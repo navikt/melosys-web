@@ -1,0 +1,26 @@
+{
+  "name": "melosys-api-mock",
+  "version": "1.0.0",
+  "description": "Mock server for melosys-api E2E tests - plays back recorded API responses",
+  "main": "dist/mock-server/src/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/mock-server/src/server.js",
+    "dev": "ts-node src/server.ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

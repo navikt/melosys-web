@@ -58,6 +58,7 @@ class Stegvelger extends Component {
       [StegStoreTyper.Lovvalgsland]: new EnkelDataStore(),
     },
     visMottatteOpplysningerFeilmeldinger: false,
+    harTrygdeavgiftperiode: false,
   };
 
   aktiv = true;
@@ -66,6 +67,9 @@ class Stegvelger extends Component {
     this.aktiv = true;
     const { behandlingID, sakstype } = this.props;
     const { aktivtStegNummer } = this.state;
+
+    const trygdeavgiftperioder = await Api.Trygdeavgift.hentTrygdeavgiftperioder(behandlingID);
+    this.setState({ harTrygdeavgiftperiode: trygdeavgiftperioder.length > 0 });
 
     if (sakstype === MKV.Koder.sakstyper.FTRL) {
       await Promise.all([this.props.hentVilkar(behandlingID)]);
@@ -368,6 +372,7 @@ class Stegvelger extends Component {
    * @returns {Array}
    */
   oppdaterAktuelleSteg = (aktivtStegNummer, endreFokus = false) => {
+    const { harTrygdeavgiftperiode } = this.state;
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgUtpek: this.lagreOgUtpek,
@@ -454,6 +459,7 @@ class Stegvelger extends Component {
       art11_4_1eller13_4_1: props.art11_4_1eller13_4_1,
       art11_4_2eller13_4_2: props.art11_4_2eller13_4_2,
       eøsFaktureringAvTrygdeavgiftToggleEnabled: props.eøsFaktureringAvTrygdeavgiftToggleEnabled,
+      harTrygdeavgiftperiode,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -498,14 +504,25 @@ class Stegvelger extends Component {
       lagreUtpekingsperioderHandler,
       sakstype,
       anmodningErSendtUtland,
+      oppsummering,
+      eøsFaktureringAvTrygdeavgiftToggleEnabled,
     } = this.props;
+    const { aktivtStegNummer, aktuelleSteg } = this.state;
+    const erVurderingPeriode = aktuelleSteg[aktivtStegNummer]?.id == STEG.VURDERING_PERIODE;
+    const erArbeidTjenestepersonEllerFly =
+      oppsummering.behandlingstema.kode == MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY;
+
+    const flytHarIkkeVurderingPeriode = !(eøsFaktureringAvTrygdeavgiftToggleEnabled && erArbeidTjenestepersonEllerFly);
 
     this.setState({ aktivtStegNummer: nyttStegNummer });
 
     if (redigerbart) {
       if (sakstype !== MKV.Koder.sakstyper.FTRL) {
         await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
-        await lagreLovvalgsperioderHandler();
+
+        if (flytHarIkkeVurderingPeriode || erVurderingPeriode) {
+          await lagreLovvalgsperioderHandler();
+        }
 
         if (!anmodningErSendtUtland) {
           await lagreAvklartefaktaHandler();

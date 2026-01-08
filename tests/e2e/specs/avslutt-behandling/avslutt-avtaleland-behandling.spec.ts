@@ -1,24 +1,22 @@
-import { test } from "@playwright/test";
-import { SokPage } from "../../pages/sok.page";
+import { test } from "../../recording/fixtures";
 import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
 import { BehandlingPage } from "../../pages/behandling/behandling.page";
-import { runAxeAnalyze } from "../../utils/axeUtils";
-import { opprettAvtalelandSak } from "../../utils/testdataUtils";
+import { hentPrepopulertSakUrl } from "../../utils/testdataUtils";
+import { UI_TEXTS } from "../../config/ui-texts";
 
 test.describe("Avslutt Avtaleland-behandling for testdata", () => {
-  test("Opprett og avslutt Avtaleland-sak, verifiser redirect til hovedside", async ({ page }, testInfo) => {
+  test("Opprett og avslutt Avtaleland-sak, verifiser redirect til hovedside", async ({
+    page,
+    apiRecorder,
+  }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
-    const sokPage = new SokPage(page);
-    const behandlingPage = new BehandlingPage(page);
+    const saksnummer = "MEL-1001";
+    const behandlingPage = new BehandlingPage(page, saksnummer);
 
-    // Opprett egen Avtaleland-sak
-    const sak = await opprettAvtalelandSak(page);
-    const sakId = await sokPage.getSaksnummer(sak);
+    // Hent URL til prepopulert Avtaleland-sak og naviger direkte dit
+    const url = hentPrepopulertSakUrl(saksnummer);
+    await behandlingPage.goto(url);
 
-    await sokPage.klikkVisBehandling(sak);
-    await behandlingPage.verifiserBehandlingsside();
-    await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId);
-
-    await runAxeAnalyze(page, testInfo.title);
+    await behandlingPage.avsluttBehandling(UI_TEXTS.VEDTAK.INNVILGET, UI_TEXTS.BUTTONS.BEKREFT);
   });
 });

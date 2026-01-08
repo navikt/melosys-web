@@ -1,27 +1,13 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { getSaksnummerFraLocator, setDatoFelt } from "../../utils/testUtils";
-
-const SELECTORS = {
-  OPPRETT_NY_BEHANDLING_BUTTON: "button:has-text('Opprett ny behandling')",
-  AVBRYT_BUTTON: "button:has-text('Avbryt')",
-  VIS_FLERE_SAKER_BUTTON: 'button:has-text("Vis flere saker")',
-  CUSTOM_RADIO_PANEL_TITLE: ".customRadioPanelTittel",
-} as const;
-
-interface LocatorWithSakId extends Locator {
-  _sakId?: string;
-}
-
-/**
- * Sett sakId på locator ved å hente den fra .customRadioPanelTittel
- * Denne funksjonen er spesifikk for opprett-ny-sak-siden
- * @param sak - Sak-locator
- */
-export async function setSakId(sak: Locator): Promise<void> {
-  const sakId = await sak.locator(".customRadioPanelTittel").textContent();
-  const sakIdMatch = sakId?.match(/MEL-\d+/);
-  (sak as LocatorWithSakId)._sakId = sakIdMatch ? sakIdMatch[0] : "ukjent";
-}
+import {
+  finnCheckbox,
+  finnKnapp,
+  finnRadioGroup,
+  getSaksnummerFraLocator,
+  LocatorWithSakId,
+  setDatoFelt,
+} from "../../utils/testUtils";
+import { UI_TEXTS } from "../../config/ui-texts";
 
 /**
  * Page Object Model for opprett ny sak - Actions only
@@ -34,35 +20,7 @@ export class OpprettNySakPage {
     this.page = page;
   }
 
-  // ===== ACTIONS (utfører handlinger på siden) =====
-
-  /**
-   * Velg sak ved index
-   * Venter automatisk på at enten behandlingspanel eller feilmelding vises før den returnerer
-   */
-  async velgSakVedIndex(index: number): Promise<void> {
-    const sak = this.page.locator(".customRadioPanel").nth(index);
-    await expect(sak, "Fant ikke sak med index " + index).toBeVisible();
-    await sak.click();
-
-    // Vent på at enten panelramme eller behandlingspanel vises (data er lastet)
-    await this.page
-      .locator(".knyttTilSak__panelramme, .knyttTilSak__behandlingspanel")
-      .first()
-      .waitFor({ state: "visible", timeout: 5000 });
-  }
-
   // ===== QUERIES (henter data fra siden) =====
-
-  /**
-   * Hent saks-ID ved index
-   */
-  async hentSakIdVedIndex(index: number): Promise<string> {
-    const sak = this.page.locator(".customRadioPanel").nth(index);
-    const sakIdElement = await sak.locator(".customRadioPanelTittel").textContent();
-    const sakIdMatch = sakIdElement?.match(/MEL-\d+/);
-    return sakIdMatch ? sakIdMatch[0] : `sak-${index}`;
-  }
 
   /**
    * Fyll inn bruker-ID
@@ -81,6 +39,8 @@ export class OpprettNySakPage {
     const orgNumberInput = this.page.locator("input[name='virksomhetOrgnr']");
     await expect(orgNumberInput, "Fant ikke org nr input").toBeVisible();
     await orgNumberInput.fill(orgNumber);
+    // Vent på at backend svarer (enten sakstype-select vises, eller feilmelding kommer)
+    await this.page.waitForTimeout(2000);
   }
 
   /**
@@ -92,9 +52,7 @@ export class OpprettNySakPage {
     );
 
     try {
-      await expect(undertittel, "Fant ikke undertittel 'Knytt til eksisterende sak eller opprett ny'").toBeVisible({
-        timeout: 5000,
-      });
+      await expect(undertittel, "Fant ikke undertittel 'Knytt til eksisterende sak eller opprett ny'").toBeVisible();
     } catch {
       return;
     }
@@ -111,9 +69,7 @@ export class OpprettNySakPage {
 
     // Det finnes eksisterende saker - velg "Opprett ny sak" radioknapp
     const opprettNySakRadio = this.page.locator(".navds-radio__content:has-text('Opprett ny sak')");
-    await expect(opprettNySakRadio, "Kunne ikke finne 'Opprett ny sak").toBeVisible({
-      timeout: 10000,
-    });
+    await expect(opprettNySakRadio, "Kunne ikke finne 'Opprett ny sak").toBeVisible();
     await opprettNySakRadio.click();
     await this.page.waitForLoadState("domcontentloaded");
   }
@@ -146,99 +102,11 @@ export class OpprettNySakPage {
    * Klikk "Vis flere saker" knappen hvis den finnes
    */
   async klikkVisFlereSaker(): Promise<void> {
-    const visFlereSakerKnapp = this.page.locator(SELECTORS.VIS_FLERE_SAKER_BUTTON);
+    const visFlereSakerKnapp = this.page.getByRole("button", { name: UI_TEXTS.BUTTONS.VIS_FLERE_SAKER });
     const harVisFlereSakerKnapp = await visFlereSakerKnapp.isVisible();
     if (harVisFlereSakerKnapp) {
       await visFlereSakerKnapp.click();
     }
-  }
-
-  /**
-   * Generisk helper-funksjon for å finne en sak basert på kriterier
-   */
-  async finnSak(kriterier: {
-    sakstype: "Utenfor avtaleland" | "Avtaleland" | "EU/EØS-land";
-    behandlingstype?: "Førstegangsbehandling" | "Ny vurdering" | "Klage" | "Henvendelse" | "Årsavregning";
-    behandlingsstatus?:
-      | "Behandlingen er opprettet"
-      | "Behandlingen pågår"
-      | "Behandlingen er avsluttet"
-      | "Søknaden er henlagt/trukket";
-    resultattype?: string;
-    sakstema?: string;
-  }): Promise<Locator | null> {
-    const saker = await this.finnAlleSaker({
-      sakstype: kriterier.sakstype,
-      behandlingsstatus: kriterier.behandlingsstatus,
-      resultattype: kriterier.resultattype,
-      sakstema: kriterier.sakstema,
-    });
-
-    if (saker.length > 0) {
-      return saker[0];
-    }
-    return null;
-  }
-
-  /**
-   * Generisk funksjon for å finne alle saker basert på sakstype og kriterier
-   */
-  async finnAlleSaker(kriterier: {
-    sakstype: "Utenfor avtaleland" | "Avtaleland" | "EU/EØS-land";
-    behandlingsstatus?:
-      | "Behandlingen er opprettet"
-      | "Behandlingen pågår"
-      | "Behandlingen er avsluttet"
-      | "Søknaden er henlagt/trukket";
-    resultattype?: string;
-    sakstema?: string;
-  }): Promise<Locator[]> {
-    const alleSaker = this.page.locator(".customRadioPanel");
-    const sakListe: Locator[] = [];
-
-    for (let i = 0; i < (await alleSaker.count()); i++) {
-      const sak = alleSaker.nth(i);
-      const tittel = await sak.locator(".customRadioPanelTittel").textContent();
-
-      if (!tittel?.startsWith(kriterier.sakstype)) {
-        continue;
-      }
-
-      let oppfyllerKriterier = true;
-
-      if (kriterier.sakstema) {
-        // Sakstema vises i tittelen som "{sakstype} - {sakstema}"
-        const harSakstema = tittel?.includes(kriterier.sakstema) ?? false;
-        if (!harSakstema) {
-          oppfyllerKriterier = false;
-        }
-      }
-
-      if (kriterier.behandlingsstatus) {
-        const sakInnhold = await sak.textContent();
-        const harStatus = sakInnhold?.includes(kriterier.behandlingsstatus) ?? false;
-
-        if (!harStatus) {
-          oppfyllerKriterier = false;
-        }
-      }
-
-      if (kriterier.resultattype) {
-        const sakInnhold = await sak.textContent();
-        const harResultattype = sakInnhold?.includes(kriterier.resultattype) ?? false;
-        if (!harResultattype) {
-          oppfyllerKriterier = false;
-        }
-      }
-
-      await setSakId(sak);
-
-      if (oppfyllerKriterier) {
-        sakListe.push(sak);
-      }
-    }
-
-    return sakListe;
   }
 
   /**
@@ -265,9 +133,8 @@ export class OpprettNySakPage {
    * Klikk "Opprett ny behandling" knappen
    */
   async klikkOpprettNyBehandling(): Promise<void> {
-    const opprettKnapp = this.page.locator(SELECTORS.OPPRETT_NY_BEHANDLING_BUTTON);
-    await expect(opprettKnapp, "Fant ikke 'Opprett ny behandling' knappen").toBeVisible();
-    await opprettKnapp.click();
+    const knapp = await finnKnapp(UI_TEXTS.BUTTONS.OPPRETT_NY_BEHANDLING, this.page);
+    await knapp.click();
     await this.page.waitForLoadState("domcontentloaded");
   }
 
@@ -277,22 +144,18 @@ export class OpprettNySakPage {
   async velgSakstype(value: "Avtaleland" | "Utenfor avtaleland" | "EU/EØS-land"): Promise<void> {
     const sakstypeSelect = this.page.locator("select[name='sakstype']");
 
-    // Vent på elementet med timeout, returner stille hvis det ikke kommer
+    // Vent på at select er synlig
     try {
-      await expect(sakstypeSelect, "Fant ikke sakstype dropdown").toBeVisible({ timeout: 5000 });
+      await expect(sakstypeSelect, "Fant ikke sakstype dropdown").toBeVisible();
     } catch {
       return;
     }
 
-    const options = await sakstypeSelect.locator("option").all();
-    let foundValue: string | null = null;
-    for (const option of options) {
-      const text = await option.textContent();
-      if (text && text.trim() === value) {
-        foundValue = await option.getAttribute("value");
-        break;
-      }
-    }
+    // Vent på at den ønskede option finnes (options kan lastes dynamisk)
+    const targetOption = sakstypeSelect.locator(`option:text-is("${value}")`);
+    await expect(targetOption, `Venter på at sakstype option "${value}" skal lastes`).toBeAttached();
+
+    const foundValue = await targetOption.getAttribute("value");
 
     expect(foundValue, `Fant ikke sakstype med tekst "${value}"`).not.toBeNull();
     if (!foundValue) return; // Type guard for TypeScript
@@ -307,9 +170,7 @@ export class OpprettNySakPage {
     await this.velgDropdownVerdi("sakstema", value, "Sakstema");
     // Vent på at behandlingstema-dropdown er lastet inn
     const behandlingstemaSelect = this.page.locator("select[name='behandlingstema']");
-    await expect(behandlingstemaSelect, "Behandlingstema-select skal være synlig etter sakstema valgt").toBeVisible({
-      timeout: 5000,
-    });
+    await expect(behandlingstemaSelect, "Behandlingstema-select skal være synlig etter sakstema valgt").toBeVisible();
   }
 
   /**
@@ -326,7 +187,8 @@ export class OpprettNySakPage {
       | "Ikke yrkesaktiv"
       | "Pensjonist/uføretrygdet"
       | "Forespørsel fra trygdemyndighet"
-      | "Forespørsel om trygdetid",
+      | "Forespørsel om trygdetid"
+      | "Virksomhet", // Gjelder kun for virksomhet-saker
   ): Promise<void> {
     await this.velgDropdownVerdi("behandlingstema", value, "Behandlingstema");
     // Vent på at behandlingstype-dropdown er lastet inn
@@ -334,7 +196,7 @@ export class OpprettNySakPage {
     await expect(
       behandlingstypeSelect,
       "Behandlingstype-select skal være synlig etter behandlingstema valgt",
-    ).toBeVisible({ timeout: 5000 });
+    ).toBeVisible();
   }
 
   /**
@@ -343,13 +205,13 @@ export class OpprettNySakPage {
   async velgBehandlingstype(
     value: "Førstegangsbehandling" | "Ny vurdering" | "Klage" | "Henvendelse" | "Årsavregning",
   ): Promise<void> {
-    await this.velgDropdownVerdi("behandlingstype", value, "Behandlingstype");
+    await this.velgDropdownVerdi("behandlingstype", value, UI_TEXTS.LABELS.BEHANDLINGSTYPE);
     // Vent på at behandlingsårsak-dropdown er lastet inn
     const behandlingsaarsakSelect = this.page.locator("select[name='behandlingsaarsakType']");
     await expect(
       behandlingsaarsakSelect,
       "Behandlingsårsak-select skal være synlig etter behandlingstype valgt",
-    ).toBeVisible({ timeout: 5000 });
+    ).toBeVisible();
   }
 
   /**
@@ -360,13 +222,13 @@ export class OpprettNySakPage {
     // Etter behandlingsårsak vises enten land-felt eller "Opprett ny behandling" knapp
     // Vent på at ett av disse er synlig
     const landFieldset = this.page.locator("fieldset:has-text('Land')");
-    const opprettKnapp = this.page.locator(SELECTORS.OPPRETT_NY_BEHANDLING_BUTTON);
+    const opprettKnapp = this.page.getByRole("button", { name: UI_TEXTS.BUTTONS.OPPRETT_NY_BEHANDLING });
     await Promise.race([
       expect(landFieldset, "Land-fieldset skal være synlig")
-        .toBeVisible({ timeout: 5000 })
+        .toBeVisible()
         .catch(() => {}),
       expect(opprettKnapp, "Opprett-knapp skal være synlig")
-        .toBeVisible({ timeout: 5000 })
+        .toBeVisible()
         .catch(() => {}),
     ]);
   }
@@ -378,7 +240,7 @@ export class OpprettNySakPage {
     // Vent for at land-feltet skal vises etter behandlingsårsak er valgt
     // Feltet vises ikke for alle kombinasjoner av sakstype/tema
     const landFieldset = this.page.locator('fieldset:has-text("land")').first();
-    await expect(landFieldset, "Fant ikke land-feltet").toBeVisible({ timeout: 10000 });
+    await expect(landFieldset, "Fant ikke land-feltet").toBeVisible();
 
     const combobox = landFieldset.locator('[role="combobox"]').first();
     await expect(combobox, "Fant ikke land combobox").toBeVisible();
@@ -397,19 +259,6 @@ export class OpprettNySakPage {
 
     // Vent på at valget er registrert - sjekk at dropdown har lukket seg
     await expect(this.page.locator('[role="option"]'), "Land dropdown lukket seg ikke etter valg").toHaveCount(0);
-  }
-
-  /**
-   * Velg en spesifikk behandlingstype via radio button
-   * @param behandlingstype - Navn på behandlingstypen (f.eks. "Årsavregning", "Henvendelse")
-   */
-  async velgBehandlingstypeRadio(behandlingstype: string): Promise<void> {
-    const behandlingstypeGruppe = this.page.getByRole("group", { name: "Behandlingstype" });
-    await expect(behandlingstypeGruppe, "Fant ikke behandlingstype-gruppe").toBeVisible();
-
-    const radioButton = behandlingstypeGruppe.getByRole("radio", { name: new RegExp(behandlingstype, "i") });
-    await expect(radioButton, `Fant ikke radioknapp for behandlingstype "${behandlingstype}"`).toBeVisible();
-    await radioButton.click();
   }
 
   /**
@@ -476,37 +325,6 @@ export class OpprettNySakPage {
   }
 
   /**
-   * Generisk funksjon for å velge første sak av en bestemt sakstype
-   * @private
-   */
-  async velgFørsteSak(
-    sakstype: "Utenfor avtaleland" | "EU/EØS-land" | "Avtaleland",
-    status?: "Behandlingen er opprettet" | "Behandlingen pågår" | "Behandlingen er avsluttet" | "Søknaden er henlagt",
-    behandlingstema?: string,
-  ): Promise<Locator> {
-    await this.page.waitForSelector(".customRadioPanel", { timeout: 10000 });
-
-    // Bygg tittel-søk basert på sakstype og behandlingstema
-    const tittelSok: string = behandlingstema ? `${sakstype} - ${behandlingstema}` : sakstype;
-
-    let selector = `.customRadioPanel:has(.customRadioPanelTittel h1:has-text("${tittelSok}"))`;
-    if (status) {
-      selector += `:has(.behandlingsstatus__span:has-text("${status}"))`;
-    }
-    const sak = this.page.locator(selector).first();
-
-    await expect(
-      sak,
-      `Fant ingen ${sakstype}-sak ${behandlingstema ? `med tema "${behandlingstema}" ` : ""}${status ? ` med status "${status}"` : ""}. Selector: ${selector}`,
-    ).toBeVisible({ timeout: 10000 });
-
-    await setSakId(sak);
-    await sak.click();
-
-    return sak;
-  }
-
-  /**
    * Sjekker om det finnes feilmeldinger på siden
    * @param feilmelding Valgfri spesifikk feilmelding å lete etter
    * @returns true hvis feilmelding finnes
@@ -530,7 +348,7 @@ export class OpprettNySakPage {
       return nextError;
     }
 
-    // Fallback til global sjekk (bakoverkompatibilitet)
+    // Global sjekk (når sakIndex ikke er spesifisert)
     const selector = ".knyttTilSak__behandlingspanel";
     if (feilmelding) {
       return this.page.locator(selector).filter({ hasText: feilmelding });
@@ -551,58 +369,10 @@ export class OpprettNySakPage {
   }
 
   /**
-   * Tell antall saker som vises
-   */
-  async tellAntallSaker(): Promise<number> {
-    return await this.page.locator(".customRadioPanel").count();
-  }
-
-  /**
    * Sjekk om opprett-ny-sak siden er synlig
    */
   async erOpprettNySakSidenSynlig(): Promise<boolean> {
     return await this.page.locator(".opprettnysak").isVisible();
-  }
-
-  /**
-   * Sjekk om behandlingstype-gruppen er synlig
-   */
-  async erBehandlingstypeGruppeSynlig(): Promise<boolean> {
-    const behandlingstypeGruppe = this.page.getByRole("group", { name: "Behandlingstype" });
-    return await behandlingstypeGruppe.isVisible().catch(() => false);
-  }
-
-  /**
-   * Hent locator for behandlingspanel-rammen
-   * Dette panelet inneholder "Velg tema og type for ny behandling"
-   * @param sakIndex - Valgfri index for å hente panel rett etter spesifikk sak
-   */
-  hentBehandlingspanelRamme(sakIndex?: number): Locator {
-    if (sakIndex !== undefined) {
-      // Finn saken først, deretter neste sibling panelramme
-      const sak = this.page.locator(".customRadioPanel").nth(sakIndex);
-      return sak.locator("~ .knyttTilSak__panelramme").first();
-    }
-
-    // Fallback til global sjekk (bakoverkompatibilitet)
-    return this.page.locator(".knyttTilSak__panelramme");
-  }
-
-  /**
-   * Tell antall behandlingstyper i behandlingspanel-rammen
-   */
-  async tellBehandlingstyperIPanel(): Promise<number> {
-    const behandlingspanelRamme = this.page.locator(".knyttTilSak__panelramme");
-    const behandlingstypeRadios = behandlingspanelRamme.locator(".navds-radio");
-    return await behandlingstypeRadios.count();
-  }
-
-  /**
-   * Hent behandlingstema-verdi
-   */
-  async hentBehandlingstemaVerdi(): Promise<string> {
-    const behandlingstemaSelect = this.page.locator("select[name='behandlingstema']");
-    return await behandlingstemaSelect.inputValue();
   }
 
   // ===== ASSERTIONS (verifiserer tilstand) =====
@@ -645,14 +415,12 @@ export class OpprettNySakPage {
   }
 
   /**
-   * Verifiser at "Legg behandlingen til en eksisterende sak?" checkbox er synlig
+   * Verifiser at "Legg behandlingen i mine oppgaver" checkbox er synlig og uavkrysset
    */
   private async verifiserLeggBehandlingenCheckbox(): Promise<void> {
-    await expect(
-      this.page.locator(".navds-checkbox:has-text('Legg behandlingen i mine oppgaver')"),
-      "Checkbox 'Legg behandlingen i mine oppgaver' skal være synlig",
-    ).toBeVisible();
-    await expect(this.page.locator("input[name='skalTilordnes']")).not.toBeChecked();
+    const checkbox = await finnCheckbox("Legg behandlingen i mine oppgaver", this.page);
+    await expect(checkbox, "Checkbox 'Legg behandlingen i mine oppgaver' skal være synlig").toBeVisible();
+    await expect(checkbox).not.toBeChecked();
   }
 
   /**
@@ -693,34 +461,31 @@ export class OpprettNySakPage {
    * Verifiser hvilke behandlingstyper som er tilgjengelige for en valgt sak
    * @param valgtSak Den valgte saken
    * @param forventedeBehandlingstyper Array med forventede behandlingstyper
+   * @param saksnummer Optional saksnummer for feilmeldinger (hvis ikke oppgitt, hentes fra locator)
    */
-  async verifiserTilgjengeligeBehandlingstyper(valgtSak: Locator, forventedeBehandlingstyper: string[]): Promise<void> {
-    await expect(
-      this.page.getByRole("group", { name: "Behandlingstype" }),
-      `Behandlingstype-gruppe for sak ${getSaksnummerFraLocator(valgtSak!)} skal være synlig`,
-    ).toBeVisible();
+  async verifiserTilgjengeligeBehandlingstyper(
+    valgtSak: Locator,
+    forventedeBehandlingstyper: string[],
+    saksnummer?: string,
+  ): Promise<void> {
+    const sakId = saksnummer || getSaksnummerFraLocator(valgtSak!);
+    const behandlingstypeGruppe = await finnRadioGroup(UI_TEXTS.LABELS.BEHANDLINGSTYPE, this.page);
 
     // Hent alle faktiske radiobuttons som er tilstede
-    let alleRadioButtons = this.page.getByRole("group", { name: "Behandlingstype" }).getByRole("radio");
+    let alleRadioButtons = behandlingstypeGruppe.getByRole("radio");
     let antallRadioButtons = await alleRadioButtons.count();
 
     // Prøv alternative selektorer hvis ingen radiobuttons finnes
     if (antallRadioButtons === 0) {
-      const alternativeRadios = await this.page
-        .getByRole("group", { name: "Behandlingstype" })
-        .locator("input[type='radio']")
-        .count();
-      const navdsRadios = await this.page
-        .getByRole("group", { name: "Behandlingstype" })
-        .locator(".navds-radio")
-        .count();
+      const alternativeRadios = await behandlingstypeGruppe.locator("input[type='radio']").count();
+      const navdsRadios = await behandlingstypeGruppe.locator(".navds-radio").count();
 
       // Bruk alternative selektorer hvis de finner radiobuttons
       if (alternativeRadios > 0) {
-        alleRadioButtons = this.page.getByRole("group", { name: "Behandlingstype" }).locator("input[type='radio']");
+        alleRadioButtons = behandlingstypeGruppe.locator("input[type='radio']");
         antallRadioButtons = alternativeRadios;
       } else if (navdsRadios > 0) {
-        alleRadioButtons = this.page.getByRole("group", { name: "Behandlingstype" }).locator(".navds-radio input");
+        alleRadioButtons = behandlingstypeGruppe.locator(".navds-radio input");
         antallRadioButtons = navdsRadios;
       }
     }
@@ -774,37 +539,13 @@ export class OpprettNySakPage {
 
     expect(
       manglendeBehandlingstyper.length,
-      `Sak ${getSaksnummerFraLocator(valgtSak!)}: Manglende behandlingstyper: ${manglendeBehandlingstyper.join(", ")}. Faktiske: ${faktiskeTilgjengeligeBehandlingstyper.join(", ")}`,
+      `Sak ${sakId}: Manglende behandlingstyper: ${manglendeBehandlingstyper.join(", ")}. Faktiske: ${faktiskeTilgjengeligeBehandlingstyper.join(", ")}`,
     ).toBe(0);
 
     expect(
       uventedeBehandlingstyper.length,
-      `Sak ${getSaksnummerFraLocator(valgtSak!)}: Uventede behandlingstyper: ${uventedeBehandlingstyper.join(", ")}. Forventede: ${forventedeBehandlingstyper.join(", ")}`,
+      `Sak ${sakId}: Uventede behandlingstyper: ${uventedeBehandlingstyper.join(", ")}. Forventede: ${forventedeBehandlingstyper.join(", ")}`,
     ).toBe(0);
-  }
-
-  /**
-   * Verifiser at behandlingstype-gruppen er synlig og har behandlingstyper
-   */
-  async verifiserBehandlingstypeGruppe(): Promise<void> {
-    const behandlingstypeGruppe = this.page.getByRole("group", { name: "Behandlingstype" });
-    await expect(behandlingstypeGruppe, "Behandlingstype-gruppe skal være synlig").toBeVisible();
-
-    const behandlingstypeRadios = behandlingstypeGruppe.locator(".navds-radio");
-    const antallBehandlingstyper = await behandlingstypeRadios.count();
-    expect(antallBehandlingstyper, "Minst én behandlingstype skal være tilgjengelig").toBeGreaterThan(0);
-  }
-
-  /**
-   * Verifiser at "Tidligere behandling er avsluttet" melding vises
-   */
-  async verifiserTidligereBehandlingAvsluttet(): Promise<void> {
-    await expect(
-      this.page.locator(".tidligereBehandlingAvsluttet", {
-        hasText: "Tidligere behandling er avsluttet",
-      }),
-      "Melding 'Tidligere behandling er avsluttet' skal være synlig",
-    ).toBeVisible();
   }
 
   /**
@@ -820,18 +561,9 @@ export class OpprettNySakPage {
   }
 
   /**
-   * Verifiser at behandlingstema-select er synlig
-   */
-  async verifiserBehandlingstemaSelectSynlig(): Promise<void> {
-    const behandlingstemaSelect = this.page.locator("select[name='behandlingstema']");
-    await expect(behandlingstemaSelect, "Select-felt for behandlingstema skal være synlig").toBeVisible();
-  }
-
-  /**
    * Verifiser at behandlingstype-gruppen IKKE er synlig
    */
   async verifiserBehandlingstypeGruppeIkkeSynlig(): Promise<void> {
-    const behandlingstypeGruppe = this.page.getByRole("group", { name: "Behandlingstype" });
-    await expect(behandlingstypeGruppe, "Behandlingstype-gruppe skal ikke være synlig").not.toBeVisible();
+    await finnRadioGroup(UI_TEXTS.LABELS.BEHANDLINGSTYPE, this.page, { erSynlig: false });
   }
 }

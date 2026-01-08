@@ -33,6 +33,7 @@ function InnerMultiSelectComponent({
   endreFelt,
   feltNavn,
   onChange,
+  "aria-label": ariaLabel,
 }: InnerMultiSelectComponentProps) {
   const feil = meta.submitFailed ? SkjemaUtils.mapReduxFormFeilTilNavFeil(meta) : undefined;
 
@@ -48,6 +49,7 @@ function InnerMultiSelectComponent({
       feil={feil}
       values={fields.getAll()}
       redigerbart={redigerbart}
+      aria-label={ariaLabel}
     />
   );
 }

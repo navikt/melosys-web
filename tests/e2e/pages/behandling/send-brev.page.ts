@@ -1,10 +1,11 @@
 import { Page, Locator, expect } from "@playwright/test";
-import { getSaksnummerFraUrl } from "../../utils/testUtils";
 import { BehandlingPage } from "./behandling.page";
+import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
+import { finnCombobox } from "../../utils/testUtils";
 
 export class SendBrevPage extends BehandlingPage {
-  constructor(page: Page) {
-    super(page);
+  constructor(page: Page, saksnummer: PrepopulertSaksnummer) {
+    super(page, saksnummer);
   }
 
   // Dersom SendBrev ligger på en dedikert sti etter at man er inne i en sak, sett path her.
@@ -12,13 +13,12 @@ export class SendBrevPage extends BehandlingPage {
   readonly path = "/send-brev";
 
   readonly labels = {
-    mottaker: /mottaker/i,
-    brevmal: /brevmal|brevtype|type/i,
-    sendBrev: /send brev/i,
+    mottaker: "Mottaker",
+    brevmal: "Velg brevmal",
+    sendBrev: "Send brev",
   };
 
   private sendBrevPanel?: Locator;
-  private sakId?: string;
 
   get sendButton(): Locator {
     return this.page.getByRole("button", { name: this.labels.sendBrev });
@@ -34,22 +34,10 @@ export class SendBrevPage extends BehandlingPage {
     return scope.locator('select[name="mottaker"]');
   }
 
-  // Behold ARIA-combobox for brevmal, men ha fallback til native select[name="type"]
-  private get brevmalCombobox(): Locator {
-    const scope = this.sendBrevPanel ?? this.page;
-    return scope.getByRole("combobox", { name: this.labels.brevmal });
-  }
-
-  private get brevmalNativeSelect(): Locator {
-    const scope = this.sendBrevPanel ?? this.page;
-    return scope.locator('select[name="type"]');
-  }
-
   async clickSendBrevTab(): Promise<void> {
     const tab = this.sendBrevTab;
-    this.sakId = getSaksnummerFraUrl(this.page);
 
-    await expect(tab, this.sakId + ': Fant ikke "Send brev"-fanen for sak ').toBeVisible();
+    await expect(tab, `${this.ctx}: Fant ikke "Send brev"-fanen`).toBeVisible();
 
     const panelId = await tab.getAttribute("aria-controls");
     await tab.click();
@@ -73,21 +61,14 @@ export class SendBrevPage extends BehandlingPage {
   }
 
   private async waitForBrevmalSelect(timeoutMs: number = 5000): Promise<Locator> {
-    // Vent på enten aria-combobox eller native select[name="type"]
-    const combo = this.brevmalCombobox;
-    if (await combo.count()) {
-      await combo.waitFor({ state: "visible", timeout: timeoutMs });
-      return combo;
-    }
-    const nativeSel = this.brevmalNativeSelect;
-    await nativeSel.waitFor({ state: "visible", timeout: timeoutMs });
-    return nativeSel;
+    const scope = this.sendBrevPanel ?? this.page;
+    return await finnCombobox(this.labels.brevmal, scope, timeoutMs);
   }
 
   async selectFirstMottaker() {
     // Bruk native select[name="mottaker"] direkte
     const sel = this.mottakerNativeSelect;
-    await expect(sel, this.sakId + ': Fant ikke native select for "Mottaker" sak ').toBeVisible();
+    await expect(sel, `${this.ctx}: Fant ikke mottaker-feltet`).toBeVisible();
 
     // Velg første reelle alternativ (index 1, siden index 0 er "Velg...")
     await sel.selectOption({ index: 1 });
@@ -98,8 +79,7 @@ export class SendBrevPage extends BehandlingPage {
 
   async selectFirstBrevmal() {
     const ctl = await this.waitForBrevmalSelect();
-    // Hvis dette er en native <select>, velg første reelle alternativ.
-    // Hvis det er en combobox, bruk tastatur (ArrowDown+Enter).
+    // Native select bruker selectOption, ARIA combobox bruker tastaturnavigasjon
     const tag = await ctl.evaluate((el) => el.tagName.toLowerCase());
     if (tag === "select") {
       await ctl.selectOption({ index: 1 });
@@ -108,12 +88,12 @@ export class SendBrevPage extends BehandlingPage {
     }
   }
 
-  // Valgfritt: velg brevmal via synlig tekst (f.eks. "Innhenting av inntektsopplysninger for årsavregning")
+  // Velg brevmal via synlig tekst (f.eks. "Innhenting av inntektsopplysninger for årsavregning")
   async selectBrevmalByLabel(label: string | RegExp) {
     const ctl = await this.waitForBrevmalSelect();
     const tag = await ctl.evaluate((el) => el.tagName.toLowerCase());
     if (tag === "select") {
-      // Map label -> value via evaluate og bruk selectOption
+      // Native select: finn option-verdi og bruk selectOption
       const value = await ctl.evaluate(
         (el, l) => {
           const sel = el as HTMLSelectElement;
@@ -123,9 +103,10 @@ export class SendBrevPage extends BehandlingPage {
         },
         label as string | RegExp,
       );
-      expect(value, `${this.sakId}: Fant ikke brevmal med gitt label "${label}" for sak`).toBeTruthy();
+      expect(value, `${this.ctx}: Fant ikke brevmalen "${label}"`).toBeTruthy();
       await ctl.selectOption(value);
     } else {
+      // ARIA combobox: klikk og velg fra listbox
       await ctl.click({ force: true });
       const scope = this.sendBrevPanel ?? this.page;
       await scope.getByRole("option", { name: label }).first().click();
@@ -133,16 +114,16 @@ export class SendBrevPage extends BehandlingPage {
   }
 
   async verifiserSendKnappDeaktivert() {
-    await expect(this.sendButton, `${this.sakId}: Send-knapp skal være deaktivert`).toBeDisabled();
+    await expect(this.sendButton, `${this.ctx}: Send-knappen er uventet aktiv`).toBeDisabled();
   }
 
   async verifiserSendKnappAktivert() {
-    await expect(this.sendButton, `${this.sakId}: Send-knapp skal være aktivert`).toBeEnabled();
+    await expect(this.sendButton, `${this.ctx}: Send-knappen er uventet deaktivert`).toBeEnabled();
   }
 
   async selectMottakerByLabel(label: string | RegExp) {
     const sel = this.mottakerNativeSelect;
-    await expect(sel, `${this.sakId}: Fant ikke native select for "Mottaker"`).toBeVisible();
+    await expect(sel, `${this.ctx}: Fant ikke mottaker-feltet`).toBeVisible();
 
     const value = await sel.evaluate(
       (el, l) => {
@@ -154,7 +135,7 @@ export class SendBrevPage extends BehandlingPage {
       label as string | RegExp,
     );
 
-    expect(value, `${this.sakId}: Fant ikke mottaker med label: ${label}`).toBeTruthy();
+    expect(value, `${this.ctx}: Fant ikke mottakeren "${label}"`).toBeTruthy();
     await sel.selectOption(value);
 
     await this.waitForBrevmalSelect();

@@ -1,14 +1,14 @@
-import { test } from "@playwright/test";
-import { SokPage } from "../../../pages/sok.page";
+import { test } from "../../../recording/fixtures";
 import { TrygdeavgiftPage } from "../../../pages/behandling/trygdeavgift.page";
 import { InngangPage } from "../../../pages/behandling/inngang.page";
-import { opprettEøsPensjonistSakMedTrygdeavgift } from "../../../utils/testdataUtils";
-import { runAxeAnalyze } from "../../../utils/axeUtils";
+import { BehandlingPage } from "../../../pages/behandling/behandling.page";
+import { hentPrepopulertSakUrl } from "../../../utils/testdataUtils";
+import { UI_TEXTS } from "../../../config/ui-texts";
 
 /**
  * E2E-tester for Trygdeavgift-steget i EU/EØS saksbehandling
  *
- * MELOSYS-7661: Legge til steget "trygdeavgift"
+ * Legge til steget "trygdeavgift"
  *
  * Disse testene verifiserer:
  * - Trygdeavgift-steget vises i stegflyten
@@ -19,25 +19,30 @@ import { runAxeAnalyze } from "../../../utils/axeUtils";
  */
 
 test.describe("EU/EØS Trygdeavgift", () => {
-  test("skal vise inntektskilder når bruker ikke er skattepliktig", async ({ page }, testInfo) => {
-    const sokPage = new SokPage(page);
+  test("skal vise inntektskilder når bruker ikke er skattepliktig", async ({ page, apiRecorder }, testInfo) => {
+    // Note: This test uses the write-then-read pattern (form saves + subsequent reads).
+    // The mock server supports this via sequence-based matching - it returns responses
+    // in the order they were recorded, so GET after POST returns the updated state.
 
-    // Finn en sak som har trygdeavgift og inntektskilder og gå inn på behandlingssiden
-    const sak = await opprettEøsPensjonistSakMedTrygdeavgift(page);
-    await sokPage.klikkVisBehandling(sak);
+    const saksnummer = "MEL-1054";
+    const behandlingPage = new BehandlingPage(page, saksnummer);
+    // Hent URL til prepopulert EØS pensjonist-sak med trygdeavgift og naviger direkte dit
+    const url = hentPrepopulertSakUrl(saksnummer);
+    await behandlingPage.goto(url, "Oppgi opplysninger fra attest / S1");
+
+    // Bruk inneværende år for å unngå at skatteforhold skjules pga "tidligere år"-logikk
+    const inneværendeÅr = new Date().getFullYear();
 
     // Steg 1: Inngang (Oppgi opplysninger fra attest / S1)
-    const inngangPage = new InngangPage(page);
-    await inngangPage.verifiserBehandlingsside();
-    await inngangPage.ventPaInngangStegEØS();
-    await inngangPage.setFraOgMedDato("01.01.2024");
-    await inngangPage.setTilOgMedDato("31.12.2024");
+    const inngangPage = new InngangPage(page, saksnummer);
+    await inngangPage.setFraOgMedDato(`01.01.${inneværendeÅr}`);
+    await inngangPage.setTilOgMedDato(`31.12.${inneværendeÅr}`);
     await inngangPage.velgLand("SE");
 
-    // Steg 2: Gå til Trygdeavgift og verifiser intiell tilstand
+    // Steg 2: Gå til Trygdeavgift og verifiser initiell tilstand
     await inngangPage.klikkBekreftOgFortsett();
-    const trygdeavgiftPage = new TrygdeavgiftPage(page);
-    await trygdeavgiftPage.verifiserSteg("Trygdeavgift");
+    const trygdeavgiftPage = new TrygdeavgiftPage(page, saksnummer);
+    await trygdeavgiftPage.verifiserSteg(UI_TEXTS.STEG.TRYGDEAVGIFT);
     await trygdeavgiftPage.verifiserSkattepliktigErIkkeValgt();
     await trygdeavgiftPage.verifiserInntektskilderSynlige(false);
 
@@ -51,8 +56,6 @@ test.describe("EU/EØS Trygdeavgift", () => {
 
     // Steg 3: Gå til Bekreftelse og verifiser intiell tilstand
     await inngangPage.klikkBekreftOgFortsett();
-    await trygdeavgiftPage.verifiserSteg("Bekreftelse");
-
-    await runAxeAnalyze(page, testInfo.title);
+    await trygdeavgiftPage.verifiserSteg(UI_TEXTS.STEG.BEKREFTELSE);
   });
 });

@@ -1,0 +1,94 @@
+name: Integration Tests (Playback)
+
+on:
+  pull_request:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+jobs:
+  integration-tests-playback:
+    runs-on: ubuntu-latest-8-cores
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"  # Use latest Node 22.x (Vite requires 22.12+)
+          registry-url: https://npm.pkg.github.com/
+          scope: "@navikt"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm install --frozen-lockfile
+
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "version=$(pnpm list @playwright/test --depth=0 --json | jq -r '.[0].devDependencies["@playwright/test"].version')" >> $GITHUB_OUTPUT
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v5
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+
+      - name: Install Playwright browsers (if not cached)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install only system dependencies (if browsers were cached)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Build mock server
+        run: |
+          pnpm e2e:mock:install
+          pnpm e2e:mock:build
+
+      - name: Run integration tests (playback mode)
+        run: pnpm test:e2e:playback
+        env:
+          CI: true
+
+      - name: Generate test summary
+        if: always()
+        run: |
+          # Use custom reporter summary if available (it includes its own header)
+          if [ -f "tests/e2e/reports/test-summary.md" ]; then
+            cat tests/e2e/reports/test-summary.md >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## ⚠️ No test summary found" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "📦 Download the full HTML report from the artifacts below." >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: playwright-report
+          path: |
+            tests/e2e/reports/playwright-report/
+            tests/e2e/reports/test-summary.md
+            tests/e2e/reports/test-summary.json
+          retention-days: 7
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v6
+        if: failure()
+        with:
+          name: test-artifacts
+          path: tests/e2e/artifacts/
+          retention-days: 7

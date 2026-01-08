@@ -18,13 +18,13 @@ const HoyManedinntekt = (
 
 const InntektskildeUtenforMedlemskapsperiode = (
   <Nav.Alert variant="error" className="alertstripe_feilmelding">
-    Inntektskildeperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e).
+    Inntektskildeperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e)/lovvalgsperioden(e).
   </Nav.Alert>
 );
 
 const SkatteforholdUtenforMedlemskapsperiode = (
   <Nav.Alert variant="error" className="alertstripe_feilmelding">
-    Skatteforholdsperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e).
+    Skatteforholdsperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e)/lovvalgsperioden(e).
   </Nav.Alert>
 );
 

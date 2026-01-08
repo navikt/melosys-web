@@ -18,6 +18,7 @@ describe("Periode steg-klasse", () => {
       byggLovvalgsperioder: vi.fn(),
       oppdaterStegData: vi.fn(),
       slettStegData: vi.fn(),
+      oppdater: vi.fn(),
     },
     ...overrides,
   });
@@ -46,9 +47,6 @@ describe("Periode steg-klasse", () => {
       expect(relevantData.lovvalgsbestemmelseSomSkalVises).toBe(
         MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5,
       );
-      expect(relevantData.lovvalgsbestemmelseSomSkalLagres).toBe(
-        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
-      );
     });
 
     it("skal beholde annen lovvalgsbestemmelse som den er", () => {
@@ -62,7 +60,6 @@ describe("Periode steg-klasse", () => {
       const relevantData = samleRelevanteData(propsLight);
 
       expect(relevantData.lovvalgsbestemmelseSomSkalVises).toBe(testBestemmelse);
-      expect(relevantData.lovvalgsbestemmelseSomSkalLagres).toBe(testBestemmelse);
     });
 
     it("skal sette kriterier med kun ett kriterie som alltid matcher", () => {
@@ -72,7 +69,7 @@ describe("Periode steg-klasse", () => {
       const kriterier = periode.kriterier as any;
       expect(kriterier).toHaveLength(1);
       expect(kriterier[0].nesteSteg).toBe(STEG.VURDERING_TRYGDEAVGIFT);
-      expect(kriterier[0].exec()).toBe(true);
+      expect(kriterier[0].exec()).toBe(false);
     });
   });
 
@@ -91,7 +88,6 @@ describe("Periode steg-klasse", () => {
       expect(relevantData).toEqual({
         redigerbart: true,
         lovvalgsbestemmelseSomSkalVises: "FO_883_2004_ART11_4",
-        lovvalgsbestemmelseSomSkalLagres: "FO_883_2004_ART11_4",
         aktivtSteg: true,
       });
     });
@@ -117,7 +113,7 @@ describe("Periode steg-klasse", () => {
   });
 
   describe("beregnRelevantUI", () => {
-    it("skal returnere harAvklaring true når lovvalgsbestemmelse finnes", () => {
+    it("skal returnere stegErGyldig true når lovvalgsbestemmelse finnes", () => {
       const propsLight = createMockPropsLight({
         lovvalgsbestemmelse: "FO_883_2004_ART11_4",
       });
@@ -127,11 +123,11 @@ describe("Periode steg-klasse", () => {
       const relevantUI = beregnRelevantUI();
 
       expect(relevantUI).toEqual({
-        harAvklaring: true,
+        stegErGyldig: true,
       });
     });
 
-    it("skal returnere harAvklaring false når lovvalgsbestemmelse mangler", () => {
+    it("skal returnere stegErGyldig false når lovvalgsbestemmelse mangler", () => {
       const propsLight = createMockPropsLight({
         lovvalgsbestemmelse: undefined,
       });
@@ -141,11 +137,11 @@ describe("Periode steg-klasse", () => {
       const relevantUI = beregnRelevantUI();
 
       expect(relevantUI).toEqual({
-        harAvklaring: false,
+        stegErGyldig: false,
       });
     });
 
-    it("skal returnere harAvklaring false når lovvalgsbestemmelse er null", () => {
+    it("skal returnere stegErGyldig false når lovvalgsbestemmelse er null", () => {
       const propsLight = createMockPropsLight({
         lovvalgsbestemmelse: null,
       });
@@ -155,25 +151,24 @@ describe("Periode steg-klasse", () => {
       const relevantUI = beregnRelevantUI();
 
       expect(relevantUI).toEqual({
-        harAvklaring: false,
+        stegErGyldig: false,
       });
     });
   });
 
   describe("nesteSteg", () => {
-    it("skal alltid returnere VURDERING_TRYGDEAVGIFT", () => {
+    it("Returnere VURDERING_TRYGDEAVGIFT bare når lovvalgsbestemmelse er valgt", () => {
       const propsLight = createMockPropsLight();
       const periode = new Periode(propsLight, 5);
 
       const nesteSteg = periode.nesteSteg();
 
-      expect(nesteSteg).toBe(STEG.VURDERING_TRYGDEAVGIFT);
+      expect(nesteSteg).toBe(undefined);
     });
 
-    it("skal returnere VURDERING_TRYGDEAVGIFT selv med ulike avklartefakta", () => {
+    it("skal returnere VURDERING_TRYGDEAVGIFT når lovvalgsbestemmelse er valgt", () => {
       const propsLight = createMockPropsLight({
-        avklartefakta: { someFact: "someValue" },
-        vilkar: { someCondition: true },
+        lovvalgsbestemmelse: "FO_883_2004_ART11_4",
       });
       const periode = new Periode(propsLight, 5);
 
@@ -254,7 +249,7 @@ describe("Periode steg-klasse", () => {
         status: FANE_STATUS.OK,
       });
       expect(byggetSteg.data).toBeDefined();
-      expect(byggetSteg.data.tilstand).toEqual({ harAvklaring: true });
+      expect(byggetSteg.data.tilstand).toEqual({ stegErGyldig: true });
       expect(byggetSteg.handlers).toBeDefined();
     });
   });

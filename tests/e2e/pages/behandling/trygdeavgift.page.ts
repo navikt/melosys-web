@@ -1,21 +1,25 @@
 import { expect, Page } from "@playwright/test";
-import { getSaksnummerFraUrl } from "../../utils/testUtils";
+import { UI_TEXTS } from "../../config/ui-texts";
 import { BehandlingPage } from "./behandling.page";
+import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
 
 /**
  * Page Object Model for trygdeavgift-komponenten
  * Håndterer interaksjon med skatteforholdsperioder og inntektskilder
  */
 export class TrygdeavgiftPage extends BehandlingPage {
-  constructor(page: Page) {
-    super(page);
+  constructor(page: Page, saksnummer: PrepopulertSaksnummer) {
+    super(page, saksnummer);
   }
 
   /**
    * Vent på at et spesifikt steg i trygdeavgift-komponenten er synlig
    */
-  async verifiserSteg(stegnavn: string, timeout = 10000): Promise<void> {
-    await this.page.waitForSelector(`text=${stegnavn}`, { timeout });
+  async verifiserSteg(stegnavn: string): Promise<void> {
+    await expect(
+      this.page.locator(`text=${stegnavn}`).first(),
+      `${this.ctx}: Fant ikke steget "${stegnavn}"`,
+    ).toBeVisible();
   }
 
   /**
@@ -24,23 +28,27 @@ export class TrygdeavgiftPage extends BehandlingPage {
    * @param erSkattepliktig - true for "Ja", false for "Nei"
    */
   async velgSkattepliktig(indeks: number, erSkattepliktig: boolean): Promise<void> {
-    await this.verifiserSteg("Trygdeavgift");
+    await this.verifiserSteg(UI_TEXTS.STEG.TRYGDEAVGIFT);
 
     // Radio-knappene har verdier "SKATTEPLIKTIG" (Ja) og "IKKE_SKATTEPLIKTIG" (Nei)
     const name = `skatteforholdsperioder[${indeks}].skatteplikttype`;
     const value = erSkattepliktig ? "SKATTEPLIKTIG" : "IKKE_SKATTEPLIKTIG";
+    const valgtekst = erSkattepliktig ? "Ja" : "Nei";
 
     // Vent på at skatteforholdsperioder-delen er synlig før vi prøver å klikke
     const skatteforholdsHeading = this.page.locator("text=Oppgi informasjon om brukers skatteforhold");
-    await skatteforholdsHeading.waitFor({ state: "visible", timeout: 10000 });
+    await expect(skatteforholdsHeading, `${this.ctx}: Fant ikke skatteforhold-seksjonen`).toBeVisible();
 
     // Finn fieldset-et for denne skatteforholdsperioden
     const fieldset = this.page.locator("fieldset.skatteforholdsperioder-radio-group").nth(indeks);
-    await fieldset.waitFor({ state: "visible", timeout: 10000 });
+    await expect(fieldset, `${this.ctx}: Fant ikke skatteforholdsperiode ${indeks}`).toBeVisible();
 
     // Finn radio-input med riktig name og value
     const radioInput = fieldset.locator(`input[name="${name}"][type="radio"][value="${value}"]`);
-    await radioInput.waitFor({ state: "visible", timeout: 10000 });
+    await expect(
+      radioInput,
+      `${this.ctx}: Fant ikke valget "${valgtekst}" for skatteforholdsperiode ${indeks}`,
+    ).toBeVisible();
 
     // Bruk check() for å velge radio-knappen (Playwright sin anbefalte metode)
     await radioInput.check({ force: true });
@@ -53,32 +61,7 @@ export class TrygdeavgiftPage extends BehandlingPage {
     const name = `skatteforholdsperioder[0].skatteplikttype`;
     const radioInput = this.page.locator(`input[name="${name}"][type="radio"][value="SKATTEPLIKTIG"]`);
     const isit = await radioInput.isChecked().catch(() => false);
-    const saksnummer = getSaksnummerFraUrl(this.page);
-    expect(isit, `[${saksnummer}] Skattepliktig skal IKKE være valgt`).toBe(false);
-  }
-
-  /**
-   * Verifiser at trygdeavgiftsberegning vises
-   */
-  async verifiserBeregningVises(): Promise<void> {
-    await this.verifiserSteg("Trygdeavgift");
-
-    // Se etter tabell med beregning eller tekst som indikerer beregning
-    const beregningElementer = [
-      this.page.locator("text=Trygdeavgift skal ikke betales til NAV"),
-      this.page.locator("table").filter({ hasText: "Trygdeavgift" }),
-      this.page.locator("text=Beregnet trygdeavgift"),
-    ];
-
-    let funnet = false;
-    for (const element of beregningElementer) {
-      if (await element.isVisible({ timeout: 3000 }).catch(() => false)) {
-        funnet = true;
-        break;
-      }
-    }
-
-    expect(funnet, `${getSaksnummerFraUrl(this.page)}: Beregning av trygdeavgift skal vises`).toBe(true);
+    expect(isit, `${this.ctx}: "Skattepliktig" er uventet valgt`).toBe(false);
   }
 
   /**
@@ -87,7 +70,7 @@ export class TrygdeavgiftPage extends BehandlingPage {
   async verifiserInntektskilderSynlige(synlig: boolean): Promise<void> {
     const heading = this.page.locator("h1.undertittel:has-text('Oppgi informasjon om brukers inntekt')");
     const val = await heading.isVisible({ timeout: 5000 }).catch(() => false);
-    const saksnummer = getSaksnummerFraUrl(this.page);
-    expect(val, `[${saksnummer}] Inntektskilder skal IKKE være synlig`).toBe(synlig);
+    const feilmelding = synlig ? "Inntektskilder vises ikke" : "Inntektskilder vises uventet";
+    expect(val, `${this.ctx}: ${feilmelding}`).toBe(synlig);
   }
 }

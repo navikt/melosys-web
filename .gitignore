@@ -2,6 +2,9 @@
 
 # dependencies
 /node_modules
+/tests/e2e/mock-server/node_modules
+/tests/e2e/mock-server/dist
+*.css
 
 # testing
 /coverage

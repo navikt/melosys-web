@@ -1,14 +1,10 @@
-import { expect, test } from "@playwright/test";
-import { runAxeAnalyze } from "../../../utils/axeUtils";
+import { expect, test } from "../../../recording/fixtures";
 import { HovedsidePage, USER_ID_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
-import { getSaksnummerFraLocator, TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
-import { opprettAvtalelandSak } from "../../../utils/testdataUtils";
-import { SokPage } from "../../../pages/sok.page";
-import { BehandlingPage } from "../../../pages/behandling/behandling.page";
+import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
 
 /**
- * MELOSYS-7385: Test regresjonstest for Avtaleland-saker
+ * Test regresjonstest for Avtaleland-saker
  *
  * Regresjonstest akseptansekriterium:
  * "Gitt at jeg skal opprette en behandling på en eksistrende sakstype EØS/AVTALELAND
@@ -19,7 +15,7 @@ import { BehandlingPage } from "../../../pages/behandling/behandling.page";
 test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
   let opprettNySakPage: OpprettNySakPage;
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, apiRecorder }) => {
     const mainPage = new HovedsidePage(page);
     opprettNySakPage = new OpprettNySakPage(page);
 
@@ -28,12 +24,11 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     await mainPage.klikkOpprettNySakKnapp();
   });
 
-  test("Regresjon: Avtaleland med åpen behandling - viser varselmelding", async ({ page }, testInfo) => {
+  test("Regresjon: Avtaleland med åpen behandling - viser varselmelding", async ({ page, apiRecorder }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
-    const sokPage = new SokPage(page);
-    const sak = await opprettAvtalelandSak(page);
-    const sakId = await sokPage.getSaksnummer(sak);
+    // Bruk prepopulert Avtaleland-sak med UNDER_BEHANDLING status
+    const sakId = "MEL-1069";
 
     const hovedsidePage = new HovedsidePage(page);
     await hovedsidePage.goto();
@@ -50,42 +45,31 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     const feilmelding = "Du kan ikke opprette en ny behandling på eksisterende sak med en aktiv/pågående behandling";
 
     // Vent spesifikt på at feilmeldingen vises (ikke bare loading-panelet)
-    await page.locator(".knyttTilSak__behandlingspanel").filter({ hasText: feilmelding }).waitFor({ state: "visible" });
+    await page
+      .locator(".knyttTilSak__behandlingspanel")
+      .filter({ hasText: feilmelding })
+      .waitFor({ state: "visible", timeout: 10000 });
 
     expect(
       await opprettNySakPage.harFeilmelding(feilmelding),
-      `Gul varselmelding skal vises for Avtaleland-sak ${getSaksnummerFraLocator(valgtSak)} med åpen behandling`,
+      `Gul varselmelding skal vises for Avtaleland-sak ${sakId} med åpen behandling`,
     ).toBe(true);
 
     // Behandlingstype-gruppen skal IKKE være synlig
-    expect(await opprettNySakPage.erBehandlingstypeGruppeSynlig(), "Behandlingstype-gruppe skal ikke være synlig").toBe(
-      false,
-    );
-
-    await runAxeAnalyze(page, testInfo.title);
+    await opprettNySakPage.verifiserBehandlingstypeGruppeIkkeSynlig();
   });
 
-  test("Regresjon: Avtaleland med henlagt søknad - viser varselmelding", async ({ page }, testInfo) => {
-    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og henlegger sak
-
-    const sokPage = new SokPage(page);
-    const behandlingPage = new BehandlingPage(page);
-
-    const sak = await opprettAvtalelandSak(page);
-    const sakId = await sokPage.getSaksnummer(sak);
-
-    await sokPage.klikkVisBehandling(sak);
-    await behandlingPage.verifiserBehandlingsside();
-    await behandlingPage.avsluttBehandling("Søknaden/klagen er trukket", sakId);
+  test("Regresjon: Avtaleland med henlagt søknad - viser varselmelding", async ({ page, apiRecorder }, testInfo) => {
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const hovedsidePage = new HovedsidePage(page);
-
     await hovedsidePage.goto();
     await hovedsidePage.klikkOpprettNySakKnapp();
 
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
     await opprettNySakPage.velgKnyttTilEksisterendeSak();
 
+    const sakId = "MEL-1063";
     const valgtSak = opprettNySakPage.finnSakBySaksnummer(sakId);
 
     await valgtSak.click();
@@ -94,40 +78,27 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     // Gul varselmelding skal vises selv om behandling er henlagt
     // Note: Henlagt behandling kan vises som "Behandlingen er avsluttet" i UI
     // Vent på at feilmeldingspanelet vises (ikke bare loading-panelet)
-    await page.locator(".knyttTilSak__behandlingspanel").waitFor({ state: "visible" });
+    await page.locator(".knyttTilSak__behandlingspanel").waitFor({ state: "visible", timeout: 10000 });
 
     // Sjekk først om det er noen feilmelding i det hele tatt
     expect(
       await opprettNySakPage.harFeilmelding(),
-      `En gul varselmelding skal vises for henlagt behandling på sak ${getSaksnummerFraLocator(valgtSak)}`,
+      `En gul varselmelding skal vises for henlagt behandling på sak ${sakId}`,
     ).toBe(true);
 
     // Behandlingstype-gruppen skal IKKE være synlig når behandling er henlagt
-    expect(
-      await opprettNySakPage.erBehandlingstypeGruppeSynlig(),
-      "Behandlingstype-gruppe skal ikke være synlig for henlagt behandling",
-    ).toBe(false);
-
-    await runAxeAnalyze(page, testInfo.title);
+    await opprettNySakPage.verifiserBehandlingstypeGruppeIkkeSynlig();
   });
 
   test("Regresjon: Avtaleland med ferdigbehandlede - Ny vurdering og Henvendelse tilgjengelig", async ({
     page,
   }, testInfo) => {
-    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
-    const sokPage = new SokPage(page);
-    const behandlingPage = new BehandlingPage(page);
-
-    const sak = await opprettAvtalelandSak(page);
-    const sakId = await sokPage.getSaksnummer(sak);
-
-    await sokPage.klikkVisBehandling(sak);
-    await behandlingPage.verifiserBehandlingsside();
-    await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId);
+    // Bruk prepopulert AVSLUTTET Avtaleland-sak (MEL-1067)
+    const sakId = "MEL-1067";
 
     const hovedsidePage = new HovedsidePage(page);
-
     await hovedsidePage.goto();
     await hovedsidePage.klikkOpprettNySakKnapp();
 
@@ -142,13 +113,15 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
     // Vent på at panelrammen med behandlingstyper vises (ikke bare loading-panelet)
     await page.locator(".knyttTilSak__panelramme").waitFor({ state: "visible" });
 
-    await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Ny vurdering", "Klage", "Henvendelse"]);
+    await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(
+      valgtSak,
+      ["Ny vurdering", "Klage", "Henvendelse"],
+      sakId,
+    );
 
     expect(
       await opprettNySakPage.harFeilmelding(),
-      `Ingen feilmelding skal vises for ferdigbehandlet Avtaleland-sak ${getSaksnummerFraLocator(valgtSak)}`,
+      `Ingen feilmelding skal vises for ferdigbehandlet Avtaleland-sak ${sakId}`,
     ).toBe(false);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 });

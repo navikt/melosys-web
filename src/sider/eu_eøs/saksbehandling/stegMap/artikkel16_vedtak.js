@@ -1,4 +1,4 @@
-import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
+import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/stegLegacy";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingArtikkel16Vedtak from "../../stegKomponenter/vurderingArtikkel16Vedtak/vurderingArtikkel16Vedtak";
 

@@ -1,6 +1,6 @@
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
-import { VurderingTrygdeavgift as VurderingTrygdeavgiftFTRL } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
+import { VurderingTrygdeavgift } from "../../../vurderingTrygdeavgift/vurderingTrygdeavgift";
 import type { PropsLight } from "../../../../felleskomponenter/stegvelger/stegMotor/typer";
 
 // Spesifikke typer for Trygdeavgift-steg
@@ -12,8 +12,10 @@ interface TrygdeavgiftRelevanteData {
 
 interface TrygdeavgiftRelevantUI {
   [key: string]: unknown; // Index signature for base class compatibility
-  harAvklaring: boolean;
+  stegErGyldig: boolean;
 }
+
+let stegErGyldigState = false;
 
 class Trygdeavgift extends Steg {
   constructor(propsLight: PropsLight, stegPosisjon: number) {
@@ -21,14 +23,14 @@ class Trygdeavgift extends Steg {
 
     this.kriterier = [
       {
-        exec: () => true,
+        exec: () => stegErGyldigState,
         nesteSteg: STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK,
       },
     ];
 
     this.id = STEG.VURDERING_TRYGDEAVGIFT;
     this.tittel = "Trygdeavgift";
-    this.komponent = VurderingTrygdeavgiftFTRL;
+    this.komponent = VurderingTrygdeavgift;
 
     this.samleRelevanteData = (_propsLight: PropsLight): TrygdeavgiftRelevanteData => ({
       behandlingID: _propsLight.behandlingID,
@@ -36,7 +38,7 @@ class Trygdeavgift extends Steg {
     });
 
     this.beregnRelevantUI = (): TrygdeavgiftRelevantUI => ({
-      harAvklaring: true,
+      stegErGyldig: stegErGyldigState,
     });
 
     this.handlers = {
@@ -45,7 +47,10 @@ class Trygdeavgift extends Steg {
       oppdaterData: (felt: string, verdi: unknown) =>
         this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id!, felt, verdi),
       slettData: (data?: unknown) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id!, data),
-      oppdaterStatus: () => {}, // No-op: Step validity is managed internally by the component
+      oppdaterStatus: (isValid: boolean) => {
+        stegErGyldigState = isValid;
+        this._propsLight.tilgjengeligeHandlers.oppdater();
+      },
     };
 
     this.status = FANE_STATUS.OK;

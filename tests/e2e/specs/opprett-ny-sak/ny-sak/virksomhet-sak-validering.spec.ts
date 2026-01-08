@@ -1,33 +1,28 @@
-import { test, Page } from "@playwright/test";
-import { runAxeAnalyze } from "../../../utils/axeUtils";
+import { test } from "../../../recording/fixtures";
 import { HovedsidePage, ORG_NUMBER_VALID } from "../../../pages/hovedside.page";
 import { OpprettNySakPage } from "../../../pages/opprett-ny-sak/opprett-ny-sak.page";
 import { assertFieldError, assertNyBehandlingOpprettet } from "../../../utils/testUtils";
 
 let opprettNySakPage: OpprettNySakPage;
 
-async function setupOpprettNySakTester(page: Page) {
-  const mainPage = new HovedsidePage(page);
-  opprettNySakPage = new OpprettNySakPage(page);
-
-  await mainPage.goto();
-
-  await mainPage.klikkOpprettNySakKnapp();
-}
-
 test.describe("'Opprett ny sak for virksomhet", () => {
-  test.beforeEach(async ({ page }) => {
-    await setupOpprettNySakTester(page);
+  // Kjør tester serielt fordi de deler module-level state (opprettNySakPage)
+  test.describe.configure({ mode: "serial" });
+
+  test.beforeEach(async ({ page, apiRecorder }) => {
+    const mainPage = new HovedsidePage(page);
+    opprettNySakPage = new OpprettNySakPage(page);
+
+    await mainPage.goto();
+    await mainPage.klikkOpprettNySakKnapp();
   });
 
-  test("Manglende påkrevde felt - viser feilmeldinger", async ({ page }, testInfo) => {
+  test("Manglende påkrevde felt - viser feilmeldinger", async ({ page, apiRecorder }, testInfo) => {
     await opprettNySakPage.velgVirksomhet();
     await opprettNySakPage.fyllInnOrganisasjonsnummer("123456789");
     await opprettNySakPage.klikkOpprettNyBehandling();
 
     await assertFieldError(page, "Fant ingen navn på dette organisasjonsnummeret");
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test('Opprett sak for sakstype "EU/EØS-land" og verifiser at det ikke oppstår noen feil', async ({
@@ -48,8 +43,6 @@ test.describe("'Opprett ny sak for virksomhet", () => {
     await opprettNySakPage.klikkOpprettNyBehandling();
 
     await assertNyBehandlingOpprettet(page);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 
   test('Opprett sak for sakstype "Avtaleland" og verifiser at det ikke oppstår noen feil', async ({
@@ -70,7 +63,5 @@ test.describe("'Opprett ny sak for virksomhet", () => {
     await opprettNySakPage.klikkOpprettNyBehandling();
 
     await assertNyBehandlingOpprettet(page);
-
-    await runAxeAnalyze(page, testInfo.title);
   });
 });

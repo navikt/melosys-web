@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import Trygdeavgift from "./trygdeavgift";
 import { STEG, FANE_STATUS } from "../../../../felleskomponenter/stegvelger";
-import { VurderingTrygdeavgift as VurderingTrygdeavgiftFTRL } from "../../../ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgift";
+import { VurderingTrygdeavgift as VurderingTrygdeavgiftFTRL } from "../../../vurderingTrygdeavgift/vurderingTrygdeavgift";
 
 describe("Trygdeavgift steg-klasse", () => {
   // Mock propsLight factory
@@ -11,12 +11,14 @@ describe("Trygdeavgift steg-klasse", () => {
     aktivtSteg: false,
     avklartefakta: [],
     vilkar: [],
+    stegErGyldig: false,
     tilgjengeligeHandlers: {
       bekreftOgFortsett: vi.fn(),
       tilbake: vi.fn(),
       byggLovvalgsperioder: vi.fn(),
       oppdaterStegData: vi.fn(),
       slettStegData: vi.fn(),
+      oppdater: vi.fn(),
     },
     ...overrides,
   });
@@ -26,6 +28,8 @@ describe("Trygdeavgift steg-klasse", () => {
       const propsLight = createMockPropsLight();
       const stegPosisjon = 6;
       const trygdeavgift = new Trygdeavgift(propsLight, stegPosisjon);
+      const handlers = trygdeavgift.handlers as any;
+      handlers.oppdaterStatus(false);
 
       expect(trygdeavgift.id).toBe(STEG.VURDERING_TRYGDEAVGIFT);
       expect(trygdeavgift.tittel).toBe("Trygdeavgift");
@@ -33,14 +37,14 @@ describe("Trygdeavgift steg-klasse", () => {
       expect(trygdeavgift.status).toBe(FANE_STATUS.OK);
     });
 
-    it("skal sette kriterier med kun ett kriterie som alltid matcher", () => {
+    it("kriterierer er default false", () => {
       const propsLight = createMockPropsLight();
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
 
       const kriterier = trygdeavgift.kriterier as any;
       expect(kriterier).toHaveLength(1);
       expect(kriterier[0].nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
-      expect(kriterier[0].exec()).toBe(true);
+      expect(kriterier[0].exec()).toBe(false);
     });
   });
 
@@ -79,7 +83,7 @@ describe("Trygdeavgift steg-klasse", () => {
   });
 
   describe("beregnRelevantUI", () => {
-    it("skal alltid returnere harAvklaring true", () => {
+    it("skal returnere stegErGyldig false som default", () => {
       const propsLight = createMockPropsLight();
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
 
@@ -87,46 +91,46 @@ describe("Trygdeavgift steg-klasse", () => {
       const relevantUI = beregnRelevantUI();
 
       expect(relevantUI).toEqual({
-        harAvklaring: true,
+        stegErGyldig: false,
       });
     });
 
-    it("skal returnere harAvklaring true uavhengig av propsLight", () => {
-      const propsLight = createMockPropsLight({
-        avklartefakta: { noeData: "verdi" },
-        vilkar: { betingelse: false },
-      });
+    it("skal følge stegErGyldigState når oppdaterStatus kalles", () => {
+      const propsLight = createMockPropsLight();
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
+      const handlers = trygdeavgift.handlers as any;
 
       const beregnRelevantUI = trygdeavgift.beregnRelevantUI as any;
-      const relevantUI = beregnRelevantUI();
 
-      expect(relevantUI).toEqual({
-        harAvklaring: true,
-      });
+      handlers.oppdaterStatus(true);
+      expect(beregnRelevantUI()).toEqual({ stegErGyldig: true });
+
+      handlers.oppdaterStatus(false);
+      expect(beregnRelevantUI()).toEqual({ stegErGyldig: false });
     });
   });
 
   describe("nesteSteg", () => {
-    it("skal alltid returnere ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK", () => {
+    it("Returnere ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK bare når stegErGyldig er true", () => {
       const propsLight = createMockPropsLight();
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
+      const handlers = trygdeavgift.handlers as any;
 
+      handlers.oppdaterStatus(true);
       const nesteSteg = trygdeavgift.nesteSteg();
 
       expect(nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
     });
 
-    it("skal returnere ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK selv med ulike avklartefakta", () => {
-      const propsLight = createMockPropsLight({
-        avklartefakta: { someFact: "someValue" },
-        vilkar: { someCondition: true },
-      });
+    it("skal ikke returnere ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK når stegErGyldig er false", () => {
+      const propsLight = createMockPropsLight({});
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
+      const handlers = trygdeavgift.handlers as any;
 
+      handlers.oppdaterStatus(false);
       const nesteSteg = trygdeavgift.nesteSteg();
 
-      expect(nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
+      expect(nesteSteg).toBe(undefined);
     });
   });
 
@@ -197,7 +201,9 @@ describe("Trygdeavgift steg-klasse", () => {
       });
       const stegPosisjon = 6;
       const trygdeavgift = new Trygdeavgift(propsLight, stegPosisjon);
+      const handlers = trygdeavgift.handlers as any;
 
+      handlers.oppdaterStatus(false);
       const byggetSteg = trygdeavgift.byggSteg();
 
       expect(byggetSteg).toMatchObject({
@@ -205,10 +211,10 @@ describe("Trygdeavgift steg-klasse", () => {
         komponent: VurderingTrygdeavgiftFTRL,
         tittel: "Trygdeavgift",
         stegPosisjon: 6,
-        status: FANE_STATUS.OK,
+        status: FANE_STATUS.UBEHANDLET,
       });
       expect(byggetSteg.data).toBeDefined();
-      expect(byggetSteg.data.tilstand).toEqual({ harAvklaring: true });
+      expect(byggetSteg.data.tilstand).toEqual({ stegErGyldig: false });
       expect(byggetSteg.data.behandlingID).toBe("test-123");
       expect(byggetSteg.data.redigerbart).toBe(true);
       expect(byggetSteg.handlers).toBeDefined();
@@ -216,25 +222,28 @@ describe("Trygdeavgift steg-klasse", () => {
   });
 
   describe("hentStatus", () => {
-    it("skal returnere OK siden harAvklaring alltid er true", () => {
+    it("skal returnere OK når stegErGyldigState er true", () => {
       const propsLight = createMockPropsLight();
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
+      const handlers = trygdeavgift.handlers as any;
+
+      handlers.oppdaterStatus(true);
 
       const status = trygdeavgift.hentStatus();
 
       expect(status).toBe(FANE_STATUS.OK);
     });
 
-    it("skal returnere OK uavhengig av propsLight-verdier", () => {
-      const propsLight = createMockPropsLight({
-        behandlingID: undefined,
-        generiskStegRedigerbart: false,
-      });
+    it("skal returnere UBEHANDLET når stegErGyldigState er false", () => {
+      const propsLight = createMockPropsLight();
       const trygdeavgift = new Trygdeavgift(propsLight, 6);
+      const handlers = trygdeavgift.handlers as any;
+
+      handlers.oppdaterStatus(false);
 
       const status = trygdeavgift.hentStatus();
 
-      expect(status).toBe(FANE_STATUS.OK);
+      expect(status).toBe(FANE_STATUS.UBEHANDLET);
     });
   });
 });
