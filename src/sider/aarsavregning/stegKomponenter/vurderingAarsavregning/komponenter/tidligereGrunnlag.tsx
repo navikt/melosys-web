@@ -1,6 +1,6 @@
 import * as Nav from "../../../../../navFrontend";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
-import { hasInnvilgelsesResultat } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { harInnvilgelsesResultat } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import MKV from "../../../../../melosyskodeverk";
 import { formaterTilNorskBelopUtenDesimaler } from "../../../../../utils";
 import { BeregnetTrygdeavgiftDetaljer } from "./beregnetTrygdeavgiftDetaljer";
@@ -35,7 +35,7 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
 
     return (
       aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.avgiftspliktigperioder?.every(
-        (periode) => hasInnvilgelsesResultat(periode) && periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+        (periode) => harInnvilgelsesResultat(periode) && periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
       ) ?? true
     );
   };

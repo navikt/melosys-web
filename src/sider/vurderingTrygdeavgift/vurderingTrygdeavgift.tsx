@@ -41,7 +41,7 @@ import { fagsakSelectors } from "../../ducks/fagsaker";
 import { lovvalgsperioderSelectors } from "../../ducks/lovvalgsperioder";
 import {
   harPerioderFraTidligereÅr,
-  hasInnvilgelsesResultat,
+  harInnvilgelsesResultat,
 } from "../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 interface Props {
@@ -93,7 +93,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const medlemskapsTypeErPliktig =
     erEuEøs ||
     medlemskapsperioder.every(
-      (periode) => hasInnvilgelsesResultat(periode) && periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+      (periode) => harInnvilgelsesResultat(periode) && periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
     );
 
   const formattedDefaultPeriode = () => {

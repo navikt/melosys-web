@@ -37,23 +37,23 @@ export interface Lovvalgsperiode extends BaseAvgiftspliktigperiode {
 // Discriminated union
 export type Avgiftspliktigperiode = Medlemskapsperiode | Helseutgiftdekkesperiode | Lovvalgsperiode;
 
-// Type guard helper functions
-export const isMedlemskapsperiode = (periode: Avgiftspliktigperiode): periode is Medlemskapsperiode => {
+// Type guard hjelpefunksjoner
+export const erMedlemskapsperiode = (periode: Avgiftspliktigperiode): periode is Medlemskapsperiode => {
   return periode.type === "MEDLEMSKAPSPERIODE";
 };
 
-export const isLovvalgsperiode = (periode: Avgiftspliktigperiode): periode is Lovvalgsperiode => {
+export const erLovvalgsperiode = (periode: Avgiftspliktigperiode): periode is Lovvalgsperiode => {
   return periode.type === "LOVVALGSPERIODE";
 };
 
-export const isHelseutgiftdekkesperiode = (periode: Avgiftspliktigperiode): periode is Helseutgiftdekkesperiode => {
+export const erHelseutgiftdekkesperiode = (periode: Avgiftspliktigperiode): periode is Helseutgiftdekkesperiode => {
   return periode.type === "HELSEUTGIFTDEKKESPERIODE";
 };
 
-export const hasInnvilgelsesResultat = (
+export const harInnvilgelsesResultat = (
   periode: Avgiftspliktigperiode,
 ): periode is Medlemskapsperiode | Lovvalgsperiode => {
-  return isMedlemskapsperiode(periode) || isLovvalgsperiode(periode);
+  return erMedlemskapsperiode(periode) || erLovvalgsperiode(periode);
 };
 
 export interface OppdaterMedlemskapsperiode {

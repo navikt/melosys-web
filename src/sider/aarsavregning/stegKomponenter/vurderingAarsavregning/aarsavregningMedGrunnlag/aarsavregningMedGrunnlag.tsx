@@ -17,14 +17,14 @@ import * as Nav from "../../../../../navFrontend";
 import MKV from "../../../../../melosyskodeverk";
 import {
   Avgiftspliktigperiode,
-  hasInnvilgelsesResultat,
+  harInnvilgelsesResultat,
 } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
 
 const mapMedlemskapsperioder = (medlemskapsperioder: Avgiftspliktigperiode[]) => {
   const innvilgedePerioder = medlemskapsperioder.filter(
     (periode) =>
-      hasInnvilgelsesResultat(periode) && periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
+      harInnvilgelsesResultat(periode) && periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
   );
 
   return [...innvilgedePerioder].sort(sorterEtterISOFomDato).map((periode) => ({
@@ -83,9 +83,9 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       const sisteGjeldendeØ = aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder?.[0];
 
       const bestemmelseFraTidligereAvgiftsgrunnlag =
-        tidligerePerioderØ && hasInnvilgelsesResultat(tidligerePerioderØ) ? tidligerePerioderØ.bestemmelse : undefined;
+        tidligerePerioderØ && harInnvilgelsesResultat(tidligerePerioderØ) ? tidligerePerioderØ.bestemmelse : undefined;
       const eventuellNyBestemmelse =
-        sisteGjeldendeØ && hasInnvilgelsesResultat(sisteGjeldendeØ) ? sisteGjeldendeØ.bestemmelse : undefined;
+        sisteGjeldendeØ && harInnvilgelsesResultat(sisteGjeldendeØ) ? sisteGjeldendeØ.bestemmelse : undefined;
 
       if (
         bestemmelseFraTidligereAvgiftsgrunnlag &&
@@ -146,7 +146,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           const medlemskapstypeErPliktig = Boolean(
             innvilgetMedlemskapsperioder?.every(
               (periode) =>
-                hasInnvilgelsesResultat(periode) && periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+                harInnvilgelsesResultat(periode) && periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
             ),
           );
 

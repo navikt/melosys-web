@@ -4,7 +4,7 @@ import * as Utils from "../../../utils";
 import MKV from "../../../melosyskodeverk";
 import {
   Avgiftspliktigperiode,
-  hasInnvilgelsesResultat,
+  harInnvilgelsesResultat,
 } from "../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { Type } from "../../menypanel/menypunkter/fullmektig/types";
 
@@ -111,7 +111,7 @@ const erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
     [PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT].includes(inntektskilde.kildetype),
   );
   const overlappendeMedlemskapsperioder = medlemskapsperioder
-    .filter((periode) => hasInnvilgelsesResultat(periode) && periode.innvilgelsesResultat === INNVILGET)
+    .filter((periode) => harInnvilgelsesResultat(periode) && periode.innvilgelsesResultat === INNVILGET)
     .filter((periode) =>
       pensjonuføretrygdKilder.some((inntektskilde) =>
         Utils.dato.perioderOverlapper(
@@ -127,7 +127,7 @@ const erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
   return (
     !Utils._isEmpty(overlappendeMedlemskapsperioder) &&
     overlappendeMedlemskapsperioder.every(
-      (periode) => hasInnvilgelsesResultat(periode) && periode.trygdedekning === FTRL_2_9_FØRSTE_LEDD_B_PENSJON,
+      (periode) => harInnvilgelsesResultat(periode) && periode.trygdedekning === FTRL_2_9_FØRSTE_LEDD_B_PENSJON,
     )
   );
 };

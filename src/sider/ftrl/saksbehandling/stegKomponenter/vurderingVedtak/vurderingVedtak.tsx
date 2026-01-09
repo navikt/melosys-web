@@ -8,7 +8,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
-import { hasInnvilgelsesResultat } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { harInnvilgelsesResultat } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Forms from "../../../../../felleskomponenter/forms";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
@@ -125,12 +125,12 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const erSatsendring = behandlingstype === SATSENDRING;
   const erManglendeInnbetalingTrygdeavgift = behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT;
   const erDelvisOpphør = medlemskapsperioder.some(
-    (periode) => hasInnvilgelsesResultat(periode) && periode.innvilgelsesResultat === OPPHØRT,
+    (periode) => harInnvilgelsesResultat(periode) && periode.innvilgelsesResultat === OPPHØRT,
   );
   const erIkkeYrkesaktiv = behandlingstema === IKKE_YRKESAKTIV;
   const erPensjonist = behandlingstema === PENSJONIST;
   const medlemskapsTypeErPliktig = medlemskapsperioder.some(
-    (periode) => hasInnvilgelsesResultat(periode) && periode.medlemskapstype === PLIKTIG,
+    (periode) => harInnvilgelsesResultat(periode) && periode.medlemskapstype === PLIKTIG,
   );
   const betalingsvalgErFaktura = betalingsvalg === MKV.Koder.betalingstype.FAKTURA;
   const mottakerErSkatt = trygdeavgiftMottaker?.kode === TRYGDEAVGIFT_BETALES_TIL_SKATT;
@@ -292,7 +292,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const getOpphørsdato = () =>
     [...medlemskapsperioder]
       .sort(Utils.dato.sorterEtterISOFomDato)
-      .find((periode) => hasInnvilgelsesResultat(periode) && periode.innvilgelsesResultat === OPPHØRT)?.fomDato;
+      .find((periode) => harInnvilgelsesResultat(periode) && periode.innvilgelsesResultat === OPPHØRT)?.fomDato;
 
   const getVedtakstype = () => {
     if (lagretVedtakstype) return lagretVedtakstype;
@@ -359,7 +359,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
   const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode[]) =>
     [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
-      const hasFullFields = hasInnvilgelsesResultat(it);
+      const hasFullFields = harInnvilgelsesResultat(it);
       return {
         periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
         bestemmelse: hasFullFields ? KV.finnTermFraListe(bestemmelserkodeverk, it.bestemmelse) : "-",

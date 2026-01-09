@@ -3,7 +3,7 @@ import { createSelector, Selector } from "reselect";
 import * as Types from "./types";
 import MKV from "../../melosyskodeverk";
 import { sorterEtterISOFomDato } from "../../utils/dato";
-import { hasInnvilgelsesResultat } from "../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { harInnvilgelsesResultat } from "../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;
 
@@ -32,7 +32,7 @@ export const InnvilgetEllerDelvisInnvilgetMedlemskapsperioderSelector = createSe
   (medlemskapsperioder) =>
     medlemskapsperioder.filter(
       (periode) =>
-        hasInnvilgelsesResultat(periode) &&
+        harInnvilgelsesResultat(periode) &&
         (periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET),
     ),
 );
@@ -41,7 +41,7 @@ export const SamletInnvilgetMedlemskapsperiodeSelector = createSelector(
   AlleMedlemskapsperioderSelector,
   (medlemskapsperioder) => {
     const sorterteInnvilgedePerioder = [...medlemskapsperioder]
-      .filter((periode) => hasInnvilgelsesResultat(periode) && periode.innvilgelsesResultat === INNVILGET)
+      .filter((periode) => harInnvilgelsesResultat(periode) && periode.innvilgelsesResultat === INNVILGET)
       .sort(sorterEtterISOFomDato);
 
     if (sorterteInnvilgedePerioder.length === 0) return undefined;
@@ -56,5 +56,5 @@ export const SamletInnvilgetMedlemskapsperiodeSelector = createSelector(
 export const BestemmelseSelector = createSelector(AlleMedlemskapsperioderSelector, (medlemskapsperioder) => {
   const sorterte = [...medlemskapsperioder].sort(sorterEtterISOFomDato);
   const forstePeriode = sorterte[0];
-  return forstePeriode && hasInnvilgelsesResultat(forstePeriode) ? forstePeriode.bestemmelse : "";
+  return forstePeriode && harInnvilgelsesResultat(forstePeriode) ? forstePeriode.bestemmelse : "";
 });
