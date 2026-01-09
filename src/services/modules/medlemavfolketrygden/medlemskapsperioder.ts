@@ -55,12 +55,13 @@ export const harInnvilgelsesResultat = (
   return erMedlemskapsperiode(periode) || erLovvalgsperiode(periode);
 };
 
-export interface OppdaterMedlemskapsperiode {
-  fomDato: string;
+/**
+ * Request DTO for opprettelse/oppdatering av medlemskapsperiode.
+ * Utledet fra Medlemskapsperiode, men tomDato er valgfri.
+ */
+export interface OppdaterMedlemskapsperiode
+  extends Pick<Medlemskapsperiode, "fomDato" | "innvilgelsesResultat" | "bestemmelse" | "trygdedekning"> {
   tomDato?: string | null;
-  innvilgelsesResultat: string;
-  bestemmelse: string;
-  trygdedekning: string;
 }
 
 export const hentMedlemskapsperioder = (behandlingID: number) =>
