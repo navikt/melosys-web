@@ -1,6 +1,9 @@
 import * as Nav from "../../../../../navFrontend";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
-import { harInnvilgelsesResultat } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import {
+  erHelseutgiftdekkesperiode,
+  harInnvilgelsesResultat,
+} from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import MKV from "../../../../../melosyskodeverk";
 import { formaterTilNorskBelopUtenDesimaler } from "../../../../../utils";
 import { BeregnetTrygdeavgiftDetaljer } from "./beregnetTrygdeavgiftDetaljer";
@@ -24,12 +27,12 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
     (aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
 
   const erMedlemskapstypePliktig = () => {
-    const erHelseutgiftDekkesPeriode =
+    const alleErHelseutgiftdekkesperioder =
       aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.avgiftspliktigperioder?.every(
-        (a) => a.type === "HELSEUTGIFTDEKKESPERIODE",
+        erHelseutgiftdekkesperiode,
       );
 
-    if (erHelseutgiftDekkesPeriode) {
+    if (alleErHelseutgiftdekkesperioder) {
       return true;
     }
 

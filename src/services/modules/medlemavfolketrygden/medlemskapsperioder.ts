@@ -1,7 +1,7 @@
 import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../../utils";
 import { API_BASE_URL, BEHANDLINGER, MEDLEMSKAPSPERIODER } from "../../api-constants";
 
-// Base interface with common fields
+// Felles felt for alle avgiftspliktige perioder
 interface BaseAvgiftspliktigperiode {
   id: number;
   fomDato: string;
@@ -9,7 +9,7 @@ interface BaseAvgiftspliktigperiode {
   redigerbar?: boolean;
 }
 
-// Medlemskapsperiode has all the complex fields
+// Medlemskapsperiode - har alle de komplekse feltene
 export interface Medlemskapsperiode extends BaseAvgiftspliktigperiode {
   type: "MEDLEMSKAPSPERIODE";
   bestemmelse: string;
@@ -18,20 +18,19 @@ export interface Medlemskapsperiode extends BaseAvgiftspliktigperiode {
   medlemskapstype: string;
 }
 
-// Helseutgiftdekkesperiode only needs dates
+// Helseutgiftdekkesperiode i årsavregning-kontekst - kun datoer
+// NB: HelseutgiftDekkesPeriodeDto (egen fil) brukes for CRUD og har bostedLandkode
 export interface Helseutgiftdekkesperiode extends BaseAvgiftspliktigperiode {
   type: "HELSEUTGIFTDEKKESPERIODE";
-  // Only dates! Backend also has bostedLandkode, but not exposed in current DTO
 }
 
-// Lovvalgsperiode has its own specific fields
+// Lovvalgsperiode - backend har også lovvalgsland og tilleggsbestemmelse, men ikke eksponert i AvgiftspliktigPeriodeDto
 export interface Lovvalgsperiode extends BaseAvgiftspliktigperiode {
   type: "LOVVALGSPERIODE";
   bestemmelse: string;
   innvilgelsesResultat: string;
   trygdedekning: string;
   medlemskapstype: string;
-  // Backend has lovvalgsland and tilleggsbestemmelse, but not exposed in current DTO
 }
 
 // Discriminated union
