@@ -64,7 +64,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector,
   );
   const lovvalgsperioder = useSelector(lovvalgsperioderSelectors.PeriodeSelector);
-
   const erEøsFaktureringAvTrygdeavgiftToggleEnabled =
     useFeatureToggle(MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT) ?? false;
 
