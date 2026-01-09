@@ -15,7 +15,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "AppTypes";
 import * as Types from "./types";
 import { Vilkaar } from "../../services/modules/vilkar";
-import { Lovvalgsperiode } from "../../services/modules/lovvalgsperioder";
+import { LovvalgsperiodeDto } from "../../services/modules/lovvalgsperioder";
 import { PerioderStegState } from "../../felleskomponenter/stegvelger";
 
 /* Hjelpefunksjoner
@@ -28,7 +28,7 @@ const finnOppfyltVilkar = (alleLovvalgsVilkar: Vilkaar[]): string | undefined =>
   return vilkarObjekt?.vilkaar;
 };
 
-const byggLovvalgsperiodeUtsending = (stegState: PerioderStegState, reduxState: RootState): Lovvalgsperiode[] => {
+const byggLovvalgsperiodeUtsending = (stegState: PerioderStegState, reduxState: RootState): LovvalgsperiodeDto[] => {
   const søknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   return [
@@ -50,7 +50,7 @@ const byggLovvalgsperiodeArtikkel113Aeller133A = (
   stegState: PerioderStegState,
   reduxState: RootState,
   oppfyltLovvalg: string,
-): Lovvalgsperiode[] => {
+): LovvalgsperiodeDto[] => {
   const søknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const tilleggsbestemmelseFraVilkar = finnOppfyltVilkar(vilkarSelectors.ValgteTilleggsVilkar(reduxState));
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
@@ -73,7 +73,7 @@ const byggLovvalgsperiodeArtikkel1142eller1342 = (
   stegState: PerioderStegState,
   reduxState: RootState,
   oppfyltLovvalg: string,
-): Lovvalgsperiode[] => {
+): LovvalgsperiodeDto[] => {
   const søknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   return [
@@ -91,7 +91,7 @@ const byggLovvalgsperiodeArtikkel1142eller1342 = (
   ];
 };
 
-const byggLovvalgsperiodeArtikkelUnntak = (reduxState: RootState): Lovvalgsperiode[] => {
+const byggLovvalgsperiodeArtikkelUnntak = (reduxState: RootState): LovvalgsperiodeDto[] => {
   const erAnmodningsperiodeSendtUtland =
     anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(reduxState);
   const erBehandlingsstatusUnderBehandlingAvsluttetEllerMottattSvarPåAnmodning = [

@@ -31,7 +31,7 @@ export function hent(behandlingID: number) {
  * send
  * OBS: Bruk heller opprettLovvalgsperiode og oppdaterLovvalgsperiode dersom du utvikler noe nytt
  */
-export function send(behandlingID: number, body: Api.Lovvalgsperioder.Lovvalgsperiode[]) {
+export function send(behandlingID: number, body: Api.Lovvalgsperioder.LovvalgsperiodeDto[]) {
   return doThenDispatch(() => Api.Lovvalgsperioder.send(behandlingID, body), {
     OK: Types.OK,
     FEILET: Types.FEILET,
@@ -53,7 +53,7 @@ export function opprettLovvalgsperiode(
 export function oppdaterLovvalgsperiode(
   behandlingID: number,
   lovvalgsperiodeID: number,
-  body: Api.Lovvalgsperioder.Lovvalgsperiode,
+  body: Api.Lovvalgsperioder.LovvalgsperiodeDto,
 ): AppThunk<Promise<Types.OppdaterLovvalgsperioderAction>, Types.OppdaterLovvalgsperioderAction> {
   return doThenDispatch(() => Api.Lovvalgsperioder.oppdaterLovvalgsperiode(behandlingID, lovvalgsperiodeID, body), {
     OK: Types.OK_OPPDATER_LOVVALGSPERIODE,
