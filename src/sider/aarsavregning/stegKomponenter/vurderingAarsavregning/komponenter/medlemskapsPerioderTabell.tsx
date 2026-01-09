@@ -1,4 +1,7 @@
-import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import {
+  Avgiftspliktigperiode,
+  hasInnvilgelsesResultat,
+} from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../utils";
 import * as KV from "../../../../../kodeverk";
 import * as Nav from "../../../../../navFrontend";
@@ -42,8 +45,7 @@ function MedlemskapsPerioderTabell({ perioder }: { perioder?: Avgiftspliktigperi
       </Nav.Table.Header>
       <Nav.Table.Body>
         {perioder.map((medlemskapsPeriode) => {
-          const hasMedlemskapstype =
-            medlemskapsPeriode.type === "MEDLEMSKAPSPERIODE" || medlemskapsPeriode.type === "LOVVALGSPERIODE";
+          const hasMedlemskapstype = hasInnvilgelsesResultat(medlemskapsPeriode);
           return (
             <Nav.Table.Row className="border_top" key={Utils._uuid()}>
               <Nav.Table.DataCell>

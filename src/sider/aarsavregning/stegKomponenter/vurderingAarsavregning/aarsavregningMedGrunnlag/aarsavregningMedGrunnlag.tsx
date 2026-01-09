@@ -15,14 +15,16 @@ import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../utils";
 import { AarsavregningMedGrunnlagForm } from "./aarsavregningMedGrunnlagForm";
 import * as Nav from "../../../../../navFrontend";
 import MKV from "../../../../../melosyskodeverk";
-import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import {
+  Avgiftspliktigperiode,
+  hasInnvilgelsesResultat,
+} from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
 
 const mapMedlemskapsperioder = (medlemskapsperioder: Avgiftspliktigperiode[]) => {
   const innvilgedePerioder = medlemskapsperioder.filter(
     (periode) =>
-      (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
-      periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
+      hasInnvilgelsesResultat(periode) && periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
   );
 
   return [...innvilgedePerioder].sort(sorterEtterISOFomDato).map((periode) => ({
@@ -81,14 +83,9 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       const sisteGjeldendeØ = aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder?.[0];
 
       const bestemmelseFraTidligereAvgiftsgrunnlag =
-        tidligerePerioderØ &&
-        (tidligerePerioderØ.type === "MEDLEMSKAPSPERIODE" || tidligerePerioderØ.type === "LOVVALGSPERIODE")
-          ? tidligerePerioderØ.bestemmelse
-          : undefined;
+        tidligerePerioderØ && hasInnvilgelsesResultat(tidligerePerioderØ) ? tidligerePerioderØ.bestemmelse : undefined;
       const eventuellNyBestemmelse =
-        sisteGjeldendeØ && (sisteGjeldendeØ.type === "MEDLEMSKAPSPERIODE" || sisteGjeldendeØ.type === "LOVVALGSPERIODE")
-          ? sisteGjeldendeØ.bestemmelse
-          : undefined;
+        sisteGjeldendeØ && hasInnvilgelsesResultat(sisteGjeldendeØ) ? sisteGjeldendeØ.bestemmelse : undefined;
 
       if (
         bestemmelseFraTidligereAvgiftsgrunnlag &&
@@ -149,8 +146,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           const medlemskapstypeErPliktig = Boolean(
             innvilgetMedlemskapsperioder?.every(
               (periode) =>
-                (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
-                periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+                hasInnvilgelsesResultat(periode) && periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
             ),
           );
 

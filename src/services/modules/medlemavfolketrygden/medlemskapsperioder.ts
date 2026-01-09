@@ -53,7 +53,7 @@ export const isHelseutgiftdekkesperiode = (periode: Avgiftspliktigperiode): peri
 export const hasInnvilgelsesResultat = (
   periode: Avgiftspliktigperiode,
 ): periode is Medlemskapsperiode | Lovvalgsperiode => {
-  return periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE";
+  return isMedlemskapsperiode(periode) || isLovvalgsperiode(periode);
 };
 
 export interface OppdaterMedlemskapsperiode {

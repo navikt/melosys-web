@@ -7,6 +7,7 @@ import { useDispatch } from "../../../../../hooks";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import vurdering_vedtak_opphoer from "./vurderingVedtakOpphoerSchema";
 import * as Api from "../../../../../services/api";
+import { hasInnvilgelsesResultat } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { useCallback, useEffect, useState } from "react";
@@ -73,13 +74,9 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
     behandlingErAvsluttet
       ? [...medlemskapsperioder]
       : [...medlemskapsperioder]
-          .filter(
-            (it) =>
-              (it.type === "MEDLEMSKAPSPERIODE" || it.type === "LOVVALGSPERIODE") &&
-              [INNVILGET, OPPHØRT].includes(it.innvilgelsesResultat),
-          )
+          .filter((it) => hasInnvilgelsesResultat(it) && [INNVILGET, OPPHØRT].includes(it.innvilgelsesResultat))
           .map((it) => {
-            if (it.type === "MEDLEMSKAPSPERIODE" || it.type === "LOVVALGSPERIODE") {
+            if (hasInnvilgelsesResultat(it)) {
               return { ...it, innvilgelsesResultat: OPPHØRT, bestemmelse: FTRL_KAP2_2_15_ANDRE_LEDD };
             }
             return it;
@@ -101,11 +98,7 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
   const getOpphørsdato = () =>
     forventetOpphørteMedlemskapsperioder()
       .sort(Utils.dato.sorterEtterISOFomDato)
-      .find(
-        (periode) =>
-          (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
-          periode.innvilgelsesResultat === OPPHØRT,
-      )?.fomDato;
+      .find((periode) => hasInnvilgelsesResultat(periode) && periode.innvilgelsesResultat === OPPHØRT)?.fomDato;
 
   const lagFattVedtakFTRLReqDto = (): Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto => {
     return {
@@ -151,7 +144,7 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
 
   const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode[]) =>
     perioder.sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
-      const hasFullFields = it.type === "MEDLEMSKAPSPERIODE" || it.type === "LOVVALGSPERIODE";
+      const hasFullFields = hasInnvilgelsesResultat(it);
       return {
         periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
         bestemmelse: hasFullFields

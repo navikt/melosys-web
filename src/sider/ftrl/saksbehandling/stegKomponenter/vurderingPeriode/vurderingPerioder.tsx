@@ -8,6 +8,7 @@ import * as Mui from "../../../../../felleskomponenter/ui";
 import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
+import { hasInnvilgelsesResultat } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../utils";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
@@ -56,8 +57,7 @@ const mapTilMedlemskapsperiodeProps = (
   medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode,
 ): MedlemskapsperiodeProp => {
   // Extract only the fields that exist based on the discriminated union type
-  const hasFullFields =
-    medlemskapsperiode.type === "MEDLEMSKAPSPERIODE" || medlemskapsperiode.type === "LOVVALGSPERIODE";
+  const hasFullFields = hasInnvilgelsesResultat(medlemskapsperiode);
   return {
     fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
     tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
@@ -78,9 +78,7 @@ const mapInitialMedlemskapsperioder = (
     .sort(
       (a, b) =>
         Utils.dato.sorterEtterISOFomDato(a, b) ||
-        ((a.type === "MEDLEMSKAPSPERIODE" || a.type === "LOVVALGSPERIODE") && a.innvilgelsesResultat === AVSLAATT
-          ? -1
-          : 1),
+        (hasInnvilgelsesResultat(a) && a.innvilgelsesResultat === AVSLAATT ? -1 : 1),
     )
     .map(mapTilMedlemskapsperiodeProps);
 
@@ -101,9 +99,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const soknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandkoderSelector);
   const ikkeyrkesaktivOppholdstype = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivOppholdSelector);
   const medlemskapsTypeErPliktig = lagredeMedlemskapsperioder.some(
-    (periode) =>
-      (periode.type === "MEDLEMSKAPSPERIODE" || periode.type === "LOVVALGSPERIODE") &&
-      periode.medlemskapstype === PLIKTIG,
+    (periode) => hasInnvilgelsesResultat(periode) && periode.medlemskapstype === PLIKTIG,
   );
   const arbeidssituasjonType = useSelector(oppsummertfaktaSelectors.ArbeidssituasjonSelector);
   const ukjentSluttdatoMedlemskapsperiode = useSelector(

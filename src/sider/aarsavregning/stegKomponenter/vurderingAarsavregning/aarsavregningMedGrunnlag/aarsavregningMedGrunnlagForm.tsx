@@ -24,6 +24,7 @@ import { EndeligAvgiftValgRadioGroup } from "../komponenter/endeligAvgiftValgRad
 import { ManuellAvgiftFormPart } from "../komponenter/manuellAvgiftFormPart";
 import { MedlemskapsperioderDisplay } from "../komponenter/medlemskapsperiodeDisplay";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
+import { hasInnvilgelsesResultat } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden, finnMedlemskapsperiode } from "../utils";
 import "../vurderingAarsavregningInngang.less";
 import { InitiellData } from "./aarsavregningMedGrunnlag";
@@ -369,9 +370,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
               medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
               skalViseErMaanedsBelopRadioGroup
               bestemmelse={
-                innvilgetMedlemskapsperioder[0] &&
-                (innvilgetMedlemskapsperioder[0].type === "MEDLEMSKAPSPERIODE" ||
-                  innvilgetMedlemskapsperioder[0].type === "LOVVALGSPERIODE")
+                innvilgetMedlemskapsperioder[0] && hasInnvilgelsesResultat(innvilgetMedlemskapsperioder[0])
                   ? innvilgetMedlemskapsperioder[0].bestemmelse
                   : undefined
               }
