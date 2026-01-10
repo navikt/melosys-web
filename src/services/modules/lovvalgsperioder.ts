@@ -17,13 +17,14 @@ export interface LovvalgsperiodeDto
   medlemskapsperiodeID?: string;
 }
 
-export interface OpprettLovvalgsperiode {
-  fomDato?: string;
-  tomDato?: string;
-  lovvalgsbestemmelse?: string;
-  innvilgelsesResultat?: string;
-  trygdedekning?: string;
-}
+/**
+ * DTO for opprettelse av lovvalgsperiode.
+ * Alle felt er valgfrie ved opprettelse.
+ * Gjenbruker felt fra Lovvalgsperiode, pluss lovvalgsbestemmelse fra LovvalgsperiodeDto.
+ */
+export interface OpprettLovvalgsperiode
+  extends Partial<Pick<Lovvalgsperiode, "fomDato" | "tomDato" | "innvilgelsesResultat" | "trygdedekning">>,
+    Partial<Pick<LovvalgsperiodeDto, "lovvalgsbestemmelse">> {}
 
 export const hent = (behandlingID: number): Promise<LovvalgsperiodeDto[]> =>
   getAsJson(`${API_BASE_URL}${LOVVALGSPERIODER}/${behandlingID}`);
