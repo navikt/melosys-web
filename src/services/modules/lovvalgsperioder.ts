@@ -1,6 +1,6 @@
 import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../utils";
 import { API_BASE_URL, BEHANDLINGER, LOVVALGSPERIODER } from "../api-constants";
-import { Lovvalgsperiode } from "./medlemavfolketrygden/medlemskapsperioder";
+import { Lovvalgsperiode } from "./types/periodeTyper";
 
 /**
  * DTO for EU/EØS lovvalgsperioder.

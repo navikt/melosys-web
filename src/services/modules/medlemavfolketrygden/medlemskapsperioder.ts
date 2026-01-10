@@ -1,59 +1,20 @@
 import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../../utils";
 import { API_BASE_URL, BEHANDLINGER, MEDLEMSKAPSPERIODER } from "../../api-constants";
 
-// Felles felt for alle avgiftspliktige perioder
-interface BaseAvgiftspliktigperiode {
-  id: number;
-  fomDato: string;
-  tomDato: string;
-  redigerbar?: boolean;
-}
+// Re-eksporter periodetyper fra felles lokasjon for bakoverkompatibilitet
+export {
+  type BaseAvgiftspliktigperiode,
+  type Medlemskapsperiode,
+  type Helseutgiftdekkesperiode,
+  type Lovvalgsperiode,
+  type Avgiftspliktigperiode,
+  erMedlemskapsperiode,
+  erLovvalgsperiode,
+  erHelseutgiftdekkesperiode,
+  harInnvilgelsesResultat,
+} from "../types/periodeTyper";
 
-// Medlemskapsperiode - har alle de komplekse feltene
-export interface Medlemskapsperiode extends BaseAvgiftspliktigperiode {
-  type: "MEDLEMSKAPSPERIODE";
-  bestemmelse: string;
-  innvilgelsesResultat: string;
-  trygdedekning: string;
-  medlemskapstype: string;
-}
-
-// Helseutgiftdekkesperiode i årsavregning-kontekst - kun datoer
-// NB: HelseutgiftDekkesPeriodeDto (egen fil) brukes for CRUD og har bostedLandkode
-export interface Helseutgiftdekkesperiode extends BaseAvgiftspliktigperiode {
-  type: "HELSEUTGIFTDEKKESPERIODE";
-}
-
-// Lovvalgsperiode - backend har også lovvalgsland og tilleggsbestemmelse, men ikke eksponert i AvgiftspliktigPeriodeDto
-export interface Lovvalgsperiode extends BaseAvgiftspliktigperiode {
-  type: "LOVVALGSPERIODE";
-  bestemmelse: string;
-  innvilgelsesResultat: string;
-  trygdedekning: string;
-  medlemskapstype: string;
-}
-
-// Discriminated union
-export type Avgiftspliktigperiode = Medlemskapsperiode | Helseutgiftdekkesperiode | Lovvalgsperiode;
-
-// Type guard hjelpefunksjoner
-export const erMedlemskapsperiode = (periode: Avgiftspliktigperiode): periode is Medlemskapsperiode => {
-  return periode.type === "MEDLEMSKAPSPERIODE";
-};
-
-export const erLovvalgsperiode = (periode: Avgiftspliktigperiode): periode is Lovvalgsperiode => {
-  return periode.type === "LOVVALGSPERIODE";
-};
-
-export const erHelseutgiftdekkesperiode = (periode: Avgiftspliktigperiode): periode is Helseutgiftdekkesperiode => {
-  return periode.type === "HELSEUTGIFTDEKKESPERIODE";
-};
-
-export const harInnvilgelsesResultat = (
-  periode: Avgiftspliktigperiode,
-): periode is Medlemskapsperiode | Lovvalgsperiode => {
-  return erMedlemskapsperiode(periode) || erLovvalgsperiode(periode);
-};
+import type { Medlemskapsperiode, Avgiftspliktigperiode } from "../types/periodeTyper";
 
 /**
  * Request DTO for opprettelse/oppdatering av medlemskapsperiode.

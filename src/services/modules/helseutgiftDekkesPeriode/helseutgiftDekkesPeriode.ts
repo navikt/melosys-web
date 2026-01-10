@@ -1,6 +1,6 @@
 import { getAsJson, postAsJson, putAsJson } from "../../utils";
 import { API_BASE_URL, HELSEUTGIFTDEKKESPERIODE, BEHANDLINGER } from "../../api-constants";
-import { Helseutgiftdekkesperiode } from "../medlemavfolketrygden/medlemskapsperioder";
+import { Helseutgiftdekkesperiode } from "../types/periodeTyper";
 
 /**
  * DTO for CRUD-operasjoner på helseutgiftdekkesperiode.
