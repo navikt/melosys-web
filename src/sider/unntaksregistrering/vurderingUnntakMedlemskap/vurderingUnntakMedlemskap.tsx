@@ -64,7 +64,7 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
       fom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato || mottatteOpplysningerPeriode.fom),
       tom: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato || mottatteOpplysningerPeriode.tom),
       bestemmelse: lovvalgsperiode.lovvalgsbestemmelse || "",
-      trygdedekning: lovvalgsperiode.trygdeDekning,
+      trygdedekning: lovvalgsperiode.trygdedekning,
     } as FieldValues,
   });
   const formValues = watch();

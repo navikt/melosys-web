@@ -40,7 +40,7 @@ const byggLovvalgsperiodeUtsending = (stegState: PerioderStegState, reduxState: 
       tilleggBestemmelse: stegState.tilleggbestemmelse,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
       lovvalgsland: MKV.Koder.landkoder.NO,
-      trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+      trygdedekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
       medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
     },
   ];
@@ -63,7 +63,7 @@ const byggLovvalgsperiodeArtikkel113Aeller133A = (
       tilleggBestemmelse: stegState.tilleggbestemmelse || tilleggsbestemmelseFraVilkar,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
       lovvalgsland: MKV.Koder.landkoder.NO,
-      trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+      trygdedekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
       medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
     },
   ];
@@ -85,7 +85,7 @@ const byggLovvalgsperiodeArtikkel1142eller1342 = (
       tilleggBestemmelse: stegState.tilleggbestemmelse,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
       lovvalgsland: MKV.Koder.landkoder.NO,
-      trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+      trygdedekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
       medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
     },
   ];
@@ -122,7 +122,7 @@ const byggAvslaattLovvalgsperiode = (reduxState: RootState, lovvalgsbestemmelse:
       unntakFraLovvalgsland: null,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.AVSLAATT,
       lovvalgsland: null,
-      trygdeDekning: MKV.Koder.trygdedekninger.UTEN_DEKNING,
+      trygdedekning: MKV.Koder.trygdedekninger.UTEN_DEKNING,
       medlemskapstype: null,
     },
   ];
@@ -230,7 +230,7 @@ const byggLovvalgsperioder = (stegState: PerioderStegState, reduxState: RootStat
       unntakFraLovvalgsland: null,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
       lovvalgsland,
-      trygdeDekning: erNorgeLovvalgsland(lovvalgsland)
+      trygdedekning: erNorgeLovvalgsland(lovvalgsland)
         ? MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO
         : MKV.Koder.trygdedekninger.UTEN_DEKNING,
       medlemskapstype: erNorgeLovvalgsland(lovvalgsland)

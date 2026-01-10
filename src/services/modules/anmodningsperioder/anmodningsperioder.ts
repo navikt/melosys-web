@@ -11,7 +11,7 @@ export interface Anmodningsperiode {
   lovvalgsland: string;
   unntakFraBestemmelse?: string;
   unntakFraLovvalgsland: string;
-  trygdeDekning: string;
+  trygdedekning: string;
   medlemskapsperiodeID: string;
 }
 

@@ -6,16 +6,14 @@ import { Lovvalgsperiode } from "./medlemavfolketrygden/medlemskapsperioder";
  * DTO for EU/EØS lovvalgsperioder.
  * Gjenbruker felles felt fra Lovvalgsperiode (årsavregning) via Pick.
  * tomDato er valgfri i DTO (Partial), men påkrevd i Lovvalgsperiode.
- * NB: Backend bruker ulik casing: trygdeDekning (her) vs trygdedekning (årsavregning).
  */
 export interface LovvalgsperiodeDto
-  extends Pick<Lovvalgsperiode, "fomDato" | "innvilgelsesResultat" | "medlemskapstype">,
+  extends Pick<Lovvalgsperiode, "fomDato" | "innvilgelsesResultat" | "medlemskapstype" | "trygdedekning">,
     Partial<Pick<Lovvalgsperiode, "tomDato">> {
   periodeID?: string;
   lovvalgsbestemmelse?: string;
   tilleggBestemmelse?: string;
   lovvalgsland: string;
-  trygdeDekning: string;
   medlemskapsperiodeID?: string;
 }
 

@@ -75,7 +75,7 @@ const byggAnmodningsperiode = (
       unntakFraBestemmelse: stegState.unntakfrabestemmelse,
       unntakFraLovvalgsland: soknadsland.join(""),
       medlemskapsperiodeID: medlemskapsperiodeID || null,
-      trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+      trygdedekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
     },
   ];
 };
