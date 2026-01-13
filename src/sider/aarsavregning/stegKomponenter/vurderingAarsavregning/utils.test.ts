@@ -23,7 +23,6 @@ const createMockMedlemskapsperiode = (overrides?: Partial<Avgiftspliktigperiode>
   innvilgelsesResultat: "INNVILGET",
   trygdedekning: "FULL_DEKNING",
   medlemskapstype: "PLIKTIG",
-  redigerbar: false,
   ...overrides,
 });
 

@@ -17,7 +17,6 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
@@ -32,7 +31,6 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
                 medlemskapstype: "PLIKTIG",
                 innvilgelsesResultat: "INNVILGET",
                 trygdedekning: "FULL_DEKNING",
-                redigerbar: false,
               },
             ],
             skatteforholdsperioder: [],
@@ -78,7 +76,6 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
@@ -93,7 +90,6 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
                 medlemskapstype: "PLIKTIG",
                 innvilgelsesResultat: "INNVILGET",
                 trygdedekning: "FULL_DEKNING",
-                redigerbar: false,
               },
             ],
             skatteforholdsperioder: [],
@@ -205,7 +201,6 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
           {
             type: "MEDLEMSKAPSPERIODE",
@@ -216,7 +211,6 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
             medlemskapstype: "FRIVILLIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "DELVIS_DEKNING",
-            redigerbar: false,
           },
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
@@ -231,7 +225,6 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
                 medlemskapstype: "PLIKTIG",
                 innvilgelsesResultat: "INNVILGET",
                 trygdedekning: "FULL_DEKNING",
-                redigerbar: false,
               },
             ],
             skatteforholdsperioder: [],

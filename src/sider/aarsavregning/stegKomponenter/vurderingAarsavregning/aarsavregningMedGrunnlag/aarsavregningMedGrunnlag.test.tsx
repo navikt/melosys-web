@@ -85,7 +85,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
         ],
         nyttTrygdeavgiftsGrunnlag: {
@@ -156,7 +155,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
         ],
         nyttTrygdeavgiftsGrunnlag: undefined, // Ingen nytt grunnlag
@@ -172,7 +170,6 @@ describe("AarsavregningMedGrunnlag", () => {
                 medlemskapstype: "PLIKTIG",
                 innvilgelsesResultat: "INNVILGET",
                 trygdedekning: "FULL_DEKNING",
-                redigerbar: false,
               },
             ],
             skatteforholdsperioder: [
@@ -229,7 +226,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
         ],
         nyttTrygdeavgiftsGrunnlag: undefined,
@@ -245,7 +241,6 @@ describe("AarsavregningMedGrunnlag", () => {
                 medlemskapstype: "PLIKTIG",
                 innvilgelsesResultat: "INNVILGET",
                 trygdedekning: "FULL_DEKNING",
-                redigerbar: false,
               },
             ],
             skatteforholdsperioder: [],
@@ -288,7 +283,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
           {
             type: "MEDLEMSKAPSPERIODE",
@@ -299,7 +293,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "DELVIS_DEKNING",
-            redigerbar: false,
           },
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
@@ -395,7 +388,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
         ],
         nyttTrygdeavgiftsGrunnlag: {
@@ -431,7 +423,6 @@ describe("AarsavregningMedGrunnlag", () => {
                 medlemskapstype: "PLIKTIG",
                 innvilgelsesResultat: "INNVILGET",
                 trygdedekning: "FULL_DEKNING",
-                redigerbar: false,
               },
             ],
             skatteforholdsperioder: [],
@@ -483,7 +474,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
           {
             type: "MEDLEMSKAPSPERIODE",
@@ -494,7 +484,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "DELVIS_DEKNING",
-            redigerbar: false,
           },
           {
             type: "MEDLEMSKAPSPERIODE",
@@ -505,7 +494,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "FRIVILLIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
@@ -547,7 +535,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
           {
             type: "MEDLEMSKAPSPERIODE",
@@ -558,7 +545,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "AVSLÅTT", // Ikke innvilget
             trygdedekning: "INGEN_DEKNING",
-            redigerbar: false,
           },
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
@@ -601,7 +587,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "INGEN_DEKNING",
-            redigerbar: false,
           },
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
@@ -643,7 +628,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
           {
             type: "MEDLEMSKAPSPERIODE",
@@ -654,7 +638,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
           {
             type: "MEDLEMSKAPSPERIODE",
@@ -665,7 +648,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "DELVIS_DEKNING",
-            redigerbar: false,
           },
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
@@ -707,7 +689,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {

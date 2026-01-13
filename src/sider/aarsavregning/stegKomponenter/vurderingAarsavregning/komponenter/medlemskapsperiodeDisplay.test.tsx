@@ -13,7 +13,6 @@ describe("MedlemskapsperioderDisplay", () => {
     innvilgelsesResultat: "INNVILGET",
     trygdedekning: "FULL_DEKNING",
     medlemskapstype: "PLIKTIG",
-    redigerbar: false,
   };
 
   it("skal vise alle medlemskapsperioder", () => {

@@ -62,7 +62,6 @@ const mapTilMedlemskapsperiodeProps = (medlemskapsperiode: Avgiftspliktigperiode
     innvilgelsesResultat: hasFullFields ? medlemskapsperiode.innvilgelsesResultat : "",
     bestemmelse: hasFullFields ? medlemskapsperiode.bestemmelse : "",
     trygdedekning: hasFullFields ? medlemskapsperiode.trygdedekning : "",
-    redigerbar: medlemskapsperiode.redigerbar,
     ny: false,
     feil: undefined,
     periodeId: medlemskapsperiode.id,

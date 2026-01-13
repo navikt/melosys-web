@@ -56,7 +56,6 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
           id: 1,
           bestemmelse: "mock-bestemmelse",
           innvilgelsesResultat: "mock-innvilgelsesResultat",
-          redigerbar: false,
         },
       ],
       skatteforholdsperioder: [

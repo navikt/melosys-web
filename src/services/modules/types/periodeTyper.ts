@@ -1,7 +1,6 @@
 /**
  * Felles periodetyper.
  * BasePeriode er generisk og kan gjenbrukes av alle periodetyper.
- * Avgiftspliktige perioder (medlemskap, lovvalg, helseutgift) legger til redigerbar for UI-kontroll.
  */
 
 // Generisk base for alle perioder - kun datoer
@@ -18,7 +17,6 @@ export interface Medlemskapsperiode extends BasePeriode {
   innvilgelsesResultat: string;
   trygdedekning: string;
   medlemskapstype: string;
-  redigerbar?: boolean; // UI-only, settes i frontend basert på forretningslogikk
 }
 
 // Helseutgiftdekkesperiode i årsavregning-kontekst - kun datoer
@@ -26,7 +24,6 @@ export interface Medlemskapsperiode extends BasePeriode {
 export interface Helseutgiftdekkesperiode extends BasePeriode {
   id: number;
   type: "HELSEUTGIFTDEKKESPERIODE";
-  redigerbar?: boolean; // UI-only, settes i frontend basert på forretningslogikk
 }
 
 // Lovvalgsperiode - backend har også lovvalgsland og tilleggsbestemmelse, men ikke eksponert i AvgiftspliktigPeriodeDto
@@ -37,7 +34,6 @@ export interface Lovvalgsperiode extends BasePeriode {
   innvilgelsesResultat: string;
   trygdedekning: string;
   medlemskapstype: string;
-  redigerbar?: boolean; // UI-only, settes i frontend basert på forretningslogikk
 }
 
 // Discriminated union

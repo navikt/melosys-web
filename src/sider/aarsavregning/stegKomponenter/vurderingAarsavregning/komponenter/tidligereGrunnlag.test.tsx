@@ -22,7 +22,6 @@ describe("TidligereGrunnlag", () => {
             bestemmelse: "FTRL_2_7",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING_FTRL",
-            redigerbar: false,
           },
         ],
         skatteforholdsperioder: [
@@ -78,7 +77,6 @@ describe("TidligereGrunnlag", () => {
               bestemmelse: "FTRL_2_7",
               innvilgelsesResultat: "INNVILGET",
               trygdedekning: "FULL_DEKNING_FTRL",
-              redigerbar: false,
             },
           ],
           skatteforholdsperioder: [],

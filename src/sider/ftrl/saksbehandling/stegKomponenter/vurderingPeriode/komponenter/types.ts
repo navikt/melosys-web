@@ -8,7 +8,6 @@ export interface MedlemskapsperiodeProp extends BasePeriode {
   innvilgelsesResultat: string;
   bestemmelse: string;
   trygdedekning: string;
-  redigerbar?: boolean;
 }
 
 export interface FieldArrayProps {

@@ -101,7 +101,6 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "FULL_DEKNING",
         medlemskapstype: "PLIKTIG",
-        redigerbar: false,
       },
       {
         type: "MEDLEMSKAPSPERIODE",
@@ -134,7 +133,6 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "FULL_DEKNING",
         medlemskapstype: "PLIKTIG",
-        redigerbar: false,
       },
       {
         type: "MEDLEMSKAPSPERIODE",
@@ -145,7 +143,6 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "DELVIS_DEKNING",
         medlemskapstype: "PLIKTIG",
-        redigerbar: false,
       },
     ];
 
@@ -168,7 +165,6 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "FULL_DEKNING",
         medlemskapstype: "PLIKTIG",
-        redigerbar: false,
       },
       {
         type: "MEDLEMSKAPSPERIODE",
@@ -179,7 +175,6 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "DELVIS_DEKNING",
         medlemskapstype: "PLIKTIG",
-        redigerbar: false,
       },
     ];
 
@@ -199,7 +194,6 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "FULL_DEKNING",
         medlemskapstype: "PLIKTIG",
-        redigerbar: false,
       },
     ];
 
@@ -222,7 +216,6 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "DELVIS_DEKNING",
         medlemskapstype: "PLIKTIG",
-        redigerbar: false,
       },
       {
         type: "MEDLEMSKAPSPERIODE",
@@ -233,7 +226,6 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "FULL_DEKNING",
         medlemskapstype: "PLIKTIG",
-        redigerbar: false,
       },
       {
         type: "MEDLEMSKAPSPERIODE",
@@ -244,7 +236,6 @@ describe("finnMedlemskapsperiode logikk", () => {
         innvilgelsesResultat: "INNVILGET",
         trygdedekning: "FULL_DEKNING",
         medlemskapstype: "PLIKTIG",
-        redigerbar: false,
       },
     ];
 

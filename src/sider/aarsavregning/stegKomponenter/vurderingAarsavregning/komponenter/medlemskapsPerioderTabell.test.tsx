@@ -79,7 +79,6 @@ describe("MedlemskapsPerioderTabell", () => {
         bestemmelse: "bestemmelse",
         innvilgelsesResultat: "PLIKTIG",
         medlemskapstype: "type",
-        redigerbar: false,
       },
     ] as Avgiftspliktigperiode[];
     render(<MedlemskapsPerioderTabell perioder={perioder} />);
