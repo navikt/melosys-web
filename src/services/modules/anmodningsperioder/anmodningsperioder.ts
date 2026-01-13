@@ -8,8 +8,8 @@ import { BasePeriode, Medlemskapsperiode } from "../types/periodeTyper";
  */
 export interface Anmodningsperiode
   extends Pick<BasePeriode, "fomDato" | "tomDato">,
-    Partial<Pick<BasePeriode, "id">>,
     Pick<Medlemskapsperiode, "trygdedekning"> {
+  id?: number;
   sendtUtland?: boolean;
   lovvalgBestemmelse?: string;
   tilleggBestemmelse?: string;

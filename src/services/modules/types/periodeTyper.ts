@@ -4,15 +4,15 @@
  * Avgiftspliktige perioder (medlemskap, lovvalg, helseutgift) legger til redigerbar for UI-kontroll.
  */
 
-// Generisk base for alle perioder
+// Generisk base for alle perioder - kun datoer
 export interface BasePeriode {
-  id: number;
   fomDato: string;
   tomDato: string;
 }
 
 // Medlemskapsperiode - har alle de komplekse feltene
 export interface Medlemskapsperiode extends BasePeriode {
+  id: number;
   type: "MEDLEMSKAPSPERIODE";
   bestemmelse: string;
   innvilgelsesResultat: string;
@@ -24,12 +24,14 @@ export interface Medlemskapsperiode extends BasePeriode {
 // Helseutgiftdekkesperiode i årsavregning-kontekst - kun datoer
 // NB: HelseutgiftDekkesPeriodeDto (egen fil) brukes for CRUD og har bostedLandkode
 export interface Helseutgiftdekkesperiode extends BasePeriode {
+  id: number;
   type: "HELSEUTGIFTDEKKESPERIODE";
   redigerbar?: boolean; // UI-only
 }
 
 // Lovvalgsperiode - backend har også lovvalgsland og tilleggsbestemmelse, men ikke eksponert i AvgiftspliktigPeriodeDto
 export interface Lovvalgsperiode extends BasePeriode {
+  id: number;
   type: "LOVVALGSPERIODE";
   bestemmelse: string;
   innvilgelsesResultat: string;

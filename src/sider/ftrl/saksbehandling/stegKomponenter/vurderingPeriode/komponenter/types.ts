@@ -1,11 +1,10 @@
 import { FieldValues } from "react-hook-form";
+import { BasePeriode } from "../../../../../../services/modules/types/periodeTyper";
 
-export interface MedlemskapsperiodeProp {
+export interface MedlemskapsperiodeProp extends Pick<BasePeriode, "fomDato" | "tomDato"> {
   ny: boolean;
   feil?: string;
   periodeId: number;
-  fomDato: string;
-  tomDato: string;
   innvilgelsesResultat: string;
   bestemmelse: string;
   trygdedekning: string;

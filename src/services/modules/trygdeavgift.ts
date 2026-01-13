@@ -1,19 +1,16 @@
 import { deleteAsJson, getAsJson, putAsJson } from "../utils";
 import { API_BASE_URL, TRYGDEAVGIFT, EØS_PENSJONIST } from "../api-constants";
 import { KTObject } from "@navikt/melosys-kodeverk";
+import { BasePeriode } from "./types/periodeTyper";
 
-export interface InntektskildeDto {
+export interface InntektskildeDto extends Pick<BasePeriode, "fomDato" | "tomDato"> {
   type: string;
   arbeidsgiversavgiftBetales: boolean;
   avgiftspliktigInntekt?: number;
-  fomDato: string;
-  tomDato: string;
   erMaanedsbelop: boolean;
 }
 
-export interface SkatteforholdDto {
-  fomDato: string;
-  tomDato: string;
+export interface SkatteforholdDto extends Pick<BasePeriode, "fomDato" | "tomDato"> {
   skatteplikttype: string;
 }
 
