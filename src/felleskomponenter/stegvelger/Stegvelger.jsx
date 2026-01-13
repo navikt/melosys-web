@@ -43,20 +43,22 @@ import {
   MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
 } from "../../featuretoggle/toggleNavn";
 
+const byggStegStores = () => ({
+  [StegStoreTyper.Anmodningsperiodersvar]: new EnkelDataStore(),
+  [StegStoreTyper.Avklartefakta]: new AvklartefaktaStore(),
+  [StegStoreTyper.Vilkar]: new VilkaarStore(),
+  [StegStoreTyper.Lovvalgsbestemmelser]: new EnkelDataStore(),
+  [StegStoreTyper.Tilleggbestemmelser]: new EnkelDataStore(),
+  [StegStoreTyper.UnntakFraBestemmelse]: new EnkelDataStore(),
+  [StegStoreTyper.Lovvalgsperiode]: new EnkelDataStore(),
+  [StegStoreTyper.Lovvalgsland]: new EnkelDataStore(),
+});
+
 class Stegvelger extends Component {
   state = {
     aktivtStegNummer: 0,
     aktuelleSteg: [],
-    stegStores: {
-      [StegStoreTyper.Anmodningsperiodersvar]: new EnkelDataStore(),
-      [StegStoreTyper.Avklartefakta]: new AvklartefaktaStore(),
-      [StegStoreTyper.Vilkar]: new VilkaarStore(),
-      [StegStoreTyper.Lovvalgsbestemmelser]: new EnkelDataStore(),
-      [StegStoreTyper.Tilleggbestemmelser]: new EnkelDataStore(),
-      [StegStoreTyper.UnntakFraBestemmelse]: new EnkelDataStore(),
-      [StegStoreTyper.Lovvalgsperiode]: new EnkelDataStore(),
-      [StegStoreTyper.Lovvalgsland]: new EnkelDataStore(),
-    },
+    stegStores: byggStegStores(),
     visMottatteOpplysningerFeilmeldinger: false,
     harTrygdeavgiftperiode: false,
   };
@@ -87,13 +89,39 @@ class Stegvelger extends Component {
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   }
 
+  resetTilForsteSteg = (endreFokus = true) => {
+    this.debouncedOppdaterAktuelleSteg.cancel?.();
+    this.setState(
+      {
+        aktivtStegNummer: 0,
+        stegStores: byggStegStores(),
+        visMottatteOpplysningerFeilmeldinger: false,
+      },
+      () => {
+        this.oppdaterAktuelleSteg(0, endreFokus);
+      },
+    );
+  };
+
   componentDidUpdate(prevProps, prevState) {
     const { aktivtStegNummer, aktuelleSteg } = this.state;
+    const oppfriskStartet = !prevProps.behandlingOppfriskes && this.props.behandlingOppfriskes;
+    const oppfriskFerdig = prevProps.behandlingOppfriskes && !this.props.behandlingOppfriskes;
     const svarAnmodningSteg = aktuelleSteg.find((steg) => steg.id === STEG.ARTIKKEL_16_MOTTA_SVAR);
     const prevSvarAnmodningSteg = prevState.aktuelleSteg.find((steg) => steg.id === STEG.ARTIKKEL_16_MOTTA_SVAR);
 
     const behandlingsstatusErMottattSvarAnmodning =
       prevProps.oppsummering.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.SVAR_ANMODNING_MOTTATT;
+
+    if (oppfriskStartet || (this.props.behandlingOppfriskes && aktivtStegNummer !== 0)) {
+      this.resetTilForsteSteg(false);
+      return;
+    }
+
+    if (oppfriskFerdig) {
+      this.resetTilForsteSteg(true);
+      return;
+    }
 
     if (
       behandlingsstatusErMottattSvarAnmodning &&
@@ -111,6 +139,7 @@ class Stegvelger extends Component {
 
   componentWillUnmount() {
     this.aktiv = false;
+    this.debouncedOppdaterAktuelleSteg.cancel?.();
   }
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
