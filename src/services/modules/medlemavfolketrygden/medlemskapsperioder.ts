@@ -11,7 +11,7 @@ export interface OppdaterMedlemskapsperiode
   tomDato?: string | null;
 }
 
-export const hentMedlemskapsperioder = (behandlingID: number): Promise<Avgiftspliktigperiode[]> =>
+export const hentMedlemskapsperioder = (behandlingID: number): Promise<Medlemskapsperiode[]> =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}`);
 
 export const opprettMedlemskapsperioder = (
