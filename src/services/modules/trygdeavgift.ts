@@ -3,14 +3,14 @@ import { API_BASE_URL, TRYGDEAVGIFT, EØS_PENSJONIST } from "../api-constants";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { BasePeriode } from "./types/periodeTyper";
 
-export interface InntektskildeDto extends Pick<BasePeriode, "fomDato" | "tomDato"> {
+export interface InntektskildeDto extends BasePeriode {
   type: string;
   arbeidsgiversavgiftBetales: boolean;
   avgiftspliktigInntekt?: number;
   erMaanedsbelop: boolean;
 }
 
-export interface SkatteforholdDto extends Pick<BasePeriode, "fomDato" | "tomDato"> {
+export interface SkatteforholdDto extends BasePeriode {
   skatteplikttype: string;
 }
 
