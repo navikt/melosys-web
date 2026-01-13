@@ -13,11 +13,8 @@ import { OK } from "../../../../../ducks/aarsavregning/types";
 
 import { medlemskapsperioderTypes } from "../../../../../ducks/medlemskapsperioder";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../utils";
-import {
-  Avgiftspliktigperiode,
-  harInnvilgelsesResultat,
-  OppdaterMedlemskapsperiode,
-} from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode, harInnvilgelsesResultat } from "../../../../../services/modules/types/periodeTyper";
+import { OppdaterMedlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { AarsavregningUtenEllerDeltGrunnlagForm } from "./aarsavregningUtenEllerDeltGrunnlagForm";
 
 const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;

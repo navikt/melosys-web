@@ -15,10 +15,7 @@ import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../utils";
 import { AarsavregningMedGrunnlagForm } from "./aarsavregningMedGrunnlagForm";
 import * as Nav from "../../../../../navFrontend";
 import MKV from "../../../../../melosyskodeverk";
-import {
-  Avgiftspliktigperiode,
-  harInnvilgelsesResultat,
-} from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode, harInnvilgelsesResultat } from "../../../../../services/modules/types/periodeTyper";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
 
 const mapMedlemskapsperioder = (medlemskapsperioder: Avgiftspliktigperiode[]) => {

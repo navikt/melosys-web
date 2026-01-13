@@ -26,7 +26,7 @@ export interface Medlemskapsperiode extends BasePeriode {
 export interface Helseutgiftdekkesperiode extends BasePeriode {
   id: number;
   type: "HELSEUTGIFTDEKKESPERIODE";
-  redigerbar?: boolean; // UI-only
+  redigerbar?: boolean; // UI-only, settes i frontend basert på forretningslogikk
 }
 
 // Lovvalgsperiode - backend har også lovvalgsland og tilleggsbestemmelse, men ikke eksponert i AvgiftspliktigPeriodeDto
@@ -37,7 +37,7 @@ export interface Lovvalgsperiode extends BasePeriode {
   innvilgelsesResultat: string;
   trygdedekning: string;
   medlemskapstype: string;
-  redigerbar?: boolean; // UI-only
+  redigerbar?: boolean; // UI-only, settes i frontend basert på forretningslogikk
 }
 
 // Discriminated union

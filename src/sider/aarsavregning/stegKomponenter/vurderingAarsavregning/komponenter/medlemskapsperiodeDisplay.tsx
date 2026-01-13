@@ -3,7 +3,7 @@ import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 import Datovelger from "../../../../../felleskomponenter/datovelger";
-import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../../services/modules/types/periodeTyper";
 import "./medlemskapsperiodeSkjema.less";
 
 interface MedlemskapsperioderDisplayProps {

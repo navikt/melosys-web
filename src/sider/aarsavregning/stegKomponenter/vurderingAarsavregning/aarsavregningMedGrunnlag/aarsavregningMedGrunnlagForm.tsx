@@ -24,7 +24,7 @@ import { EndeligAvgiftValgRadioGroup } from "../komponenter/endeligAvgiftValgRad
 import { ManuellAvgiftFormPart } from "../komponenter/manuellAvgiftFormPart";
 import { MedlemskapsperioderDisplay } from "../komponenter/medlemskapsperiodeDisplay";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
-import { harInnvilgelsesResultat } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { harInnvilgelsesResultat } from "../../../../../services/modules/types/periodeTyper";
 import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden, finnMedlemskapsperiode } from "../utils";
 import "../vurderingAarsavregningInngang.less";
 import { InitiellData } from "./aarsavregningMedGrunnlag";

@@ -8,7 +8,7 @@ import * as Mui from "../../../../../felleskomponenter/ui";
 import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
-import { harInnvilgelsesResultat } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode, harInnvilgelsesResultat } from "../../../../../services/modules/types/periodeTyper";
 import * as Utils from "../../../../../utils";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
@@ -53,9 +53,7 @@ const kallFeilet = (response: any): boolean => response.type === medlemskapsperi
 
 const mapFeil = (response: any) => response?.data?.message || response.data;
 
-const mapTilMedlemskapsperiodeProps = (
-  medlemskapsperiode: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode,
-): MedlemskapsperiodeProp => {
+const mapTilMedlemskapsperiodeProps = (medlemskapsperiode: Avgiftspliktigperiode): MedlemskapsperiodeProp => {
   // Extract only the fields that exist based on the discriminated union type
   const hasFullFields = harInnvilgelsesResultat(medlemskapsperiode);
   return {
@@ -71,9 +69,7 @@ const mapTilMedlemskapsperiodeProps = (
   };
 };
 
-const mapInitialMedlemskapsperioder = (
-  medlemskapsperioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode[],
-): MedlemskapsperiodeProp[] =>
+const mapInitialMedlemskapsperioder = (medlemskapsperioder: Avgiftspliktigperiode[]): MedlemskapsperiodeProp[] =>
   [...medlemskapsperioder]
     .sort(
       (a, b) =>

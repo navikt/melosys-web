@@ -1,4 +1,4 @@
-import * as Api from "../../services/api";
+import { Avgiftspliktigperiode } from "../../services/modules/types/periodeTyper";
 
 export const OK_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK";
 export const OK_OPPRETT_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK_OPPRETT";
@@ -10,7 +10,7 @@ export const PENDING = "medlemskapsperioder/PENDING";
 export const RESET = "medlemskapsperioder/RESET";
 
 export interface Data {
-  medlemskapsperioder?: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode[];
+  medlemskapsperioder?: Avgiftspliktigperiode[];
 }
 
 export interface FeiletAction {
@@ -28,17 +28,17 @@ export interface ResetAction {
 
 export interface OkMedlemskapsperiodeAction {
   type: typeof OK_MEDLEMSKAPSPERIODE;
-  data: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode[];
+  data: Avgiftspliktigperiode[];
 }
 
 export interface OkOpprettMedlemskapsperiodeAction {
   type: typeof OK_OPPRETT_MEDLEMSKAPSPERIODE;
-  data: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode;
+  data: Avgiftspliktigperiode;
 }
 
 export interface OkOppdaterMedlemskapsperiodeAction {
   type: typeof OK_OPPDATER_MEDLEMSKAPSPERIODE;
-  data: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode;
+  data: Avgiftspliktigperiode;
 }
 
 export interface OkSlettMedlemskapsperiodeAction {

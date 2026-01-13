@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { MedlemskapsperioderDisplay } from "./medlemskapsperiodeDisplay";
-import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../../services/modules/types/periodeTyper";
 
 describe("MedlemskapsperioderDisplay", () => {
   const mockPeriode: Avgiftspliktigperiode = {

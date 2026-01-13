@@ -7,7 +7,7 @@ import {
 import * as Api from "../../../../services/api";
 import * as Utils from "../../../../utils";
 import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
-import { Avgiftspliktigperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../services/modules/types/periodeTyper";
 import { InntektskildeDto, SkatteforholdDto } from "../../../../services/modules/trygdeavgift";
 import MKV from "../../../../melosyskodeverk";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlagSchema";

@@ -3,7 +3,7 @@ import { AarsavregningResponse } from "../../../../../services/modules/aarsavreg
 import {
   erHelseutgiftdekkesperiode,
   harInnvilgelsesResultat,
-} from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+} from "../../../../../services/modules/types/periodeTyper";
 import MKV from "../../../../../melosyskodeverk";
 import { formaterTilNorskBelopUtenDesimaler } from "../../../../../utils";
 import { BeregnetTrygdeavgiftDetaljer } from "./beregnetTrygdeavgiftDetaljer";

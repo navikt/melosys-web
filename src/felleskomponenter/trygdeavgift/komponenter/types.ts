@@ -1,5 +1,5 @@
 import { FieldValues } from "react-hook-form";
-import { Avgiftspliktigperiode } from "../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../services/modules/types/periodeTyper";
 
 export interface Inntektskilde {
   kildetype?: string;

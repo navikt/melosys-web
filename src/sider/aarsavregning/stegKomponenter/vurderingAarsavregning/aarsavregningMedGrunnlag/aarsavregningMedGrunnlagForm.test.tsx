@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { useForm } from "react-hook-form";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import MKV from "../../../../../melosyskodeverk";
-import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../../services/modules/types/periodeTyper";
 import { finnMedlemskapsperiode } from "../utils";
 
 const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;

@@ -11,7 +11,7 @@ import {
   mapTilInntektskilderProps,
   mapTilSkatteforholdProps,
 } from "./utils";
-import { Avgiftspliktigperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../services/modules/types/periodeTyper";
 
 // Helper function to create mock Medlemskapsperiode
 const createMockMedlemskapsperiode = (overrides?: Partial<Avgiftspliktigperiode>): Avgiftspliktigperiode => ({

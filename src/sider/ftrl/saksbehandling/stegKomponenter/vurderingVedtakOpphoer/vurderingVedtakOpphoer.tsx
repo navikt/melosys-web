@@ -7,7 +7,7 @@ import { useDispatch } from "../../../../../hooks";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import vurdering_vedtak_opphoer from "./vurderingVedtakOpphoerSchema";
 import * as Api from "../../../../../services/api";
-import { harInnvilgelsesResultat } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode, harInnvilgelsesResultat } from "../../../../../services/modules/types/periodeTyper";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { useCallback, useEffect, useState } from "react";
@@ -142,7 +142,7 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
     ];
   };
 
-  const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode[]) =>
+  const mapPeriodeRader = (perioder: Avgiftspliktigperiode[]) =>
     perioder.sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
       const hasFullFields = harInnvilgelsesResultat(it);
       return {

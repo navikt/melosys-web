@@ -12,7 +12,7 @@ import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrun
 
 import { useEffect } from "react";
 import { FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../../services/modules/types/periodeTyper";
 import "./medlemskapsperiodeSkjema.less";
 import { usePliktigeBestemmelser } from "../hooks/usePliktigeBestemmelser";
 

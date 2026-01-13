@@ -8,7 +8,7 @@
 import { createSelector, Selector } from "reselect";
 import { RootState, StateSection } from "AppTypes";
 import { AarsavregningResponse, Trygdeavgiftsgrunnlag } from "../../services/modules/aarsavregning/aarsavregning";
-import { Avgiftspliktigperiode } from "../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../services/modules/types/periodeTyper";
 
 const AarsavregningSelector: Selector<RootState, StateSection<AarsavregningResponse>> = createSelector(
   (state: RootState) => state.aarsavregning,

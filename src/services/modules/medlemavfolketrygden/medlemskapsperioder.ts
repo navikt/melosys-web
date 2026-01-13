@@ -1,9 +1,5 @@
 import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../../utils";
 import { API_BASE_URL, BEHANDLINGER, MEDLEMSKAPSPERIODER } from "../../api-constants";
-
-// Re-eksporter kun det som faktisk brukes fra denne filen
-export { type Avgiftspliktigperiode, erHelseutgiftdekkesperiode, harInnvilgelsesResultat } from "../types/periodeTyper";
-
 import type { Medlemskapsperiode, Avgiftspliktigperiode } from "../types/periodeTyper";
 
 /**

@@ -8,7 +8,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
-import { harInnvilgelsesResultat } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode, harInnvilgelsesResultat } from "../../../../../services/modules/types/periodeTyper";
 import * as Forms from "../../../../../felleskomponenter/forms";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
@@ -357,7 +357,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
   if (!aktivtSteg) return null;
 
-  const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode[]) =>
+  const mapPeriodeRader = (perioder: Avgiftspliktigperiode[]) =>
     [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
       const hasFullFields = harInnvilgelsesResultat(it);
       return {

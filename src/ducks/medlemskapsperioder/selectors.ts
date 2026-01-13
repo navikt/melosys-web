@@ -3,7 +3,7 @@ import { createSelector, Selector } from "reselect";
 import * as Types from "./types";
 import MKV from "../../melosyskodeverk";
 import { sorterEtterISOFomDato } from "../../utils/dato";
-import { harInnvilgelsesResultat } from "../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { harInnvilgelsesResultat } from "../../services/modules/types/periodeTyper";
 
 const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;
 

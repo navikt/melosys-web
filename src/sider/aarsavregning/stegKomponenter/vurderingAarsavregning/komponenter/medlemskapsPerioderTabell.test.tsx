@@ -1,4 +1,4 @@
-import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../../services/modules/types/periodeTyper";
 import MedlemskapsPerioderTabell from "./medlemskapsPerioderTabell";
 import { render, screen } from "@testing-library/react";
 
