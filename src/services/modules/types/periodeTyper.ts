@@ -1,38 +1,41 @@
 /**
- * Felles periodetyper for avgiftspliktige perioder.
- * Brukes på tvers av medlemskapsperioder, lovvalgsperioder, helseutgiftdekkesperioder og årsavregning.
+ * Felles periodetyper.
+ * BasePeriode er generisk og kan gjenbrukes av alle periodetyper.
+ * Avgiftspliktige perioder (medlemskap, lovvalg, helseutgift) legger til redigerbar for UI-kontroll.
  */
 
-// Felles felt for alle avgiftspliktige perioder
-export interface BaseAvgiftspliktigperiode {
+// Generisk base for alle perioder
+export interface BasePeriode {
   id: number;
   fomDato: string;
   tomDato: string;
-  redigerbar?: boolean;
 }
 
 // Medlemskapsperiode - har alle de komplekse feltene
-export interface Medlemskapsperiode extends BaseAvgiftspliktigperiode {
+export interface Medlemskapsperiode extends BasePeriode {
   type: "MEDLEMSKAPSPERIODE";
   bestemmelse: string;
   innvilgelsesResultat: string;
   trygdedekning: string;
   medlemskapstype: string;
+  redigerbar?: boolean; // UI-only, settes i frontend basert på forretningslogikk
 }
 
 // Helseutgiftdekkesperiode i årsavregning-kontekst - kun datoer
 // NB: HelseutgiftDekkesPeriodeDto (egen fil) brukes for CRUD og har bostedLandkode
-export interface Helseutgiftdekkesperiode extends BaseAvgiftspliktigperiode {
+export interface Helseutgiftdekkesperiode extends BasePeriode {
   type: "HELSEUTGIFTDEKKESPERIODE";
+  redigerbar?: boolean; // UI-only
 }
 
 // Lovvalgsperiode - backend har også lovvalgsland og tilleggsbestemmelse, men ikke eksponert i AvgiftspliktigPeriodeDto
-export interface Lovvalgsperiode extends BaseAvgiftspliktigperiode {
+export interface Lovvalgsperiode extends BasePeriode {
   type: "LOVVALGSPERIODE";
   bestemmelse: string;
   innvilgelsesResultat: string;
   trygdedekning: string;
   medlemskapstype: string;
+  redigerbar?: boolean; // UI-only
 }
 
 // Discriminated union

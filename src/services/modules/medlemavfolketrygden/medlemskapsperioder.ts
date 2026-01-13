@@ -3,7 +3,7 @@ import { API_BASE_URL, BEHANDLINGER, MEDLEMSKAPSPERIODER } from "../../api-const
 
 // Re-eksporter periodetyper fra felles lokasjon for bakoverkompatibilitet
 export {
-  type BaseAvgiftspliktigperiode,
+  type BasePeriode,
   type Medlemskapsperiode,
   type Helseutgiftdekkesperiode,
   type Lovvalgsperiode,

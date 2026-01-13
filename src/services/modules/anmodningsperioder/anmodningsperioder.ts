@@ -1,17 +1,21 @@
 import { getAsJson, postAsJson } from "../../utils";
 import { ANMODNINGSPERIODER, API_BASE_URL } from "../../api-constants";
+import { BasePeriode, Medlemskapsperiode } from "../types/periodeTyper";
 
-export interface Anmodningsperiode {
+/**
+ * Anmodningsperiode for EU/EØS unntak.
+ * Gjenbruker felles felt fra BasePeriode og Medlemskapsperiode.
+ */
+export interface Anmodningsperiode
+  extends Pick<BasePeriode, "fomDato" | "tomDato">,
+    Partial<Pick<BasePeriode, "id">>,
+    Pick<Medlemskapsperiode, "trygdedekning"> {
   sendtUtland?: boolean;
-  id: string | null;
-  fomDato: string;
-  tomDato: string;
   lovvalgBestemmelse?: string;
   tilleggBestemmelse?: string;
   lovvalgsland: string;
   unntakFraBestemmelse?: string;
   unntakFraLovvalgsland: string;
-  trygdedekning: string;
   medlemskapsperiodeID: string;
 }
 

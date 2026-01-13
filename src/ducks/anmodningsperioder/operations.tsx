@@ -66,7 +66,6 @@ const byggAnmodningsperiode = (
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   return [
     {
-      id: null,
       fomDato: søknadsperiode.fom,
       tomDato: søknadsperiode.tom,
       lovvalgBestemmelse: stegState.lovvalgsbestemmelse,
