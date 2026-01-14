@@ -14,13 +14,16 @@ import { HGrid, Stack } from "@navikt/ds-react";
 interface SkatteforholdsperioderProps {
   formValues: FormValuesProps;
   fields: FieldArrayWithId<FieldArrayProps, "skatteforholdsperioder">[];
-  control: Control;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: Control<any>;
   remove: (index: number) => void;
   append: (skatteforhold: Skatteforhold) => void;
   redigerbart: boolean;
   defaultPeriode?: { fomDato: string; tomDato: string };
   minDate?: Date;
   maxDate?: Date;
+  forhindreAutoUtfylling?: boolean;
+  laasAar?: boolean;
 }
 
 export function Skatteforholdsperioder({
@@ -33,6 +36,8 @@ export function Skatteforholdsperioder({
   fields,
   minDate,
   maxDate,
+  forhindreAutoUtfylling,
+  laasAar,
 }: SkatteforholdsperioderProps) {
   return (
     <div className="perioder">
@@ -47,6 +52,8 @@ export function Skatteforholdsperioder({
               control={control}
               minDate={minDate}
               maxDate={maxDate}
+              forhindreAutoUtfylling={forhindreAutoUtfylling}
+              laasAar={laasAar}
             />
 
             <Forms.Datovelger
@@ -57,6 +64,8 @@ export function Skatteforholdsperioder({
               control={control}
               minDate={Utils.dato.norskStringTilDate(formValues.skatteforholdsperioder[index].fomDato) || minDate}
               maxDate={maxDate}
+              forhindreAutoUtfylling={forhindreAutoUtfylling}
+              laasAar={laasAar}
             />
 
             <Forms.RadioGroup

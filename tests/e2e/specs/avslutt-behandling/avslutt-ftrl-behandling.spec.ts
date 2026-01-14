@@ -1,47 +1,37 @@
-import { test } from "@playwright/test";
-import { HovedsidePage, USER_ID_VALID } from "../../pages/hovedside.page";
-import { SokPage } from "../../pages/sok.page";
-import { VisBehandlingPage } from "../../pages/vis-behandling.page";
-import { runAxeAnalyze } from "../../utils/axeUtils";
-import { opprettUtenforAvtalelandSak } from "../../utils/testdataUtils";
+import { test } from "../../recording/fixtures";
+import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
+import { BehandlingPage } from "../../pages/behandling/behandling.page";
+import { hentPrepopulertSakUrl } from "../../utils/testdataUtils";
+import { UI_TEXTS } from "../../config/ui-texts";
 
 test.describe("Avslutt 'Utenfor avtaleland'-behandling for testdata", () => {
-  test("Opprett og avslutt 'Utenfor avtaleland'-sak, verifiser redirect til hovedside", async ({ page }, testInfo) => {
-    test.setTimeout(30000); // Økt timeout siden vi oppretter og avslutter sak
-    const hovedsidePage = new HovedsidePage(page);
-    const sokPage = new SokPage(page);
-    const behandlingPage = new VisBehandlingPage(page);
+  test("Opprett og avslutt 'Utenfor avtaleland'-sak, verifiser redirect til hovedside", async ({
+    page,
+    apiRecorder,
+  }, testInfo) => {
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
+    const saksnummer = "MEL-1015";
+    const behandlingPage = new BehandlingPage(page, saksnummer);
 
-    // Opprett egen FTRL-sak
-    const sakId = await opprettUtenforAvtalelandSak(page);
+    // Hent URL til prepopulert FTRL-sak og naviger direkte dit
+    const url = hentPrepopulertSakUrl(saksnummer);
+    await behandlingPage.goto(url);
 
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
-
-    const sak = sokPage.finnSakBySaksnummer(sakId);
-    await sokPage.klikkVisBehandling(sak);
-    await behandlingPage.verifiserBehandlingsside();
-    await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId);
-
-    await runAxeAnalyze(page, testInfo.title);
+    await behandlingPage.avsluttBehandling(UI_TEXTS.VEDTAK.INNVILGET, UI_TEXTS.BUTTONS.BEKREFT);
   });
 
-  test("Opprett og avslutt 'Utenfor avtaleland'-sak for å sikre full avslutning", async ({ page }, testInfo) => {
-    test.setTimeout(30000); // Økt timeout siden vi oppretter og avslutter sak
-    const hovedsidePage = new HovedsidePage(page);
-    const sokPage = new SokPage(page);
-    const behandlingPage = new VisBehandlingPage(page);
+  test("Opprett og avslutt 'Utenfor avtaleland'-sak for å sikre full avslutning", async ({
+    page,
+    apiRecorder,
+  }, testInfo) => {
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Økt timeout siden vi oppretter og avslutter sak
+    const saksnummer = "MEL-1016";
+    const behandlingPage = new BehandlingPage(page, saksnummer);
 
-    // Opprett egen FTRL-sak
-    const sakId = await opprettUtenforAvtalelandSak(page);
+    // Hent URL til prepopulert FTRL-sak og naviger direkte dit
+    const url = hentPrepopulertSakUrl(saksnummer);
+    await behandlingPage.goto(url);
 
-    await hovedsidePage.goto();
-    await hovedsidePage.søkOgVentPåResultat(USER_ID_VALID);
-
-    const sak = sokPage.finnSakBySaksnummer(sakId);
-    await sokPage.klikkVisBehandling(sak);
-    await behandlingPage.avsluttBehandling("Søknaden er innvilget", sakId);
-
-    await runAxeAnalyze(page, testInfo.title);
+    await behandlingPage.avsluttBehandling(UI_TEXTS.VEDTAK.INNVILGET, UI_TEXTS.BUTTONS.BEKREFT);
   });
 });

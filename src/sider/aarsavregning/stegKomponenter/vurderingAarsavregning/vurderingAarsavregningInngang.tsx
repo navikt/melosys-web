@@ -74,7 +74,9 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const [valgtÅr, setValgtÅr] = useState<number | undefined>(undefined);
   const [initieltÅr, setInitieltÅr] = useState<number | undefined>(undefined);
   const [lagÅrsavregningFeil, setLagÅrsavregningFeil] = useState<string | undefined>(undefined);
-  const [harGrunnlag, setHarGrunnlag] = useState<boolean | undefined>(undefined);
+  const [harTidligereTrygdeavgiftsgrunnlag, setHarTidligereTrygdeavgiftsgrunnlag] = useState<boolean | undefined>(
+    undefined,
+  );
   const [harTrygdeavgiftFraAvgiftssystemet, setHarTrygdeavgiftFraAvgiftssystemet] = useState<boolean | undefined>(
     undefined,
   );
@@ -91,13 +93,50 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const { oppfriskOgLastInnSaksopplysningerForAarsavregning } = useContext(FellesHandlersContext) as any;
   const dispatch = useDispatch();
 
-  const utledGrunnlagstypeForÅrsavregning = (res: AarsavregningResponse) => {
-    setHarTrygdeavgiftFraAvgiftssystemet(res.harTrygdeavgiftFraAvgiftssystemet);
+  /**
+   * Utleder harTrygdeavgiftFraAvgiftssystemet når verdien er null (bakoverkompatibilitet).
+   *
+   * Eldre behandlinger kan ha null pga. bug der verdien ikke ble lagret.
+   * Vi infererer verdien basert på om brukeren har fylt ut avhengige felter:
+   * - Hvis trygdeavgiftFraAvgiftssystemet har verdi → brukeren valgte "Ja" → returnerer true
+   * - Hvis andre felter (manueltAvgiftBeloep, nyttTrygdeavgiftsGrunnlag) er fylt ut → brukeren valgte "Nei" → returnerer false
+   * - Ellers → ny årsavregning hvor brukeren ikke har svart ennå → returnerer undefined
+   */
+  const utledHarTrygdeavgiftFraAvgiftssystemetNårNull = (res: AarsavregningResponse): boolean | undefined => {
+    // Sjekk om brukeren har lagt til trygdeavgift fra avgiftssystemet (valgte "Ja")
+    const harTrygdeavgiftFraAvgiftssystemet =
+      res.avregning?.trygdeavgiftFraAvgiftssystemet !== null &&
+      res.avregning?.trygdeavgiftFraAvgiftssystemet !== undefined;
 
-    setHarGrunnlag(
+    if (harTrygdeavgiftFraAvgiftssystemet) {
+      return true;
+    }
+
+    // Sjekk om brukeren har fylt ut andre felter som krever at radioknappen er besvart (valgte "Nei")
+    const harAnnenDataSomKreverSvar =
+      res.avregning?.manueltAvgiftBeloep !== null || res.nyttTrygdeavgiftsGrunnlag !== null;
+
+    if (harAnnenDataSomKreverSvar) {
+      return false;
+    }
+
+    // Ingen data fylt ut - ny årsavregning hvor brukeren må svare
+    return undefined;
+  };
+
+  const utledGrunnlagstypeForÅrsavregning = (res: AarsavregningResponse) => {
+    if (res.harTrygdeavgiftFraAvgiftssystemet !== null) {
+      setHarTrygdeavgiftFraAvgiftssystemet(res.harTrygdeavgiftFraAvgiftssystemet);
+    } else {
+      // Bakoverkompatibilitet: utled verdi fra eksisterende data
+      const utledetVerdi = utledHarTrygdeavgiftFraAvgiftssystemetNårNull(res);
+      setHarTrygdeavgiftFraAvgiftssystemet(utledetVerdi);
+    }
+
+    setHarTidligereTrygdeavgiftsgrunnlag(
       !(
         res.tidligereTrygdeavgiftsGrunnlagsopplysninger === null ||
-        Utils._isEmpty(res.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.medlemskapsperioder)
+        Utils._isEmpty(res.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.avgiftspliktigperioder)
       ),
     );
   };
@@ -125,7 +164,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     setLagÅrsavregningFeil(undefined);
     setErNyVurdering(false);
     setHarAktivÅrsavregning(false);
-    setHarGrunnlag(undefined);
+    setHarTidligereTrygdeavgiftsgrunnlag(undefined);
     setHarTrygdeavgiftFraAvgiftssystemet(undefined);
     setAarsavregningResponse(undefined);
 
@@ -162,10 +201,16 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     setHarTrygdeavgiftFraAvgiftssystemetIsPending(true);
     Api.Aarsavregning.oppdaterHarTrygdeavgiftFraAvgiftssystemet(behandlingID, {
       harTrygdeavgiftFraAvgiftssystemet: value,
-    }).then((res) => {
-      setHarTrygdeavgiftFraAvgiftssystemet(res.harTrygdeavgiftFraAvgiftssystemet);
-      setHarTrygdeavgiftFraAvgiftssystemetIsPending(false);
-    });
+    })
+      .then((res) => {
+        setHarTrygdeavgiftFraAvgiftssystemet(res.harTrygdeavgiftFraAvgiftssystemet);
+        setHarTrygdeavgiftFraAvgiftssystemetIsPending(false);
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error("Feil ved oppdatering av harTrygdeavgiftFraAvgiftssystemet:", error);
+        setHarTrygdeavgiftFraAvgiftssystemetIsPending(false);
+      });
   };
 
   const forrigeÅrsavregningErManueltBeregnet = Boolean(
@@ -176,7 +221,9 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   );
   const forrigeÅrsavregningHarInnbetaltFraAvgiftssystem = Boolean(
     aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet !==
-      null,
+      null &&
+      aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet !==
+        undefined,
   );
 
   const sisteMuligeÅr = new Date().getFullYear() - 1;
@@ -247,9 +294,11 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             </Nav.Alert>
           )}
 
-          {aarsavregningResponse && harGrunnlag && <TidligereGrunnlag aarsavregningResponse={aarsavregningResponse} />}
+          {aarsavregningResponse && harTidligereTrygdeavgiftsgrunnlag && (
+            <TidligereGrunnlag aarsavregningResponse={aarsavregningResponse} />
+          )}
 
-          {aarsavregningResponse && harGrunnlag === false && (
+          {aarsavregningResponse && harTidligereTrygdeavgiftsgrunnlag === false && (
             <Nav.Alert variant="info" className="alertstripe_feilmelding">
               <Nav.BodyLong size="small">
                 Det er ingen informasjon om perioder med medlemskap og forskuddsvis fakturert trygdeavgift i Melosys.
@@ -261,11 +310,12 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             <Nav.Row>
               <Nav.Column xs="12">
                 <Nav.RadioGroup
+                  key={`trygdeavgiftFraAvgiftssystemetRadioGroup ${valgtÅr || initieltÅr || ""}`}
                   onChange={håndterHarTrygdeavgiftFraAvgiftssystemet}
                   legend={
                     <LabelMedHjelpetekst
                       label="Skal du legge til trygdeavgift fra Avgiftssystemet til denne årsavregningen?"
-                      hjelpetekst={harGrunnlag ? DELT_GRUNNLAG_HJELPETEKST : ""}
+                      hjelpetekst={harTidligereTrygdeavgiftsgrunnlag ? DELT_GRUNNLAG_HJELPETEKST : ""}
                     />
                   }
                   value={harTrygdeavgiftFraAvgiftssystemet}
@@ -281,19 +331,19 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           )}
 
           {!harTrygdeavgiftFraAvgiftssystemetIsPending &&
-            harGrunnlag === true &&
+            harTidligereTrygdeavgiftsgrunnlag === true &&
             harTrygdeavgiftFraAvgiftssystemet === false && (
               <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
             )}
           {!harTrygdeavgiftFraAvgiftssystemetIsPending &&
-            (harGrunnlag === false || harTrygdeavgiftFraAvgiftssystemet) &&
-            harTrygdeavgiftFraAvgiftssystemet !== null && (
+            (harTidligereTrygdeavgiftsgrunnlag === false || harTrygdeavgiftFraAvgiftssystemet) &&
+            (harTrygdeavgiftFraAvgiftssystemet === true || harTrygdeavgiftFraAvgiftssystemet === false) && (
               <AarsavregningUtenEllerDeltGrunnlag
                 bekreft={bekreft}
                 aktivtSteg={aktivtSteg}
                 oppdaterStatus={oppdaterStatus}
                 harTrygdeavgiftFraAvgiftssystemet={Boolean(harTrygdeavgiftFraAvgiftssystemet)}
-                harGrunnlag={Boolean(harGrunnlag)}
+                harTidligereTrygdeavgiftsgrunnlag={Boolean(harTidligereTrygdeavgiftsgrunnlag)}
               />
             )}
         </>

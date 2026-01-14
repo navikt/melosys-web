@@ -1,18 +1,12 @@
-import { describe, expect, beforeEach } from "vitest";
+import { describe, expect } from "vitest";
+import { http, HttpResponse } from "msw";
 import { Journalforing } from "../api";
 
-// Type for fetch mock
-declare const fetch: {
-  resetMocks: () => void;
-  mockResponse: (response: string) => void;
-  mockReject: (error: Error) => void;
-};
+// Global MSW server from setupTests.js
+declare const mswServer: ReturnType<typeof import("msw/node").setupServer>;
 
 describe("Journalforing endepunkt", () => {
-  beforeEach(() => {
-    fetch.resetMocks();
-  });
-  test("GET /api/journalforing/:journalpostID/:oppgaveID", () => {
+  test("GET /api/journalforing/:journalpostID/:oppgaveID", async () => {
     const oppgave = {
       brukerID: "30098000492",
       avsenderID: null,
@@ -23,20 +17,20 @@ describe("Journalforing endepunkt", () => {
         mottattDato: "2018-05-04T15:15:25.622",
       },
     };
-    fetch.mockResponse(JSON.stringify(oppgave));
-
     const journalpostID = "DOK_3789";
-    // assert on the response
-    Journalforing.hent(journalpostID).then((res) => {
-      expect(res).toEqual(oppgave);
-    });
 
-    // assert on the times called and arguments given to fetch
-    expect((fetch as any).mock.calls.length).toEqual(1);
-    expect((fetch as any).mock.calls[0][0]).toEqual(`/api/journalforing/${journalpostID}`);
+    mswServer.use(
+      http.get(`/api/journalforing/${journalpostID}`, () => {
+        return HttpResponse.json(oppgave);
+      }),
+    );
+
+    // assert on the response
+    const res = await Journalforing.hent(journalpostID);
+    expect(res).toEqual(oppgave);
   });
 
-  test("POST /api/journalforing/opprett", () => {
+  test("POST /api/journalforing/opprett", async () => {
     const oppgave = {
       brukerID: "30098000492",
       avsenderID: "30098000492",
@@ -47,11 +41,15 @@ describe("Journalforing endepunkt", () => {
         mottattDato: "2018-05-04T15:15:25.622",
       },
     };
-    fetch.mockResponse(JSON.stringify(oppgave));
+
+    mswServer.use(
+      http.post("/api/journalforing/opprett", () => {
+        return HttpResponse.json(oppgave);
+      }),
+    );
 
     // assert on the response
-    Journalforing.opprett(oppgave).then((res) => {
-      expect(res).toEqual(oppgave);
-    });
+    const res = await Journalforing.opprett(oppgave);
+    expect(res).toEqual(oppgave);
   });
 });

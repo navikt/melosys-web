@@ -5,11 +5,25 @@ import {
   beregnSumTilFakturaEllerRefusjon,
   beregnTrygdeavgiftsperioder,
   erBrukerSkattepliktigIHelePerioden,
+  erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling,
   hentMedlemskapsFomTomDato,
   mapFeilmelding,
   mapTilInntektskilderProps,
   mapTilSkatteforholdProps,
 } from "./utils";
+import { Avgiftspliktigperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+
+// Helper function to create mock Medlemskapsperiode
+const createMockMedlemskapsperiode = (overrides?: Partial<Avgiftspliktigperiode>): Avgiftspliktigperiode => ({
+  id: 1,
+  fomDato: "01.01.2023",
+  tomDato: "31.12.2023",
+  bestemmelse: "FTRL_2_7",
+  innvilgelsesResultat: "INNVILGET",
+  trygdedekning: "FULL_DEKNING",
+  medlemskapstype: "PLIKTIG",
+  ...overrides,
+});
 
 // Mock dependencies
 vi.mock("../../../../services/api", () => ({
@@ -166,7 +180,7 @@ describe("utils", () => {
 
     describe("hentMedlemskapsFomTomDato", () => {
       it("extracts date range from membership periods", () => {
-        const periods = [{ fomDato: "01.01.2023", tomDato: "31.12.2023" }];
+        const periods = [createMockMedlemskapsperiode()];
         vi.mocked(Utils._isEmpty).mockReturnValue(false);
 
         const result = hentMedlemskapsFomTomDato(periods);
@@ -191,7 +205,7 @@ describe("utils", () => {
       });
 
       it("creates default skatteforhold from membership when none provided", () => {
-        const membership = [{ fomDato: "01.01.2023", tomDato: "31.12.2023" }];
+        const membership = [createMockMedlemskapsperiode()];
         vi.mocked(Utils._isEmpty).mockReturnValue(false);
 
         const result = mapTilSkatteforholdProps(undefined, membership);
@@ -208,7 +222,7 @@ describe("utils", () => {
             tomDato: "2023-12-31",
             type: "ARBEID",
             arbeidsgiversavgiftBetales: true,
-            avgiftspliktigInntekt: "500000",
+            avgiftspliktigInntekt: 500000,
             erMaanedsbelop: false,
           },
         ];
@@ -222,14 +236,14 @@ describe("utils", () => {
             tomDato: "31.12.2023",
             kildetype: "ARBEID",
             arbAvgBetales: "JA",
-            bruttoInntekt: "500000",
+            bruttoInntekt: 500000,
             erMaanedsbelop: "NEI",
           },
         ]);
       });
 
       it("creates default inntektskilde from membership when none provided", () => {
-        const membership = [{ fomDato: "01.01.2023", tomDato: "31.12.2023" }];
+        const membership = [createMockMedlemskapsperiode()];
         vi.mocked(Utils._isEmpty).mockReturnValue(false);
 
         const result = mapTilInntektskilderProps(undefined, membership);
@@ -240,10 +254,105 @@ describe("utils", () => {
             tomDato: "31.12.2023",
             kildetype: "",
             arbAvgBetales: "NEI",
-            bruttoInntekt: "",
+            bruttoInntekt: undefined,
             erMaanedsbelop: "JA",
           },
         ]);
+      });
+
+      // MELOSYS-7639: Test for forhåndsutfylt inntektskilde når backend ikke har data
+      it("skal sette default erMaanedsbelop når ingen inntektskilder finnes fra backend", () => {
+        const membership = [createMockMedlemskapsperiode()];
+        vi.mocked(Utils._isEmpty).mockReturnValue(false);
+
+        const result = mapTilInntektskilderProps(undefined, membership);
+
+        // Forhåndsutfylt objekt MÅ ha erMaanedsbelop satt til default-verdi
+        // Dette sikrer at verdien ikke blir undefined ved beregning
+        // Default skal være "JA" (Md.) - konsistent med "Legg til inntekt"-knappen
+        expect(result[0].erMaanedsbelop).toBe("JA");
+      });
+
+      it("mapper erMaanedsbelop korrekt fra backend når inntektskilder finnes", () => {
+        const income = [
+          {
+            fomDato: "2023-01-01",
+            tomDato: "2023-12-31",
+            type: "ARBEID",
+            arbeidsgiversavgiftBetales: false,
+            avgiftspliktigInntekt: 600000,
+            erMaanedsbelop: false, // Backend sender boolean
+          },
+        ];
+        vi.mocked(Utils._isEmpty).mockReturnValue(false);
+
+        const result = mapTilInntektskilderProps(income, []);
+
+        // Frontend skal få string "NEI"
+        expect(result[0].erMaanedsbelop).toBe("NEI");
+      });
+
+      // MELOSYS-7639: Test for å verifisere at verdier holder seg sammen ved forskjellig rekkefølge
+      it("skal bevare korrekt mapping mellom datoer og periodetype selv om backend returnerer data i forskjellig rekkefølge", () => {
+        // Scenario: Backend returnerer tre inntektskilder med FORSKJELLIGE verdier i ALLE kolonner
+        // Dette gjør det lett å spotte om verdier "hopper" mellom rader
+        const inntektskilderFraBackend = [
+          {
+            fomDato: "2023-03-01", // Mars (siste periode)
+            tomDato: "2023-03-31",
+            type: "ARBEIDSINNTEKT",
+            arbeidsgiversavgiftBetales: true,
+            avgiftspliktigInntekt: 30000,
+            erMaanedsbelop: false, // Total
+          },
+          {
+            fomDato: "2023-01-01", // Januar (første periode)
+            tomDato: "2023-01-31",
+            type: "NÆRINGSINNTEKT",
+            arbeidsgiversavgiftBetales: false,
+            avgiftspliktigInntekt: 10000,
+            erMaanedsbelop: true, // Md.
+          },
+          {
+            fomDato: "2023-02-01", // Februar (midtre periode)
+            tomDato: "2023-02-28",
+            type: "PENSJON",
+            arbeidsgiversavgiftBetales: false,
+            avgiftspliktigInntekt: 20000,
+            erMaanedsbelop: true, // Md.
+          },
+        ];
+
+        vi.mocked(Utils._isEmpty).mockReturnValue(false);
+        // Mock datoformatering til å returnere input uendret for enklere assertions
+        vi.mocked(Utils.dato.formatterDatoTilNorsk).mockImplementation((dato) => dato);
+
+        const result = mapTilInntektskilderProps(inntektskilderFraBackend, []);
+
+        // UTEN sortering: Data kommer i samme rekkefølge som backend sendte (Mars, Januar, Februar)
+        // Index 0 = Mars (siste periode) med Total
+        expect(result[0].fomDato).toBe("2023-03-01");
+        expect(result[0].tomDato).toBe("2023-03-31");
+        expect(result[0].kildetype).toBe("ARBEIDSINNTEKT");
+        expect(result[0].bruttoInntekt).toBe(30000);
+        expect(result[0].erMaanedsbelop).toBe("NEI"); // Total skal følge Mars
+        expect(result[0].arbAvgBetales).toBe("JA");
+
+        // Index 1 = Januar (første periode) med Md.
+        expect(result[1].fomDato).toBe("2023-01-01");
+        expect(result[1].tomDato).toBe("2023-01-31");
+        expect(result[1].kildetype).toBe("NÆRINGSINNTEKT");
+        expect(result[1].bruttoInntekt).toBe(10000);
+        expect(result[1].erMaanedsbelop).toBe("JA"); // Md. skal følge Januar
+        expect(result[1].arbAvgBetales).toBe("NEI");
+
+        // Index 2 = Februar (midtre periode) med Md.
+        expect(result[2].fomDato).toBe("2023-02-01");
+        expect(result[2].tomDato).toBe("2023-02-28");
+        expect(result[2].kildetype).toBe("PENSJON");
+        expect(result[2].bruttoInntekt).toBe(20000);
+        expect(result[2].erMaanedsbelop).toBe("JA"); // Md. skal følge Februar
+        expect(result[2].arbAvgBetales).toBe("NEI");
       });
     });
   });
@@ -274,6 +383,48 @@ describe("utils", () => {
 
       // 1000 - 5000 - 2000 + 500 = -5500
       expect(result).toBe(-5500);
+    });
+  });
+
+  describe("erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling", () => {
+    it("returnerer false når fomDato er tom", () => {
+      const result = erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling("", "31.12.2020", 2020);
+      expect(result).toBe(false);
+    });
+
+    it("returnerer false når tomDato er tom", () => {
+      const result = erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling("01.01.2020", "", 2020);
+      expect(result).toBe(false);
+    });
+
+    it("returnerer false når input er ugyldig som 'dd11ss'", () => {
+      const result = erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling("dd11ss", "31.12.2020", 2020);
+      expect(result).toBe(false);
+    });
+
+    it("returnerer false når tomDato er ugyldig", () => {
+      const result = erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling("01.01.2020", "abc123", 2020);
+      expect(result).toBe(false);
+    });
+
+    it("returnerer false når fomDato er før valgt år", () => {
+      const result = erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling("31.12.2019", "31.12.2020", 2020);
+      expect(result).toBe(false);
+    });
+
+    it("returnerer false når tomDato er etter valgt år", () => {
+      const result = erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling("01.01.2020", "01.01.2021", 2020);
+      expect(result).toBe(false);
+    });
+
+    it("returnerer true når datoer er gyldige og innenfor valgt år", () => {
+      const result = erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling("01.01.2020", "31.12.2020", 2020);
+      expect(result).toBe(true);
+    });
+
+    it("returnerer true når datoer er gyldige og valgtAar ikke er spesifisert", () => {
+      const result = erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling("01.01.2020", "31.12.2020");
+      expect(result).toBe(true);
     });
   });
 });

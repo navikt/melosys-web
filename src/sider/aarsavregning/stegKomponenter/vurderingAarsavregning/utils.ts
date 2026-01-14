@@ -7,25 +7,64 @@ import {
 import * as Api from "../../../../services/api";
 import * as Utils from "../../../../utils";
 import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
+import { Avgiftspliktigperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { InntektskildeDto, SkatteforholdDto } from "../../../../services/modules/trygdeavgift";
 import MKV from "../../../../melosyskodeverk";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlagSchema";
+import { ValidationError } from "yup";
 
 const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 
-export const mapFeilmelding = (error: any) => {
+interface ApiError {
+  body?: {
+    feilkoder?: string[];
+    message?: string;
+  };
+  message?: string;
+}
+
+export const mapFeilmelding = (error: unknown): string | string[] => {
   const feilmelding = "Finner ikke trygdeavgiftssats. Melosys har ikke satser for årene før 2014.";
 
-  const ingenGjeldendeSats = error.body?.feilkoder?.some((feilkode: string) =>
+  // Handle string errors directly
+  if (typeof error === "string") {
+    return error;
+  }
+
+  const apiError = error as ApiError;
+  const ingenGjeldendeSats = apiError.body?.feilkoder?.some((feilkode: string) =>
     feilkode.startsWith("Ingen gjeldende sats finnes for perioden"),
   );
 
   if (ingenGjeldendeSats) return feilmelding;
 
-  return error.body?.feilkoder || error.body?.message || error;
+  return apiError.body?.feilkoder || apiError.body?.message || apiError.message || "Ukjent feil";
 };
 
-export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder: any) => {
-  return !skatteforholdsperioder.some((skatteforhold: any) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG);
+export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder: Skatteforhold[]) => {
+  return !skatteforholdsperioder.some((skatteforhold) => skatteforhold.skatteplikttype === IKKE_SKATTEPLIKTIG);
+};
+
+/**
+ * Finner sammensatt medlemskapsperiode fra en liste av perioder.
+ * Returnerer fomDato fra den tidligste perioden og tomDato fra den seneste.
+ * Filtrerer bort perioder som mangler fomDato eller tomDato.
+ */
+export const finnMedlemskapsperiode = (
+  perioder: Avgiftspliktigperiode[],
+): { fomDato: string; tomDato: string } | undefined => {
+  const sorterteGyldigePerioder = perioder
+    .filter((periode) => periode.fomDato && periode.tomDato)
+    .sort((a, b) => Utils.dato.sorterEtterNorskFomDato(a, b));
+
+  if (sorterteGyldigePerioder.length === 0) {
+    return undefined;
+  }
+
+  return {
+    fomDato: sorterteGyldigePerioder[0].fomDato,
+    tomDato: sorterteGyldigePerioder[sorterteGyldigePerioder.length - 1].tomDato,
+  };
 };
 
 export function beregnTrygdeavgiftsperioder(
@@ -33,7 +72,7 @@ export function beregnTrygdeavgiftsperioder(
   options: {
     behandlingID: number;
     medlemskapstypeErPliktig?: boolean;
-    setFeilmelding: (error: any) => void;
+    setFeilmelding: (error: string | string[] | undefined) => void;
     setAarsavregningResponse: (response: AarsavregningResponse) => void;
   },
 ) {
@@ -70,12 +109,9 @@ export function beregnTrygdeavgiftsperioder(
 
 // Functions moved from aarsavregningHelpers.ts
 
-export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: any[]) => {
+export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: Avgiftspliktigperiode[]) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
     const sorted = [...medlemskapsperioder].sort(Utils.dato.sorterEtterNorskFomDato);
-    /* eslint-disable-next-line no-console */
-    console.log("[hentMedlemskapsFomTomDato] sorted with Utils.dato.sorterEtterNorskFomDato", sorted);
-
     const fomISO = Utils.dato.formatterDatoTilISO(sorted[0].fomDato);
     const tomISO = Utils.dato.formatterDatoTilISO(sorted[sorted.length - 1].tomDato);
     return { fom: fomISO, tom: tomISO };
@@ -83,7 +119,10 @@ export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: any[]) => {
   return {};
 };
 
-export const mapTilSkatteforholdProps = (skatteforholdsperioder?: any[], medlemskapsperioder?: any[]) => {
+export const mapTilSkatteforholdProps = (
+  skatteforholdsperioder?: SkatteforholdDto[],
+  medlemskapsperioder?: Avgiftspliktigperiode[],
+): Skatteforhold[] => {
   if (skatteforholdsperioder && !Utils._isEmpty(skatteforholdsperioder)) {
     return skatteforholdsperioder.map((skatteForhold) => ({
       fomDato: Utils.dato.formatterDatoTilNorsk(skatteForhold.fomDato),
@@ -101,10 +140,13 @@ export const mapTilSkatteforholdProps = (skatteforholdsperioder?: any[], medlems
       },
     ];
   }
-  return [{}];
+  return [{}] as Skatteforhold[];
 };
 
-export const mapTilInntektskilderProps = (inntektskilder?: any[], medlemskapsperioder?: any[]) => {
+export const mapTilInntektskilderProps = (
+  inntektskilder?: InntektskildeDto[],
+  medlemskapsperioder?: Avgiftspliktigperiode[],
+): Inntektskilde[] => {
   if (inntektskilder && !Utils._isEmpty(inntektskilder)) {
     return inntektskilder.map((inntektskilde) => ({
       fomDato: Utils.dato.formatterDatoTilNorsk(inntektskilde.fomDato),
@@ -122,13 +164,13 @@ export const mapTilInntektskilderProps = (inntektskilder?: any[], medlemskapsper
         fomDato: Utils.dato.formatterDatoTilNorsk(fom),
         tomDato: Utils.dato.formatterDatoTilNorsk(tom),
         arbAvgBetales: Utils.streng.boolTilUppercaseStreng(false),
-        bruttoInntekt: "",
+        bruttoInntekt: undefined,
         kildetype: "",
         erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(true),
       },
     ];
   }
-  return [{}];
+  return [{ erMaanedsbelop: Utils.streng.boolTilUppercaseStreng(true) }] as Inntektskilde[];
 };
 
 export const beregnSumTilFakturaEllerRefusjon = (
@@ -146,13 +188,54 @@ export const beregnSumTilFakturaEllerRefusjon = (
 };
 
 /**
+ * Sjekker om datoer fra medlemskapsperiode er gyldige og kan brukes til å auto-fylle skatteforhold/inntektskilder.
+ * Validerer at:
+ * 1. Datoene kan formateres til ISO (er gyldige datoer)
+ * 2. Datoene er innenfor valgt år for årsavregningen
+ *
+ * @param fomDato - Fra og med dato i norsk format (dd.mm.yyyy)
+ * @param tomDato - Til og med dato i norsk format (dd.mm.yyyy)
+ * @param valgtAar - Året som årsavregningen gjelder for
+ * @returns true hvis datoene er gyldige og kan brukes, false ellers
+ */
+export const erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling = (
+  fomDato: string,
+  tomDato: string,
+  valgtAar?: number,
+): boolean => {
+  if (!fomDato || !tomDato) {
+    return false;
+  }
+
+  const fomDatoISO = Utils.dato.vaskOgFormatterTilISO(fomDato);
+  const tomDatoISO = Utils.dato.vaskOgFormatterTilISO(tomDato);
+
+  if (!fomDatoISO || !tomDatoISO) {
+    return false;
+  }
+
+  if (valgtAar) {
+    const fomDate = new Date(fomDatoISO);
+    const tomDate = new Date(tomDatoISO);
+    const startAar = new Date(valgtAar, 0, 1);
+    const sluttAar = new Date(valgtAar, 11, 31, 23, 59, 59, 999);
+
+    if (fomDate < startAar || fomDate > sluttAar || tomDate < startAar || tomDate > sluttAar) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+/**
  * Modifisert manuell valideringsfunksjon for å unngå å trigge react-hook-form feil for tidlig
  */
 export const validateAarsavregningUtenEllerDeltGrunnlag = async (
-  values: any,
+  values: unknown,
   context: { aar?: number; harTrygdeavgiftFraAvgiftssystemet?: boolean },
   path: string | null = null,
-) => {
+): Promise<{ isValid: boolean; errors: Record<string, string> }> => {
   try {
     const schema = aarsavregningUtenEllerDeltGrunnlagSchema;
 
@@ -161,27 +244,33 @@ export const validateAarsavregningUtenEllerDeltGrunnlag = async (
 
     // Hvis validering lykkes (ingen exception), returner gyldig
     return { isValid: true, errors: {} };
-  } catch (err: any) {
-    const validationErrors: any = {};
+  } catch (err) {
+    const validationErrors: Record<string, string> = {};
 
-    if (err.inner) {
-      err.inner.forEach((error: any) => {
-        if (path) {
-          // Inkluder kun feil for den spesifiserte stien
-          if (error.path && error.path.startsWith(path)) {
-            validationErrors[error.path] = error.message;
+    if (err instanceof ValidationError) {
+      if (err.inner && err.inner.length > 0) {
+        err.inner.forEach((error) => {
+          if (path) {
+            // Inkluder kun feil for den spesifiserte stien
+            if (error.path && error.path.startsWith(path)) {
+              validationErrors[error.path] = error.message;
+            }
+          } else {
+            // Inkluder alle feil hvis ingen sti er spesifisert
+            if (error.path) {
+              validationErrors[error.path] = error.message;
+            }
           }
-        } else {
-          // Inkluder alle feil hvis ingen sti er spesifisert
-          validationErrors[error.path] = error.message;
+        });
+      } else {
+        // Håndter enkeltfeil (f.eks. for array-nivå validering)
+        if (path && err.path && err.path.startsWith(path)) {
+          validationErrors[err.path] = err.message;
+        } else if (!path && err.path) {
+          validationErrors[err.path] = err.message;
+        } else if (!path) {
+          validationErrors["form"] = err.message;
         }
-      });
-    } else {
-      // Håndter enkeltfeil (f.eks. for array-nivå validering)
-      if (path && err.path && err.path.startsWith(path)) {
-        validationErrors[err.path] = err.message;
-      } else if (!path) {
-        validationErrors[err.path || "form"] = err.message;
       }
     }
 

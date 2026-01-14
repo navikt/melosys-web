@@ -46,7 +46,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
 
   const createMockData = (): Grunnlagsopplysninger => ({
     trygdeavgiftsgrunnlag: {
-      medlemskapsperioder: [
+      avgiftspliktigperioder: [
         {
           fomDato: "2023-01-01",
           tomDato: "2023-12-31",

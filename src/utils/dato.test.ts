@@ -89,6 +89,32 @@ describe("dato.js:", () => {
         expect(vasketDato).toEqual(datoTest.forvent);
       });
     });
+
+    test("feiler på kort input med 4 tegn som '0101'", () => {
+      const vasketDato = vaskInputDato("0101");
+      expect(vasketDato).toEqual(false);
+    });
+
+    test("feiler på kort input med 2 tegn som '01'", () => {
+      const vasketDato = vaskInputDato("01");
+      expect(vasketDato).toEqual(false);
+    });
+
+    test("tolker '010120' som 01.01.2020 når dagens år er 2025", () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date("2025-10-24"));
+
+      const vasketDato = vaskInputDato("010120");
+      expect(vasketDato).toEqual("01.01.2020");
+    });
+
+    test("tolker '011025' som 01.10.2025 når dagens år er 2025", () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date("2025-10-24"));
+
+      const vasketDato = vaskInputDato("011025");
+      expect(vasketDato).toEqual("01.10.2025");
+    });
   });
 
   describe("nodmaliserInputDato", () => {

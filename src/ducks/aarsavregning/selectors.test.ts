@@ -26,7 +26,7 @@ describe("Aarsavregning Selektorer", () => {
             aar: 2023,
             tidligereTrygdeavgiftsGrunnlagsopplysninger: {
               trygdeavgiftsgrunnlag: {
-                medlemskapsperioder: mockMedlemskapsperioder,
+                avgiftspliktigperioder: mockMedlemskapsperioder,
                 skatteforholdsperioder: [],
                 inntektskperioder: [],
               },

@@ -2,7 +2,7 @@ import { Inntektskilde, Skatteforhold } from "./types";
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import MKV from "../../../melosyskodeverk";
-import { Medlemskapsperiode } from "../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { Type } from "../../menypanel/menypunkter/fullmektig/types";
 
 const { PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT } = MKV.Koder.inntektskildetype;
@@ -18,13 +18,13 @@ const HoyManedinntekt = (
 
 const InntektskildeUtenforMedlemskapsperiode = (
   <Nav.Alert variant="error" className="alertstripe_feilmelding">
-    Inntektskildeperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e).
+    Inntektskildeperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e)/lovvalgsperioden(e).
   </Nav.Alert>
 );
 
 const SkatteforholdUtenforMedlemskapsperiode = (
   <Nav.Alert variant="error" className="alertstripe_feilmelding">
-    Skatteforholdsperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e).
+    Skatteforholdsperioden(e) kan ikke starte før eller slutte etter medlemskapsperioden(e)/lovvalgsperioden(e).
   </Nav.Alert>
 );
 
@@ -102,7 +102,7 @@ const erSkattepliktigOgPensjonUføreMedKildeskatt = (
 
 const erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
   inntektskilder: Inntektskilde[],
-  medlemskapsperioder: Medlemskapsperiode[],
+  medlemskapsperioder: Avgiftspliktigperiode[],
 ) => {
   const pensjonuføretrygdKilder = inntektskilder.filter((inntektskilde) =>
     [PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT].includes(inntektskilde.kildetype),
@@ -138,7 +138,7 @@ enum TypeMelding {
 export const finnAktivFeilmelding = (
   inntektskilder: Inntektskilde[],
   skatteforholdsperioder: Skatteforhold[],
-  medlemskapsperioder: Medlemskapsperiode[],
+  medlemskapsperioder: Avgiftspliktigperiode[],
   innvilgetMedlemskapsperiode?: { fom: string; tom: string },
 ): string | undefined => {
   if (!innvilgetMedlemskapsperiode || innvilgetMedlemskapsperiode.tom == null) return undefined;

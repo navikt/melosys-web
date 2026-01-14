@@ -1,7 +1,7 @@
 import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../../utils";
 import { API_BASE_URL, BEHANDLINGER, MEDLEMSKAPSPERIODER } from "../../api-constants";
 
-export interface Medlemskapsperiode {
+export interface Avgiftspliktigperiode {
   id: number;
   fomDato: string;
   tomDato: string;
@@ -9,6 +9,7 @@ export interface Medlemskapsperiode {
   innvilgelsesResultat: string;
   trygdedekning: string;
   medlemskapstype: string;
+  type?: "MEDLEMSKAPSPERIODE" | "HELSEUTGIFTDEKKESPERIODE" | "LOVVALGSPERIODE";
   redigerbar?: boolean;
 }
 
@@ -40,3 +41,10 @@ export const slettMedlemskapsperioder = (behandlingID: number) =>
 
 export const opprettForeslåtteMedlemskapsperioder = (behandlingID: number, bestemmelse: string) =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/forslag`, { bestemmelse });
+
+export function harPerioderFraTidligereÅr(avgiftspliktigperioder: Avgiftspliktigperiode[]): boolean {
+  return (
+    avgiftspliktigperioder.length > 0 &&
+    avgiftspliktigperioder.some((periode) => new Date(periode.fomDato).getFullYear() < new Date().getFullYear())
+  );
+}

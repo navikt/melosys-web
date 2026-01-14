@@ -5,12 +5,199 @@
 import { expect, Locator, Page } from "@playwright/test";
 
 /**
+ * CI timeout multiplier - same as playwright.config.ts
+ * CI environments are slower so we need longer timeouts
+ */
+const IS_CI = !!process.env.CI;
+const CI_TIMEOUT_MULTIPLIER = IS_CI ? 3 : 1;
+
+/**
+ * 30 sekunder for komplekse tester (45 sekunder i CI)
+ * Note: This must be >= the default test timeout in playwright.config.ts
+ * to actually extend the timeout for complex tests.
+ */
+export const TIMEOUT_FOR_COMPLEX_TESTS = 30000 * CI_TIMEOUT_MULTIPLIER;
+
+/**
+ * Generisk funksjon for å sette dato i et datofelt
+ * @param feltNavn - Navn/label på datofeltet
+ * @param dato - Dato i norsk format (DD.MM.YYYY)
+ * @param scope - Page eller Locator å søke innenfor
+ */
+export async function setDatoFelt(feltNavn: string, dato: string, scope: Page | Locator): Promise<void> {
+  const datoInput = scope.getByRole("textbox", { name: feltNavn });
+  const count = await datoInput.count();
+  expect(count, `Datofelt "${feltNavn}" skal finnes`).toBeGreaterThan(0);
+  expect(count, `Datofelt "${feltNavn}" skal være unik - bruk smalere scope`).toBe(1);
+
+  await expect(datoInput, `Datofelt "${feltNavn}" skal være synlig`).toBeVisible();
+  await datoInput.fill(dato);
+}
+
+/**
+ * Finn en knapp basert på label/navn og verifiser at den finnes og er unik
+ * @param label - Knappens label/navn (synlig tekst eller aria-label)
+ * @param scope - Page eller Locator å søke innenfor
+ * @returns Locator for knappen (garantert å finnes og være unik)
+ */
+export async function finnKnapp(label: string, scope: Page | Locator): Promise<Locator> {
+  const knapp = scope.getByRole("button", { name: label });
+  const count = await knapp.count();
+
+  expect(count, `Knapp "${label}" skal finnes`).toBeGreaterThan(0);
+  expect(count, `Knapp "${label}" skal være unik - bruk smalere scope`).toBe(1);
+
+  return knapp;
+}
+
+/**
+ * Finn en checkbox basert på label/navn og verifiser at den finnes og er unik
+ * @param label - Checkboxens label/navn (synlig tekst eller aria-label)
+ * @param scope - Page eller Locator å søke innenfor
+ * @returns Locator for checkboxen (garantert å finnes og være unik)
+ */
+export async function finnCheckbox(label: string, scope: Page | Locator): Promise<Locator> {
+  const checkbox = scope.getByRole("checkbox", { name: label });
+  const count = await checkbox.count();
+
+  expect(count, `Checkbox "${label}" skal finnes`).toBeGreaterThan(0);
+  expect(count, `Checkbox "${label}" skal være unik - bruk smalere scope`).toBe(1);
+
+  return checkbox;
+}
+
+/**
+ * Finn en checkbox-gruppe (fieldset med legend) og returner scoped locator
+ * @param legend - Tekst i legend-elementet (kan være delvis match)
+ * @param scope - Page eller Locator å søke innenfor
+ * @returns Locator for fieldset-en (scoped til gruppen)
+ */
+export async function finnCheckboxGroup(legend: string, scope: Page | Locator): Promise<Locator> {
+  const fieldset = scope.locator("fieldset").filter({
+    has: scope.locator(`legend:has-text("${legend}")`),
+  });
+  const count = await fieldset.count();
+
+  expect(count, `Checkbox-gruppe "${legend}" skal finnes`).toBeGreaterThan(0);
+  expect(count, `Checkbox-gruppe "${legend}" skal være unik - bruk smalere scope`).toBe(1);
+
+  return fieldset;
+}
+
+/**
+ * Finn en radio-gruppe (role="group") og verifiser synlighet
+ * @param navn - Gruppens accessible name (fra legend eller aria-label)
+ * @param scope - Page eller Locator å søke innenfor
+ * @param options - Valgfrie options: timeout (ms), erSynlig (default true)
+ * @returns Locator for gruppen (scoped)
+ */
+export async function finnRadioGroup(
+  navn: string,
+  scope: Page | Locator,
+  options?: { timeout?: number; erSynlig?: boolean },
+): Promise<Locator> {
+  const gruppe = scope.getByRole("group", { name: navn });
+  const erSynlig = options?.erSynlig ?? true;
+  const timeoutOptions = options?.timeout ? { timeout: options.timeout } : undefined;
+
+  if (erSynlig) {
+    await expect(gruppe, `Radio-gruppe "${navn}" skal være synlig`).toBeVisible(timeoutOptions);
+    const count = await gruppe.count();
+    expect(count, `Radio-gruppe "${navn}" skal være unik - bruk smalere scope`).toBe(1);
+  } else {
+    await expect(gruppe, `Radio-gruppe "${navn}" skal ikke være synlig`).not.toBeVisible(timeoutOptions);
+  }
+
+  return gruppe;
+}
+
+/**
+ * Finn en radioknapp basert på label/navn og verifiser at den finnes og er unik
+ * @param label - Radioknappens label/navn (synlig tekst eller aria-label)
+ * @param scope - Page eller Locator å søke innenfor
+ * @param timeout - Valgfri timeout i ms for å vente på at elementet skal dukke opp
+ * @returns Locator for radioknappen (garantert å finnes og være unik)
+ */
+export async function finnRadioknapp(label: string, scope: Page | Locator, timeout?: number): Promise<Locator> {
+  const radio = scope.getByRole("radio", { name: label });
+
+  // Verifiser at radioknappen er synlig (med valgfri timeout)
+  const options = timeout ? { timeout } : undefined;
+  await expect(radio, `Radioknapp "${label}" skal være synlig`).toBeVisible(options);
+
+  const count = await radio.count();
+  expect(count, `Radioknapp "${label}" skal være unik - bruk smalere scope`).toBe(1);
+
+  return radio;
+}
+
+/**
+ * Finn og velg en radioknapp
+ * @param navn - Navn/label på radioknappen
+ * @param scope - Page eller Locator å søke innenfor
+ * @param timeout - Valgfri timeout i ms for å vente på at elementet skal dukke opp
+ */
+export async function velgRadioknapp(navn: string, scope: Page | Locator, timeout?: number): Promise<void> {
+  const radio = await finnRadioknapp(navn, scope, timeout);
+
+  const isChecked = await radio.isChecked();
+  if (!isChecked) {
+    await radio.check();
+  }
+}
+
+/**
+ * Finn en combobox/select basert på label/navn og verifiser at den finnes og er unik
+ * @param navn - Comboboxens label/navn (synlig tekst eller aria-label)
+ * @param scope - Page eller Locator å søke innenfor
+ * @param timeout - Valgfri timeout i ms for å vente på at elementet skal dukke opp
+ * @returns Locator for comboboxen (garantert å finnes og være unik)
+ */
+export async function finnCombobox(navn: string, scope: Page | Locator, timeout?: number): Promise<Locator> {
+  const combobox = scope.getByRole("combobox", { name: navn });
+
+  const options = timeout ? { timeout } : undefined;
+  await expect(combobox, `Combobox "${navn}" skal være synlig`).toBeVisible(options);
+
+  const count = await combobox.count();
+  expect(count, `Combobox "${navn}" skal være unik - bruk smalere scope`).toBe(1);
+
+  return combobox;
+}
+
+/**
+ * Finn og velg verdi fra en combobox/select
+ * @param navn - Navn/label på combobox/select
+ * @param verdi - Verdien som skal velges (label)
+ * @param scope - Page eller Locator å søke innenfor
+ * @param timeout - Valgfri timeout i ms for å vente på at elementet skal dukke opp
+ */
+export async function velgFraListe(
+  navn: string,
+  verdi: string,
+  scope: Page | Locator,
+  timeout?: number,
+): Promise<void> {
+  const combobox = await finnCombobox(navn, scope, timeout);
+  await combobox.selectOption({ label: verdi });
+}
+
+/**
+ * Extended Locator interface with custom _sakId property
+ */
+export interface LocatorWithSakId extends Locator {
+  _sakId?: string;
+}
+
+/**
  * Hent sakId fra locator
  * @param sak - Sak-locator
  * @returns sakId eller "ukjent"
+ *
+ * Note: This relies on custom _sakId property set by setSakId() in OpprettNySakPage
  */
-export function getSakId(sak: Locator): string {
-  return sak ? ((sak as unknown as Record<string, unknown>)._sakId as string) || "ukjent" : "ukjent";
+export function getSaksnummerFraLocator(sak: Locator): string {
+  return (sak as LocatorWithSakId)._sakId || "ukjent";
 }
 
 /**
@@ -29,21 +216,17 @@ export function sanitizeFilename(filename: string): string {
     .trim(); // Trim leading/trailing whitespace
 }
 
+const ERROR_SELECTORS =
+  ".navds-error-message, .feilmelding, .skjemaelement__feilmelding, [data-testid*='error'], .navds-alert--error";
+
 /**
  * Verifiserer at en spesifikk field error er synlig
  * @param scope - Side eller locator-område å søke innenfor
  * @param errorText - Forventet feilmeldingstekst
  */
 export async function assertFieldError(scope: Page | Locator, errorText: string | RegExp) {
-  const fieldError = scope
-    .locator(
-      ".navds-error-message, .feilmelding, .skjemaelement__feilmelding, [data-testid*='error'], .navds-alert--error",
-    )
-    .filter({
-      hasText: errorText,
-    })
-    .first();
-  await expect(fieldError, `Fant ikke feilmedingen: ` + errorText).toBeVisible();
+  const fieldError = scope.locator(ERROR_SELECTORS).filter({ hasText: errorText }).first();
+  await expect(fieldError, `Fant ikke feilmedingen: ${errorText}`).toBeVisible();
 }
 
 /**
@@ -54,9 +237,7 @@ export async function assertFieldError(scope: Page | Locator, errorText: string 
 export async function assertFieldErrors(scope: Page | Locator, errorTexts: (string | RegExp)[]) {
   // Hent alle synlige field errors, ekskluder feiloppsummering
   const allFieldErrors = scope
-    .locator(
-      ".navds-error-message, .feilmelding, .skjemaelement__feilmelding, [data-testid*='error'], .navds-alert--error",
-    )
+    .locator(ERROR_SELECTORS)
     .and(scope.locator(':not(:has-text("Følgende feil ble funnet"))'));
   const actualCount = await allFieldErrors.count();
 
@@ -101,9 +282,7 @@ export async function assertErrors(scope: Page | Locator, errorTexts: (string | 
   // Hvis tom array, sjekk at INGEN feilmeldinger vises
   if (errorTexts.length === 0) {
     const allFieldErrors = scope
-      .locator(
-        ".navds-alert--error, .feilmelding, .skjemaelement__feilmelding, [data-testid*='error'], .navds-alert--error",
-      )
+      .locator(ERROR_SELECTORS)
       .and(scope.locator(':not(:has-text("Følgende feil ble funnet"))'));
 
     // Sjekk også for tekniske feilmeldinger

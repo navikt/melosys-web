@@ -4,7 +4,10 @@ import viteTsconfigPaths from "vite-tsconfig-paths";
 import svgrPlugin from "vite-plugin-svgr";
 import * as path from "path";
 
-const LOCAL_API_PORT = 8080;
+// API port can be overridden via VITE_API_PORT env var (e.g., for E2E playback mode)
+const LOCAL_API_PORT = parseInt(process.env.VITE_API_PORT || "8080", 10);
+// eslint-disable-next-line no-console
+if (process.env.VITE_API_PORT) console.log(`[Vite] Using API port: ${LOCAL_API_PORT}`);
 const LOCAL_TRYGDEAVTALE_FLYT_PORT = 8088;
 const LOCAL_FAKTURERINGSKOMPONENTEN_PORT = 8084;
 
@@ -102,6 +105,18 @@ export default defineConfig({
     // Explicitly define timers to mock to avoid issues with fetch/async ops in Vitest v3+
     fakeTimers: {
       toFake: ["setTimeout", "clearTimeout", "setInterval", "clearInterval", "setImmediate", "clearImmediate", "Date"],
+    },
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "text-summary", "json-summary", "html"],
+      reportsDirectory: "./coverage",
+      include: ["src/**/*.{js,jsx,ts,tsx}"],
+      exclude: [
+        "src/**/*.test.{js,jsx,ts,tsx}",
+        "src/**/*.spec.{js,jsx,ts,tsx}",
+        "src/**/__tests__/**",
+        "src/setupTests.js",
+      ],
     },
   },
 });

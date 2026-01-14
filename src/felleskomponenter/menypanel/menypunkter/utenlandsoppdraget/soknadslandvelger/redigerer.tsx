@@ -42,6 +42,7 @@ function Redigerer({ lagre, avbryt }: RedigererProps) {
         feltNavn="soknadsland.landkoder"
         redigerbart={!flereLandUkjentHvilke}
         options={MKV.KTObjects.landkoder.map(({ kode, term }: KTObject) => ({ value: kode, label: term }))}
+        aria-label="Velg land"
       />
       <Knapperad bekreftTekst="Lagre" bekreft={lagre} avbrytTekst="Avbryt" avbryt={avbryt} redigerbart />
     </>

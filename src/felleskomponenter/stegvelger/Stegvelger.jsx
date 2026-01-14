@@ -38,7 +38,10 @@ import { Innsynsmelding, NyVurderingMelding, StatsborgerskapFeil } from "../aler
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.less";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
-import { MELOSYS_NORGE_ER_UTPEKT_11_3_A } from "../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_NORGE_ER_UTPEKT_11_3_A,
+  MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
+} from "../../featuretoggle/toggleNavn";
 
 class Stegvelger extends Component {
   state = {
@@ -55,6 +58,7 @@ class Stegvelger extends Component {
       [StegStoreTyper.Lovvalgsland]: new EnkelDataStore(),
     },
     visMottatteOpplysningerFeilmeldinger: false,
+    harTrygdeavgiftperiode: false,
   };
 
   aktiv = true;
@@ -63,6 +67,9 @@ class Stegvelger extends Component {
     this.aktiv = true;
     const { behandlingID, sakstype } = this.props;
     const { aktivtStegNummer } = this.state;
+
+    const trygdeavgiftperioder = await Api.Trygdeavgift.hentTrygdeavgiftperioder(behandlingID);
+    this.setState({ harTrygdeavgiftperiode: trygdeavgiftperioder.length > 0 });
 
     if (sakstype === MKV.Koder.sakstyper.FTRL) {
       await Promise.all([this.props.hentVilkar(behandlingID)]);
@@ -365,6 +372,7 @@ class Stegvelger extends Component {
    * @returns {Array}
    */
   oppdaterAktuelleSteg = (aktivtStegNummer, endreFokus = false) => {
+    const { harTrygdeavgiftperiode } = this.state;
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgUtpek: this.lagreOgUtpek,
@@ -450,6 +458,8 @@ class Stegvelger extends Component {
       art11_3Aeller13_3A: props.art11_3Aeller13_3A,
       art11_4_1eller13_4_1: props.art11_4_1eller13_4_1,
       art11_4_2eller13_4_2: props.art11_4_2eller13_4_2,
+      eøsFaktureringAvTrygdeavgiftToggleEnabled: props.eøsFaktureringAvTrygdeavgiftToggleEnabled,
+      harTrygdeavgiftperiode,
     };
 
     const stegMotor = new StegMotor(propsLight, props.stegMap, props.forsteSteg);
@@ -494,14 +504,25 @@ class Stegvelger extends Component {
       lagreUtpekingsperioderHandler,
       sakstype,
       anmodningErSendtUtland,
+      oppsummering,
+      eøsFaktureringAvTrygdeavgiftToggleEnabled,
     } = this.props;
+    const { aktivtStegNummer, aktuelleSteg } = this.state;
+    const erVurderingPeriode = aktuelleSteg[aktivtStegNummer]?.id == STEG.VURDERING_PERIODE;
+    const erArbeidTjenestepersonEllerFly =
+      oppsummering.behandlingstema.kode == MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY;
+
+    const flytHarIkkeVurderingPeriode = !(eøsFaktureringAvTrygdeavgiftToggleEnabled && erArbeidTjenestepersonEllerFly);
 
     this.setState({ aktivtStegNummer: nyttStegNummer });
 
     if (redigerbart) {
       if (sakstype !== MKV.Koder.sakstyper.FTRL) {
         await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
-        await lagreLovvalgsperioderHandler();
+
+        if (flytHarIkkeVurderingPeriode || erVurderingPeriode) {
+          await lagreLovvalgsperioderHandler();
+        }
 
         if (!anmodningErSendtUtland) {
           await lagreAvklartefaktaHandler();
@@ -751,6 +772,7 @@ const mapStateToProps = (state) => ({
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
   kontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
   norgeErUtpekt11_3AToggleEnabled: erFeatureToggleEnabled(MELOSYS_NORGE_ER_UTPEKT_11_3_A, state),
+  eøsFaktureringAvTrygdeavgiftToggleEnabled: erFeatureToggleEnabled(MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT, state),
 });
 
 /* eslint no-alert:off */

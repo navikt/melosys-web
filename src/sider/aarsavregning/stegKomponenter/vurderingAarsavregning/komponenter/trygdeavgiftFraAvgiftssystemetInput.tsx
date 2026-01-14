@@ -3,7 +3,8 @@ import { Control } from "react-hook-form";
 import * as Forms from "../../../../../felleskomponenter/forms";
 
 interface TrygdeavgiftFraAvgiftssystemetInputProps {
-  control: Control;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: Control<any>;
   redigerbart: boolean;
   erNyAarsavregning: boolean;
 }

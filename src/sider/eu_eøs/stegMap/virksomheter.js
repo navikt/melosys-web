@@ -1,4 +1,4 @@
-import Steg from "../../../felleskomponenter/stegvelger/stegMotor/steg";
+import Steg from "../../../felleskomponenter/stegvelger/stegMotor/stegLegacy";
 import { FANE_STATUS, STEG } from "../../../felleskomponenter/stegvelger";
 import VurderingVirksomhet from "../stegKomponenter/vurderingVirksomhet";
 import * as KV from "../../../kodeverk";

@@ -1,13 +1,13 @@
 import { getAsJson, postAsJson, putAsJson } from "../../utils";
 import { AARSAVREGNING, API_BASE_URL, BEHANDLINGER, FAGSAKER } from "../../api-constants";
 import { InntektskildeDto, SkatteforholdDto } from "../trygdeavgift";
-import { Medlemskapsperiode } from "../medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../medlemavfolketrygden/medlemskapsperioder";
 
 export interface AarsavregningResponse {
   aarsavregningID: number;
   aar: number;
   tidligereTrygdeavgiftsGrunnlagsopplysninger?: Grunnlagsopplysninger;
-  sisteGjeldendeMedlemskapsperioder?: Medlemskapsperiode[];
+  sisteGjeldendeAvgiftspliktigperioder?: Avgiftspliktigperiode[];
   nyttTrygdeavgiftsGrunnlag?: Grunnlagsopplysninger;
   avregning?: Avregning;
   harTrygdeavgiftFraAvgiftssystemet?: boolean;
@@ -35,7 +35,7 @@ export interface Grunnlagsopplysninger {
 }
 
 export interface Trygdeavgiftsgrunnlag {
-  medlemskapsperioder: Medlemskapsperiode[];
+  avgiftspliktigperioder: Avgiftspliktigperiode[];
   skatteforholdsperioder: SkatteforholdDto[];
   inntektskperioder: InntektskildeDto[];
 }

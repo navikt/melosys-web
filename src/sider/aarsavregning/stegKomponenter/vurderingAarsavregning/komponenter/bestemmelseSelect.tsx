@@ -7,19 +7,19 @@ import * as Api from "../../../../../services/api";
 import { Inntektskilde } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Utils from "../../../../../utils";
 import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
-import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 interface BestemmelseSelectProps {
   control: Control<any>;
   setValue: (name: string, value: any) => void;
   bestemmelser: string[];
-  harGrunnlag: boolean;
   behandlingID?: number;
   redigerbart: boolean;
   setTrygdedekninger: (trygdedekninger: string[]) => void;
   setFeilmelding: (feilmelding: string | undefined) => void;
   setEndrerBestemmelse: (isChanging: boolean) => void;
-  lagreMedlemskapsperioderHvisGyldig: (oppdaterteMedlemskapsperioder: Medlemskapsperiode[]) => void;
+  lagreMedlemskapsperioderHvisGyldig: (oppdaterteMedlemskapsperioder: Avgiftspliktigperiode[]) => void;
+  harLaasteMedlemskapsperioder: boolean;
 }
 
 function BestemmelseSelect({
@@ -27,12 +27,12 @@ function BestemmelseSelect({
   setValue,
   bestemmelser,
   behandlingID,
-  harGrunnlag,
   redigerbart,
   setTrygdedekninger,
   setFeilmelding,
   setEndrerBestemmelse,
   lagreMedlemskapsperioderHvisGyldig,
+  harLaasteMedlemskapsperioder,
 }: BestemmelseSelectProps) {
   const medlemskapsperioder = useWatch({ control, name: "medlemskapsperioder" });
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
@@ -46,7 +46,9 @@ function BestemmelseSelect({
         setTrygdedekninger(trygdedekningerResponse);
 
         try {
-          if (medlemskapsperioder.some((periode: Medlemskapsperiode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)) {
+          if (
+            medlemskapsperioder.some((periode: Avgiftspliktigperiode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
+          ) {
             await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID!);
           }
         } catch (error) {
@@ -57,7 +59,7 @@ function BestemmelseSelect({
 
         const defaultTrygdedekning = trygdedekningerResponse.length === 1 ? trygdedekningerResponse[0] : "";
 
-        const oppdaterteMedlemskapsperioder = medlemskapsperioder.map((periode: Medlemskapsperiode) => ({
+        const oppdaterteMedlemskapsperioder = medlemskapsperioder.map((periode: Avgiftspliktigperiode) => ({
           ...periode,
           trygdedekning: defaultTrygdedekning,
           id: ULAGRET_MEDLEMSKAPSPERIODE_ID,
@@ -98,7 +100,7 @@ function BestemmelseSelect({
       label="Bestemmelse"
       aria-label="Bestemmelse"
       control={control}
-      readOnly={!redigerbart || harGrunnlag}
+      readOnly={!redigerbart || harLaasteMedlemskapsperioder}
       emptyFieldDisabled
       onChange={(valgtBestemmelse) => {
         handleBestemmelseChange(valgtBestemmelse);

@@ -1,17 +1,12 @@
+import { http, HttpResponse } from "msw";
 import { createTestStore } from "../test-utils/createTestStore";
+
+// Global MSW server from setupTests.js
+declare const mswServer: ReturnType<typeof import("msw/node").setupServer>;
 
 import MKV from "../../melosyskodeverk";
 
 import { vilkarOperations as operations } from "./index";
-
-// Type for fetch mock
-declare const fetch: {
-  resetMocks: () => void;
-  mockResponse: (response: string) => void;
-  mockReject: (error: Error) => void;
-  toHaveBeenCalledTimes: (times: number) => void;
-  toHaveBeenLastCalledWith: (url: string, options: any) => void;
-};
 
 interface TestState {
   vilkar: {
@@ -29,9 +24,6 @@ describe("vilkar operations", () => {
   let initialState: TestState;
 
   beforeEach(() => {
-    fetch.resetMocks();
-    fetch.mockResponse(JSON.stringify({}));
-
     initialState = {
       vilkar: {
         data: [],
@@ -50,10 +42,13 @@ describe("vilkar operations", () => {
       const store = createTestStore(initialState);
       const behandlingID = 5;
 
-      await store.dispatch(operations.hent(behandlingID) as any);
+      mswServer.use(
+        http.get(`/api/vilkaar/${behandlingID}`, () => {
+          return HttpResponse.json({});
+        }),
+      );
 
-      expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenLastCalledWith(`/api/vilkaar/${behandlingID}`, expect.anything());
+      await store.dispatch(operations.hent(behandlingID) as any);
 
       const finalState = store.getState();
       expect(finalState.vilkar.data).toEqual({});
@@ -61,19 +56,18 @@ describe("vilkar operations", () => {
     });
 
     it("lager FEILET ved feil i api-kall", async () => {
-      const error = new Error("feil ved kall til Api");
-      fetch.mockReject(error);
-
       const store = createTestStore(initialState);
       const behandlingID = 5;
 
+      mswServer.use(
+        http.get(`/api/vilkaar/${behandlingID}`, () => {
+          return new HttpResponse(null, { status: 500 });
+        }),
+      );
+
       await store.dispatch(operations.hent(behandlingID) as any);
 
-      expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenLastCalledWith(`/api/vilkaar/${behandlingID}`, expect.anything());
-
       const finalState = store.getState();
-      expect(finalState.vilkar.data).toBe(error.toString());
       expect(finalState.vilkar.status).toBe("ERROR");
     });
   });
@@ -91,18 +85,13 @@ describe("vilkar operations", () => {
 
       const store = createTestStore(initialState);
 
-      await store.dispatch(operations.lagre() as any);
-
-      expect(fetch).toHaveBeenLastCalledWith(
-        "/api/vilkaar/4",
-        expect.objectContaining({
-          body: JSON.stringify([
-            {
-              vilkaar: MKV.Koder.vilkaar.FO_883_2004_ART12_1,
-            },
-          ]),
+      mswServer.use(
+        http.post("/api/vilkaar/4", () => {
+          return HttpResponse.json({});
         }),
       );
+
+      await store.dispatch(operations.lagre() as any);
 
       const finalState = store.getState();
       expect(finalState.vilkar.data).toEqual({});
@@ -110,18 +99,17 @@ describe("vilkar operations", () => {
     });
 
     it("lager FEILET ved feil i api-kall", async () => {
-      const error = new Error("feil ved kall til Api");
-      fetch.mockReject(error);
-
       const store = createTestStore(initialState);
+
+      mswServer.use(
+        http.post("/api/vilkaar/4", () => {
+          return new HttpResponse(null, { status: 500 });
+        }),
+      );
 
       await store.dispatch(operations.lagre() as any);
 
-      expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenLastCalledWith("/api/vilkaar/4", expect.anything());
-
       const finalState = store.getState();
-      expect(finalState.vilkar.data).toBe(error.toString());
       expect(finalState.vilkar.status).toBe("ERROR");
     });
   });

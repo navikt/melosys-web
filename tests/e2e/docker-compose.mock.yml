@@ -1,0 +1,36 @@
+# Docker Compose for E2E tests with mock server
+#
+# Usage:
+#   docker compose -f tests/e2e/docker-compose.mock.yml up -d
+#   docker compose -f tests/e2e/docker-compose.mock.yml down
+#
+# This replaces melosys-api with a mock server that plays back recorded responses.
+
+services:
+  melosys-api-mock:
+    build:
+      context: ./mock-server
+      dockerfile: Dockerfile
+    container_name: melosys-api-mock
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./recordings:/recordings:ro
+    environment:
+      - PORT=8080
+      - RECORDINGS_PATH=/recordings
+      - LOG_REQUESTS=true
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+    networks:
+      - melosys-e2e
+
+networks:
+  melosys-e2e:
+    driver: bridge

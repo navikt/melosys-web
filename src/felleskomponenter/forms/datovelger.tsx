@@ -1,4 +1,4 @@
-import { ReactNode, forwardRef, useEffect } from "react";
+import { ReactNode, forwardRef } from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 
 import * as Utils from "../../utils/dato";
@@ -17,6 +17,8 @@ interface DatovelgerComponentProps {
   feil?: string;
   onChange?: (dato: string) => void;
   className?: string;
+  forhindreAutoUtfylling?: boolean;
+  laasAar?: boolean;
 }
 
 type InnerDatovelgerComponentProps = DatovelgerComponentProps & RegisterHookFormProps;
@@ -29,6 +31,8 @@ function InnerDatovelgerComponent({
   maxDate,
   feil,
   onChange,
+  forhindreAutoUtfylling,
+  laasAar,
   ...rest
 }: InnerDatovelgerComponentProps) {
   return (
@@ -43,6 +47,8 @@ function InnerDatovelgerComponent({
         readOnly={readOnly}
         minDate={minDate}
         maxDate={maxDate}
+        forhindreAutoUtfylling={forhindreAutoUtfylling}
+        laasAar={laasAar}
       />
     </div>
   );
@@ -50,8 +56,10 @@ function InnerDatovelgerComponent({
 
 type DatovelgerProps = DatovelgerComponentProps & UseControllerProps;
 
-const Datovelger = forwardRef<HTMLSelectElement, DatovelgerProps>(
-  ({ name, control, ...rest }: DatovelgerProps, _ref: any) => {
+// Bruker forwardRef for å matche UseControllerProps typing pattern,
+// men ref brukes ikke og videresentdes ikke (DatePicker.Input håndterer sin egen ref)
+const Datovelger = forwardRef<HTMLInputElement, DatovelgerProps>(
+  ({ name, control, ...rest }: DatovelgerProps, _ref) => {
     return (
       <Controller
         name={name}
@@ -65,7 +73,9 @@ const Datovelger = forwardRef<HTMLSelectElement, DatovelgerProps>(
             bredde={rest.bredde}
             minDate={rest.minDate}
             maxDate={rest.maxDate}
-            onChange={(value: any) => {
+            forhindreAutoUtfylling={rest.forhindreAutoUtfylling}
+            laasAar={rest.laasAar}
+            onChange={(value: string) => {
               field.onChange(value || "");
               if (rest.onChange) rest.onChange(value);
             }}

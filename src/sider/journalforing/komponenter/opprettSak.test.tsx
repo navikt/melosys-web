@@ -143,7 +143,7 @@ describe("OpprettSak - journalføring", () => {
 
       expect(getByLabelText("Fra")).toBeInTheDocument();
       expect(getByLabelText("Til")).toBeInTheDocument();
-      expect(getByRole("combobox", { name: "" })).toBeInTheDocument(); // MultiSelect har tom label
+      expect(getByRole("combobox", { name: "I hvilke land skal arbeidet/næringen utføres i?" })).toBeInTheDocument(); // MultiSelect har tom label
       expect(queryByRole("radio")).not.toBeInTheDocument();
 
       cleanup(); // Må gjøre cleanup pga. flere render kall i en testmetode
@@ -162,7 +162,9 @@ describe("OpprettSak - journalføring", () => {
 
       expect(queryByLabelText("Fra")).not.toBeInTheDocument();
       expect(queryByLabelText("Til")).not.toBeInTheDocument();
-      expect(queryByRole("combobox", { name: "" })).not.toBeInTheDocument();
+      expect(
+        queryByRole("combobox", { name: "I hvilke land skal arbeidet/næringen utføres i?" }),
+      ).not.toBeInTheDocument();
       expect(queryByRole("radio")).not.toBeInTheDocument();
 
       cleanup(); // Må gjøre cleanup pga. flere render kall i en testmetode
@@ -183,7 +185,7 @@ describe("OpprettSak - journalføring", () => {
 
     expect(getByLabelText("Fra")).toBeInTheDocument();
     expect(getByLabelText("Til")).toBeInTheDocument();
-    expect(getByRole("combobox", { name: "" })).toBeInTheDocument(); // MultiSelect har tom label
+    expect(getByRole("combobox", { name: "I hvilke land skal arbeidet/næringen utføres i?" })).toBeInTheDocument(); // MultiSelect har tom label
     expect(getAllByRole("radio")).toHaveLength(2);
   });
 });
@@ -246,7 +248,7 @@ describe("OpprettSak - opprett ny sak", () => {
 
       expect(getByLabelText("Fra")).toBeInTheDocument();
       expect(getByLabelText("Til")).toBeInTheDocument();
-      expect(getByRole("combobox", { name: "" })).toBeInTheDocument(); // MultiSelect har tom label
+      expect(getByRole("combobox", { name: "I hvilke land skal arbeidet/næringen utføres i?" })).toBeInTheDocument(); // MultiSelect har tom label
       expect(queryByRole("radio")).not.toBeInTheDocument();
 
       cleanup(); // Må gjøre cleanup pga. flere render kall i en testmetode
@@ -286,7 +288,7 @@ describe("OpprettSak - opprett ny sak", () => {
 
     expect(getByLabelText("Fra")).toBeInTheDocument();
     expect(getByLabelText("Til")).toBeInTheDocument();
-    expect(getByRole("combobox", { name: "" })).toBeInTheDocument(); // MultiSelect har tom label
+    expect(getByRole("combobox", { name: "I hvilke land skal arbeidet/næringen utføres i?" })).toBeInTheDocument(); // MultiSelect har tom label
     expect(getAllByRole("radio")).toHaveLength(2);
   });
 });

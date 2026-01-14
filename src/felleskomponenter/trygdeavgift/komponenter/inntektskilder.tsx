@@ -13,7 +13,7 @@ import { FieldArrayProps, FormValuesProps, Inntektskilde } from "./types";
 import {
   arbAvgBetalesKreves,
   bruttoInntektKreves,
-} from "../../../sider/ftrl/saksbehandling/stegKomponenter/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
+} from "../../../sider/vurderingTrygdeavgift/vurderingTrygdeavgiftSchema";
 import "./inntektskilder.less";
 import { Stack } from "@navikt/ds-react";
 
@@ -39,7 +39,8 @@ const {
 interface InntektskilderProps {
   formValues: FormValuesProps;
   fields: FieldArrayWithId<FieldArrayProps, "inntektskilder">[];
-  control: Control;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: Control<any>;
   update: (index: number, inntektskilde: Inntektskilde) => void;
   remove: (index: number) => void;
   append: (inntektskilde: Inntektskilde) => void;
@@ -50,6 +51,8 @@ interface InntektskilderProps {
   bestemmelse?: string;
   minDate?: Date;
   maxDate?: Date;
+  forhindreAutoUtfylling?: boolean;
+  laasAar?: boolean;
 }
 
 const hentInntektskilde = (
@@ -98,6 +101,8 @@ export function Inntektskilder({
   bestemmelse,
   minDate,
   maxDate,
+  forhindreAutoUtfylling,
+  laasAar,
 }: InntektskilderProps) {
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
 
@@ -148,6 +153,8 @@ export function Inntektskilder({
                 control={control}
                 minDate={minDate}
                 maxDate={maxDate}
+                forhindreAutoUtfylling={forhindreAutoUtfylling}
+                laasAar={laasAar}
               />
             </Nav.Column>
 
@@ -159,6 +166,8 @@ export function Inntektskilder({
                 control={control}
                 minDate={Utils.dato.norskStringTilDate(formValues.inntektskilder[index].fomDato) || minDate}
                 maxDate={maxDate}
+                forhindreAutoUtfylling={forhindreAutoUtfylling}
+                laasAar={laasAar}
               />
             </Nav.Column>
             <Nav.Column className="inntektskildetype">

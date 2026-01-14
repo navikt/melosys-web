@@ -1,5 +1,5 @@
 import { FieldValues } from "react-hook-form";
-import { Medlemskapsperiode } from "../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 export interface Inntektskilde {
   kildetype?: string;
@@ -17,7 +17,7 @@ export interface Skatteforhold {
 }
 
 export interface FieldArrayProps {
-  medlemskapsperioder?: Medlemskapsperiode[];
+  medlemskapsperioder?: Avgiftspliktigperiode[];
   inntektskilder: Inntektskilde[];
   skatteforholdsperioder: Skatteforhold[];
 }

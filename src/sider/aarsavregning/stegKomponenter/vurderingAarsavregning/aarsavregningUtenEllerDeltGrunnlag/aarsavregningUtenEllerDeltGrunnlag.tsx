@@ -14,7 +14,7 @@ import { OK } from "../../../../../ducks/aarsavregning/types";
 import { medlemskapsperioderTypes } from "../../../../../ducks/medlemskapsperioder";
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../utils";
 import {
-  Medlemskapsperiode,
+  Avgiftspliktigperiode,
   OppdaterMedlemskapsperiode,
 } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { AarsavregningUtenEllerDeltGrunnlagForm } from "./aarsavregningUtenEllerDeltGrunnlagForm";
@@ -36,11 +36,9 @@ export const DEFAULT_MEDLEMSKAPSPERIODE = {
 
 const mapTilMedlemskapsperiodeFieldProps = (
   medlemskapsperiode: any,
-  tidligereGrunnlag?: Api.Aarsavregning.Trygdeavgiftsgrunnlag,
+  sistGjeldendeAvgiftspliktigePerioder?: Avgiftspliktigperiode[],
 ) => {
-  const grunnlagsperioder = tidligereGrunnlag?.medlemskapsperioder;
-
-  const medlemskapsperiodeErFraGrunnlag = grunnlagsperioder?.some(
+  const medlemskapsperiodeErFraGrunnlag = sistGjeldendeAvgiftspliktigePerioder?.some(
     (periode) => periode.fomDato === medlemskapsperiode.fomDato && periode.tomDato === medlemskapsperiode.tomDato,
   );
 
@@ -53,17 +51,17 @@ const mapTilMedlemskapsperiodeFieldProps = (
   };
 };
 
-const mapMedlemskapsperioder = (perioder: any[], tidligereGrunnlag?: Api.Aarsavregning.Trygdeavgiftsgrunnlag) =>
+const mapMedlemskapsperioder = (perioder: any[], sistGjeldendeAvgiftspliktigePerioder?: Avgiftspliktigperiode[]) =>
   [...perioder]
     .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b))
-    .map((periode) => mapTilMedlemskapsperiodeFieldProps(periode, tidligereGrunnlag));
+    .map((periode) => mapTilMedlemskapsperiodeFieldProps(periode, sistGjeldendeAvgiftspliktigePerioder));
 
 interface Props {
   bekreft: () => void;
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
   harTrygdeavgiftFraAvgiftssystemet: boolean;
-  harGrunnlag: boolean;
+  harTidligereTrygdeavgiftsgrunnlag: boolean;
 }
 
 export interface MedlemskapTomFomDatoer {
@@ -72,17 +70,17 @@ export interface MedlemskapTomFomDatoer {
 }
 
 export interface AarsavregningFormValuesProps extends FormValuesProps {
-  trygdeavgiftFraAvgiftssystemet?: number | string;
+  trygdeavgiftFraAvgiftssystemet?: string;
   bestemmelse?: string;
   endeligAvgiftValg: string;
-  manueltAvgiftBeloep?: number | string;
+  manueltAvgiftBeloep?: string;
 }
 
 export function AarsavregningUtenEllerDeltGrunnlag({
   bekreft,
   oppdaterStatus,
   harTrygdeavgiftFraAvgiftssystemet,
-  harGrunnlag,
+  harTidligereTrygdeavgiftsgrunnlag,
 }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [initiellData, setInitiellData] = useState<{
@@ -109,7 +107,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const dispatch = useDispatch();
 
-  const opprettMedlemskapsperiode = async (medlemskapsperiode: Medlemskapsperiode) => {
+  const opprettMedlemskapsperiode = async (medlemskapsperiode: Avgiftspliktigperiode) => {
     const periodeRequest = {
       fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
       tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, "") as string,
@@ -128,12 +126,12 @@ export function AarsavregningUtenEllerDeltGrunnlag({
 
   const getMappedMedlemskapsperioder = async (
     aarsavregningRes: AarsavregningResponse,
-  ): Promise<Medlemskapsperiode[]> => {
+  ): Promise<Avgiftspliktigperiode[]> => {
     const medlemskapsperioderRes =
       await Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID);
 
     const innvilgedeMedlemskapsperioder = medlemskapsperioderRes.filter(
-      (periode: Medlemskapsperiode) =>
+      (periode: Avgiftspliktigperiode) =>
         periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
     );
 
@@ -141,10 +139,10 @@ export function AarsavregningUtenEllerDeltGrunnlag({
       redigerbart &&
       harTrygdeavgiftFraAvgiftssystemet &&
       innvilgedeMedlemskapsperioder.length === 0 &&
-      aarsavregningRes?.sisteGjeldendeMedlemskapsperioder
+      aarsavregningRes?.sisteGjeldendeAvgiftspliktigperioder
     ) {
       // Initiell innlasting for delt grunnlag
-      const medlemskapsperioderFraGrunnlag = aarsavregningRes.sisteGjeldendeMedlemskapsperioder;
+      const medlemskapsperioderFraGrunnlag = aarsavregningRes.sisteGjeldendeAvgiftspliktigperioder;
       const innvilgedeMedlemskapsperioderFraGrunnlag = medlemskapsperioderFraGrunnlag.filter(
         (periode) => periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
       );
@@ -158,23 +156,20 @@ export function AarsavregningUtenEllerDeltGrunnlag({
         await Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID);
 
       const oppdaterteInnvilgedeMedlemskapsperioder = oppdaterteMedlemskapsperioder.filter(
-        (periode: Medlemskapsperiode) =>
+        (periode: Avgiftspliktigperiode) =>
           periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
       );
 
       return mapMedlemskapsperioder(
         oppdaterteInnvilgedeMedlemskapsperioder,
-        aarsavregningRes.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
+        aarsavregningRes.sisteGjeldendeAvgiftspliktigperioder,
       );
     }
     // Vanlig innlastning. Delt og uten grunnlag
-    return mapMedlemskapsperioder(
-      innvilgedeMedlemskapsperioder,
-      aarsavregningRes?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag,
-    );
+    return mapMedlemskapsperioder(innvilgedeMedlemskapsperioder, aarsavregningRes.sisteGjeldendeAvgiftspliktigperioder);
   };
 
-  const getBestemmelse = (mappedMedlemskapsperioder: Medlemskapsperiode[]) => {
+  const getBestemmelse = (mappedMedlemskapsperioder: Avgiftspliktigperiode[]) => {
     if (mappedMedlemskapsperioder.length > 0) {
       const førsteBestemmelse = mappedMedlemskapsperioder[0].bestemmelse;
       const medlemskapsperioderHarSammeBestemmelse = mappedMedlemskapsperioder.every(
@@ -226,9 +221,9 @@ export function AarsavregningUtenEllerDeltGrunnlag({
           harTrygdeavgiftFraAvgiftssystemet && aarsavregningRes && !aarsavregningRes.nyttTrygdeavgiftsGrunnlag;
 
         const bestemmelseFraTidligereAvgiftsgrunnlag =
-          aarsavregningRes?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag?.medlemskapsperioder?.[0]
-            ?.bestemmelse;
-        const eventuellNyBestemmelse = aarsavregningRes?.sisteGjeldendeMedlemskapsperioder?.[0]?.bestemmelse;
+          aarsavregningRes?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
+            ?.avgiftspliktigperioder?.[0]?.bestemmelse;
+        const eventuellNyBestemmelse = aarsavregningRes?.sisteGjeldendeAvgiftspliktigperioder?.[0]?.bestemmelse;
 
         const skalHenteGrunnlagFraTidligereTrygdeavgiftsgrunnlag =
           deltGrunnlagAarsavregningHarIkkeNyttGrunnlag &&
@@ -307,7 +302,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
       bekreft={bekreft}
       oppdaterStatus={memoizedOppdaterStatus}
       harTrygdeavgiftFraAvgiftssystemet={harTrygdeavgiftFraAvgiftssystemet}
-      harGrunnlag={harGrunnlag}
+      harTidligereTrygdeavgiftsgrunnlag={harTidligereTrygdeavgiftsgrunnlag}
     />
   );
 }

@@ -45,4 +45,26 @@ describe("MultiSelect", () => {
 
     expect(screen.getByText(errorMessage)).toBeInTheDocument();
   });
+
+  it("Tom label rendrer ikke label-element", () => {
+    renderWithProviders(<MultiSelect {...props} label="" aria-label="Velg land" />);
+
+    expect(screen.queryByLabelText("Label")).not.toBeInTheDocument();
+    expect(screen.getByRole("combobox")).toHaveAttribute("aria-label", "Velg land");
+  });
+
+  it("aria-label brukes når label er tom streng", () => {
+    renderWithProviders(<MultiSelect {...props} label="" aria-label="Arbeidsland" />);
+
+    const combobox = screen.getByRole("combobox");
+    expect(combobox).toHaveAttribute("aria-label", "Arbeidsland");
+    expect(combobox).not.toHaveAttribute("aria-labelledby");
+  });
+
+  it("aria-labelledby settes når label har verdi", () => {
+    renderWithProviders(<MultiSelect {...props} label="Velg land" />);
+
+    const combobox = screen.getByRole("combobox");
+    expect(combobox).toHaveAttribute("aria-labelledby");
+  });
 });

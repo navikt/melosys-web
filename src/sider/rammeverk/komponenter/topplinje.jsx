@@ -6,6 +6,7 @@ import NavLogo from "../../../resources/images/nav.svg?react";
 import * as Nav from "../../../navFrontend";
 
 import "./topplinje.less";
+import { HolidayDecor } from "../../../felleskomponenter/høytidOgMorro/holidayDecor";
 
 function Topplinje(props) {
   const { saksbehandler = "" } = props;
@@ -35,9 +36,12 @@ function Topplinje(props) {
         <div className="brand__tittel">
           <span>Melosys</span>
         </div>
+        <HolidayDecor slot="brand" />
       </div>
+      <HolidayDecor slot="center" />
       <div className="topplinje__saksbehandler">
         <div className="dropdown">
+          <HolidayDecor slot="user" />
           <div className="saksbehandler__navn ">{saksbehandler}</div>
           {!erProduksjonsmiljo && (
             <div className="dropdown-content">

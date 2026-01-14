@@ -1,4 +1,4 @@
-import { Medlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../utils";
 import * as KV from "../../../../../kodeverk";
 import * as Nav from "../../../../../navFrontend";
@@ -27,7 +27,7 @@ const mapMedlemskapstypeTekst = (kode: string) => {
   return "";
 };
 
-function MedlemskapsPerioderTabell({ perioder }: { perioder?: Medlemskapsperiode[] }) {
+function MedlemskapsPerioderTabell({ perioder }: { perioder?: Avgiftspliktigperiode[] }) {
   if (!perioder) return null;
 
   return (

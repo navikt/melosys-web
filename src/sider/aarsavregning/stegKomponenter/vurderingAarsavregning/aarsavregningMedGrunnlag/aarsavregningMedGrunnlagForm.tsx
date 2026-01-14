@@ -22,15 +22,31 @@ import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgif
 import { BorderedFormContainer } from "../komponenter/borderedFormContainer";
 import { EndeligAvgiftValgRadioGroup } from "../komponenter/endeligAvgiftValgRadioGroup";
 import { ManuellAvgiftFormPart } from "../komponenter/manuellAvgiftFormPart";
-import { MedlemskapsperiodeDisplay } from "../komponenter/medlemskapsperiodeDisplay";
+import { MedlemskapsperioderDisplay } from "../komponenter/medlemskapsperiodeDisplay";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
-import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden } from "../utils";
+import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden, finnMedlemskapsperiode } from "../utils";
 import "../vurderingAarsavregningInngang.less";
 import { InitiellData } from "./aarsavregningMedGrunnlag";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
 
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
+
+interface MappedFormState {
+  skatteforholdsperioder: Array<{
+    fomDato: string | undefined;
+    tomDato: string | undefined;
+    skatteplikttype: string | undefined;
+  }>;
+  inntektskilder: Array<{
+    fomDato: string | undefined;
+    tomDato: string | undefined;
+    kildetype: string | undefined;
+    bruttoInntekt: number | undefined;
+    arbAvgBetales: string | boolean | undefined;
+    erMaanedsbelop: string | boolean | undefined;
+  }>;
+}
 
 interface Props {
   initiellData: InitiellData;
@@ -39,26 +55,25 @@ interface Props {
 }
 
 export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterStatus }: Props) {
-  const [feilmelding, setFeilmelding] = useState<undefined | string>(undefined);
+  const [feilmelding, setFeilmelding] = useState<string | string[] | undefined>(undefined);
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(
     initiellData.aarsavregningResponse,
   );
   const [beregningPaagar, setBeregningPaagar] = useState(false);
-  const [previousFormValues, setPreviousFormValues] = useState<any | null>(null);
+  const [previousFormValues, setPreviousFormValues] = useState<MappedFormState | null>(null);
   const [endrerEndeligAvgiftValg, setEndrerEndeligAvgiftValg] = useState(false);
   const [debouncedBeregningPagaar, setDebouncedBeregningPagaar] = useState(false);
   const [arrayValideringsfeil, setArrayValideringsfeil] = useState<string | undefined>(undefined);
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
-  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
+  const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
 
-  const {
-    innvilgetMedlemskapsperiode,
-    innvilgetMedlemskapsperiodeBestemmelse,
-    innvilgetMedlemskapsperiodeTrygdedekning,
-    medlemskapstypeErPliktig,
-  } = initiellData;
+  const { innvilgetMedlemskapsperioder, medlemskapstypeErPliktig } = initiellData;
+
+  const medlemskapsperiode = useMemo(() => {
+    return finnMedlemskapsperiode(innvilgetMedlemskapsperioder);
+  }, [innvilgetMedlemskapsperioder]);
 
   const {
     control,
@@ -70,7 +85,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   } = useForm({
     resolver: yupResolver(aarsavregningMedGrunnlagSchema),
     context: {
-      medlemskapsperiode: innvilgetMedlemskapsperiode,
+      medlemskapsperiode,
       medlemskapsTypeErPliktig: medlemskapstypeErPliktig,
     },
     mode: "onChange",
@@ -81,21 +96,21 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     fields: skattFields,
     append: skattAppend,
     remove: skattRemove,
-  } = useFieldArray({ control: control as any, name: "skatteforholdsperioder" });
+  } = useFieldArray({ control, name: "skatteforholdsperioder" });
 
   const {
     fields: inntektFields,
     append: inntektAppend,
     remove: inntektRemove,
     update: inntektUpdate,
-  } = useFieldArray({ control: control as any, name: "inntektskilder" });
+  } = useFieldArray({ control, name: "inntektskilder" });
 
   const formValues = watch();
   const skatteforholdsperioder = watch("skatteforholdsperioder");
   const inntektskilder = watch("inntektskilder");
   const endeligAvgiftValg = watch("endeligAvgiftValg");
   const manueltAvgiftBeloep = watch("manueltAvgiftBeloep");
-  const debouncedBeregningRef = useRef<any>(null);
+  const debouncedBeregningRef = useRef<ReturnType<typeof Utils._debounce> | null>(null);
 
   const mapFormState = (
     skatteforholdsperioderFormState: Skatteforhold[],
@@ -152,7 +167,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       const aktivFeilmelding = finnAktivFeilmelding({
         skatteforholdsperioder: formState.skatteforholdsperioder,
         inntektskilder: formState.inntektskilder,
-        medlemskapsperiodeFomTom: innvilgetMedlemskapsperiode!,
+        medlemskapsperiodeFomTom: medlemskapsperiode!,
         medlemskapstypeErPliktig,
       });
       if (!aktivFeilmelding) {
@@ -181,13 +196,13 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     isValidating,
     handleBeregnTrygdeavgiftsperioder,
     previousFormValues,
-    innvilgetMedlemskapsperiode,
+    medlemskapsperiode,
     medlemskapstypeErPliktig,
   ]);
 
   // Lager en ny debounce funksjon når beregning callback endres
   useEffect(() => {
-    debouncedBeregningRef.current = Utils._debounce(debouncedBeregning, 350);
+    debouncedBeregningRef.current = Utils._debounce(debouncedBeregning, 600);
 
     // Cancel på unmount
     return () => {
@@ -210,9 +225,9 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
         if (!Utils._isEqual(currentFormState, previousFormValues)) {
           /* eslint-disable-next-line no-console */
-          console.log("[useEffect] currentFormState", currentFormState);
+          // console.log("[useEffect] currentFormState", currentFormState);
           /* eslint-disable-next-line no-console */
-          console.log("[useEffect] previousFormValues", previousFormValues);
+          // console.log("[useEffect] previousFormValues", previousFormValues);
           setDebouncedBeregningPagaar(true);
           debouncedBeregningRef.current();
         } else {
@@ -329,22 +344,11 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             Inntekts- og skatteopplysninger for endelig trygdeavgift
           </Nav.Heading>
 
-          {innvilgetMedlemskapsperiode &&
-            innvilgetMedlemskapsperiodeTrygdedekning &&
-            innvilgetMedlemskapsperiodeBestemmelse && (
-              <div className="medlemskapsperioder">
-                <MedlemskapsperiodeDisplay
-                  fomDato={innvilgetMedlemskapsperiode.fomDato}
-                  tomDato={innvilgetMedlemskapsperiode.tomDato}
-                  trygdedekning={innvilgetMedlemskapsperiodeTrygdedekning}
-                  bestemmelse={innvilgetMedlemskapsperiodeBestemmelse}
-                />
-              </div>
-            )}
+          <MedlemskapsperioderDisplay medlemskapsperioder={innvilgetMedlemskapsperioder} />
 
           <Skatteforholdsperioder
             formValues={formValues}
-            redigerbart={redigerbart}
+            redigerbart={redigerbart && !beregningPaagar}
             remove={skattRemove}
             append={skattAppend}
             control={control}
@@ -354,9 +358,9 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           />
           {!trygdeAvgiftSkalIkkeBetalesTilNav && (
             <Inntektskilder
-              defaultPeriode={innvilgetMedlemskapsperiode}
+              defaultPeriode={medlemskapsperiode}
               formValues={formValues}
-              redigerbart={redigerbart}
+              redigerbart={redigerbart && !beregningPaagar}
               update={inntektUpdate}
               remove={inntektRemove}
               append={inntektAppend}
@@ -364,7 +368,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
               fields={inntektFields}
               medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
               skalViseErMaanedsBelopRadioGroup
-              bestemmelse={innvilgetMedlemskapsperiodeBestemmelse}
+              bestemmelse={innvilgetMedlemskapsperioder[0]?.bestemmelse}
               minDate={minDate}
               maxDate={maxDate}
             />
