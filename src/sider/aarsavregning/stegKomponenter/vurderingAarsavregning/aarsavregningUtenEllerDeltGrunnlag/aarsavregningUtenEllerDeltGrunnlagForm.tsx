@@ -15,7 +15,8 @@ import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
-import { Avgiftspliktigperiode, harInnvilgelsesResultat } from "../../../../../services/modules/types/periodeTyper";
+import type { Avgiftspliktigperiode, BasePeriode } from "../../../../../services/modules/types/periodeTyper";
+import { harInnvilgelsesResultat } from "../../../../../services/modules/types/periodeTyper";
 import { OppdaterMedlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../utils";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
@@ -476,13 +477,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       trygdedekning: harInnvilgelsesResultat(periode) ? periode.trygdedekning : undefined,
     }));
 
-    type PeriodeComparison = {
-      fomDato: string;
-      tomDato: string;
-      trygdedekning?: string;
-    };
-
-    const sorterEtterFomDato = (a: PeriodeComparison, b: PeriodeComparison) => {
+    const sorterEtterFomDato = (a: BasePeriode, b: BasePeriode) => {
       if (!a.fomDato || !b.fomDato) return 0;
       return a.fomDato.localeCompare(b.fomDato);
     };

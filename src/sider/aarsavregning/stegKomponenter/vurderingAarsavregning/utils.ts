@@ -7,7 +7,7 @@ import {
 import * as Api from "../../../../services/api";
 import * as Utils from "../../../../utils";
 import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
-import { Avgiftspliktigperiode } from "../../../../services/modules/types/periodeTyper";
+import type { Avgiftspliktigperiode, BasePeriode } from "../../../../services/modules/types/periodeTyper";
 import { InntektskildeDto, SkatteforholdDto } from "../../../../services/modules/trygdeavgift";
 import MKV from "../../../../melosyskodeverk";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlagSchema";
@@ -50,9 +50,7 @@ export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder: Skatt
  * Returnerer fomDato fra den tidligste perioden og tomDato fra den seneste.
  * Filtrerer bort perioder som mangler fomDato eller tomDato.
  */
-export const finnMedlemskapsperiode = (
-  perioder: Avgiftspliktigperiode[],
-): { fomDato: string; tomDato: string } | undefined => {
+export const finnMedlemskapsperiode = (perioder: Avgiftspliktigperiode[]): BasePeriode | undefined => {
   const sorterteGyldigePerioder = perioder
     .filter((periode) => periode.fomDato && periode.tomDato)
     .sort((a, b) => Utils.dato.sorterEtterNorskFomDato(a, b));
