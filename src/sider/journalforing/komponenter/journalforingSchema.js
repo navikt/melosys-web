@@ -4,7 +4,7 @@ import MKV from "../../../melosyskodeverk";
 import * as Utils from "../../../utils";
 import * as Konstanter from "../../../constants";
 import * as KV from "../../../kodeverk";
-import { skalViseSoknadsperiodeOgLand } from "./opprettSak";
+import { skalViseSoknadsperiodeOgLand } from "../../../felleskomponenter/fagsakVelger/opprettSak";
 
 const {
   MAA_FYLLES_UT,

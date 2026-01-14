@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen, waitFor, within } from "@testing-library/react";
 
-import { JournalforingValues } from "../../../kodeverk/form";
-import MKV from "../../../melosyskodeverk";
+import { JournalforingValues } from "../../kodeverk/form";
+import MKV from "../../melosyskodeverk";
 import { KnyttTilSak, KnyttTilSakProps } from "./knyttTilSak";
-import { renderWithProvidersAsync } from "../../../ducks/test-utils/renderWithProviders";
+import { renderWithProvidersAsync } from "../../ducks/test-utils/renderWithProviders";
 import { reduxForm } from "redux-form";
 
 const mocks = vi.hoisted(() => {
@@ -14,14 +14,14 @@ const mocks = vi.hoisted(() => {
     hentTrygdeavgiftOppsummering: vi.fn(() => Promise.resolve({ harBehandlingMedTrygdeavgift: false })),
   };
 });
-vi.mock("../../../services/modules/anmodningsperioder", () => ({
+vi.mock("../../services/modules/anmodningsperioder", () => ({
   hent: () => Promise.resolve(mocks.hent()),
 }));
-vi.mock("../../../services/modules/lovligekombinasjoner", () => ({
+vi.mock("../../services/modules/lovligekombinasjoner", () => ({
   hentBehandlingstemaer: () => Promise.resolve([]),
   hentBehandlingstyperForKnyttTilSak: () => mocks.hentBehandlingstyperForKnyttTilSak(),
 }));
-vi.mock("../../../services/modules/fagsaker/fagsak", () => ({
+vi.mock("../../services/modules/fagsaker/fagsak", () => ({
   hentTrygdeavgiftOppsummering: () => mocks.hentTrygdeavgiftOppsummering(),
 }));
 

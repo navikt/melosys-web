@@ -3,19 +3,19 @@ import { connect } from "react-redux";
 import { change, getFormSyncErrors } from "redux-form";
 import PT from "prop-types";
 
-import MKV from "../../../melosyskodeverk";
-import * as KV from "../../../kodeverk";
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Nav from "../../../navFrontend";
-import * as Api from "../../../services/api";
-import * as Utils from "../../../utils";
+import MKV from "../../melosyskodeverk";
+import * as KV from "../../kodeverk";
+import * as Skjema from "../skjema";
+import * as Nav from "../../navFrontend";
+import * as Api from "../../services/api";
+import * as Utils from "../../utils";
 
-import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
-import { skalViseIngenFlyt } from "../../../url";
+import LabelMedHjelpetekst from "../labelMedHjelpetekst";
+import { skalViseIngenFlyt } from "../../url";
 
 import "./opprettSak.less";
-import { useFeatureToggle } from "../../../featuretoggle";
-import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../../featuretoggle/toggleNavn";
+import { useFeatureToggle } from "../../featuretoggle";
+import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../featuretoggle/toggleNavn";
 
 const nullstillVerdier = (steg, endreFelt, feltNavn) => {
   switch (steg) {

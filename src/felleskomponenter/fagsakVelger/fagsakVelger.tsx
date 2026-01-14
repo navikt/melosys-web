@@ -1,39 +1,49 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { change } from "redux-form";
-import PT from "prop-types";
+import { HStack } from "@navikt/ds-react";
+import { KTObject } from "@navikt/melosys-kodeverk";
+import { AnyAction } from "redux";
 
-import * as MPT from "../../../proptypes";
-import * as Nav from "../../../navFrontend";
-import * as KV from "../../../kodeverk";
-import * as Skjema from "../../../felleskomponenter/skjema";
-
-import { JOURNALFORING_HENSIKT } from "../../../constants";
+import * as Nav from "../../navFrontend";
+import * as KV from "../../kodeverk";
+import * as Skjema from "../skjema";
+import { JOURNALFORING_HENSIKT } from "../../constants";
+import { EnkelNavBox } from "../enkelNavBox";
+import { Spinner } from "../spinner";
+import { FagsakOppsummering } from "../../services/modules/types";
 
 import OpprettSak from "./opprettSak";
 import EnkeltSak from "./enkeltSak";
 import KnyttTilSak from "./knyttTilSak";
 
 import "./fagsakVelger.less";
-import { HStack } from "@navikt/ds-react";
-import { EnkelNavBox } from "../../../felleskomponenter/enkelNavBox";
-import { Spinner } from "../../../felleskomponenter/spinner";
 
 const EKSISTERENDE = "Eksisterende sak";
 const OPPRETT = "Opprett ny sak";
 
 const { JournalforingValues: FormValuesJournalforing, OpprettNySakValues: FormValuesOpprettNySak } = KV.Form;
 
-function FagsakVelger(props) {
-  const {
-    fagsakListe,
-    settJournalforingHensikt = undefined,
-    landkoder,
-    formValues,
-    erJournalføring,
-    nullstillFormVerdier = undefined,
-    fagsakerHentes = false,
-  } = props;
+export interface FagsakVelgerProps {
+  fagsakListe: FagsakOppsummering[];
+  settJournalforingHensikt?: (hensikt: string) => Promise<void>;
+  landkoder: KTObject[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  formValues: any;
+  erJournalføring: boolean;
+  nullstillFormVerdier?: () => void;
+  fagsakerHentes?: boolean;
+}
+
+function FagsakVelger({
+  fagsakListe,
+  settJournalforingHensikt,
+  landkoder,
+  formValues,
+  erJournalføring,
+  nullstillFormVerdier,
+  fagsakerHentes = false,
+}: FagsakVelgerProps) {
   const [valgtVisning, setValgtVisning] = useState(EKSISTERENDE);
   const feltNavn = erJournalføring ? FormValuesJournalforing : FormValuesOpprettNySak;
   const dispatch = useDispatch();
@@ -47,20 +57,26 @@ function FagsakVelger(props) {
 
   useEffect(() => {
     if (valgtVisning === OPPRETT || ingenSakerFinnes) {
-      dispatch(change(feltNavn.formNavn, feltNavn.saksnummer, "-1"));
+      dispatch(change(feltNavn.formNavn, feltNavn.saksnummer, "-1") as unknown as AnyAction);
     } else if (valgtVisning === EKSISTERENDE) {
-      dispatch(change(feltNavn.formNavn, feltNavn.saksnummer, ""));
+      dispatch(change(feltNavn.formNavn, feltNavn.saksnummer, "") as unknown as AnyAction);
     }
   }, [ingenSakerFinnes, valgtVisning]);
 
-  const notifier = async (saksnummer) => {
+  const notifier = async (saksnummer: string) => {
     if (erJournalføring && settJournalforingHensikt) {
       const hensikt = saksnummer === "-1" ? JOURNALFORING_HENSIKT.OPPRETT : JOURNALFORING_HENSIKT.KNYTT;
       await settJournalforingHensikt(hensikt);
     }
   };
 
-  const radioValg = fagsakListe.reduce(
+  const radioValg = fagsakListe.reduce<
+    Array<{
+      value: string;
+      innhold: React.ReactNode;
+      footer: React.ReactNode;
+    }>
+  >(
     (samling, sak) => [
       ...samling,
       {
@@ -116,15 +132,5 @@ function FagsakVelger(props) {
     </div>
   );
 }
-
-FagsakVelger.propTypes = {
-  fagsakListe: PT.array.isRequired,
-  settJournalforingHensikt: PT.func,
-  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
-  formValues: PT.object.isRequired,
-  erJournalføring: PT.bool.isRequired,
-  nullstillFormVerdier: PT.func,
-  fagsakerHentes: PT.bool,
-};
 
 export default FagsakVelger;

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { BehandlingsstatusMedSvarfrist } from "../../../felleskomponenter/behandlingsstatus";
+import { BehandlingsstatusMedSvarfrist } from "../behandlingsstatus";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import "./behandlingerListe.less";
 import { HStack, VStack } from "@navikt/ds-react";
-import ChevronKnapp from "../../../felleskomponenter/chevronKnapp/chevronKnapp";
+import ChevronKnapp from "../chevronKnapp/chevronKnapp";
 
 interface BehandlingForFagsak {
   behandlingID: number;

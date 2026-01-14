@@ -2,20 +2,16 @@ import { Dispatch, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { change, FormAction } from "redux-form";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import { useDispatch } from "../../../hooks";
+import { useDispatch } from "../../hooks";
 
-import * as Skjema from "../../../felleskomponenter/skjema";
-import * as Nav from "../../../navFrontend";
-import {
-  journalforingOperations,
-  PrepareKnyttTilSakFormResult,
-  journalforingTypes,
-} from "../../../ducks/journalforing";
-import * as Utils from "../../../utils";
+import * as Skjema from "../skjema";
+import * as Nav from "../../navFrontend";
+import { journalforingOperations, PrepareKnyttTilSakFormResult, journalforingTypes } from "../../ducks/journalforing";
+import * as Utils from "../../utils";
 
 import "./knyttTilSak.less";
-import { harFlerePågåendeBehandlinger } from "../../../melosyskodeverk/utils";
-import MKV from "../../../melosyskodeverk/index.js";
+import { harFlerePågåendeBehandlinger } from "../../melosyskodeverk/utils";
+import MKV from "../../melosyskodeverk/index.js";
 
 type Sak = journalforingTypes.Sak;
 type FeltNavn = journalforingTypes.FeltNavn;
