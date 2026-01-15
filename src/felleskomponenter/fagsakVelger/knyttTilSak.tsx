@@ -52,6 +52,12 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
   // Sjekk om det er andregangsbehandling (saken har eksisterende behandlinger)
   const erAndregangsbehandling = (behandlingOversikter?.length ?? 0) > 0;
 
+  // Sjekk om valgt behandlingstype er årsavregning
+  const erÅrsavregning = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING;
+
+  // Behandlingstema skal låses ved årsavregning på sak med eksisterende behandlinger
+  const erAndregangsÅrsavregning = erAndregangsbehandling && erÅrsavregning;
+
   // State for data fra operasjonen
   const [state, setState] = useState<KnyttTilSakState>({
     muligeBehandlingstemaer: [],
@@ -105,14 +111,17 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
 
   // Håndterer brukerinteraksjoner: Oppdatering av behandlingstema
   useEffect(() => {
-    if (opprettBehandling && Utils._isEmpty(behandlingstema) && sisteBehandling?.behandlingstema?.kode) {
-      changeField(feltNavn.formNavn, feltNavn.behandlingstema, sisteBehandling.behandlingstema.kode);
+    // Ved årsavregning på andregangsbehandling: Tving arv av behandlingstema fra siste behandling
+    if (opprettBehandling && erAndregangsÅrsavregning && sisteBehandling?.behandlingstema?.kode) {
+      if (behandlingstema !== sisteBehandling.behandlingstema.kode) {
+        changeField(feltNavn.formNavn, feltNavn.behandlingstema, sisteBehandling.behandlingstema.kode);
+      }
     }
     // Nullstill behandlingstype når opprettBehandling er false
     if (!opprettBehandling && !Utils._isEmpty(behandlingstype)) {
       changeField(feltNavn.formNavn, feltNavn.behandlingstype, "");
     }
-  }, [opprettBehandling]);
+  }, [opprettBehandling, behandlingstype]);
 
   // Cleanup ved unmount
   useEffect(() => {
@@ -188,17 +197,21 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
               feltNavn={feltNavn.behandlingstema}
               label="Behandlingstema"
               emptyFieldDisabled={!!(behandlingstema as { kode?: string })?.kode}
-              disabled={state.harBehandlingMedTrygdeavgift || erAndregangsbehandling}
-              className={state.harBehandlingMedTrygdeavgift || erAndregangsbehandling ? "select__slim" : undefined}
+              disabled={state.harBehandlingMedTrygdeavgift || erAndregangsÅrsavregning}
+              className={state.harBehandlingMedTrygdeavgift || erAndregangsÅrsavregning ? "select__slim" : undefined}
             >
               {state.muligeBehandlingstemaer?.map((elem) => (
                 <option key={elem.kode} value={elem.kode} label={elem.term ?? undefined} />
               ))}
             </Skjema.Select>
-            {(state.harBehandlingMedTrygdeavgift || erAndregangsbehandling) && (
+            {state.harBehandlingMedTrygdeavgift && (
               <Nav.Detail className="behandlingstema__label">
-                Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie eller en eksisterende
-                behandling.
+                Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie.
+              </Nav.Detail>
+            )}
+            {!state.harBehandlingMedTrygdeavgift && erAndregangsÅrsavregning && (
+              <Nav.Detail className="behandlingstema__label">
+                Du kan ikke endre behandlingstema for årsavregning når den har en eksisterende behandling.
               </Nav.Detail>
             )}
             <Skjema.RadioGroup legend="Behandlingstype" name={feltNavn.behandlingstype}>

@@ -378,10 +378,11 @@ describe("KnyttTilSak", () => {
     });
   });
 
-  describe("Behandlingstema disabled ved andregangsbehandling", () => {
-    it("behandlingstema-dropdown er disabled når saken har eksisterende behandlinger", async () => {
+  describe("Behandlingstema disabled ved årsavregning", () => {
+    it("behandlingstema-dropdown er disabled når behandlingstype er årsavregning og saken har eksisterende behandlinger", async () => {
       props.formValues.opprettBehandling = true;
       props.formValues.behandlingstema = "YRKESAKTIV";
+      props.formValues.behandlingstype = MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING;
       props.sak.behandlingOversikter[0].behandlingsstatus = {
         kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
         term: "Avsluttet",
@@ -395,9 +396,27 @@ describe("KnyttTilSak", () => {
       });
     });
 
-    it("viser riktig hjelpetekst når behandlingstema er disabled pga andregangsbehandling", async () => {
+    it("behandlingstema-dropdown er IKKE disabled når behandlingstype ikke er årsavregning", async () => {
       props.formValues.opprettBehandling = true;
       props.formValues.behandlingstema = "YRKESAKTIV";
+      props.formValues.behandlingstype = MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+      props.sak.behandlingOversikter[0].behandlingsstatus = {
+        kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
+        term: "Avsluttet",
+      };
+
+      await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+
+      await waitFor(() => {
+        const behandlingstemaSelect = screen.getByLabelText("Behandlingstema");
+        expect(behandlingstemaSelect).not.toBeDisabled();
+      });
+    });
+
+    it("viser riktig hjelpetekst når behandlingstema er disabled pga årsavregning", async () => {
+      props.formValues.opprettBehandling = true;
+      props.formValues.behandlingstema = "YRKESAKTIV";
+      props.formValues.behandlingstype = MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING;
       props.sak.behandlingOversikter[0].behandlingsstatus = {
         kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
         term: "Avsluttet",
@@ -408,13 +427,13 @@ describe("KnyttTilSak", () => {
       await waitFor(() => {
         expect(
           screen.getByText(
-            "Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie eller en eksisterende behandling.",
+            "Du kan ikke endre behandlingstema for årsavregning når den har en eksisterende behandling.",
           ),
         ).toBeInTheDocument();
       });
     });
 
-    it("viser samme melding og disabled dropdown når saken har trygdeavgift", async () => {
+    it("viser hjelpetekst om fakturaserie når saken har trygdeavgift", async () => {
       mocks.hentTrygdeavgiftOppsummering.mockReturnValueOnce(Promise.resolve({ harBehandlingMedTrygdeavgift: true }));
 
       props.formValues.opprettBehandling = true;
@@ -430,17 +449,16 @@ describe("KnyttTilSak", () => {
         const behandlingstemaSelect = screen.getByLabelText("Behandlingstema");
         expect(behandlingstemaSelect).toBeDisabled();
         expect(
-          screen.getByText(
-            "Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie eller en eksisterende behandling.",
-          ),
+          screen.getByText("Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie."),
         ).toBeInTheDocument();
       });
     });
 
-    it("arver behandlingstema automatisk fra siste behandling når opprettBehandling velges", async () => {
-      // Start med opprettBehandling=null og behandlingstema=null
-      props.formValues.opprettBehandling = null;
-      props.formValues.behandlingstema = null;
+    it("arver behandlingstema automatisk fra siste behandling når årsavregning velges", async () => {
+      // Start med opprettBehandling=true og behandlingstype=null (ikke årsavregning ennå)
+      props.formValues.opprettBehandling = true;
+      props.formValues.behandlingstema = "PENSJONIST"; // Bruker har valgt et annet tema først
+      props.formValues.behandlingstype = MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING; // Ikke årsavregning
       props.sak.behandlingOversikter[0].behandlingsstatus = {
         kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
         term: "Avsluttet",
@@ -453,13 +471,22 @@ describe("KnyttTilSak", () => {
 
       const { rerender } = await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
 
-      // Simuler at bruker velger "Opprett ny behandling"
+      // Vent på at komponenten er ferdig lastet
+      await waitFor(() => {
+        expect(screen.getByLabelText("Behandlingstema")).toBeInTheDocument();
+      });
+
+      // Reset mock for å kun sjekke kall etter bruker-interaksjon
+      (props.changeField as ReturnType<typeof vi.fn>).mockClear();
+
+      // Simuler at bruker bytter behandlingstype til "Årsavregning"
       const updatedProps = {
         ...props,
         formValues: {
           ...props.formValues,
           opprettBehandling: true,
-          behandlingstema: null, // Fortsatt null - skal arves
+          behandlingstema: "PENSJONIST", // Fortsatt feil verdi - skal overskrives
+          behandlingstype: MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
         },
       };
 
