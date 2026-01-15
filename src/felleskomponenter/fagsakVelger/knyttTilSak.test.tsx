@@ -426,14 +426,12 @@ describe("KnyttTilSak", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText(
-            "Du kan ikke endre behandlingstema for årsavregning når den har en eksisterende behandling.",
-          ),
+          screen.getByText(/Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie eller/),
         ).toBeInTheDocument();
       });
     });
 
-    it("viser hjelpetekst om fakturaserie når saken har trygdeavgift", async () => {
+    it("viser hjelpetekst når saken har trygdeavgift", async () => {
       mocks.hentTrygdeavgiftOppsummering.mockReturnValueOnce(Promise.resolve({ harBehandlingMedTrygdeavgift: true }));
 
       props.formValues.opprettBehandling = true;
@@ -449,7 +447,7 @@ describe("KnyttTilSak", () => {
         const behandlingstemaSelect = screen.getByLabelText("Behandlingstema");
         expect(behandlingstemaSelect).toBeDisabled();
         expect(
-          screen.getByText("Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie."),
+          screen.getByText(/Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie eller/),
         ).toBeInTheDocument();
       });
     });
