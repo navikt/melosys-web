@@ -436,5 +436,43 @@ describe("KnyttTilSak", () => {
         ).toBeInTheDocument();
       });
     });
+
+    it("arver behandlingstema automatisk fra siste behandling når opprettBehandling velges", async () => {
+      // Start med opprettBehandling=null og behandlingstema=null
+      props.formValues.opprettBehandling = null;
+      props.formValues.behandlingstema = null;
+      props.sak.behandlingOversikter[0].behandlingsstatus = {
+        kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
+        term: "Avsluttet",
+      };
+      // Siste behandling har behandlingstema YRKESAKTIV
+      props.sak.behandlingOversikter[0].behandlingstema = {
+        kode: MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
+        term: "Yrkesaktiv",
+      };
+
+      const { rerender } = await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
+
+      // Simuler at bruker velger "Opprett ny behandling"
+      const updatedProps = {
+        ...props,
+        formValues: {
+          ...props.formValues,
+          opprettBehandling: true,
+          behandlingstema: null, // Fortsatt null - skal arves
+        },
+      };
+
+      rerender(<WrappedKnyttTilSak {...(updatedProps as any)} />);
+
+      // Verifiser at changeField ble kalt med behandlingstema fra siste behandling
+      await waitFor(() => {
+        expect(props.changeField).toHaveBeenCalledWith(
+          JournalforingValues.formNavn,
+          JournalforingValues.behandlingstema,
+          MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
+        );
+      });
+    });
   });
 });
