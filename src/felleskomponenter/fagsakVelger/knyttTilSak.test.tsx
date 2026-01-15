@@ -454,7 +454,7 @@ describe("KnyttTilSak", () => {
       });
     });
 
-    it("arver behandlingstema automatisk fra siste behandling når årsavregning velges", async () => {
+    it("arver behandlingstema automatisk fra første behandling når årsavregning velges", async () => {
       // Start med opprettBehandling=true og behandlingstype=null (ikke årsavregning ennå)
       props.formValues.opprettBehandling = true;
       props.formValues.behandlingstema = "PENSJONIST"; // Bruker har valgt et annet tema først
@@ -463,7 +463,7 @@ describe("KnyttTilSak", () => {
         kode: MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
         term: "Avsluttet",
       };
-      // Siste behandling har behandlingstema YRKESAKTIV
+      // Første behandling har behandlingstema YRKESAKTIV (behandlingOversikter er sortert nyest først)
       props.sak.behandlingOversikter[0].behandlingstema = {
         kode: MKV.Koder.behandlinger.behandlingstema.YRKESAKTIV,
         term: "Yrkesaktiv",
@@ -492,7 +492,7 @@ describe("KnyttTilSak", () => {
 
       rerender(<WrappedKnyttTilSak {...(updatedProps as any)} />);
 
-      // Verifiser at changeField ble kalt med behandlingstema fra siste behandling
+      // Verifiser at changeField ble kalt med behandlingstema fra første behandling
       await waitFor(() => {
         expect(props.changeField).toHaveBeenCalledWith(
           JournalforingValues.formNavn,

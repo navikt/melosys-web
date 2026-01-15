@@ -47,6 +47,8 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
   };
   const { behandlingOversikter, sakstype } = sak;
   const sisteBehandling = behandlingOversikter[0];
+  // Første behandling (eldste) skal være førende for behandlingstema ved årsavregning
+  const førsteBehandling = behandlingOversikter[behandlingOversikter.length - 1];
   const dispatch = useDispatch();
 
   // Sjekk om det er andregangsbehandling (saken har eksisterende behandlinger)
@@ -111,10 +113,10 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
 
   // Håndterer brukerinteraksjoner: Oppdatering av behandlingstema
   useEffect(() => {
-    // Ved årsavregning på andregangsbehandling: Tving arv av behandlingstema fra siste behandling
-    if (opprettBehandling && erAndregangsÅrsavregning && sisteBehandling?.behandlingstema?.kode) {
-      if (behandlingstema !== sisteBehandling.behandlingstema.kode) {
-        changeField(feltNavn.formNavn, feltNavn.behandlingstema, sisteBehandling.behandlingstema.kode);
+    // Ved årsavregning på andregangsbehandling: Tving arv av behandlingstema fra første behandling
+    if (opprettBehandling && erAndregangsÅrsavregning && førsteBehandling?.behandlingstema?.kode) {
+      if (behandlingstema !== førsteBehandling.behandlingstema.kode) {
+        changeField(feltNavn.formNavn, feltNavn.behandlingstema, førsteBehandling.behandlingstema.kode);
       }
     }
     // Nullstill behandlingstype når opprettBehandling er false
