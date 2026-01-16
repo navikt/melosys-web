@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getFormValues, reduxForm } from "redux-form";
 import { connect } from "react-redux";
 import PT from "prop-types";
@@ -60,8 +60,12 @@ export function VurderingVideresend({
 
   const isMounted = Hooks.useIsMounted();
 
-  // Clear error message when vedlegg changes, so the validation error
-  // only appears after attempting to submit without vedlegg
+  // Nullstill eventuelle feilmeldinger når steget vises
+  useEffect(() => {
+    resetFeiletRespons();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleVedleggChange = (newVedlegg) => {
     resetFeiletRespons();
     setValgteVedlegg(newVedlegg);
@@ -122,6 +126,7 @@ export function VurderingVideresend({
               <VedleggVelger
                 valgteVedlegg={valgteVedlegg}
                 onChange={handleVedleggChange}
+                onOpen={resetFeiletRespons}
                 dokumenter={fysiskeDokument}
                 redigerbart={redigerbart}
                 standardvedlegg={tilgjengeligeStandardvedlegg}
