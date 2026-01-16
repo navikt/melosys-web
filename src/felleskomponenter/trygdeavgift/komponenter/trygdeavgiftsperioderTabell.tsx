@@ -18,6 +18,8 @@ function TrygdeavgiftsperioderTabell({
 }) {
   if (!perioder) return null;
 
+  const sortertePerioder = [...perioder].sort(Utils.dato.sorterEtterISOFomDato);
+
   return (
     <div className="tabell-container">
       {lagrePending && (
@@ -36,7 +38,7 @@ function TrygdeavgiftsperioderTabell({
           </Nav.Table.Row>
         </Nav.Table.Header>
         <Nav.Table.Body>
-          {perioder.map((trygdeavgiftsperiode) => (
+          {sortertePerioder.map((trygdeavgiftsperiode) => (
             <Nav.Table.Row className="border_top" key={Utils._uuid()}>
               <Nav.Table.DataCell key={Utils._uuid()}>
                 {`${Utils.dato.formatterDatoTilNorsk(trygdeavgiftsperiode.fom)} - ${Utils.dato.formatterDatoTilNorsk(

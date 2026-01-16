@@ -275,6 +275,78 @@ describe("dato.js:", () => {
       const dato2 = "2018-01-01";
       expect(sorterEtterISOFomDato({ fomDato: dato1 }, { fomDato: dato2 })).toBeGreaterThan(0);
     });
+
+    test("når fomDato er lik, sorteres på tomDato", () => {
+      const fom = "2018-01-01";
+      expect(
+        sorterEtterISOFomDato({ fomDato: fom, tomDato: "2018-06-01" }, { fomDato: fom, tomDato: "2018-12-01" }),
+      ).toBeLessThan(0);
+    });
+
+    test("når fomDato er lik og tomDato er lik, gir 0", () => {
+      expect(
+        sorterEtterISOFomDato(
+          { fomDato: "2018-01-01", tomDato: "2018-06-01" },
+          { fomDato: "2018-01-01", tomDato: "2018-06-01" },
+        ),
+      ).toBe(0);
+    });
+
+    describe("med fom/tom feltnavn", () => {
+      test("dato1 er den samme som dato2 gir 0", () => {
+        expect(sorterEtterISOFomDato({ fom: "2018-01-01" }, { fom: "2018-01-01" })).toBe(0);
+      });
+
+      test("dato1 er før dato2 gir negativt tall", () => {
+        expect(sorterEtterISOFomDato({ fom: "2018-01-01" }, { fom: "2020-01-01" })).toBeLessThan(0);
+      });
+
+      test("dato1 er etter dato2 gir positivt tall", () => {
+        expect(sorterEtterISOFomDato({ fom: "2020-01-01" }, { fom: "2018-01-01" })).toBeGreaterThan(0);
+      });
+
+      test("når fom er lik, sorteres på tom", () => {
+        expect(
+          sorterEtterISOFomDato({ fom: "2018-01-01", tom: "2018-06-01" }, { fom: "2018-01-01", tom: "2018-12-01" }),
+        ).toBeLessThan(0);
+      });
+
+      test("når fom er lik og tom er lik, gir 0", () => {
+        expect(
+          sorterEtterISOFomDato({ fom: "2018-01-01", tom: "2018-06-01" }, { fom: "2018-01-01", tom: "2018-06-01" }),
+        ).toBe(0);
+      });
+
+      test("når fom er lik og tom mangler, gir 0", () => {
+        expect(sorterEtterISOFomDato({ fom: "2018-01-01" }, { fom: "2018-01-01" })).toBe(0);
+      });
+    });
+
+    describe("gir samme resultat for fomDato/tomDato og fom/tom", () => {
+      test("sortering før", () => {
+        const resultatFomDato = sorterEtterISOFomDato({ fomDato: "2018-01-01" }, { fomDato: "2020-01-01" });
+        const resultatFom = sorterEtterISOFomDato({ fom: "2018-01-01" }, { fom: "2020-01-01" });
+        expect(Math.sign(resultatFomDato)).toBe(Math.sign(resultatFom));
+      });
+
+      test("sortering etter", () => {
+        const resultatFomDato = sorterEtterISOFomDato({ fomDato: "2020-01-01" }, { fomDato: "2018-01-01" });
+        const resultatFom = sorterEtterISOFomDato({ fom: "2020-01-01" }, { fom: "2018-01-01" });
+        expect(Math.sign(resultatFomDato)).toBe(Math.sign(resultatFom));
+      });
+
+      test("sortering på tom når fom er lik", () => {
+        const resultatFomDato = sorterEtterISOFomDato(
+          { fomDato: "2018-01-01", tomDato: "2018-06-01" },
+          { fomDato: "2018-01-01", tomDato: "2018-12-01" },
+        );
+        const resultatFom = sorterEtterISOFomDato(
+          { fom: "2018-01-01", tom: "2018-06-01" },
+          { fom: "2018-01-01", tom: "2018-12-01" },
+        );
+        expect(Math.sign(resultatFomDato)).toBe(Math.sign(resultatFom));
+      });
+    });
   });
 
   describe("datodiff", () => {

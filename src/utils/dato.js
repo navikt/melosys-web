@@ -267,7 +267,15 @@ function sorterEtterNorskFomDato(periode1, periode2) {
 }
 
 function sorterEtterISOFomDato(periode1, periode2) {
-  return (new Date(periode1.fomDato)?.getTime() ?? 0) - (new Date(periode2.fomDato)?.getTime() ?? 0);
+  const fom1 = periode1.fomDato ?? periode1.fom;
+  const fom2 = periode2.fomDato ?? periode2.fom;
+  const tom1 = periode1.tomDato ?? periode1.tom;
+  const tom2 = periode2.tomDato ?? periode2.tom;
+
+  const fomDiff = (new Date(fom1)?.getTime() ?? 0) - (new Date(fom2)?.getTime() ?? 0);
+  if (fomDiff !== 0) return fomDiff;
+  if (!tom1 || !tom2) return 0;
+  return (new Date(tom1)?.getTime() ?? 0) - (new Date(tom2)?.getTime() ?? 0);
 }
 
 function justerDatoHvisTidligereÅr(dato) {
