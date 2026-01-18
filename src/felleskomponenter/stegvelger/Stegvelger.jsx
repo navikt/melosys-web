@@ -244,16 +244,18 @@ class Stegvelger extends Component {
     const perioderStegState = this.hentPerioderStegState();
 
     if (sakstype === MKV.Koder.sakstyper.FTRL) {
-      await Promise.all([this.props.oppdaterVilkaar(vilkaar.hent())]);
+      await this.props.oppdaterVilkaar(vilkaar.hent());
     } else {
-      await Promise.all([
-        this.props.oppdaterVilkaar(vilkaar.hent()),
-        this.props.oppdaterAvklartefakta(avklartefakta.hent()),
-        this.props.oppdaterLovvalgperioder(perioderStegState),
-        this.props.oppdaterAnmodningsPerioder(perioderStegState),
-        this.props.oppdaterUtpekingsperioder(perioderStegState),
-        this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
-      ]);
+      // FIX: Serialize API calls to prevent backend race conditions
+      // Previously these ran in parallel via Promise.all, causing
+      // OptimisticLockingFailureException on SaksopplysningKilde entity
+      // when multiple threads tried to update the same behandling entity graph
+      await this.props.oppdaterVilkaar(vilkaar.hent());
+      await this.props.oppdaterAvklartefakta(avklartefakta.hent());
+      await this.props.oppdaterLovvalgperioder(perioderStegState);
+      await this.props.oppdaterAnmodningsPerioder(perioderStegState);
+      await this.props.oppdaterUtpekingsperioder(perioderStegState);
+      await this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent());
     }
 
     this.props.oppdaterMottatteOpplysninger();
