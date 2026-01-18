@@ -1,0 +1,61 @@
+name: Build Test Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Custom tag for the Docker image (e.g., serialize-fix-1)'
+        required: true
+        default: 'test'
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build:
+    name: Build and Push Test Image
+    runs-on: ubuntu-latest-8-cores
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.11.0'
+          registry-url: https://npm.pkg.github.com/
+          scope: '@navikt'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: |
+          BRANCH_NAME=$GITHUB_REF
+          BUILD_NUMBER="$(date "+%Y.%m.%d")-$(git rev-parse --short HEAD)"
+          pnpm build
+
+      - name: Build and push Docker image
+        uses: nais/docker-build-push@v0
+        with:
+          team: teammelosys
+          tag: ${{ github.event.inputs.tag }}
+
+      - name: Output image info
+        run: |
+          echo "✅ Image built and pushed:"
+          echo "   europe-north1-docker.pkg.dev/nais-management-233d/teammelosys/melosys-web:${{ github.event.inputs.tag }}"
+          echo ""
+          echo "To use in E2E tests, run:"
+          echo "   gh workflow run 'E2E Tests' --repo navikt/melosys-e2e-tests -f melosys-web=${{ github.event.inputs.tag }}"
