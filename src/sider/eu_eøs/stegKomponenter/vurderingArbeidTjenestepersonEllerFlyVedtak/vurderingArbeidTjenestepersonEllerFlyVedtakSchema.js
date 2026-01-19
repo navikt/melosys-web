@@ -2,6 +2,7 @@ import { object, string, bool, array } from "yup";
 
 import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
+import { DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN } from "../../../../kodeverk/feilmeldinger";
 
 const VELG_EN_VEDTAKSTYPE = { melding: "Velg en vedtakstype" };
 const OPPGI_BEGRUNNELSE = { melding: "Oppgi begrunnelse" };
@@ -34,6 +35,8 @@ const arbeid_tjenesteperson_eller_fly_vedtak = object().shape({
       }),
     }),
   ),
+  vedtaksbrevFritekst: string().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
+  fritekstSed: string().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
   kreverMottakerinstitusjon: bool().required(),
   mottakerinstitusjon: string().when("kreverMottakerinstitusjon", {
     is: true,
