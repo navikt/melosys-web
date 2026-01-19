@@ -326,7 +326,7 @@ describe("utils", () => {
 
         vi.mocked(Utils._isEmpty).mockReturnValue(false);
         // Mock datoformatering til å returnere input uendret for enklere assertions
-        vi.mocked(Utils.dato.formatterDatoTilNorsk).mockImplementation((dato) => dato);
+        vi.mocked(Utils.dato.formatterDatoTilNorsk).mockImplementation((dato) => (dato as string) ?? "");
 
         const result = mapTilInntektskilderProps(inntektskilderFraBackend, []);
 
