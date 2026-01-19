@@ -244,16 +244,18 @@ class Stegvelger extends Component {
     const perioderStegState = this.hentPerioderStegState();
 
     if (sakstype === MKV.Koder.sakstyper.FTRL) {
-      await Promise.all([this.props.oppdaterVilkaar(vilkaar.hent())]);
+      await this.props.oppdaterVilkaar(vilkaar.hent());
     } else {
-      await Promise.all([
-        this.props.oppdaterVilkaar(vilkaar.hent()),
-        this.props.oppdaterAvklartefakta(avklartefakta.hent()),
-        this.props.oppdaterLovvalgperioder(perioderStegState),
-        this.props.oppdaterAnmodningsPerioder(perioderStegState),
-        this.props.oppdaterUtpekingsperioder(perioderStegState),
-        this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
-      ]);
+      // FIKS: Serialiser API-kall for å unngå race conditions i backend
+      // Tidligere kjørte disse parallelt via Promise.all, noe som forårsaket
+      // OptimisticLockingFailureException på SaksopplysningKilde-entitet
+      // når flere tråder prøvde å oppdatere samme behandling-entitetsgraf
+      await this.props.oppdaterVilkaar(vilkaar.hent());
+      await this.props.oppdaterAvklartefakta(avklartefakta.hent());
+      await this.props.oppdaterLovvalgperioder(perioderStegState);
+      await this.props.oppdaterAnmodningsPerioder(perioderStegState);
+      await this.props.oppdaterUtpekingsperioder(perioderStegState);
+      await this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent());
     }
 
     this.props.oppdaterMottatteOpplysninger();
