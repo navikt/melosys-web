@@ -1900,7 +1900,7 @@
                   "etternavn": "TRIVIELL",
                   "__typename": "Navn"
                 },
-                "kjoenn": "UKJENT",
+                "kjoenn": "MANN",
                 "folkeregisterpersonstatuser": [
                   {
                     "kode": "BOSATT",
