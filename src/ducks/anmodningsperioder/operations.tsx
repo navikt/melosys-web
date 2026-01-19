@@ -66,6 +66,7 @@ const byggAnmodningsperiode = (
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   return [
     {
+      id: null,
       fomDato: søknadsperiode.fom,
       tomDato: søknadsperiode.tom,
       lovvalgBestemmelse: stegState.lovvalgsbestemmelse,
@@ -74,7 +75,7 @@ const byggAnmodningsperiode = (
       unntakFraBestemmelse: stegState.unntakfrabestemmelse,
       unntakFraLovvalgsland: soknadsland.join(""),
       medlemskapsperiodeID: medlemskapsperiodeID || null,
-      trygdedekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+      trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
     },
   ];
 };

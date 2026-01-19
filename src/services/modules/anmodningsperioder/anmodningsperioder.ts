@@ -1,20 +1,17 @@
 import { getAsJson, postAsJson } from "../../utils";
 import { ANMODNINGSPERIODER, API_BASE_URL } from "../../api-constants";
-import { BasePeriode } from "../types/periodeTyper";
 
-/**
- * Anmodningsperiode for EU/EØS unntak.
- * Gjenbruker felles felt fra BasePeriode og Medlemskapsperiode.
- */
-export interface Anmodningsperiode extends BasePeriode {
-  id?: number;
+export interface Anmodningsperiode {
   sendtUtland?: boolean;
+  id: string | null;
+  fomDato: string;
+  tomDato: string;
   lovvalgBestemmelse?: string;
   tilleggBestemmelse?: string;
   lovvalgsland: string;
   unntakFraBestemmelse?: string;
   unntakFraLovvalgsland: string;
-  trygdedekning: string;
+  trygdeDekning: string;
   medlemskapsperiodeID: string;
 }
 
