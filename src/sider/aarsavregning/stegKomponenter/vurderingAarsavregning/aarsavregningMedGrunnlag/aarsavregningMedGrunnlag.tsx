@@ -74,15 +74,15 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     if (aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag?.trygdeavgiftsgrunnlag) {
       trygdeavgiftsgrunnlag = aarsavregningResponse.nyttTrygdeavgiftsGrunnlag.trygdeavgiftsgrunnlag;
     } else {
-      const tidligerePerioderØ =
+      const tidligerePerioder =
         aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
           ?.avgiftspliktigperioder?.[0];
-      const sisteGjeldendeØ = aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder?.[0];
+      const sisteGjeldende = aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder?.[0];
 
       const bestemmelseFraTidligereAvgiftsgrunnlag =
-        tidligerePerioderØ && harInnvilgelsesResultat(tidligerePerioderØ) ? tidligerePerioderØ.bestemmelse : undefined;
+        tidligerePerioder && harInnvilgelsesResultat(tidligerePerioder) ? tidligerePerioder.bestemmelse : undefined;
       const eventuellNyBestemmelse =
-        sisteGjeldendeØ && harInnvilgelsesResultat(sisteGjeldendeØ) ? sisteGjeldendeØ.bestemmelse : undefined;
+        sisteGjeldende && harInnvilgelsesResultat(sisteGjeldende) ? sisteGjeldende.bestemmelse : undefined;
 
       if (
         bestemmelseFraTidligereAvgiftsgrunnlag &&
