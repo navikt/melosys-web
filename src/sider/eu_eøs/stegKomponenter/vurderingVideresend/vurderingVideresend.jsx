@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getFormValues, reduxForm } from "redux-form";
 import { connect } from "react-redux";
 import PT from "prop-types";
@@ -20,6 +20,7 @@ import VedleggTable from "../../../../felleskomponenter/vedleggTable";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 import { dokumenterSelectors } from "../../../../ducks/dokumenter";
+import { feiletResponsOperations } from "../../../../ducks/feiletRespons";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingVideresendSchema from "../vurderingVideresendSchema";
@@ -34,6 +35,7 @@ export function VurderingVideresend({
   form,
   formValues = {},
   tilbake,
+  resetFeiletRespons,
 }) {
   const pdfDokumenter = [
     {
@@ -57,6 +59,17 @@ export function VurderingVideresend({
   const tilgjengeligeStandardvedlegg = []; // TODO: Skal implementeres i MELOSYS-7071
 
   const isMounted = Hooks.useIsMounted();
+
+  // Nullstill eventuelle feilmeldinger når steget vises
+  useEffect(() => {
+    resetFeiletRespons();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleVedleggChange = (newVedlegg) => {
+    resetFeiletRespons();
+    setValgteVedlegg(newVedlegg);
+  };
 
   const videresendSoknad = async (values, dispatch, props) => {
     setVideresendPending(true);
@@ -107,12 +120,13 @@ export function VurderingVideresend({
               <VedleggTable
                 valgteVedlegg={valgteVedlegg}
                 label="Vedlegg til SED"
-                setValgteVedlegg={setValgteVedlegg}
+                setValgteVedlegg={handleVedleggChange}
                 redigerbart={redigerbart}
               />
               <VedleggVelger
                 valgteVedlegg={valgteVedlegg}
-                onChange={setValgteVedlegg}
+                onChange={handleVedleggChange}
+                onOpen={resetFeiletRespons}
                 dokumenter={fysiskeDokument}
                 redigerbart={redigerbart}
                 standardvedlegg={tilgjengeligeStandardvedlegg}
@@ -153,6 +167,7 @@ VurderingVideresend.propTypes = {
   form: PT.string.isRequired,
   formValues: PT.object,
   fysiskeDokument: PT.arrayOf(PT.object).isRequired,
+  resetFeiletRespons: PT.func.isRequired,
 };
 
 const VurderingVideresendForm = reduxForm({
@@ -175,4 +190,8 @@ const mapStateToProps = (state) => ({
   },
 });
 
-export default connect(mapStateToProps)(VurderingVideresendForm);
+const mapDispatchToProps = (dispatch) => ({
+  resetFeiletRespons: () => dispatch(feiletResponsOperations.resetFeiletRespons()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(VurderingVideresendForm);

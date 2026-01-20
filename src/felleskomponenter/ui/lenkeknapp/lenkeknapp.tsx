@@ -17,6 +17,7 @@ interface LenkeknappProps {
 function Lenkeknapp({ onClick, children, className, ikon: Ikon, value, disabled }: LenkeknappProps) {
   return (
     <Nav.Button
+      type="button"
       icon={Ikon && <Ikon className="ikon" />}
       onClick={onClick}
       className={className}
