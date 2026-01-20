@@ -329,19 +329,17 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   useEffect(() => {
     if (redigerbart && aktivtSteg) {
-      if (!formIsValid) {
-        formValues?.skatteforholdsperioder?.forEach((_periode: any, index: number) => {
-          trigger(`skatteforholdsperioder[${index}].fomDato`);
-          trigger(`skatteforholdsperioder[${index}].tomDato`);
-        });
-        formValues?.inntektskilder?.forEach((_periode: any, index: number) => {
-          trigger(`inntektskilder[${index}].fomDato`);
-          trigger(`inntektskilder[${index}].tomDato`);
-        });
-        if (!erÅpenSluttDato && (feil || harEndretInnvilgetMedlemskapsperiode)) {
-          debounceBeregnTrygdeavgiftsperioder(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
-          setHarEndretInnvilgetMedlemskapsperiode(false);
-        }
+      formValues?.skatteforholdsperioder?.forEach((_periode: any, index: number) => {
+        trigger(`skatteforholdsperioder[${index}].fomDato`);
+        trigger(`skatteforholdsperioder[${index}].tomDato`);
+      });
+      formValues?.inntektskilder?.forEach((_periode: any, index: number) => {
+        trigger(`inntektskilder[${index}].fomDato`);
+        trigger(`inntektskilder[${index}].tomDato`);
+      });
+      if (!erÅpenSluttDato && (feil || harEndretInnvilgetMedlemskapsperiode)) {
+        debounceBeregnTrygdeavgiftsperioder(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
+        setHarEndretInnvilgetMedlemskapsperiode(false);
       }
     }
   }, [aktivtSteg, harEndretInnvilgetMedlemskapsperiode]);
