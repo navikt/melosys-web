@@ -34,25 +34,29 @@ describe("OpprettNySak", () => {
     vi.clearAllMocks();
   });
 
-  it("skal rendre komponenten", () => {
+  it("skal rendre komponenten", async () => {
     renderWithProviders(<OpprettNySakForm tilForsiden={mockTilForsiden} />, {
       preloadedState: defaultPreloadedState,
     });
 
-    expect(screen.getByText("Hvem skal saken opprettes på?")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Hvem skal saken opprettes på?")).toBeInTheDocument();
+    });
   });
 
-  it("skal vise bruker-felter som standard", () => {
+  it("skal vise bruker-felter som standard", async () => {
     renderWithProviders(<OpprettNySakForm tilForsiden={mockTilForsiden} />, {
       preloadedState: defaultPreloadedState,
     });
 
-    expect(screen.getByText("Bruker")).toBeInTheDocument();
-    expect(screen.getByText("Virksomhet")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Bruker")).toBeInTheDocument();
+      expect(screen.getByText("Virksomhet")).toBeInTheDocument();
 
-    // Bruker skal være valgt som standard
-    const brukerRadio = screen.getByRole("radio", { name: "Bruker" });
-    expect(brukerRadio).toBeChecked();
+      // Bruker skal være valgt som standard
+      const brukerRadio = screen.getByRole("radio", { name: "Bruker" });
+      expect(brukerRadio).toBeChecked();
+    });
   });
 
   it("skal vise virksomhet-felter når virksomhet velges", async () => {
@@ -70,12 +74,14 @@ describe("OpprettNySak", () => {
     });
   });
 
-  it("skal vise avbryt-knapp", () => {
+  it("skal vise avbryt-knapp", async () => {
     renderWithProviders(<OpprettNySakForm tilForsiden={mockTilForsiden} />, {
       preloadedState: defaultPreloadedState,
     });
 
-    expect(screen.getByText("Avbryt")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Avbryt")).toBeInTheDocument();
+    });
   });
 
   it("skal kalle tilForsiden når avbryt klikkes", async () => {
@@ -91,27 +97,33 @@ describe("OpprettNySak", () => {
     expect(mockTilForsiden).toHaveBeenCalledTimes(1);
   });
 
-  it("skal vise checkbox for 'Legg behandlingen i mine oppgaver'", () => {
+  it("skal vise checkbox for 'Legg behandlingen i mine oppgaver'", async () => {
     renderWithProviders(<OpprettNySakForm tilForsiden={mockTilForsiden} />, {
       preloadedState: defaultPreloadedState,
     });
 
-    expect(screen.getByText("Legg behandlingen i mine oppgaver")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Legg behandlingen i mine oppgaver")).toBeInTheDocument();
+    });
   });
 
-  it("skal vise opprett-knapp", () => {
+  it("skal vise opprett-knapp", async () => {
     renderWithProviders(<OpprettNySakForm tilForsiden={mockTilForsiden} />, {
       preloadedState: defaultPreloadedState,
     });
 
-    expect(screen.getByText("Opprett ny behandling")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Opprett ny behandling")).toBeInTheDocument();
+    });
   });
 
-  it("skal ikke vise fagsakvelger før bruker/virksomhet info er fylt ut", () => {
+  it("skal ikke vise fagsakvelger før bruker/virksomhet info er fylt ut", async () => {
     renderWithProviders(<OpprettNySakForm tilForsiden={mockTilForsiden} />, {
       preloadedState: defaultPreloadedState,
     });
 
-    expect(screen.queryByText("Knytt til eksisterende sak eller opprett ny")).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText("Knytt til eksisterende sak eller opprett ny")).not.toBeInTheDocument();
+    });
   });
 });

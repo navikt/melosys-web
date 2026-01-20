@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import { render } from "@testing-library/react";
@@ -190,7 +190,7 @@ describe("Alertmeldinger", () => {
       });
     });
 
-    it("skal sette opp en timeout for automatisk skjuling", () => {
+    it("skal sette opp en timeout for automatisk skjuling", async () => {
       const mockAction = vi.fn();
       vi.useFakeTimers();
 
@@ -200,7 +200,9 @@ describe("Alertmeldinger", () => {
       expect(screen.getByText("Test")).toBeInTheDocument();
 
       // Etter 3 sekunder skal den skjules
-      vi.advanceTimersByTime(3000);
+      await act(async () => {
+        vi.advanceTimersByTime(3000);
+      });
 
       // actionEtterSynlighet skal være kalt
       expect(mockAction).toHaveBeenCalledTimes(1);
@@ -266,7 +268,7 @@ describe("Alertmeldinger", () => {
       expect(screen.queryByText("Test")).not.toBeInTheDocument();
     });
 
-    it("skal rydde opp timer ved unmount", () => {
+    it("skal rydde opp timer ved unmount", async () => {
       vi.useFakeTimers();
       const mockAction = vi.fn();
 
@@ -276,7 +278,9 @@ describe("Alertmeldinger", () => {
 
       unmount();
 
-      vi.advanceTimersByTime(3000);
+      await act(async () => {
+        vi.advanceTimersByTime(3000);
+      });
 
       // actionEtterSynlighet skal ikke kalles etter unmount
       expect(mockAction).not.toHaveBeenCalled();
