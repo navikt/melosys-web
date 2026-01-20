@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, act } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 // @ts-expect-error - Missing type definitions
@@ -72,16 +72,14 @@ describe("Dokumentliste", () => {
       render(<Dokumentliste {...props} />);
       const user = userEvent.setup();
 
-      await act(async () => {
-        await user.click(
-          screen.getByText(
-            `${KV.kodeTilTerm(
-              props.dokumenter[0].dokumentData?.produserbardokument,
-              MKV.KTObjects.brev.produserbaredokumenter,
-            )}`,
-          ),
-        );
-      });
+      await user.click(
+        screen.getByText(
+          `${KV.kodeTilTerm(
+            props.dokumenter[0].dokumentData?.produserbardokument,
+            MKV.KTObjects.brev.produserbaredokumenter,
+          )}`,
+        ),
+      );
 
       expect(await screen.findByText(errorMessage)).toBeInTheDocument();
     });
@@ -94,16 +92,14 @@ describe("Dokumentliste", () => {
       render(<Dokumentliste {...props} />);
       const user = userEvent.setup();
 
-      await act(async () => {
-        await user.click(
-          screen.getByText(
-            `${KV.kodeTilTerm(
-              props.dokumenter[0].dokumentData?.produserbardokument,
-              MKV.KTObjects.brev.produserbaredokumenter,
-            )}`,
-          ),
-        );
-      });
+      await user.click(
+        screen.getByText(
+          `${KV.kodeTilTerm(
+            props.dokumenter[0].dokumentData?.produserbardokument,
+            MKV.KTObjects.brev.produserbaredokumenter,
+          )}`,
+        ),
+      );
 
       expect(await screen.findByText("Det oppstod en feil da brevet skulle forhåndsvises!")).toBeInTheDocument();
     });
@@ -120,9 +116,7 @@ describe("Dokumentliste", () => {
       render(<Dokumentliste {...props} />);
       const user = userEvent.setup();
 
-      await act(async () => {
-        await user.click(screen.getByText(`SED ${props.dokumenter[1].sedType}`));
-      });
+      await user.click(screen.getByText(`SED ${props.dokumenter[1].sedType}`));
 
       expect(await screen.findByText(errorMessage)).toBeInTheDocument();
     });
@@ -135,9 +129,7 @@ describe("Dokumentliste", () => {
       render(<Dokumentliste {...props} />);
       const user = userEvent.setup();
 
-      await act(async () => {
-        await user.click(screen.getByText(`SED ${props.dokumenter[1].sedType}`));
-      });
+      await user.click(screen.getByText(`SED ${props.dokumenter[1].sedType}`));
 
       expect(await screen.findByText("Det oppstod en feil da SED skulle forhåndsvises!")).toBeInTheDocument();
     });

@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { waitFor } from "@testing-library/react";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -80,21 +81,25 @@ describe("VurderingArtikkel16MottaSvar", () => {
     };
   });
 
-  it("viser ett Datoomrademedvarighet", () => {
+  it("viser ett Datoomrademedvarighet", async () => {
     const { getByText } = renderWithProviders(<ConnectedVurderingArtikkel16MottaSvar {...props} />, {
       preloadedState: initialReduxState,
     });
 
-    expect(getByText("0 måneder og 20 dager")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText("0 måneder og 20 dager")).toBeInTheDocument();
+    });
   });
 
-  it("viser stegknapper", () => {
+  it("viser stegknapper", async () => {
     const { getByRole } = renderWithProviders(<ConnectedVurderingArtikkel16MottaSvar {...props} />, {
       preloadedState: initialReduxState,
     });
 
-    expect(getByRole("button", { name: "Bekreft og fortsett" })).toBeInTheDocument();
-    expect(getByRole("button", { name: "Tilbake" })).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByRole("button", { name: "Bekreft og fortsett" })).toBeInTheDocument();
+      expect(getByRole("button", { name: "Tilbake" })).toBeInTheDocument();
+    });
   });
 
   it("viser en textarea ved delvis innvilgelse", async () => {
@@ -103,13 +108,19 @@ describe("VurderingArtikkel16MottaSvar", () => {
     const { getByRole } = renderWithProviders(<ConnectedVurderingArtikkel16MottaSvar {...props} />, {
       preloadedState: initialReduxState,
     });
-    expect(getByRole("textbox", { name: "Begrunnelse" })).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(getByRole("textbox", { name: "Begrunnelse" })).toBeInTheDocument();
+    });
   });
 
-  it("snapshot test", () => {
+  it("snapshot test", async () => {
     const { container } = renderWithProviders(<ConnectedVurderingArtikkel16MottaSvar {...props} />, {
       preloadedState: initialReduxState,
     });
-    expect(container).toMatchSnapshot();
+
+    await waitFor(() => {
+      expect(container).toMatchSnapshot();
+    });
   });
 });

@@ -14,12 +14,25 @@ interface VedleggVelgerProps {
   onChange: (valgteVedlegg: DokumenterV2.BrevVedleggVisningstabellInterface) => void;
   redigerbart: boolean;
   standardvedlegg: DokumenterV2.TilgjengeligStandardvedlegg[];
+  onOpen?: () => void;
 }
 
-function VedleggVelger({ dokumenter, valgteVedlegg, onChange, redigerbart, standardvedlegg }: VedleggVelgerProps) {
+function VedleggVelger({
+  dokumenter,
+  valgteVedlegg,
+  onChange,
+  redigerbart,
+  standardvedlegg,
+  onOpen,
+}: VedleggVelgerProps) {
   const [redigerer, setRedigerer] = useState<boolean>(false);
 
-  const toggleRedigerer = () => setRedigerer(!redigerer);
+  const toggleRedigerer = () => {
+    if (!redigerer && onOpen) {
+      onOpen();
+    }
+    setRedigerer(!redigerer);
+  };
 
   const velgStandardvedlegg = (vedlegg: TilgjengeligStandardvedlegg) => {
     onChange({

@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import userEvent from "@testing-library/user-event";
 
 import { reduxForm } from "redux-form";
 import * as KV from "../../../../kodeverk";
-import VurderingVideresend from "./vurderingVideresend";
+import { VurderingVideresend } from "./vurderingVideresend";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
 const initialReduxState = {
@@ -44,6 +45,7 @@ describe("Vurderingvideresend", () => {
       videresendSoknad: vi.fn(),
       tilbake: vi.fn(),
       handleSubmit: vi.fn(),
+      resetFeiletRespons: vi.fn(),
     };
   });
 
@@ -67,5 +69,33 @@ describe("Vurderingvideresend", () => {
       preloadedState: initialReduxState,
     });
     expect(queryByText("SED A008")).not.toBeInTheDocument();
+  });
+
+  it("kaller resetFeiletRespons ved mount", () => {
+    const resetFeiletRespons = vi.fn();
+    props.resetFeiletRespons = resetFeiletRespons;
+
+    renderWithProviders(<WrappedVurderingVideresend {...props} />, {
+      preloadedState: initialReduxState,
+    });
+
+    expect(resetFeiletRespons).toHaveBeenCalledTimes(1);
+  });
+
+  it("kaller resetFeiletRespons når vedleggvelger åpnes", async () => {
+    const resetFeiletRespons = vi.fn();
+    props.resetFeiletRespons = resetFeiletRespons;
+
+    renderWithProviders(<WrappedVurderingVideresend {...props} />, {
+      preloadedState: initialReduxState,
+    });
+
+    // Nullstill mock etter mount-kallet
+    resetFeiletRespons.mockClear();
+
+    // Klikk på "Legg til vedlegg" for å åpne vedleggvelgeren
+    await userEvent.click(document.querySelector(".vedleggvelger") as HTMLElement);
+
+    expect(resetFeiletRespons).toHaveBeenCalledTimes(1);
   });
 });

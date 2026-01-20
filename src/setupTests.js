@@ -6,6 +6,9 @@ import { handlers } from "./test/mocks/handlers";
 // Oppsettfilen for Yup kjøres ikke uten videre av vi. Derfor er det nødvendig å importere den manuelt her.
 import "./setupYup";
 
+// Enable React act() environment for testing
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+
 expect.extend(matchers);
 
 // Example: Custom snapshot serializer

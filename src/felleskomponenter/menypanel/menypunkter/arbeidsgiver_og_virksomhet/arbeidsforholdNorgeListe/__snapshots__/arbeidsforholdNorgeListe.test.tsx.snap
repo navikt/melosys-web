@@ -83,7 +83,10 @@ exports[`ArbeidsforholdNorgeListe > snapshot test 1`] = `
       </div>
     </div>
     <div class="leggTilKnapp">
-      <button class="navds-button navds-button--tertiary navds-button--small">
+      <button
+        type="button"
+        class="navds-button navds-button--tertiary navds-button--small"
+      >
         <span class="navds-button__icon">
           <svg
             width="20"
