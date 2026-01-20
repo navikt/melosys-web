@@ -56,6 +56,22 @@ describe("Vurderingvideresend", () => {
     expect(getByRole("textbox", { name: "Fritekst til orienteringsbrev" })).toBeInTheDocument();
   });
 
+  it("viser radiogruppe for formål med A008", () => {
+    const { getByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
+      preloadedState: initialReduxState,
+    });
+    expect(getByRole("group", { name: "Formål med A008" })).toBeInTheDocument();
+    expect(getByRole("radio", { name: "Melding om endring i relevante data" })).toBeInTheDocument();
+    expect(getByRole("radio", { name: "Informasjon om arbeid i to eller flere medlemsland" })).toBeInTheDocument();
+  });
+
+  it("viser ytterligere informasjon tekstfelt", () => {
+    const { getByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
+      preloadedState: initialReduxState,
+    });
+    expect(getByRole("textbox", { name: /Ytterligere informasjon/ })).toBeInTheDocument();
+  });
+
   it("viser en dokumentliste med forventet innhold", () => {
     const { getByText } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
       preloadedState: initialReduxState,

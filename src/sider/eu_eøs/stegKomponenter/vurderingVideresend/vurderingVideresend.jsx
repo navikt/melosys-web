@@ -75,7 +75,13 @@ export function VurderingVideresend({
     setVideresendPending(true);
 
     const vedlegg = valgteVedlegg.saksvedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID }));
-    await props.videresendSoknad(values.mottakerinstitusjon, values.orienteringsbrevFritekst, vedlegg);
+    await props.videresendSoknad(
+      values.mottakerinstitusjon,
+      values.orienteringsbrevFritekst,
+      values.ytterligereInformasjonSed,
+      values.a008Formaal,
+      vedlegg,
+    );
 
     // Videresend-operation navigerer til forside, og komponenten kan derfor være unmountet.
     if (isMounted.current) {
@@ -89,6 +95,25 @@ export function VurderingVideresend({
         <Nav.Heading level="1" className="stegvelgertittel">
           Videresending av søknad
         </Nav.Heading>
+        <Nav.Row>
+          <Nav.Column xs="8">
+            <Skjema.RadioGroup legend="Formål med A008" name="a008Formaal" readOnly={!redigerbart}>
+              <Nav.Radio value="endringsmelding">Melding om endring i relevante data</Nav.Radio>
+              <Nav.Radio value="arbeid_flere_land">Informasjon om arbeid i to eller flere medlemsland</Nav.Radio>
+            </Skjema.RadioGroup>
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="8">
+            <Skjema.Textarea
+              feltNavn="ytterligereInformasjonSed"
+              label="Ytterligere informasjon (valgfritt)"
+              description="Denne teksten legges ved i SED A008"
+              placeholder="Skriv inn ytterligere informasjon..."
+              readOnly={!redigerbart}
+            />
+          </Nav.Column>
+        </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="8">
             <Skjema.Textarea
@@ -187,6 +212,8 @@ const mapStateToProps = (state) => ({
     mottakerinstitusjon: "",
     kreverMottakerinstitusjon: false,
     orienteringsbrevFritekst: "",
+    ytterligereInformasjonSed: "",
+    a008Formaal: "",
   },
 });
 
