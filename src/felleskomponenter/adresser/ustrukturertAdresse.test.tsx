@@ -2,8 +2,9 @@ import { describe, it, expect, vi } from "vitest";
 import { render } from "@testing-library/react";
 import UstrukturertAdresse from "./ustrukturertAdresse";
 
+let uuidCounter = 0;
 vi.mock("../../utils", () => ({
-  _uuid: vi.fn(() => "test-uuid-123"),
+  _uuid: vi.fn(() => `test-uuid-${uuidCounter++}`),
 }));
 
 describe("UstrukturertAdresse", () => {

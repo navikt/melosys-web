@@ -158,7 +158,10 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
         </div>
       </div>
       <div class="legg__til__knapp">
-        <button class="navds-button navds-button--tertiary navds-button--small">
+        <button
+          type="button"
+          class="navds-button navds-button--tertiary navds-button--small"
+        >
           <span class="navds-button__icon">
             <svg
               width="20"

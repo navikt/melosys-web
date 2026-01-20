@@ -2,12 +2,12 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { cleanup } from "@testing-library/react";
 
 import OpprettSak from "./opprettSak";
-import MKV from "../../../melosyskodeverk";
-import { renderWithProviders, renderWithProvidersAsync } from "../../../ducks/test-utils/renderWithProviders";
+import MKV from "../../melosyskodeverk";
+import { renderWithProviders, renderWithProvidersAsync } from "../../ducks/test-utils/renderWithProviders";
 import { reduxForm } from "redux-form";
 
-vi.mock("../../../services/modules/lovligekombinasjoner", async () => {
-  const actual = await vi.importActual("../../../services/modules/lovligekombinasjoner");
+vi.mock("../../services/modules/lovligekombinasjoner", async () => {
+  const actual = await vi.importActual("../../services/modules/lovligekombinasjoner");
   return {
     ...actual,
     hentSakstyper: () =>

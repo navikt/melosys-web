@@ -18,7 +18,7 @@ import { formSelectors } from "../../../../ducks/form";
 import { sokSelectors } from "../../../../ducks/sok";
 
 import Informasjon from "./informasjon";
-import FagsakVelger from "../fagsakVelger";
+import { FagsakVelger } from "../../../../felleskomponenter/fagsakVelger";
 import SendForvaltningsMelding from "../sendForvaltningsMelding";
 import Komponent, { KomponentUtenOverskrift } from "../komponent";
 

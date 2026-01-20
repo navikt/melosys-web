@@ -15,14 +15,13 @@ vi.mock("../../felleskomponenter/sideDialog", () => ({
 
 describe("Sendbrev", () => {
   const defaultPreloadedState = {
-    redigerbart: { redigerbart: true },
     form: {
       SEND_BREV: {
         values: {},
       },
     },
     dokumenter: { data: [] },
-    behandlinger: { data: [] },
+    behandlinger: { data: { redigerbart: true } },
   };
 
   const renderSendbrev = (behandlingID = "123", saksnummer = "12345678") => {
@@ -118,7 +117,7 @@ describe("Sendbrev", () => {
   it("skal rendre med redigerbart = false", () => {
     const preloadedState = {
       ...defaultPreloadedState,
-      redigerbart: { redigerbart: false },
+      behandlinger: { data: { redigerbart: false } },
     };
 
     renderWithProviders(
