@@ -101,13 +101,15 @@ describe("SendBrev", () => {
     vi.clearAllMocks();
   });
 
-  it("skal returnere null før async data er lastet", () => {
+  it("skal returnere null før async data er lastet", async () => {
     const { container } = renderWithProviders(<SendBrev {...defaultProps} />, {
       preloadedState: defaultPreloadedState,
     });
 
     // Komponenten returnerer null mens den venter på API-data
-    expect(container.querySelector(".send_brev")).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(container.querySelector(".send_brev")).not.toBeInTheDocument();
+    });
   });
 
   it("skal kalle API for å hente tilgjengelige maler ved mount", async () => {
@@ -155,7 +157,7 @@ describe("SendBrev", () => {
     });
   });
 
-  it("skal håndtere tomme behandlinger i state", () => {
+  it("skal håndtere tomme behandlinger i state", async () => {
     const preloadedState = {
       ...defaultPreloadedState,
       behandlinger: {
@@ -167,10 +169,12 @@ describe("SendBrev", () => {
       preloadedState,
     });
 
-    expect(container.querySelector(".send_brev")).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(container.querySelector(".send_brev")).not.toBeInTheDocument();
+    });
   });
 
-  it("skal håndtere dokumenter i state", () => {
+  it("skal håndtere dokumenter i state", async () => {
     const preloadedState = {
       ...defaultPreloadedState,
       dokumenter: {
@@ -185,15 +189,20 @@ describe("SendBrev", () => {
       preloadedState,
     });
 
-    // Komponenten rendrer uten å krasje
-    expect(true).toBe(true);
+    // Komponenten rendrer uten å krasje - vent på at async operasjoner stabiliserer seg
+    await waitFor(() => {
+      expect(true).toBe(true);
+    });
   });
 
-  it("skal ikke krasje ved rendering", () => {
-    expect(() => {
-      renderWithProviders(<SendBrev {...defaultProps} />, {
-        preloadedState: defaultPreloadedState,
-      });
-    }).not.toThrow();
+  it("skal ikke krasje ved rendering", async () => {
+    renderWithProviders(<SendBrev {...defaultProps} />, {
+      preloadedState: defaultPreloadedState,
+    });
+
+    // Vent på at async operasjoner stabiliserer seg
+    await waitFor(() => {
+      expect(true).toBe(true);
+    });
   });
 });

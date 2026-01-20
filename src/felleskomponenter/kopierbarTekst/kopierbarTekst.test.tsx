@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import KopierbarTekst from "./kopierbarTekst";
 
 // Mock icons
@@ -139,22 +139,31 @@ describe("KopierbarTekst", () => {
   });
 
   it("skal tilbakestille til Kopier ikon etter 1 sekund", async () => {
+    vi.useFakeTimers();
+
     render(<KopierbarTekst>Test</KopierbarTekst>);
 
     const button = screen.getByRole("button");
-    fireEvent.click(button);
 
-    // Wait for checkmark to appear
-    await waitFor(() => {
-      expect(screen.getByTestId("green-checkmark")).toBeInTheDocument();
+    // Click and flush promises (clipboard.writeText is async)
+    await act(async () => {
+      fireEvent.click(button);
+      await Promise.resolve(); // Flush microtasks for clipboard promise
     });
 
-    // Wait for the 1 second timer plus a bit
-    await new Promise((resolve) => setTimeout(resolve, 1100));
+    // Checkmark should be visible now
+    expect(screen.getByTestId("green-checkmark")).toBeInTheDocument();
+
+    // Advance time by 1 second
+    await act(async () => {
+      vi.advanceTimersByTime(1000);
+    });
 
     // Should be back to kopier icon
     expect(screen.getByTestId("kopier-icon")).toBeInTheDocument();
     expect(screen.queryByTestId("green-checkmark")).not.toBeInTheDocument();
+
+    vi.useRealTimers();
   });
 
   it("skal vise hovertekst ved focus", () => {
@@ -210,10 +219,12 @@ describe("KopierbarTekst", () => {
     render(<KopierbarTekst>Test</KopierbarTekst>);
 
     const button = screen.getByRole("button");
-    fireEvent.click(button);
 
-    // Wait for the async error handling
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    // Click and wait for async error handling
+    await act(async () => {
+      fireEvent.click(button);
+      await Promise.resolve(); // Flush microtasks
+    });
 
     expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to copy text: ", expect.any(Error));
 
@@ -231,12 +242,14 @@ describe("KopierbarTekst", () => {
     render(<KopierbarTekst>Test</KopierbarTekst>);
 
     const button = screen.getByRole("button");
-    fireEvent.click(button);
-    fireEvent.click(button);
-    fireEvent.click(button);
 
-    // Wait for async operations
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    // Click multiple times and flush async operations
+    await act(async () => {
+      fireEvent.click(button);
+      fireEvent.click(button);
+      fireEvent.click(button);
+      await Promise.resolve(); // Flush microtasks
+    });
 
     expect(clipboardWriteTextSpy).toHaveBeenCalledTimes(3);
   });
@@ -246,10 +259,12 @@ describe("KopierbarTekst", () => {
     render(<KopierbarTekst>{langTekst}</KopierbarTekst>);
 
     const button = screen.getByRole("button");
-    fireEvent.click(button);
 
-    // Wait for async operation
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    // Click and flush async operation
+    await act(async () => {
+      fireEvent.click(button);
+      await Promise.resolve(); // Flush microtasks
+    });
 
     expect(clipboardWriteTextSpy).toHaveBeenCalledWith(langTekst);
   });

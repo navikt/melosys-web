@@ -109,12 +109,14 @@ describe("Fullmektige", () => {
     });
   });
 
-  it("skal ha CSS-klasse fullmektige", () => {
+  it("skal ha CSS-klasse fullmektige", async () => {
     const { container } = renderWithProviders(<Fullmektige {...defaultProps} />, {
       preloadedState: defaultPreloadedState,
     });
 
-    expect(container.querySelector(".fullmektige")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(container.querySelector(".fullmektige")).toBeInTheDocument();
+    });
   });
 
   it("skal håndtere ulike saksnumre", async () => {
