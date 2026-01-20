@@ -274,8 +274,13 @@ function sorterEtterISOFomDato(periode1, periode2) {
 
   const fomDiff = (new Date(fom1)?.getTime() ?? 0) - (new Date(fom2)?.getTime() ?? 0);
   if (fomDiff !== 0) return fomDiff;
-  if (!tom1 || !tom2) return 0;
-  return (new Date(tom1)?.getTime() ?? 0) - (new Date(tom2)?.getTime() ?? 0);
+
+  const tom1Time = tom1 ? new Date(tom1).getTime() : null;
+  const tom2Time = tom2 ? new Date(tom2).getTime() : null;
+  if (tom1Time === null && tom2Time === null) return 0;
+  if (tom1Time === null) return 1; // Perioder uten tom-dato sorteres etter perioder med tom-dato
+  if (tom2Time === null) return -1;
+  return tom1Time - tom2Time;
 }
 
 function justerDatoHvisTidligereÅr(dato) {

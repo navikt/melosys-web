@@ -317,8 +317,18 @@ describe("dato.js:", () => {
         ).toBe(0);
       });
 
-      test("når fom er lik og tom mangler, gir 0", () => {
+      test("når fom er lik og begge mangler tom, gir 0", () => {
         expect(sorterEtterISOFomDato({ fom: "2018-01-01" }, { fom: "2018-01-01" })).toBe(0);
+      });
+
+      test("når fom er lik og periode1 mangler tom, sorteres periode1 etter periode2", () => {
+        expect(sorterEtterISOFomDato({ fom: "2018-01-01" }, { fom: "2018-01-01", tom: "2018-06-01" })).toBeGreaterThan(
+          0,
+        );
+      });
+
+      test("når fom er lik og periode2 mangler tom, sorteres periode2 etter periode1", () => {
+        expect(sorterEtterISOFomDato({ fom: "2018-01-01", tom: "2018-06-01" }, { fom: "2018-01-01" })).toBeLessThan(0);
       });
     });
 
