@@ -22,8 +22,8 @@ import { fagsakOperations } from "../../ducks/fagsaker";
 import Knapperad from "../../felleskomponenter/knapperad";
 import { Feilmeldinger } from "../../felleskomponenter/feilmeldinger";
 import { hentSammensattNavn } from "../../graphql/navn";
-import FagsakVelger from "../journalforing/komponenter/fagsakVelger";
-import { skalViseSoknadsperiodeOgLand } from "../journalforing/komponenter/opprettSak";
+import { FagsakVelger } from "../../felleskomponenter/fagsakVelger";
+import { skalViseSoknadsperiodeOgLand } from "../../felleskomponenter/fagsakVelger/opprettSak";
 
 import IdentOgNavn from "./komponenter/identOgNavn";
 
