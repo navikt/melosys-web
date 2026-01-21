@@ -112,6 +112,7 @@ export function VurderingVideresend({
               label="Fritekst til orienteringsbrev"
               placeholder="Skriv inn tekst til orienteringsbrevet..."
               readOnly={!redigerbart}
+              maxLength={10000}
             />
           </Nav.Column>
         </Nav.Row>
