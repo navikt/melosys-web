@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Grunnlagsopplysninger } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { BeregnetTrygdeavgiftDetaljer } from "./beregnetTrygdeavgiftDetaljer";
@@ -14,6 +14,11 @@ vi.mock("../../../../../utils", () => {
         const [year, month, day] = date.split("-");
         return `${day}.${month}.${year}`;
       }),
+      sorterEtterISOFomDato: (a: { fom?: string; fomDato?: string }, b: { fom?: string; fomDato?: string }) => {
+        const fom1 = a.fomDato ?? a.fom ?? "";
+        const fom2 = b.fomDato ?? b.fom ?? "";
+        return new Date(fom1).getTime() - new Date(fom2).getTime();
+      },
     },
   };
 });
@@ -117,5 +122,65 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     );
 
     expect(container.firstChild).toMatchSnapshot();
+  });
+
+  it("sorterer perioder i stigende rekkefølge etter fom-dato", () => {
+    const grunnlagMedFlerePerioder: Grunnlagsopplysninger = {
+      trygdeavgiftsgrunnlag: {
+        avgiftspliktigperioder: [
+          {
+            fomDato: "2021-01-01",
+            tomDato: "2023-12-31",
+            medlemskapstype: "PLIKTIG",
+            trygdedekning: "FULL",
+            id: 1,
+            bestemmelse: "",
+            innvilgelsesResultat: "",
+          },
+        ],
+        skatteforholdsperioder: [{ fomDato: "2021-01-01", tomDato: "2023-12-31", skatteplikttype: "SKATTEPLIKTIG" }],
+        inntektskperioder: [],
+      },
+      avgift: {
+        trygdeavgiftsperioder: [
+          {
+            fom: "2023-01-01",
+            tom: "2023-12-31",
+            inntektskildetype: "ARBEID",
+            arbeidsgiversavgiftBetales: true,
+            inntektPerMd: 41667,
+            avgiftssats: 8.2,
+            avgiftPerMd: 3417,
+          },
+          {
+            fom: "2021-01-01",
+            tom: "2021-12-31",
+            inntektskildetype: "ARBEID",
+            arbeidsgiversavgiftBetales: true,
+            inntektPerMd: 41667,
+            avgiftssats: 8.2,
+            avgiftPerMd: 3417,
+          },
+          {
+            fom: "2022-01-01",
+            tom: "2022-12-31",
+            inntektskildetype: "ARBEID",
+            arbeidsgiversavgiftBetales: true,
+            inntektPerMd: 41667,
+            avgiftssats: 8.2,
+            avgiftPerMd: 3417,
+          },
+        ],
+        totalInntekt: 1500000,
+        totalAvgift: 123000,
+      },
+    };
+
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlagMedFlerePerioder} medlemskapsTypeErPliktig={true} />);
+
+    const rows = screen.getAllByRole("row");
+    expect(rows[1]).toHaveTextContent("01.01.2021");
+    expect(rows[2]).toHaveTextContent("01.01.2022");
+    expect(rows[3]).toHaveTextContent("01.01.2023");
   });
 });

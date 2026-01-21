@@ -267,7 +267,20 @@ function sorterEtterNorskFomDato(periode1, periode2) {
 }
 
 function sorterEtterISOFomDato(periode1, periode2) {
-  return (new Date(periode1.fomDato)?.getTime() ?? 0) - (new Date(periode2.fomDato)?.getTime() ?? 0);
+  const fom1 = periode1.fomDato ?? periode1.fom;
+  const fom2 = periode2.fomDato ?? periode2.fom;
+  const tom1 = periode1.tomDato ?? periode1.tom;
+  const tom2 = periode2.tomDato ?? periode2.tom;
+
+  const fomDiff = (new Date(fom1)?.getTime() ?? 0) - (new Date(fom2)?.getTime() ?? 0);
+  if (fomDiff !== 0) return fomDiff;
+
+  const tom1Time = tom1 ? new Date(tom1).getTime() : null;
+  const tom2Time = tom2 ? new Date(tom2).getTime() : null;
+  if (tom1Time === null && tom2Time === null) return 0;
+  if (tom1Time === null) return 1; // Perioder uten tom-dato sorteres etter perioder med tom-dato
+  if (tom2Time === null) return -1;
+  return tom1Time - tom2Time;
 }
 
 function justerDatoHvisTidligereÅr(dato) {

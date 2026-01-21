@@ -61,9 +61,7 @@ export function BeregnetTrygdeavgiftDetaljer({
           dekning,
         };
       })
-      .sort(
-        (periode1, periode2) => (new Date(periode1.fom)?.getTime() ?? 0) - (new Date(periode2.fom)?.getTime() ?? 0),
-      );
+      .sort(Utils.dato.sorterEtterISOFomDato);
   };
 
   const arbAvgBetalesKreves = (kildetype: string) => !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;

@@ -5,9 +5,10 @@ import Undertittel from "./undertittel";
 import { render, screen } from "@testing-library/react";
 import { expect, vi } from "vitest";
 
-// Mock _uuid
+// Mock _uuid with unique values
+let uuidCounter = 0;
 vi.mock("../../utils", () => ({
-  _uuid: vi.fn(() => "test-uuid-123"),
+  _uuid: vi.fn(() => `test-uuid-${uuidCounter++}`),
 }));
 
 // Mock icon component
@@ -114,7 +115,7 @@ describe("undertittel", () => {
     render(<Undertittel tekst="Test" />);
 
     const heading = screen.getByRole("heading");
-    expect(heading).toHaveAttribute("id", "test-uuid-123");
+    expect(heading.getAttribute("id")).toMatch(/^test-uuid-\d+$/);
   });
 
   it("skal gi ikon default props", () => {
@@ -123,7 +124,7 @@ describe("undertittel", () => {
     const icon = screen.getByTestId("mock-icon");
     expect(icon).toHaveAttribute("role", "img");
     expect(icon).toHaveAttribute("focusable", "false");
-    expect(icon).toHaveAttribute("aria-labelledby", "test-uuid-123");
+    expect(icon.getAttribute("aria-labelledby")).toMatch(/^test-uuid-\d+$/);
   });
 
   it("skal sette ikon title med tekst", () => {

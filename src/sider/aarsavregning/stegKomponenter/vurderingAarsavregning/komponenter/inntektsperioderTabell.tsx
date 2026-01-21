@@ -32,7 +32,7 @@ function InntektsperioderTabell({ perioder }: { perioder?: InntektskildeDto[]; a
         </Nav.Table.Header>
         <Nav.Table.Body>
           {perioder && perioder.length !== 0
-            ? perioder.map((inntektsperiode) => (
+            ? [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((inntektsperiode) => (
                 <Nav.Table.Row className="border_top" key={Utils._uuid()}>
                   <Nav.Table.DataCell key={Utils._uuid()}>
                     {`${Utils.dato.formatterDatoTilNorsk(inntektsperiode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(

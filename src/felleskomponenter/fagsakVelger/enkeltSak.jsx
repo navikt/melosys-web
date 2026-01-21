@@ -1,17 +1,17 @@
 import PT from "prop-types";
 
-import * as KV from "../../../kodeverk";
-import * as Routing from "../../../url";
-import * as MPT from "../../../proptypes";
-import * as Nav from "../../../navFrontend";
-import * as Ikon from "../../../resources/images";
+import * as KV from "../../kodeverk";
+import * as Routing from "../../url";
+import * as MPT from "../../proptypes";
+import * as Nav from "../../navFrontend";
+import * as Ikon from "../../resources/images";
 
-import EnkeltDato from "../../../felleskomponenter/enkeltDato";
-import Soknadsland from "../../../felleskomponenter/soknadsland";
+import EnkeltDato from "../enkeltDato";
+import Soknadsland from "../soknadsland";
 
 import BehandlingerListe from "./behandlingerListe";
 import { HStack, VStack } from "@navikt/ds-react";
-import { sorterElementerEtterDato } from "../../../felleskomponenter/sorterbarListe";
+import { sorterElementerEtterDato } from "../sorterbarListe";
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */

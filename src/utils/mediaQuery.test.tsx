@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { renderHook } from "@testing-library/react";
+import { renderHook, act } from "@testing-library/react";
 import { useMediaQuery } from "./mediaQuery";
 
 describe("mediaQuery utils", () => {
@@ -92,7 +92,10 @@ describe("mediaQuery utils", () => {
       // Simuler endring i media query
       matchMediaMock.matches = true;
       const listener = matchMediaMock.addEventListener.mock.calls[0][1];
-      listener();
+
+      act(() => {
+        listener();
+      });
 
       rerender();
 
