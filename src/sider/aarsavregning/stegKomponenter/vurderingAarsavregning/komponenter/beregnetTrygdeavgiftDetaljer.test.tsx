@@ -129,6 +129,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
       trygdeavgiftsgrunnlag: {
         avgiftspliktigperioder: [
           {
+            type: "LOVVALGSPERIODE",
             fomDato: "2021-01-01",
             tomDato: "2023-12-31",
             medlemskapstype: "PLIKTIG",
