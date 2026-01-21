@@ -107,20 +107,20 @@ export function VurderingVideresend({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="8">
-            <Skjema.RadioGroup legend="Formål med A008" name="a008Formaal" readOnly={!redigerbart}>
-              <Nav.Radio value="endringsmelding">Melding om endring i relevante data</Nav.Radio>
-              <Nav.Radio value="arbeid_flere_land">Informasjon om arbeid i to eller flere medlemsland</Nav.Radio>
-            </Skjema.RadioGroup>
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="8">
             <Skjema.Textarea
               feltNavn="orienteringsbrevFritekst"
               label="Fritekst til orienteringsbrev"
               placeholder="Skriv inn tekst til orienteringsbrevet..."
               readOnly={!redigerbart}
             />
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="8">
+            <Skjema.RadioGroup legend="Formål med A008" name="a008Formaal" readOnly={!redigerbart}>
+              <Nav.Radio value="arbeid_flere_land">Informasjon om arbeid i to eller flere medlemsland</Nav.Radio>
+              <Nav.Radio value="endringsmelding">Melding om endring i relevante data</Nav.Radio>
+            </Skjema.RadioGroup>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -213,7 +213,7 @@ const mapStateToProps = (state) => ({
     kreverMottakerinstitusjon: false,
     orienteringsbrevFritekst: "",
     ytterligereInformasjonSed: "",
-    a008Formaal: "",
+    a008Formaal: "arbeid_flere_land",
   },
 });
 
