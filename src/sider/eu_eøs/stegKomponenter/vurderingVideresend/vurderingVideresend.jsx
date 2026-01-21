@@ -95,23 +95,22 @@ export function VurderingVideresend({
         <Nav.Heading level="1" className="stegvelgertittel">
           Videresending av søknad
         </Nav.Heading>
+        <Nav.Row className="mottakerinstitusjoner">
+          <Nav.Column xs="8">
+            <Mottakerinstitusjonvelger
+              form={form}
+              redigerbart={redigerbart}
+              landkode={bostedsland.kode}
+              bucType={EKV.Koder.buctyper.legislation.LA_BUC_03}
+            />
+          </Nav.Column>
+        </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="8">
             <Skjema.RadioGroup legend="Formål med A008" name="a008Formaal" readOnly={!redigerbart}>
               <Nav.Radio value="endringsmelding">Melding om endring i relevante data</Nav.Radio>
               <Nav.Radio value="arbeid_flere_land">Informasjon om arbeid i to eller flere medlemsland</Nav.Radio>
             </Skjema.RadioGroup>
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="8">
-            <Skjema.Textarea
-              feltNavn="ytterligereInformasjonSed"
-              label="Ytterligere informasjon (valgfritt)"
-              description="Denne teksten legges ved i SED A008"
-              placeholder="Skriv inn ytterligere informasjon..."
-              readOnly={!redigerbart}
-            />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -124,13 +123,14 @@ export function VurderingVideresend({
             />
           </Nav.Column>
         </Nav.Row>
-        <Nav.Row className="mottakerinstitusjoner">
+        <Nav.Row>
           <Nav.Column xs="8">
-            <Mottakerinstitusjonvelger
-              form={form}
-              redigerbart={redigerbart}
-              landkode={bostedsland.kode}
-              bucType={EKV.Koder.buctyper.legislation.LA_BUC_03}
+            <Skjema.Textarea
+              feltNavn="ytterligereInformasjonSed"
+              label="Ytterligere informasjon (valgfritt)"
+              description="Denne teksten legges ved i SED A008"
+              placeholder="Skriv inn ytterligere informasjon..."
+              readOnly={!redigerbart}
             />
           </Nav.Column>
         </Nav.Row>
