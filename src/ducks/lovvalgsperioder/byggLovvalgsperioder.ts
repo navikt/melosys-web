@@ -15,7 +15,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "AppTypes";
 import * as Types from "./types";
 import { Vilkaar } from "../../services/modules/vilkar";
-import { LovvalgsperiodeDto } from "../../services/modules/lovvalgsperioder";
+import { Lovvalgsperiode } from "../../services/modules/lovvalgsperioder";
 import { PerioderStegState } from "../../felleskomponenter/stegvelger";
 
 /* Hjelpefunksjoner
@@ -28,7 +28,7 @@ const finnOppfyltVilkar = (alleLovvalgsVilkar: Vilkaar[]): string | undefined =>
   return vilkarObjekt?.vilkaar;
 };
 
-const byggLovvalgsperiodeUtsending = (stegState: PerioderStegState, reduxState: RootState): LovvalgsperiodeDto[] => {
+const byggLovvalgsperiodeUtsending = (stegState: PerioderStegState, reduxState: RootState): Lovvalgsperiode[] => {
   const søknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   return [
@@ -40,7 +40,7 @@ const byggLovvalgsperiodeUtsending = (stegState: PerioderStegState, reduxState: 
       tilleggBestemmelse: stegState.tilleggbestemmelse,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
       lovvalgsland: MKV.Koder.landkoder.NO,
-      trygdedekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+      trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
       medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
     },
   ];
@@ -50,7 +50,7 @@ const byggLovvalgsperiodeArtikkel113Aeller133A = (
   stegState: PerioderStegState,
   reduxState: RootState,
   oppfyltLovvalg: string,
-): LovvalgsperiodeDto[] => {
+): Lovvalgsperiode[] => {
   const søknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const tilleggsbestemmelseFraVilkar = finnOppfyltVilkar(vilkarSelectors.ValgteTilleggsVilkar(reduxState));
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
@@ -63,7 +63,7 @@ const byggLovvalgsperiodeArtikkel113Aeller133A = (
       tilleggBestemmelse: stegState.tilleggbestemmelse || tilleggsbestemmelseFraVilkar,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
       lovvalgsland: MKV.Koder.landkoder.NO,
-      trygdedekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+      trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
       medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
     },
   ];
@@ -73,7 +73,7 @@ const byggLovvalgsperiodeArtikkel1142eller1342 = (
   stegState: PerioderStegState,
   reduxState: RootState,
   oppfyltLovvalg: string,
-): LovvalgsperiodeDto[] => {
+): Lovvalgsperiode[] => {
   const søknadsperiode = mottatteOpplysningerSelectors.PeriodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   return [
@@ -85,13 +85,13 @@ const byggLovvalgsperiodeArtikkel1142eller1342 = (
       tilleggBestemmelse: stegState.tilleggbestemmelse,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
       lovvalgsland: MKV.Koder.landkoder.NO,
-      trygdedekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+      trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
       medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
     },
   ];
 };
 
-const byggLovvalgsperiodeArtikkelUnntak = (reduxState: RootState): LovvalgsperiodeDto[] => {
+const byggLovvalgsperiodeArtikkelUnntak = (reduxState: RootState): Lovvalgsperiode[] => {
   const erAnmodningsperiodeSendtUtland =
     anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(reduxState);
   const erBehandlingsstatusUnderBehandlingAvsluttetEllerMottattSvarPåAnmodning = [
@@ -122,7 +122,7 @@ const byggAvslaattLovvalgsperiode = (reduxState: RootState, lovvalgsbestemmelse:
       unntakFraLovvalgsland: null,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.AVSLAATT,
       lovvalgsland: null,
-      trygdedekning: MKV.Koder.trygdedekninger.UTEN_DEKNING,
+      trygdeDekning: MKV.Koder.trygdedekninger.UTEN_DEKNING,
       medlemskapstype: null,
     },
   ];
@@ -230,7 +230,7 @@ const byggLovvalgsperioder = (stegState: PerioderStegState, reduxState: RootStat
       unntakFraLovvalgsland: null,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
       lovvalgsland,
-      trygdedekning: erNorgeLovvalgsland(lovvalgsland)
+      trygdeDekning: erNorgeLovvalgsland(lovvalgsland)
         ? MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO
         : MKV.Koder.trygdedekninger.UTEN_DEKNING,
       medlemskapstype: erNorgeLovvalgsland(lovvalgsland)

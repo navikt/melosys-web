@@ -24,17 +24,17 @@ interface PendingAction {
 
 export interface OkAction {
   type: typeof OK;
-  data: Api.Lovvalgsperioder.LovvalgsperiodeDto[];
+  data: Api.Lovvalgsperioder.Lovvalgsperiode[];
 }
 
 export interface OppdaterLovvalgsperioderAction {
   type: typeof OPPDATER_LOVVALGSPERIODER;
-  data: Api.Lovvalgsperioder.LovvalgsperiodeDto[];
+  data: Api.Lovvalgsperioder.Lovvalgsperiode[];
 }
 
 export interface OkOppdaterLovvalgsperiodeAction {
   type: typeof OK_OPPDATER_LOVVALGSPERIODE;
-  data: Api.Lovvalgsperioder.LovvalgsperiodeDto;
+  data: Api.Lovvalgsperioder.Lovvalgsperiode;
 }
 
 export interface OkSlettLovvalgsperiodeAction {

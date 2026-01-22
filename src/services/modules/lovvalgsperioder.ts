@@ -1,56 +1,51 @@
 import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../utils";
 import { API_BASE_URL, BEHANDLINGER, LOVVALGSPERIODER } from "../api-constants";
-import { Lovvalgsperiode } from "./types/periodeTyper";
 
-/**
- * DTO for EU/EØS lovvalgsperioder.
- * Gjenbruker felles felt fra Lovvalgsperiode (årsavregning) via Pick.
- * tomDato er valgfri i DTO (Partial), men påkrevd i Lovvalgsperiode.
- */
-export interface LovvalgsperiodeDto
-  extends Pick<Lovvalgsperiode, "fomDato" | "innvilgelsesResultat" | "medlemskapstype" | "trygdedekning">,
-    Partial<Pick<Lovvalgsperiode, "tomDato">> {
+export interface Lovvalgsperiode {
   periodeID?: string;
+  fomDato: string;
+  tomDato?: string;
   lovvalgsbestemmelse?: string;
   tilleggBestemmelse?: string;
   lovvalgsland: string;
+  innvilgelsesResultat: string;
+  trygdeDekning: string;
+  medlemskapstype: string;
   medlemskapsperiodeID?: string;
 }
 
-/**
- * DTO for opprettelse av lovvalgsperiode.
- * Alle felt er valgfrie ved opprettelse.
- * Gjenbruker felt fra Lovvalgsperiode, pluss lovvalgsbestemmelse fra LovvalgsperiodeDto.
- */
-export interface OpprettLovvalgsperiode
-  extends Partial<Pick<Lovvalgsperiode, "fomDato" | "tomDato" | "innvilgelsesResultat" | "trygdedekning">>,
-    Partial<Pick<LovvalgsperiodeDto, "lovvalgsbestemmelse">> {}
+export interface OpprettLovvalgsperiode {
+  fomDato?: string;
+  tomDato?: string;
+  lovvalgsbestemmelse?: string;
+  innvilgelsesResultat?: string;
+  trygdedekning?: string;
+}
 
-export const hent = (behandlingID: number): Promise<LovvalgsperiodeDto[]> =>
+export const hent = (behandlingID: number): Promise<Lovvalgsperiode[]> =>
   getAsJson(`${API_BASE_URL}${LOVVALGSPERIODER}/${behandlingID}`);
 
-export const send = (behandlingID: number, data: LovvalgsperiodeDto[]): Promise<LovvalgsperiodeDto[]> => {
+export const send = (behandlingID: number, data: Lovvalgsperiode[]): Promise<Lovvalgsperiode[]> => {
   if (data.length === 0) {
     return Promise.resolve([]);
   }
   return postAsJson(`${API_BASE_URL}${LOVVALGSPERIODER}/${behandlingID}`, data);
 };
 
-export const hentOpprinnelig = (behandlingID: number): Promise<LovvalgsperiodeDto[]> =>
+export const hentOpprinnelig = (behandlingID: number) =>
   getAsJson(`${API_BASE_URL}${LOVVALGSPERIODER}/${behandlingID}/opprinnelig`);
 
 export const opprettLovvalgsperiode = (
   behandlingID: number,
   data: OpprettLovvalgsperiode,
-): Promise<LovvalgsperiodeDto[]> =>
-  postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${LOVVALGSPERIODER}`, data);
+): Promise<Lovvalgsperiode[]> => postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${LOVVALGSPERIODER}`, data);
 
 export const oppdaterLovvalgsperiode = (
   behandlingID: number,
   lovvalgsperiodeID: number,
-  data: LovvalgsperiodeDto,
-): Promise<LovvalgsperiodeDto> =>
+  data: Lovvalgsperiode,
+): Promise<Lovvalgsperiode> =>
   putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${LOVVALGSPERIODER}/${lovvalgsperiodeID}`, data);
 
-export const slettLovvalgsperiode = (behandlingID: number, lovvalgsperiodeID: number): Promise<void> =>
+export const slettLovvalgsperiode = (behandlingID: number, lovvalgsperiodeID: number) =>
   deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${LOVVALGSPERIODER}/${lovvalgsperiodeID}`);

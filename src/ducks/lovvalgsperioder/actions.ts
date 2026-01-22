@@ -2,7 +2,7 @@ import * as Types from "./types";
 import * as Api from "../../services/api";
 
 export function oppdaterLovvalgsperioderState(
-  lovvalgsperioder: Api.Lovvalgsperioder.LovvalgsperiodeDto[],
+  lovvalgsperioder: Api.Lovvalgsperioder.Lovvalgsperiode[],
 ): Types.OppdaterLovvalgsperioderAction {
   return {
     type: Types.OPPDATER_LOVVALGSPERIODER,
