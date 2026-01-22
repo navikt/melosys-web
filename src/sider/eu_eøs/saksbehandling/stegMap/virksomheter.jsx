@@ -31,6 +31,22 @@ class SaksbehandlingVirksomheter extends Virksomheter {
     const erArbeidKunNorge =
       MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE === propsLight.behandlingstema.kode;
 
+    const beregnNesteStegForFlyt11_3_b = (propsLight) => {
+      const innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift =
+        !propsLight.generiskStegRedigerbart && !propsLight.harTrygdeavgiftperiode;
+
+      if (propsLight.eøsFaktureringAvTrygdeavgiftToggleEnabled) {
+        if (innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift) {
+          return STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK;
+        }
+
+        return STEG.VURDERING_PERIODE;
+      }
+
+      return STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK;
+    };
+    const NESTE_STEG_FOR_11_3_b = beregnNesteStegForFlyt11_3_b(propsLight);
+
     this.kriterier = [
       {
         exec: (avklartefakta) => {
@@ -53,8 +69,12 @@ class SaksbehandlingVirksomheter extends Virksomheter {
         nesteSteg: STEG.VEDTAK,
       },
       {
-        exec: () => harValgtArbeidsgiver && (gårDirekteTilArtikkel16 || propsLight.erArbeidTjenestepersonEllerFly),
+        exec: () => harValgtArbeidsgiver && gårDirekteTilArtikkel16,
         nesteSteg: STEG.MEDFOLGENDE_BARN,
+      },
+      {
+        exec: () => harValgtArbeidsgiver && propsLight.erArbeidTjenestepersonEllerFly,
+        nesteSteg: NESTE_STEG_FOR_11_3_b,
       },
       {
         exec: () => {

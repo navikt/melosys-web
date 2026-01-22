@@ -20,8 +20,6 @@ class VesentligVirksomhet extends Steg {
 
     const harAvklaring = this.harAvklaring(vurderingLovvalgBarnFakta, propsLight.medfolgendeBarn);
 
-    const NESTE_STEG_FOR_11_3_b = this.beregnNesteStegForFlyt11_3_b(propsLight);
-
     this.kriterier = [
       {
         exec: () => harAvklaring && utsendingsvilkårOppfylt,
@@ -30,10 +28,6 @@ class VesentligVirksomhet extends Steg {
       {
         exec: () => harAvklaring && unntaksvilkårOppfylt,
         nesteSteg: STEG.ARTIKKEL_16_ANMODNING,
-      },
-      {
-        exec: () => harAvklaring && propsLight.erArbeidTjenestepersonEllerFly,
-        nesteSteg: NESTE_STEG_FOR_11_3_b,
       },
     ];
 
@@ -63,21 +57,6 @@ class VesentligVirksomhet extends Steg {
         enkeltFakta.fakta.includes(BOOLSK_STRING.SANN) ||
         (enkeltFakta.fakta.includes(BOOLSK_STRING.USANN) && enkeltFakta.begrunnelseKoder.length > 0),
     );
-
-  beregnNesteStegForFlyt11_3_b = (propsLight) => {
-    const innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift =
-      !propsLight.generiskStegRedigerbart && !propsLight.harTrygdeavgiftperiode;
-
-    if (propsLight.eøsFaktureringAvTrygdeavgiftToggleEnabled) {
-      if (innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift) {
-        return STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK;
-      }
-
-      return STEG.VURDERING_PERIODE;
-    }
-
-    return STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK;
-  };
 }
 
 export default VesentligVirksomhet;
