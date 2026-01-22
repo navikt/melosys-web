@@ -7,6 +7,8 @@ import { behandlingerSelectors } from "../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { modalerOperations } from "../../../ducks/modaler";
 import Handling from "./handling";
+import { useFeatureToggle } from "../../../featuretoggle";
+import { MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER } from "../../../featuretoggle/toggleNavn";
 
 const {
   YRKESAKTIV,
@@ -37,6 +39,9 @@ function AvsluttSak() {
   const sakstema = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
+  const erIkkeTidligerePerioderToggleEnabled = useFeatureToggle(
+    MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
+  );
 
   const skalViseAvslåPgaManglendeOpplysninger = () => {
     if (!redigerbart || sakstema !== MEDLEMSKAP_LOVVALG) return false;
@@ -207,11 +212,14 @@ function AvsluttSak() {
   const skalViseSøknadenErAvslått = () => skalViseSøknadenErInnvilget();
 
   const skalViseAnnullerSak = () => {
-    return Boolean(
-      redigerbart &&
-        [FTRL, EU_EOS].includes(sakstype) &&
-        [MEDLEMSKAP_LOVVALG, TRYGDEAVGIFT].includes(sakstema) &&
-        [NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype),
+    return (
+      !erIkkeTidligerePerioderToggleEnabled &&
+      Boolean(
+        redigerbart &&
+          [FTRL, EU_EOS].includes(sakstype) &&
+          [MEDLEMSKAP_LOVVALG, TRYGDEAVGIFT].includes(sakstema) &&
+          [NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype),
+      )
     );
   };
 

@@ -2,6 +2,8 @@ import { screen } from "@testing-library/react";
 import MKV from "../../../melosyskodeverk";
 import { renderWithProviders, renderWithProvidersAsync } from "../../../ducks/test-utils/renderWithProviders";
 import AvsluttSak from "./avsluttsak";
+import { vi } from "vitest";
+import { useFeatureToggle } from "../../../featuretoggle";
 
 const {
   YRKESAKTIV,
@@ -14,6 +16,10 @@ const {
 const { NY_VURDERING, FØRSTEGANG, HENVENDELSE, KLAGE } = MKV.Koder.behandlinger.behandlingstyper;
 const { FTRL, TRYGDEAVTALE, EU_EOS } = MKV.Koder.sakstyper;
 const { MEDLEMSKAP_LOVVALG, UNNTAK } = MKV.Koder.sakstemaer;
+
+vi.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: vi.fn(),
+}));
 
 describe("AvsluttSak", () => {
   const props = {
@@ -75,10 +81,11 @@ describe("AvsluttSak", () => {
     expect(knapper.at(5)?.textContent).toBe("Behandlingen er bortfalt");
   });
 
-  it("viser riktige valg for sakstype FTRL og behandlingstype NY_VURDERING ", async () => {
+  it("viser riktige valg for sakstype FTRL og behandlingstype NY_VURDERING - Toggle av", async () => {
     props.sakstype = FTRL;
     props.behandlingstema = YRKESAKTIV;
     props.behandlingstype = NY_VURDERING;
+    vi.mocked(useFeatureToggle).mockReturnValue(false);
     await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
     const knapper = await screen.findAllByRole("button");
@@ -91,6 +98,24 @@ describe("AvsluttSak", () => {
     expect(knapper.at(5)?.textContent).toBe("Ferdigbehandlet");
     expect(knapper.at(6)?.textContent).toBe("Søknaden/klagen er trukket");
     expect(knapper.at(7)?.textContent).toBe("Behandlingen er bortfalt");
+  });
+
+  it("viser riktige valg for sakstype FTRL og behandlingstype NY_VURDERING - Toggle på", async () => {
+    props.sakstype = FTRL;
+    props.behandlingstema = YRKESAKTIV;
+    props.behandlingstype = NY_VURDERING;
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+    await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
+
+    const knapper = await screen.findAllByRole("button");
+    expect(knapper).toHaveLength(7);
+    expect(knapper.at(0)?.textContent).toBe("Søknaden er innvilget");
+    expect(knapper.at(1)?.textContent).toBe("Søknaden er avslått");
+    expect(knapper.at(2)?.textContent).toBe("Avslå søknad pga. manglende opplysninger");
+    expect(knapper.at(3)?.textContent).toBe("Vedtaket er omgjort (fvl § 35)");
+    expect(knapper.at(4)?.textContent).toBe("Ferdigbehandlet");
+    expect(knapper.at(5)?.textContent).toBe("Søknaden/klagen er trukket");
+    expect(knapper.at(6)?.textContent).toBe("Behandlingen er bortfalt");
   });
 
   it("viser ingenting når behandling er ikke redigerbart", async () => {
