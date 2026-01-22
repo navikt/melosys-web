@@ -4,13 +4,13 @@ import {
   erLovvalgsperiode,
   erHelseutgiftdekkesperiode,
   harInnvilgelsesResultat,
-  Medlemskapsperiode,
-  Lovvalgsperiode,
-  Helseutgiftdekkesperiode,
+  MedlemskapsperiodeForAvgift,
+  LovvalgsperiodeForAvgift,
+  HelseutgiftdekkesperiodeForAvgift,
   Avgiftspliktigperiode,
 } from "./periodeTyper";
 
-const lagMedlemskapsperiode = (overrides?: Partial<Medlemskapsperiode>): Medlemskapsperiode => ({
+const lagMedlemskapsperiode = (overrides?: Partial<MedlemskapsperiodeForAvgift>): MedlemskapsperiodeForAvgift => ({
   id: 1,
   type: "MEDLEMSKAPSPERIODE",
   fomDato: "2024-01-01",
@@ -22,7 +22,7 @@ const lagMedlemskapsperiode = (overrides?: Partial<Medlemskapsperiode>): Medlems
   ...overrides,
 });
 
-const lagLovvalgsperiode = (overrides?: Partial<Lovvalgsperiode>): Lovvalgsperiode => ({
+const lagLovvalgsperiode = (overrides?: Partial<LovvalgsperiodeForAvgift>): LovvalgsperiodeForAvgift => ({
   id: 2,
   type: "LOVVALGSPERIODE",
   fomDato: "2024-01-01",
@@ -34,7 +34,9 @@ const lagLovvalgsperiode = (overrides?: Partial<Lovvalgsperiode>): Lovvalgsperio
   ...overrides,
 });
 
-const lagHelseutgiftdekkesperiode = (overrides?: Partial<Helseutgiftdekkesperiode>): Helseutgiftdekkesperiode => ({
+const lagHelseutgiftdekkesperiode = (
+  overrides?: Partial<HelseutgiftdekkesperiodeForAvgift>,
+): HelseutgiftdekkesperiodeForAvgift => ({
   id: 3,
   type: "HELSEUTGIFTDEKKESPERIODE",
   fomDato: "2024-01-01",

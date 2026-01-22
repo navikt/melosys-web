@@ -5,10 +5,10 @@ import {
   InnvilgetEllerDelvisInnvilgetMedlemskapsperioderSelector,
   SamletInnvilgetMedlemskapsperiodeSelector,
 } from "./selectors";
-import { Medlemskapsperiode } from "../../services/modules/types/periodeTyper";
+import { MedlemskapsperiodeForAvgift } from "../../services/modules/types/periodeTyper";
 import { RootState } from "AppTypes";
 
-const lagMedlemskapsperiode = (overrides?: Partial<Medlemskapsperiode>): Medlemskapsperiode => ({
+const lagMedlemskapsperiode = (overrides?: Partial<MedlemskapsperiodeForAvgift>): MedlemskapsperiodeForAvgift => ({
   id: 1,
   type: "MEDLEMSKAPSPERIODE",
   fomDato: "2024-01-01",
@@ -20,7 +20,7 @@ const lagMedlemskapsperiode = (overrides?: Partial<Medlemskapsperiode>): Medlems
   ...overrides,
 });
 
-const lagState = (medlemskapsperioder: Medlemskapsperiode[]): RootState =>
+const lagState = (medlemskapsperioder: MedlemskapsperiodeForAvgift[]): RootState =>
   ({
     medlemskapsperioder: {
       status: "LASTET",

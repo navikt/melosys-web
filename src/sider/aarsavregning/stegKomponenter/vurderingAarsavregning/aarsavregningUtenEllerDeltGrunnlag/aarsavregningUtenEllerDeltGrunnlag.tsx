@@ -15,7 +15,7 @@ import { medlemskapsperioderTypes } from "../../../../../ducks/medlemskapsperiod
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../utils";
 import {
   Avgiftspliktigperiode,
-  Medlemskapsperiode,
+  MedlemskapsperiodeForAvgift,
   harInnvilgelsesResultat,
 } from "../../../../../services/modules/types/periodeTyper";
 import { OppdaterMedlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
@@ -29,7 +29,7 @@ const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;
  * - redigerbar: true = kan endres (nye perioder), false = fra grunnlag
  * - feil: valideringsfeilmelding
  */
-export type MedlemskapsperiodeFieldProps = Medlemskapsperiode & {
+export type MedlemskapsperiodeFieldProps = MedlemskapsperiodeForAvgift & {
   redigerbar: boolean;
   feil?: string;
 };
@@ -49,7 +49,7 @@ export const DEFAULT_MEDLEMSKAPSPERIODE: MedlemskapsperiodeFieldProps = {
 };
 
 const mapTilMedlemskapsperiodeFieldProps = (
-  medlemskapsperiode: Medlemskapsperiode,
+  medlemskapsperiode: MedlemskapsperiodeForAvgift,
   sistGjeldendeAvgiftspliktigePerioder?: Avgiftspliktigperiode[],
 ): MedlemskapsperiodeFieldProps => {
   const medlemskapsperiodeErFraGrunnlag = sistGjeldendeAvgiftspliktigePerioder?.some(
@@ -66,7 +66,7 @@ const mapTilMedlemskapsperiodeFieldProps = (
 };
 
 const mapMedlemskapsperioder = (
-  perioder: Medlemskapsperiode[],
+  perioder: MedlemskapsperiodeForAvgift[],
   sistGjeldendeAvgiftspliktigePerioder?: Avgiftspliktigperiode[],
 ): MedlemskapsperiodeFieldProps[] =>
   [...perioder]
@@ -153,7 +153,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
       await Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID);
 
     const innvilgedeMedlemskapsperioder = medlemskapsperioderRes.filter(
-      (periode): periode is Medlemskapsperiode =>
+      (periode): periode is MedlemskapsperiodeForAvgift =>
         periode.type === "MEDLEMSKAPSPERIODE" &&
         (periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET),
     );
@@ -167,7 +167,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
       // Initiell innlasting for delt grunnlag
       const medlemskapsperioderFraGrunnlag = aarsavregningRes.sisteGjeldendeAvgiftspliktigperioder;
       const innvilgedeMedlemskapsperioderFraGrunnlag = medlemskapsperioderFraGrunnlag.filter(
-        (periode): periode is Medlemskapsperiode =>
+        (periode): periode is MedlemskapsperiodeForAvgift =>
           periode.type === "MEDLEMSKAPSPERIODE" &&
           (periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET),
       );
@@ -181,7 +181,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
         await Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID);
 
       const oppdaterteInnvilgedeMedlemskapsperioder = oppdaterteMedlemskapsperioder.filter(
-        (periode): periode is Medlemskapsperiode =>
+        (periode): periode is MedlemskapsperiodeForAvgift =>
           periode.type === "MEDLEMSKAPSPERIODE" &&
           (periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET),
       );

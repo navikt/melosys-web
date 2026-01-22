@@ -10,7 +10,7 @@ export interface BasePeriode {
 }
 
 // Medlemskapsperiode - har alle de komplekse feltene
-export interface Medlemskapsperiode extends BasePeriode {
+export interface MedlemskapsperiodeForAvgift extends BasePeriode {
   id: number;
   type: "MEDLEMSKAPSPERIODE";
   bestemmelse: string;
@@ -21,13 +21,13 @@ export interface Medlemskapsperiode extends BasePeriode {
 
 // Helseutgiftdekkesperiode i årsavregning-kontekst - kun datoer
 // NB: HelseutgiftDekkesPeriodeDto (egen fil) brukes for CRUD og har bostedLandkode
-export interface Helseutgiftdekkesperiode extends BasePeriode {
+export interface HelseutgiftdekkesperiodeForAvgift extends BasePeriode {
   id: number;
   type: "HELSEUTGIFTDEKKESPERIODE";
 }
 
 // Lovvalgsperiode - backend har også lovvalgsland og tilleggsbestemmelse, men ikke eksponert i AvgiftspliktigPeriodeDto
-export interface Lovvalgsperiode extends BasePeriode {
+export interface LovvalgsperiodeForAvgift extends BasePeriode {
   id: number;
   type: "LOVVALGSPERIODE";
   bestemmelse: string;
@@ -37,23 +37,28 @@ export interface Lovvalgsperiode extends BasePeriode {
 }
 
 // Discriminated union
-export type Avgiftspliktigperiode = Medlemskapsperiode | Helseutgiftdekkesperiode | Lovvalgsperiode;
+export type Avgiftspliktigperiode =
+  | MedlemskapsperiodeForAvgift
+  | HelseutgiftdekkesperiodeForAvgift
+  | LovvalgsperiodeForAvgift;
 
 // Type guard hjelpefunksjoner
-export const erMedlemskapsperiode = (periode: Avgiftspliktigperiode): periode is Medlemskapsperiode => {
+export const erMedlemskapsperiode = (periode: Avgiftspliktigperiode): periode is MedlemskapsperiodeForAvgift => {
   return periode.type === "MEDLEMSKAPSPERIODE";
 };
 
-export const erLovvalgsperiode = (periode: Avgiftspliktigperiode): periode is Lovvalgsperiode => {
+export const erLovvalgsperiode = (periode: Avgiftspliktigperiode): periode is LovvalgsperiodeForAvgift => {
   return periode.type === "LOVVALGSPERIODE";
 };
 
-export const erHelseutgiftdekkesperiode = (periode: Avgiftspliktigperiode): periode is Helseutgiftdekkesperiode => {
+export const erHelseutgiftdekkesperiode = (
+  periode: Avgiftspliktigperiode,
+): periode is HelseutgiftdekkesperiodeForAvgift => {
   return periode.type === "HELSEUTGIFTDEKKESPERIODE";
 };
 
 export const harInnvilgelsesResultat = (
   periode: Avgiftspliktigperiode,
-): periode is Medlemskapsperiode | Lovvalgsperiode => {
+): periode is MedlemskapsperiodeForAvgift | LovvalgsperiodeForAvgift => {
   return erMedlemskapsperiode(periode) || erLovvalgsperiode(periode);
 };
