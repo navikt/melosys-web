@@ -39,6 +39,7 @@ export async function forhandsvisSed(behandlingID: number, sedType: string, data
     nyttLovvalgsland: data.nyttLovvalgsland || null,
     begrunnelseUtenlandskMyndighet: data.begrunnelseUtenlandskMyndighet || null,
     vilSendeAnmodningOmMerInformasjon,
+    a008Formaal: data.a008Formaal || null,
   };
 
   const response = await Api.Dokumenter.pdf.forhandsvisSed(behandlingID, sedType, utfyltdata);

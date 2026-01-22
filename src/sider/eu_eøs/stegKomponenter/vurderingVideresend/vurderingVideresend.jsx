@@ -47,6 +47,10 @@ export function VurderingVideresend({
     },
     {
       sedType: EKV.Koder.sedtyper.A008,
+      sedData: {
+        fritekst: formValues.ytterligereInformasjonSed,
+        a008Formaal: formValues.a008Formaal,
+      },
     },
   ];
 
@@ -95,16 +99,6 @@ export function VurderingVideresend({
         <Nav.Heading level="1" className="stegvelgertittel">
           Videresending av søknad
         </Nav.Heading>
-        <Nav.Row className="mottakerinstitusjoner">
-          <Nav.Column xs="8">
-            <Mottakerinstitusjonvelger
-              form={form}
-              redigerbart={redigerbart}
-              landkode={bostedsland.kode}
-              bucType={EKV.Koder.buctyper.legislation.LA_BUC_03}
-            />
-          </Nav.Column>
-        </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="8">
             <Skjema.Textarea
@@ -132,6 +126,16 @@ export function VurderingVideresend({
               description="Denne teksten legges ved i SED A008"
               placeholder="Skriv inn ytterligere informasjon..."
               readOnly={!redigerbart}
+            />
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row className="mottakerinstitusjoner">
+          <Nav.Column xs="8">
+            <Mottakerinstitusjonvelger
+              form={form}
+              redigerbart={redigerbart}
+              landkode={bostedsland.kode}
+              bucType={EKV.Koder.buctyper.legislation.LA_BUC_03}
             />
           </Nav.Column>
         </Nav.Row>
