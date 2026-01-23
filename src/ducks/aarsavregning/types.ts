@@ -1,5 +1,13 @@
+import { StateSection } from "AppTypes";
+import { AarsavregningResponse } from "../../services/modules/aarsavregning/aarsavregning";
+
 export const OK = "aarsavregning/OK";
 export const RESET = "aarsavregning/RESET";
+export const SET_ER_NY_VURDERING = "aarsavregning/SET_ER_NY_VURDERING";
+
+export interface AarsavregningState extends StateSection<AarsavregningResponse> {
+  erNyVurdering: boolean;
+}
 
 interface OkAction {
   type: typeof OK;
@@ -10,4 +18,9 @@ interface ResetAction {
   type: typeof RESET;
 }
 
-export type Action = OkAction | ResetAction;
+interface SetErNyVurderingAction {
+  type: typeof SET_ER_NY_VURDERING;
+  erNyVurdering: boolean;
+}
+
+export type Action = OkAction | ResetAction | SetErNyVurderingAction;

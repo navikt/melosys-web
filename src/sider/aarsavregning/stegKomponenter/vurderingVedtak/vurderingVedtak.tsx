@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
+import { aarsavregningSelectors } from "../../../../ducks/aarsavregning";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
@@ -70,10 +71,11 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   });
   const [harSkjemaverdier, setHarSkjemaverdier] = useState(false);
   const [fritekstPending, setFritekstPending] = useState(false);
+  const erNyVurdering = useSelector(aarsavregningSelectors.ErNyVurderingSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const erFullmektigEndret = useSelector(menypanelSelectors.MenypanelErFullmektigEndretSelector) as boolean;
-  const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as string | number | null;
+  const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
 
   const { fattVedtak } = komponentDispatch(dispatch);
 
@@ -93,7 +95,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     formState: { isValid: formIsValid },
   } = useForm<FormValuesProps>({
     resolver: yupResolver(vurdering_vedtak),
-    context: { endeligAvgiftValg: lagretAarsavregning?.endeligAvgiftValg },
+    context: { endeligAvgiftValg: lagretAarsavregning?.endeligAvgiftValg, erNyVurdering },
     mode: "onSubmit",
     reValidateMode: "onChange",
   });
@@ -152,12 +154,10 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   }, [behandlingID]);
 
   const fetchAndSetHarFullmaktForTrygdeavgift = useCallback(async () => {
-    if (saksnummer === null || saksnummer === undefined) return;
-    const saksnummerString = typeof saksnummer === "number" ? saksnummer.toString() : saksnummer;
-    if (typeof saksnummerString !== "string") return;
+    if (!saksnummer) return;
 
     try {
-      const res = await Api.Fagsaker.aktoer.hent(saksnummerString, FULLMEKTIG);
+      const res = await Api.Fagsaker.aktoer.hent(saksnummer, FULLMEKTIG);
       setHarBekreftetFullmaktForTrygdeavgift(false);
       setHarFullmaktForTrygdeavgift(
         res.some((aktoer) => aktoer.fullmakter?.some((fullmakt) => fullmakt === FULLMEKTIG_TRYGDEAVGIFT)),
@@ -355,6 +355,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const erDifferanseUnderMinstebeløp = Math.abs(sumTilFakturaEllerRefusjon) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
   const erNullKroner = sumTilFakturaEllerRefusjon === 0;
   const skalFaktureres = sumTilFakturaEllerRefusjon > 0;
+  const kreverBegrunnelse = erNyVurdering || lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT;
 
   const kanSubmitte =
     redigerbart &&
@@ -367,10 +368,19 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         Vedtak årsavregning {lagretAarsavregning ? lagretAarsavregning.aar : ""}
       </Nav.Heading>
 
-      {redigerbart && lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT && (
+      {redigerbart && (lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT || erNyVurdering) && (
         <Nav.Alert variant="warning">
-          Du har lagt inn &quot;Endelig beregnet trygdeavgift&quot; manuelt og må derfor oppgi en begrunnelse i
-          fritekstfeltet.
+          Følgende punkter må begrunnes i fritekstfeltet
+          <Nav.List>
+            {erNyVurdering && (
+              <Nav.List.Item>
+                hvorfor fastsettelsen av trygdeavgiften tas opp igjen etter skatteforvaltningsloven § 12-1
+              </Nav.List.Item>
+            )}
+            {lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT && (
+              <Nav.List.Item>hvorfor du har lagt inn «Endelig beregnet trygdeavgift» manuelt</Nav.List.Item>
+            )}
+          </Nav.List>
         </Nav.Alert>
       )}
 
@@ -440,7 +450,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         control={control}
         className="fritekst_editor"
         disabled={!redigerbart}
-        label="Fritekst til begrunnelse"
+        label={`Fritekst til begrunnelse${kreverBegrunnelse ? " (Obligatorisk)" : ""}`}
       />
 
       {formIsValid &&
