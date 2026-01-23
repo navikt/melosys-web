@@ -49,7 +49,7 @@ export function VurderingVideresend({
       sedType: EKV.Koder.sedtyper.A008,
       sedData: {
         fritekst: formValues.ytterligereInformasjonSed,
-        a008Formaal: formValues.a008Formaal,
+        a008Formaal: "arbeid_flere_land",
       },
     },
   ];
@@ -83,7 +83,7 @@ export function VurderingVideresend({
       values.mottakerinstitusjon,
       values.orienteringsbrevFritekst,
       values.ytterligereInformasjonSed,
-      values.a008Formaal,
+      "arbeid_flere_land",
       vedlegg,
     );
 
@@ -108,14 +108,6 @@ export function VurderingVideresend({
               readOnly={!redigerbart}
               maxLength={10000}
             />
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="8">
-            <Skjema.RadioGroup legend="Formål med A008" name="a008Formaal" readOnly={!redigerbart}>
-              <Nav.Radio value="arbeid_flere_land">Informasjon om arbeid i to eller flere medlemsland</Nav.Radio>
-              <Nav.Radio value="endringsmelding">Melding om endring i relevante data</Nav.Radio>
-            </Skjema.RadioGroup>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -218,7 +210,6 @@ const mapStateToProps = (state) => ({
     kreverMottakerinstitusjon: false,
     orienteringsbrevFritekst: "",
     ytterligereInformasjonSed: "",
-    a008Formaal: "arbeid_flere_land",
   },
 });
 
