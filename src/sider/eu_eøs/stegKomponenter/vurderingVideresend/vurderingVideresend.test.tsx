@@ -5,6 +5,8 @@ import { reduxForm } from "redux-form";
 import * as KV from "../../../../kodeverk";
 import { VurderingVideresend } from "./vurderingVideresend";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
+import { STATUS } from "../../../../services";
+import { MELOSYS_A008_CDM_4_4 } from "../../../../featuretoggle/toggleNavn";
 
 const initialReduxState = {
   behandlinger: {
@@ -23,6 +25,16 @@ const initialReduxState = {
   dokumenter: {
     data: {
       dokumentOversikt: [],
+    },
+  },
+};
+
+const reduxStateWithA008Cdm44Toggle = {
+  ...initialReduxState,
+  featureToggle: {
+    status: STATUS.OK,
+    data: {
+      [MELOSYS_A008_CDM_4_4]: true,
     },
   },
 };
@@ -56,20 +68,34 @@ describe("Vurderingvideresend", () => {
     expect(getByRole("textbox", { name: "Fritekst til orienteringsbrev" })).toBeInTheDocument();
   });
 
-  it("viser radiogruppe for formål med A008", () => {
+  it("viser radiogruppe for formål med A008 når toggle er på", () => {
     const { getByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
-      preloadedState: initialReduxState,
+      preloadedState: reduxStateWithA008Cdm44Toggle,
     });
     expect(getByRole("group", { name: "Formål med A008" })).toBeInTheDocument();
     expect(getByRole("radio", { name: "Melding om endring i relevante data" })).toBeInTheDocument();
     expect(getByRole("radio", { name: "Informasjon om arbeid i to eller flere medlemsland" })).toBeInTheDocument();
   });
 
-  it("viser ytterligere informasjon tekstfelt", () => {
+  it("viser ytterligere informasjon tekstfelt når toggle er på", () => {
     const { getByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
-      preloadedState: initialReduxState,
+      preloadedState: reduxStateWithA008Cdm44Toggle,
     });
     expect(getByRole("textbox", { name: /Ytterligere informasjon/ })).toBeInTheDocument();
+  });
+
+  it("viser ikke radiogruppe for formål med A008 når toggle er av", () => {
+    const { queryByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
+      preloadedState: initialReduxState,
+    });
+    expect(queryByRole("group", { name: "Formål med A008" })).not.toBeInTheDocument();
+  });
+
+  it("viser ikke ytterligere informasjon tekstfelt når toggle er av", () => {
+    const { queryByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
+      preloadedState: initialReduxState,
+    });
+    expect(queryByRole("textbox", { name: /Ytterligere informasjon/ })).not.toBeInTheDocument();
   });
 
   it("viser en dokumentliste med forventet innhold", () => {

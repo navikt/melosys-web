@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getFormValues, reduxForm } from "redux-form";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 
@@ -21,6 +21,8 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 import { dokumenterSelectors } from "../../../../ducks/dokumenter";
 import { feiletResponsOperations } from "../../../../ducks/feiletRespons";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_A008_CDM_4_4 } from "../../../../featuretoggle/toggleNavn";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingVideresendSchema from "../vurderingVideresendSchema";
@@ -37,6 +39,8 @@ export function VurderingVideresend({
   tilbake,
   resetFeiletRespons,
 }) {
+  const isA008Cdm44Enabled = useFeatureToggle(MELOSYS_A008_CDM_4_4);
+
   const pdfDokumenter = [
     {
       dokumentData: {
@@ -48,8 +52,8 @@ export function VurderingVideresend({
     {
       sedType: EKV.Koder.sedtyper.A008,
       sedData: {
-        fritekst: formValues.ytterligereInformasjonSed,
-        a008Formaal: "arbeid_flere_land",
+        fritekst: isA008Cdm44Enabled ? formValues.ytterligereInformasjonSed : undefined,
+        a008Formaal: isA008Cdm44Enabled ? formValues.a008Formaal : undefined,
       },
     },
   ];
@@ -82,8 +86,8 @@ export function VurderingVideresend({
     await props.videresendSoknad(
       values.mottakerinstitusjon,
       values.orienteringsbrevFritekst,
-      values.ytterligereInformasjonSed,
-      "arbeid_flere_land",
+      isA008Cdm44Enabled ? values.ytterligereInformasjonSed : null,
+      isA008Cdm44Enabled ? values.a008Formaal : null,
       vedlegg,
     );
 
@@ -110,17 +114,29 @@ export function VurderingVideresend({
             />
           </Nav.Column>
         </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="8">
-            <Skjema.Textarea
-              feltNavn="ytterligereInformasjonSed"
-              label="Ytterligere informasjon (valgfritt)"
-              description="Denne teksten legges ved i SED A008"
-              placeholder="Skriv inn ytterligere informasjon..."
-              readOnly={!redigerbart}
-            />
-          </Nav.Column>
-        </Nav.Row>
+        {isA008Cdm44Enabled && (
+          <>
+            <Nav.Row>
+              <Nav.Column xs="8">
+                <Skjema.RadioGroup legend="Formål med A008" name="a008Formaal" readOnly={!redigerbart}>
+                  <Nav.Radio value="endring_av_data">Melding om endring i relevante data</Nav.Radio>
+                  <Nav.Radio value="arbeid_flere_land">Informasjon om arbeid i to eller flere medlemsland</Nav.Radio>
+                </Skjema.RadioGroup>
+              </Nav.Column>
+            </Nav.Row>
+            <Nav.Row>
+              <Nav.Column xs="8">
+                <Skjema.Textarea
+                  feltNavn="ytterligereInformasjonSed"
+                  label="Ytterligere informasjon (valgfritt)"
+                  description="Denne teksten legges ved i SED A008"
+                  placeholder="Skriv inn ytterligere informasjon..."
+                  readOnly={!redigerbart}
+                />
+              </Nav.Column>
+            </Nav.Row>
+          </>
+        )}
         <Nav.Row className="mottakerinstitusjoner">
           <Nav.Column xs="8">
             <Mottakerinstitusjonvelger
@@ -210,6 +226,7 @@ const mapStateToProps = (state) => ({
     kreverMottakerinstitusjon: false,
     orienteringsbrevFritekst: "",
     ytterligereInformasjonSed: "",
+    a008Formaal: "",
   },
 });
 
