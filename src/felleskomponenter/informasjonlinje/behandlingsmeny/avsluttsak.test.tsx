@@ -2,7 +2,7 @@ import { screen } from "@testing-library/react";
 import MKV from "../../../melosyskodeverk";
 import { renderWithProviders, renderWithProvidersAsync } from "../../../ducks/test-utils/renderWithProviders";
 import AvsluttSak from "./avsluttsak";
-import { vi } from "vitest";
+import { beforeEach, vi } from "vitest";
 import { useFeatureToggle } from "../../../featuretoggle";
 
 const {
@@ -31,6 +31,7 @@ describe("AvsluttSak", () => {
   };
 
   beforeEach(() => {
+    vi.clearAllMocks();
     props.redigerbart = true;
     props.sakstype = EU_EOS;
     props.sakstema = MEDLEMSKAP_LOVVALG;
