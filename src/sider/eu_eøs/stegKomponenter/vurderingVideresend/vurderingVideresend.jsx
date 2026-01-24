@@ -53,7 +53,7 @@ export function VurderingVideresend({
       sedType: EKV.Koder.sedtyper.A008,
       sedData: {
         fritekst: isA008Cdm44Enabled ? formValues.ytterligereInformasjonSed : undefined,
-        a008Formaal: isA008Cdm44Enabled ? formValues.a008Formaal : undefined,
+        a008Formaal: isA008Cdm44Enabled ? "arbeid_flere_land" : undefined,
       },
     },
   ];
@@ -87,7 +87,7 @@ export function VurderingVideresend({
       values.mottakerinstitusjon,
       values.orienteringsbrevFritekst,
       isA008Cdm44Enabled ? values.ytterligereInformasjonSed : null,
-      isA008Cdm44Enabled ? values.a008Formaal : null,
+      isA008Cdm44Enabled ? "arbeid_flere_land" : null,
       vedlegg,
     );
 
@@ -115,27 +115,17 @@ export function VurderingVideresend({
           </Nav.Column>
         </Nav.Row>
         {isA008Cdm44Enabled && (
-          <>
-            <Nav.Row>
-              <Nav.Column xs="8">
-                <Skjema.RadioGroup legend="Formål med A008" name="a008Formaal" readOnly={!redigerbart}>
-                  <Nav.Radio value="endring_av_data">Melding om endring i relevante data</Nav.Radio>
-                  <Nav.Radio value="arbeid_flere_land">Informasjon om arbeid i to eller flere medlemsland</Nav.Radio>
-                </Skjema.RadioGroup>
-              </Nav.Column>
-            </Nav.Row>
-            <Nav.Row>
-              <Nav.Column xs="8">
-                <Skjema.Textarea
-                  feltNavn="ytterligereInformasjonSed"
-                  label="Ytterligere informasjon (valgfritt)"
-                  description="Denne teksten legges ved i SED A008"
-                  placeholder="Skriv inn ytterligere informasjon..."
-                  readOnly={!redigerbart}
-                />
-              </Nav.Column>
-            </Nav.Row>
-          </>
+          <Nav.Row>
+            <Nav.Column xs="8">
+              <Skjema.Textarea
+                feltNavn="ytterligereInformasjonSed"
+                label="Ytterligere informasjon (valgfritt)"
+                description="Denne teksten legges ved i SED A008"
+                placeholder="Skriv inn ytterligere informasjon..."
+                readOnly={!redigerbart}
+              />
+            </Nav.Column>
+          </Nav.Row>
         )}
         <Nav.Row className="mottakerinstitusjoner">
           <Nav.Column xs="8">
@@ -226,7 +216,6 @@ const mapStateToProps = (state) => ({
     kreverMottakerinstitusjon: false,
     orienteringsbrevFritekst: "",
     ytterligereInformasjonSed: "",
-    a008Formaal: "",
   },
 });
 

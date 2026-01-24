@@ -68,27 +68,11 @@ describe("Vurderingvideresend", () => {
     expect(getByRole("textbox", { name: "Fritekst til orienteringsbrev" })).toBeInTheDocument();
   });
 
-  it("viser radiogruppe for formål med A008 når toggle er på", () => {
-    const { getByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
-      preloadedState: reduxStateWithA008Cdm44Toggle,
-    });
-    expect(getByRole("group", { name: "Formål med A008" })).toBeInTheDocument();
-    expect(getByRole("radio", { name: "Melding om endring i relevante data" })).toBeInTheDocument();
-    expect(getByRole("radio", { name: "Informasjon om arbeid i to eller flere medlemsland" })).toBeInTheDocument();
-  });
-
   it("viser ytterligere informasjon tekstfelt når toggle er på", () => {
     const { getByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
       preloadedState: reduxStateWithA008Cdm44Toggle,
     });
     expect(getByRole("textbox", { name: /Ytterligere informasjon/ })).toBeInTheDocument();
-  });
-
-  it("viser ikke radiogruppe for formål med A008 når toggle er av", () => {
-    const { queryByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
-      preloadedState: initialReduxState,
-    });
-    expect(queryByRole("group", { name: "Formål med A008" })).not.toBeInTheDocument();
   });
 
   it("viser ikke ytterligere informasjon tekstfelt når toggle er av", () => {
