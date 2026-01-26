@@ -15,7 +15,12 @@ import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
-import type { Avgiftspliktigperiode, BasePeriode } from "../../../../../services/modules/types/periodeTyper";
+import type {
+  Avgiftspliktigperiode,
+  BasePeriode,
+  LovvalgsperiodeForAvgift,
+  MedlemskapsperiodeForAvgift,
+} from "../../../../../services/modules/types/periodeTyper";
 import { erMedlemskapsperiodeEllerLovvalgsperiode } from "../../../../../services/modules/types/periodeTyper";
 import { OppdaterMedlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../utils";
@@ -406,7 +411,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   const lagreMedlemskapsperioder = useCallback(
     async (medlemskapsperioderFormValues: Avgiftspliktigperiode[]) => {
-      type LagredeMedlemskapsperioder = Avgiftspliktigperiode & {
+      type LagredeMedlemskapsperioder = (MedlemskapsperiodeForAvgift | LovvalgsperiodeForAvgift) & {
         formValuesIndex: number;
       };
 
@@ -415,7 +420,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         const lagretPeriode = await lagreMedlemskapsperiodeHvisEndret(periode, lagredeMedlemskapsperioder, index);
         if (lagretPeriode)
           endredeMedlemskapsperioder.push({
-            ...(lagretPeriode as Avgiftspliktigperiode),
+            ...(lagretPeriode as MedlemskapsperiodeForAvgift | LovvalgsperiodeForAvgift),
             formValuesIndex: index,
           });
       }
@@ -429,14 +434,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             (backendPeriode) => backendPeriode.formValuesIndex === index,
           );
           if (lagretPeriodeMedID) {
-            // lagretPeriodeMedID is guaranteed to be MEDLEMSKAPSPERIODE or LOVVALGSPERIODE from lagreMedlemskapsperiodeHvisEndret
             return {
               ...periode,
-              medlemskapstype: erMedlemskapsperiodeEllerLovvalgsperiode(lagretPeriodeMedID)
-                ? lagretPeriodeMedID.medlemskapstype
-                : erMedlemskapsperiodeEllerLovvalgsperiode(periode)
-                  ? periode.medlemskapstype
-                  : "",
+              medlemskapstype: lagretPeriodeMedID.medlemskapstype,
               id: lagretPeriodeMedID.id,
             };
           }
