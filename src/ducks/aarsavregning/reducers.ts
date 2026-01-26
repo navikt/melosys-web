@@ -4,16 +4,16 @@
  * Dette er Redux-reducere som håndterer state-manipulasjon direkte, basert på
  * action types som sendes inn sammen med dataene.
  */
-import { STATUS } from "../../services";
+import { STATUS } from "../../services/utils";
 import * as Types from "./types";
 
-const initialState = {
+const initialState: Types.AarsavregningState = {
   status: STATUS.NOT_STARTED,
   data: {},
   erNyVurdering: false,
 };
 
-export default function reducer(state = initialState, action: Types.Action) {
+export default function reducer(state = initialState, action: Types.Action): Types.AarsavregningState {
   switch (action.type) {
     case Types.OK:
       return { ...state, status: STATUS.OK, data: action.data };

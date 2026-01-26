@@ -16,7 +16,7 @@ const AarsavregningSelector: Selector<RootState, AarsavregningState> = createSel
   (aarsavregning) => aarsavregning,
 );
 
-const AarsavregningDataSelector: Selector<RootState, AarsavregningResponse> = createSelector(
+const AarsavregningDataSelector: Selector<RootState, AarsavregningResponse | Record<string, never>> = createSelector(
   AarsavregningSelector,
   (aarsavregning) => aarsavregning.data,
 );

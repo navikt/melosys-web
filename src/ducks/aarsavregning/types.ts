@@ -1,11 +1,12 @@
-import { StateSection } from "AppTypes";
 import { AarsavregningResponse } from "../../services/modules/aarsavregning/aarsavregning";
 
 export const OK = "aarsavregning/OK";
 export const RESET = "aarsavregning/RESET";
 export const SET_ER_NY_VURDERING = "aarsavregning/SET_ER_NY_VURDERING";
 
-export interface AarsavregningState extends StateSection<AarsavregningResponse> {
+export interface AarsavregningState {
+  status: string;
+  data: AarsavregningResponse | Record<string, never>;
   erNyVurdering: boolean;
 }
 
