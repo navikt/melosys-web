@@ -7,7 +7,7 @@ import { useDispatch } from "../../../../../hooks";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import vurdering_vedtak_opphoer from "./vurderingVedtakOpphoerSchema";
 import * as Api from "../../../../../services/api";
-import { Avgiftspliktigperiode, harInnvilgelsesResultat } from "../../../../../services/modules/types/periodeTyper";
+import { MedlemskapsperiodeForAvgift } from "../../../../../services/modules/types/periodeTyper";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { useCallback, useEffect, useState } from "react";
@@ -70,17 +70,12 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
     return () => debouncedOppdaterFritekster.cancel();
   }, []);
 
-  const forventetOpphørteMedlemskapsperioder = () =>
+  const forventetOpphørteMedlemskapsperioder = (): MedlemskapsperiodeForAvgift[] =>
     behandlingErAvsluttet
       ? [...medlemskapsperioder]
       : [...medlemskapsperioder]
-          .filter((it) => harInnvilgelsesResultat(it) && [INNVILGET, OPPHØRT].includes(it.innvilgelsesResultat))
-          .map((it) => {
-            if (harInnvilgelsesResultat(it)) {
-              return { ...it, innvilgelsesResultat: OPPHØRT, bestemmelse: FTRL_KAP2_2_15_ANDRE_LEDD };
-            }
-            return it;
-          });
+          .filter((it) => [INNVILGET, OPPHØRT].includes(it.innvilgelsesResultat))
+          .map((it) => ({ ...it, innvilgelsesResultat: OPPHØRT, bestemmelse: FTRL_KAP2_2_15_ANDRE_LEDD }));
 
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {
@@ -98,7 +93,7 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
   const getOpphørsdato = () =>
     forventetOpphørteMedlemskapsperioder()
       .sort(Utils.dato.sorterEtterISOFomDato)
-      .find((periode) => harInnvilgelsesResultat(periode) && periode.innvilgelsesResultat === OPPHØRT)?.fomDato;
+      .find((periode) => periode.innvilgelsesResultat === OPPHØRT)?.fomDato;
 
   const lagFattVedtakFTRLReqDto = (): Api.Saksflyt.Vedtak.FattVedtakFTRLReqDto => {
     return {
@@ -142,19 +137,12 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
     ];
   };
 
-  const mapPeriodeRader = (perioder: Avgiftspliktigperiode[]) =>
-    perioder.sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
-      const hasFullFields = harInnvilgelsesResultat(it);
-      return {
-        periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
-        bestemmelse: hasFullFields
-          ? KV.finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, it.bestemmelse)
-          : "-",
-        resultat: hasFullFields
-          ? KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, it.innvilgelsesResultat)
-          : "-",
-      };
-    });
+  const mapPeriodeRader = (perioder: MedlemskapsperiodeForAvgift[]) =>
+    [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((it) => ({
+      periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
+      bestemmelse: KV.finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, it.bestemmelse),
+      resultat: KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, it.innvilgelsesResultat),
+    }));
 
   return (
     <div className="vurderingVedtakOpphoer">

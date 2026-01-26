@@ -2,8 +2,7 @@ import { Inntektskilde, Skatteforhold } from "./types";
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import MKV from "../../../melosyskodeverk";
-import { Avgiftspliktigperiode, harInnvilgelsesResultat } from "../../../services/modules/types/periodeTyper";
-import { Type } from "../../menypanel/menypunkter/fullmektig/types";
+import { MedlemskapsperiodeForAvgift } from "../../../services/modules/types/periodeTyper";
 
 const { PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT } = MKV.Koder.inntektskildetype;
 const { INNVILGET } = MKV.Koder.innvilgelsesResultat;
@@ -102,13 +101,13 @@ const erSkattepliktigOgPensjonUføreMedKildeskatt = (
 
 const erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
   inntektskilder: Inntektskilde[],
-  medlemskapsperioder: Avgiftspliktigperiode[],
+  medlemskapsperioder: MedlemskapsperiodeForAvgift[],
 ) => {
   const pensjonuføretrygdKilder = inntektskilder.filter((inntektskilde) =>
     [PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT].includes(inntektskilde.kildetype),
   );
   const overlappendeMedlemskapsperioder = medlemskapsperioder
-    .filter((periode) => harInnvilgelsesResultat(periode) && periode.innvilgelsesResultat === INNVILGET)
+    .filter((periode) => periode.innvilgelsesResultat === INNVILGET)
     .filter((periode) =>
       pensjonuføretrygdKilder.some((inntektskilde) =>
         Utils.dato.perioderOverlapper(
@@ -119,13 +118,9 @@ const erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
         ),
       ),
     );
-  // overlappendeMedlemskapsperioder is already filtered to MEDLEMSKAPSPERIODE or LOVVALGSPERIODE above,
-  // so all periods have trygdedekning.
   return (
     !Utils._isEmpty(overlappendeMedlemskapsperioder) &&
-    overlappendeMedlemskapsperioder.every(
-      (periode) => harInnvilgelsesResultat(periode) && periode.trygdedekning === FTRL_2_9_FØRSTE_LEDD_B_PENSJON,
-    )
+    overlappendeMedlemskapsperioder.every((periode) => periode.trygdedekning === FTRL_2_9_FØRSTE_LEDD_B_PENSJON)
   );
 };
 
@@ -142,7 +137,7 @@ enum TypeMelding {
 export const finnAktivFeilmelding = (
   inntektskilder: Inntektskilde[],
   skatteforholdsperioder: Skatteforhold[],
-  medlemskapsperioder: Avgiftspliktigperiode[],
+  medlemskapsperioder: MedlemskapsperiodeForAvgift[],
   innvilgetMedlemskapsperiode?: { fom: string; tom: string },
 ): string | undefined => {
   if (!innvilgetMedlemskapsperiode || innvilgetMedlemskapsperiode.tom == null) return undefined;

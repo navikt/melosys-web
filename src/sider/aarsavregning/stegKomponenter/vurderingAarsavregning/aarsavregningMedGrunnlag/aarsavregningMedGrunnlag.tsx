@@ -15,13 +15,16 @@ import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../utils";
 import { AarsavregningMedGrunnlagForm } from "./aarsavregningMedGrunnlagForm";
 import * as Nav from "../../../../../navFrontend";
 import MKV from "../../../../../melosyskodeverk";
-import { Avgiftspliktigperiode, harInnvilgelsesResultat } from "../../../../../services/modules/types/periodeTyper";
+import {
+  erMedlemskapsperiode,
+  harInnvilgelsesResultat,
+  MedlemskapsperiodeForAvgift,
+} from "../../../../../services/modules/types/periodeTyper";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
 
-const mapMedlemskapsperioder = (medlemskapsperioder: Avgiftspliktigperiode[]) => {
+const mapMedlemskapsperioder = (medlemskapsperioder: MedlemskapsperiodeForAvgift[]) => {
   const innvilgedePerioder = medlemskapsperioder.filter(
-    (periode) =>
-      harInnvilgelsesResultat(periode) && periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
+    (periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
   );
 
   return [...innvilgedePerioder].sort(sorterEtterISOFomDato).map((periode) => ({
@@ -39,7 +42,7 @@ export interface AarsavregningMedGrunnlagFormValues extends FormValuesProps {
 export interface InitiellData {
   aarsavregningResponse?: AarsavregningResponse;
   formDefaultValues: FieldValue<AarsavregningMedGrunnlagFormValues>;
-  innvilgetMedlemskapsperioder: Avgiftspliktigperiode[];
+  innvilgetMedlemskapsperioder: MedlemskapsperiodeForAvgift[];
   medlemskapstypeErPliktig: boolean;
   forrigeÅrsavregningErManueltBeregnet: boolean;
   valgtÅr?: number;
@@ -138,12 +141,11 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           const defaultFormValues: FieldValue<AarsavregningMedGrunnlagFormValues> =
             mapSkjemaverdierFraTrygdeavgiftsgrunnlag(res);
 
-          const medlemskapsperioder = res.sisteGjeldendeAvgiftspliktigperioder || [];
+          const medlemskapsperioder = (res.sisteGjeldendeAvgiftspliktigperioder || []).filter(erMedlemskapsperiode);
           const innvilgetMedlemskapsperioder = mapMedlemskapsperioder(medlemskapsperioder);
           const medlemskapstypeErPliktig = Boolean(
             innvilgetMedlemskapsperioder?.every(
-              (periode) =>
-                harInnvilgelsesResultat(periode) && periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+              (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
             ),
           );
 
