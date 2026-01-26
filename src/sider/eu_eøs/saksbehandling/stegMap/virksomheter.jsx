@@ -73,7 +73,11 @@ class SaksbehandlingVirksomheter extends Virksomheter {
           const harMedfolgendeBarnData = propsLight.medfolgendeBarn?.length > 0;
           const erInnsyn = !propsLight.generiskStegRedigerbart;
 
-          return harValgtArbeidsgiver && (gårDirekteTilArtikkel16 || (erInnsyn && harMedfolgendeBarnData));
+          if (propsLight.erArbeidTjenestepersonEllerFly) {
+            return harValgtArbeidsgiver && erInnsyn && harMedfolgendeBarnData;
+          }
+
+          return harValgtArbeidsgiver && gårDirekteTilArtikkel16;
         },
         nesteSteg: STEG.MEDFOLGENDE_BARN,
       },
