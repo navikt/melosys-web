@@ -22,7 +22,7 @@ import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 import { dokumenterSelectors } from "../../../../ducks/dokumenter";
 import { feiletResponsOperations } from "../../../../ducks/feiletRespons";
 import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_A008_CDM_4_4 } from "../../../../featuretoggle/toggleNavn";
+import { MELOSYS_CDM_4_4 } from "../../../../featuretoggle/toggleNavn";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingVideresendSchema from "../vurderingVideresendSchema";
@@ -39,7 +39,7 @@ export function VurderingVideresend({
   tilbake,
   resetFeiletRespons,
 }) {
-  const isA008Cdm44Enabled = useFeatureToggle(MELOSYS_A008_CDM_4_4);
+  const isA008Cdm44Enabled = useFeatureToggle(MELOSYS_CDM_4_4);
 
   const pdfDokumenter = [
     {

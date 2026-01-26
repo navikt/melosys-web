@@ -6,7 +6,7 @@ import * as KV from "../../../../kodeverk";
 import { VurderingVideresend } from "./vurderingVideresend";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 import { STATUS } from "../../../../services";
-import { MELOSYS_A008_CDM_4_4 } from "../../../../featuretoggle/toggleNavn";
+import { MELOSYS_CDM_4_4 } from "../../../../featuretoggle/toggleNavn";
 
 const initialReduxState = {
   behandlinger: {
@@ -34,7 +34,7 @@ const reduxStateWithA008Cdm44Toggle = {
   featureToggle: {
     status: STATUS.OK,
     data: {
-      [MELOSYS_A008_CDM_4_4]: true,
+      [MELOSYS_CDM_4_4]: true,
     },
   },
 };
