@@ -16,7 +16,7 @@ import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../utils";
 import {
   Avgiftspliktigperiode,
   MedlemskapsperiodeForAvgift,
-  harInnvilgelsesResultat,
+  erMedlemskapsperiodeEllerLovvalgsperiode,
 } from "../../../../../services/modules/types/periodeTyper";
 import { OppdaterMedlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import { AarsavregningUtenEllerDeltGrunnlagForm } from "./aarsavregningUtenEllerDeltGrunnlagForm";
@@ -125,8 +125,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
   const dispatch = useDispatch();
 
   const opprettMedlemskapsperiode = async (medlemskapsperiode: Avgiftspliktigperiode) => {
-    // Only MEDLEMSKAPSPERIODE and LOVVALGSPERIODE have bestemmelse and trygdedekning
-    if (!harInnvilgelsesResultat(medlemskapsperiode)) {
+    if (!erMedlemskapsperiodeEllerLovvalgsperiode(medlemskapsperiode)) {
       throw new Error(`Cannot create membership period from type ${medlemskapsperiode.type}`);
     }
 
@@ -250,10 +249,12 @@ export function AarsavregningUtenEllerDeltGrunnlag({
           aarsavregningRes?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
             ?.avgiftspliktigperioder?.[0];
         const bestemmelseFraTidligereAvgiftsgrunnlag =
-          tidligerePeriode && harInnvilgelsesResultat(tidligerePeriode) ? tidligerePeriode.bestemmelse : undefined;
+          tidligerePeriode && erMedlemskapsperiodeEllerLovvalgsperiode(tidligerePeriode)
+            ? tidligerePeriode.bestemmelse
+            : undefined;
         const nyPeriode = aarsavregningRes?.sisteGjeldendeAvgiftspliktigperioder?.[0];
         const eventuellNyBestemmelse =
-          nyPeriode && harInnvilgelsesResultat(nyPeriode) ? nyPeriode.bestemmelse : undefined;
+          nyPeriode && erMedlemskapsperiodeEllerLovvalgsperiode(nyPeriode) ? nyPeriode.bestemmelse : undefined;
 
         const skalHenteGrunnlagFraTidligereTrygdeavgiftsgrunnlag =
           deltGrunnlagAarsavregningHarIkkeNyttGrunnlag &&

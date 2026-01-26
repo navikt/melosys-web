@@ -57,7 +57,7 @@ export const erHelseutgiftdekkesperiode = (
   return periode.type === "HELSEUTGIFTDEKKESPERIODE";
 };
 
-export const harInnvilgelsesResultat = (
+export const erMedlemskapsperiodeEllerLovvalgsperiode = (
   periode: Avgiftspliktigperiode,
 ): periode is MedlemskapsperiodeForAvgift | LovvalgsperiodeForAvgift => {
   return erMedlemskapsperiode(periode) || erLovvalgsperiode(periode);

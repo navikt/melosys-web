@@ -1,4 +1,7 @@
-import { Avgiftspliktigperiode, harInnvilgelsesResultat } from "../../../../../services/modules/types/periodeTyper";
+import {
+  Avgiftspliktigperiode,
+  erMedlemskapsperiodeEllerLovvalgsperiode,
+} from "../../../../../services/modules/types/periodeTyper";
 import * as Utils from "../../../../../utils";
 import * as KV from "../../../../../kodeverk";
 import * as Nav from "../../../../../navFrontend";
@@ -44,7 +47,7 @@ function MedlemskapsPerioderTabell({ perioder }: { perioder?: Avgiftspliktigperi
       </Nav.Table.Header>
       <Nav.Table.Body>
         {sortertePerioder.map((medlemskapsPeriode) => {
-          const hasMedlemskapstype = harInnvilgelsesResultat(medlemskapsPeriode);
+          const hasMedlemskapstype = erMedlemskapsperiodeEllerLovvalgsperiode(medlemskapsPeriode);
           return (
             <Nav.Table.Row className="border_top" key={Utils._uuid()}>
               <Nav.Table.DataCell>

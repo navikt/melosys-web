@@ -2,7 +2,7 @@ import * as Nav from "../../../../../navFrontend";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import {
   erHelseutgiftdekkesperiode,
-  harInnvilgelsesResultat,
+  erMedlemskapsperiodeEllerLovvalgsperiode,
 } from "../../../../../services/modules/types/periodeTyper";
 import MKV from "../../../../../melosyskodeverk";
 import { formaterTilNorskBelopUtenDesimaler } from "../../../../../utils";
@@ -38,7 +38,9 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
 
     return (
       aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.avgiftspliktigperioder?.every(
-        (periode) => harInnvilgelsesResultat(periode) && periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+        (periode) =>
+          erMedlemskapsperiodeEllerLovvalgsperiode(periode) &&
+          periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
       ) ?? true
     );
   };

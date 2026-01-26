@@ -16,7 +16,7 @@ import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import type { Avgiftspliktigperiode, BasePeriode } from "../../../../../services/modules/types/periodeTyper";
-import { harInnvilgelsesResultat } from "../../../../../services/modules/types/periodeTyper";
+import { erMedlemskapsperiodeEllerLovvalgsperiode } from "../../../../../services/modules/types/periodeTyper";
 import { OppdaterMedlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import * as Utils from "../../../../../utils";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
@@ -189,7 +189,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       .filter((periode: Avgiftspliktigperiode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
       .every(
         (periode: Avgiftspliktigperiode) =>
-          harInnvilgelsesResultat(periode) && periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+          erMedlemskapsperiodeEllerLovvalgsperiode(periode) &&
+          periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
       );
   }, [medlemskapsperioder]);
 
@@ -245,8 +246,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     medlemskapsperioder: medlemskapsperioderFormState.map((periode: Avgiftspliktigperiode) => ({
       fomDato: periode.fomDato,
       tomDato: periode.tomDato,
-      trygdedekning: harInnvilgelsesResultat(periode) ? periode.trygdedekning : undefined,
-      medlemskapstype: harInnvilgelsesResultat(periode) ? periode.medlemskapstype : undefined,
+      trygdedekning: erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.trygdedekning : undefined,
+      medlemskapstype: erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.medlemskapstype : undefined,
     })),
     trygdeavgiftFraAvgiftssystemet: trygdeavgiftFraAvgiftssystemetParam,
     endeligAvgiftValg: endeligAvgiftValgFormState,
@@ -275,8 +276,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     lagredePerioder: Avgiftspliktigperiode[],
     index: number,
   ) => {
-    // Only MEDLEMSKAPSPERIODE and LOVVALGSPERIODE have trygdedekning
-    if (!harInnvilgelsesResultat(periode)) {
+    if (!erMedlemskapsperiodeEllerLovvalgsperiode(periode)) {
       throw new Error(`Cannot save periode of type ${periode.type}`);
     }
 
@@ -294,7 +294,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       periode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID ||
       periode.fomDato !== lagretMedlemskapsperiode.fomDato ||
       periode.tomDato !== lagretMedlemskapsperiode.tomDato ||
-      (harInnvilgelsesResultat(lagretMedlemskapsperiode) &&
+      (erMedlemskapsperiodeEllerLovvalgsperiode(lagretMedlemskapsperiode) &&
         periode.trygdedekning !== lagretMedlemskapsperiode.trygdedekning);
 
     if (harEndringer) {
@@ -432,9 +432,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             // lagretPeriodeMedID is guaranteed to be MEDLEMSKAPSPERIODE or LOVVALGSPERIODE from lagreMedlemskapsperiodeHvisEndret
             return {
               ...periode,
-              medlemskapstype: harInnvilgelsesResultat(lagretPeriodeMedID)
+              medlemskapstype: erMedlemskapsperiodeEllerLovvalgsperiode(lagretPeriodeMedID)
                 ? lagretPeriodeMedID.medlemskapstype
-                : harInnvilgelsesResultat(periode)
+                : erMedlemskapsperiodeEllerLovvalgsperiode(periode)
                   ? periode.medlemskapstype
                   : "",
               id: lagretPeriodeMedID.id,
@@ -468,13 +468,13 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     const nåværendeListeMedRelevanteFelter = medlemskapsperioderNå.map((periode) => ({
       fomDato: periode.fomDato,
       tomDato: periode.tomDato,
-      trygdedekning: harInnvilgelsesResultat(periode) ? periode.trygdedekning : undefined,
+      trygdedekning: erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.trygdedekning : undefined,
     }));
 
     const forrigeListeMedRelevanteFelter = medlemskapsperioderTidlgere.map((periode) => ({
       fomDato: periode.fomDato,
       tomDato: periode.tomDato,
-      trygdedekning: harInnvilgelsesResultat(periode) ? periode.trygdedekning : undefined,
+      trygdedekning: erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.trygdedekning : undefined,
     }));
 
     const sorterEtterFomDato = (a: BasePeriode, b: BasePeriode) => {

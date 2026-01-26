@@ -17,7 +17,7 @@ import * as Nav from "../../../../../navFrontend";
 import MKV from "../../../../../melosyskodeverk";
 import {
   erMedlemskapsperiode,
-  harInnvilgelsesResultat,
+  erMedlemskapsperiodeEllerLovvalgsperiode,
   MedlemskapsperiodeForAvgift,
 } from "../../../../../services/modules/types/periodeTyper";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
@@ -83,9 +83,13 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       const sisteGjeldende = aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder?.[0];
 
       const bestemmelseFraTidligereAvgiftsgrunnlag =
-        tidligerePerioder && harInnvilgelsesResultat(tidligerePerioder) ? tidligerePerioder.bestemmelse : undefined;
+        tidligerePerioder && erMedlemskapsperiodeEllerLovvalgsperiode(tidligerePerioder)
+          ? tidligerePerioder.bestemmelse
+          : undefined;
       const eventuellNyBestemmelse =
-        sisteGjeldende && harInnvilgelsesResultat(sisteGjeldende) ? sisteGjeldende.bestemmelse : undefined;
+        sisteGjeldende && erMedlemskapsperiodeEllerLovvalgsperiode(sisteGjeldende)
+          ? sisteGjeldende.bestemmelse
+          : undefined;
 
       if (
         bestemmelseFraTidligereAvgiftsgrunnlag &&

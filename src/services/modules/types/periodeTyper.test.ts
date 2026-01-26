@@ -3,7 +3,7 @@ import {
   erMedlemskapsperiode,
   erLovvalgsperiode,
   erHelseutgiftdekkesperiode,
-  harInnvilgelsesResultat,
+  erMedlemskapsperiodeEllerLovvalgsperiode,
   MedlemskapsperiodeForAvgift,
   LovvalgsperiodeForAvgift,
   HelseutgiftdekkesperiodeForAvgift,
@@ -99,17 +99,17 @@ describe("periodeTyper type guards", () => {
   describe("harInnvilgelsesResultat", () => {
     it("skal returnere true for Medlemskapsperiode", () => {
       const periode = lagMedlemskapsperiode();
-      expect(harInnvilgelsesResultat(periode)).toBe(true);
+      expect(erMedlemskapsperiodeEllerLovvalgsperiode(periode)).toBe(true);
     });
 
     it("skal returnere true for Lovvalgsperiode", () => {
       const periode = lagLovvalgsperiode();
-      expect(harInnvilgelsesResultat(periode)).toBe(true);
+      expect(erMedlemskapsperiodeEllerLovvalgsperiode(periode)).toBe(true);
     });
 
     it("skal returnere false for Helseutgiftdekkesperiode", () => {
       const periode = lagHelseutgiftdekkesperiode();
-      expect(harInnvilgelsesResultat(periode)).toBe(false);
+      expect(erMedlemskapsperiodeEllerLovvalgsperiode(periode)).toBe(false);
     });
 
     it("skal gi tilgang til innvilgelsesResultat etter type narrowing", () => {
@@ -119,7 +119,9 @@ describe("periodeTyper type guards", () => {
         lagHelseutgiftdekkesperiode(),
       ];
 
-      const resultater = perioder.filter(harInnvilgelsesResultat).map((periode) => periode.innvilgelsesResultat);
+      const resultater = perioder
+        .filter(erMedlemskapsperiodeEllerLovvalgsperiode)
+        .map((periode) => periode.innvilgelsesResultat);
 
       expect(resultater).toEqual(["INNVILGET", "DELVIS_INNVILGET"]);
     });
