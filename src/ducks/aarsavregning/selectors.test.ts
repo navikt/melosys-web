@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { AarsavregningTidligereGrunnlagMedlemskapsperioderSelector } from "./selectors";
+import { AarsavregningTidligereGrunnlagMedlemskapsperioderSelector, ErNyVurderingSelector } from "./selectors";
 import { RootState } from "AppTypes";
 import { AarsavregningResponse } from "../../services/modules/aarsavregning/aarsavregning";
 
@@ -91,6 +91,47 @@ describe("Aarsavregning Selektorer", () => {
 
       const result = AarsavregningTidligereGrunnlagMedlemskapsperioderSelector(mockState as RootState);
       expect(result).toEqual([]);
+    });
+  });
+
+  describe("ErNyVurderingSelector", () => {
+    it("skal returnere true når erNyVurdering er true", () => {
+      const mockState = {
+        aarsavregning: {
+          data: {} as AarsavregningResponse,
+          status: "OK",
+          erNyVurdering: true,
+        },
+      } as unknown as RootState;
+
+      const result = ErNyVurderingSelector(mockState);
+      expect(result).toBe(true);
+    });
+
+    it("skal returnere false når erNyVurdering er false", () => {
+      const mockState = {
+        aarsavregning: {
+          data: {} as AarsavregningResponse,
+          status: "OK",
+          erNyVurdering: false,
+        },
+      } as unknown as RootState;
+
+      const result = ErNyVurderingSelector(mockState);
+      expect(result).toBe(false);
+    });
+
+    it("skal returnere false når erNyVurdering er undefined (nullish coalescing)", () => {
+      const mockState = {
+        aarsavregning: {
+          data: {} as AarsavregningResponse,
+          status: "OK",
+          erNyVurdering: undefined,
+        },
+      } as unknown as RootState;
+
+      const result = ErNyVurderingSelector(mockState);
+      expect(result).toBe(false);
     });
   });
 });
