@@ -71,7 +71,6 @@ export function VurderingVideresend({
   // Nullstill eventuelle feilmeldinger når steget vises
   useEffect(() => {
     resetFeiletRespons();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleVedleggChange = (newVedlegg) => {
