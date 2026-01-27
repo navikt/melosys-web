@@ -69,21 +69,8 @@ class SaksbehandlingVirksomheter extends Virksomheter {
         nesteSteg: STEG.VEDTAK,
       },
       {
-        exec: () => {
-          const harMedfolgendeBarnData = propsLight.medfolgendeBarn?.length > 0;
-          const erInnsyn = !propsLight.generiskStegRedigerbart;
-
-          if (propsLight.erArbeidTjenestepersonEllerFly) {
-            return harValgtArbeidsgiver && erInnsyn && harMedfolgendeBarnData;
-          }
-
-          return harValgtArbeidsgiver && gårDirekteTilArtikkel16;
-        },
+        exec: () => harValgtArbeidsgiver && (gårDirekteTilArtikkel16 || propsLight.erArbeidTjenestepersonEllerFly),
         nesteSteg: STEG.MEDFOLGENDE_BARN,
-      },
-      {
-        exec: () => harValgtArbeidsgiver && propsLight.erArbeidTjenestepersonEllerFly,
-        nesteSteg: NESTE_STEG_FOR_11_3_b,
       },
       {
         exec: () => {
