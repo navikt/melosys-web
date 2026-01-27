@@ -52,14 +52,13 @@ class SaksbehandlingVirksomheter extends Virksomheter {
 
       const harAvklaringBarn = harAvklaring(vurderingLovvalgBarnFakta, propsLight.medfolgendeBarn);
 
-      const erInnsynsmodus = propsLight.generiskStegRedigerbart;
-
+      const erInnsynsmodus = !propsLight.generiskStegRedigerbart;
       if (harAvklaringBarn && erInnsynsmodus) {
         return STEG.MEDFOLGENDE_BARN;
       }
 
       const innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift =
-        !erInnsynsmodus && !propsLight.harTrygdeavgiftperiode;
+        !propsLight.generiskStegRedigerbart && !propsLight.harTrygdeavgiftperiode;
 
       if (propsLight.eøsFaktureringAvTrygdeavgiftToggleEnabled) {
         if (innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift) {
