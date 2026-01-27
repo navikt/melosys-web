@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { AarsavregningListResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
-import { årsavregningErNyVurdering } from "../vurderingAarsavregning/vurderingAarsavregningInngang";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
@@ -37,6 +36,19 @@ const { AARSAVREGNING_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
 const { FULLMEKTIG_TRYGDEAVGIFT } = MKV.Koder.fullmaktstype;
 const { FULLMEKTIG } = MKV.Koder.aktoersroller;
 const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
+
+const årsavregningErNyVurdering = (
+  behandlingID: number,
+  årsavregningList: AarsavregningListResponse[],
+  aar: number,
+) => {
+  return årsavregningList.find(
+    (aarsavregning) =>
+      aarsavregning.behandlingID !== behandlingID &&
+      aarsavregning.aar === aar &&
+      aarsavregning.resultattype.kode === FASTSATT_TRYGDEAVGIFT,
+  );
+};
 
 interface FormValuesProps {
   innledningFritekst?: string;

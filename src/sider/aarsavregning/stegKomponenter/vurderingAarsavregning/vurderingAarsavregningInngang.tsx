@@ -41,7 +41,7 @@ const behandlingHarÅrsavregning = (behandlingID: number, årsavregningList: Aar
   return årsavregningList.find((aarsavregning) => aarsavregning.behandlingID === behandlingID);
 };
 
-export const årsavregningErNyVurdering = (
+const årsavregningErNyVurdering = (
   behandlingID: number,
   årsavregningList: AarsavregningListResponse[],
   aar: number,
@@ -173,8 +173,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
     Api.Aarsavregning.hentFiltrertAarsavregningList(saksnummer, FASTSATT_TRYGDEAVGIFT, år).then(
       (fastsattÅrsavregningList) => {
-        const nyVurdering = fastsattÅrsavregningList.length > 0;
-        setErNyVurdering(nyVurdering);
+        setErNyVurdering(fastsattÅrsavregningList.length > 0);
       },
     );
 
