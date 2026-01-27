@@ -13,6 +13,7 @@ Object.defineProperty(window, "scrollTo", {
 vi.mock("../../../../services/api", () => ({
   Aarsavregning: {
     hentAarsavregning: vi.fn(),
+    hentFiltrertAarsavregningList: vi.fn(),
   },
   DokumenterV2: {
     hentMuligeMottakere: vi.fn(),
@@ -95,6 +96,7 @@ describe("VurderingVedtak", () => {
     };
 
     vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(mockAarsavregningResponse);
+    vi.mocked(Api.Aarsavregning.hentFiltrertAarsavregningList).mockResolvedValue([]);
     vi.mocked(Api.DokumenterV2.hentMuligeMottakere).mockResolvedValue(mockMuligeMottakere);
     vi.mocked(Api.DokumenterV2.hentStandardvedleggForBrev).mockResolvedValue([
       {
@@ -153,7 +155,6 @@ describe("VurderingVedtak", () => {
       aarsavregning: {
         status: "OK",
         data: {},
-        erNyVurdering: false,
       },
     };
 
@@ -184,7 +185,7 @@ import { screen, waitFor } from "@testing-library/react";
 const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
 describe("MELOSYS-7114: Obligatorisk begrunnelse", () => {
-  const createReduxState = (erNyVurdering = false) => ({
+  const createReduxState = () => ({
     behandlinger: {
       status: "OK",
       data: {
@@ -214,11 +215,10 @@ describe("MELOSYS-7114: Obligatorisk begrunnelse", () => {
     aarsavregning: {
       status: "OK",
       data: {},
-      erNyVurdering,
     },
   });
 
-  const defaultReduxState = createReduxState(false);
+  const defaultReduxState = createReduxState();
 
   const defaultMockProps = {
     tilbake: vi.fn(),
@@ -241,9 +241,23 @@ describe("MELOSYS-7114: Obligatorisk begrunnelse", () => {
     ...overrides,
   });
 
-  const setupMocks = (aarsavregningOverrides = {}) => {
+  const setupMocks = (aarsavregningOverrides = {}, erNyVurdering = false) => {
     vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(
       createMockAarsavregningResponse(aarsavregningOverrides),
+    );
+    // Mock hentFiltrertAarsavregningList to control erNyVurdering
+    // erNyVurdering is true when there's a previously FASTSATT aarsavregning for the same year
+    vi.mocked(Api.Aarsavregning.hentFiltrertAarsavregningList).mockResolvedValue(
+      erNyVurdering
+        ? [
+            {
+              aarsavregningId: 99998,
+              behandlingID: 99999, // Different behandlingID
+              aar: 2024,
+              resultattype: { kode: "FASTSATT_TRYGDEAVGIFT", term: "Fastsatt trygdeavgift" },
+            },
+          ]
+        : [],
     );
     vi.mocked(Api.DokumenterV2.hentMuligeMottakere).mockResolvedValue({
       hovedMottaker: {
@@ -336,12 +350,12 @@ describe("MELOSYS-7114: Obligatorisk begrunnelse", () => {
 
   describe("AK3: Ny vurdering uten manuell avgift", () => {
     beforeEach(() => {
-      setupMocks({ endeligAvgiftValg: BEREGNET_AVGIFT });
+      setupMocks({ endeligAvgiftValg: BEREGNET_AVGIFT }, true);
     });
 
     it("skal vise varsel om § 12-1", async () => {
       await renderWithProvidersAsync(<VurderingVedtak {...defaultMockProps} />, {
-        preloadedState: createReduxState(true),
+        preloadedState: createReduxState(),
       });
 
       await waitFor(() => {
@@ -361,7 +375,7 @@ describe("MELOSYS-7114: Obligatorisk begrunnelse", () => {
 
     it("skal vise (Obligatorisk) i label", async () => {
       await renderWithProvidersAsync(<VurderingVedtak {...defaultMockProps} />, {
-        preloadedState: createReduxState(true),
+        preloadedState: createReduxState(),
       });
 
       await waitFor(() => {
@@ -377,12 +391,12 @@ describe("MELOSYS-7114: Obligatorisk begrunnelse", () => {
 
   describe("AK4: Ny vurdering med manuell avgift", () => {
     beforeEach(() => {
-      setupMocks({ endeligAvgiftValg: MANUELL_ENDELIG_AVGIFT });
+      setupMocks({ endeligAvgiftValg: MANUELL_ENDELIG_AVGIFT }, true);
     });
 
     it("skal vise varsel med BEGGE punktene", async () => {
       await renderWithProvidersAsync(<VurderingVedtak {...defaultMockProps} />, {
-        preloadedState: createReduxState(true),
+        preloadedState: createReduxState(),
       });
 
       await waitFor(() => {
@@ -403,7 +417,7 @@ describe("MELOSYS-7114: Obligatorisk begrunnelse", () => {
 
     it("skal vise (Obligatorisk) i label", async () => {
       await renderWithProvidersAsync(<VurderingVedtak {...defaultMockProps} />, {
-        preloadedState: createReduxState(true),
+        preloadedState: createReduxState(),
       });
 
       await waitFor(() => {

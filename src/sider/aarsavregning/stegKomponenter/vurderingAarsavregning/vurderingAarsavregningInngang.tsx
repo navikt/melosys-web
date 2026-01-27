@@ -1,7 +1,7 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "../../../../hooks";
-import { OK, SET_ER_NY_VURDERING } from "../../../../ducks/aarsavregning/types";
+import { OK } from "../../../../ducks/aarsavregning/types";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
 import { redigerbartSelectors } from "../../../../ducks/redigerbart";
@@ -41,7 +41,7 @@ const behandlingHarÅrsavregning = (behandlingID: number, årsavregningList: Aar
   return årsavregningList.find((aarsavregning) => aarsavregning.behandlingID === behandlingID);
 };
 
-const årsavregningErNyVurdering = (
+export const årsavregningErNyVurdering = (
   behandlingID: number,
   årsavregningList: AarsavregningListResponse[],
   aar: number,
@@ -175,7 +175,6 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       (fastsattÅrsavregningList) => {
         const nyVurdering = fastsattÅrsavregningList.length > 0;
         setErNyVurdering(nyVurdering);
-        dispatch({ type: SET_ER_NY_VURDERING, erNyVurdering: nyVurdering });
       },
     );
 

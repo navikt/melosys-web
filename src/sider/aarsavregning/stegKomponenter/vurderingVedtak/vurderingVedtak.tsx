@@ -5,7 +5,8 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
-import { aarsavregningSelectors } from "../../../../ducks/aarsavregning";
+import { AarsavregningListResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
+import { årsavregningErNyVurdering } from "../vurderingAarsavregning/vurderingAarsavregningInngang";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
@@ -71,7 +72,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   });
   const [harSkjemaverdier, setHarSkjemaverdier] = useState(false);
   const [fritekstPending, setFritekstPending] = useState(false);
-  const erNyVurdering = useSelector(aarsavregningSelectors.ErNyVurderingSelector);
+  const [erNyVurdering, setErNyVurdering] = useState(false);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const erFullmektigEndret = useSelector(menypanelSelectors.MenypanelErFullmektigEndretSelector) as boolean;
@@ -113,6 +114,24 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       return undefined;
     }
   }, [behandlingID]);
+
+  const fetchErNyVurdering = useCallback(
+    async (aar: number) => {
+      if (!saksnummer || !aar) return;
+      try {
+        const årsavregningList: AarsavregningListResponse[] = await Api.Aarsavregning.hentFiltrertAarsavregningList(
+          saksnummer,
+          FASTSATT_TRYGDEAVGIFT,
+          aar,
+        );
+        setErNyVurdering(!!årsavregningErNyVurdering(behandlingID, årsavregningList, aar));
+      } catch (error) {
+        /* eslint-disable-next-line no-console */
+        console.error("Henting av årsavregningList feilet: ", error);
+      }
+    },
+    [saksnummer, behandlingID],
+  );
 
   const fetchMuligeMottakere = useCallback(async () => {
     if (behandlingID === null) return;
@@ -173,7 +192,11 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       setHarSkjemaverdier(false);
       window.scrollTo(0, 0);
       Promise.all([
-        fetchAarsavregning(),
+        fetchAarsavregning().then((response) => {
+          if (response?.aar) {
+            fetchErNyVurdering(response.aar);
+          }
+        }),
         fetchMuligeMottakere(),
         fetchFakturaMottaker(),
         fetchAndSetHarFullmaktForTrygdeavgift(),
@@ -183,6 +206,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     aktivtSteg,
     behandlingID,
     fetchAarsavregning,
+    fetchErNyVurdering,
     fetchMuligeMottakere,
     fetchFakturaMottaker,
     fetchAndSetHarFullmaktForTrygdeavgift,
