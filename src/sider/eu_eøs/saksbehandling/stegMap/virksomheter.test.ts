@@ -2,6 +2,8 @@ import { describe, it, expect, vi } from "vitest";
 import SaksbehandlingVirksomheter from "./virksomheter";
 import { STEG } from "../../../../felleskomponenter/stegvelger";
 import * as KV from "../../../../kodeverk";
+import MKV from "../../../../melosyskodeverk";
+import { BOOLSK_STRING } from "../../../../constants";
 
 describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende personell flyt", () => {
   const createMockPropsLight = (overrides = {}) => ({
@@ -39,6 +41,18 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
     },
   ];
 
+  // Helper for å lage VURDERING_LOVVALG_BARN avklartefakta med avklaring
+  const createVurderingLovvalgBarnMedAvklaring = (antallBarn: number) =>
+    Array.from({ length: antallBarn }, () => ({
+      referanse: MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+      fakta: [BOOLSK_STRING.SANN],
+      begrunnelseKoder: [],
+    }));
+
+  // Helper for å lage medfølgende barn
+  const createMedfolgendeBarn = (antallBarn: number) =>
+    Array.from({ length: antallBarn }, (_, i) => ({ navn: `Test Barn ${i + 1}` }));
+
   describe("Akseptansekriterie: Pågående behandling - Offentlig tjenesteperson/fly skal IKKE vise barn-steget", () => {
     it("Gitt at jeg er i en pågående behandling med offentlig tjenesteperson/fly, når jeg går videre fra Virksomhet, skal neste steg være Periode (ikke Barn)", () => {
       const propsLight = createMockPropsLight({
@@ -69,13 +83,21 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
     });
   });
 
-  describe("Akseptansekriterie: Avsluttet behandling i innsyn - skal vise barn-steget hvis det finnes barn-data", () => {
-    it("Gitt at jeg er i en avsluttet behandling (innsyn) med offentlig tjenesteperson/fly, når behandlingen har medfølgende barn-data, skal steget Barn vises", () => {
+  describe("Akseptansekriterie: Avsluttet behandling i innsyn - skal vise barn-steget hvis det finnes avklaring for barn", () => {
+    it("Gitt at jeg er i en avsluttet behandling (innsyn) med offentlig tjenesteperson/fly, når behandlingen har avklaring for medfølgende barn, skal steget Barn vises", () => {
+      const antallBarn = 1;
       const propsLight = createMockPropsLight({
         generiskStegRedigerbart: false,
         erArbeidTjenestepersonEllerFly: true,
-        medfolgendeBarn: [{ navn: "Test Barn" }],
+        medfolgendeBarn: createMedfolgendeBarn(antallBarn),
         eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
+        avklartefakta: [
+          {
+            referanse: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
+            fakta: ["TRUE"],
+          },
+          ...createVurderingLovvalgBarnMedAvklaring(antallBarn),
+        ],
       });
 
       const virksomheter = new SaksbehandlingVirksomheter(propsLight, 3);
@@ -84,11 +106,12 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
       expect(nesteSteg).toBe(STEG.MEDFOLGENDE_BARN);
     });
 
-    it("Gitt at jeg er i en avsluttet behandling (innsyn) med offentlig tjenesteperson/fly, når behandlingen IKKE har medfølgende barn-data, skal steget Barn IKKE vises", () => {
+    it("Gitt at det finnes medfolgendeBarn men mangler tilsvarende VURDERING_LOVVALG_BARN avklartefakta, skal steget Barn IKKE vises (harAvklaring = false)", () => {
+      // 1 barn men ingen VURDERING_LOVVALG_BARN avklartefakta -> harAvklaring = false
       const propsLight = createMockPropsLight({
         generiskStegRedigerbart: false,
         erArbeidTjenestepersonEllerFly: true,
-        medfolgendeBarn: [],
+        medfolgendeBarn: createMedfolgendeBarn(1),
         eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
       });
 
@@ -99,7 +122,9 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
       expect(nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
     });
 
-    it("Gitt at jeg er i innsyn med offentlig tjenesteperson/fly uten barn-data og toggle av, skal gå til vedtak-steget", () => {
+    it("Gitt at jeg er i innsyn med offentlig tjenesteperson/fly uten barn-data og toggle av, skal gå til barn-steget (harAvklaring = true for tom liste)", () => {
+      // Merk: Når medfolgendeBarn er tom og det ikke finnes VURDERING_LOVVALG_BARN,
+      // er harAvklaring = true fordi begge lengder er 0 og every() på tom array returnerer true
       const propsLight = createMockPropsLight({
         generiskStegRedigerbart: false,
         erArbeidTjenestepersonEllerFly: true,
@@ -110,12 +135,13 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
       const virksomheter = new SaksbehandlingVirksomheter(propsLight, 3);
       const nesteSteg = virksomheter.nesteSteg();
 
-      expect(nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
+      // harAvklaring er true, så går til MEDFOLGENDE_BARN
+      expect(nesteSteg).toBe(STEG.MEDFOLGENDE_BARN);
     });
   });
 
-  describe("Andre flyter skal fortsatt vise barn-steget som før", () => {
-    it("Ordinær flyt (gårDirekteTilArtikkel16) skal fortsatt vise barn-steget i saksbehandling", () => {
+  describe("Andre flyter (gårDirekteTilArtikkel16)", () => {
+    it("Ordinær flyt (gårDirekteTilArtikkel16) skal gå til VURDERING_PERIODE i saksbehandling når toggle er på", () => {
       const propsLight = createMockPropsLight({
         generiskStegRedigerbart: true,
         erArbeidTjenestepersonEllerFly: false,
@@ -125,14 +151,19 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
       const virksomheter = new SaksbehandlingVirksomheter(propsLight, 3);
       const nesteSteg = virksomheter.nesteSteg();
 
-      expect(nesteSteg).toBe(STEG.MEDFOLGENDE_BARN);
+      expect(nesteSteg).toBe(STEG.VURDERING_PERIODE);
     });
 
-    it("Ordinær flyt (gårDirekteTilArtikkel16) skal fortsatt vise barn-steget i innsyn", () => {
+    it("Ordinær flyt (gårDirekteTilArtikkel16) skal vise barn-steget i innsyn når det finnes avklaring for barn", () => {
+      const antallBarn = 1;
       const propsLight = createMockPropsLight({
         generiskStegRedigerbart: false,
         erArbeidTjenestepersonEllerFly: false,
-        avklartefakta: createAvklartefaktaMedOrdinaerUtenArt12(),
+        medfolgendeBarn: createMedfolgendeBarn(antallBarn),
+        avklartefakta: [
+          ...createAvklartefaktaMedOrdinaerUtenArt12(),
+          ...createVurderingLovvalgBarnMedAvklaring(antallBarn),
+        ],
       });
 
       const virksomheter = new SaksbehandlingVirksomheter(propsLight, 3);
@@ -143,12 +174,20 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
   });
 
   describe("Edge cases", () => {
-    it("medfolgendeBarn som undefined skal behandles som ingen barn-data", () => {
+    it("Når det er mismatch mellom antall medfolgendeBarn og antall VURDERING_LOVVALG_BARN avklartefakta, skal det ikke vise barn-steget", () => {
+      // 2 barn men bare 1 avklaring -> harAvklaring = false
       const propsLight = createMockPropsLight({
         generiskStegRedigerbart: false,
         erArbeidTjenestepersonEllerFly: true,
-        medfolgendeBarn: undefined,
+        medfolgendeBarn: createMedfolgendeBarn(2),
         eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
+        avklartefakta: [
+          {
+            referanse: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
+            fakta: ["TRUE"],
+          },
+          ...createVurderingLovvalgBarnMedAvklaring(1),
+        ],
       });
 
       const virksomheter = new SaksbehandlingVirksomheter(propsLight, 3);
@@ -158,18 +197,55 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
       expect(nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
     });
 
-    it("medfolgendeBarn som null skal behandles som ingen barn-data", () => {
+    it("Når VURDERING_LOVVALG_BARN har USANN uten begrunnelseKoder, skal harAvklaring være false", () => {
       const propsLight = createMockPropsLight({
         generiskStegRedigerbart: false,
         erArbeidTjenestepersonEllerFly: true,
-        medfolgendeBarn: null,
+        medfolgendeBarn: createMedfolgendeBarn(1),
         eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
+        avklartefakta: [
+          {
+            referanse: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
+            fakta: ["TRUE"],
+          },
+          {
+            referanse: MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+            fakta: [BOOLSK_STRING.USANN],
+            begrunnelseKoder: [], // Mangler begrunnelse -> harAvklaring = false
+          },
+        ],
       });
 
       const virksomheter = new SaksbehandlingVirksomheter(propsLight, 3);
       const nesteSteg = virksomheter.nesteSteg();
 
       expect(nesteSteg).not.toBe(STEG.MEDFOLGENDE_BARN);
+      expect(nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
+    });
+
+    it("Når VURDERING_LOVVALG_BARN har USANN med begrunnelseKoder, skal harAvklaring være true", () => {
+      const propsLight = createMockPropsLight({
+        generiskStegRedigerbart: false,
+        erArbeidTjenestepersonEllerFly: true,
+        medfolgendeBarn: createMedfolgendeBarn(1),
+        eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
+        avklartefakta: [
+          {
+            referanse: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
+            fakta: ["TRUE"],
+          },
+          {
+            referanse: MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+            fakta: [BOOLSK_STRING.USANN],
+            begrunnelseKoder: ["EN_BEGRUNNELSE"], // Har begrunnelse -> harAvklaring = true
+          },
+        ],
+      });
+
+      const virksomheter = new SaksbehandlingVirksomheter(propsLight, 3);
+      const nesteSteg = virksomheter.nesteSteg();
+
+      expect(nesteSteg).toBe(STEG.MEDFOLGENDE_BARN);
     });
   });
 });
