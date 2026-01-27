@@ -33,13 +33,16 @@ class SaksbehandlingVirksomheter extends Virksomheter {
     const erArbeidKunNorge =
       MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE === propsLight.behandlingstema.kode;
 
-    const harAvklaring = (vurderingLovvalgBarnFakta, mottatteOpplysningerMedfolgendeBarn) =>
-      vurderingLovvalgBarnFakta.length === mottatteOpplysningerMedfolgendeBarn.length &&
-      vurderingLovvalgBarnFakta.every(
-        (enkeltFakta) =>
-          enkeltFakta.fakta.includes(BOOLSK_STRING.SANN) ||
-          (enkeltFakta.fakta.includes(BOOLSK_STRING.USANN) && enkeltFakta.begrunnelseKoder.length > 0),
+    const harAvklaring = (vurderingLovvalgBarnFakta, mottatteOpplysningerMedfolgendeBarn) => {
+      return (
+        vurderingLovvalgBarnFakta.length === mottatteOpplysningerMedfolgendeBarn.length &&
+        vurderingLovvalgBarnFakta.every(
+          (enkeltFakta) =>
+            enkeltFakta.fakta.includes(BOOLSK_STRING.SANN) ||
+            (enkeltFakta.fakta.includes(BOOLSK_STRING.USANN) && enkeltFakta.begrunnelseKoder.length > 0),
+        )
       );
+    };
 
     const beregnNesteStegForFlyt11_3_b = (propsLight) => {
       const vurderingLovvalgBarnFakta = hentFaktaListe(
@@ -49,12 +52,14 @@ class SaksbehandlingVirksomheter extends Virksomheter {
 
       const harAvklaringBarn = harAvklaring(vurderingLovvalgBarnFakta, propsLight.medfolgendeBarn);
 
-      if (harAvklaringBarn) {
+      const erInnsynsmodus = propsLight.generiskStegRedigerbart;
+
+      if (harAvklaringBarn && erInnsynsmodus) {
         return STEG.MEDFOLGENDE_BARN;
       }
 
       const innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift =
-        !propsLight.generiskStegRedigerbart && !propsLight.harTrygdeavgiftperiode;
+        !erInnsynsmodus && !propsLight.harTrygdeavgiftperiode;
 
       if (propsLight.eøsFaktureringAvTrygdeavgiftToggleEnabled) {
         if (innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift) {
