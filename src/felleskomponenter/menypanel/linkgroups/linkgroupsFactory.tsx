@@ -4,7 +4,7 @@ import { harUnntaksregistreringFlyt, skalViseIngenFlyt } from "../../../url";
 import { ContentProps, LinkGroup } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
-import { MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT } from "../,,/../../../featuretoggle/toggleNavn";
+import { MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT } from "../../../featuretoggle/toggleNavn";
 import { useFeatureToggle } from "../../../featuretoggle";
 
 const {
