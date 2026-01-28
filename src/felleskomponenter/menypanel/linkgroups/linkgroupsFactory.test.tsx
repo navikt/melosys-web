@@ -38,27 +38,42 @@ const { ÅRSAVREGNING, SØKNAD } = MKV.Koder.behandlinger.behandlingstyper;
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
 
-const createContentProps = (): ContentProps => ({
+const createContentProps = (behandlingstema = UTSENDT_ARBEIDSTAKER): ContentProps => ({
   visArbeidsforholdRolleEtiketter: false,
   redigerbart: true,
   visMottatteOpplysningerData: true,
   lagreSoknadOgOppfriskSaksopplysninger: vi.fn(),
-  behandlingstema: UTSENDT_ARBEIDSTAKER,
+  behandlingstema,
   endreFokus: false,
 });
 
-const createConfig = (overrides = {}) => ({
-  sakstype: MKV.Koder.sakstyper.EU_EOS,
-  behandlingstema: UTSENDT_ARBEIDSTAKER,
-  behandlingstype: SØKNAD,
-  mottatteOpplysningerType: SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
-  contentProps: createContentProps(),
-  sakstema: "",
-  kunFullmektig: false,
-  erPensjonistToggleEnabled: false,
-  erPensjonistEØSToggleEnabled: false,
-  ...overrides,
-});
+type ConfigOverrides = {
+  behandlingstema?: string;
+  behandlingstype?: string;
+  sakstype?: string;
+  mottatteOpplysningerType?: string;
+  contentProps?: ContentProps;
+  sakstema?: string;
+  kunFullmektig?: boolean;
+  erPensjonistToggleEnabled?: boolean;
+  erPensjonistEØSToggleEnabled?: boolean;
+};
+
+const createConfig = (overrides: ConfigOverrides = {}) => {
+  const behandlingstema = overrides.behandlingstema ?? UTSENDT_ARBEIDSTAKER;
+  return {
+    sakstype: MKV.Koder.sakstyper.EU_EOS,
+    behandlingstema,
+    behandlingstype: SØKNAD,
+    mottatteOpplysningerType: SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
+    contentProps: createContentProps(behandlingstema),
+    sakstema: "",
+    kunFullmektig: false,
+    erPensjonistToggleEnabled: false,
+    erPensjonistEØSToggleEnabled: false,
+    ...overrides,
+  };
+};
 
 const getAllLabels = (linkGroups: ReturnType<typeof LinkGroupsFactory.createLinkGroups>) =>
   linkGroups.flatMap((g) => g.links).map((l) => l.label);
