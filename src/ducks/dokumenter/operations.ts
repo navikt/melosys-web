@@ -34,12 +34,13 @@ export async function forhandsvisSed(behandlingID: number, sedType: string, data
   const vilSendeAnmodningOmMerInformasjon =
     data.vilSendeAnmodningOmMerInformasjon || (data.vilSendeAnmodningOmMerInformasjon === false ? false : null);
 
+  // Bare inkluder CDM 4.4-felt når de har verdier (bakoverkompatibilitet)
   const utfyltdata = {
     fritekst: data.fritekst || null,
     nyttLovvalgsland: data.nyttLovvalgsland || null,
     begrunnelseUtenlandskMyndighet: data.begrunnelseUtenlandskMyndighet || null,
     vilSendeAnmodningOmMerInformasjon,
-    a008Formaal: data.a008Formaal || null,
+    ...(data.a008Formaal && { a008Formaal: data.a008Formaal }),
   };
 
   const response = await Api.Dokumenter.pdf.forhandsvisSed(behandlingID, sedType, utfyltdata);
