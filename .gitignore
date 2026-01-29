@@ -21,6 +21,7 @@
 
 # misc
 .claude
+.opencode
 .idea
 !.idea/runConfigurations/
 .vscode

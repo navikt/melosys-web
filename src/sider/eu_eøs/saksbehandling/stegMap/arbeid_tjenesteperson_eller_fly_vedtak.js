@@ -55,15 +55,17 @@ class ArbeidTjenestepersonEllerFlyVedtak extends Steg {
   }
 
   skalBrukeLegacyKomponent = (propsLight) => {
+    const oppsummering = propsLight.oppsummering;
+    const flytProduksjonDato = new Date("2025-11-15T00:00:00Z");
+
+    const behandlingAvsluttetFørNyEndringEØS_11_3_b =
+      oppsummering.behandlingsstatus.kode === "AVSLUTTET" && new Date(oppsummering.endretDato) < flytProduksjonDato;
+
     const innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift =
-      !propsLight.generiskStegRedigerbart && !propsLight.harTrygdeavgiftperiode;
+      !propsLight.generiskStegRedigerbart && behandlingAvsluttetFørNyEndringEØS_11_3_b;
 
     if (propsLight.eøsFaktureringAvTrygdeavgiftToggleEnabled) {
-      if (innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift) {
-        return true;
-      }
-
-      return false;
+      return !!innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift;
     }
 
     return true;
