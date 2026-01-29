@@ -6,6 +6,15 @@ import MKV from "../../../../melosyskodeverk";
 import { BOOLSK_STRING } from "../../../../constants";
 
 describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende personell flyt", () => {
+  // Helper for å lage oppsummering med behandlingsstatus og endretDato
+  const createOppsummering = (
+    behandlingsstatusKode: string = "UNDER_BEHANDLING",
+    endretDato: string = "2026-02-01", // Default: etter flytProduksjonDato
+  ) => ({
+    behandlingsstatus: { kode: behandlingsstatusKode },
+    endretDato,
+  });
+
   const createMockPropsLight = (overrides = {}) => ({
     avklartefakta: [
       {
@@ -21,6 +30,7 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
     erArbeidTjenestepersonEllerFly: false,
     eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
     harTrygdeavgiftperiode: false,
+    oppsummering: createOppsummering(),
     tilgjengeligeHandlers: {
       bekreftOgFortsett: vi.fn(),
       tilbake: vi.fn(),
@@ -122,9 +132,9 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
       expect(nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
     });
 
-    it("Gitt at jeg er i innsyn med offentlig tjenesteperson/fly uten barn-data og toggle av, skal gå til barn-steget (harAvklaring = true for tom liste)", () => {
+    it("Gitt at jeg er i innsyn med offentlig tjenesteperson/fly uten barn-data og toggle av, skal IKKE gå til barn-steget (harAvklaring = false for tomme lister)", () => {
       // Merk: Når medfolgendeBarn er tom og det ikke finnes VURDERING_LOVVALG_BARN,
-      // er harAvklaring = true fordi begge lengder er 0 og every() på tom array returnerer true
+      // er harAvklaring = false fordi begge lengder er 0 (ny logikk ekskluderer tomme lister)
       const propsLight = createMockPropsLight({
         generiskStegRedigerbart: false,
         erArbeidTjenestepersonEllerFly: true,
@@ -135,8 +145,9 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
       const virksomheter = new SaksbehandlingVirksomheter(propsLight, 3);
       const nesteSteg = virksomheter.nesteSteg();
 
-      // harAvklaring er true, så går til MEDFOLGENDE_BARN
-      expect(nesteSteg).toBe(STEG.MEDFOLGENDE_BARN);
+      // harAvklaring er false for tomme lister, så går til ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK
+      expect(nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
+      expect(nesteSteg).not.toBe(STEG.MEDFOLGENDE_BARN);
     });
   });
 
@@ -246,6 +257,67 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
       const nesteSteg = virksomheter.nesteSteg();
 
       expect(nesteSteg).toBe(STEG.MEDFOLGENDE_BARN);
+    });
+  });
+
+  describe("Innsyn: Dato-basert logikk for visning av legacy komponent", () => {
+    const DATO_FØR_PRODUKSJON = "2025-11-01T00:00:00Z";
+    const DATO_ETTER_PRODUKSJON = "2025-11-16T00:00:00Z"; // Etter 2025-11-15
+
+    it("Avsluttet behandling FØR flytProduksjonDato skal bruke legacy komponent (gå til ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK)", () => {
+      const propsLight = createMockPropsLight({
+        generiskStegRedigerbart: false,
+        erArbeidTjenestepersonEllerFly: true,
+        eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
+        oppsummering: createOppsummering("AVSLUTTET", DATO_FØR_PRODUKSJON),
+      });
+
+      const virksomheter = new SaksbehandlingVirksomheter(propsLight, 3);
+      const nesteSteg = virksomheter.nesteSteg();
+
+      expect(nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
+    });
+
+    it("Avsluttet behandling ETTER flytProduksjonDato skal bruke ny komponent (gå til VURDERING_PERIODE)", () => {
+      const propsLight = createMockPropsLight({
+        generiskStegRedigerbart: false,
+        erArbeidTjenestepersonEllerFly: true,
+        eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
+        oppsummering: createOppsummering("AVSLUTTET", DATO_ETTER_PRODUKSJON),
+      });
+
+      const virksomheter = new SaksbehandlingVirksomheter(propsLight, 3);
+      const nesteSteg = virksomheter.nesteSteg();
+
+      expect(nesteSteg).toBe(STEG.VURDERING_PERIODE);
+    });
+
+    it("Behandling som IKKE er avsluttet skal bruke ny komponent uavhengig av dato", () => {
+      const propsLight = createMockPropsLight({
+        generiskStegRedigerbart: false,
+        erArbeidTjenestepersonEllerFly: true,
+        eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
+        oppsummering: createOppsummering("UNDER_BEHANDLING", DATO_FØR_PRODUKSJON),
+      });
+
+      const virksomheter = new SaksbehandlingVirksomheter(propsLight, 3);
+      const nesteSteg = virksomheter.nesteSteg();
+
+      expect(nesteSteg).toBe(STEG.VURDERING_PERIODE);
+    });
+
+    it("I saksbehandlingsmodus (redigerbar) skal alltid bruke ny komponent", () => {
+      const propsLight = createMockPropsLight({
+        generiskStegRedigerbart: true,
+        erArbeidTjenestepersonEllerFly: true,
+        eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
+        oppsummering: createOppsummering("AVSLUTTET", DATO_FØR_PRODUKSJON),
+      });
+
+      const virksomheter = new SaksbehandlingVirksomheter(propsLight, 3);
+      const nesteSteg = virksomheter.nesteSteg();
+
+      expect(nesteSteg).toBe(STEG.VURDERING_PERIODE);
     });
   });
 });
