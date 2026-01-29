@@ -35,13 +35,13 @@ class SaksbehandlingVirksomheter extends Virksomheter {
 
     const harAvklaring = (vurderingLovvalgBarnFakta, mottatteOpplysningerMedfolgendeBarn) => {
       return (
-        !(vurderingLovvalgBarnFakta.length === 0 && mottatteOpplysningerMedfolgendeBarn.length === 0) &&
-        vurderingLovvalgBarnFakta.length === mottatteOpplysningerMedfolgendeBarn.length &&
-        vurderingLovvalgBarnFakta.every(
-          (enkeltFakta) =>
-            enkeltFakta.fakta.includes(BOOLSK_STRING.SANN) ||
-            (enkeltFakta.fakta.includes(BOOLSK_STRING.USANN) && enkeltFakta.begrunnelseKoder.length > 0),
-        )
+        !(vurderingLovvalgBarnFakta.length === 0 && mottatteOpplysningerMedfolgendeBarn.length === 0) ||
+        (vurderingLovvalgBarnFakta.length === mottatteOpplysningerMedfolgendeBarn.length &&
+          vurderingLovvalgBarnFakta.every(
+            (enkeltFakta) =>
+              enkeltFakta.fakta.includes(BOOLSK_STRING.SANN) ||
+              (enkeltFakta.fakta.includes(BOOLSK_STRING.USANN) && enkeltFakta.begrunnelseKoder.length > 0),
+          ))
       );
     };
 
