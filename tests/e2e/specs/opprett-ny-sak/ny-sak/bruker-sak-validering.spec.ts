@@ -131,6 +131,7 @@ test.describe("'Opprett ny sak for bruker", () => {
 
   test('Opprett sak for sakstype "Avtaleland" og verifiser at det ikke oppstår noen feil', async ({
     page,
+    apiRecorder,
   }, testInfo) => {
     const opprettNySakPage = await setupOpprettNySakTest(page);
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
@@ -151,6 +152,7 @@ test.describe("'Opprett ny sak for bruker", () => {
 
   test('Opprett sak for sakstype "Utenfor avtaleland" og verifiser at det ikke oppstår noen feil', async ({
     page,
+    apiRecorder,
   }, testInfo) => {
     const opprettNySakPage = await setupOpprettNySakTest(page);
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
@@ -171,6 +173,7 @@ test.describe("'Opprett ny sak for bruker", () => {
 
   test('Opprett sak for sakstype "Utenfor avtaleland" med behandlingstype "Årsavregning" og verifiser at det ikke oppstår noen feil', async ({
     page,
+    apiRecorder,
   }, testInfo) => {
     const opprettNySakPage = await setupOpprettNySakTest(page);
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);

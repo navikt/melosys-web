@@ -191,12 +191,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.verifiserIngenFeilmelding("utenfor medlemskapsperioden");
     });
 
-    // Skip: Flaky test - mock server matching issues with shared saksnummer across recordings
-    // TODO: Fix by ensuring unique saksnummer per test or improving mock server isolation
-    test.skip("Kan utvide skatteforholdsperiode innenfor medlemskapsperiode", async ({
-      page,
-      apiRecorder,
-    }, testInfo) => {
+    test("Kan utvide skatteforholdsperiode innenfor medlemskapsperiode", async ({ page, apiRecorder }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
       const { aarsavregningPage, lagDato } = await setupAarsavregningTest(page, "MEL-1042");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
@@ -230,9 +225,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
     });
   });
 
-  // Skip: Flaky test - mock server matching issues with shared saksnummer across recordings
-  // TODO: Fix by ensuring unique saksnummer per test or improving mock server isolation
-  test.describe.skip("Legg til periode med pliktig bestemmelse (bugfix)", () => {
+  test.describe("Legg til periode med pliktig bestemmelse (bugfix)", () => {
     test("skal vise 'Legg til periode'-knappen for delt grunnlag selv med pliktig bestemmelse", async ({
       page,
     }, testInfo) => {
