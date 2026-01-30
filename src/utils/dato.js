@@ -12,6 +12,8 @@ import momentTZ from "moment-timezone";
  */
 const MAX_AR_FREM_I_TID = 10;
 
+const FLYT_PRODUKSJON_DATO_EØS_11_3_B = moment("2025-11-15T00:00:00Z");
+
 /** Gjør et beste forsøk på å vaske inputdato. Dersom vask ikke er mulig (feks ved helt feil datoformat eller
  * ugyldig dato, returner false.
  * @param dato
@@ -308,6 +310,7 @@ export {
   formatterKortDatoTilNorsk,
   isoStringTilDate,
   MAX_AR_FREM_I_TID,
+  FLYT_PRODUKSJON_DATO_EØS_11_3_B,
   normaliserInputDato,
   norskStringTilDate,
   perioderOverlapper,
