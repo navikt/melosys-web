@@ -1,22 +1,31 @@
 import { describe, it, test, expect, afterEach, vi } from "vitest";
 import {
   vaskInputDato,
+  vaskOgFormatterTilISO,
   normaliserInputDato,
   formatterDatoTilNorsk,
   formatterDatoTilISO,
   formatterKortDatoTilNorsk,
   datoDiff,
   datoDiffNorskFormat,
+  datoDiffPure,
   datoDiffMenneskelig,
   beregnAlder,
   erGyldigPeriode,
+  erIPeriode,
   erLike,
   erLikeDatoer,
   plussEnDag,
+  norskStringTilDate,
+  isoStringTilDate,
+  dateTilNorskString,
+  dateTilIsoString,
+  perioderOverlapper,
   erFør,
   erEtter,
   sorterEtterNorskFomDato,
   sorterEtterISOFomDato,
+  justerDatoHvisTidligereÅr,
 } from "./dato";
 
 import moment from "moment/moment";
@@ -521,6 +530,132 @@ describe("dato.js:", () => {
       const dato = "28.02.2019";
       const forventetDato = "01.03.2019";
       expect(plussEnDag(dato)).toBe(forventetDato);
+    });
+  });
+
+  describe("vaskOgFormatterTilISO", () => {
+    test("formatterer 6-tegn kortdato til ISO", () => {
+      expect(vaskOgFormatterTilISO("010124")).toBe("2024-01-01");
+    });
+
+    test("formatterer 8-tegn dato til ISO", () => {
+      expect(vaskOgFormatterTilISO("01012024")).toBe("2024-01-01");
+    });
+
+    test("formatterer norsk dato til ISO", () => {
+      expect(vaskOgFormatterTilISO("01.01.2024")).toBe("2024-01-01");
+    });
+
+    test("returnerer defaultValue for ugyldig kortdato", () => {
+      expect(vaskOgFormatterTilISO("abcdef")).toBeNull();
+    });
+
+    test("returnerer custom defaultValue for ugyldig dato", () => {
+      expect(vaskOgFormatterTilISO("abcdef", "fallback")).toBe("fallback");
+    });
+  });
+
+  describe("erIPeriode", () => {
+    test("dato innenfor periode gir true", () => {
+      expect(erIPeriode("2024-01-01", "2024-12-31", "2024-06-15", "[]")).toBe(true);
+    });
+
+    test("dato utenfor periode gir false", () => {
+      expect(erIPeriode("2024-01-01", "2024-12-31", "2025-06-15", "[]")).toBe(false);
+    });
+  });
+
+  describe("datoDiffPure", () => {
+    test("returnerer positiv diff når fom er etter tom", () => {
+      expect(datoDiffPure("2024-06-01", "2024-01-01", "months")).toBeGreaterThan(0);
+    });
+
+    test("returnerer false for ugyldig dato", () => {
+      expect(datoDiffPure("ugyldig", "2024-01-01")).toBe(false);
+    });
+  });
+
+  describe("norskStringTilDate", () => {
+    test("konverterer norsk dato til Date-objekt", () => {
+      const result = norskStringTilDate("15.06.2024");
+      expect(result).toBeInstanceOf(Date);
+      expect(result?.getFullYear()).toBe(2024);
+      expect(result?.getMonth()).toBe(5); // 0-indexed
+      expect(result?.getDate()).toBe(15);
+    });
+
+    test("returnerer undefined for ugyldig dato", () => {
+      expect(norskStringTilDate("ugyldig")).toBeUndefined();
+    });
+  });
+
+  describe("isoStringTilDate", () => {
+    test("konverterer ISO dato til Date-objekt", () => {
+      const result = isoStringTilDate("2024-06-15");
+      expect(result).toBeInstanceOf(Date);
+      expect(result?.getFullYear()).toBe(2024);
+      expect(result?.getDate()).toBe(15);
+    });
+  });
+
+  describe("dateTilNorskString", () => {
+    test("konverterer Date til norsk string", () => {
+      expect(dateTilNorskString(new Date(2024, 5, 15))).toBe("15.06.2024");
+    });
+
+    test("returnerer undefined for null", () => {
+      expect(dateTilNorskString(null)).toBeUndefined();
+    });
+
+    test("returnerer undefined for ikke-Date", () => {
+      expect(dateTilNorskString("not a date")).toBeUndefined();
+    });
+  });
+
+  describe("dateTilIsoString", () => {
+    test("konverterer Date til ISO string", () => {
+      expect(dateTilIsoString(new Date(2024, 5, 15))).toBe("2024-06-15");
+    });
+
+    test("returnerer undefined for null", () => {
+      expect(dateTilIsoString(null)).toBeUndefined();
+    });
+
+    test("returnerer undefined for ikke-Date", () => {
+      expect(dateTilIsoString("not a date")).toBeUndefined();
+    });
+  });
+
+  describe("perioderOverlapper", () => {
+    test("overlappende perioder gir true", () => {
+      expect(perioderOverlapper("01.01.2024", "30.06.2024", "01.03.2024", "31.12.2024")).toBe(true);
+    });
+
+    test("ikke-overlappende perioder gir false", () => {
+      expect(perioderOverlapper("01.01.2024", "28.02.2024", "01.06.2024", "31.12.2024")).toBe(false);
+    });
+
+    test("ugyldig periode gir false", () => {
+      expect(perioderOverlapper("30.06.2024", "01.01.2024", "01.03.2024", "31.12.2024")).toBe(false);
+    });
+  });
+
+  describe("justerDatoHvisTidligereÅr", () => {
+    test("returnerer dato uendret hvis samme år eller fremtidig", () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date("2024-06-15"));
+      expect(justerDatoHvisTidligereÅr("2024-06-01")).toBe("2024-06-01");
+    });
+
+    test("justerer dato til 01.01 i nåværende år hvis tidligere år", () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date("2024-06-15"));
+      expect(justerDatoHvisTidligereÅr("2023-06-01")).toBe("2024-01-01");
+    });
+
+    test("returnerer falsy verdi uendret", () => {
+      expect(justerDatoHvisTidligereÅr(null)).toBeNull();
+      expect(justerDatoHvisTidligereÅr(undefined)).toBeUndefined();
     });
   });
 });
