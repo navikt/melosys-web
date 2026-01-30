@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getFormValues, reduxForm } from "redux-form";
-import { connect, useSelector } from "react-redux";
+import { connect } from "react-redux";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 
