@@ -30,6 +30,8 @@ const mapMedlemskapstypeTekst = (kode: string) => {
 function MedlemskapsPerioderTabell({ perioder }: { perioder?: Avgiftspliktigperiode[] }) {
   if (!perioder) return null;
 
+  const sortertePerioder = [...perioder].sort(Utils.dato.sorterEtterISOFomDato);
+
   return (
     <Nav.Table size="small" className="periode_tabell">
       <Nav.Table.Header className="header_row">
@@ -41,7 +43,7 @@ function MedlemskapsPerioderTabell({ perioder }: { perioder?: Avgiftspliktigperi
         </Nav.Table.Row>
       </Nav.Table.Header>
       <Nav.Table.Body>
-        {perioder.map((medlemskapsPeriode) => (
+        {sortertePerioder.map((medlemskapsPeriode) => (
           <Nav.Table.Row className="border_top" key={Utils._uuid()}>
             <Nav.Table.DataCell>
               {`${Utils.dato.formatterDatoTilNorsk(medlemskapsPeriode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(

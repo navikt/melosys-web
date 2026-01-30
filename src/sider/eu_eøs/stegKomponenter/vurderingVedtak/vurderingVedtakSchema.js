@@ -29,6 +29,7 @@ const vedtak = object().shape({
     is: true,
     then: (schema) => schema.required(MOTTAKERINSTITUSJON_KREVES),
   }),
+  vedtaksbrevFritekst: string().nullable().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
   fritekstSed: string().when("$bestemmelse", {
     is: (bestemmelseVal) => MKVUtils.erStorbritanniaKonvBestemmelse(bestemmelseVal),
     then: (schema) => schema.nullable().max(462, DU_KAN_IKKE_SKRIVE_MER_ENN_462_TEGN),

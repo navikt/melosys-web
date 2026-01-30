@@ -5,6 +5,8 @@ import MKV from "../../../../melosyskodeverk";
 
 import SokkelSkip from "./sokkel_skip";
 import Yrkesgruppe from "./yrkesgruppe";
+import { hentFaktaListe } from "../../../../domeneUtils";
+import { BOOLSK_STRING } from "../../../../constants";
 
 class SaksbehandlingVirksomheter extends Virksomheter {
   constructor(propsLight, stegPosisjon) {
@@ -31,6 +33,46 @@ class SaksbehandlingVirksomheter extends Virksomheter {
     const erArbeidKunNorge =
       MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE === propsLight.behandlingstema.kode;
 
+    const harAvklaring = (vurderingLovvalgBarnFakta, mottatteOpplysningerMedfolgendeBarn) => {
+      return (
+        vurderingLovvalgBarnFakta.length === mottatteOpplysningerMedfolgendeBarn.length &&
+        vurderingLovvalgBarnFakta.every(
+          (enkeltFakta) =>
+            enkeltFakta.fakta.includes(BOOLSK_STRING.SANN) ||
+            (enkeltFakta.fakta.includes(BOOLSK_STRING.USANN) && enkeltFakta.begrunnelseKoder.length > 0),
+        )
+      );
+    };
+
+    const beregnNesteStegForFlyt11_3_b = (propsLight) => {
+      const vurderingLovvalgBarnFakta = hentFaktaListe(
+        MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+        propsLight.avklartefakta,
+      );
+
+      const harAvklaringBarn = harAvklaring(vurderingLovvalgBarnFakta, propsLight.medfolgendeBarn);
+
+      const erInnsynsmodus = !propsLight.generiskStegRedigerbart;
+      if (harAvklaringBarn && erInnsynsmodus) {
+        return STEG.MEDFOLGENDE_BARN;
+      }
+
+      const innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift =
+        !propsLight.generiskStegRedigerbart && !propsLight.harTrygdeavgiftperiode;
+
+      if (propsLight.eøsFaktureringAvTrygdeavgiftToggleEnabled) {
+        if (innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift) {
+          return STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK;
+        }
+
+        return STEG.VURDERING_PERIODE;
+      }
+
+      return STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK;
+    };
+
+    const NESTE_STEG_FOR_11_3_b = beregnNesteStegForFlyt11_3_b(propsLight);
+
     this.kriterier = [
       {
         exec: (avklartefakta) => {
@@ -54,7 +96,7 @@ class SaksbehandlingVirksomheter extends Virksomheter {
       },
       {
         exec: () => harValgtArbeidsgiver && (gårDirekteTilArtikkel16 || propsLight.erArbeidTjenestepersonEllerFly),
-        nesteSteg: STEG.MEDFOLGENDE_BARN,
+        nesteSteg: NESTE_STEG_FOR_11_3_b,
       },
       {
         exec: () => {

@@ -13,6 +13,7 @@ Object.defineProperty(window, "scrollTo", {
 vi.mock("../../../../services/api", () => ({
   Aarsavregning: {
     hentAarsavregning: vi.fn(),
+    hentFiltrertAarsavregningList: vi.fn(),
   },
   DokumenterV2: {
     hentMuligeMottakere: vi.fn(),
@@ -95,6 +96,7 @@ describe("VurderingVedtak", () => {
     };
 
     vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(mockAarsavregningResponse);
+    vi.mocked(Api.Aarsavregning.hentFiltrertAarsavregningList).mockResolvedValue([]);
     vi.mocked(Api.DokumenterV2.hentMuligeMottakere).mockResolvedValue(mockMuligeMottakere);
     vi.mocked(Api.DokumenterV2.hentStandardvedleggForBrev).mockResolvedValue([
       {
@@ -150,6 +152,10 @@ describe("VurderingVedtak", () => {
           begrunnelseFritekst: "Basert på innsendte opplysninger er trygdeavgiften fastsatt til kr 28.000.",
         },
       },
+      aarsavregning: {
+        status: "OK",
+        data: {},
+      },
     };
 
     const { container } = await renderWithProvidersAsync(<VurderingVedtak {...mockProps} />, {
@@ -162,5 +168,266 @@ describe("VurderingVedtak", () => {
     });
 
     expect(container).toMatchSnapshot();
+  });
+});
+
+/**
+ * MELOSYS-7114: Obligatorisk begrunnelse ved ny årsavregning
+ *
+ * Akseptansekriterier:
+ * - AK1: Førstegangsbehandling uten manuell avgift → Begrunnelse IKKE obligatorisk
+ * - AK2: Førstegangsbehandling med manuell avgift → Begrunnelse obligatorisk
+ * - AK3: Ny vurdering uten manuell avgift → Begrunnelse obligatorisk (§ 12-1)
+ * - AK4: Ny vurdering med manuell avgift → Begrunnelse obligatorisk (begge grunner)
+ */
+import { screen, waitFor } from "@testing-library/react";
+
+const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
+
+describe("MELOSYS-7114: Obligatorisk begrunnelse", () => {
+  const createReduxState = () => ({
+    behandlinger: {
+      status: "OK",
+      data: {
+        behandlingID: 12345,
+        redigerbart: true,
+      },
+    },
+    menypanel: {
+      status: "OK",
+      data: {
+        erFullmektigEndret: false,
+      },
+    },
+    fagsaker: {
+      status: "OK",
+      data: {
+        saksnummer: "SAK123456",
+      },
+    },
+    behandlingsresultat: {
+      status: "OK",
+      data: {
+        innledningFritekst: "",
+        begrunnelseFritekst: "",
+      },
+    },
+    aarsavregning: {
+      status: "OK",
+      data: {},
+    },
+  });
+
+  const defaultReduxState = createReduxState();
+
+  const defaultMockProps = {
+    tilbake: vi.fn(),
+    aktivtSteg: true,
+  };
+
+  const createMockAarsavregningResponse = (overrides = {}) => ({
+    aarsavregningID: 12345,
+    aar: 2024,
+    endeligAvgiftValg: BEREGNET_AVGIFT,
+    avregning: {
+      tidligereFakturertBeloep: 25000,
+      trygdeavgiftFraAvgiftssystemet: undefined,
+      beregnetAvgiftBelop: 28000,
+      manueltAvgiftBeloep: undefined,
+    },
+    harTrygdeavgiftFraAvgiftssystemet: false,
+    sisteGjeldendeAvgiftspliktigperioder: [],
+    tidligereTrygdeavgiftsGrunnlagsopplysninger: undefined,
+    ...overrides,
+  });
+
+  const setupMocks = (aarsavregningOverrides = {}, erNyVurdering = false) => {
+    vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(
+      createMockAarsavregningResponse(aarsavregningOverrides),
+    );
+    // Mock hentFiltrertAarsavregningList to control erNyVurdering
+    // erNyVurdering is true when there's a previously FASTSATT aarsavregning for the same year
+    vi.mocked(Api.Aarsavregning.hentFiltrertAarsavregningList).mockResolvedValue(
+      erNyVurdering
+        ? [
+            {
+              aarsavregningId: 99998,
+              behandlingID: 99999, // Different behandlingID
+              aar: 2024,
+              resultattype: { kode: "FASTSATT_TRYGDEAVGIFT", term: "Fastsatt trygdeavgift" },
+            },
+          ]
+        : [],
+    );
+    vi.mocked(Api.DokumenterV2.hentMuligeMottakere).mockResolvedValue({
+      hovedMottaker: {
+        rolle: "SØKER",
+        mottakerNavn: "Ola Nordmann",
+        dokumentNavn: "Vedtak årsavregning 2024",
+        orgnr: null,
+        aktørId: "123456789",
+        institusjonID: null,
+      },
+      kopiMottakere: [],
+      fasteMottakere: [],
+    });
+    vi.mocked(Api.DokumenterV2.hentStandardvedleggForBrev).mockResolvedValue([]);
+    vi.mocked(Api.Trygdeavgift.hentFakturamottaker).mockResolvedValue({ navn: "Acme AS" });
+    vi.mocked(Api.Fagsaker.aktoer.hent).mockResolvedValue([]);
+    vi.mocked(Api.Behandlinger.resultat.oppdaterFritekster).mockResolvedValue({});
+  };
+
+  describe("AK1: Førstegangsbehandling uten manuell avgift", () => {
+    beforeEach(() => {
+      setupMocks({ endeligAvgiftValg: BEREGNET_AVGIFT });
+    });
+
+    it("skal IKKE vise varsel når det er førstegangsbehandling uten manuell avgift", async () => {
+      await renderWithProvidersAsync(<VurderingVedtak {...defaultMockProps} />, {
+        preloadedState: defaultReduxState,
+      });
+
+      await waitFor(() => {
+        expect(screen.getByRole("heading", { name: /Vedtak årsavregning/ })).toBeInTheDocument();
+      });
+
+      // Skal IKKE vise varsel
+      expect(screen.queryByText(/Følgende punkter må begrunnes/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/skatteforvaltningsloven § 12-1/)).not.toBeInTheDocument();
+    });
+
+    it("skal IKKE vise (Obligatorisk) i label", async () => {
+      await renderWithProvidersAsync(<VurderingVedtak {...defaultMockProps} />, {
+        preloadedState: defaultReduxState,
+      });
+
+      await waitFor(() => {
+        expect(screen.getByRole("heading", { name: /Vedtak årsavregning/ })).toBeInTheDocument();
+      });
+
+      // Label skal IKKE ha "(Obligatorisk)"
+      expect(screen.queryByText(/Fritekst til begrunnelse \(Obligatorisk\)/)).not.toBeInTheDocument();
+      expect(screen.getByText(/Fritekst til begrunnelse/)).toBeInTheDocument();
+    });
+  });
+
+  describe("AK2: Førstegangsbehandling med manuell avgift", () => {
+    beforeEach(() => {
+      setupMocks({ endeligAvgiftValg: MANUELL_ENDELIG_AVGIFT });
+    });
+
+    it("skal vise varsel om manuell avgift", async () => {
+      await renderWithProvidersAsync(<VurderingVedtak {...defaultMockProps} />, {
+        preloadedState: defaultReduxState,
+      });
+
+      await waitFor(() => {
+        expect(screen.getByRole("heading", { name: /Vedtak årsavregning/ })).toBeInTheDocument();
+      });
+
+      // Skal vise varsel om manuell avgift
+      await waitFor(() => {
+        expect(screen.getByText(/Følgende punkter må begrunnes/)).toBeInTheDocument();
+        expect(screen.getByText(/hvorfor du har lagt inn «Endelig beregnet trygdeavgift» manuelt/)).toBeInTheDocument();
+      });
+    });
+
+    it("skal vise (Obligatorisk) i label", async () => {
+      await renderWithProvidersAsync(<VurderingVedtak {...defaultMockProps} />, {
+        preloadedState: defaultReduxState,
+      });
+
+      await waitFor(() => {
+        expect(screen.getByRole("heading", { name: /Vedtak årsavregning/ })).toBeInTheDocument();
+      });
+
+      // Label skal ha "(Obligatorisk)"
+      await waitFor(() => {
+        expect(screen.getByText(/Fritekst til begrunnelse \(Obligatorisk\)/)).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe("AK3: Ny vurdering uten manuell avgift", () => {
+    beforeEach(() => {
+      setupMocks({ endeligAvgiftValg: BEREGNET_AVGIFT }, true);
+    });
+
+    it("skal vise varsel om § 12-1", async () => {
+      await renderWithProvidersAsync(<VurderingVedtak {...defaultMockProps} />, {
+        preloadedState: createReduxState(),
+      });
+
+      await waitFor(() => {
+        expect(screen.getByRole("heading", { name: /Vedtak årsavregning/ })).toBeInTheDocument();
+      });
+
+      // Skal vise varsel om § 12-1
+      await waitFor(() => {
+        expect(screen.getByText(/Følgende punkter må begrunnes/)).toBeInTheDocument();
+        expect(
+          screen.getByText(
+            /hvorfor fastsettelsen av trygdeavgiften tas opp igjen etter skatteforvaltningsloven § 12-1/,
+          ),
+        ).toBeInTheDocument();
+      });
+    });
+
+    it("skal vise (Obligatorisk) i label", async () => {
+      await renderWithProvidersAsync(<VurderingVedtak {...defaultMockProps} />, {
+        preloadedState: createReduxState(),
+      });
+
+      await waitFor(() => {
+        expect(screen.getByRole("heading", { name: /Vedtak årsavregning/ })).toBeInTheDocument();
+      });
+
+      // Label skal ha "(Obligatorisk)"
+      await waitFor(() => {
+        expect(screen.getByText(/Fritekst til begrunnelse \(Obligatorisk\)/)).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe("AK4: Ny vurdering med manuell avgift", () => {
+    beforeEach(() => {
+      setupMocks({ endeligAvgiftValg: MANUELL_ENDELIG_AVGIFT }, true);
+    });
+
+    it("skal vise varsel med BEGGE punktene", async () => {
+      await renderWithProvidersAsync(<VurderingVedtak {...defaultMockProps} />, {
+        preloadedState: createReduxState(),
+      });
+
+      await waitFor(() => {
+        expect(screen.getByRole("heading", { name: /Vedtak årsavregning/ })).toBeInTheDocument();
+      });
+
+      // Skal vise begge varseltekster
+      await waitFor(() => {
+        expect(screen.getByText(/Følgende punkter må begrunnes/)).toBeInTheDocument();
+        expect(
+          screen.getByText(
+            /hvorfor fastsettelsen av trygdeavgiften tas opp igjen etter skatteforvaltningsloven § 12-1/,
+          ),
+        ).toBeInTheDocument();
+        expect(screen.getByText(/hvorfor du har lagt inn «Endelig beregnet trygdeavgift» manuelt/)).toBeInTheDocument();
+      });
+    });
+
+    it("skal vise (Obligatorisk) i label", async () => {
+      await renderWithProvidersAsync(<VurderingVedtak {...defaultMockProps} />, {
+        preloadedState: createReduxState(),
+      });
+
+      await waitFor(() => {
+        expect(screen.getByRole("heading", { name: /Vedtak årsavregning/ })).toBeInTheDocument();
+      });
+
+      // Label skal ha "(Obligatorisk)"
+      await waitFor(() => {
+        expect(screen.getByText(/Fritekst til begrunnelse \(Obligatorisk\)/)).toBeInTheDocument();
+      });
+    });
   });
 });
