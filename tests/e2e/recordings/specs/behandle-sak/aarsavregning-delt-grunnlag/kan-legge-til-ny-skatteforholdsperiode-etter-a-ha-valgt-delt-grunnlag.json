@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "recordedAt": "2025-01-01T00:00:00.000Z",
-  "testFile": "/Users/ragnarwestad/develop/nav/melosys-web/tests/e2e/specs/behandle-sak/aarsavregning-delt-grunnlag.spec.ts",
+  "testFile": "/Users/ragnarwestad/develop/nav/melosys-web-2/tests/e2e/specs/behandle-sak/aarsavregning-delt-grunnlag.spec.ts",
   "testName": "Kan legge til ny skatteforholdsperiode etter å ha valgt delt grunnlag",
   "exchanges": [
     {
@@ -316,7 +316,7 @@
                 "arbeidsforholdID": "123",
                 "arbeidsforholdIDnav": 123,
                 "ansettelsesPeriode": {
-                  "fom": "2021-01-05",
+                  "fom": "2021-01-30",
                   "tom": null
                 },
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
@@ -332,13 +332,13 @@
                       "term": "KONSULENT"
                     },
                     "gyldighetsperiode": {
-                      "fom": "2021-01-05",
+                      "fom": "2021-01-30",
                       "tom": null
                     },
                     "avtaltArbeidstimerPerUke": 37.5,
                     "stillingsprosent": 100,
                     "beregnetAntallTimerPrUke": 37.5,
-                    "endringsdatoStillingsprosent": "2021-01-05",
+                    "endringsdatoStillingsprosent": "2021-01-30",
                     "skipsregister": null,
                     "skipstype": null,
                     "maritimArbeidsavtale": false,
@@ -1539,20 +1539,7 @@
         "headers": {
           "content-type": "application/json"
         },
-        "body": [
-          {
-            "kode": "MEDLEMSKAP_LOVVALG",
-            "term": "Medlemskap og lovvalg"
-          },
-          {
-            "kode": "UNNTAK",
-            "term": "Unntak"
-          },
-          {
-            "kode": "TRYGDEAVGIFT",
-            "term": "Trygdeavgift"
-          }
-        ]
+        "body": []
       }
     },
     {
@@ -1576,20 +1563,7 @@
         "headers": {
           "content-type": "application/json"
         },
-        "body": [
-          {
-            "kode": "EU_EOS",
-            "term": "EU/EØS-land"
-          },
-          {
-            "kode": "FTRL",
-            "term": "Utenfor avtaleland"
-          },
-          {
-            "kode": "TRYGDEAVTALE",
-            "term": "Avtaleland"
-          }
-        ]
+        "body": []
       }
     },
     {
@@ -1891,7 +1865,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-01-05",
+                    "gyldigFraOgMed": "2016-01-30",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -1914,7 +1888,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-01-05",
+                    "gyldigFraOgMed": "2016-01-30",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
@@ -2036,7 +2010,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-01-05",
+                    "gyldigFraOgMed": "2016-01-30",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -2059,7 +2033,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-01-05",
+                    "gyldigFraOgMed": "2016-01-30",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
@@ -2363,7 +2337,7 @@
                   "etternavn": "TRIVIELL",
                   "__typename": "Navn"
                 },
-                "kjoenn": "UKJENT",
+                "kjoenn": "MANN",
                 "folkeregisterpersonstatuser": [
                   {
                     "kode": "BOSATT",
@@ -2432,11 +2406,11 @@
           "authorization": "[REDACTED]"
         },
         "body": {
-          "operationName": "hentPersonopplysninger",
+          "operationName": "hentStatsborgerskap",
           "variables": {
             "behandlingID": 41
           },
-          "query": "query hentPersonopplysninger($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      navn {\n        fornavn\n        mellomnavn\n        etternavn\n        __typename\n      }\n      kjoenn\n      folkeregisterpersonstatuser {\n        kode\n        erHistorisk\n        __typename\n      }\n      folkeregisteridentifikator\n      statsborgerskap {\n        land\n        erHistorisk\n        __typename\n      }\n      sivilstand {\n        type\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
+          "query": "query hentStatsborgerskap($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      statsborgerskap {\n        land\n        bekreftelsesdato\n        gyldigFraOgMed\n        gyldigTilOgMed\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
         }
       },
       "response": {
@@ -2449,58 +2423,16 @@
           "data": {
             "hentSaksopplysninger": {
               "persondata": {
-                "navn": {
-                  "fornavn": "KARAFFEL",
-                  "mellomnavn": null,
-                  "etternavn": "TRIVIELL",
-                  "__typename": "Navn"
-                },
-                "kjoenn": "UKJENT",
-                "folkeregisterpersonstatuser": [
-                  {
-                    "kode": "BOSATT",
-                    "erHistorisk": false,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "MIDLERTIDIG",
-                    "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "UTFLYTTET",
-                    "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  }
-                ],
-                "folkeregisteridentifikator": "30056928150",
                 "statsborgerskap": [
                   {
                     "land": "NORGE",
+                    "bekreftelsesdato": null,
+                    "gyldigFraOgMed": "1990-01-01",
+                    "gyldigTilOgMed": null,
+                    "master": "FREG",
+                    "kilde": "Folkeregisteret",
                     "erHistorisk": false,
                     "__typename": "Statsborgerskap"
-                  }
-                ],
-                "sivilstand": [
-                  {
-                    "type": "Gift",
-                    "erHistorisk": false,
-                    "__typename": "Sivilstand"
-                  },
-                  {
-                    "type": "Gift",
-                    "erHistorisk": false,
-                    "__typename": "Sivilstand"
-                  },
-                  {
-                    "type": "Separert",
-                    "erHistorisk": true,
-                    "__typename": "Sivilstand"
-                  },
-                  {
-                    "type": "Skilt",
-                    "erHistorisk": true,
-                    "__typename": "Sivilstand"
                   }
                 ],
                 "__typename": "Personopplysninger"
