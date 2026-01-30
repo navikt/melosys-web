@@ -123,6 +123,7 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
         erArbeidTjenestepersonEllerFly: true,
         medfolgendeBarn: createMedfolgendeBarn(1),
         eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
+        oppsummering: createOppsummering("AVSLUTTET", "2025-11-01"),
       });
 
       const virksomheter = new SaksbehandlingVirksomheter(propsLight, 3);
@@ -192,6 +193,7 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
         erArbeidTjenestepersonEllerFly: true,
         medfolgendeBarn: createMedfolgendeBarn(2),
         eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
+        oppsummering: createOppsummering("AVSLUTTET", "2025-11-01"),
         avklartefakta: [
           {
             referanse: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
@@ -214,6 +216,7 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
         erArbeidTjenestepersonEllerFly: true,
         medfolgendeBarn: createMedfolgendeBarn(1),
         eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
+        oppsummering: createOppsummering("AVSLUTTET", "2025-11-16"),
         avklartefakta: [
           {
             referanse: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
@@ -231,7 +234,7 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
       const nesteSteg = virksomheter.nesteSteg();
 
       expect(nesteSteg).not.toBe(STEG.MEDFOLGENDE_BARN);
-      expect(nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
+      expect(nesteSteg).toBe(STEG.VURDERING_PERIODE);
     });
 
     it("Når VURDERING_LOVVALG_BARN har USANN med begrunnelseKoder, skal harAvklaring være true", () => {
