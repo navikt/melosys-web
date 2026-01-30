@@ -8,7 +8,7 @@ import { anmodningunntakTypes } from "../anmodningunntak";
 import { fagsakTypes } from "../fagsaker";
 import { kontrollTypes } from "../kontroll";
 import { sokTypes } from "../sok";
-import { STATUS } from "../../services/utils";
+import { STATUS } from "../../services";
 
 describe("feiletRespons reducer", () => {
   it("returnerer initial state", () => {

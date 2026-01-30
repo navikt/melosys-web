@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import reducer, { initialState } from "./reducers";
 import * as Types from "./types";
-import { STATUS } from "../../services/utils";
+import { STATUS } from "../../services";
 
 vi.mock("../../utils/land", () => ({
   sorterLandOgGjørOmTilStoreForbokstaver: (data: any) => data,

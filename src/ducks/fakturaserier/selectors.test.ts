@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { FakturaserierSelector } from "./selectors";
-import { STATUS } from "../../services/utils";
+import { STATUS } from "../../services";
 
 const lagState = (fakturaserier: any) => ({ fakturaserier }) as any;
 

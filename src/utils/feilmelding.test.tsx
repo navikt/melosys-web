@@ -47,7 +47,6 @@ describe("syncErrorsTilFeilmelding", () => {
     const syncErrors = {
       felt1: "en ren streng uten melding-property",
     };
-    // @ts-expect-error testing string case
     render(syncErrorsTilFeilmelding(syncErrors));
     const items = screen.getAllByRole("listitem");
     expect(items.some((item) => item.textContent === "Noe gikk galt")).toBe(true);

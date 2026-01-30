@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import * as selectors from "./selectors";
 import * as DucksTestUtils from "../test-utils";
-import { STATUS } from "../../services/utils";
+import { STATUS } from "../../services";
 
 const lagState = (data = {}) =>
   DucksTestUtils.lagState({

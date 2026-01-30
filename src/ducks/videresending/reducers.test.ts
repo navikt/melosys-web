@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import reducer from "./reducers";
 import * as Types from "./types";
-import { STATUS } from "../../services/utils";
+import { STATUS } from "../../services";
 
 describe("videresending reducer", () => {
   it("returnerer initial state", () => {
