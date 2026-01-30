@@ -17,22 +17,22 @@ import { Page } from "@playwright/test";
  * - Inntektsperioder kan legges til/utvides uten valideringsfeil
  */
 
-let aarsavregningPage: AarsavregningPage;
-let valgtTestÅr: string;
-
 /**
- * Hjelpefunksjon for å lage dato med riktig år
+ * Resultat fra setup-funksjonen - returnerer page object og valgt år
  */
-function lagDato(dagMåned: string): string {
-  return `${dagMåned}.${valgtTestÅr}`;
+interface SetupResult {
+  aarsavregningPage: AarsavregningPage;
+  valgtTestÅr: string;
+  lagDato: (dagMåned: string) => string;
 }
 
 /**
  * Gjenbrukbar setup-funksjon som oppretter testdata og navigerer til en årsavregning-behandling
+ * Returnerer lokale variabler for å unngå race conditions ved parallell kjøring
  */
-async function setupAarsavregningTest(page: Page, saksnummer: PrepopulertSaksnummer) {
+async function setupAarsavregningTest(page: Page, saksnummer: PrepopulertSaksnummer): Promise<SetupResult> {
   const behandlingPage = new BehandlingPage(page, saksnummer);
-  aarsavregningPage = new AarsavregningPage(page, saksnummer);
+  const aarsavregningPage = new AarsavregningPage(page, saksnummer);
 
   // Hent URL til prepopulert FTRL-sak med årsavregning og naviger direkte dit
   const url = hentPrepopulertSakUrl(saksnummer);
@@ -49,8 +49,13 @@ async function setupAarsavregningTest(page: Page, saksnummer: PrepopulertSaksnum
   await aarsavregningPage.verifiserAarsavregningside();
 
   // Hent første tilgjengelige år fra dropdown-en og velg det
-  valgtTestÅr = await aarsavregningPage.hentFørsteTilgjengeligeÅr();
+  const valgtTestÅr = await aarsavregningPage.hentFørsteTilgjengeligeÅr();
   await aarsavregningPage.velgÅr(valgtTestÅr);
+
+  // Hjelpefunksjon for å lage dato med riktig år
+  const lagDato = (dagMåned: string): string => `${dagMåned}.${valgtTestÅr}`;
+
+  return { aarsavregningPage, valgtTestÅr, lagDato };
 }
 
 // Hver test oppretter sine egne testdata via setupAarsavregningTest
@@ -61,9 +66,8 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       apiRecorder,
     }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS); // Sett timeout til 30 sekunder for setup
-      await setupAarsavregningTest(page, "MEL-1026");
-      // Velg "Ja" på spør
-      // smålet om å legge til trygdeavgift fra Avgiftssystemet
+      const { aarsavregningPage, lagDato } = await setupAarsavregningTest(page, "MEL-1026");
+      // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
 
       // Velg bestemmelse først - dette er nødvendig for å få trygdedekning-alternativer
@@ -95,7 +99,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
 
     test("Datepicker skal fungere for fra-dato på ny medlemskapsperiode", async ({ page, apiRecorder }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-      await setupAarsavregningTest(page, "MEL-1024");
+      const { aarsavregningPage, valgtTestÅr } = await setupAarsavregningTest(page, "MEL-1024");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -130,7 +134,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       apiRecorder,
     }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-      await setupAarsavregningTest(page, "MEL-1025");
+      const { aarsavregningPage, lagDato } = await setupAarsavregningTest(page, "MEL-1025");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -161,7 +165,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       apiRecorder,
     }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-      await setupAarsavregningTest(page, "MEL-1041");
+      const { aarsavregningPage, lagDato } = await setupAarsavregningTest(page, "MEL-1041");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -189,7 +193,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
 
     test("Kan utvide skatteforholdsperiode innenfor medlemskapsperiode", async ({ page, apiRecorder }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-      await setupAarsavregningTest(page, "MEL-1042");
+      const { aarsavregningPage, lagDato } = await setupAarsavregningTest(page, "MEL-1042");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -226,7 +230,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       page,
     }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-      await setupAarsavregningTest(page, "MEL-1043");
+      const { aarsavregningPage } = await setupAarsavregningTest(page, "MEL-1043");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet (delt grunnlag)
       await aarsavregningPage.velgDeltGrunnlagJa();
 
@@ -251,7 +255,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       apiRecorder,
     }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-      await setupAarsavregningTest(page, "MEL-1044");
+      const { aarsavregningPage, lagDato } = await setupAarsavregningTest(page, "MEL-1044");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet (delt grunnlag)
       await aarsavregningPage.velgDeltGrunnlagJa();
 
@@ -284,7 +288,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
   test.describe("Inntektsperiode validering", () => {
     test("Kan legge til ny inntektsperiode etter å ha valgt delt grunnlag", async ({ page, apiRecorder }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-      await setupAarsavregningTest(page, "MEL-1045");
+      const { aarsavregningPage, lagDato } = await setupAarsavregningTest(page, "MEL-1045");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -319,7 +323,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
 
     test("Kan utvide inntektsperiode innenfor medlemskapsperiode", async ({ page, apiRecorder }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-      await setupAarsavregningTest(page, "MEL-1046");
+      const { aarsavregningPage, lagDato } = await setupAarsavregningTest(page, "MEL-1046");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
@@ -358,7 +362,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
 
     test("Kan legge til flere inntektsperioder innenfor samme år", async ({ page, apiRecorder }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-      await setupAarsavregningTest(page, "MEL-1047");
+      const { aarsavregningPage, lagDato } = await setupAarsavregningTest(page, "MEL-1047");
       // Velg "Ja" på spørsmålet om å legge til trygdeavgift fra Avgiftssystemet
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");

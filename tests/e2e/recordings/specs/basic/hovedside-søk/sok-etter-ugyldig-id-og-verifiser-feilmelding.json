@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "recordedAt": "2025-01-01T00:00:00.000Z",
-  "testFile": "/Users/ragnarwestad/develop/nav/melosys-web/tests/e2e/specs/basic/hovedside-søk.spec.ts",
+  "testFile": "/Users/ragnarwestad/develop/nav/melosys-web-2/tests/e2e/specs/basic/hovedside-søk.spec.ts",
   "testName": "Søk etter ugyldig ID og verifiser feilmelding",
   "exchanges": [
     {
@@ -1072,33 +1072,6 @@
     },
     {
       "request": {
-        "method": "POST",
-        "url": "http://localhost:3333/api/fagsaker/sok",
-        "pathname": "/api/fagsaker/sok",
-        "normalizedPath": "/api/fagsaker/sok",
-        "query": {},
-        "headers": {
-          "accept": "application/json",
-          "content-type": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": {
-          "ident": null,
-          "saksnummer": "INVALID123",
-          "orgnr": null
-        }
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": []
-      }
-    },
-    {
-      "request": {
         "method": "GET",
         "url": "http://localhost:3333/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/?",
         "pathname": "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/",
@@ -1130,6 +1103,35 @@
             "term": "Avtaleland"
           }
         ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3333/api/fagsaker/sok?aktiveBehandlinger=false",
+        "pathname": "/api/fagsaker/sok",
+        "normalizedPath": "/api/fagsaker/sok",
+        "query": {
+          "aktiveBehandlinger": "false"
+        },
+        "headers": {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": {
+          "ident": null,
+          "saksnummer": "INVALID123",
+          "orgnr": null
+        }
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
       }
     }
   ]
