@@ -26,7 +26,7 @@ describe("lovvalgsperioder reducer", () => {
   });
 
   it("RESET tilbakestiller til initial state", () => {
-    const modified = { data: [{ periodeID: 1 }], status: STATUS.OK };
+    const modified = { data: [{ periodeID: 1 }], status: STATUS.OK } as any;
     expect(reducer(modified, { type: Types.RESET })).toEqual(initialState);
   });
 
@@ -44,7 +44,7 @@ describe("lovvalgsperioder reducer", () => {
         { periodeID: 2, fomDato: "2024-06-01" },
       ],
       status: STATUS.OK,
-    };
+    } as any;
     const next = reducer(state, {
       type: Types.OK_OPPDATER_LOVVALGSPERIODE,
       data: { periodeID: 1, fomDato: "2024-03-01" },
@@ -60,7 +60,7 @@ describe("lovvalgsperioder reducer", () => {
         { periodeID: 2, fomDato: "2024-06-01" },
       ],
       status: STATUS.OK,
-    };
+    } as any;
     const next = reducer(state, {
       type: Types.OK_SLETT_LOVVALGSPERIODE,
       data: { periodeID: 1 },
@@ -73,7 +73,7 @@ describe("lovvalgsperioder reducer", () => {
     const state = {
       data: [{ periodeID: 1, fomDato: "2024-01-01", tomDato: "2024-12-31" }],
       status: STATUS.OK,
-    };
+    } as any;
     const next = reducer(state, {
       type: Types.ENDRE_PERIODE,
       data: { fomDato: "2024-03-01", tomDato: "2024-09-30" },
