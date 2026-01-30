@@ -7,6 +7,8 @@ import SokkelSkip from "./sokkel_skip";
 import Yrkesgruppe from "./yrkesgruppe";
 import { hentFaktaListe } from "../../../../domeneUtils";
 import { BOOLSK_STRING } from "../../../../constants";
+import { FLYT_PRODUKSJON_DATO_EØS_11_3_B } from "../../../../utils/dato";
+import moment from "moment";
 
 class SaksbehandlingVirksomheter extends Virksomheter {
   constructor(propsLight, stegPosisjon) {
@@ -53,15 +55,16 @@ class SaksbehandlingVirksomheter extends Virksomheter {
 
       const harAvklaringBarn = harAvklaring(vurderingLovvalgBarnFakta, propsLight.medfolgendeBarn);
       const erInnsynsmodus = !propsLight.generiskStegRedigerbart;
+
       if (harAvklaringBarn && erInnsynsmodus) {
         return STEG.MEDFOLGENDE_BARN;
       }
 
       const oppsummering = propsLight.oppsummering;
-      const flytProduksjonDato = new Date("2025-11-15T00:00:00Z");
 
       const behandlingAvsluttetFørNyEndringEØS_11_3_b =
-        oppsummering.behandlingsstatus.kode === "AVSLUTTET" && new Date(oppsummering.endretDato) < flytProduksjonDato;
+        oppsummering.behandlingsstatus.kode === "AVSLUTTET" &&
+        moment(oppsummering.endretDato).isBefore(FLYT_PRODUKSJON_DATO_EØS_11_3_B);
 
       const innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift =
         !propsLight.generiskStegRedigerbart && behandlingAvsluttetFørNyEndringEØS_11_3_b;

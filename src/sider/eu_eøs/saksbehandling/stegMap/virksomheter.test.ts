@@ -4,12 +4,17 @@ import { STEG } from "../../../../felleskomponenter/stegvelger";
 import * as KV from "../../../../kodeverk";
 import MKV from "../../../../melosyskodeverk";
 import { BOOLSK_STRING } from "../../../../constants";
+import { FLYT_PRODUKSJON_DATO_EØS_11_3_B } from "../../../../utils/dato";
+
+// Datoer avledet fra produksjonsdatoen for å sikre konsistens
+const DATO_FØR_PRODUKSJON = FLYT_PRODUKSJON_DATO_EØS_11_3_B.clone().subtract(14, "days").toISOString();
+const DATO_ETTER_PRODUKSJON = FLYT_PRODUKSJON_DATO_EØS_11_3_B.clone().add(1, "days").toISOString();
 
 describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende personell flyt", () => {
   // Helper for å lage oppsummering med behandlingsstatus og endretDato
   const createOppsummering = (
     behandlingsstatusKode: string = "UNDER_BEHANDLING",
-    endretDato: string = "2026-02-01", // Default: etter flytProduksjonDato
+    endretDato: string = DATO_ETTER_PRODUKSJON, // Default: etter flytProduksjonDato
   ) => ({
     behandlingsstatus: { kode: behandlingsstatusKode },
     endretDato,
@@ -123,7 +128,7 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
         erArbeidTjenestepersonEllerFly: true,
         medfolgendeBarn: createMedfolgendeBarn(1),
         eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
-        oppsummering: createOppsummering("AVSLUTTET", "2025-11-01"),
+        oppsummering: createOppsummering("AVSLUTTET", DATO_FØR_PRODUKSJON),
       });
 
       const virksomheter = new SaksbehandlingVirksomheter(propsLight, 3);
@@ -193,7 +198,7 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
         erArbeidTjenestepersonEllerFly: true,
         medfolgendeBarn: createMedfolgendeBarn(2),
         eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
-        oppsummering: createOppsummering("AVSLUTTET", "2025-11-01"),
+        oppsummering: createOppsummering("AVSLUTTET", DATO_FØR_PRODUKSJON),
         avklartefakta: [
           {
             referanse: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
@@ -216,7 +221,7 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
         erArbeidTjenestepersonEllerFly: true,
         medfolgendeBarn: createMedfolgendeBarn(1),
         eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
-        oppsummering: createOppsummering("AVSLUTTET", "2025-11-16"),
+        oppsummering: createOppsummering("AVSLUTTET", DATO_ETTER_PRODUKSJON),
         avklartefakta: [
           {
             referanse: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
@@ -264,9 +269,6 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
   });
 
   describe("Innsyn: Dato-basert logikk for visning av legacy komponent", () => {
-    const DATO_FØR_PRODUKSJON = "2025-11-01T00:00:00Z";
-    const DATO_ETTER_PRODUKSJON = "2025-11-16T00:00:00Z"; // Etter 2025-11-15
-
     it("Avsluttet behandling FØR flytProduksjonDato skal bruke legacy komponent (gå til ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK)", () => {
       const propsLight = createMockPropsLight({
         generiskStegRedigerbart: false,

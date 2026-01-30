@@ -5,6 +5,8 @@ import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/stegLegacy"
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingMedfolgendeBarn from "../../stegKomponenter/vurderingMedfolgendeBarn";
 import { hentFaktaListe } from "../../../../domeneUtils";
+import { FLYT_PRODUKSJON_DATO_EØS_11_3_B } from "../../../../utils/dato";
+import moment from "moment";
 
 class VesentligVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -66,10 +68,10 @@ class VesentligVirksomhet extends Steg {
 
   beregnNesteStegForFlyt11_3_b = (propsLight) => {
     const oppsummering = propsLight.oppsummering;
-    const flytProduksjonDato = new Date("2025-11-15T00:00:00Z");
 
     const behandlingAvsluttetFørNyEndringEØS_11_3_b =
-      oppsummering.behandlingsstatus.kode === "AVSLUTTET" && new Date(oppsummering.endretDato) < flytProduksjonDato;
+      oppsummering.behandlingsstatus.kode === "AVSLUTTET" &&
+      moment(oppsummering.endretDato).isBefore(FLYT_PRODUKSJON_DATO_EØS_11_3_B);
 
     const innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift =
       !propsLight.generiskStegRedigerbart && behandlingAvsluttetFørNyEndringEØS_11_3_b;
