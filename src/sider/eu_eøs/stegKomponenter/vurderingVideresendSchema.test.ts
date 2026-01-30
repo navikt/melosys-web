@@ -1,0 +1,50 @@
+import { describe, it, expect, beforeAll } from "vitest";
+import type { ValidationError } from "yup";
+
+const getErrors = async (schema: any, values: any): Promise<string[]> => {
+  try {
+    await schema.validate(values, { abortEarly: false });
+    return [];
+  } catch (error) {
+    const ve = error as ValidationError;
+    return (
+      ve.inner?.map((e) => {
+        const msg = (e as any).message;
+        return typeof msg === "object" ? msg.melding : msg;
+      }) || []
+    );
+  }
+};
+
+describe("vurderingVideresendSchema", () => {
+  let schema: any;
+
+  beforeAll(async () => {
+    const mod = await import("./vurderingVideresendSchema");
+    schema = mod.default;
+  });
+
+  it("should accept valid values when mottakerinstitusjon is required", async () => {
+    const errors = await getErrors(schema, {
+      kreverMottakerinstitusjon: true,
+      mottakerinstitusjon: "SE:12345",
+    });
+    expect(errors).toEqual([]);
+  });
+
+  it("should accept missing mottakerinstitusjon when not required", async () => {
+    const errors = await getErrors(schema, {
+      kreverMottakerinstitusjon: false,
+      mottakerinstitusjon: undefined,
+    });
+    expect(errors).toEqual([]);
+  });
+
+  it("should require mottakerinstitusjon when kreverMottakerinstitusjon is true", async () => {
+    const errors = await getErrors(schema, {
+      kreverMottakerinstitusjon: true,
+      mottakerinstitusjon: undefined,
+    });
+    expect(errors.some((e) => e.includes("Velg mottakerinstitusjon"))).toBe(true);
+  });
+});
