@@ -5,7 +5,7 @@ import MKV from "../../../../../melosyskodeverk";
 const { OPPLYSNINGER_ENDRET } = MKV.Koder.endeligAvgiftValg;
 const { PLIKTIG } = MKV.Koder.medlemskapstyper;
 
-const validate = async (values, context = {}) => {
+const validate = async (values: Record<string, unknown>, context: Record<string, unknown> = {}) => {
   try {
     await aarsavregningUtenEllerDeltGrunnlagSchema.validate(values, {
       abortEarly: false,
@@ -17,7 +17,15 @@ const validate = async (values, context = {}) => {
   }
 };
 
-const hasError = (err, path, message) => {
+const hasError = (
+  err: {
+    inner?: { path?: string; message?: string | { melding?: string } }[];
+    path?: string;
+    message?: string | { melding?: string };
+  } | null,
+  path: string,
+  message?: string,
+) => {
   if (!err) return false;
   const errors = Array.isArray(err.inner) ? err.inner : [err];
   return errors.some((e) => {
