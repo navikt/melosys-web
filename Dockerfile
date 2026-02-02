@@ -1,9 +1,11 @@
 FROM nginxinc/nginx-unprivileged
 
-# Fjern avhenigheter som ikke er nødvendige for å kjøre nginx, og som skaper CVEs.
+# Fjern avhengigheter som ikke er nødvendige for å kjøre nginx, og som skaper CVEs.
+# Oppgrader OpenSSL for å fikse CVE-2025-15467
 USER root
 RUN apt-get update && \
     apt-get remove -y curl && \
+    apt-get install -y --only-upgrade openssl libssl3 openssl-provider-legacy && \
     apt-get upgrade -y && \
     apt-get autoremove -y && \
     apt-get clean && \
