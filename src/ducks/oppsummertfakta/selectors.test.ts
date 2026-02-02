@@ -37,4 +37,21 @@ describe("oppsummertfakta selectors", () => {
     const state = lagState({ ukjentSluttdatoMedlemskapsperiode: true });
     expect(selectors.UkjentSluttdatoMedlemskapsperiodeSelector(state)).toBe(true);
   });
+
+  it("IkkeYrkesaktivOppholdSelector returnerer oppholdstype", () => {
+    const state = lagState({ ikkeYrkesaktivOppholdstype: "MIDLERTIDIG" });
+    expect(selectors.IkkeYrkesaktivOppholdSelector(state)).toBe("MIDLERTIDIG");
+  });
+
+  it("VirksomheterSelector returnerer virksomheter-objekt", () => {
+    const virksomheter = { virksomhetIDer: [1] };
+    const state = lagState({ virksomheter });
+    expect(selectors.VirksomheterSelector(state)).toEqual(virksomheter);
+  });
+
+  it("OppsummertFaktaDataSelector returnerer data", () => {
+    const data = { arbeidssituasjonType: "TEST" };
+    const state = lagState(data);
+    expect(selectors.OppsummertFaktaDataSelector(state)).toEqual(data);
+  });
 });

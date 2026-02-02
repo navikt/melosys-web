@@ -12,6 +12,7 @@ import {
   arrayTilKonjunksjon,
   separerListeMedBindestrek,
   tryParseFloat,
+  tryParseBool,
   harStrengInnhold,
 } from "./streng";
 import { BOOLSK_STRING } from "../constants";
@@ -248,6 +249,48 @@ describe("streng.js", () => {
     });
     test("<p></p> gir false", () => {
       expect(harStrengInnhold("<p></p>")).toBeFalsy();
+    });
+    test("<p><br></p> gir false", () => {
+      expect(harStrengInnhold("<p><br></p>")).toBeFalsy();
+    });
+  });
+
+  describe("tryParseBool", () => {
+    test("returnerer true for boolean true", () => {
+      expect(tryParseBool(true)).toBe(true);
+    });
+    test("returnerer false for boolean false", () => {
+      expect(tryParseBool(false)).toBe(false);
+    });
+    test('returnerer true for "true"', () => {
+      expect(tryParseBool("true")).toBe(true);
+    });
+    test('returnerer true for "TRUE"', () => {
+      expect(tryParseBool("TRUE")).toBe(true);
+    });
+    test('returnerer false for "false"', () => {
+      expect(tryParseBool("false")).toBe(false);
+    });
+    test('returnerer false for "FALSE"', () => {
+      expect(tryParseBool("FALSE")).toBe(false);
+    });
+    test("returnerer undefined for ugyldig streng", () => {
+      expect(tryParseBool("kanskje")).toBeUndefined();
+    });
+  });
+
+  describe("storeForbokstaverForLand - spesialtilfeller", () => {
+    test("USA forblir uppercase", () => {
+      expect(storeForbokstaverForLand("USA")).toBe("USA");
+    });
+  });
+
+  describe("storeForbokstaver - edge cases", () => {
+    test("håndterer null", () => {
+      expect(storeForbokstaver(null)).toBeUndefined();
+    });
+    test("håndterer undefined", () => {
+      expect(storeForbokstaver(undefined)).toBeUndefined();
     });
   });
 });
