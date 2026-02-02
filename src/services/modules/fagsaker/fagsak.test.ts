@@ -45,7 +45,15 @@ describe("fagsak", () => {
   });
 
   it("videresend returnerer promise", () => {
-    expect(videresend("123", { mottakerinstitusjon: null, fritekst: null, vedlegg: [] })).toBeInstanceOf(Promise);
+    expect(
+      videresend("123", {
+        mottakerinstitusjon: null,
+        fritekst: null,
+        ytterligereInformasjonSed: null,
+        a008Formaal: null,
+        vedlegg: [],
+      }),
+    ).toBeInstanceOf(Promise);
   });
 
   it("utpek returnerer promise", () => {
