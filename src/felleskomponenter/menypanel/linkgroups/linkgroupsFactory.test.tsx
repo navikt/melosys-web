@@ -104,30 +104,6 @@ describe("LinkGroupsFactory", () => {
       expect(allLabels).not.toContain("Arbeidssted(er)");
     });
 
-    it("skal IKKE inkludere Arbeidsgiver/virksomhet for BESLUTNING_LOVVALG_NORGE", () => {
-      const config = createConfig({
-        behandlingstype: ÅRSAVREGNING,
-        behandlingstema: BESLUTNING_LOVVALG_NORGE,
-      });
-
-      const linkGroups = LinkGroupsFactory.createLinkGroups(config);
-      const allLabels = getAllLabels(linkGroups);
-
-      expect(allLabels).not.toContain("Arbeidsgiver/virksomhet");
-    });
-
-    it("skal IKKE inkludere Arbeidssted(er) for BESLUTNING_LOVVALG_NORGE", () => {
-      const config = createConfig({
-        behandlingstype: ÅRSAVREGNING,
-        behandlingstema: BESLUTNING_LOVVALG_NORGE,
-      });
-
-      const linkGroups = LinkGroupsFactory.createLinkGroups(config);
-      const allLabels = getAllLabels(linkGroups);
-
-      expect(allLabels).not.toContain("Arbeidssted(er)");
-    });
-
     it("skal IKKE inkludere Arbeidsgiver/virksomhet for YRKESAKTIV", () => {
       const config = createConfig({
         behandlingstype: ÅRSAVREGNING,
@@ -190,18 +166,6 @@ describe("LinkGroupsFactory", () => {
       expect(allLabels).toContain("Arbeidssted(er)");
     });
 
-    it("skal inkludere Arbeidsgiver/virksomhet for BESLUTNING_LOVVALG_NORGE", () => {
-      const config = createConfig({
-        behandlingstype: SØKNAD,
-        behandlingstema: BESLUTNING_LOVVALG_NORGE,
-      });
-
-      const linkGroups = LinkGroupsFactory.createLinkGroups(config);
-      const allLabels = getAllLabels(linkGroups);
-
-      expect(allLabels).toContain("Arbeidsgiver/virksomhet");
-    });
-
     it("skal inkludere Arbeidssted(er) for YRKESAKTIV", () => {
       const config = createConfig({
         behandlingstype: SØKNAD,
@@ -212,6 +176,44 @@ describe("LinkGroupsFactory", () => {
       const allLabels = getAllLabels(linkGroups);
 
       expect(allLabels).toContain("Arbeidssted(er)");
+    });
+  });
+
+  describe("BESLUTNING_LOVVALG_NORGE uten Fra bruker-seksjon", () => {
+    it("skal IKKE inkludere Arbeidsgiver/virksomhet", () => {
+      const config = createConfig({
+        behandlingstype: SØKNAD,
+        behandlingstema: BESLUTNING_LOVVALG_NORGE,
+      });
+
+      const linkGroups = LinkGroupsFactory.createLinkGroups(config);
+      const allLabels = getAllLabels(linkGroups);
+
+      expect(allLabels).not.toContain("Arbeidsgiver/virksomhet");
+    });
+
+    it("skal IKKE inkludere Arbeidssted(er)", () => {
+      const config = createConfig({
+        behandlingstype: SØKNAD,
+        behandlingstema: BESLUTNING_LOVVALG_NORGE,
+      });
+
+      const linkGroups = LinkGroupsFactory.createLinkGroups(config);
+      const allLabels = getAllLabels(linkGroups);
+
+      expect(allLabels).not.toContain("Arbeidssted(er)");
+    });
+
+    it("skal IKKE inkludere Fullmektig", () => {
+      const config = createConfig({
+        behandlingstype: SØKNAD,
+        behandlingstema: BESLUTNING_LOVVALG_NORGE,
+      });
+
+      const linkGroups = LinkGroupsFactory.createLinkGroups(config);
+      const allLabels = getAllLabels(linkGroups);
+
+      expect(allLabels).not.toContain("Fullmektig");
     });
   });
 });

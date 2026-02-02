@@ -159,14 +159,9 @@ class LinkGroupsFactory {
           .build();
       }
       case BESLUTNING_LOVVALG_NORGE: {
-        const fraBrukerBuilder = new LinksBuilder(contentProps);
-        if (behandlingstype !== ÅRSAVREGNING) fraBrukerBuilder.addArbeidsgiverEllerVirksomhet();
-        fraBrukerBuilder.addFullmektig().addPeriode();
-        if (behandlingstype !== ÅRSAVREGNING) fraBrukerBuilder.addArbeidssteder();
         return new LinkgroupsBuilder()
           .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
           .addFraRegister(new LinksBuilder(contentProps).addMedlemskap().addArbeidsforholdOgInntekt().build())
-          .addFraBruker(fraBrukerBuilder.build())
           .build();
       }
       case YRKESAKTIV: {
