@@ -26,6 +26,8 @@ import {
   sorterEtterNorskFomDato,
   sorterEtterISOFomDato,
   justerDatoHvisTidligereÅr,
+  vaskOgFormatterDatoTilNorsk,
+  vaskOgFormaterDatoerTilIso,
 } from "./dato";
 
 import moment from "moment/moment";
@@ -656,6 +658,76 @@ describe("dato.js:", () => {
     test("returnerer falsy verdi uendret", () => {
       expect(justerDatoHvisTidligereÅr(null)).toBeNull();
       expect(justerDatoHvisTidligereÅr(undefined)).toBeUndefined();
+    });
+  });
+
+  describe("vaskOgFormatterDatoTilNorsk", () => {
+    test("vasker og formatterer 6-tegn kortdato til norsk", () => {
+      expect(vaskOgFormatterDatoTilNorsk("150624")).toBe("15.06.2024");
+    });
+
+    test("vasker og formatterer 8-tegn dato til norsk", () => {
+      expect(vaskOgFormatterDatoTilNorsk("15062024")).toBe("15.06.2024");
+    });
+
+    test("formatterer ISO-dato til norsk", () => {
+      expect(vaskOgFormatterDatoTilNorsk("2024-06-15")).toBe("15.06.2024");
+    });
+
+    test("returnerer defaultValue for ugyldig kortdato", () => {
+      expect(vaskOgFormatterDatoTilNorsk("abcdef", "fallback")).toBe("fallback");
+    });
+
+    test("returnerer tom streng som default for ugyldig dato", () => {
+      expect(vaskOgFormatterDatoTilNorsk("ugyldig")).toBe("");
+    });
+  });
+
+  describe("vaskOgFormaterDatoerTilIso", () => {
+    test("konverterer fomDato og tomDato til ISO-format", () => {
+      const perioder = [{ fomDato: "01.01.2024", tomDato: "30.06.2024", annet: "beholdes" }];
+      const resultat = vaskOgFormaterDatoerTilIso(perioder);
+      expect(resultat[0].fomDato).toBe("2024-01-01");
+      expect(resultat[0].tomDato).toBe("2024-06-30");
+      expect(resultat[0].annet).toBe("beholdes");
+    });
+
+    test("returnerer tom array for ikke-array input", () => {
+      expect(vaskOgFormaterDatoerTilIso(null as any)).toEqual([]);
+      expect(vaskOgFormaterDatoerTilIso(undefined as any)).toEqual([]);
+    });
+
+    test("bruker defaultValue for manglende datoer", () => {
+      const perioder = [{ fomDato: null, tomDato: null }];
+      const resultat = vaskOgFormaterDatoerTilIso(perioder);
+      expect(resultat[0].fomDato).toBeUndefined();
+      expect(resultat[0].tomDato).toBeUndefined();
+    });
+
+    test("håndterer tom array", () => {
+      expect(vaskOgFormaterDatoerTilIso([])).toEqual([]);
+    });
+  });
+
+  describe("datoDiff - edge cases", () => {
+    test("returnerer false for ugyldig dato", () => {
+      expect(datoDiff("ugyldig", "2024-01-01")).toBe(false);
+    });
+  });
+
+  describe("datoDiffMenneskelig - edge cases", () => {
+    test("returnerer false for ugyldig dato", () => {
+      expect(datoDiffMenneskelig("ugyldig", "2024-01-01")).toBe(false);
+    });
+  });
+
+  describe("formatterDatoTilISO - edge cases", () => {
+    test("returnerer defaultValue for ugyldig dato", () => {
+      expect(formatterDatoTilISO("ugyldig")).toBe("Invalid date");
+    });
+
+    test("returnerer custom defaultValue for ugyldig dato", () => {
+      expect(formatterDatoTilISO("ugyldig", null)).toBeNull();
     });
   });
 });
