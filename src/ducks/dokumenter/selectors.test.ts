@@ -1,9 +1,11 @@
 import { DokumentOversikt } from "Domene";
 
 import * as selectors from "./selectors";
+import { hentDato } from "./selectors";
 import * as Types from "./types";
 import * as DucksTestUtils from "../test-utils";
-import { STATUS } from "../../services/utils";
+import { STATUS } from "../../services";
+import MKV from "../../melosyskodeverk";
 
 describe("DokumenterSelectors", () => {
   const lagDokumentOversiktState = ({ dokumentOversikt = [] }: Types.Data) =>
@@ -102,6 +104,23 @@ describe("DokumenterSelectors", () => {
       expect(titler).toContainEqual("Søknad om A1");
       expect(titler).toContainEqual("Vedlegg 1");
       expect(titler).toContainEqual("Vedlegg 2");
+    });
+  });
+
+  describe("hentDato", () => {
+    it("returnerer mottattDato for inngående dokument", () => {
+      const mottaksretning = { kode: MKV.Koder.mottaksretning.INN, term: "Inngående" };
+      expect(hentDato(mottaksretning, "2024-01-15", "2024-01-20")).toBe("2024-01-15");
+    });
+
+    it("returnerer journalforingDato for utgående dokument", () => {
+      const mottaksretning = { kode: MKV.Koder.mottaksretning.UT, term: "Utgående" };
+      expect(hentDato(mottaksretning, "2024-01-15", "2024-01-20")).toBe("2024-01-20");
+    });
+
+    it("returnerer journalforingDato for inngående uten mottattDato", () => {
+      const mottaksretning = { kode: MKV.Koder.mottaksretning.INN, term: "Inngående" };
+      expect(hentDato(mottaksretning, null, "2024-01-20")).toBe("2024-01-20");
     });
   });
 });

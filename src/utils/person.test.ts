@@ -89,6 +89,19 @@ describe("Tester person.js:", () => {
     });
   });
 
+  describe("tilSammensattNavnFraObjekt", () => {
+    test("returnerer sammensatt navn fra objekt", () => {
+      expect(Person.tilSammensattNavnFraObjekt({ fornavn: "Per", mellomnavn: "Pål", etternavn: "Askeladden" })).toBe(
+        "Per Pål Askeladden",
+      );
+    });
+
+    test("returnerer tom streng for null/undefined", () => {
+      expect(Person.tilSammensattNavnFraObjekt(null)).toBe("");
+      expect(Person.tilSammensattNavnFraObjekt(undefined)).toBe("");
+    });
+  });
+
   describe("tilSammensattNavn", () => {
     test("riktig med mellomnavn", () => {
       const fornavn = "Per";

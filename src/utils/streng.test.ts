@@ -10,6 +10,9 @@ import {
   storeForbokstaver,
   storeForbokstaverForLand,
   arrayTilKonjunksjon,
+  separerListeMedBindestrek,
+  tryParseFloat,
+  tryParseBool,
   harStrengInnhold,
 } from "./streng";
 import { BOOLSK_STRING } from "../constants";
@@ -185,6 +188,55 @@ describe("streng.js", () => {
       expect(arrayTilKonjunksjon(liste as any)).toEqual(forventetResultat);
     });
   });
+  describe("tryParseFloat", () => {
+    test("returnerer null for falsy verdier", () => {
+      expect(tryParseFloat(null)).toBeNull();
+      expect(tryParseFloat(undefined)).toBeNull();
+      expect(tryParseFloat(0)).toBeNull();
+    });
+
+    test("returnerer number direkte", () => {
+      expect(tryParseFloat(42.5)).toBe(42.5);
+    });
+
+    test("parser string til float", () => {
+      expect(tryParseFloat("3.14")).toBe(3.14);
+    });
+
+    test("returnerer null for ugyldig string", () => {
+      expect(tryParseFloat("abc")).toBeNull();
+    });
+  });
+
+  describe("separerListeMedBindestrek", () => {
+    test("separerer liste med bindestrek", () => {
+      expect(separerListeMedBindestrek(["Foo", "Bar", "Baz"])).toBe("Foo - Bar - Baz");
+    });
+
+    test("ett element gir kun elementet", () => {
+      expect(separerListeMedBindestrek(["Foo"])).toBe("Foo");
+    });
+
+    test("tom array gir tom streng", () => {
+      expect(separerListeMedBindestrek([])).toBe("");
+    });
+
+    test("håndterer falsy input", () => {
+      expect(separerListeMedBindestrek(null as any)).toBe("");
+    });
+
+    test("håndterer string input", () => {
+      expect(separerListeMedBindestrek("Foo, Bar" as any)).toBe("Foo, Bar");
+    });
+  });
+
+  describe("arrayTilKonjunksjon med falsy input", () => {
+    test("håndterer null/undefined", () => {
+      expect(arrayTilKonjunksjon(null as any)).toBe("");
+      expect(arrayTilKonjunksjon(undefined as any)).toBe("");
+    });
+  });
+
   describe("harStrengInnhold", () => {
     test("streng med innhold gir true", () => {
       expect(harStrengInnhold("En streng")).toBeTruthy();
@@ -197,6 +249,48 @@ describe("streng.js", () => {
     });
     test("<p></p> gir false", () => {
       expect(harStrengInnhold("<p></p>")).toBeFalsy();
+    });
+    test("<p><br></p> gir false", () => {
+      expect(harStrengInnhold("<p><br></p>")).toBeFalsy();
+    });
+  });
+
+  describe("tryParseBool", () => {
+    test("returnerer true for boolean true", () => {
+      expect(tryParseBool(true)).toBe(true);
+    });
+    test("returnerer false for boolean false", () => {
+      expect(tryParseBool(false)).toBe(false);
+    });
+    test('returnerer true for "true"', () => {
+      expect(tryParseBool("true")).toBe(true);
+    });
+    test('returnerer true for "TRUE"', () => {
+      expect(tryParseBool("TRUE")).toBe(true);
+    });
+    test('returnerer false for "false"', () => {
+      expect(tryParseBool("false")).toBe(false);
+    });
+    test('returnerer false for "FALSE"', () => {
+      expect(tryParseBool("FALSE")).toBe(false);
+    });
+    test("returnerer undefined for ugyldig streng", () => {
+      expect(tryParseBool("kanskje")).toBeUndefined();
+    });
+  });
+
+  describe("storeForbokstaverForLand - spesialtilfeller", () => {
+    test("USA forblir uppercase", () => {
+      expect(storeForbokstaverForLand("USA")).toBe("USA");
+    });
+  });
+
+  describe("storeForbokstaver - edge cases", () => {
+    test("håndterer null", () => {
+      expect(storeForbokstaver(null)).toBeUndefined();
+    });
+    test("håndterer undefined", () => {
+      expect(storeForbokstaver(undefined)).toBeUndefined();
     });
   });
 });
