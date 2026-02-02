@@ -35,8 +35,8 @@ const arbeid_tjenesteperson_eller_fly_vedtak = object().shape({
       }),
     }),
   ),
-  vedtaksbrevFritekst: string().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
-  fritekstSed: string().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
+  vedtaksbrevFritekst: string().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN).nullable(),
+  fritekstSed: string().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN).nullable(),
   kreverMottakerinstitusjon: bool().required(),
   mottakerinstitusjon: string().when("kreverMottakerinstitusjon", {
     is: true,
