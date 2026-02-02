@@ -494,6 +494,7 @@ class Stegvelger extends Component {
       art11_4_1eller13_4_1: props.art11_4_1eller13_4_1,
       art11_4_2eller13_4_2: props.art11_4_2eller13_4_2,
       eøsFaktureringAvTrygdeavgiftToggleEnabled: props.eøsFaktureringAvTrygdeavgiftToggleEnabled,
+      oppsummering: props.oppsummering,
       harTrygdeavgiftperiode,
     };
 

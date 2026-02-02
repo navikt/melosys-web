@@ -195,7 +195,12 @@ export function VurderingArtikkel13_x_vedtak({
       {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
       <Nav.Row className="fritekst">
         <Nav.Column xs="8">
-          <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekst til begrunnelse" readOnly={!redigerbart} />
+          <Skjema.Textarea
+            feltNavn="vedtaksbrevFritekst"
+            label="Fritekst til begrunnelse"
+            readOnly={!redigerbart}
+            maxLength={500}
+          />
         </Nav.Column>
       </Nav.Row>
       {skalViseSedAlternativer && (
@@ -204,6 +209,7 @@ export function VurderingArtikkel13_x_vedtak({
             <Skjema.Textarea
               label="Ytterligere informasjon til SED (valgfri)"
               feltNavn="fritekstSed"
+              maxLength={500}
               readOnly={!redigerbart}
             />
           </Nav.Column>

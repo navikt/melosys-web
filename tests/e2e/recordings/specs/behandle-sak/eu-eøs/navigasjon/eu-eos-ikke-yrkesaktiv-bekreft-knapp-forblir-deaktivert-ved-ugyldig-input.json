@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "recordedAt": "2025-01-01T00:00:00.000Z",
-  "testFile": "/Users/ragnarwestad/develop/nav/melosys-web/tests/e2e/specs/behandle-sak/eu-eøs/navigasjon.spec.ts",
+  "testFile": "/Users/ragnarwestad/develop/nav/melosys-web-2/tests/e2e/specs/behandle-sak/eu-eøs/navigasjon.spec.ts",
   "testName": "EU/EØS Ikke yrkesaktiv - Bekreft-knapp forblir deaktivert ved ugyldig input",
   "exchanges": [
     {
@@ -608,7 +608,7 @@
                   "etternavn": "TRIVIELL",
                   "__typename": "Navn"
                 },
-                "kjoenn": "UKJENT",
+                "kjoenn": "MANN",
                 "folkeregisterpersonstatuser": [
                   {
                     "kode": "BOSATT",
