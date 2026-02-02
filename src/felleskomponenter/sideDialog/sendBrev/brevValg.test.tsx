@@ -20,7 +20,7 @@ const defaultProps = {
   width: "12" as any,
   redigerbart: true,
   changeField: vi.fn(),
-  finnValgAlternativ: vi.fn(() => ({ visFelt: true })),
+  finnValgAlternativ: vi.fn(() => ({ visFelt: true })) as any,
 };
 
 describe("BrevValg", () => {
@@ -58,7 +58,11 @@ describe("BrevValg", () => {
       },
     } as any;
     render(
-      <BrevValg {...defaultProps} formValues={formValues} finnValgAlternativ={vi.fn(() => ({ visFelt: true }))} />,
+      <BrevValg
+        {...defaultProps}
+        formValues={formValues}
+        finnValgAlternativ={vi.fn(() => ({ visFelt: true })) as any}
+      />,
     );
     expect(screen.queryByText("Valg: FRITEKST")).toBeNull();
     expect(screen.getByText("BrevFelt: FRITEKST")).toBeDefined();

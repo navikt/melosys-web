@@ -25,29 +25,35 @@ const { BRUKER, VIRKSOMHET } = MKV.Koder.aktoersroller;
 
 describe("Informasjonlinje", () => {
   it("rendrer personlinje for BRUKER-rolle", () => {
-    render(<Informasjonlinje behandlingID={1} saksnummer="123" hovedpartRolle={BRUKER} />);
+    render(<Informasjonlinje {...({ behandlingID: 1, saksnummer: "123", hovedpartRolle: BRUKER } as any)} />);
     expect(screen.getByText("Personlinje 1")).toBeDefined();
     expect(screen.queryByText(/Virksomhetlinje/)).toBeNull();
   });
 
   it("rendrer virksomhetlinje for VIRKSOMHET-rolle", () => {
-    render(<Informasjonlinje behandlingID={1} saksnummer="123" hovedpartRolle={VIRKSOMHET} />);
+    render(<Informasjonlinje {...({ behandlingID: 1, saksnummer: "123", hovedpartRolle: VIRKSOMHET } as any)} />);
     expect(screen.getByText("Virksomhetlinje 123")).toBeDefined();
     expect(screen.queryByText(/Personlinje/)).toBeNull();
   });
 
   it("rendrer null når rolle er ukjent", () => {
-    const { container } = render(<Informasjonlinje behandlingID={1} saksnummer="123" hovedpartRolle="UKJENT" />);
+    const { container } = render(
+      <Informasjonlinje {...({ behandlingID: 1, saksnummer: "123", hovedpartRolle: "UKJENT" } as any)} />,
+    );
     expect(container.innerHTML).toBe("");
   });
 
   it("rendrer behandlingsmeny som standard", () => {
-    render(<Informasjonlinje behandlingID={1} saksnummer="123" hovedpartRolle={BRUKER} />);
+    render(<Informasjonlinje {...({ behandlingID: 1, saksnummer: "123", hovedpartRolle: BRUKER } as any)} />);
     expect(screen.getByText("Behandlingsmeny")).toBeDefined();
   });
 
   it("skjuler behandlingsmeny når visBehandlingsmeny=false", () => {
-    render(<Informasjonlinje behandlingID={1} saksnummer="123" hovedpartRolle={BRUKER} visBehandlingsmeny={false} />);
+    render(
+      <Informasjonlinje
+        {...({ behandlingID: 1, saksnummer: "123", hovedpartRolle: BRUKER, visBehandlingsmeny: false } as any)}
+      />,
+    );
     expect(screen.queryByText("Behandlingsmeny")).toBeNull();
   });
 });

@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { useForm, FormProvider } from "react-hook-form";
 
 vi.mock("../htmlEditor", () => ({
-  default: ({ className, disabled, feil, ...rest }: any) => (
+  default: ({ className, disabled, feil }: any) => (
     <div data-testid="html-editor" data-classname={className} data-disabled={disabled} data-feil={feil}>
       editor
     </div>
@@ -20,7 +20,7 @@ function TestWrapper({ disabled, className }: any) {
   const methods = useForm({ defaultValues: { testField: "" } });
   return (
     <FormProvider {...methods}>
-      <HTMLEditor name="testField" control={methods.control} disabled={disabled} className={className} />
+      <HTMLEditor name="testField" control={methods.control as any} disabled={disabled} className={className} />
     </FormProvider>
   );
 }

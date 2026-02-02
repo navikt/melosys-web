@@ -25,7 +25,7 @@ function TestWrapper({ readOnly, label = "Fom dato" }: any) {
   const methods = useForm({ defaultValues: { testField: "01.01.2024" } });
   return (
     <FormProvider {...methods}>
-      <Datovelger name="testField" control={methods.control} label={label} readOnly={readOnly} />
+      <Datovelger name="testField" control={methods.control as any} label={label} readOnly={readOnly} />
     </FormProvider>
   );
 }

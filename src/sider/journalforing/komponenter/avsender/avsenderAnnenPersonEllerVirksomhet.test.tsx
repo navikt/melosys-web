@@ -30,17 +30,21 @@ import AvsenderAnnenPersonEllerVirksomhet from "./avsenderAnnenPersonEllerVirkso
 
 describe("AvsenderAnnenPersonEllerVirksomhet", () => {
   it("rendrer input-felt med riktig label", () => {
-    render(<AvsenderAnnenPersonEllerVirksomhet hentOgVisAvsender={vi.fn()} avsenderNavn="" />);
+    render(<AvsenderAnnenPersonEllerVirksomhet {...({ hentOgVisAvsender: vi.fn(), avsenderNavn: "" } as any)} />);
     expect(screen.getByLabelText("F.nr./d-nr. eller org.nr.")).toBeDefined();
   });
 
   it("rendrer Navn-label", () => {
-    render(<AvsenderAnnenPersonEllerVirksomhet hentOgVisAvsender={vi.fn()} avsenderNavn="" />);
+    render(<AvsenderAnnenPersonEllerVirksomhet {...({ hentOgVisAvsender: vi.fn(), avsenderNavn: "" } as any)} />);
     expect(screen.getByText(/Navn:/)).toBeDefined();
   });
 
   it("viser avsenderNavn når satt", () => {
-    render(<AvsenderAnnenPersonEllerVirksomhet hentOgVisAvsender={vi.fn()} avsenderNavn="Test Firma AS" />);
+    render(
+      <AvsenderAnnenPersonEllerVirksomhet
+        {...({ hentOgVisAvsender: vi.fn(), avsenderNavn: "Test Firma AS" } as any)}
+      />,
+    );
     expect(screen.getByText("Test Firma AS")).toBeDefined();
   });
 });

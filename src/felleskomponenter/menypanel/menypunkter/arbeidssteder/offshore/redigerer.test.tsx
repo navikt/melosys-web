@@ -26,14 +26,14 @@ import Redigerer from "./redigerer";
 
 describe("Redigerer (offshore)", () => {
   it("rendrer innretning-input, type-select og land-velger", () => {
-    render(<Redigerer redigerbart={true} overordnetFeltNavn="offshore[0]" slett={vi.fn()} />);
+    render(<Redigerer {...({ redigerbart: true, overordnetFeltNavn: "offshore[0]", slett: vi.fn() } as any)} />);
     expect(screen.getByText("Navn på innretning")).toBeDefined();
     expect(screen.getByText("Type innretning")).toBeDefined();
     expect(screen.getByText("Lands sokkel")).toBeDefined();
   });
 
   it("rendrer innretningstyper fra ekte MKV-kodeverk", () => {
-    render(<Redigerer redigerbart={true} overordnetFeltNavn="offshore[0]" slett={vi.fn()} />);
+    render(<Redigerer {...({ redigerbart: true, overordnetFeltNavn: "offshore[0]", slett: vi.fn() } as any)} />);
     const options = screen.getAllByRole("option");
     expect(options.length).toBe(MKV.KTObjects.innretningstyper.length);
   });

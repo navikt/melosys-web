@@ -41,7 +41,7 @@ describe("Skatteforholdsperioder", () => {
   const defaultProps = {
     formValues: {
       skatteforholdsperioder: [{ fomDato: "01.01.2024", tomDato: "31.12.2024", skatteplikttype: "SKATTEPLIKTIG" }],
-    },
+    } as any,
     fields: [{ id: "1" }] as any,
     control: {} as any,
     remove: vi.fn(),
@@ -76,7 +76,7 @@ describe("Skatteforholdsperioder", () => {
           { fomDato: "01.01.2024", tomDato: "30.06.2024", skatteplikttype: "SKATTEPLIKTIG" },
           { fomDato: "01.07.2024", tomDato: "31.12.2024", skatteplikttype: "IKKE_SKATTEPLIKTIG" },
         ],
-      },
+      } as any,
       fields: [{ id: "1" }, { id: "2" }] as any,
     };
     render(<Skatteforholdsperioder {...props} />);

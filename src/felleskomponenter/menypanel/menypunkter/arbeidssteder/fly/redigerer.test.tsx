@@ -26,21 +26,21 @@ import Redigerer from "./redigerer";
 
 describe("Redigerer (fly)", () => {
   it("rendrer hjemmebase-input, flyvningstype-select og land-velger", () => {
-    render(<Redigerer redigerbart={true} overordnetFeltNavn="fly[0]" slett={vi.fn()} />);
+    render(<Redigerer {...({ redigerbart: true, overordnetFeltNavn: "fly[0]", slett: vi.fn() } as any)} />);
     expect(screen.getByText("Navn på hjemmebase")).toBeDefined();
     expect(screen.getByText("Type flyvninger")).toBeDefined();
     expect(screen.getByText("Hjemmebasens land")).toBeDefined();
   });
 
   it("rendrer flyvningstyper fra ekte MKV-kodeverk", () => {
-    render(<Redigerer redigerbart={true} overordnetFeltNavn="fly[0]" slett={vi.fn()} />);
+    render(<Redigerer {...({ redigerbart: true, overordnetFeltNavn: "fly[0]", slett: vi.fn() } as any)} />);
     const options = screen.getAllByRole("option");
     expect(options.length).toBe(MKV.KTObjects.flyvningstyper.length);
   });
 
   it("rendrer sletteknapp", () => {
     const slett = vi.fn();
-    render(<Redigerer redigerbart={true} overordnetFeltNavn="fly[0]" slett={slett} />);
+    render(<Redigerer {...({ redigerbart: true, overordnetFeltNavn: "fly[0]", slett } as any)} />);
     expect(screen.getByText("Slett")).toBeDefined();
   });
 });

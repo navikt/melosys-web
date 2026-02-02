@@ -64,7 +64,7 @@ describe("VedleggVelgerTable", () => {
 
   it("markerer valgt standardvedlegg", () => {
     const standardvedlegg = [{ type: "STD_1" }] as any;
-    const valgteVedlegg = { standardvedlegg: { type: "STD_1" }, saksvedlegg: [] };
+    const valgteVedlegg = { standardvedlegg: { type: "STD_1" } as any, saksvedlegg: [] };
     render(<VedleggVelgerTable {...defaultProps} standardvedlegg={standardvedlegg} valgteVedlegg={valgteVedlegg} />);
     expect(screen.getByTestId("vedlegg-STD_1")).toHaveAttribute("data-markert", "true");
   });

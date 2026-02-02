@@ -23,17 +23,17 @@ import { JournalforingsOppgaver } from "./jornualforingoppgaver";
 
 describe("JournalforingsOppgaver", () => {
   it("viser info-melding når ingen journalføringsoppgaver", () => {
-    render(<JournalforingsOppgaver mineSaker={{ journalforing: [] }} />);
+    render(<JournalforingsOppgaver {...({ mineSaker: { journalforing: [] } } as any)} />);
     expect(screen.getByText("Det er ingen journalføringsoppgaver på arbeidsbenken din")).toBeDefined();
   });
 
   it("rendrer oppgaver via SorterbarListe", () => {
-    render(<JournalforingsOppgaver mineSaker={{ journalforing: [{ id: 1 }, { id: 2 }] }} />);
+    render(<JournalforingsOppgaver {...({ mineSaker: { journalforing: [{ id: 1 }, { id: 2 }] } } as any)} />);
     expect(screen.getAllByText("oppgave")).toHaveLength(2);
   });
 
   it("viser ikke info-melding når det finnes oppgaver", () => {
-    render(<JournalforingsOppgaver mineSaker={{ journalforing: [{ id: 1 }] }} />);
+    render(<JournalforingsOppgaver {...({ mineSaker: { journalforing: [{ id: 1 }] } } as any)} />);
     expect(screen.queryByText("Det er ingen journalføringsoppgaver på arbeidsbenken din")).toBeNull();
   });
 });

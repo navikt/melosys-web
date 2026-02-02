@@ -25,7 +25,7 @@ function TestWrapper({ onChange, checked, label = "Test checkbox" }: any) {
   const methods = useForm({ defaultValues: { testField: false } });
   return (
     <FormProvider {...methods}>
-      <Checkbox name="testField" control={methods.control} label={label} onChange={onChange} checked={checked} />
+      <Checkbox name="testField" control={methods.control as any} label={label} onChange={onChange} checked={checked} />
     </FormProvider>
   );
 }

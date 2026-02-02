@@ -12,7 +12,7 @@ const validate = async (values: Record<string, unknown>, context: Record<string,
       context: { aar: 2024, ...context },
     });
     return null;
-  } catch (e) {
+  } catch (e: any) {
     return e;
   }
 };

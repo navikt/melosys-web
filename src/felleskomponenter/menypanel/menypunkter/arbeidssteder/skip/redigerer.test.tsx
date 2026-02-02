@@ -28,13 +28,21 @@ const { INNENRIKS, UTENRIKS } = MKV.Koder.begrunnelser.fartsomrader;
 
 describe("Redigerer (skip)", () => {
   it("rendrer skip-input og fartsområde-select", () => {
-    render(<Redigerer redigerbart={true} overordnetFeltNavn="skip[0]" slett={vi.fn()} settVerdi={vi.fn()} />);
+    render(
+      <Redigerer
+        {...({ redigerbart: true, overordnetFeltNavn: "skip[0]", slett: vi.fn(), settVerdi: vi.fn() } as any)}
+      />,
+    );
     expect(screen.getByText("Navn på skip")).toBeDefined();
     expect(screen.getByText("Fartsområde")).toBeDefined();
   });
 
   it("rendrer fartsområder fra ekte MKV-kodeverk", () => {
-    render(<Redigerer redigerbart={true} overordnetFeltNavn="skip[0]" slett={vi.fn()} settVerdi={vi.fn()} />);
+    render(
+      <Redigerer
+        {...({ redigerbart: true, overordnetFeltNavn: "skip[0]", slett: vi.fn(), settVerdi: vi.fn() } as any)}
+      />,
+    );
     const options = screen.getAllByRole("option");
     expect(options.length).toBe(MKV.KTObjects.begrunnelser.fartsomrader.length);
   });

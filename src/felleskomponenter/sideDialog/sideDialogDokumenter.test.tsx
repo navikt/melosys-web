@@ -67,7 +67,7 @@ describe("SideDialogDokumenter", () => {
         {
           mottattDato: "2024-01-01",
           journalforingDato: "2024-01-02",
-          mottaksretning: { kode: MKV.Koder.mottaksretning.INN },
+          mottaksretning: { kode: MKV.Koder.mottaksretning.INN, term: "inn" } as any,
           avsenderEllerMottaker: "NAV",
           journalpostID: "123",
           hoveddokument: { dokumentID: "doc1", tittel: "Søknad", logiskeVedlegg: [] },
@@ -87,7 +87,7 @@ describe("SideDialogDokumenter", () => {
         {
           mottattDato: "2024-01-01",
           journalforingDato: "2024-01-02",
-          mottaksretning: { kode: MKV.Koder.mottaksretning.INN },
+          mottaksretning: { kode: MKV.Koder.mottaksretning.INN, term: "inn" } as any,
           avsenderEllerMottaker: "Bruker",
           journalpostID: "123",
           hoveddokument: { dokumentID: "doc1", tittel: "Dok", logiskeVedlegg: [] },
@@ -106,7 +106,7 @@ describe("SideDialogDokumenter", () => {
         {
           mottattDato: "2024-01-01",
           journalforingDato: "2024-01-02",
-          mottaksretning: { kode: MKV.Koder.mottaksretning.UT },
+          mottaksretning: { kode: MKV.Koder.mottaksretning.UT, term: "ut" } as any,
           avsenderEllerMottaker: "Bruker",
           journalpostID: "456",
           hoveddokument: { dokumentID: "doc2", tittel: "Vedtak", logiskeVedlegg: [] },

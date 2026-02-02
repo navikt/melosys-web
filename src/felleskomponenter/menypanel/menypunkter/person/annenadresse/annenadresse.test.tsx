@@ -35,20 +35,22 @@ import AnnenAdresse from "./annenadresse";
 describe("AnnenAdresse", () => {
   it("returnerer null når alle verdier er undefined", () => {
     const { container } = render(
-      <AnnenAdresse oppgittAdresse={{ gate: undefined }} oppgittAdresseHarVerdier={false} />,
+      <AnnenAdresse {...({ oppgittAdresse: { gate: undefined }, oppgittAdresseHarVerdier: false } as any)} />,
     );
     expect(container.innerHTML).toBe("");
   });
 
   it("rendrer adresse når data finnes", () => {
-    render(<AnnenAdresse oppgittAdresse={{ gateadresse: "Testgata 1" }} oppgittAdresseHarVerdier={true} />);
+    render(
+      <AnnenAdresse {...({ oppgittAdresse: { gateadresse: "Testgata 1" }, oppgittAdresseHarVerdier: true } as any)} />,
+    );
     expect(screen.getByText("Annen adresse")).toBeDefined();
     expect(screen.getByText("Adresse: Testgata 1")).toBeDefined();
   });
 
   it("returnerer null når oppgittAdresseHarVerdier er false men verdier finnes", () => {
     const { container } = render(
-      <AnnenAdresse oppgittAdresse={{ gateadresse: "Testgata 1" }} oppgittAdresseHarVerdier={false} />,
+      <AnnenAdresse {...({ oppgittAdresse: { gateadresse: "Testgata 1" }, oppgittAdresseHarVerdier: false } as any)} />,
     );
     expect(container.innerHTML).toBe("");
   });

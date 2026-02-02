@@ -25,7 +25,7 @@ function TestWrapper({ onChange, emptyFieldDisabled }: any) {
     <FormProvider {...methods}>
       <Select
         name="testField"
-        control={methods.control}
+        control={methods.control as any}
         label="Velg land"
         onChange={onChange}
         emptyFieldDisabled={emptyFieldDisabled}

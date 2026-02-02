@@ -18,7 +18,7 @@ function TestWrapper({ numeric, tillattNegativeTall, onChange }: any) {
     <FormProvider {...methods}>
       <Input
         name="testField"
-        control={methods.control}
+        control={methods.control as any}
         label="Test"
         numeric={numeric}
         tillattNegativeTall={tillattNegativeTall}

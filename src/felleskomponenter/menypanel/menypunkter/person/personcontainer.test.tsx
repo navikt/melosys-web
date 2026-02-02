@@ -26,9 +26,7 @@ describe("PersonContainer", () => {
   it("rendrer tittel fra kodeverk", () => {
     render(
       <PersonContainer
-        visArbeidsforholdRolleEtiketter={true}
-        visMottatteOpplysningerData={false}
-        endreFokus={vi.fn()}
+        {...({ visArbeidsforholdRolleEtiketter: true, visMottatteOpplysningerData: false, endreFokus: vi.fn() } as any)}
       />,
     );
     expect(screen.getByText("Personopplysninger")).toBeDefined();
@@ -37,9 +35,7 @@ describe("PersonContainer", () => {
   it("sender props videre til Person", () => {
     render(
       <PersonContainer
-        visArbeidsforholdRolleEtiketter={true}
-        visMottatteOpplysningerData={false}
-        endreFokus={vi.fn()}
+        {...({ visArbeidsforholdRolleEtiketter: true, visMottatteOpplysningerData: false, endreFokus: vi.fn() } as any)}
       />,
     );
     expect(screen.getByText(/Person rolle=true mottatt=false/)).toBeDefined();

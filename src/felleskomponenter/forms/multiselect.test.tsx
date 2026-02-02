@@ -24,7 +24,7 @@ function TestWrapper({ redigerbart = true }: any) {
     <FormProvider {...methods}>
       <MultiSelect
         name="testField"
-        control={methods.control}
+        control={methods.control as any}
         label="Velg land"
         redigerbart={redigerbart}
         options={[
