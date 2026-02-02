@@ -19,6 +19,23 @@ export function hentFakturaserier(fakturaserieReferanse: string) {
   });
 }
 
+export function hentAlleFakturaserierForSak(saksnummer: string) {
+  return doThenDispatch(
+    async () => {
+      const referanser = await Api.Fagsaker.fagsak.hentFakturaserieReferanser(saksnummer);
+      const alleSerier = await Promise.all(
+        referanser.map((ref: string) => Api.Faktureringskomponenten.hentFakturaserie(ref)),
+      );
+      return alleSerier;
+    },
+    {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+  );
+}
+
 export function resetFakturaserier() {
   return Actions.resetFakturaserier();
 }

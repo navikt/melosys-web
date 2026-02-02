@@ -9,11 +9,9 @@ import { fakturaserierOperations, fakturaserierSelectors, fakturaserierTypes } f
 import "./fakturainformasjon.less";
 import { Faktura } from "./faktura";
 import { STATUS } from "../../../../services";
-import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
-import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE } from "../../../../featuretoggle/toggleNavn";
 import moment from "moment";
 import LabelMedHjelpetekst from "../../../labelMedHjelpetekst";
+import { fagsakSelectors } from "../../../../ducks/fagsaker";
 
 const gyldigeFakturaStatuser = [
   fakturaserierTypes.FakturaStatus.BESTILT,
@@ -24,17 +22,14 @@ const gyldigeFakturaStatuser = [
 
 function Fakturainformasjon() {
   const dispatch = useDispatch();
-  const visReferanseEnabled = useFeatureToggle(MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE);
   const fakturaserier = useSelector(fakturaserierSelectors.FakturaserierSelector);
-  const fakturaserieReferanseFraBehandling = useSelector((state) =>
-    behandlingsresultatSelectors.fakturaserieReferanseSelector(state),
-  );
+  const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
 
   useEffect(() => {
-    if (fakturaserieReferanseFraBehandling) {
-      dispatch(fakturaserierOperations.hentFakturaserier(fakturaserieReferanseFraBehandling));
+    if (saksnummer) {
+      dispatch(fakturaserierOperations.hentAlleFakturaserierForSak(saksnummer));
     }
-  }, [fakturaserieReferanseFraBehandling]);
+  }, [saksnummer]);
 
   if (Utils._isEmpty(fakturaserier.data) || fakturaserier.status !== STATUS.OK) {
     return null;
@@ -52,17 +47,10 @@ function Fakturainformasjon() {
 
   return (
     <Nav.Container fluid className="fakturainformasjon">
-      <div key={fakturaserieReferanseFraBehandling}>
+      <div key={saksnummer}>
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.Heading level="2">Fakturainformasjon</Nav.Heading>
-            {visReferanseEnabled && (
-              <Nav.Column xs="12">
-                <Nav.Row className="mellomrom-tekst-tabell">
-                  Fakturaseriereferanse: {fakturaserieReferanseFraBehandling}
-                </Nav.Row>
-              </Nav.Column>
-            )}
             <Nav.Table>
               <Nav.Table.Header>
                 <Nav.Table.Row shadeOnHover={false}>
