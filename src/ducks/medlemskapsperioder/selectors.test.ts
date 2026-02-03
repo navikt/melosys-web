@@ -42,7 +42,6 @@ describe("medlemskapsperioder selectors", () => {
       const state = lagState(perioder);
       expect(AlleMedlemskapsperioderSelector(state)).toHaveLength(2);
     });
-    expect(selectors.AlleMedlemskapsperioderSelector(state)).toEqual([]);
   });
 
   describe("BestemmelseSelector", () => {
