@@ -5,6 +5,10 @@ import MKV from "../../../../melosyskodeverk";
 
 import SokkelSkip from "./sokkel_skip";
 import Yrkesgruppe from "./yrkesgruppe";
+import { hentFaktaListe } from "../../../../domeneUtils";
+import { BOOLSK_STRING } from "../../../../constants";
+import { FLYT_PRODUKSJON_DATO_EØS_11_3_B } from "../../../../utils/dato";
+import moment from "moment";
 
 class SaksbehandlingVirksomheter extends Virksomheter {
   constructor(propsLight, stegPosisjon) {
@@ -31,9 +35,39 @@ class SaksbehandlingVirksomheter extends Virksomheter {
     const erArbeidKunNorge =
       MKV.Koder.behandlinger.behandlingstema.ARBEID_KUN_NORGE === propsLight.behandlingstema.kode;
 
+    const harAvklaring = (vurderingLovvalgBarnFakta, mottatteOpplysningerMedfolgendeBarn) => {
+      return (
+        !(vurderingLovvalgBarnFakta.length === 0 && mottatteOpplysningerMedfolgendeBarn.length === 0) &&
+        vurderingLovvalgBarnFakta.length === mottatteOpplysningerMedfolgendeBarn.length &&
+        vurderingLovvalgBarnFakta.every(
+          (enkeltFakta) =>
+            enkeltFakta.fakta.includes(BOOLSK_STRING.SANN) ||
+            (enkeltFakta.fakta.includes(BOOLSK_STRING.USANN) && enkeltFakta.begrunnelseKoder.length > 0),
+        )
+      );
+    };
+
     const beregnNesteStegForFlyt11_3_b = (propsLight) => {
+      const vurderingLovvalgBarnFakta = hentFaktaListe(
+        MKV.Koder.avklartefaktatyper.VURDERING_LOVVALG_BARN,
+        propsLight.avklartefakta,
+      );
+
+      const harAvklaringBarn = harAvklaring(vurderingLovvalgBarnFakta, propsLight.medfolgendeBarn);
+      const erInnsynsmodus = !propsLight.generiskStegRedigerbart;
+
+      if (harAvklaringBarn && erInnsynsmodus) {
+        return STEG.MEDFOLGENDE_BARN;
+      }
+
+      const oppsummering = propsLight.oppsummering;
+
+      const behandlingAvsluttetFørNyEndringEØS_11_3_b =
+        oppsummering.behandlingsstatus.kode === "AVSLUTTET" &&
+        moment(oppsummering.endretDato).isBefore(FLYT_PRODUKSJON_DATO_EØS_11_3_B);
+
       const innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift =
-        !propsLight.generiskStegRedigerbart && !propsLight.harTrygdeavgiftperiode;
+        !propsLight.generiskStegRedigerbart && behandlingAvsluttetFørNyEndringEØS_11_3_b;
 
       if (propsLight.eøsFaktureringAvTrygdeavgiftToggleEnabled) {
         if (innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift) {
@@ -45,6 +79,7 @@ class SaksbehandlingVirksomheter extends Virksomheter {
 
       return STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK;
     };
+
     const NESTE_STEG_FOR_11_3_b = beregnNesteStegForFlyt11_3_b(propsLight);
 
     this.kriterier = [
@@ -69,16 +104,7 @@ class SaksbehandlingVirksomheter extends Virksomheter {
         nesteSteg: STEG.VEDTAK,
       },
       {
-        exec: () => {
-          const harMedfolgendeBarnData = propsLight.medfolgendeBarn?.length > 0;
-          const erInnsyn = !propsLight.generiskStegRedigerbart;
-
-          return harValgtArbeidsgiver && (gårDirekteTilArtikkel16 || (erInnsyn && harMedfolgendeBarnData));
-        },
-        nesteSteg: STEG.MEDFOLGENDE_BARN,
-      },
-      {
-        exec: () => harValgtArbeidsgiver && propsLight.erArbeidTjenestepersonEllerFly,
+        exec: () => harValgtArbeidsgiver && (gårDirekteTilArtikkel16 || propsLight.erArbeidTjenestepersonEllerFly),
         nesteSteg: NESTE_STEG_FOR_11_3_b,
       },
       {

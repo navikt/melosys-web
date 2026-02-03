@@ -50,11 +50,6 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: npx playwright install-deps chromium
 
-      - name: Build mock server
-        run: |
-          pnpm e2e:mock:install
-          pnpm e2e:mock:build
-
       - name: Run integration tests (playback mode)
         run: pnpm test:e2e:playback
         env:

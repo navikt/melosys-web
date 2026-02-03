@@ -1,9 +1,12 @@
+import moment from "moment";
+
 import Steg from "../../../../felleskomponenter/stegvelger/stegMotor/steg";
 import { FANE_STATUS, STEG } from "../../../../felleskomponenter/stegvelger";
 import VurderingArbeidTjenestepersonEllerFlyVedtak from "../../stegKomponenter/vurderingArbeidTjenestepersonEllerFlyVedtak/vurderingArbeidTjenestepersonEllerFlyVedtak";
 import VurderingArbeidTjenestepersonEllerFlyVedtakLegacy from "../../stegKomponenter/vurderingArbeidTjenestepersonEllerFlyVedtak_Legacy/vurderingArbeidTjenestepersonEllerFlyVedtak";
 
 import { hentFakta } from "../../../../domeneUtils";
+import { FLYT_PRODUKSJON_DATO_EØS_11_3_B } from "../../../../utils/dato";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -55,15 +58,17 @@ class ArbeidTjenestepersonEllerFlyVedtak extends Steg {
   }
 
   skalBrukeLegacyKomponent = (propsLight) => {
+    const oppsummering = propsLight.oppsummering;
+
+    const behandlingAvsluttetFørNyEndringEØS_11_3_b =
+      oppsummering.behandlingsstatus.kode === "AVSLUTTET" &&
+      moment(oppsummering.endretDato).isBefore(FLYT_PRODUKSJON_DATO_EØS_11_3_B);
+
     const innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift =
-      !propsLight.generiskStegRedigerbart && !propsLight.harTrygdeavgiftperiode;
+      !propsLight.generiskStegRedigerbart && behandlingAvsluttetFørNyEndringEØS_11_3_b;
 
     if (propsLight.eøsFaktureringAvTrygdeavgiftToggleEnabled) {
-      if (innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift) {
-        return true;
-      }
-
-      return false;
+      return !!innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift;
     }
 
     return true;
