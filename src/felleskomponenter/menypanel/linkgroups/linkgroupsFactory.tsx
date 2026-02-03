@@ -4,7 +4,7 @@ import { harUnntaksregistreringFlyt, skalViseIngenFlyt } from "../../../url";
 import { ContentProps, LinkGroup } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
-import { MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT } from "../,,/../../../featuretoggle/toggleNavn";
+import { MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT } from "../../../featuretoggle/toggleNavn";
 import { useFeatureToggle } from "../../../featuretoggle";
 
 const {
@@ -25,6 +25,7 @@ const {
 } = MKV.Koder.behandlinger.behandlingstema;
 
 const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
+const { ÅRSAVREGNING } = MKV.Koder.behandlinger.behandlingstyper;
 
 interface LinkGroupsConfig {
   sakstype: string;
@@ -113,13 +114,14 @@ class LinkGroupsFactory {
       case ARBEID_KUN_NORGE:
       case ARBEID_TJENESTEPERSON_ELLER_FLY:
       case ARBEID_NORGE_BOSATT_ANNET_LAND: {
-        const fraBruker = new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet();
+        const fraBruker = new LinksBuilder(contentProps);
+        if (behandlingstype !== ÅRSAVREGNING) fraBruker.addArbeidsgiverEllerVirksomhet();
         const fraRegister = new LinksBuilder(contentProps).addMedlemskap().addArbeidsforholdOgInntekt();
         if (mottatteOpplysningerType === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraBruker.addLonnOgGodtgjorelser();
         fraBruker.addFullmektig();
         if (mottatteOpplysningerType === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) fraBruker.addUtenlandsoppdraget();
         else fraBruker.addPeriode();
-        fraBruker.addArbeidssteder();
+        if (behandlingstype !== ÅRSAVREGNING) fraBruker.addArbeidssteder();
         if (mottatteOpplysningerType === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS) {
           fraBruker.addOmVirksomhetenINorge();
           fraBruker.addOvrigOmArbeidstaker();
@@ -160,17 +162,13 @@ class LinkGroupsFactory {
         return new LinkgroupsBuilder()
           .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
           .addFraRegister(new LinksBuilder(contentProps).addMedlemskap().addArbeidsforholdOgInntekt().build())
-          .addFraBruker(
-            new LinksBuilder(contentProps)
-              .addArbeidsgiverEllerVirksomhet()
-              .addFullmektig()
-              .addPeriode()
-              .addArbeidssteder()
-              .build(),
-          )
           .build();
       }
       case YRKESAKTIV: {
+        const fraBrukerBuilder = new LinksBuilder(contentProps);
+        if (behandlingstype !== ÅRSAVREGNING) fraBrukerBuilder.addArbeidsgiverEllerVirksomhet();
+        fraBrukerBuilder.addFullmektig();
+        if (behandlingstype !== ÅRSAVREGNING) fraBrukerBuilder.addArbeidssteder();
         return new LinkgroupsBuilder()
           .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
           .addFraRegister(
@@ -180,9 +178,7 @@ class LinkGroupsFactory {
               .addFaktureringskomponenten()
               .build(),
           )
-          .addFraBruker(
-            new LinksBuilder(contentProps).addArbeidsgiverEllerVirksomhet().addFullmektig().addArbeidssteder().build(),
-          )
+          .addFraBruker(fraBrukerBuilder.build())
           .build();
       }
       default:
