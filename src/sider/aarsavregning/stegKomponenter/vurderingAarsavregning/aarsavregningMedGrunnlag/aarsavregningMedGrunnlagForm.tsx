@@ -261,27 +261,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
 
-  useEffect(() => {
-    if (redigerbart && aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag && aarsavregningID) {
-      const { totalAvgift } = aarsavregningResponse.nyttTrygdeavgiftsGrunnlag.avgift;
-      const beregnetAvgiftBelop = aarsavregningResponse.avregning?.beregnetAvgiftBelop;
-
-      if (totalAvgift !== beregnetAvgiftBelop) {
-        Api.Aarsavregning.oppdaterBeregnetAvgiftBeloep(behandlingID, aarsavregningID, totalAvgift).then(
-          (res: AarsavregningResponse) => {
-            setAarsavregningResponse(res);
-          },
-        );
-      }
-    }
-  }, [
-    redigerbart,
-    behandlingID,
-    aarsavregningID,
-    aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag?.avgift.totalAvgift,
-    aarsavregningResponse?.avregning?.beregnetAvgiftBelop,
-  ]);
-
   const handleEndeligAvgiftValgChange = useCallback(
     (value: string) => {
       setEndrerEndeligAvgiftValg(true);
