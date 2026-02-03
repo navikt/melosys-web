@@ -21,6 +21,8 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 import { dokumenterSelectors } from "../../../../ducks/dokumenter";
 import { feiletResponsOperations } from "../../../../ducks/feiletRespons";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_CDM_4_4 } from "../../../../featuretoggle/toggleNavn";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingVideresendSchema from "../vurderingVideresendSchema";
@@ -37,6 +39,8 @@ export function VurderingVideresend({
   tilbake,
   resetFeiletRespons,
 }) {
+  const isA008Cdm44Enabled = useFeatureToggle(MELOSYS_CDM_4_4);
+
   const pdfDokumenter = [
     {
       dokumentData: {
@@ -47,6 +51,10 @@ export function VurderingVideresend({
     },
     {
       sedType: EKV.Koder.sedtyper.A008,
+      sedData: {
+        fritekst: isA008Cdm44Enabled ? formValues.ytterligereInformasjonSed : undefined,
+        a008Formaal: isA008Cdm44Enabled ? "arbeid_flere_land" : undefined,
+      },
     },
   ];
 
@@ -63,7 +71,6 @@ export function VurderingVideresend({
   // Nullstill eventuelle feilmeldinger når steget vises
   useEffect(() => {
     resetFeiletRespons();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleVedleggChange = (newVedlegg) => {
@@ -75,7 +82,13 @@ export function VurderingVideresend({
     setVideresendPending(true);
 
     const vedlegg = valgteVedlegg.saksvedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID }));
-    await props.videresendSoknad(values.mottakerinstitusjon, values.orienteringsbrevFritekst, vedlegg);
+    await props.videresendSoknad(
+      values.mottakerinstitusjon,
+      values.orienteringsbrevFritekst,
+      isA008Cdm44Enabled ? values.ytterligereInformasjonSed : null,
+      isA008Cdm44Enabled ? "arbeid_flere_land" : null,
+      vedlegg,
+    );
 
     // Videresend-operation navigerer til forside, og komponenten kan derfor være unmountet.
     if (isMounted.current) {
@@ -96,9 +109,23 @@ export function VurderingVideresend({
               label="Fritekst til orienteringsbrev"
               placeholder="Skriv inn tekst til orienteringsbrevet..."
               readOnly={!redigerbart}
+              maxLength={10000}
             />
           </Nav.Column>
         </Nav.Row>
+        {isA008Cdm44Enabled && (
+          <Nav.Row>
+            <Nav.Column xs="8">
+              <Skjema.Textarea
+                feltNavn="ytterligereInformasjonSed"
+                label="Ytterligere informasjon (valgfritt)"
+                description="Denne teksten legges ved i SED A008"
+                placeholder="Skriv inn ytterligere informasjon..."
+                readOnly={!redigerbart}
+              />
+            </Nav.Column>
+          </Nav.Row>
+        )}
         <Nav.Row className="mottakerinstitusjoner">
           <Nav.Column xs="8">
             <Mottakerinstitusjonvelger
@@ -187,6 +214,7 @@ const mapStateToProps = (state) => ({
     mottakerinstitusjon: "",
     kreverMottakerinstitusjon: false,
     orienteringsbrevFritekst: "",
+    ytterligereInformasjonSed: "",
   },
 });
 

@@ -1,10 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { reduxForm } from "redux-form";
 import * as KV from "../../../../kodeverk";
 import { VurderingVideresend } from "./vurderingVideresend";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
+import { STATUS } from "../../../../services";
+import { MELOSYS_CDM_4_4 } from "../../../../featuretoggle/toggleNavn";
 
 const initialReduxState = {
   behandlinger: {
@@ -23,6 +26,16 @@ const initialReduxState = {
   dokumenter: {
     data: {
       dokumentOversikt: [],
+    },
+  },
+};
+
+const reduxStateWithA008Cdm44Toggle = {
+  ...initialReduxState,
+  featureToggle: {
+    status: STATUS.OK,
+    data: {
+      [MELOSYS_CDM_4_4]: true,
     },
   },
 };
@@ -54,6 +67,20 @@ describe("Vurderingvideresend", () => {
       preloadedState: initialReduxState,
     });
     expect(getByRole("textbox", { name: "Fritekst til orienteringsbrev" })).toBeInTheDocument();
+  });
+
+  it("viser ytterligere informasjon tekstfelt når toggle er på", () => {
+    const { getByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
+      preloadedState: reduxStateWithA008Cdm44Toggle,
+    });
+    expect(getByRole("textbox", { name: /Ytterligere informasjon/ })).toBeInTheDocument();
+  });
+
+  it("viser ikke ytterligere informasjon tekstfelt når toggle er av", () => {
+    const { queryByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
+      preloadedState: initialReduxState,
+    });
+    expect(queryByRole("textbox", { name: /Ytterligere informasjon/ })).not.toBeInTheDocument();
   });
 
   it("viser en dokumentliste med forventet innhold", () => {
@@ -97,5 +124,107 @@ describe("Vurderingvideresend", () => {
     await userEvent.click(document.querySelector(".vedleggvelger") as HTMLElement);
 
     expect(resetFeiletRespons).toHaveBeenCalledTimes(1);
+  });
+
+  describe("videresendSoknad kall", () => {
+    it("sender ytterligereInformasjonSed og a008Formaal når toggle er på", async () => {
+      const videresendSoknad = vi.fn().mockResolvedValue(undefined);
+      const user = userEvent.setup();
+
+      // Mock handleSubmit to call the passed function with form values
+      const handleSubmit = (submitFn: any) => (e: any) => {
+        e?.preventDefault?.();
+        return submitFn(
+          {
+            mottakerinstitusjon: "SE:123",
+            orienteringsbrevFritekst: "Orienteringstekst",
+            ytterligereInformasjonSed: "Tilleggsinformasjon for A008",
+          },
+          vi.fn(),
+          { videresendSoknad },
+        );
+      };
+
+      renderWithProviders(
+        <WrappedVurderingVideresend {...props} videresendSoknad={videresendSoknad} handleSubmit={handleSubmit} />,
+        {
+          preloadedState: reduxStateWithA008Cdm44Toggle,
+        },
+      );
+
+      await user.click(screen.getByRole("button", { name: /Videresend søknad/i }));
+
+      await waitFor(() => {
+        expect(videresendSoknad).toHaveBeenCalledWith(
+          "SE:123",
+          "Orienteringstekst",
+          "Tilleggsinformasjon for A008",
+          "arbeid_flere_land",
+          [],
+        );
+      });
+    });
+
+    it("sender null for ytterligereInformasjonSed og a008Formaal når toggle er av", async () => {
+      const videresendSoknad = vi.fn().mockResolvedValue(undefined);
+      const user = userEvent.setup();
+
+      const handleSubmit = (submitFn: any) => (e: any) => {
+        e?.preventDefault?.();
+        return submitFn(
+          {
+            mottakerinstitusjon: "SE:123",
+            orienteringsbrevFritekst: "Orienteringstekst",
+            ytterligereInformasjonSed: "Dette skal ignoreres",
+          },
+          vi.fn(),
+          { videresendSoknad },
+        );
+      };
+
+      renderWithProviders(
+        <WrappedVurderingVideresend {...props} videresendSoknad={videresendSoknad} handleSubmit={handleSubmit} />,
+        {
+          preloadedState: initialReduxState,
+        },
+      );
+
+      await user.click(screen.getByRole("button", { name: /Videresend søknad/i }));
+
+      await waitFor(() => {
+        expect(videresendSoknad).toHaveBeenCalledWith("SE:123", "Orienteringstekst", null, null, []);
+      });
+    });
+
+    it("sender tom streng som ytterligereInformasjonSed når feltet er tomt og toggle er på", async () => {
+      const videresendSoknad = vi.fn().mockResolvedValue(undefined);
+      const user = userEvent.setup();
+
+      const handleSubmit = (submitFn: any) => (e: any) => {
+        e?.preventDefault?.();
+        return submitFn(
+          {
+            mottakerinstitusjon: "SE:123",
+            orienteringsbrevFritekst: "Orienteringstekst",
+            ytterligereInformasjonSed: "",
+          },
+          vi.fn(),
+          { videresendSoknad },
+        );
+      };
+
+      renderWithProviders(
+        <WrappedVurderingVideresend {...props} videresendSoknad={videresendSoknad} handleSubmit={handleSubmit} />,
+        {
+          preloadedState: reduxStateWithA008Cdm44Toggle,
+        },
+      );
+
+      await user.click(screen.getByRole("button", { name: /Videresend søknad/i }));
+
+      await waitFor(() => {
+        expect(videresendSoknad).toHaveBeenCalledWith("SE:123", "Orienteringstekst", "", "arbeid_flere_land", []);
+      });
+    });
   });
 });

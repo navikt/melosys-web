@@ -57,6 +57,8 @@ interface Vedlegg {
 export interface VideresendReqDto {
   mottakerinstitusjon: string | null;
   fritekst: string | null;
+  ytterligereInformasjonSed: string | null;
+  a008Formaal: string | null;
   vedlegg: Vedlegg[];
 }
 
