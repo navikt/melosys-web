@@ -2,41 +2,41 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useEffect, useState } from "react";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import * as Mui from "../../../../../felleskomponenter/ui";
-import * as Nav from "../../../../../navFrontend";
-import * as Api from "../../../../../services/api";
-import * as Utils from "../../../../../utils";
+import * as Mui from "../../../felleskomponenter/ui";
+import * as Nav from "../../../navFrontend";
+import * as Api from "../../../services/api";
+import * as Utils from "../../../utils";
 
-import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import { helseutgiftDekkesPeriodeSelector } from "../../../../../ducks/helseutgiftdekkesperiode";
+import { behandlingerSelectors } from "../../../ducks/behandlinger";
+import { helseutgiftDekkesPeriodeSelector } from "../../../ducks/helseutgiftdekkesperiode";
 
-import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
+import { redigerbartSelectors } from "../../../ducks/redigerbart";
 
-import { BOOLSK_STRING } from "../../../../../constants";
-import LabelMedHjelpetekst from "../../../../../felleskomponenter/labelMedHjelpetekst";
-import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
+import { BOOLSK_STRING } from "../../../constants";
+import LabelMedHjelpetekst from "../../../felleskomponenter/labelMedHjelpetekst";
+import { Inntektskilder } from "../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import {
   Feilmelding,
   feilMeldingBlokkerer,
   finnAktivFeilmeldingEøsPensjonist,
-} from "../../../../../felleskomponenter/trygdeavgift/komponenter/meldinger";
-import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
-import TrygdeavgiftsperioderTabell from "../../../../../felleskomponenter/trygdeavgift/komponenter/trygdeavgiftsperioderTabell";
+} from "../../../felleskomponenter/trygdeavgift/komponenter/meldinger";
+import { Skatteforholdsperioder } from "../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
+import TrygdeavgiftsperioderTabell from "../../../felleskomponenter/trygdeavgift/komponenter/trygdeavgiftsperioderTabell";
 import {
   FormValuesProps,
   Inntektskilde,
   Skatteforhold,
-} from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import MKV from "../../../../../melosyskodeverk";
-import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../../../../services/modules/trygdeavgift";
+} from "../../../felleskomponenter/trygdeavgift/komponenter/types";
+import MKV from "../../../melosyskodeverk";
+import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../../services/modules/trygdeavgift";
 import "./vurderingTrygdeavgift.less";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 
-import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
-import { fagsakSelectors } from "../../../../../ducks/fagsaker";
-import { Alert } from "../../../../../navFrontend";
-import { useFeatureToggle } from "../../../../../featuretoggle";
-import { MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER } from "../../../../../featuretoggle/toggleNavn";
+import { erBrukerSkattepliktigIHelePerioden } from "../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
+import { fagsakSelectors } from "../../../ducks/fagsaker";
+import { Alert } from "../../../navFrontend";
+import { useFeatureToggle } from "../../../featuretoggle";
+import { MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER } from "../../../featuretoggle/toggleNavn";
 
 const { EU_EOS } = MKV.Koder.sakstyper;
 const { PENSJONIST } = MKV.Koder.behandlinger.behandlingstema;

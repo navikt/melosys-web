@@ -1,10 +1,10 @@
 import { array, lazy, object, string } from "yup";
-import MKV from "../../../../../melosyskodeverk";
-import * as KV from "../../../../../kodeverk";
-import * as Utils from "../../../../../utils";
-import { BOOLSK_STRING } from "../../../../../constants";
+import MKV from "../../../melosyskodeverk/index.js";
+import * as KV from "../../../kodeverk/index.js";
+import * as Utils from "../../../utils/index.js";
+import { BOOLSK_STRING } from "../../../constants.js";
 
-import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
+import { erBrukerSkattepliktigIHelePerioden } from "../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils.ts";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const {
