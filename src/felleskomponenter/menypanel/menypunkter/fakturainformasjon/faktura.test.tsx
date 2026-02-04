@@ -15,7 +15,9 @@ describe("Faktura", () => {
         periodeFra: "2023-04-01",
         periodeTil: "2023-08-31",
         status: "BESTILT",
+        fakturaserieReferanse: "TEST-REF-123",
       },
+      visReferanse: false,
     };
   });
 

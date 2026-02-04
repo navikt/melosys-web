@@ -12,6 +12,12 @@ import { STATUS } from "../../../../services";
 import moment from "moment";
 import LabelMedHjelpetekst from "../../../labelMedHjelpetekst";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
+import useFeatureToggle from "../../../../featuretoggle/useFeatureToggle";
+import { MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE } from "../../../../featuretoggle/toggleNavn";
+
+export interface FakturaMedSerieReferanse extends fakturaserierTypes.Faktura {
+  fakturaserieReferanse: string;
+}
 
 const gyldigeFakturaStatuser = [
   fakturaserierTypes.FakturaStatus.BESTILT,
@@ -24,6 +30,7 @@ function Fakturainformasjon() {
   const dispatch = useDispatch();
   const fakturaserier = useSelector(fakturaserierSelectors.FakturaserierSelector);
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
+  const visReferanse = useFeatureToggle(MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE);
 
   useEffect(() => {
     if (saksnummer) {
@@ -36,9 +43,13 @@ function Fakturainformasjon() {
   }
 
   const alleFakturaer = fakturaserier.data
-    .reduce((fakturaer: fakturaserierTypes.Faktura[], fakturaserie) => {
+    .reduce((fakturaer: FakturaMedSerieReferanse[], fakturaserie) => {
       if (!Utils._isEmpty(fakturaserie.faktura)) {
-        fakturaer.push(...fakturaserie.faktura);
+        const fakturaerMedReferanse = fakturaserie.faktura.map((faktura) => ({
+          ...faktura,
+          fakturaserieReferanse: fakturaserie.fakturaserieReferanse,
+        }));
+        fakturaer.push(...fakturaerMedReferanse);
       }
       return fakturaer;
     }, [])
@@ -64,11 +75,12 @@ function Fakturainformasjon() {
                   <Nav.Table.HeaderCell scope="col">Kvartal</Nav.Table.HeaderCell>
                   <Nav.Table.HeaderCell scope="col">Status</Nav.Table.HeaderCell>
                   <Nav.Table.HeaderCell scope="col">Utestående betaling</Nav.Table.HeaderCell>
+                  {visReferanse && <Nav.Table.HeaderCell scope="col">Referanse</Nav.Table.HeaderCell>}
                 </Nav.Table.Row>
               </Nav.Table.Header>
               <Nav.Table.Body>
                 {alleFakturaer.map((faktura) => (
-                  <Faktura key={faktura.fakturaReferanse} faktura={faktura} />
+                  <Faktura key={faktura.fakturaReferanse} faktura={faktura} visReferanse={visReferanse} />
                 ))}
               </Nav.Table.Body>
             </Nav.Table>
