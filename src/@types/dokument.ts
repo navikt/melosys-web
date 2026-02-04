@@ -45,6 +45,7 @@ export interface SedPdfData {
   vilSendeAnmodningOmMerInformasjon?: boolean | null;
   nyttLovvalgsland?: string | null;
   fritekst?: string | null;
+  a008Formaal?: string | null; // CDM 4.4: "endringsmelding" | "arbeid_flere_land"
 }
 
 export interface TilgjengeligStandardvedlegg {

@@ -1,3 +1,4 @@
+const MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE = "melosys.faktureringskomponent.vis_referanse";
 const MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK = "melosys.ftrl.begrense_periode_vedtak";
 const FEATURE_TOGGLE = "feature-toggle";
 const MELOSYS_NORGE_ER_UTPEKT_11_3_A = "melosys.11_3_a_Norge_er_utpekt";
@@ -9,7 +10,7 @@ const ÅRSAVREGNING_UTEN_FLYT = "melosys.arsavregning.uten.flyt";
 const MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER =
   "melosys.faktureringskomponenten.ikke-tidligere-perioder";
 const MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT = "melosys.eos_fakturering_av_trygdeavgift";
-const MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE = "melosys.faktureringskomponent.vis_referanse";
+const MELOSYS_CDM_4_4 = "melosys.cdm-4-4";
 
 const alleToggleNavn = [
   MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
@@ -22,6 +23,7 @@ const alleToggleNavn = [
   MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
   MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
   MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE,
+  MELOSYS_CDM_4_4,
 ];
 
 export {
@@ -36,5 +38,6 @@ export {
   MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
   MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
   MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE,
+  MELOSYS_CDM_4_4,
   alleToggleNavn,
 };

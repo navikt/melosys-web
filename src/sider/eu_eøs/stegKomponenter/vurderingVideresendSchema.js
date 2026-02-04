@@ -8,6 +8,7 @@ export const vurdering_videresend = object().shape({
     is: true,
     then: (schema) => schema.required(VELG_MOTTAKERINSTITUSJON),
   }),
+  ytterligereInformasjonSed: string().nullable(),
 });
 
 export default vurdering_videresend;

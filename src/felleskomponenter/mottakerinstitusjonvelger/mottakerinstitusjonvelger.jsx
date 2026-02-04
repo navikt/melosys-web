@@ -38,6 +38,13 @@ export function MottakerinstitusjonvelgerSchema({
     };
   }, [lovvalgsland, mottakerinstitusjoner]);
 
+  // Automatisk velg institusjon hvis det kun finnes én
+  useEffect(() => {
+    if (mottakerinstitusjoner?.length === 1 && rest.input?.onChange) {
+      rest.input.onChange(mottakerinstitusjoner[0].id);
+    }
+  }, [mottakerinstitusjoner]);
+
   if (Utils._isEmpty(mottakerinstitusjoner) || !redigerbart) {
     return null;
   }
