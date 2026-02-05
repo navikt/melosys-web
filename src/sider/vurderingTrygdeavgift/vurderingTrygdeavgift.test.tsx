@@ -131,7 +131,7 @@ describe("VurderingTrygdeavgift", () => {
   });
 
   describe("rendering", () => {
-    it("returnerer null når steget ikke er aktivt", () => {
+    it("rendrer ingenting når steget ikke er aktivt", () => {
       const { container } = renderComponent({}, { aktivtSteg: false });
 
       expect(container.firstChild).toBeNull();
@@ -222,6 +222,8 @@ describe("VurderingTrygdeavgift", () => {
       const [, payload] = vi.mocked(Api.Trygdeavgift.beregnTrygdeavgiftsperioder).mock.calls[0];
       expect(payload.skatteforholdsperioder[0].fomDato).toBe(medlemskapsperiodeDates.fomDato);
       expect(payload.skatteforholdsperioder[0].tomDato).toBe(medlemskapsperiodeDates.tomDato);
+      expect(payload.inntektskilder[0].fomDato).toBe(medlemskapsperiodeDates.fomDato);
+      expect(payload.inntektskilder[0].tomDato).toBe(medlemskapsperiodeDates.tomDato);
     });
   });
 });
