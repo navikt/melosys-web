@@ -103,7 +103,17 @@ const defaultProps = {
   oppdaterStatus: vi.fn(),
 };
 
-const renderComponent = (stateOverrides: CreateStateOptions = {}, propsOverrides = {}) =>
+interface VurderingTrygdeavgiftProps {
+  bekreft: () => void;
+  tilbake: () => void;
+  aktivtSteg: boolean;
+  oppdaterStatus: (isValid: boolean) => void;
+}
+
+const renderComponent = (
+  stateOverrides: CreateStateOptions = {},
+  propsOverrides: Partial<VurderingTrygdeavgiftProps> = {},
+) =>
   renderWithProviders(<VurderingTrygdeavgift {...defaultProps} {...propsOverrides} />, {
     preloadedState: createState(stateOverrides),
   });
