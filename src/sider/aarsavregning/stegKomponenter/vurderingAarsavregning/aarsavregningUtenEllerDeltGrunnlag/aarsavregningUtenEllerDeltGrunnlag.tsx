@@ -16,6 +16,7 @@ import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../utils";
 import {
   Avgiftspliktigperiode,
   MedlemskapsperiodeForAvgift,
+  erMedlemskapsperiode,
   erMedlemskapsperiodeEllerLovvalgsperiode,
 } from "../../../../../services/modules/types/periodeTyper";
 import { OppdaterMedlemskapsperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
@@ -125,7 +126,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
   const dispatch = useDispatch();
 
   const opprettMedlemskapsperiode = async (medlemskapsperiode: Avgiftspliktigperiode) => {
-    if (!erMedlemskapsperiodeEllerLovvalgsperiode(medlemskapsperiode)) {
+    if (!erMedlemskapsperiode(medlemskapsperiode)) {
       throw new Error(`Cannot create membership period from type ${medlemskapsperiode.type}`);
     }
 
