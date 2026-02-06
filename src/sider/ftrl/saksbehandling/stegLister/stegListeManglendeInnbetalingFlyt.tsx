@@ -3,7 +3,7 @@ import { VurderingInngang } from "../stegKomponenter/vurderingInngang/vurderingI
 import { VurderingVirksomhet } from "../stegKomponenter/vurderingVirksomhet/vurderingVirksomhet";
 import { VurderingPerioder } from "../stegKomponenter/vurderingPeriode/vurderingPerioder";
 import { VurderingBestemmelse } from "../stegKomponenter/vurderingBestemmelse/vurderingBestemmelse";
-import { VurderingTrygdeavgift } from "../../../vurderingTrygdeavgift/vurderingTrygdeavgift";
+import { VurderingTrygdeavgift } from "../../../trygdeavgift/medlemskapsperiode/vurderingTrygdeavgift";
 import { VurderingVedtak } from "../stegKomponenter/vurderingVedtak/vurderingVedtak";
 import { VurderingInngangManglendeInnbetaling } from "../stegKomponenter/vurderingInngangManglendeInnbetaling/vurderingInngangManglendeInnbetaling";
 import { VurderingVedtakOpphoer } from "../stegKomponenter/vurderingVedtakOpphoer/vurderingVedtakOpphoer";
