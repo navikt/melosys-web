@@ -8,7 +8,7 @@ import { VurderingTrygdeavgift } from "./vurderingTrygdeavgift";
 import * as Api from "../../../services/api";
 import { useFeatureToggle } from "../../../featuretoggle";
 
-vi.mock("../../services/api", () => ({
+vi.mock("../../../services/api", () => ({
   Trygdeavgift: {
     hentBeregnetTrygdeavgift: vi.fn(),
     hentOpprinneligTrygdeavgiftsgrunnlag: vi.fn(),
@@ -16,19 +16,19 @@ vi.mock("../../services/api", () => ({
   },
 }));
 
-vi.mock("../../featuretoggle", () => ({
+vi.mock("../../../featuretoggle", () => ({
   useFeatureToggle: vi.fn(),
 }));
 
-vi.mock("../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder", () => ({
+vi.mock("../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder", () => ({
   Skatteforholdsperioder: () => <div data-testid="skatteforholdsperioder">Skatteforholdsperioder</div>,
 }));
 
-vi.mock("../../felleskomponenter/trygdeavgift/komponenter/inntektskilder", () => ({
+vi.mock("../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder", () => ({
   Inntektskilder: () => <div data-testid="inntektskilder">Inntektskilder</div>,
 }));
 
-vi.mock("../../felleskomponenter/trygdeavgift/komponenter/trygdeavgiftsperioderTabell", () => ({
+vi.mock("../../../felleskomponenter/trygdeavgift/komponenter/trygdeavgiftsperioderTabell", () => ({
   default: () => <div data-testid="trygdeavgiftstabell">TrygdeavgiftsperioderTabell</div>,
 }));
 
