@@ -75,7 +75,7 @@ function Fakturainformasjon() {
                   <Nav.Table.HeaderCell scope="col">Kvartal</Nav.Table.HeaderCell>
                   <Nav.Table.HeaderCell scope="col">Status</Nav.Table.HeaderCell>
                   <Nav.Table.HeaderCell scope="col">Utestående betaling</Nav.Table.HeaderCell>
-                  {visReferanse && <Nav.Table.HeaderCell scope="col">Referanse</Nav.Table.HeaderCell>}
+                  {visReferanse && <Nav.Table.HeaderCell scope="col">Fakturaseriereferanse</Nav.Table.HeaderCell>}
                 </Nav.Table.Row>
               </Nav.Table.Header>
               <Nav.Table.Body>
