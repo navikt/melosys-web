@@ -4,7 +4,7 @@ import { renderWithProviders } from "../../../ducks/test-utils/renderWithProvide
 import MKV from "../../../melosyskodeverk";
 import { STATUS } from "../../../services";
 import { MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER } from "../../../featuretoggle/toggleNavn";
-import { VurderingTrygdeavgift } from "../lovvalgsperiode/vurderingTrygdeavgift";
+import { VurderingTrygdeavgift } from "./vurderingTrygdeavgift";
 import * as Api from "../../../services/api";
 import { useFeatureToggle } from "../../../featuretoggle";
 
