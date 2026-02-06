@@ -1,5 +1,6 @@
 import { object, string, bool, array } from "yup";
 import * as KV from "../../../../kodeverk";
+import { DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN } from "../../../../kodeverk/feilmeldinger";
 
 const MOTTAKERINSTITUSJON_KREVES = { melding: "Mottakerinstitusjon kreves" };
 const LOVVALGSLAND_KREVES = { melding: "Lovvalgsland kreves" };
@@ -18,6 +19,8 @@ const artikkel13_utpek = object().shape({
       schema.erInnenforSoknadsperioden().erEtterDatofelt("fomDato").erGyldigDato().required(MAA_FYLLES_UT),
   }),
   kreverMottakerinstitusjon: bool().required(),
+  fritekstSed: string().nullable().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
+  fritekstOrienteringsbrev: string().nullable().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
   mottakerinstitusjoner: array().of(
     object().shape({
       kreverMottakerinstitusjon: bool(),

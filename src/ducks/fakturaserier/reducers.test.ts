@@ -33,4 +33,19 @@ describe("fakturaserier reducer", () => {
     expect(next.status).toBe(STATUS.NOT_STARTED);
     expect(next.data).toEqual([]);
   });
+
+  it("OK merger data fra flere fakturaserier (fra hentAlleFakturaserierForSak)", () => {
+    const serie1 = { fakturaserieReferanse: "ref1", faktura: [{ fakturaReferanse: "f1" }] };
+    const serie2 = { fakturaserieReferanse: "ref2", faktura: [{ fakturaReferanse: "f2" }] };
+    const data = [serie1, serie2];
+    const next = reducer(undefined, { type: Types.OK, data } as any);
+    expect(next.status).toBe(STATUS.OK);
+    expect(next.data).toHaveLength(2);
+    expect(next.data).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ fakturaserieReferanse: "ref1" }),
+        expect.objectContaining({ fakturaserieReferanse: "ref2" }),
+      ]),
+    );
+  });
 });
