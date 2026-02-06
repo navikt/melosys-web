@@ -5,9 +5,11 @@ import moment from "moment";
 import { FakturaLinjeContainer } from "./fakturalinjecontainer";
 import { formatterDatoTilNorsk } from "../../../../utils/dato";
 import { fakturaserierTypes } from "../../../../ducks/fakturaserier";
+import { FakturaMedSerieReferanse } from "./fakturainformasjon";
 
 interface FakturaProps {
-  faktura: fakturaserierTypes.Faktura;
+  faktura: FakturaMedSerieReferanse;
+  visReferanse?: boolean;
 }
 
 const fakturastatusMap = new Map<fakturaserierTypes.FakturaStatus, { farge: string; beskrivelse: string }>([
@@ -34,7 +36,7 @@ const mapPeriodeTilKvartalString = (periodeFra: string, periodeTil: string) => {
   }
 };
 
-export const Faktura = ({ faktura }: FakturaProps) => {
+export const Faktura = ({ faktura, visReferanse }: FakturaProps) => {
   const [nyesteFakturaStatus] = useState<fakturaserierTypes.FakturaTilbakemelding | undefined>(
     faktura.eksternFakturaStatus?.slice().sort((a, b) => moment(b.dato).diff(moment(a.dato)))[0],
   );
@@ -52,6 +54,7 @@ export const Faktura = ({ faktura }: FakturaProps) => {
         </div>
       </Nav.Table.DataCell>
       <Nav.Table.DataCell>{Utils.formaterTilNorskBelop(nyesteFakturaStatus?.ubetaltBelop) || "-"}</Nav.Table.DataCell>
+      {visReferanse && <Nav.Table.DataCell>{faktura.fakturaserieReferanse}</Nav.Table.DataCell>}
     </Nav.Table.ExpandableRow>
   );
 };

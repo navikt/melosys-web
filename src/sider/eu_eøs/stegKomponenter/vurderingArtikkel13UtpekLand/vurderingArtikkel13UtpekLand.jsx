@@ -272,7 +272,7 @@ export function VurderingArtikkel13UtpekLand({
         bekreftKnappProps={{
           onClick: vedKlikkUtpek,
           loading: utpekingPending,
-          disabled: !redigerbart,
+          disabled: !redigerbart || !formIsValid,
         }}
         bekreftTekst="Fatt vedtak"
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart }}

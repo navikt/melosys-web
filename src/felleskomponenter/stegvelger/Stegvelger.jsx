@@ -337,11 +337,17 @@ class Stegvelger extends Component {
     return Promise.resolve();
   };
 
-  videresendSoknad = async (mottakerinstitusjon, fritekst, vedlegg) => {
+  videresendSoknad = async (mottakerinstitusjon, fritekst, ytterligereInformasjonSed, a008Formaal, vedlegg) => {
     const { saksnummer, videresend, lagreAllData } = this.props;
 
     if (this.validerOgVisMottatteOpplysningerFeilmeldinger()) {
-      const body = { mottakerinstitusjon, fritekst, vedlegg };
+      // Bare inkluder CDM 4.4-felt når de har verdier (bakoverkompatibilitet)
+      const body = {
+        mottakerinstitusjon,
+        fritekst,
+        ...(a008Formaal !== null && { ytterligereInformasjonSed, a008Formaal }),
+        vedlegg,
+      };
 
       await lagreAllData();
       return videresend(saksnummer, body);
