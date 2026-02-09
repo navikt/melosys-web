@@ -483,6 +483,7 @@ describe("journalforing operations", () => {
     });
 
     it("håndterer API-feil gracefully med .catch() fallbacks", async () => {
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
       mswServer.use(
         http.get("/api/anmodningsperioder/:behandlingId", () =>
           HttpResponse.json({ message: "Internal Server Error" }, { status: 500 }),
@@ -514,6 +515,7 @@ describe("journalforing operations", () => {
       expect(result.muligeBehandlingstemaer).toEqual([]);
       expect(result.muligeBehandlingstyper).toEqual([]);
       expect(result.harBehandlingMedTrygdeavgift).toBe(false);
+      consoleErrorSpy.mockRestore();
     });
 
     it("returnerer harBehandlingMedTrygdeavgift=true når sak har trygdeavgift", async () => {
