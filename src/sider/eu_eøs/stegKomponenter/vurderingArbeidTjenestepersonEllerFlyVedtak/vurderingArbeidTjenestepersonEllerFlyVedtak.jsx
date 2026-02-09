@@ -403,7 +403,11 @@ const mapStateToProps = (state, ownProps) => {
         "days",
       ) !== 0;
 
-  const informerUtenlandskTrygdemyndighet = !Utils._isEmpty(ownProps.informertMyndighetFakta) ? true : null;
+  const erArt11_3B =
+    ownProps.lovvalgsbestemmelseSomSkalVises ===
+    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B;
+  const informerUtenlandskTrygdemyndighet =
+    !Utils._isEmpty(ownProps.informertMyndighetFakta) || erArt11_3B ? true : null;
   const mottakerLand = ownProps.informertMyndighetFakta.subjektID;
 
   return {
