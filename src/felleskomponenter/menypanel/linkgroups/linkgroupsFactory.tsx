@@ -162,6 +162,14 @@ class LinkGroupsFactory {
         return new LinkgroupsBuilder()
           .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
           .addFraRegister(new LinksBuilder(contentProps).addMedlemskap().addArbeidsforholdOgInntekt().build())
+          .addFraBruker(
+            new LinksBuilder(contentProps)
+              .addArbeidsgiverEllerVirksomhet()
+              .addFullmektig()
+              .addPeriode()
+              .addArbeidssteder()
+              .build(),
+          )
           .build();
       }
       case YRKESAKTIV: {

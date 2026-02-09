@@ -179,8 +179,8 @@ describe("LinkGroupsFactory", () => {
     });
   });
 
-  describe("BESLUTNING_LOVVALG_NORGE uten Fra bruker-seksjon", () => {
-    it("skal IKKE inkludere Arbeidsgiver/virksomhet", () => {
+  describe("BESLUTNING_LOVVALG_NORGE ved vanlig søknadsbehandling", () => {
+    it("skal inkludere Arbeidsgiver/virksomhet", () => {
       const config = createConfig({
         behandlingstype: SØKNAD,
         behandlingstema: BESLUTNING_LOVVALG_NORGE,
@@ -189,10 +189,10 @@ describe("LinkGroupsFactory", () => {
       const linkGroups = LinkGroupsFactory.createLinkGroups(config);
       const allLabels = getAllLabels(linkGroups);
 
-      expect(allLabels).not.toContain("Arbeidsgiver/virksomhet");
+      expect(allLabels).toContain("Arbeidsgiver/virksomhet");
     });
 
-    it("skal IKKE inkludere Arbeidssted(er)", () => {
+    it("skal inkludere Arbeidssted(er)", () => {
       const config = createConfig({
         behandlingstype: SØKNAD,
         behandlingstema: BESLUTNING_LOVVALG_NORGE,
@@ -201,10 +201,10 @@ describe("LinkGroupsFactory", () => {
       const linkGroups = LinkGroupsFactory.createLinkGroups(config);
       const allLabels = getAllLabels(linkGroups);
 
-      expect(allLabels).not.toContain("Arbeidssted(er)");
+      expect(allLabels).toContain("Arbeidssted(er)");
     });
 
-    it("skal IKKE inkludere Fullmektig", () => {
+    it("skal inkludere Fullmektig", () => {
       const config = createConfig({
         behandlingstype: SØKNAD,
         behandlingstema: BESLUTNING_LOVVALG_NORGE,
@@ -213,7 +213,19 @@ describe("LinkGroupsFactory", () => {
       const linkGroups = LinkGroupsFactory.createLinkGroups(config);
       const allLabels = getAllLabels(linkGroups);
 
-      expect(allLabels).not.toContain("Fullmektig");
+      expect(allLabels).toContain("Fullmektig");
+    });
+
+    it("skal inkludere Periode og land", () => {
+      const config = createConfig({
+        behandlingstype: SØKNAD,
+        behandlingstema: BESLUTNING_LOVVALG_NORGE,
+      });
+
+      const linkGroups = LinkGroupsFactory.createLinkGroups(config);
+      const allLabels = getAllLabels(linkGroups);
+
+      expect(allLabels).toContain("Periode og land");
     });
   });
 });

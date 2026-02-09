@@ -1,7 +1,7 @@
 import * as Nav from "../../../../navFrontend";
 import { Inntektskilde, Skatteforhold } from "../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Utils from "../../../../utils";
-import { Avgiftspliktigperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../services/modules/types/periodeTyper";
 import { BOOLSK_STRING } from "../../../../constants";
 import { MedlemskapTomFomDatoer } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 

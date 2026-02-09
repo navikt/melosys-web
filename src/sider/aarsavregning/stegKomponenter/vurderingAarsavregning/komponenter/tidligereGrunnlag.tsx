@@ -1,5 +1,9 @@
 import * as Nav from "../../../../../navFrontend";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import {
+  erHelseutgiftdekkesperiode,
+  erMedlemskapsperiodeEllerLovvalgsperiode,
+} from "../../../../../services/modules/types/periodeTyper";
 import MKV from "../../../../../melosyskodeverk";
 import { formaterTilNorskBelopUtenDesimaler } from "../../../../../utils";
 import { BeregnetTrygdeavgiftDetaljer } from "./beregnetTrygdeavgiftDetaljer";
@@ -23,18 +27,20 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
     (aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
 
   const erMedlemskapstypePliktig = () => {
-    const erHelseutgiftDekkesPeriode =
+    const alleErHelseutgiftdekkesperioder =
       aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.avgiftspliktigperioder?.every(
-        (a) => a.type === "HELSEUTGIFTDEKKESPERIODE",
+        erHelseutgiftdekkesperiode,
       );
 
-    if (erHelseutgiftDekkesPeriode) {
+    if (alleErHelseutgiftdekkesperioder) {
       return true;
     }
 
     return (
       aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.avgiftspliktigperioder?.every(
-        (periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
+        (periode) =>
+          erMedlemskapsperiodeEllerLovvalgsperiode(periode) &&
+          periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
       ) ?? true
     );
   };

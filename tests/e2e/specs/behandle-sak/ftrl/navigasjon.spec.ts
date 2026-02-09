@@ -46,14 +46,8 @@ test.describe("FTRL Stegvelger - Navigasjon", () => {
 
     // === STEG 3: Bestemmelse ===
     await stegvelgerPage.verifiserSteg("Bestemmelse");
-    // Bestemmelse kan være forhåndsutfylt, sjekk om knapp allerede er aktivert
-    const bestemmelseAktiv = await page
-      .locator(".stegFane--aktiv button.stegKnapper__bekreft")
-      .isEnabled()
-      .catch(() => false);
-    if (!bestemmelseAktiv) {
-      await stegvelgerPage.velgBestemmelse("§ 2-5");
-    }
+    // Alltid velg bestemmelse - dette sikrer at trygdedekninger lastes på Perioder-steget
+    await stegvelgerPage.velgBestemmelse("§ 2-5");
     await stegvelgerPage.verifiserBekreftKnappAktivert();
     await stegvelgerPage.klikkBekreftOgFortsett();
 
