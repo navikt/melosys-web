@@ -19,8 +19,6 @@ const harOppholdsperioder = (perioder: any[]) => {
   }
 
   const sortedPerioder = perioder.sort(Utils.dato.sorterEtterISOFomDato);
-  /* eslint-disable-next-line no-console */
-  console.log("[harOppholdsperioder] sortedPerioder", sortedPerioder);
 
   for (let i = 0; i < sortedPerioder.length - 1; i++) {
     const currentTom = sortedPerioder[i].tomDato;
@@ -95,8 +93,6 @@ const ingenOverlappendePerioder = (perioder: any[]): boolean => {
 
   try {
     const sortedPerioder = perioder.sort(Utils.dato.sorterEtterISOFomDato);
-    /* eslint-disable-next-line no-console */
-    console.log("[ingenOverlappendePerioder] sortedPerioder", sortedPerioder);
 
     // Check for overlapping periods
     for (let i = 0; i < sortedPerioder.length - 1; i++) {
@@ -181,24 +177,14 @@ export function finnAktivFeilmelding({
   if (
     !dekkerHeleMedlemskapsperiode(vaskedeSkatteforholdsperioder, medlemskapsperiodeFomTomIsoFormat, "skatteforhold")
   ) {
-    /* eslint-disable-next-line no-console */
-    console.log(
-      "[finnAktivFeilmelding] dekkerHeleMedlemskapsperiode",
-      vaskedeSkatteforholdsperioder,
-      vaskedeMedlemskapsperioder,
-    );
     return TypeFeilmelding.SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN;
   }
 
   if (!ingenOverlappendePerioder(vaskedeSkatteforholdsperioder)) {
-    /* eslint-disable-next-line no-console */
-    console.log("[finnAktivFeilmelding] ingenOverlappendePerioder", vaskedeSkatteforholdsperioder);
     return TypeFeilmelding.OVERLAPPENDE_SKATTEFORHOLDSPERIODER;
   }
 
   if (!ikkeAlleSammeSkatteforholdstyper(vaskedeSkatteforholdsperioder)) {
-    /* eslint-disable-next-line no-console */
-    console.log("[finnAktivFeilmelding] ikkeAlleSammeSkatteforholdstyper", vaskedeSkatteforholdsperioder);
     return TypeFeilmelding.LIKE_SKATTEPLIKTTYPER;
   }
 
