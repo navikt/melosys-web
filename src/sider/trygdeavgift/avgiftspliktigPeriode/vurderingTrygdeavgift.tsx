@@ -132,6 +132,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     append: skattAppend,
     remove: skattRemove,
     replace: resetSkatteforholdsperioder,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } = useFieldArray({ control: control as any, name: "skatteforholdsperioder" }) as any;
   const {
     fields: inntektFields,
@@ -139,6 +140,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     remove: inntektRemove,
     update: inntektUpdate,
     replace: resetInntektskilder,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } = useFieldArray({ control: control as any, name: "inntektskilder" }) as any;
   const formValues = watch();
 
@@ -297,6 +299,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mapFeilmelding = (error: any) => {
     const feilmelding = "Finner ikke trygdeavgiftssats. Melosys har ikke satser for årene før 2014.";
 
@@ -331,11 +334,11 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   useEffect(() => {
     if (redigerbart && aktivtSteg) {
-      formValues?.skatteforholdsperioder?.forEach((_periode: any, index: number) => {
+      formValues?.skatteforholdsperioder?.forEach((_periode: Skatteforhold, index: number) => {
         trigger(`skatteforholdsperioder[${index}].fomDato`);
         trigger(`skatteforholdsperioder[${index}].tomDato`);
       });
-      formValues?.inntektskilder?.forEach((_periode: any, index: number) => {
+      formValues?.inntektskilder?.forEach((_periode: Inntektskilde, index: number) => {
         trigger(`inntektskilder[${index}].fomDato`);
         trigger(`inntektskilder[${index}].tomDato`);
       });
