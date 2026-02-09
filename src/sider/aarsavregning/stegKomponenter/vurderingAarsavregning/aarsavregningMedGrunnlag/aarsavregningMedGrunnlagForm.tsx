@@ -148,8 +148,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   );
 
   const debouncedBeregning = useCallback(() => {
-    /* eslint-disable-next-line no-console */
-    console.log("[debouncedBeregning] debouncedBeregningPagaar set false", debouncedBeregningPagaar);
     setDebouncedBeregningPagaar(false);
     if (
       !redigerbart ||
@@ -224,10 +222,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         const currentFormState = mapFormState(getValues("skatteforholdsperioder"), getValues("inntektskilder"));
 
         if (!Utils._isEqual(currentFormState, previousFormValues)) {
-          /* eslint-disable-next-line no-console */
-          // console.log("[useEffect] currentFormState", currentFormState);
-          /* eslint-disable-next-line no-console */
-          // console.log("[useEffect] previousFormValues", previousFormValues);
           setDebouncedBeregningPagaar(true);
           debouncedBeregningRef.current();
         } else {

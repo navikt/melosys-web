@@ -75,10 +75,6 @@ const dekkerHeleMedlemskapsperiode = (
     );
 
     if (!minFomDato || minFomDato !== medlemskapsperiodeFom || !maxTomDato || maxTomDato !== medlemskapsperiodeTom) {
-      /* eslint-disable-next-line no-console */
-      console.log(
-        `[dekkerHeleMedlemskapsperiode, ${type}] Datoer dekker ikke. MinFom: ${minFomDato} (Skal være: ${medlemskapsperiodeFom}), MaxTom: ${maxTomDato} (Skal være: ${medlemskapsperiodeTom})`,
-      );
       return false;
     }
 
