@@ -192,7 +192,7 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
     let mottakerinstitusjoner = null;
     if (art11_5_ErValgt(formValues)) {
       mottakerinstitusjoner = formValues.mottakerLand ? [formValues.mottakerinstitusjon] : [];
-    } else if (art11_3B_ErValgt(formValues)) {
+    } else if (art11_3B_ErValgt(formValues) && formValues.informerUtenlandskTrygdemyndighet) {
       mottakerinstitusjoner = formValues.mottakerinstitusjoner
         .filter((inst) => inst.kreverMottakerinstitusjon)
         .map((inst) => inst.id);
