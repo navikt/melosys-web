@@ -1,7 +1,7 @@
 import { FANE_STATUS } from "../../../../felleskomponenter/stegvelger";
 import { VurderingInngang } from "../stegKomponenter/vurderingInngang/vurderingInngang";
 import { VurderingPerioder } from "../stegKomponenter/vurderingPeriode/vurderingPerioder";
-import { VurderingTrygdeavgift } from "../../../trygdeavgift/medlemskapsperiode/vurderingTrygdeavgift";
+import { VurderingTrygdeavgift } from "../../../trygdeavgift/avgiftspliktigPeriode/vurderingTrygdeavgift";
 import { VurderingVedtak } from "../stegKomponenter/vurderingVedtak/vurderingVedtak";
 import { VurderingBestemmelse } from "../stegKomponenter/vurderingBestemmelse/vurderingBestemmelse";
 

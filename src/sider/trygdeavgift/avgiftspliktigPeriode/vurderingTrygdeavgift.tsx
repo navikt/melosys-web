@@ -43,10 +43,8 @@ import {
 
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
-import {
-  Avgiftspliktigperiode,
-  harPerioderFraTidligereÅr,
-} from "../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { harPerioderFraTidligereÅr } from "../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import type { Avgiftspliktigperiode } from "../../../services/modules/types/periodeTyper";
 
 interface Props {
   bekreft: () => void;
