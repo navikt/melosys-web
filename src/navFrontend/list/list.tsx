@@ -3,7 +3,7 @@ import "./list.less";
 import { List as NavList, ListProps } from "@navikt/ds-react";
 
 interface ItemProps {
-  spacing?: number;
+  spacing?: 0 | 2;
   children: ReactNode;
 }
 
@@ -15,7 +15,7 @@ function List({ size = "small", children, ...rest }: ListProps) {
   );
 }
 
-function ListItem({ spacing = 2, children }: ItemProps) {
+function ListItem({ spacing = 0, children }: ItemProps) {
   return <NavList.Item className={`mb-${spacing}`}>{children}</NavList.Item>;
 }
 
