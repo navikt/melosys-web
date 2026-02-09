@@ -26,6 +26,7 @@ export const lagInntektskildeShape = (
   const arbAvgBetalesFyltUtNårDetKrevesTest = {
     name: "Fyll inn arb.ag. betales når det kreves",
     message: { message: "Velg om arb.ag. betales til skatt" },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     test: (arbAvgBetales: any, schema: any) => {
       const { kildetype } = schema.from[0].value;
       const medlemskapsTypeErPliktig = brukMedlemskapsTypeFraKontekst
@@ -38,6 +39,7 @@ export const lagInntektskildeShape = (
   const bruttoInntektFyltUtNårDetKrevesTest = {
     name: "Fyll inn brutto inntekt når det kreves",
     message: { message: "Fyll inn brutto inntekt" },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     test: (bruttoInntekt: any, schema: any) => {
       const { skatteforholdsperioder } = schema.from[1].value;
       const { kildetype, arbAvgBetales } = schema.from[0].value;
@@ -61,7 +63,8 @@ export const lagInntektskildeShape = (
   });
 };
 
-export const kreverInntektskilder = (medlemskapsTypeErPliktig: any, options: any) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const kreverInntektskilder = (medlemskapsTypeErPliktig: boolean, options: any) => {
   if (options?.parent?.skatteforholdsperioder) {
     return !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(options.parent.skatteforholdsperioder));
   }

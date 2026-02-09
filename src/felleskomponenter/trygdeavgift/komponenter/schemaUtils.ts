@@ -10,10 +10,14 @@ const {
   PENSJON_UFØRETRYGD_KILDESKATT,
 } = MKV.Koder.inntektskildetype;
 
-export const arbAvgBetalesKreves = (kildetype: any, medlemskapsTypeErPliktig: any) =>
+export const arbAvgBetalesKreves = (kildetype: string, medlemskapsTypeErPliktig: boolean) =>
   !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
 
-export const bruttoInntektKreves = (brukerSkattepliktigIHelePerioden: any, kildetype: any, arbAvgBetales: any) =>
+export const bruttoInntektKreves = (
+  brukerSkattepliktigIHelePerioden: boolean,
+  kildetype: string,
+  arbAvgBetales?: string,
+) =>
   !brukerSkattepliktigIHelePerioden ||
   [NÆRINGSINNTEKT_FRA_NORGE, FN_SKATTEFRITAK, PENSJON_UFØRETRYGD].includes(kildetype) ||
   ([INNTEKT_FRA_UTLANDET, PENSJON_UFØRETRYGD_KILDESKATT].includes(kildetype) && arbAvgBetales === BOOLSK_STRING.USANN);

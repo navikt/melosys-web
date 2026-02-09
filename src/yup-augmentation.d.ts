@@ -21,6 +21,7 @@ declare module "yup" {
     erLandKode(message?: unknown): this;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ObjectSchema<TIn, TContext, TDefault, TFlags> {
     uniqueProperty(propertyName: string, message?: unknown): this;
   }
