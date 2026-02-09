@@ -11,8 +11,9 @@ vi.mock("../../../../../../navFrontend", () => ({
   }),
 }));
 
+let uuidCounter = 0;
 vi.mock("../../../../../../utils", () => ({
-  _uuid: () => "mock-uuid",
+  _uuid: () => `mock-uuid-${++uuidCounter}`,
 }));
 
 vi.mock("../../../../../../utils/streng", () => ({

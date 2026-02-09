@@ -1,9 +1,10 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
+let uuidCounter = 0;
 vi.mock("../../utils", () => ({
   _isEmpty: (val: any) => !val || val.length === 0,
-  _uuid: () => "mock-uuid",
+  _uuid: () => `mock-uuid-${++uuidCounter}`,
 }));
 
 vi.mock("../../navFrontend", () => ({

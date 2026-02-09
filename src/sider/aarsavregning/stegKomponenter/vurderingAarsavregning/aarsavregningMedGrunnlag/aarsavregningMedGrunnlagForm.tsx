@@ -148,8 +148,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   );
 
   const debouncedBeregning = useCallback(() => {
-    /* eslint-disable-next-line no-console */
-    console.log("[debouncedBeregning] debouncedBeregningPagaar set false", debouncedBeregningPagaar);
     setDebouncedBeregningPagaar(false);
     if (
       !redigerbart ||
@@ -224,10 +222,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         const currentFormState = mapFormState(getValues("skatteforholdsperioder"), getValues("inntektskilder"));
 
         if (!Utils._isEqual(currentFormState, previousFormValues)) {
-          /* eslint-disable-next-line no-console */
-          // console.log("[useEffect] currentFormState", currentFormState);
-          /* eslint-disable-next-line no-console */
-          // console.log("[useEffect] previousFormValues", previousFormValues);
           setDebouncedBeregningPagaar(true);
           debouncedBeregningRef.current();
         } else {
@@ -260,27 +254,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   useEffect(() => {
     oppdaterStatus(stegErGyldig);
   }, [stegErGyldig]);
-
-  useEffect(() => {
-    if (redigerbart && aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag && aarsavregningID) {
-      const { totalAvgift } = aarsavregningResponse.nyttTrygdeavgiftsGrunnlag.avgift;
-      const beregnetAvgiftBelop = aarsavregningResponse.avregning?.beregnetAvgiftBelop;
-
-      if (totalAvgift !== beregnetAvgiftBelop) {
-        Api.Aarsavregning.oppdaterBeregnetAvgiftBeloep(behandlingID, aarsavregningID, totalAvgift).then(
-          (res: AarsavregningResponse) => {
-            setAarsavregningResponse(res);
-          },
-        );
-      }
-    }
-  }, [
-    redigerbart,
-    behandlingID,
-    aarsavregningID,
-    aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag?.avgift.totalAvgift,
-    aarsavregningResponse?.avregning?.beregnetAvgiftBelop,
-  ]);
 
   const handleEndeligAvgiftValgChange = useCallback(
     (value: string) => {

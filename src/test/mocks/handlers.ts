@@ -35,7 +35,7 @@ export const handlers = [
   http.get("/api/behandlinger/:id", ({ params }) => {
     const { id } = params;
     if (id === "undefined") {
-      return new HttpResponse(null, { status: 404 });
+      return HttpResponse.json({ message: "Not Found" }, { status: 404 });
     }
     return HttpResponse.json({
       behandlingID: id,
@@ -48,7 +48,7 @@ export const handlers = [
   http.get("/api/behandlinger/:id/resultat", ({ params }) => {
     const { id } = params;
     if (id === "undefined") {
-      return new HttpResponse(null, { status: 404 });
+      return HttpResponse.json({ message: "Not Found" }, { status: 404 });
     }
     return HttpResponse.json({
       behandlingsresultatType: "",
@@ -64,7 +64,7 @@ export const handlers = [
   http.get("/api/lovvalgsperioder/:id", ({ params }) => {
     const { id } = params;
     if (id === "undefined" || id === "-1") {
-      return new HttpResponse(null, { status: 404 });
+      return HttpResponse.json({ message: "Not Found" }, { status: 404 });
     }
     return HttpResponse.json({
       id,
@@ -78,7 +78,7 @@ export const handlers = [
   http.get("/api/mottatteopplysninger/:id", ({ params }) => {
     const { id } = params;
     if (id === "undefined") {
-      return new HttpResponse(null, { status: 404 });
+      return HttpResponse.json({ message: "Not Found" }, { status: 404 });
     }
     return HttpResponse.json({
       brukerID: "12345678901",

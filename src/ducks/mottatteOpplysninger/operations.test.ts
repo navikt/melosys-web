@@ -71,20 +71,6 @@ interface TestState {
 describe("MottatteOpplysninger operations", () => {
   let initialState: TestState;
 
-  const fellesFelt = {
-    juridiskArbeidsgiverNorge: {},
-    personOpplysninger: {},
-    foretakUtland: {},
-    oppholdUtland: {},
-    bosted: {},
-    selvstendigArbeid: {},
-    soeknadsland: {},
-    periode: {},
-    arbeidPaaLand: {},
-    maritimtArbeid: [],
-    luftfartBaser: [],
-  };
-
   beforeEach(() => {
     initialState = {
       form: {
@@ -151,9 +137,7 @@ describe("MottatteOpplysninger operations", () => {
         MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
 
       mswServer.use(
-        http.post("/api/mottatteopplysninger/:behandlingId", async ({ request, params }) => {
-          const body = await request.json();
-          // Kan verifisere request body her hvis nødvendig
+        http.post("/api/mottatteopplysninger/:behandlingId", () => {
           return HttpResponse.json({});
         }),
       );
@@ -221,7 +205,9 @@ describe("MottatteOpplysninger operations", () => {
 
     it("lager FEILET ved feil i api-kall", async () => {
       mswServer.use(
-        http.post("/api/mottatteopplysninger/:behandlingId", () => new HttpResponse(null, { status: 500 })),
+        http.post("/api/mottatteopplysninger/:behandlingId", () =>
+          HttpResponse.json({ message: "Internal Server Error" }, { status: 500 }),
+        ),
       );
 
       const store = createTestStore(initialState);
