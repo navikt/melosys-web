@@ -251,23 +251,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     bestemmelse: bestemmelseFormState,
   });
 
-  useEffect(() => {
-    if (redigerbart && aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag) {
-      if (
-        aarsavregningResponse.nyttTrygdeavgiftsGrunnlag?.avgift.totalAvgift !==
-        aarsavregningResponse.avregning?.beregnetAvgiftBelop
-      ) {
-        Api.Aarsavregning.oppdaterBeregnetAvgiftBeloep(
-          behandlingID,
-          aarsavregningID,
-          aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag?.avgift.totalAvgift,
-        ).then((response: AarsavregningResponse) => {
-          setAarsavregningResponse(response);
-        });
-      }
-    }
-  }, [aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag?.avgift.totalAvgift]);
-
   const lagreMedlemskapsperiodeHvisEndret = async (
     periode: Avgiftspliktigperiode,
     lagredePerioder: Avgiftspliktigperiode[],

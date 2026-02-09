@@ -127,21 +127,7 @@ export const hentFiltrertAarsavregningList = (
   }
   return getAsJson(url);
 };
-export const oppdaterBeregnetAvgiftBeloep = async (
-  behandlingID: number,
-  aarsavregningID: number,
-  beregnetAvgiftBelop?: number,
-) => {
-  return oppdaterAarsavregning(
-    behandlingID,
-    {
-      avregning: {
-        beregnetAvgiftBelop,
-      },
-    },
-    aarsavregningID,
-  );
-};
+
 export const oppdaterManueltAvgiftBeloep = async (
   behandlingID: number,
   aarsavregningID: number,
