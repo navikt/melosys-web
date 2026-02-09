@@ -8,18 +8,20 @@ import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
 import * as Ikoner from "../../../../../resources/images";
 import * as Utils from "../../../../../utils";
-import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
+import {
+  ULAGRET_MEDLEMSKAPSPERIODE_ID,
+  MedlemskapsperiodeFieldProps,
+} from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 
 import { useEffect } from "react";
 import { FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
-import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 import "./medlemskapsperiodeSkjema.less";
 import { usePliktigeBestemmelser } from "../hooks/usePliktigeBestemmelser";
 
 // Funksjon for å kalkulere slettbar-status, nå kalt kanPeriodeSlettes
 const kanPeriodeSlettes = (
-  gjeldendePeriode: Avgiftspliktigperiode,
-  allePerioderIListe: Avgiftspliktigperiode[],
+  gjeldendePeriode: MedlemskapsperiodeFieldProps,
+  allePerioderIListe: MedlemskapsperiodeFieldProps[],
 ): boolean => {
   const erPeriodeUlagret = !gjeldendePeriode.id || gjeldendePeriode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID;
   if (erPeriodeUlagret) {
@@ -87,7 +89,7 @@ export function MedlemskapsperiodeSkjema({
   const pliktigeBestemmelser = usePliktigeBestemmelser();
   const erPliktigBestemmelse = formValues.bestemmelse && pliktigeBestemmelser.includes(formValues.bestemmelse);
 
-  const medlemskapsperioder = formValues.medlemskapsperioder!;
+  const medlemskapsperioder = formValues.medlemskapsperioder as MedlemskapsperiodeFieldProps[];
   const erPeriodeFraGrunnlag = !medlemskapsperioder[index]?.redigerbar;
   const kanViseSletteKolonne = redigerbart && medlemskapsperioder.length > 1;
   const tilOgMedDatoForrigePeriode =

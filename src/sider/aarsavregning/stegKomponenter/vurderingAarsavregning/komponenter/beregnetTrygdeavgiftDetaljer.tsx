@@ -40,6 +40,14 @@ export function BeregnetTrygdeavgiftDetaljer({
           (s) => new Date(s.fomDato) <= new Date(period.tom) && new Date(s.tomDato) >= new Date(period.fom),
         );
 
+        // Get trygdedekning - only exists on Medlemskapsperiode and Lovvalgsperiode
+        const dekning =
+          overlappingAvgiftspliktigperiode &&
+          (overlappingAvgiftspliktigperiode.type === "MEDLEMSKAPSPERIODE" ||
+            overlappingAvgiftspliktigperiode.type === "LOVVALGSPERIODE")
+            ? overlappingAvgiftspliktigperiode.trygdedekning
+            : "Unknown";
+
         return {
           fom: period.fom,
           tom: period.tom,
@@ -50,7 +58,7 @@ export function BeregnetTrygdeavgiftDetaljer({
           avgiftPerMd: period.avgiftPerMd,
           skattepliktig:
             overlappingSkatteforhold && overlappingSkatteforhold.skatteplikttype === SKATTEPLIKTIG ? "Ja" : "Nei",
-          dekning: overlappingAvgiftspliktigperiode ? overlappingAvgiftspliktigperiode.trygdedekning : "Unknown",
+          dekning,
         };
       })
       .sort(Utils.dato.sorterEtterISOFomDato);

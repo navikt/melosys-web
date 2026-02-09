@@ -135,11 +135,7 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
     }
   };
 
-  const oppdaterEllerOpprettHelseutgiftDekkesPeriode = async (formValues: {
-    fomDato: string;
-    tomDato: string;
-    bostedLandkode: string;
-  }) => {
+  const oppdaterEllerOpprettHelseutgiftDekkesPeriode = async (formValues: HelseutgiftDekkesPeriodeDto) => {
     await dispatch(
       helseutgiftDekkesPeriodeOperations.oppdaterEllerOpprettHelseutgiftDekkesPeriode(
         behandlingID,

@@ -14,6 +14,7 @@ describe("TidligereGrunnlag", () => {
       trygdeavgiftsgrunnlag: {
         avgiftspliktigperioder: [
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 1,
             fomDato: "2023-01-01",
             tomDato: "2023-12-31",
@@ -21,7 +22,6 @@ describe("TidligereGrunnlag", () => {
             bestemmelse: "FTRL_2_7",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING_FTRL",
-            redigerbar: false,
           },
         ],
         skatteforholdsperioder: [
@@ -69,6 +69,7 @@ describe("TidligereGrunnlag", () => {
         trygdeavgiftsgrunnlag: {
           avgiftspliktigperioder: [
             {
+              type: "MEDLEMSKAPSPERIODE",
               id: 1,
               fomDato: "2023-01-01",
               tomDato: "2023-12-31",
@@ -76,7 +77,6 @@ describe("TidligereGrunnlag", () => {
               bestemmelse: "FTRL_2_7",
               innvilgelsesResultat: "INNVILGET",
               trygdedekning: "FULL_DEKNING_FTRL",
-              redigerbar: false,
             },
           ],
           skatteforholdsperioder: [],

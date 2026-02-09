@@ -7,6 +7,7 @@ import { useDispatch } from "../../../../../hooks";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import vurdering_vedtak_opphoer from "./vurderingVedtakOpphoerSchema";
 import * as Api from "../../../../../services/api";
+import { MedlemskapsperiodeForAvgift } from "../../../../../services/modules/types/periodeTyper";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { useCallback, useEffect, useState } from "react";
@@ -69,14 +70,12 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
     return () => debouncedOppdaterFritekster.cancel();
   }, []);
 
-  const forventetOpphørteMedlemskapsperioder = () =>
+  const forventetOpphørteMedlemskapsperioder = (): MedlemskapsperiodeForAvgift[] =>
     behandlingErAvsluttet
       ? [...medlemskapsperioder]
       : [...medlemskapsperioder]
           .filter((it) => [INNVILGET, OPPHØRT].includes(it.innvilgelsesResultat))
-          .map((it) => {
-            return { ...it, innvilgelsesResultat: OPPHØRT, bestemmelse: FTRL_KAP2_2_15_ANDRE_LEDD };
-          });
+          .map((it) => ({ ...it, innvilgelsesResultat: OPPHØRT, bestemmelse: FTRL_KAP2_2_15_ANDRE_LEDD }));
 
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {
@@ -138,14 +137,12 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
     ];
   };
 
-  const mapPeriodeRader = (perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode[]) =>
-    perioder.sort(Utils.dato.sorterEtterISOFomDato).map((it) => {
-      return {
-        periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
-        bestemmelse: KV.finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, it.bestemmelse),
-        resultat: KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, it.innvilgelsesResultat),
-      };
-    });
+  const mapPeriodeRader = (perioder: MedlemskapsperiodeForAvgift[]) =>
+    [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((it) => ({
+      periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
+      bestemmelse: KV.finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, it.bestemmelse),
+      resultat: KV.finnTermFraListe(MKV.KTObjects.innvilgelsesResultat, it.innvilgelsesResultat),
+    }));
 
   return (
     <div className="vurderingVedtakOpphoer">

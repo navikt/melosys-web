@@ -1,3 +1,5 @@
+import Periode from "../types/periode";
+
 type Arbeidsgiverbekrefterutsendelse = boolean | null;
 type Arbeidstakeransattunderutsendelsen = boolean | null;
 type Erstatterarbeidstakerenutsendte = boolean | null;
@@ -302,10 +304,7 @@ export interface Soeknadsland {
   landkoder: string[];
   flereLandUkjentHvilke: boolean;
 }
-export interface Periode {
-  fom: string;
-  tom: string | null;
-}
+export type { Periode };
 interface Juridiskarbeidsgivernorge {
   antallAdmAnsatte: Antalladmansatte;
   antallAnsatte: AntallAnsatte;

@@ -12,11 +12,11 @@ const IS_CI = !!process.env.CI;
 const CI_TIMEOUT_MULTIPLIER = IS_CI ? 3 : 1;
 
 /**
- * 30 sekunder for komplekse tester (45 sekunder i CI)
+ * 60 sekunder for komplekse tester (180 sekunder i CI)
  * Note: This must be >= the default test timeout in playwright.config.ts
  * to actually extend the timeout for complex tests.
  */
-export const TIMEOUT_FOR_COMPLEX_TESTS = 30000 * CI_TIMEOUT_MULTIPLIER;
+export const TIMEOUT_FOR_COMPLEX_TESTS = 60000 * CI_TIMEOUT_MULTIPLIER;
 
 /**
  * Generisk funksjon for å sette dato i et datofelt

@@ -7,7 +7,7 @@ import * as Api from "../../../../../services/api";
 import { Inntektskilde } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Utils from "../../../../../utils";
 import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
-import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../../services/modules/types/periodeTyper";
 
 interface BestemmelseSelectProps {
   control: Control<any>;

@@ -50,7 +50,8 @@ export const SamletInnvilgetMedlemskapsperiodeSelector = createSelector(
   },
 );
 
-export const BestemmelseSelector = createSelector(
-  AlleMedlemskapsperioderSelector,
-  (medlemskapsperioder) => [...medlemskapsperioder].sort(sorterEtterISOFomDato)?.[0]?.bestemmelse || "",
-);
+export const BestemmelseSelector = createSelector(AlleMedlemskapsperioderSelector, (medlemskapsperioder) => {
+  const sorterte = [...medlemskapsperioder].sort(sorterEtterISOFomDato);
+  const forstePeriode = sorterte[0];
+  return forstePeriode?.bestemmelse ?? "";
+});

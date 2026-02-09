@@ -1,45 +1,42 @@
 import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../../utils";
 import { API_BASE_URL, BEHANDLINGER, MEDLEMSKAPSPERIODER } from "../../api-constants";
+import type { MedlemskapsperiodeForAvgift, Avgiftspliktigperiode } from "../types/periodeTyper";
 
-export interface Avgiftspliktigperiode {
-  id: number;
-  fomDato: string;
-  tomDato: string;
-  bestemmelse: string;
-  innvilgelsesResultat: string;
-  trygdedekning: string;
-  medlemskapstype: string;
-  type?: "MEDLEMSKAPSPERIODE" | "HELSEUTGIFTDEKKESPERIODE" | "LOVVALGSPERIODE";
-  redigerbar?: boolean;
-}
-
-export interface OppdaterMedlemskapsperiode {
-  fomDato: string;
+/**
+ * Request DTO for opprettelse/oppdatering av medlemskapsperiode.
+ * Utledet fra Medlemskapsperiode, men tomDato er valgfri.
+ */
+export interface OppdaterMedlemskapsperiode
+  extends Pick<MedlemskapsperiodeForAvgift, "fomDato" | "innvilgelsesResultat" | "bestemmelse" | "trygdedekning"> {
   tomDato?: string | null;
-  innvilgelsesResultat: string;
-  bestemmelse: string;
-  trygdedekning: string;
 }
 
-export const hentMedlemskapsperioder = (behandlingID: number) =>
+export const hentMedlemskapsperioder = (behandlingID: number): Promise<MedlemskapsperiodeForAvgift[]> =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}`);
 
-export const opprettMedlemskapsperioder = (behandlingID: number, data: OppdaterMedlemskapsperiode) =>
+export const opprettMedlemskapsperioder = (
+  behandlingID: number,
+  data: OppdaterMedlemskapsperiode,
+): Promise<MedlemskapsperiodeForAvgift> =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}`, data);
 
 export const oppdaterMedlemskapsperioder = (
   behandlingID: number,
   medlemskapsID: number,
   data: OppdaterMedlemskapsperiode,
-) => putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/${medlemskapsID}`, data);
+): Promise<MedlemskapsperiodeForAvgift> =>
+  putAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/${medlemskapsID}`, data);
 
-export const slettMedlemskapsperiode = (behandlingID: number, medlemskapsID: number) =>
+export const slettMedlemskapsperiode = (behandlingID: number, medlemskapsID: number): Promise<void> =>
   deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/${medlemskapsID}`);
 
-export const slettMedlemskapsperioder = (behandlingID: number) =>
+export const slettMedlemskapsperioder = (behandlingID: number): Promise<void> =>
   deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}`);
 
-export const opprettForeslåtteMedlemskapsperioder = (behandlingID: number, bestemmelse: string) =>
+export const opprettForeslåtteMedlemskapsperioder = (
+  behandlingID: number,
+  bestemmelse: string,
+): Promise<MedlemskapsperiodeForAvgift[]> =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}/forslag`, { bestemmelse });
 
 export function harPerioderFraTidligereÅr(avgiftspliktigperioder: Avgiftspliktigperiode[]): boolean {

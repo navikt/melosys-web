@@ -162,22 +162,59 @@ export class StegvelgerPage extends BehandlingPage {
    * @param bestemmelse Søkestreng for bestemmelse (kan være delvis match, f.eks. "§ 2-5")
    */
   async velgBestemmelse(bestemmelse: string): Promise<void> {
-    const bestemmelseSelect = await finnCombobox("Bestemmelse", this.page, 5000);
+    const bestemmelseSelect = await finnCombobox("Hvilken bestemmelse skal søknaden vurderes etter?", this.page, 5000);
+
+    // Vent på at bestemmelser lastes fra API (flere options enn bare "Velg...")
+    await this.page.waitForFunction(
+      (selector) => {
+        const select = document.querySelector(selector) as HTMLSelectElement;
+        return select && select.options.length > 1;
+      },
+      'select[name="bestemmelser"]',
+      { timeout: 10000 },
+    );
 
     // Hent alle options og finn første som inneholder søkestrengen
     const options = bestemmelseSelect.locator("option");
     const count = await options.count();
 
+    let valgt = false;
+    let førsteGyldigeIndex = -1;
+    let valgtValue = "";
+
     for (let i = 0; i < count; i++) {
       const optionText = await options.nth(i).textContent();
-      if (optionText && optionText.includes(bestemmelse)) {
-        await bestemmelseSelect.selectOption({ index: i });
-        break;
+      const optionValue = await options.nth(i).getAttribute("value");
+      // Hopp over "Velg..." placeholder
+      if (optionText && !optionText.toLowerCase().includes("velg") && optionValue) {
+        if (førsteGyldigeIndex === -1) {
+          førsteGyldigeIndex = i;
+          valgtValue = optionValue;
+        }
+
+        if (optionText.includes(bestemmelse)) {
+          valgtValue = optionValue;
+          valgt = true;
+          break;
+        }
       }
     }
 
-    // Vent litt for at evt. tilleggsfelter skal vises
-    await this.page.waitForTimeout(300);
+    // Velg bestemmelse via value (mer pålitelig enn index)
+    if (valgtValue) {
+      await bestemmelseSelect.selectOption(valgtValue);
+    } else if (førsteGyldigeIndex >= 0) {
+      await bestemmelseSelect.selectOption({ index: førsteGyldigeIndex });
+    }
+
+    // Verifiser at en bestemmelse faktisk ble valgt (ikke "Velg...")
+    const selectedValue = await bestemmelseSelect.inputValue();
+    if (!selectedValue) {
+      throw new Error(`${this.ctx}: Kunne ikke velge bestemmelse - ingen option ble valgt (fant ${count} options)`);
+    }
+
+    // Vent på at React prosesserer change
+    await this.page.waitForTimeout(500);
 
     // Noen bestemmelser viser tilleggsspørsmål som må besvares.
     // Svarer "Ja" på alle radiogrupper som dukker opp (dynamisk)
@@ -224,6 +261,16 @@ export class StegvelgerPage extends BehandlingPage {
     // Velg trygdedekning for første periode
     const trygdedekningSelect = this.page.getByRole("combobox", { name: "Trygdedekning" }).first();
     if (await trygdedekningSelect.isVisible({ timeout: 2000 }).catch(() => false)) {
+      // Vent på at trygdedekning-options lastes (basert på valgt bestemmelse fra forrige steg)
+      await this.page.waitForFunction(
+        (selector) => {
+          const select = document.querySelector(selector) as HTMLSelectElement;
+          return select && select.options.length > 1; // Mer enn bare "Velg..."
+        },
+        'select[name*="trygdedekning"]',
+        { timeout: 10000 },
+      );
+
       const selectedIndex = await trygdedekningSelect.evaluate((el: HTMLSelectElement) => el.selectedIndex);
       if (selectedIndex <= 0) {
         await trygdedekningSelect.selectOption({ index: 1 });
