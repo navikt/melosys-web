@@ -77,6 +77,7 @@ describe("AarsavregningMedGrunnlag", () => {
         aar: 2023,
         sisteGjeldendeAvgiftspliktigperioder: [
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 1,
             fomDato: "2023-01-01",
             tomDato: "2023-12-31",
@@ -84,7 +85,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
         ],
         nyttTrygdeavgiftsGrunnlag: {
@@ -147,6 +147,7 @@ describe("AarsavregningMedGrunnlag", () => {
         aar: 2023,
         sisteGjeldendeAvgiftspliktigperioder: [
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 1,
             fomDato: "2023-01-01",
             tomDato: "2023-12-31",
@@ -154,7 +155,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
         ],
         nyttTrygdeavgiftsGrunnlag: undefined, // Ingen nytt grunnlag
@@ -162,6 +162,7 @@ describe("AarsavregningMedGrunnlag", () => {
           trygdeavgiftsgrunnlag: {
             avgiftspliktigperioder: [
               {
+                type: "MEDLEMSKAPSPERIODE",
                 id: 2,
                 fomDato: "2023-01-01",
                 tomDato: "2023-12-31",
@@ -169,7 +170,6 @@ describe("AarsavregningMedGrunnlag", () => {
                 medlemskapstype: "PLIKTIG",
                 innvilgelsesResultat: "INNVILGET",
                 trygdedekning: "FULL_DEKNING",
-                redigerbar: false,
               },
             ],
             skatteforholdsperioder: [
@@ -218,6 +218,7 @@ describe("AarsavregningMedGrunnlag", () => {
         aar: 2023,
         sisteGjeldendeAvgiftspliktigperioder: [
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 1,
             fomDato: "2023-01-01",
             tomDato: "2023-12-31",
@@ -225,7 +226,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
         ],
         nyttTrygdeavgiftsGrunnlag: undefined,
@@ -233,6 +233,7 @@ describe("AarsavregningMedGrunnlag", () => {
           trygdeavgiftsgrunnlag: {
             avgiftspliktigperioder: [
               {
+                type: "MEDLEMSKAPSPERIODE",
                 id: 2,
                 fomDato: "2023-01-01",
                 tomDato: "2023-12-31",
@@ -240,7 +241,6 @@ describe("AarsavregningMedGrunnlag", () => {
                 medlemskapstype: "PLIKTIG",
                 innvilgelsesResultat: "INNVILGET",
                 trygdedekning: "FULL_DEKNING",
-                redigerbar: false,
               },
             ],
             skatteforholdsperioder: [],
@@ -275,6 +275,7 @@ describe("AarsavregningMedGrunnlag", () => {
         aar: 2023,
         sisteGjeldendeAvgiftspliktigperioder: [
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 1,
             fomDato: "2023-01-01",
             tomDato: "2023-06-30",
@@ -282,9 +283,9 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 2,
             fomDato: "2023-07-01",
             tomDato: "2023-12-31",
@@ -292,7 +293,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "DELVIS_DEKNING",
-            redigerbar: false,
           },
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
@@ -380,6 +380,7 @@ describe("AarsavregningMedGrunnlag", () => {
         aar: 2023,
         sisteGjeldendeAvgiftspliktigperioder: [
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 1,
             fomDato: "2023-01-01",
             tomDato: "2023-12-31",
@@ -387,7 +388,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
         ],
         nyttTrygdeavgiftsGrunnlag: {
@@ -415,6 +415,7 @@ describe("AarsavregningMedGrunnlag", () => {
           trygdeavgiftsgrunnlag: {
             avgiftspliktigperioder: [
               {
+                type: "MEDLEMSKAPSPERIODE",
                 id: 2,
                 fomDato: "2023-01-01",
                 tomDato: "2023-12-31",
@@ -422,7 +423,6 @@ describe("AarsavregningMedGrunnlag", () => {
                 medlemskapstype: "PLIKTIG",
                 innvilgelsesResultat: "INNVILGET",
                 trygdedekning: "FULL_DEKNING",
-                redigerbar: false,
               },
             ],
             skatteforholdsperioder: [],
@@ -466,6 +466,7 @@ describe("AarsavregningMedGrunnlag", () => {
         aar: 2023,
         sisteGjeldendeAvgiftspliktigperioder: [
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 1,
             fomDato: "2023-01-01",
             tomDato: "2023-06-30",
@@ -473,9 +474,9 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 2,
             fomDato: "2023-07-01",
             tomDato: "2023-09-30",
@@ -483,9 +484,9 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "DELVIS_DEKNING",
-            redigerbar: false,
           },
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 3,
             fomDato: "2023-10-01",
             tomDato: "2023-12-31",
@@ -493,7 +494,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "FRIVILLIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
@@ -527,6 +527,7 @@ describe("AarsavregningMedGrunnlag", () => {
         aar: 2023,
         sisteGjeldendeAvgiftspliktigperioder: [
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 1,
             fomDato: "2023-01-01",
             tomDato: "2023-06-30",
@@ -534,9 +535,9 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 2,
             fomDato: "2023-07-01",
             tomDato: "2023-12-31",
@@ -544,7 +545,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "AVSLÅTT", // Ikke innvilget
             trygdedekning: "INGEN_DEKNING",
-            redigerbar: false,
           },
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
@@ -579,6 +579,7 @@ describe("AarsavregningMedGrunnlag", () => {
         aar: 2023,
         sisteGjeldendeAvgiftspliktigperioder: [
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 1,
             fomDato: "2023-01-01",
             tomDato: "2023-12-31",
@@ -586,7 +587,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "INGEN_DEKNING",
-            redigerbar: false,
           },
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
@@ -620,6 +620,7 @@ describe("AarsavregningMedGrunnlag", () => {
         aar: 2023,
         sisteGjeldendeAvgiftspliktigperioder: [
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 3,
             fomDato: "2023-09-01",
             tomDato: "2023-12-31",
@@ -627,9 +628,9 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 1,
             fomDato: "2023-01-01",
             tomDato: "2023-04-30",
@@ -637,9 +638,9 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 2,
             fomDato: "2023-05-01",
             tomDato: "2023-08-31",
@@ -647,7 +648,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "DELVIS_DEKNING",
-            redigerbar: false,
           },
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {
@@ -681,6 +681,7 @@ describe("AarsavregningMedGrunnlag", () => {
         aar: 2023,
         sisteGjeldendeAvgiftspliktigperioder: [
           {
+            type: "MEDLEMSKAPSPERIODE",
             id: 1,
             fomDato: "2023-01-01", // ISO-format
             tomDato: "2023-12-31", // ISO-format
@@ -688,7 +689,6 @@ describe("AarsavregningMedGrunnlag", () => {
             medlemskapstype: "PLIKTIG",
             innvilgelsesResultat: "INNVILGET",
             trygdedekning: "FULL_DEKNING",
-            redigerbar: false,
           },
         ],
         tidligereTrygdeavgiftsGrunnlagsopplysninger: {

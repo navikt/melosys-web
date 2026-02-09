@@ -11,10 +11,11 @@ import {
   mapTilInntektskilderProps,
   mapTilSkatteforholdProps,
 } from "./utils";
-import { Avgiftspliktigperiode } from "../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../services/modules/types/periodeTyper";
 
 // Helper function to create mock Medlemskapsperiode
 const createMockMedlemskapsperiode = (overrides?: Partial<Avgiftspliktigperiode>): Avgiftspliktigperiode => ({
+  type: "MEDLEMSKAPSPERIODE",
   id: 1,
   fomDato: "01.01.2023",
   tomDato: "31.12.2023",
@@ -325,7 +326,7 @@ describe("utils", () => {
 
         vi.mocked(Utils._isEmpty).mockReturnValue(false);
         // Mock datoformatering til å returnere input uendret for enklere assertions
-        vi.mocked(Utils.dato.formatterDatoTilNorsk).mockImplementation((dato) => dato);
+        vi.mocked(Utils.dato.formatterDatoTilNorsk).mockImplementation((dato) => (dato as string) ?? "");
 
         const result = mapTilInntektskilderProps(inntektskilderFraBackend, []);
 

@@ -80,7 +80,10 @@ const skalSendeSed = (formValues) => {
   if (art11_5_ErValgt(formValues)) {
     return kreverMottakerinstitusjon;
   }
-  return art11_3B_ErValgt(formValues);
+  if (art11_3B_ErValgt(formValues)) {
+    return formValues.informerUtenlandskTrygdemyndighet;
+  }
+  return false;
 };
 
 const skalSendeOrienteringsbrev = (selvstendigArbeid) => selvstendigArbeid?.erSelvstendig !== true;
@@ -189,7 +192,7 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
     let mottakerinstitusjoner = null;
     if (art11_5_ErValgt(formValues)) {
       mottakerinstitusjoner = formValues.mottakerLand ? [formValues.mottakerinstitusjon] : [];
-    } else if (art11_3B_ErValgt(formValues)) {
+    } else if (art11_3B_ErValgt(formValues) && formValues.informerUtenlandskTrygdemyndighet) {
       mottakerinstitusjoner = formValues.mottakerinstitusjoner
         .filter((inst) => inst.kreverMottakerinstitusjon)
         .map((inst) => inst.id);
@@ -283,17 +286,36 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
           </Nav.Column>
         </Nav.Row>
       )}
+
       {visMottakerinstitusjonvelgerFlervalg && (
-        <Nav.Row>
-          <Nav.Column xs="8">
-            <MottakerinstitusjonvelgerFlervalg
-              feltnavn="mottakerinstitusjoner"
-              bucType={EKV.Koder.buctyper.legislation.LA_BUC_05}
-              redigerbart={redigerbart}
-              form={form}
-            />
-          </Nav.Column>
-        </Nav.Row>
+        <>
+          <Nav.Row>
+            <Nav.Column xs="6">
+              <Skjema.RadioGroup
+                legend="Skal utenlandsk trygdemyndighet informeres med SED A010?"
+                name="informerUtenlandskTrygdemyndighet"
+                readOnly={!redigerbart}
+              >
+                <Nav.HStack gap="16">
+                  <Nav.Radio value>Ja</Nav.Radio>
+                  <Nav.Radio value={false}>Nei</Nav.Radio>
+                </Nav.HStack>
+              </Skjema.RadioGroup>
+            </Nav.Column>
+          </Nav.Row>
+          {formValues.informerUtenlandskTrygdemyndighet && (
+            <Nav.Row>
+              <Nav.Column xs="8">
+                <MottakerinstitusjonvelgerFlervalg
+                  feltnavn="mottakerinstitusjoner"
+                  bucType={EKV.Koder.buctyper.legislation.LA_BUC_05}
+                  redigerbart={redigerbart}
+                  form={form}
+                />
+              </Nav.Column>
+            </Nav.Row>
+          )}
+        </>
       )}
       {redigerbart && skalSendeSed(formValues) && (
         <Nav.Row className="fritekstSed">
@@ -381,7 +403,11 @@ const mapStateToProps = (state, ownProps) => {
         "days",
       ) !== 0;
 
-  const informerUtenlandskTrygdemyndighet = !Utils._isEmpty(ownProps.informertMyndighetFakta) ? true : null;
+  const erArt11_3B =
+    ownProps.lovvalgsbestemmelseSomSkalVises ===
+    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B;
+  const informerUtenlandskTrygdemyndighet =
+    !Utils._isEmpty(ownProps.informertMyndighetFakta) || erArt11_3B ? true : null;
   const mottakerLand = ownProps.informertMyndighetFakta.subjektID;
 
   return {
