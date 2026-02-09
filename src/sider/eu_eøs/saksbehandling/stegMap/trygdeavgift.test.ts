@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import Trygdeavgift from "./trygdeavgift";
 import { STEG, FANE_STATUS } from "../../../../felleskomponenter/stegvelger";
-import { VurderingTrygdeavgift } from "../../../trygdeavgift/lovvalgsperiode/vurderingTrygdeavgift";
+import { VurderingTrygdeavgift } from "../../../trygdeavgift/medlemskapsperiode/vurderingTrygdeavgift";
 
 describe("Trygdeavgift steg-klasse", () => {
   // Mock propsLight factory

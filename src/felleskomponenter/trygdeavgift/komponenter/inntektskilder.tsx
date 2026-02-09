@@ -4,16 +4,13 @@ import { Control, FieldArrayWithId } from "react-hook-form";
 import MKV from "../../../melosyskodeverk";
 import * as Forms from "../../forms";
 import * as Nav from "../../../navFrontend";
-import { Alert } from "../../../navFrontend";
+
 import * as Utils from "../../../utils";
 import * as Mui from "../../ui";
 import * as Ikoner from "../../../resources/images";
 import { BOOLSK_STRING } from "../../../constants";
 import { FieldArrayProps, FormValuesProps, Inntektskilde } from "./types";
-import {
-  arbAvgBetalesKreves,
-  bruttoInntektKreves,
-} from "../../../sider/trygdeavgift/medlemskapsperiode/vurderingTrygdeavgiftSchema";
+import { arbAvgBetalesKreves, bruttoInntektKreves } from "./schemaUtils";
 import "./inntektskilder.less";
 import { Stack } from "@navikt/ds-react";
 
@@ -294,9 +291,9 @@ export function Inntektskilder({
                         : "hoy_inntekt_advarsel--hidden"
                     }`}
                   >
-                    <Alert variant="warning" size="small">
+                    <Nav.Alert variant="warning" size="small">
                       Høy inntekt!
-                    </Alert>
+                    </Nav.Alert>
                   </div>
                 </div>
               ) : inntektskilde.kildetype &&
