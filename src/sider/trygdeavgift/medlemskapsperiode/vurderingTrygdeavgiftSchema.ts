@@ -17,13 +17,13 @@ const {
 } = MKV.Koder.inntektskildetype;
 const UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN = { melding: "Utenfor medlemskaps-/lovvalgsperioden" };
 
-export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
+export const arbAvgBetalesKreves = (kildetype: any, medlemskapsTypeErPliktig: any) =>
   !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
 
 const arbAvgBetalesFyltUtNårDetKrevesTest = {
   name: "Fyll inn arb.ag. betales når det kreves",
   message: { message: "Velg om arb.ag. betales til skatt" },
-  test: (arbAvgBetales, schema) => {
+  test: (arbAvgBetales: any, schema: any) => {
     const { kildetype } = schema.from[0].value;
 
     return !(
@@ -33,7 +33,7 @@ const arbAvgBetalesFyltUtNårDetKrevesTest = {
   },
 };
 
-export const bruttoInntektKreves = (brukerSkattepliktigIHelePerioden, kildetype, arbAvgBetales) =>
+export const bruttoInntektKreves = (brukerSkattepliktigIHelePerioden: any, kildetype: any, arbAvgBetales: any) =>
   !brukerSkattepliktigIHelePerioden ||
   [NÆRINGSINNTEKT_FRA_NORGE, FN_SKATTEFRITAK, PENSJON_UFØRETRYGD].includes(kildetype) ||
   ([INNTEKT_FRA_UTLANDET, PENSJON_UFØRETRYGD_KILDESKATT].includes(kildetype) && arbAvgBetales === BOOLSK_STRING.USANN);
@@ -41,7 +41,7 @@ export const bruttoInntektKreves = (brukerSkattepliktigIHelePerioden, kildetype,
 const bruttoInntektFyltUtNårDetKrevesTest = {
   name: "Fyll inn brutto inntekt når det kreves",
   message: { message: "Fyll inn brutto inntekt" },
-  test: (bruttoInntekt, schema) => {
+  test: (bruttoInntekt: any, schema: any) => {
     const { skatteforholdsperioder } = schema.from[1].value;
     const { kildetype, arbAvgBetales } = schema.from[0].value;
 
@@ -53,7 +53,7 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
   },
 };
 
-const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
+const kreverInntektskilder = (medlemskapsTypeErPliktig: any, options: any) => {
   if (options?.parent?.skatteforholdsperioder) {
     return !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(options.parent.skatteforholdsperioder));
   }
@@ -62,7 +62,7 @@ const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
 
 const vurdering_trygdeavgift = object().shape({
   skatteforholdsperioder: array().when(["$erÅpenSluttDato"], {
-    is: (erÅpenSluttDato) => !erÅpenSluttDato,
+    is: (erÅpenSluttDato: any) => !erÅpenSluttDato,
     then: (schema) =>
       schema.min(1).of(
         object().shape({
@@ -81,7 +81,7 @@ const vurdering_trygdeavgift = object().shape({
   }),
   inntektskilder: lazy((_value, options) => {
     return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato"], {
-      is: (medlemskapsTypeErPliktig, erÅpenSluttDato) =>
+      is: (medlemskapsTypeErPliktig: any, erÅpenSluttDato: any) =>
         !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options),
       then: (schema) =>
         schema.min(1).of(

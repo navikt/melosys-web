@@ -1,10 +1,10 @@
 import { array, lazy, object, string } from "yup";
-import MKV from "../../../melosyskodeverk/index.js";
-import * as KV from "../../../kodeverk/index.js";
-import * as Utils from "../../../utils/index.js";
-import { BOOLSK_STRING } from "../../../constants.js";
+import MKV from "../../../melosyskodeverk";
+import * as KV from "../../../kodeverk";
+import * as Utils from "../../../utils";
+import { BOOLSK_STRING } from "../../../constants";
 
-import { erBrukerSkattepliktigIHelePerioden } from "../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils.ts";
+import { erBrukerSkattepliktigIHelePerioden } from "../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const {
@@ -17,19 +17,19 @@ const {
 } = MKV.Koder.inntektskildetype;
 const UTENFOR_HELSEUTGIFT_DEKKES_PERIODE = { melding: "Utenfor helseutgift dekkes periode" };
 
-export const arbAvgBetalesKreves = (kildetype) => kildetype !== MISJONÆR;
+export const arbAvgBetalesKreves = (kildetype: any) => kildetype !== MISJONÆR;
 
 const arbAvgBetalesFyltUtNårDetKrevesTest = {
   name: "Fyll inn arb.ag. betales når det kreves",
   message: { message: "Velg om arb.ag. betales til skatt" },
-  test: (arbAvgBetales, schema) => {
+  test: (arbAvgBetales: any, schema: any) => {
     const { kildetype } = schema.from[0].value;
 
     return !(arbAvgBetalesKreves(kildetype) && Utils._isEmpty(arbAvgBetales));
   },
 };
 
-export const bruttoInntektKreves = (brukerSkattepliktigIHelePerioden, kildetype, arbAvgBetales) =>
+export const bruttoInntektKreves = (brukerSkattepliktigIHelePerioden: any, kildetype: any, arbAvgBetales: any) =>
   !brukerSkattepliktigIHelePerioden ||
   [NÆRINGSINNTEKT_FRA_NORGE, FN_SKATTEFRITAK, PENSJON_UFØRETRYGD].includes(kildetype) ||
   ([INNTEKT_FRA_UTLANDET, PENSJON_UFØRETRYGD_KILDESKATT].includes(kildetype) && arbAvgBetales === BOOLSK_STRING.USANN);
@@ -37,7 +37,7 @@ export const bruttoInntektKreves = (brukerSkattepliktigIHelePerioden, kildetype,
 const bruttoInntektFyltUtNårDetKrevesTest = {
   name: "Fyll inn brutto inntekt når det kreves",
   message: { message: "Fyll inn brutto inntekt" },
-  test: (bruttoInntekt, schema) => {
+  test: (bruttoInntekt: any, schema: any) => {
     const { skatteforholdsperioder } = schema.from[1].value;
     const { kildetype, arbAvgBetales } = schema.from[0].value;
 
@@ -49,7 +49,7 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
   },
 };
 
-const kreverInntektskilder = (options) => {
+const kreverInntektskilder = (options: any) => {
   if (options?.parent?.skatteforholdsperioder) {
     return !erBrukerSkattepliktigIHelePerioden(options.parent.skatteforholdsperioder);
   }
