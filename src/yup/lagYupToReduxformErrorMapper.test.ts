@@ -45,16 +45,19 @@ describe("lagYupToReduxformErrorMapper", () => {
 
     it("obfuskerer ikke errors som ikke er valideringsfeil(error.inner er undefined)", () => {
       const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      const schema = mixed();
-      schema.validateSync = () => {
-        throw new Error("Feil");
-      };
-      const mapYupToReduxformError = lagYupToReduxformErrorMapper(schema);
+      try {
+        const schema = mixed();
+        schema.validateSync = () => {
+          throw new Error("Feil");
+        };
+        const mapYupToReduxformError = lagYupToReduxformErrorMapper(schema);
 
-      expect(() => {
-        mapYupToReduxformError({});
-      }).toThrowError(new Error("Feil"));
-      consoleErrorSpy.mockRestore();
+        expect(() => {
+          mapYupToReduxformError({});
+        }).toThrowError(new Error("Feil"));
+      } finally {
+        consoleErrorSpy.mockRestore();
+      }
     });
   });
 });

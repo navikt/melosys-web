@@ -484,38 +484,43 @@ describe("journalforing operations", () => {
 
     it("håndterer API-feil gracefully med .catch() fallbacks", async () => {
       const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      mswServer.use(
-        http.get("/api/anmodningsperioder/:behandlingId", () =>
-          HttpResponse.json({ message: "Internal Server Error" }, { status: 500 }),
-        ),
-        http.get("/api/fagsaker/:saksnummer/trygdeavgift/oppsummering", () =>
-          HttpResponse.json({ message: "Internal Server Error" }, { status: 500 }),
-        ),
-        http.get("/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/", () =>
-          HttpResponse.json({ message: "Internal Server Error" }, { status: 500 }),
-        ),
-        http.get("/api/saksbehandling/:saksnummer/behandlingstyper/kombinasjoner-for-knytt-sak/", () =>
-          HttpResponse.json({ message: "Internal Server Error" }, { status: 500 }),
-        ),
-      );
+      try {
+        mswServer.use(
+          http.get("/api/anmodningsperioder/:behandlingId", () =>
+            HttpResponse.json({ message: "Internal Server Error" }, { status: 500 }),
+          ),
+          http.get("/api/fagsaker/:saksnummer/trygdeavgift/oppsummering", () =>
+            HttpResponse.json({ message: "Internal Server Error" }, { status: 500 }),
+          ),
+          http.get("/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/", () =>
+            HttpResponse.json({ message: "Internal Server Error" }, { status: 500 }),
+          ),
+          http.get("/api/saksbehandling/:saksnummer/behandlingstyper/kombinasjoner-for-knytt-sak/", () =>
+            HttpResponse.json({ message: "Internal Server Error" }, { status: 500 }),
+          ),
+        );
 
-      const initialState: Partial<RootState> = {
-        form: {
-          testForm: {
-            values: {},
+        const initialState: Partial<RootState> = {
+          form: {
+            testForm: {
+              values: {},
+            },
           },
-        },
-      };
+        };
 
-      const store = createTestStore(initialState);
+        const store = createTestStore(initialState);
 
-      // Skal ikke kaste feil, men returnere fallback-verdier
-      const result = await store.dispatch(operations.prepareKnyttTilSakForm(baseSak, false, "BRUKER", feltNavn) as any);
+        // Skal ikke kaste feil, men returnere fallback-verdier
+        const result = await store.dispatch(
+          operations.prepareKnyttTilSakForm(baseSak, false, "BRUKER", feltNavn) as any,
+        );
 
-      expect(result.muligeBehandlingstemaer).toEqual([]);
-      expect(result.muligeBehandlingstyper).toEqual([]);
-      expect(result.harBehandlingMedTrygdeavgift).toBe(false);
-      consoleErrorSpy.mockRestore();
+        expect(result.muligeBehandlingstemaer).toEqual([]);
+        expect(result.muligeBehandlingstyper).toEqual([]);
+        expect(result.harBehandlingMedTrygdeavgift).toBe(false);
+      } finally {
+        consoleErrorSpy.mockRestore();
+      }
     });
 
     it("returnerer harBehandlingMedTrygdeavgift=true når sak har trygdeavgift", async () => {

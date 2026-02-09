@@ -45,6 +45,10 @@ describe("FullmektigHistorikk", () => {
     finnPersonAdresse: vi.fn(),
   };
 
+  beforeEach(() => {
+    vi.mocked(hentFullmektigHistorikk).mockClear();
+  });
+
   it("rendrer tabellheader med kolonner", async () => {
     render(<FullmektigHistorikk {...defaultProps} />);
     expect(screen.getByText("Registrert fra")).toBeDefined();
