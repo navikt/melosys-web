@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { mixed, object, string } from "yup";
 
 import { lagYupToReduxformErrorMapper } from "./lagYupToReduxformErrorMapper";
@@ -44,15 +44,20 @@ describe("lagYupToReduxformErrorMapper", () => {
     });
 
     it("obfuskerer ikke errors som ikke er valideringsfeil(error.inner er undefined)", () => {
-      const schema = mixed();
-      schema.validateSync = () => {
-        throw new Error("Feil");
-      };
-      const mapYupToReduxformError = lagYupToReduxformErrorMapper(schema);
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      try {
+        const schema = mixed();
+        schema.validateSync = () => {
+          throw new Error("Feil");
+        };
+        const mapYupToReduxformError = lagYupToReduxformErrorMapper(schema);
 
-      expect(() => {
-        mapYupToReduxformError({});
-      }).toThrowError(new Error("Feil"));
+        expect(() => {
+          mapYupToReduxformError({});
+        }).toThrowError(new Error("Feil"));
+      } finally {
+        consoleErrorSpy.mockRestore();
+      }
     });
   });
 });

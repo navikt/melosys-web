@@ -131,19 +131,25 @@ describe("VurderingTrygdeavgift", () => {
   });
 
   describe("rendering", () => {
-    it("rendrer ingenting når steget ikke er aktivt", () => {
+    it("rendrer ingenting når steget ikke er aktivt", async () => {
       const { container } = renderComponent({}, { aktivtSteg: false });
 
       expect(container.firstChild).toBeNull();
+      await waitFor(() => {
+        expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled();
+      });
     });
 
-    it("viser heading når steget er aktivt", () => {
+    it("viser heading når steget er aktivt", async () => {
       renderComponent();
 
       expect(screen.getByRole("heading", { name: "Trygdeavgift" })).toBeInTheDocument();
+      await waitFor(() => {
+        expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled();
+      });
     });
 
-    it("viser info når medlemskapsperioden mangler sluttdato", () => {
+    it("viser info når medlemskapsperioden mangler sluttdato", async () => {
       renderComponent({
         medlemskapsperioder: [createMockMedlemskapsperiode({ tomDato: undefined })],
         redigerbart: false,
@@ -152,11 +158,14 @@ describe("VurderingTrygdeavgift", () => {
       expect(
         screen.getByText(/Trygdeavgift kan ikke beregnes for medlemskapsperiode uten sluttdato/),
       ).toBeInTheDocument();
+      await waitFor(() => {
+        expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled();
+      });
     });
   });
 
   describe("feature toggles", () => {
-    it("viser advarsel når tidligere år skal skjules", () => {
+    it("viser advarsel når tidligere år skal skjules", async () => {
       vi.mocked(useFeatureToggle).mockImplementation(
         (toggle) => toggle === MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
       );
@@ -166,6 +175,9 @@ describe("VurderingTrygdeavgift", () => {
       });
 
       expect(screen.getByText(/Trygdeavgift for tidligere år skal fastsettes på årsavregning/)).toBeInTheDocument();
+      await waitFor(() => {
+        expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled();
+      });
     });
   });
 

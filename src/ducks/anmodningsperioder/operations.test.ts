@@ -62,7 +62,7 @@ describe("Anmodningsperioder operations", () => {
 
       mswServer.use(
         http.post("/api/anmodningsperioder/4", () => {
-          return new HttpResponse(null, { status: 500 });
+          return HttpResponse.json({ message: "Internal Server Error" }, { status: 500 });
         }),
       );
 
