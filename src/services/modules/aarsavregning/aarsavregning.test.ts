@@ -6,7 +6,6 @@ import {
   oppdaterHarSkjoennsfastsattInntekt,
   oppdaterEndeligAvgiftValg,
   hentFiltrertAarsavregningList,
-  oppdaterBeregnetAvgiftBeloep,
   oppdaterManueltAvgiftBeloep,
   oppdaterAarsavregning,
 } from "./aarsavregning";
@@ -46,10 +45,6 @@ describe("aarsavregning", () => {
 
   it("hentFiltrertAarsavregningList med filtre returnerer promise", () => {
     expect(hentFiltrertAarsavregningList("123", "INNVILGET", 2024)).toBeInstanceOf(Promise);
-  });
-
-  it("oppdaterBeregnetAvgiftBeloep returnerer promise", () => {
-    expect(oppdaterBeregnetAvgiftBeloep(1, 2, 1000)).toBeInstanceOf(Promise);
   });
 
   it("oppdaterManueltAvgiftBeloep returnerer promise", () => {

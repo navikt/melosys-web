@@ -19,7 +19,8 @@ vi.mock("../../../../../navFrontend", () => ({
 }));
 
 vi.mock("../../../../../kodeverk", () => ({ Form: {} }));
-vi.mock("../../../../../utils", () => ({ _uuid: () => "mock-uuid" }));
+let uuidCounter = 0;
+vi.mock("../../../../../utils", () => ({ _uuid: () => `mock-uuid-${++uuidCounter}` }));
 
 import RedigeringUtfort from "./redigeringUtfort";
 

@@ -15,8 +15,9 @@ vi.mock("../../../../../melosyskodeverk", () => ({
   default: { KTObjects: { land_iso2: [] } },
 }));
 
+let uuidCounter = 0;
 vi.mock("../../../../../utils", () => ({
-  _uuid: () => "mock-uuid",
+  _uuid: () => `mock-uuid-${++uuidCounter}`,
 }));
 
 import RedigeringUtfort from "./redigeringUtfort";
