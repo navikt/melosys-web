@@ -129,7 +129,7 @@ describe("Lovvalgsperioder operations", () => {
 
       mswServer.use(
         http.post("/api/lovvalgsperioder/4", () => {
-          return new HttpResponse(null, { status: 500 });
+          return HttpResponse.json({ message: "Internal Server Error" }, { status: 500 });
         }),
       );
 

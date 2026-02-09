@@ -42,7 +42,11 @@ describe("journalforing operations", () => {
 
       const journalpostID = "12345";
 
-      mswServer.use(http.get(`/api/journalforing/${journalpostID}`, () => new HttpResponse(null, { status: 500 })));
+      mswServer.use(
+        http.get(`/api/journalforing/${journalpostID}`, () =>
+          HttpResponse.json({ message: "Internal Server Error" }, { status: 500 }),
+        ),
+      );
 
       const store = createTestStore(initialState);
 
@@ -480,15 +484,17 @@ describe("journalforing operations", () => {
 
     it("håndterer API-feil gracefully med .catch() fallbacks", async () => {
       mswServer.use(
-        http.get("/api/anmodningsperioder/:behandlingId", () => new HttpResponse(null, { status: 500 })),
-        http.get("/api/fagsaker/:saksnummer/trygdeavgift/oppsummering", () => new HttpResponse(null, { status: 500 })),
-        http.get(
-          "/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/",
-          () => new HttpResponse(null, { status: 500 }),
+        http.get("/api/anmodningsperioder/:behandlingId", () =>
+          HttpResponse.json({ message: "Internal Server Error" }, { status: 500 }),
         ),
-        http.get(
-          "/api/saksbehandling/:saksnummer/behandlingstyper/kombinasjoner-for-knytt-sak/",
-          () => new HttpResponse(null, { status: 500 }),
+        http.get("/api/fagsaker/:saksnummer/trygdeavgift/oppsummering", () =>
+          HttpResponse.json({ message: "Internal Server Error" }, { status: 500 }),
+        ),
+        http.get("/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/", () =>
+          HttpResponse.json({ message: "Internal Server Error" }, { status: 500 }),
+        ),
+        http.get("/api/saksbehandling/:saksnummer/behandlingstyper/kombinasjoner-for-knytt-sak/", () =>
+          HttpResponse.json({ message: "Internal Server Error" }, { status: 500 }),
         ),
       );
 

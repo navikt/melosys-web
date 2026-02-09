@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import MKV from "../../../../melosyskodeverk";
 
 vi.mock("react-redux", () => ({
@@ -9,6 +9,8 @@ vi.mock("react-redux", () => ({
 vi.mock("../../../../ducks/fagsaker", () => ({
   fagsakSelectors: { SaksnummerSelector: () => "SAK123" },
 }));
+
+import { hentFullmektigHistorikk } from "../../../../services/modules/fagsaker/fagsak";
 
 vi.mock("../../../../services/modules/fagsaker/fagsak", () => ({
   hentFullmektigHistorikk: vi.fn(() => Promise.resolve([])),
@@ -43,16 +45,22 @@ describe("FullmektigHistorikk", () => {
     finnPersonAdresse: vi.fn(),
   };
 
-  it("rendrer tabellheader med kolonner", () => {
+  it("rendrer tabellheader med kolonner", async () => {
     render(<FullmektigHistorikk {...defaultProps} />);
     expect(screen.getByText("Registrert fra")).toBeDefined();
     expect(screen.getByText("Registrert til")).toBeDefined();
     expect(screen.getByText("Fullmakt")).toBeDefined();
     expect(screen.getByText("Fullmektig Org.nr./F.nr.")).toBeDefined();
+    await waitFor(() => {
+      expect(hentFullmektigHistorikk).toHaveBeenCalled();
+    });
   });
 
-  it("rendrer tom tabell når ingen historikk", () => {
+  it("rendrer tom tabell når ingen historikk", async () => {
     const { container } = render(<FullmektigHistorikk {...defaultProps} />);
+    await waitFor(() => {
+      expect(hentFullmektigHistorikk).toHaveBeenCalled();
+    });
     const rows = container.querySelectorAll("tbody tr");
     expect(rows).toHaveLength(0);
   });
