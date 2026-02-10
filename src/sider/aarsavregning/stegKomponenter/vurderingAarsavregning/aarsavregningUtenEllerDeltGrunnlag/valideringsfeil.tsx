@@ -2,7 +2,7 @@ import * as Utils from "../../../../../utils";
 import { erBrukerSkattepliktigIHelePerioden } from "../utils";
 import { Inntektskilde, Skatteforhold } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Nav from "../../../../../navFrontend";
-import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import type { Avgiftspliktigperiode, BasePeriode } from "../../../../../services/modules/types/periodeTyper";
 
 export enum TypeFeilmelding {
   SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN = "SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN",
@@ -42,10 +42,7 @@ const harOppholdsperioder = (perioder: any[]) => {
 
 const dekkerHeleMedlemskapsperiode = (
   perioder: any[],
-  medlemskapsperiodeFomTom: {
-    fomDato: string;
-    tomDato: string;
-  },
+  medlemskapsperiodeFomTom: BasePeriode,
   type: "skatteforhold" | "inntektskilde",
 ): boolean => {
   if (!perioder || perioder.length === 0) return true;
@@ -126,10 +123,7 @@ const ikkeAlleSammeSkatteforholdstyper = (perioder: any[]): boolean => {
 interface AarsavregningValidationParams {
   skatteforholdsperioder: Skatteforhold[];
   inntektskilder: Inntektskilde[];
-  medlemskapsperiodeFomTom: {
-    fomDato: string;
-    tomDato: string;
-  };
+  medlemskapsperiodeFomTom: BasePeriode;
   medlemskapsperioder: Avgiftspliktigperiode[];
   medlemskapstypeErPliktig: boolean;
 }

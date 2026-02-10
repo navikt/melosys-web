@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { useForm } from "react-hook-form";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import MKV from "../../../../../melosyskodeverk";
-import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import { Avgiftspliktigperiode } from "../../../../../services/modules/types/periodeTyper";
 import { finnMedlemskapsperiode } from "../utils";
 
 const { MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
@@ -53,6 +53,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   it("skal finne sammensatt periode fra flere medlemskapsperioder", () => {
     const perioder: Avgiftspliktigperiode[] = [
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 1,
         fomDato: "01.01.2023",
         tomDato: "30.06.2023",
@@ -62,6 +63,7 @@ describe("finnMedlemskapsperiode logikk", () => {
         medlemskapstype: "PLIKTIG",
       },
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 2,
         fomDato: "01.07.2023",
         tomDato: "31.12.2023",
@@ -91,6 +93,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   it("skal filtrere bort perioder uten fomDato", () => {
     const perioder: Avgiftspliktigperiode[] = [
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 1,
         fomDato: "",
         tomDato: "30.06.2023",
@@ -100,6 +103,7 @@ describe("finnMedlemskapsperiode logikk", () => {
         medlemskapstype: "PLIKTIG",
       },
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 2,
         fomDato: "01.07.2023",
         tomDato: "31.12.2023",
@@ -121,6 +125,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   it("skal filtrere bort perioder uten tomDato", () => {
     const perioder: Avgiftspliktigperiode[] = [
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 1,
         fomDato: "01.01.2023",
         tomDato: "30.06.2023",
@@ -130,6 +135,7 @@ describe("finnMedlemskapsperiode logikk", () => {
         medlemskapstype: "PLIKTIG",
       },
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 2,
         fomDato: "01.07.2023",
         tomDato: "",
@@ -151,6 +157,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   it("skal returnere undefined når alle perioder mangler fom eller tom", () => {
     const perioder: Avgiftspliktigperiode[] = [
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 1,
         fomDato: "",
         tomDato: "30.06.2023",
@@ -160,6 +167,7 @@ describe("finnMedlemskapsperiode logikk", () => {
         medlemskapstype: "PLIKTIG",
       },
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 2,
         fomDato: "01.07.2023",
         tomDato: "",
@@ -178,6 +186,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   it("skal håndtere én enkelt periode", () => {
     const perioder: Avgiftspliktigperiode[] = [
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 1,
         fomDato: "01.01.2023",
         tomDato: "31.12.2023",
@@ -199,6 +208,7 @@ describe("finnMedlemskapsperiode logikk", () => {
   it("skal sortere perioder korrekt og ta første fomDato og siste tomDato", () => {
     const perioder: Avgiftspliktigperiode[] = [
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 2,
         fomDato: "01.07.2023",
         tomDato: "31.12.2023",
@@ -208,6 +218,7 @@ describe("finnMedlemskapsperiode logikk", () => {
         medlemskapstype: "PLIKTIG",
       },
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 1,
         fomDato: "01.01.2023",
         tomDato: "30.06.2023",
@@ -217,6 +228,7 @@ describe("finnMedlemskapsperiode logikk", () => {
         medlemskapstype: "PLIKTIG",
       },
       {
+        type: "MEDLEMSKAPSPERIODE",
         id: 3,
         fomDato: "01.01.2024",
         tomDato: "30.06.2024",

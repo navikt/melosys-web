@@ -58,6 +58,7 @@ describe("harPerioderFraTidligereÅr", () => {
     const perioder = [
       {
         id: 1,
+        type: "MEDLEMSKAPSPERIODE" as const,
         fomDato: "2020-01-01",
         tomDato: "2020-12-31",
         bestemmelse: "A",
@@ -74,6 +75,7 @@ describe("harPerioderFraTidligereÅr", () => {
     const perioder = [
       {
         id: 1,
+        type: "MEDLEMSKAPSPERIODE" as const,
         fomDato: `${år}-06-01`,
         tomDato: `${år}-12-31`,
         bestemmelse: "A",

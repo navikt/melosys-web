@@ -15,10 +15,14 @@ import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../utils";
 import { AarsavregningMedGrunnlagForm } from "./aarsavregningMedGrunnlagForm";
 import * as Nav from "../../../../../navFrontend";
 import MKV from "../../../../../melosyskodeverk";
-import { Avgiftspliktigperiode } from "../../../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
+import {
+  erMedlemskapsperiode,
+  erMedlemskapsperiodeEllerLovvalgsperiode,
+  MedlemskapsperiodeForAvgift,
+} from "../../../../../services/modules/types/periodeTyper";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
 
-const mapMedlemskapsperioder = (medlemskapsperioder: Avgiftspliktigperiode[]) => {
+const mapMedlemskapsperioder = (medlemskapsperioder: MedlemskapsperiodeForAvgift[]) => {
   const innvilgedePerioder = medlemskapsperioder.filter(
     (periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
   );
@@ -38,7 +42,7 @@ export interface AarsavregningMedGrunnlagFormValues extends FormValuesProps {
 export interface InitiellData {
   aarsavregningResponse?: AarsavregningResponse;
   formDefaultValues: FieldValue<AarsavregningMedGrunnlagFormValues>;
-  innvilgetMedlemskapsperioder: Avgiftspliktigperiode[];
+  innvilgetMedlemskapsperioder: MedlemskapsperiodeForAvgift[];
   medlemskapstypeErPliktig: boolean;
   forrigeÅrsavregningErManueltBeregnet: boolean;
   valgtÅr?: number;
@@ -73,10 +77,20 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     if (aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag?.trygdeavgiftsgrunnlag) {
       trygdeavgiftsgrunnlag = aarsavregningResponse.nyttTrygdeavgiftsGrunnlag.trygdeavgiftsgrunnlag;
     } else {
-      const bestemmelseFraTidligereAvgiftsgrunnlag =
+      const tidligerePerioder =
         aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
-          ?.avgiftspliktigperioder?.[0]?.bestemmelse;
-      const eventuellNyBestemmelse = aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder?.[0]?.bestemmelse;
+          ?.avgiftspliktigperioder?.[0];
+      const sisteGjeldende = aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder?.[0];
+
+      const bestemmelseFraTidligereAvgiftsgrunnlag =
+        tidligerePerioder && erMedlemskapsperiodeEllerLovvalgsperiode(tidligerePerioder)
+          ? tidligerePerioder.bestemmelse
+          : undefined;
+      const eventuellNyBestemmelse =
+        sisteGjeldende && erMedlemskapsperiodeEllerLovvalgsperiode(sisteGjeldende)
+          ? sisteGjeldende.bestemmelse
+          : undefined;
+
       if (
         bestemmelseFraTidligereAvgiftsgrunnlag &&
         eventuellNyBestemmelse &&
@@ -131,7 +145,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           const defaultFormValues: FieldValue<AarsavregningMedGrunnlagFormValues> =
             mapSkjemaverdierFraTrygdeavgiftsgrunnlag(res);
 
-          const medlemskapsperioder = res.sisteGjeldendeAvgiftspliktigperioder || [];
+          const medlemskapsperioder = (res.sisteGjeldendeAvgiftspliktigperioder || []).filter(erMedlemskapsperiode);
           const innvilgetMedlemskapsperioder = mapMedlemskapsperioder(medlemskapsperioder);
           const medlemskapstypeErPliktig = Boolean(
             innvilgetMedlemskapsperioder?.every(

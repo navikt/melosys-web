@@ -3,14 +3,10 @@ import reducer from "./reducers";
 import * as types from "./types";
 import * as actions from "./actions";
 import * as Utils from "../../services/utils";
-
-interface UtpekingsperiodePeriode {
-  fomDato: string;
-  tomDato: string;
-}
+import type { BasePeriode } from "../../services/modules/types/periodeTyper";
 
 interface UtpekingsperiodeState {
-  data: UtpekingsperiodePeriode[];
+  data: BasePeriode[];
   status: string;
 }
 

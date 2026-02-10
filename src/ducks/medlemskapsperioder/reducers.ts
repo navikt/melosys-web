@@ -1,6 +1,6 @@
 import { StateSection } from "AppTypes";
 import { STATUS } from "../../services";
-import * as Api from "../../services/api";
+import { Avgiftspliktigperiode } from "../../services/modules/types/periodeTyper";
 import * as Types from "./types";
 
 export const initialState: StateSection<Types.Data> = {
@@ -9,7 +9,7 @@ export const initialState: StateSection<Types.Data> = {
 };
 
 const finnIndexTilPeriode = (
-  perioder: Api.MedlemAvFolketrygden.Medlemskapsperioder.Avgiftspliktigperiode[],
+  perioder: Avgiftspliktigperiode[],
   action: Types.OkSlettMedlemskapsperiodeAction | Types.OkOppdaterMedlemskapsperiodeAction,
 ) => perioder?.findIndex((periode) => periode.id === action.data.id);
 

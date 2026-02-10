@@ -1,9 +1,13 @@
 import { getAsJson, postAsJson, putAsJson } from "../../utils";
 import { API_BASE_URL, HELSEUTGIFTDEKKESPERIODE, BEHANDLINGER } from "../../api-constants";
+import { HelseutgiftdekkesperiodeForAvgift } from "../types/periodeTyper";
 
-export interface HelseutgiftDekkesPeriodeDto {
-  fomDato: string;
-  tomDato: string;
+/**
+ * DTO for CRUD-operasjoner på helseutgiftdekkesperiode.
+ * Utvider Helseutgiftdekkesperiode med bostedLandkode (påkrevd for backend).
+ * Utelater id, type og redigerbar som kun brukes i lesekontekst.
+ */
+export interface HelseutgiftDekkesPeriodeDto extends Pick<HelseutgiftdekkesperiodeForAvgift, "fomDato" | "tomDato"> {
   bostedLandkode: string;
 }
 

@@ -37,7 +37,6 @@ import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 import { erBrukerSkattepliktigIHelePerioden } from "../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 import { useFeatureToggle } from "../../../featuretoggle";
 import { MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER } from "../../../featuretoggle/toggleNavn";
-import { Alert } from "../../../navFrontend";
 import { harPerioderFraTidligereÅr } from "../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
 
 interface Props {
@@ -336,10 +335,10 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
       )}
 
       {skalIkkeViseTidligerePerioderToggle && harMedlemskapsperiodeFraTidligereÅr && redigerbart && (
-        <Alert variant="warning" size="small" className="alert--spacing-bottom">
+        <Nav.Alert variant="warning" size="small" className="alert--spacing-bottom">
           Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor ikke oppgi skatte- og
           inntektsperioder for tidligere år i denne behandlingen.
-        </Alert>
+        </Nav.Alert>
       )}
 
       {!erÅpenSluttDato && skalViseSkatteforholdOgInntektsperioder && (
