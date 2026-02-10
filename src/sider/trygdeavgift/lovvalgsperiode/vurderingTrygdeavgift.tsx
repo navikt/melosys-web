@@ -40,7 +40,6 @@ import {
   MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
   MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
 } from "../../../featuretoggle/toggleNavn";
-import { Alert } from "../../../navFrontend";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import { harPerioderFraTidligereÅr } from "../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
@@ -364,10 +363,10 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
       )}
 
       {skalIkkeViseTidligerePerioderToggle && harMedlemskapsperiodeFraTidligereÅr && redigerbart && (
-        <Alert variant="warning" size="small" className="alert--spacing-bottom">
+        <Nav.Alert variant="warning" size="small" className="alert--spacing-bottom">
           Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor ikke oppgi skatte- og
           inntektsperioder for tidligere år i denne behandlingen.
-        </Alert>
+        </Nav.Alert>
       )}
 
       {!erÅpenSluttDato && skalViseSkatteforholdOgInntektsperioder && (
