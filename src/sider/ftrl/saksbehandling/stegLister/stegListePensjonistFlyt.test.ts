@@ -10,7 +10,7 @@ vi.mock("../stegKomponenter/vurderingVedtak/vurderingVedtak", () => ({ Vurdering
 vi.mock("../stegKomponenter/vurderingBestemmelse/vurderingBestemmelse", () => ({
   VurderingBestemmelse: "VurderingBestemmelse",
 }));
-vi.mock("../../../vurderingTrygdeavgift/vurderingTrygdeavgift", () => ({
+vi.mock("../../../trygdeavgift/medlemskapsperiode/vurderingTrygdeavgift", () => ({
   VurderingTrygdeavgift: "VurderingTrygdeavgift",
 }));
 

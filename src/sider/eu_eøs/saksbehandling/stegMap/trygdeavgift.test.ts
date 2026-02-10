@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import Trygdeavgift from "./trygdeavgift";
 import { STEG, FANE_STATUS } from "../../../../felleskomponenter/stegvelger";
-import { VurderingTrygdeavgift as VurderingTrygdeavgiftFTRL } from "../../../vurderingTrygdeavgift/vurderingTrygdeavgift";
+import { VurderingTrygdeavgift } from "../../../trygdeavgift/lovvalgsperiode/vurderingTrygdeavgift";
 
 describe("Trygdeavgift steg-klasse", () => {
   // Mock propsLight factory
@@ -33,7 +33,7 @@ describe("Trygdeavgift steg-klasse", () => {
 
       expect(trygdeavgift.id).toBe(STEG.VURDERING_TRYGDEAVGIFT);
       expect(trygdeavgift.tittel).toBe("Trygdeavgift");
-      expect(trygdeavgift.komponent).toBe(VurderingTrygdeavgiftFTRL);
+      expect(trygdeavgift.komponent).toBe(VurderingTrygdeavgift);
       expect(trygdeavgift.status).toBe(FANE_STATUS.OK);
     });
 
@@ -208,7 +208,7 @@ describe("Trygdeavgift steg-klasse", () => {
 
       expect(byggetSteg).toMatchObject({
         id: STEG.VURDERING_TRYGDEAVGIFT,
-        komponent: VurderingTrygdeavgiftFTRL,
+        komponent: VurderingTrygdeavgift,
         tittel: "Trygdeavgift",
         stegPosisjon: 6,
         status: FANE_STATUS.UBEHANDLET,

@@ -1,10 +1,10 @@
 import { array, lazy, object, string } from "yup";
-import MKV from "../../../../../melosyskodeverk";
-import * as KV from "../../../../../kodeverk";
-import * as Utils from "../../../../../utils";
-import { BOOLSK_STRING } from "../../../../../constants";
+import MKV from "../../../melosyskodeverk";
+import * as KV from "../../../kodeverk";
+import * as Utils from "../../../utils";
+import { BOOLSK_STRING } from "../../../constants";
 
-import { erBrukerSkattepliktigIHelePerioden } from "../../../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
+import { erBrukerSkattepliktigIHelePerioden } from "../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 
 const { MAA_FYLLES_UT } = KV.Feilmeldinger;
 const {
@@ -15,9 +15,10 @@ const {
   PENSJON_UFØRETRYGD,
   PENSJON_UFØRETRYGD_KILDESKATT,
 } = MKV.Koder.inntektskildetype;
-const UTENFOR_HELSEUTGIFT_DEKKES_PERIODE = { melding: "Utenfor helseutgift dekkes periode" };
+const UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN = { melding: "Utenfor medlemskaps-/lovvalgsperioden" };
 
-export const arbAvgBetalesKreves = (kildetype) => kildetype !== MISJONÆR;
+export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
+  !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
 
 const arbAvgBetalesFyltUtNårDetKrevesTest = {
   name: "Fyll inn arb.ag. betales når det kreves",
@@ -25,7 +26,10 @@ const arbAvgBetalesFyltUtNårDetKrevesTest = {
   test: (arbAvgBetales, schema) => {
     const { kildetype } = schema.from[0].value;
 
-    return !(arbAvgBetalesKreves(kildetype) && Utils._isEmpty(arbAvgBetales));
+    return !(
+      arbAvgBetalesKreves(kildetype, schema?.options?.context?.medlemskapsTypeErPliktig) &&
+      Utils._isEmpty(arbAvgBetales)
+    );
   },
 };
 
@@ -49,52 +53,54 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
   },
 };
 
-const kreverInntektskilder = (options) => {
+const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
   if (options?.parent?.skatteforholdsperioder) {
-    return !erBrukerSkattepliktigIHelePerioden(options.parent.skatteforholdsperioder);
+    return !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(options.parent.skatteforholdsperioder));
   }
   return true;
 };
 
 const vurdering_trygdeavgift = object().shape({
-  skatteforholdsperioder: array()
-    .min(1)
-    .of(
-      object().shape({
-        fomDato: string()
-          .erGyldigDato()
-          .erInnenforPeriode("helseutgiftDekkesPeriode", UTENFOR_HELSEUTGIFT_DEKKES_PERIODE)
-          .required(MAA_FYLLES_UT),
-        tomDato: string()
-          .erGyldigDato()
-          .erInnenforPeriode("helseutgiftDekkesPeriode", UTENFOR_HELSEUTGIFT_DEKKES_PERIODE)
-          .erEtterDatofelt("fomDato")
-          .required(MAA_FYLLES_UT),
-        skatteplikttype: string().required(MAA_FYLLES_UT),
-      }),
-    ),
+  skatteforholdsperioder: array().when(["$erÅpenSluttDato"], {
+    is: (erÅpenSluttDato) => !erÅpenSluttDato,
+    then: (schema) =>
+      schema.min(1).of(
+        object().shape({
+          fomDato: string()
+            .erGyldigDato()
+            .erInnenforPeriode("avgiftspliktigeperiode", UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN)
+            .required(MAA_FYLLES_UT),
+          tomDato: string()
+            .erGyldigDato()
+            .erInnenforPeriode("avgiftspliktigeperiode", UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN)
+            .erEtterDatofelt("fomDato")
+            .required(MAA_FYLLES_UT),
+          skatteplikttype: string().required(MAA_FYLLES_UT),
+        }),
+      ),
+  }),
   inntektskilder: lazy((_value, options) => {
-    if (kreverInntektskilder(options)) {
-      return array()
-        .min(1)
-        .of(
+    return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato"], {
+      is: (medlemskapsTypeErPliktig, erÅpenSluttDato) =>
+        !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options),
+      then: (schema) =>
+        schema.min(1).of(
           object().shape({
             kildetype: string().required(MAA_FYLLES_UT),
             arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
             bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
             fomDato: string()
               .erGyldigDato()
-              .erInnenforPeriode("helseutgiftDekkesPeriode", UTENFOR_HELSEUTGIFT_DEKKES_PERIODE)
+              .erInnenforPeriode("avgiftspliktigeperiode", UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN)
               .required(MAA_FYLLES_UT),
             tomDato: string()
               .erGyldigDato()
-              .erInnenforPeriode("helseutgiftDekkesPeriode", UTENFOR_HELSEUTGIFT_DEKKES_PERIODE)
+              .erInnenforPeriode("avgiftspliktigeperiode", UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN)
               .erEtterDatofelt("fomDato")
               .required(MAA_FYLLES_UT),
           }),
-        );
-    }
-    return array();
+        ),
+    });
   }),
 });
 
