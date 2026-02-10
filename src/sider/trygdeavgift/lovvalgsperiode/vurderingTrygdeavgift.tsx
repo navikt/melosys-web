@@ -59,56 +59,47 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const behandlingstype = useSelector(behandlingerSelectors.BehandlingstypeKodeSelector);
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
-  const medlemskapsperiodeStatus = useSelector(medlemskapsperioderSelectors.MedlemskapsperioderStatusSelector);
   const medlemskapsperioder = useSelector(medlemskapsperioderSelectors.AlleMedlemskapsperioderSelector);
-  const innvilgetMedlemskapsperiode = useSelector(
-    medlemskapsperioderSelectors.SamletInnvilgetMedlemskapsperiodeSelector,
-  );
   const lovvalgsperioder = useSelector(lovvalgsperioderSelectors.PeriodeSelector);
+  const lovvalgsperioderStatus = useSelector(lovvalgsperioderSelectors.LovvalgsperioderStatusSelector);
   const erEøsFaktureringAvTrygdeavgiftToggleEnabled =
     useFeatureToggle(MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT) ?? false;
 
   const erEuEøs = sakstype === MKV.Koder.sakstyper.EU_EOS && erEøsFaktureringAvTrygdeavgiftToggleEnabled;
 
-  const avgiftspliktigeperiode = erEuEøs ? lovvalgsperioder : innvilgetMedlemskapsperiode;
-  const avgiftpliktigeperioder = erEuEøs
-    ? [{ fomDato: lovvalgsperioder.fom, tomDato: lovvalgsperioder.tom }]
-    : medlemskapsperioder;
+  const avgiftpliktigeperioder = [{ fomDato: lovvalgsperioder.fom, tomDato: lovvalgsperioder.tom }];
 
   const skalIkkeViseTidligerePerioderToggle =
     useFeatureToggle(MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER) ?? false;
 
   const bestemmelse = useSelector(medlemskapsperioderSelectors.BestemmelseSelector);
+  const [feil, setFeil] = useState<string | undefined>(undefined);
+  const [lagrePending, setLagrePending] = useState(false);
+  const [harEndretLovvalgsperiode, setHarEndretLovvalgsperiode] = useState<boolean | undefined>(undefined);
   const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
     () => Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID),
     undefined,
-    [behandlingID, medlemskapsperiodeStatus === STATUS.OK],
-  );
-  const [feil, setFeil] = useState<string | undefined>(undefined);
-  const [lagrePending, setLagrePending] = useState(false);
-  const [harEndretInnvilgetMedlemskapsperiode, setHarEndretInnvilgetMedlemskapsperiode] = useState<boolean | undefined>(
-    undefined,
+    [behandlingID, lovvalgsperioderStatus === STATUS.OK],
   );
 
   const alleTrygdeavgiftsperioderHarNullBeløp = lagretTrygdeavgift?.trygdeavgiftsperioder.every(
     (periode) => periode.avgiftPerMd === 0,
   );
 
-  const medlemskapsTypeErPliktig =
-    erEuEøs || medlemskapsperioder.every((periode) => periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG);
+  const medlemskapsTypeErPliktig = erEuEøs;
 
   const formattedDefaultPeriode = () => {
     const justertFom = skalIkkeViseTidligerePerioderToggle
-      ? Utils.dato.justerDatoHvisTidligereÅr(avgiftspliktigeperiode?.fom)
-      : avgiftspliktigeperiode?.fom;
+      ? Utils.dato.justerDatoHvisTidligereÅr(lovvalgsperioder?.fom)
+      : lovvalgsperioder?.fom;
 
     return {
       fomDato: Utils.dato.formatterDatoTilNorsk(justertFom),
-      tomDato: Utils.dato.formatterDatoTilNorsk(avgiftspliktigeperiode?.tom),
+      tomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioder?.tom),
     };
   };
 
-  const erÅpenSluttDato = !avgiftspliktigeperiode?.tom;
+  const erÅpenSluttDato = !lovvalgsperioder?.tom;
   const erNyVurderingEllerManglendeInnbetaling =
     behandlingstype === NY_VURDERING || behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT;
 
@@ -119,7 +110,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     trigger,
   } = useForm({
     resolver: yupResolver(vurderingTrygdeavgiftSchema),
-    context: { avgiftspliktigeperiode: avgiftspliktigeperiode, medlemskapsTypeErPliktig, erÅpenSluttDato },
+    context: { lovvalgsperioder: lovvalgsperioder, medlemskapsTypeErPliktig, erÅpenSluttDato },
     mode: "onChange",
     defaultValues: {
       skatteforholdsperioder: [{}],
@@ -145,7 +136,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     formValues?.inntektskilder,
     formValues?.skatteforholdsperioder,
     medlemskapsperioder,
-    avgiftspliktigeperiode,
+    lovvalgsperioder,
   );
 
   const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
@@ -205,16 +196,16 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
       return;
     }
 
-    if (harEndretInnvilgetMedlemskapsperiode === undefined) {
-      setHarEndretInnvilgetMedlemskapsperiode(false);
+    if (harEndretLovvalgsperiode === undefined) {
+      setHarEndretLovvalgsperiode(false);
     } else {
-      setHarEndretInnvilgetMedlemskapsperiode(true);
+      setHarEndretLovvalgsperiode(true);
     }
 
     if (erÅpenSluttDato) {
       setTrygdeavgift(undefined);
     }
-  }, [avgiftspliktigeperiode]);
+  }, [lovvalgsperioder]);
 
   const håndterLagretTrygdeavgiftsgrunnlag = (trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto) => {
     const { inntektskilder, skatteforholdsperioder } = trygdeavgiftsgrunnlag;
@@ -338,12 +329,12 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         trigger(`inntektskilder[${index}].fomDato`);
         trigger(`inntektskilder[${index}].tomDato`);
       });
-      if (!erÅpenSluttDato && (feil || harEndretInnvilgetMedlemskapsperiode)) {
+      if (!erÅpenSluttDato && (feil || harEndretLovvalgsperiode)) {
         debounceBeregnTrygdeavgiftsperioder(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
-        setHarEndretInnvilgetMedlemskapsperiode(false);
+        setHarEndretLovvalgsperiode(false);
       }
     }
-  }, [aktivtSteg, harEndretInnvilgetMedlemskapsperiode]);
+  }, [aktivtSteg, harEndretLovvalgsperiode]);
 
   if (!aktivtSteg) return null;
 

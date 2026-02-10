@@ -68,11 +68,11 @@ const vurdering_trygdeavgift = object().shape({
         object().shape({
           fomDato: string()
             .erGyldigDato()
-            .erInnenforPeriode("avgiftspliktigeperiode", UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN)
+            .erInnenforPeriode("lovvalgsperioder", UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN)
             .required(MAA_FYLLES_UT),
           tomDato: string()
             .erGyldigDato()
-            .erInnenforPeriode("avgiftspliktigeperiode", UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN)
+            .erInnenforPeriode("lovvalgsperioder", UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN)
             .erEtterDatofelt("fomDato")
             .required(MAA_FYLLES_UT),
           skatteplikttype: string().required(MAA_FYLLES_UT),
@@ -91,11 +91,11 @@ const vurdering_trygdeavgift = object().shape({
             bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
             fomDato: string()
               .erGyldigDato()
-              .erInnenforPeriode("avgiftspliktigeperiode", UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN)
+              .erInnenforPeriode("lovvalgsperioder", UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN)
               .required(MAA_FYLLES_UT),
             tomDato: string()
               .erGyldigDato()
-              .erInnenforPeriode("avgiftspliktigeperiode", UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN)
+              .erInnenforPeriode("lovvalgsperioder", UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN)
               .erEtterDatofelt("fomDato")
               .required(MAA_FYLLES_UT),
           }),
