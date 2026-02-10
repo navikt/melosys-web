@@ -17,18 +17,6 @@ const {
 } = MKV.Koder.inntektskildetype;
 const UTENFOR_HELSEUTGIFT_DEKKES_PERIODE = { melding: "Utenfor helseutgift dekkes periode" };
 
-export const arbAvgBetalesKreves = (kildetype) => kildetype !== MISJONÆR;
-
-const arbAvgBetalesFyltUtNårDetKrevesTest = {
-  name: "Fyll inn arb.ag. betales når det kreves",
-  message: { message: "Velg om arb.ag. betales til skatt" },
-  test: (arbAvgBetales, schema) => {
-    const { kildetype } = schema.from[0].value;
-
-    return !(arbAvgBetalesKreves(kildetype) && Utils._isEmpty(arbAvgBetales));
-  },
-};
-
 export const bruttoInntektKreves = (brukerSkattepliktigIHelePerioden, kildetype, arbAvgBetales) =>
   !brukerSkattepliktigIHelePerioden ||
   [NÆRINGSINNTEKT_FRA_NORGE, FN_SKATTEFRITAK, PENSJON_UFØRETRYGD].includes(kildetype) ||
@@ -80,7 +68,6 @@ const vurdering_trygdeavgift = object().shape({
         .of(
           object().shape({
             kildetype: string().required(MAA_FYLLES_UT),
-            arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
             bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
             fomDato: string()
               .erGyldigDato()
