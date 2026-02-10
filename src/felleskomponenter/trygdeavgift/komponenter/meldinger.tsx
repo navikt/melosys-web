@@ -164,6 +164,36 @@ export const finnAktivFeilmelding = (
   return undefined;
 };
 
+export const finnAktivFeilmeldingEuEøs = (
+  inntektskilder: Inntektskilde[],
+  skatteforholdsperioder: Skatteforhold[],
+  medlemskapsperioder: MedlemskapsperiodeForAvgift[],
+  innvilgetMedlemskapsperiode?: { fom: string; tom: string },
+): string | undefined => {
+  if (!innvilgetMedlemskapsperiode || innvilgetMedlemskapsperiode.tom == null) return undefined;
+
+  // Feil
+  if (finnesSkatteforholdPeriodeUtenforMedlemskapsperiode(skatteforholdsperioder, innvilgetMedlemskapsperiode)) {
+    return TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE;
+  }
+  if (finnesInntektskildeperiodeUtenforMedlemskapsperiode(inntektskilder, innvilgetMedlemskapsperiode)) {
+    return TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE;
+  }
+  if (erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon(inntektskilder, medlemskapsperioder)) {
+    return TypeMelding.PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE;
+  }
+  if (erSkattepliktigOgPensjonUføreMedKildeskatt(skatteforholdsperioder, inntektskilder)) {
+    return TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT;
+  }
+
+  // Advarsler
+  if (finnesInntektskildeMedBruttoInntektOver250k(inntektskilder)) {
+    return TypeMelding.BRUTTOINNTEKT_OVER_250K;
+  }
+
+  return undefined;
+};
+
 export const finnAktivFeilmeldingEøsPensjonist = (
   inntektskilder: Inntektskilde[],
   skatteforholdsperioder: Skatteforhold[],

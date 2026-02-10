@@ -50,6 +50,11 @@ export const MedlemskapsperiodeIDSelector = createSelector(
   (lovvalgsperiode) => lovvalgsperiode.medlemskapsperiodeID,
 );
 
+export const LovvalgsperioderStatusSelector = createSelector(
+  (state) => state.lovvalgsperioder.status,
+  (status) => status,
+);
+
 export const PeriodeSelector = createSelector(
   (state) => LovvalgsperiodeSelector(state),
   (lovvalgsperiode) => ({
