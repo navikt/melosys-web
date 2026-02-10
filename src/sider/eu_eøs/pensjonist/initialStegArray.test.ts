@@ -6,7 +6,7 @@ vi.mock("../../../felleskomponenter/stegvelger", () => ({
 
 vi.mock("./stegKomponenter/vurderingOpplysninger/vurderingOpplysninger", () => ({ default: () => null }));
 vi.mock("./stegKomponenter/vurderingBekreftelse/vurderingBekreftelse", () => ({ default: () => null }));
-vi.mock("../../../trygdeavgift/helseutgiftDekkesPeriode/vurderingTrygdeavgift", () => ({
+vi.mock("../../trygdeavgift/helseutgiftDekkesPeriode/vurderingTrygdeavgift", () => ({
   VurderingTrygdeavgift: () => null,
 }));
 
