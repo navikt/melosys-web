@@ -131,8 +131,8 @@ export function AarsavregningUtenEllerDeltGrunnlag({
     }
 
     const periodeRequest = {
-      fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
-      tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, "") as string,
+      fomDato: medlemskapsperiode.fomDato,
+      tomDato: medlemskapsperiode.tomDato,
       trygdedekning: medlemskapsperiode.trygdedekning,
       bestemmelse: medlemskapsperiode.bestemmelse,
       innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.INNVILGET,
@@ -153,9 +153,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
       await Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID);
 
     const innvilgedeMedlemskapsperioder = medlemskapsperioderRes.filter(
-      (periode): periode is MedlemskapsperiodeForAvgift =>
-        periode.type === "MEDLEMSKAPSPERIODE" &&
-        (periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET),
+      (periode) => periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
     );
 
     if (
@@ -181,9 +179,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
         await Api.MedlemAvFolketrygden.Medlemskapsperioder.hentMedlemskapsperioder(behandlingID);
 
       const oppdaterteInnvilgedeMedlemskapsperioder = oppdaterteMedlemskapsperioder.filter(
-        (periode): periode is MedlemskapsperiodeForAvgift =>
-          periode.type === "MEDLEMSKAPSPERIODE" &&
-          (periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET),
+        (periode) => periode.innvilgelsesResultat === INNVILGET || periode.innvilgelsesResultat === DELVIS_INNVILGET,
       );
 
       return mapMedlemskapsperioder(
