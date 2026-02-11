@@ -261,16 +261,16 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
           tomDato: Utils.dato.formatterDatoTilISO(skatteforhold.tomDato, null),
           skatteplikttype: skatteforhold.skatteplikttype,
         })),
-        inntektskilder: !erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder)
-          ? formVerdier.inntektskilder.map((inntektskilde: Inntektskilde) => ({
+        inntektskilder: erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder)
+          ? []
+          : formVerdier.inntektskilder.map((inntektskilde: Inntektskilde) => ({
               type: inntektskilde.kildetype,
               arbeidsgiversavgiftBetales: Utils.streng.uppercaseStrengTilBool(inntektskilde.arbAvgBetales) || false,
               avgiftspliktigInntekt: inntektskilde.bruttoInntekt,
               fomDato: Utils.dato.formatterDatoTilISO(inntektskilde.fomDato),
               tomDato: Utils.dato.formatterDatoTilISO(inntektskilde.tomDato, null),
               erMaanedsbelop: true,
-            }))
-          : [],
+            })),
       })
         .then((beregnetTrygdeavgift) => {
           setFeil(undefined);

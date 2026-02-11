@@ -17,22 +17,6 @@ const {
 } = MKV.Koder.inntektskildetype;
 const UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN = { melding: "Utenfor medlemskaps-/lovvalgsperioden" };
 
-export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
-  !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
-
-const arbAvgBetalesFyltUtNårDetKrevesTest = {
-  name: "Fyll inn arb.ag. betales når det kreves",
-  message: { message: "Velg om arb.ag. betales til skatt" },
-  test: (arbAvgBetales, schema) => {
-    const { kildetype } = schema.from[0].value;
-
-    return !(
-      arbAvgBetalesKreves(kildetype, schema?.options?.context?.medlemskapsTypeErPliktig) &&
-      Utils._isEmpty(arbAvgBetales)
-    );
-  },
-};
-
 export const bruttoInntektKreves = (brukerSkattepliktigIHelePerioden, kildetype, arbAvgBetales) =>
   !brukerSkattepliktigIHelePerioden ||
   [NÆRINGSINNTEKT_FRA_NORGE, FN_SKATTEFRITAK, PENSJON_UFØRETRYGD].includes(kildetype) ||
@@ -53,9 +37,9 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
   },
 };
 
-const kreverInntektskilder = (medlemskapsTypeErPliktig, options) => {
+const kreverInntektskilder = (options) => {
   if (options?.parent?.skatteforholdsperioder) {
-    return !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(options.parent.skatteforholdsperioder));
+    return !erBrukerSkattepliktigIHelePerioden(options.parent.skatteforholdsperioder);
   }
   return true;
 };
@@ -80,14 +64,12 @@ const vurdering_trygdeavgift = object().shape({
       ),
   }),
   inntektskilder: lazy((_value, options) => {
-    return array().when(["$medlemskapsTypeErPliktig", "$erÅpenSluttDato"], {
-      is: (medlemskapsTypeErPliktig, erÅpenSluttDato) =>
-        !erÅpenSluttDato && kreverInntektskilder(medlemskapsTypeErPliktig, options),
+    return array().when(["$erÅpenSluttDato"], {
+      is: (erÅpenSluttDato) => !erÅpenSluttDato && kreverInntektskilder(options),
       then: (schema) =>
         schema.min(1).of(
           object().shape({
             kildetype: string().required(MAA_FYLLES_UT),
-            arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
             bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
             fomDato: string()
               .erGyldigDato()

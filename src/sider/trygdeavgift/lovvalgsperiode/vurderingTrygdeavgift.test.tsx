@@ -82,7 +82,7 @@ const createState = ({
   behandlingstype = MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
   redigerbart = true,
   medlemskapsperioder = [createMockMedlemskapsperiode()],
-  sakstype = MKV.Koder.sakstyper.FTRL,
+  sakstype = MKV.Koder.sakstyper.EU_EOS,
   lovvalgsperioder = [createMockLovvalgsperiode()],
   lovvalgsperioderStatus = STATUS.OK,
 }: CreateStateOptions = {}) => ({
@@ -139,7 +139,7 @@ const renderComponent = (
 describe("VurderingTrygdeavgift (lovvalgsperiode)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(useFeatureToggle).mockReturnValue(false);
+    vi.mocked(useFeatureToggle).mockImplementation((toggle) => toggle === MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT);
     vi.mocked(Api.Trygdeavgift.hentBeregnetTrygdeavgift).mockResolvedValue(createMockBeregnetTrygdeavgift() as any);
     vi.mocked(Api.Trygdeavgift.hentOpprinneligTrygdeavgiftsgrunnlag).mockResolvedValue({
       skatteforholdsperioder: [],
@@ -173,9 +173,7 @@ describe("VurderingTrygdeavgift (lovvalgsperiode)", () => {
         redigerbart: false,
       });
 
-      expect(
-        screen.getByText(/Trygdeavgift kan ikke beregnes for medlemskapsperiode uten sluttdato/),
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Trygdeavgift kan ikke beregnes for lovvalgsperiode uten sluttdato/)).toBeInTheDocument();
       await waitFor(() => {
         expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled();
       });
@@ -185,7 +183,9 @@ describe("VurderingTrygdeavgift (lovvalgsperiode)", () => {
   describe("feature toggles", () => {
     it("viser advarsel når tidligere år skal skjules", async () => {
       vi.mocked(useFeatureToggle).mockImplementation(
-        (toggle) => toggle === MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
+        (toggle) =>
+          toggle === MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER ||
+          toggle === MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
       );
 
       renderComponent({
@@ -220,9 +220,9 @@ describe("VurderingTrygdeavgift (lovvalgsperiode)", () => {
   });
 
   describe("periodevalg - bruker verdier fra lovvalgsperiode", () => {
-    const lovvalgsperiodeDates = { fomDato: "2024-03-01", tomDato: "2024-09-30" };
+    it("bruker lovvalgsperiode datoer i beregning", async () => {
+      const lovvalgsperiodeDates = { fomDato: "2024-03-01", tomDato: "2024-09-30" };
 
-    it("bruker lovvalgsperiode datoer for FTRL sakstype", async () => {
       vi.mocked(Api.Trygdeavgift.hentBeregnetTrygdeavgift).mockResolvedValue(
         createMockBeregnetTrygdeavgift({
           trygdeavgiftsgrunnlag: {
@@ -241,7 +241,6 @@ describe("VurderingTrygdeavgift (lovvalgsperiode)", () => {
       );
 
       renderComponent({
-        sakstype: MKV.Koder.sakstyper.FTRL,
         lovvalgsperioder: [createMockLovvalgsperiode(lovvalgsperiodeDates)],
       });
 
@@ -255,52 +254,11 @@ describe("VurderingTrygdeavgift (lovvalgsperiode)", () => {
       expect(payload.inntektskilder[0].fomDato).toBe(lovvalgsperiodeDates.fomDato);
       expect(payload.inntektskilder[0].tomDato).toBe(lovvalgsperiodeDates.tomDato);
     });
-
-    it("bruker lovvalgsperiode datoer for EU_EOS sakstype", async () => {
-      const euEosDates = { fomDato: "2024-06-01", tomDato: "2024-11-30" };
-
-      vi.mocked(useFeatureToggle).mockImplementation((toggle) => toggle === MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT);
-
-      vi.mocked(Api.Trygdeavgift.hentBeregnetTrygdeavgift).mockResolvedValue(
-        createMockBeregnetTrygdeavgift({
-          trygdeavgiftsgrunnlag: {
-            skatteforholdsperioder: [{ ...euEosDates, skatteplikttype: "IKKE_SKATTEPLIKTIG" }],
-            inntektskilder: [
-              {
-                type: "ARBEIDSINNTEKT",
-                arbeidsgiversavgiftBetales: false,
-                avgiftspliktigInntekt: 60000,
-                ...euEosDates,
-                erMaanedsbelop: true,
-              },
-            ],
-          },
-        }) as any,
-      );
-
-      renderComponent({
-        sakstype: MKV.Koder.sakstyper.EU_EOS,
-        lovvalgsperioder: [createMockLovvalgsperiode(euEosDates)],
-      });
-
-      await waitFor(() => {
-        expect(Api.Trygdeavgift.beregnTrygdeavgiftsperioder).toHaveBeenCalled();
-      });
-
-      const [, payload] = vi.mocked(Api.Trygdeavgift.beregnTrygdeavgiftsperioder).mock.calls[0];
-      expect(payload.skatteforholdsperioder[0].fomDato).toBe(euEosDates.fomDato);
-      expect(payload.skatteforholdsperioder[0].tomDato).toBe(euEosDates.tomDato);
-    });
   });
 
   describe("EØS-spesifikk oppførsel", () => {
-    it("setter medlemskapsTypeErPliktig til true for EU_EOS med EØS-toggle aktivert", async () => {
-      vi.mocked(useFeatureToggle).mockImplementation((toggle) => toggle === MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT);
-
-      renderComponent({
-        sakstype: MKV.Koder.sakstyper.EU_EOS,
-        lovvalgsperioder: [createMockLovvalgsperiode()],
-      });
+    it("rendrer korrekt for EU_EOS sakstype med EØS-toggle aktivert", async () => {
+      renderComponent();
 
       expect(screen.getByRole("heading", { name: "Trygdeavgift" })).toBeInTheDocument();
       await waitFor(() => {
@@ -308,27 +266,10 @@ describe("VurderingTrygdeavgift (lovvalgsperiode)", () => {
       });
     });
 
-    it("setter medlemskapsTypeErPliktig til false for FTRL selv med EØS-toggle aktivert", async () => {
-      vi.mocked(useFeatureToggle).mockImplementation((toggle) => toggle === MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT);
-
-      renderComponent({
-        sakstype: MKV.Koder.sakstyper.FTRL,
-        lovvalgsperioder: [createMockLovvalgsperiode()],
-      });
-
-      expect(screen.getByRole("heading", { name: "Trygdeavgift" })).toBeInTheDocument();
-      await waitFor(() => {
-        expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled();
-      });
-    });
-
-    it("setter medlemskapsTypeErPliktig til false for EU_EOS uten EØS-toggle", async () => {
+    it("rendrer korrekt for EU_EOS sakstype uten EØS-toggle", async () => {
       vi.mocked(useFeatureToggle).mockReturnValue(false);
 
-      renderComponent({
-        sakstype: MKV.Koder.sakstyper.EU_EOS,
-        lovvalgsperioder: [createMockLovvalgsperiode()],
-      });
+      renderComponent();
 
       expect(screen.getByRole("heading", { name: "Trygdeavgift" })).toBeInTheDocument();
       await waitFor(() => {
@@ -352,9 +293,7 @@ describe("VurderingTrygdeavgift (lovvalgsperiode)", () => {
     });
 
     it("viser ikke ny vurdering tekst for FØRSTEGANG behandlingstype", async () => {
-      renderComponent({
-        behandlingstype: MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-      });
+      renderComponent();
 
       expect(
         screen.queryByText(/Ved ny vurdering vises tidligere perioder med skatteforhold og inntekt/),
@@ -373,6 +312,151 @@ describe("VurderingTrygdeavgift (lovvalgsperiode)", () => {
       expect(
         screen.queryByText(/Ved ny vurdering vises tidligere perioder med skatteforhold og inntekt/),
       ).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled();
+      });
+    });
+
+    it("viser ny vurdering tekst for MANGLENDE_INNBETALING_TRYGDEAVGIFT behandlingstype", async () => {
+      renderComponent({
+        behandlingstype: MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT,
+      });
+
+      expect(
+        screen.getByText(/Ved ny vurdering vises tidligere perioder med skatteforhold og inntekt/),
+      ).toBeInTheDocument();
+      await waitFor(() => {
+        expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe("seksjon-synlighet", () => {
+    it("viser skatteforholdsperioder-seksjon når lovvalgsperiode har fom og tom", async () => {
+      renderComponent();
+
+      await waitFor(() => {
+        expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled();
+      });
+      expect(screen.getByText("Oppgi informasjon om brukers skatteforhold")).toBeInTheDocument();
+      expect(screen.getByTestId("skatteforholdsperioder")).toBeInTheDocument();
+    });
+
+    it("skjuler skatteforholdsperioder og inntektskilder når lovvalgsperiode har åpen sluttdato", async () => {
+      renderComponent({
+        lovvalgsperioder: [createMockLovvalgsperiode({ tomDato: undefined })],
+      });
+
+      await waitFor(() => {
+        expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled();
+      });
+      expect(screen.queryByText("Oppgi informasjon om brukers skatteforhold")).not.toBeInTheDocument();
+      expect(screen.queryByTestId("skatteforholdsperioder")).not.toBeInTheDocument();
+      expect(screen.queryByText("Oppgi informasjon om brukers inntekt")).not.toBeInTheDocument();
+      expect(screen.queryByTestId("inntektskilder")).not.toBeInTheDocument();
+    });
+
+    it("viser inntektskilder-seksjon når skatteforhold ikke er skattepliktig i hele perioden", async () => {
+      vi.mocked(Api.Trygdeavgift.hentBeregnetTrygdeavgift).mockResolvedValue(
+        createMockBeregnetTrygdeavgift({
+          trygdeavgiftsgrunnlag: {
+            skatteforholdsperioder: [
+              { fomDato: "2024-01-01", tomDato: "2024-12-31", skatteplikttype: "IKKE_SKATTEPLIKTIG" },
+            ],
+            inntektskilder: [],
+          },
+        }) as any,
+      );
+
+      renderComponent();
+
+      await waitFor(() => {
+        expect(screen.getByTestId("inntektskilder")).toBeInTheDocument();
+      });
+      expect(screen.getByText("Oppgi informasjon om brukers inntekt")).toBeInTheDocument();
+    });
+  });
+
+  describe("knapper", () => {
+    it("bekreft-knapp er disabled når ikke redigerbart", async () => {
+      renderComponent({ redigerbart: false });
+
+      await waitFor(() => {
+        expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled();
+      });
+      expect(screen.getByRole("button", { name: "Bekreft og fortsett" })).toBeDisabled();
+    });
+
+    it("tilbake-knapp er disabled når ikke redigerbart", async () => {
+      renderComponent({ redigerbart: false });
+
+      await waitFor(() => {
+        expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled();
+      });
+      expect(screen.getByRole("button", { name: "Tilbake" })).toBeDisabled();
+    });
+  });
+
+  describe("oppdaterStatus", () => {
+    it("kaller oppdaterStatus med steg-gyldighet", async () => {
+      const oppdaterStatus = vi.fn();
+      renderComponent({}, { oppdaterStatus });
+
+      await waitFor(() => {
+        expect(oppdaterStatus).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe("API-kall ved ulike tilstander", () => {
+    it("kaller hentBeregnetTrygdeavgift selv når redigerbart er false", async () => {
+      renderComponent({ redigerbart: false });
+
+      await waitFor(() => {
+        expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalledWith(1);
+      });
+    });
+
+    it("henter opprinnelig trygdeavgiftsgrunnlag ved MANGLENDE_INNBETALING_TRYGDEAVGIFT når skatteforholdsperioder er tom", async () => {
+      renderComponent({
+        behandlingstype: MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT,
+      });
+
+      await waitFor(() => {
+        expect(Api.Trygdeavgift.hentOpprinneligTrygdeavgiftsgrunnlag).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe("tidligere perioder toggle", () => {
+    it("skjuler skatteforhold og inntektskilder når toggle er på og alle perioder er fra tidligere år", async () => {
+      vi.mocked(useFeatureToggle).mockImplementation(
+        (toggle) =>
+          toggle === MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER ||
+          toggle === MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
+      );
+
+      renderComponent({
+        lovvalgsperioder: [createMockLovvalgsperiode({ fomDato: "2020-01-01", tomDato: "2020-12-31" })],
+      });
+
+      await waitFor(() => {
+        expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled();
+      });
+
+      expect(screen.queryByText("Oppgi informasjon om brukers skatteforhold")).not.toBeInTheDocument();
+      expect(screen.queryByTestId("skatteforholdsperioder")).not.toBeInTheDocument();
+    });
+  });
+
+  describe("info-meldinger", () => {
+    it("viser åpen sluttdato-melding med lovvalgsperiode-tekst", async () => {
+      renderComponent({
+        lovvalgsperioder: [createMockLovvalgsperiode({ tomDato: undefined })],
+      });
+
+      expect(screen.getByText(/Trygdeavgift kan ikke beregnes for lovvalgsperiode uten sluttdato/)).toBeInTheDocument();
+      expect(screen.getByText(/må du angi sluttdato på lovvalgsperiode/)).toBeInTheDocument();
       await waitFor(() => {
         expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled();
       });
