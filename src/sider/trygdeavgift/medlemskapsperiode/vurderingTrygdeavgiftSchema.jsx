@@ -15,7 +15,7 @@ const {
   PENSJON_UFØRETRYGD,
   PENSJON_UFØRETRYGD_KILDESKATT,
 } = MKV.Koder.inntektskildetype;
-const UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN = { melding: "Utenfor medlemskaps-/lovvalgsperioden" };
+const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medlemskapsperioden" };
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
   !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
@@ -68,11 +68,11 @@ const vurdering_trygdeavgift = object().shape({
         object().shape({
           fomDato: string()
             .erGyldigDato()
-            .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN)
+            .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
             .required(MAA_FYLLES_UT),
           tomDato: string()
             .erGyldigDato()
-            .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN)
+            .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
             .erEtterDatofelt("fomDato")
             .required(MAA_FYLLES_UT),
           skatteplikttype: string().required(MAA_FYLLES_UT),
@@ -91,11 +91,11 @@ const vurdering_trygdeavgift = object().shape({
             bruttoInntekt: string().erNummer().test(bruttoInntektFyltUtNårDetKrevesTest).nullable(),
             fomDato: string()
               .erGyldigDato()
-              .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN)
+              .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
               .required(MAA_FYLLES_UT),
             tomDato: string()
               .erGyldigDato()
-              .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN_ELLER_LOVVALGSPERIODEN)
+              .erInnenforPeriode("medlemskapsperiode", UTENFOR_MEDLEMSKAPSPERIODEN)
               .erEtterDatofelt("fomDato")
               .required(MAA_FYLLES_UT),
           }),
