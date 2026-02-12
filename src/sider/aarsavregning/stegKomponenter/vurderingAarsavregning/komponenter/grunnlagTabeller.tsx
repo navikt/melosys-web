@@ -8,16 +8,23 @@ interface Props {
   skatteforholdsperioder?: SkatteforholdDto[];
   inntektsperioder?: InntektskildeDto[];
   avgift?: Avgift;
+  erHelseutgiftDekkesPeriode?: boolean;
 }
 
-function GrunnlagTabeller({ skatteforholdsperioder, inntektsperioder, avgift }: Props) {
+function GrunnlagTabeller({ skatteforholdsperioder, inntektsperioder, avgift, erHelseutgiftDekkesPeriode }: Props) {
   if (Utils._isEmpty(skatteforholdsperioder) && Utils._isEmpty(inntektsperioder)) return null;
   const harGrunnlagAvgift = avgift && avgift.totalAvgift > 0;
 
   return (
     <>
       <SkatteforholdsPerioderTabell perioder={skatteforholdsperioder} />
-      {harGrunnlagAvgift && <InntektsperioderTabell perioder={inntektsperioder} avgift={avgift} />}
+      {harGrunnlagAvgift && (
+        <InntektsperioderTabell
+          erHelseutgiftDekkesPeriode={erHelseutgiftDekkesPeriode}
+          perioder={inntektsperioder}
+          avgift={avgift}
+        />
+      )}
     </>
   );
 }

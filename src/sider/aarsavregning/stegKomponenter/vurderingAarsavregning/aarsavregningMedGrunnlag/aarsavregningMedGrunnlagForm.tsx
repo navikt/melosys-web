@@ -29,6 +29,7 @@ import "../vurderingAarsavregningInngang.less";
 import { InitiellData } from "./aarsavregningMedGrunnlag";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
+import { erPeriodeListeHelseutgiftdekkesperiode } from "../../../../../services/modules/types/periodeTyper";
 
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
@@ -70,10 +71,12 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
 
   const { innvilgetMedlemskapsperioder, medlemskapstypeErPliktig } = initiellData;
-
   const medlemskapsperiode = useMemo(() => {
     return finnMedlemskapsperiode(innvilgetMedlemskapsperioder);
   }, [innvilgetMedlemskapsperioder]);
+  const erHelseutgiftDekkesPeriode = aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder
+    ? erPeriodeListeHelseutgiftdekkesperiode(aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder)
+    : false;
 
   const {
     control,
@@ -344,6 +347,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
               bestemmelse={innvilgetMedlemskapsperioder[0]?.bestemmelse}
               minDate={minDate}
               maxDate={maxDate}
+              erHelseutgiftDekkesPeriode={erHelseutgiftDekkesPeriode}
             />
           )}
 
