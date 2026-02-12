@@ -293,7 +293,7 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
         </Nav.Row>
       )}
 
-      {visMottakerinstitusjonvelgerFlervalg && toggleEnabledPensjonistEøs && (
+      {visMottakerinstitusjonvelgerFlervalg && toggleEnabledPensjonistEøs && redigerbart && (
         <Nav.Row>
           <Nav.Column xs="6">
             <Skjema.RadioGroup
