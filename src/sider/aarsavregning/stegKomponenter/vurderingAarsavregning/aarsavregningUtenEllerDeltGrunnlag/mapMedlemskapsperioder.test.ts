@@ -40,12 +40,12 @@ describe("mapTilMedlemskapsperiodeFieldProps", () => {
     expect(resultat.tomDato).toBe("30.11.2024");
   });
 
-  it("skal legge til type MEDLEMSKAPSPERIODE", () => {
+  it("skal ikke ha type-felt (MedlemskapsperiodeDto har ikke type)", () => {
     const dto = lagMedlemskapsperiodeDto();
 
     const resultat = mapTilMedlemskapsperiodeFieldProps(dto);
 
-    expect(resultat.type).toBe("MEDLEMSKAPSPERIODE");
+    expect((resultat as any).type).toBeUndefined();
   });
 
   it("skal beholde alle felt fra MedlemskapsperiodeDto", () => {
@@ -153,7 +153,7 @@ describe("mapMedlemskapsperioder", () => {
     expect(resultat[1].tomDato).toBe("31.12.2023");
   });
 
-  it("skal legge til type MEDLEMSKAPSPERIODE på alle perioder", () => {
+  it("skal ikke ha type-felt på noen perioder", () => {
     const perioder: MedlemskapsperiodeDto[] = [
       {
         id: 1,
@@ -168,7 +168,7 @@ describe("mapMedlemskapsperioder", () => {
 
     const resultat = mapMedlemskapsperioder(perioder);
 
-    expect(resultat.every((p) => p.type === "MEDLEMSKAPSPERIODE")).toBe(true);
+    expect(resultat.every((p) => (p as any).type === undefined)).toBe(true);
   });
 
   it("skal håndtere tom array", () => {

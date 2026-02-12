@@ -31,7 +31,7 @@ const { DELVIS_INNVILGET, INNVILGET } = MKV.Koder.innvilgelsesResultat;
  * - redigerbar: true = kan endres (nye perioder), false = fra grunnlag
  * - feil: valideringsfeilmelding
  */
-export type MedlemskapsperiodeFieldProps = MedlemskapsperiodeForAvgift & {
+export type MedlemskapsperiodeFieldProps = MedlemskapsperiodeDto & {
   redigerbar: boolean;
   feil?: string;
 };
@@ -39,7 +39,6 @@ export type MedlemskapsperiodeFieldProps = MedlemskapsperiodeForAvgift & {
 export const ULAGRET_MEDLEMSKAPSPERIODE_ID = -1;
 
 export const DEFAULT_MEDLEMSKAPSPERIODE: MedlemskapsperiodeFieldProps = {
-  type: "MEDLEMSKAPSPERIODE",
   id: ULAGRET_MEDLEMSKAPSPERIODE_ID,
   fomDato: "",
   tomDato: "",
@@ -60,7 +59,6 @@ export const mapTilMedlemskapsperiodeFieldProps = (
 
   return {
     ...medlemskapsperiode,
-    type: "MEDLEMSKAPSPERIODE",
     fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
     tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
     feil: undefined,

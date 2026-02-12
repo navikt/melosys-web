@@ -7,7 +7,7 @@ import {
 import * as Api from "../../../../services/api";
 import * as Utils from "../../../../utils";
 import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
-import type { Avgiftspliktigperiode, BasePeriode } from "../../../../services/modules/types/periodeTyper";
+import type { BasePeriode } from "../../../../services/modules/types/periodeTyper";
 import { InntektskildeDto, SkatteforholdDto } from "../../../../services/modules/trygdeavgift";
 import MKV from "../../../../melosyskodeverk";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlagSchema";
@@ -50,7 +50,7 @@ export const erBrukerSkattepliktigIHelePerioden = (skatteforholdsperioder: Skatt
  * Returnerer fomDato fra den tidligste perioden og tomDato fra den seneste.
  * Filtrerer bort perioder som mangler fomDato eller tomDato.
  */
-export const finnMedlemskapsperiode = (perioder: Avgiftspliktigperiode[]): BasePeriode | undefined => {
+export const finnMedlemskapsperiode = (perioder: BasePeriode[]): BasePeriode | undefined => {
   const sorterteGyldigePerioder = perioder
     .filter((periode) => periode.fomDato && periode.tomDato)
     .sort((a, b) => Utils.dato.sorterEtterNorskFomDato(a, b));
@@ -107,7 +107,7 @@ export function beregnTrygdeavgiftsperioder(
 
 // Functions moved from aarsavregningHelpers.ts
 
-export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: Avgiftspliktigperiode[]) => {
+export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: BasePeriode[]) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
     const sorted = [...medlemskapsperioder].sort(Utils.dato.sorterEtterNorskFomDato);
     const fomISO = Utils.dato.formatterDatoTilISO(sorted[0].fomDato);
@@ -119,7 +119,7 @@ export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: Avgiftspliktigpe
 
 export const mapTilSkatteforholdProps = (
   skatteforholdsperioder?: SkatteforholdDto[],
-  medlemskapsperioder?: Avgiftspliktigperiode[],
+  medlemskapsperioder?: BasePeriode[],
 ): Skatteforhold[] => {
   if (skatteforholdsperioder && !Utils._isEmpty(skatteforholdsperioder)) {
     return skatteforholdsperioder.map((skatteForhold) => ({
@@ -143,7 +143,7 @@ export const mapTilSkatteforholdProps = (
 
 export const mapTilInntektskilderProps = (
   inntektskilder?: InntektskildeDto[],
-  medlemskapsperioder?: Avgiftspliktigperiode[],
+  medlemskapsperioder?: BasePeriode[],
 ): Inntektskilde[] => {
   if (inntektskilder && !Utils._isEmpty(inntektskilder)) {
     return inntektskilder.map((inntektskilde) => ({
