@@ -15,6 +15,7 @@ import { medlemskapsperioderTypes } from "../../../../../ducks/medlemskapsperiod
 import { mapTilInntektskilderProps, mapTilSkatteforholdProps } from "../utils";
 import {
   Avgiftspliktigperiode,
+  MedlemskapsperiodeDto,
   MedlemskapsperiodeForAvgift,
   erMedlemskapsperiode,
   erMedlemskapsperiodeEllerLovvalgsperiode,
@@ -50,7 +51,7 @@ export const DEFAULT_MEDLEMSKAPSPERIODE: MedlemskapsperiodeFieldProps = {
 };
 
 const mapTilMedlemskapsperiodeFieldProps = (
-  medlemskapsperiode: MedlemskapsperiodeForAvgift,
+  medlemskapsperiode: MedlemskapsperiodeDto,
   sistGjeldendeAvgiftspliktigePerioder?: Avgiftspliktigperiode[],
 ): MedlemskapsperiodeFieldProps => {
   const medlemskapsperiodeErFraGrunnlag = sistGjeldendeAvgiftspliktigePerioder?.some(
@@ -59,6 +60,7 @@ const mapTilMedlemskapsperiodeFieldProps = (
 
   return {
     ...medlemskapsperiode,
+    type: "MEDLEMSKAPSPERIODE",
     fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
     tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
     feil: undefined,
@@ -67,7 +69,7 @@ const mapTilMedlemskapsperiodeFieldProps = (
 };
 
 const mapMedlemskapsperioder = (
-  perioder: MedlemskapsperiodeForAvgift[],
+  perioder: MedlemskapsperiodeDto[],
   sistGjeldendeAvgiftspliktigePerioder?: Avgiftspliktigperiode[],
 ): MedlemskapsperiodeFieldProps[] =>
   [...perioder]

@@ -9,7 +9,16 @@ export interface BasePeriode {
   tomDato: string;
 }
 
-// Medlemskapsperiode - har alle de komplekse feltene
+// FTRL Medlemskapsperiode - matcher MedlemskapsperiodeDto fra backend (uten type-felt)
+export interface MedlemskapsperiodeDto extends BasePeriode {
+  id: number;
+  bestemmelse: string;
+  innvilgelsesResultat: string;
+  trygdedekning: string;
+  medlemskapstype: string;
+}
+
+// Medlemskapsperiode med type-diskriminator for bruk i Avgiftspliktigperiode union
 export interface MedlemskapsperiodeForAvgift extends BasePeriode {
   id: number;
   type: "MEDLEMSKAPSPERIODE";

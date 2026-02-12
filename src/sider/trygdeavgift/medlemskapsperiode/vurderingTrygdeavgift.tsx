@@ -43,7 +43,6 @@ import {
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import { harPerioderFraTidligereÅr } from "../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
-import { Avgiftspliktigperiode } from "../../../services/modules/types/periodeTyper";
 
 interface Props {
   bekreft: () => void;
@@ -160,9 +159,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     (trygdeavgiftErIkkeTom && !redigerbart) ||
     !skalIkkeBeregneForelopigTrygdeavgift;
 
-  const harMedlemskapsperiodeFraTidligereÅr = harPerioderFraTidligereÅr(
-    avgiftpliktigeperioder as Avgiftspliktigperiode[],
-  );
+  const harMedlemskapsperiodeFraTidligereÅr = harPerioderFraTidligereÅr(avgiftpliktigeperioder);
 
   const stegErGyldig =
     (formIsValid || skalIkkeBeregneForelopigTrygdeavgift) && !feilMeldingBlokkerer(aktivFeilmeldingType) && !feil;
