@@ -50,7 +50,7 @@ export const DEFAULT_MEDLEMSKAPSPERIODE: MedlemskapsperiodeFieldProps = {
   redigerbar: true,
 };
 
-const mapTilMedlemskapsperiodeFieldProps = (
+export const mapTilMedlemskapsperiodeFieldProps = (
   medlemskapsperiode: MedlemskapsperiodeDto,
   sistGjeldendeAvgiftspliktigePerioder?: Avgiftspliktigperiode[],
 ): MedlemskapsperiodeFieldProps => {
@@ -68,7 +68,7 @@ const mapTilMedlemskapsperiodeFieldProps = (
   };
 };
 
-const mapMedlemskapsperioder = (
+export const mapMedlemskapsperioder = (
   perioder: MedlemskapsperiodeDto[],
   sistGjeldendeAvgiftspliktigePerioder?: Avgiftspliktigperiode[],
 ): MedlemskapsperiodeFieldProps[] =>
