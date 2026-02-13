@@ -8,7 +8,7 @@ import * as Mui from "../../../../../felleskomponenter/ui";
 import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
-import { MedlemskapsperiodeForAvgift } from "../../../../../services/modules/types/periodeTyper";
+import { MedlemskapsperiodeDto } from "../../../../../services/modules/types/periodeTyper";
 import * as Utils from "../../../../../utils";
 
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
@@ -53,7 +53,7 @@ const kallFeilet = (response: any): boolean => response.type === medlemskapsperi
 
 const mapFeil = (response: any) => response?.data?.message || response.data;
 
-const mapTilMedlemskapsperiodeProps = (medlemskapsperiode: MedlemskapsperiodeForAvgift): MedlemskapsperiodeProp => ({
+const mapTilMedlemskapsperiodeProps = (medlemskapsperiode: MedlemskapsperiodeDto): MedlemskapsperiodeProp => ({
   fomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.fomDato),
   tomDato: Utils.dato.formatterDatoTilNorsk(medlemskapsperiode.tomDato),
   innvilgelsesResultat: medlemskapsperiode.innvilgelsesResultat,
@@ -64,7 +64,7 @@ const mapTilMedlemskapsperiodeProps = (medlemskapsperiode: MedlemskapsperiodeFor
   periodeId: medlemskapsperiode.id,
 });
 
-const mapInitialMedlemskapsperioder = (medlemskapsperioder: MedlemskapsperiodeForAvgift[]): MedlemskapsperiodeProp[] =>
+const mapInitialMedlemskapsperioder = (medlemskapsperioder: MedlemskapsperiodeDto[]): MedlemskapsperiodeProp[] =>
   [...medlemskapsperioder]
     .sort((a, b) => Utils.dato.sorterEtterISOFomDato(a, b) || (a.innvilgelsesResultat === AVSLAATT ? -1 : 1))
     .map(mapTilMedlemskapsperiodeProps);
