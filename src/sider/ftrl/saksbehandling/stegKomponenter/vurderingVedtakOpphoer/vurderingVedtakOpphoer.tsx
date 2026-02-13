@@ -7,7 +7,7 @@ import { useDispatch } from "../../../../../hooks";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import vurdering_vedtak_opphoer from "./vurderingVedtakOpphoerSchema";
 import * as Api from "../../../../../services/api";
-import { MedlemskapsperiodeForAvgift } from "../../../../../services/modules/types/periodeTyper";
+import { MedlemskapsperiodeDto } from "../../../../../services/modules/types/periodeTyper";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { useCallback, useEffect, useState } from "react";
@@ -70,7 +70,7 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
     return () => debouncedOppdaterFritekster.cancel();
   }, []);
 
-  const forventetOpphørteMedlemskapsperioder = (): MedlemskapsperiodeForAvgift[] =>
+  const forventetOpphørteMedlemskapsperioder = (): MedlemskapsperiodeDto[] =>
     behandlingErAvsluttet
       ? [...medlemskapsperioder]
       : [...medlemskapsperioder]
@@ -137,7 +137,7 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
     ];
   };
 
-  const mapPeriodeRader = (perioder: MedlemskapsperiodeForAvgift[]) =>
+  const mapPeriodeRader = (perioder: MedlemskapsperiodeDto[]) =>
     [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((it) => ({
       periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
       bestemmelse: KV.finnTermFraListe(MKV.KTObjects.folketrygdloven_kap2_bestemmelser, it.bestemmelse),

@@ -8,7 +8,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
-import { MedlemskapsperiodeForAvgift } from "../../../../../services/modules/types/periodeTyper";
+import { MedlemskapsperiodeDto } from "../../../../../services/modules/types/periodeTyper";
 import * as Forms from "../../../../../felleskomponenter/forms";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import * as Nav from "../../../../../navFrontend";
@@ -353,7 +353,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
   if (!aktivtSteg) return null;
 
-  const mapPeriodeRader = (perioder: MedlemskapsperiodeForAvgift[]) =>
+  const mapPeriodeRader = (perioder: MedlemskapsperiodeDto[]) =>
     [...perioder].sort(Utils.dato.sorterEtterISOFomDato).map((it) => ({
       periode: `${Utils.dato.formatterDatoTilNorsk(it.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(it.tomDato)}`,
       bestemmelse: KV.finnTermFraListe(bestemmelserkodeverk, it.bestemmelse),
