@@ -71,11 +71,23 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
 
   const { innvilgetMedlemskapsperioder, medlemskapstypeErPliktig } = initiellData;
-  const medlemskapsperiode = useMemo(() => {
-    return finnMedlemskapsperiode(innvilgetMedlemskapsperioder);
-  }, [innvilgetMedlemskapsperioder]);
-  const erHelseutgiftDekkesPeriode = aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder
-    ? erPeriodeListeHelseutgiftdekkesperiode(aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder)
+  const avgiftspliktigperioder = aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder;
+  const avgiftspliktigperiode = useMemo(() => {
+    if (innvilgetMedlemskapsperioder.length > 0) {
+      return finnMedlemskapsperiode(innvilgetMedlemskapsperioder);
+    }
+    if (avgiftspliktigperioder) {
+      const perioderMedNorskDato = avgiftspliktigperioder.map((p) => ({
+        ...p,
+        fomDato: Utils.dato.formatterDatoTilNorsk(p.fomDato),
+        tomDato: Utils.dato.formatterDatoTilNorsk(p.tomDato),
+      }));
+      return finnMedlemskapsperiode(perioderMedNorskDato);
+    }
+    return undefined;
+  }, [innvilgetMedlemskapsperioder, avgiftspliktigperioder]);
+  const erHelseutgiftDekkesPeriode = avgiftspliktigperioder
+    ? erPeriodeListeHelseutgiftdekkesperiode(avgiftspliktigperioder)
     : false;
 
   const {
@@ -88,13 +100,12 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   } = useForm({
     resolver: yupResolver(aarsavregningMedGrunnlagSchema),
     context: {
-      medlemskapsperiode,
+      avgiftspliktigperiode,
       medlemskapsTypeErPliktig: medlemskapstypeErPliktig,
     },
     mode: "onChange",
     defaultValues: initiellData.formDefaultValues,
   });
-
   const {
     fields: skattFields,
     append: skattAppend,
@@ -168,7 +179,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       const aktivFeilmelding = finnAktivFeilmelding({
         skatteforholdsperioder: formState.skatteforholdsperioder,
         inntektskilder: formState.inntektskilder,
-        medlemskapsperiodeFomTom: medlemskapsperiode!,
+        medlemskapsperiodeFomTom: avgiftspliktigperiode!,
         medlemskapstypeErPliktig,
       });
       if (!aktivFeilmelding) {
@@ -197,7 +208,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     isValidating,
     handleBeregnTrygdeavgiftsperioder,
     previousFormValues,
-    medlemskapsperiode,
+    avgiftspliktigperiode,
     medlemskapstypeErPliktig,
   ]);
 
@@ -320,7 +331,18 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             Inntekts- og skatteopplysninger for endelig trygdeavgift
           </Nav.Heading>
 
-          <MedlemskapsperioderDisplay medlemskapsperioder={innvilgetMedlemskapsperioder} />
+          {erHelseutgiftDekkesPeriode ? (
+            avgiftspliktigperioder?.map((periode) => (
+              <Nav.BodyLong size="small" key={Utils._uuid()} style={{ marginBottom: "1rem" }}>
+                <span className="navds-label navds-label--small">Periode Norge dekker helseutgifter:</span>{" "}
+                {`${Utils.dato.formatterDatoTilNorsk(periode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
+                  periode.tomDato,
+                )}`}
+              </Nav.BodyLong>
+            ))
+          ) : (
+            <MedlemskapsperioderDisplay medlemskapsperioder={innvilgetMedlemskapsperioder} />
+          )}
 
           <Skatteforholdsperioder
             formValues={formValues}
@@ -334,7 +356,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           />
           {!trygdeAvgiftSkalIkkeBetalesTilNav && (
             <Inntektskilder
-              defaultPeriode={medlemskapsperiode}
+              defaultPeriode={avgiftspliktigperiode}
               formValues={formValues}
               redigerbart={redigerbart && !beregningPaagar}
               update={inntektUpdate}

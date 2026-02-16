@@ -1,6 +1,5 @@
 import {
   Avgiftspliktigperiode,
-  erHelseutgiftdekkesperiode,
   erMedlemskapsperiodeEllerLovvalgsperiode,
   erPeriodeListeHelseutgiftdekkesperiode,
 } from "../../../../../services/modules/types/periodeTyper";
@@ -32,60 +31,59 @@ const mapMedlemskapstypeTekst = (kode: string) => {
   return "";
 };
 
-const renderTitler = (erHelseutgiftdekkesperiode: boolean) => {
-  if (erHelseutgiftdekkesperiode) {
-    return (
-      <Nav.Table.Row>
-        <Nav.Table.HeaderCell scope="col">Periode Norge dekker helseutgifter</Nav.Table.HeaderCell>
-      </Nav.Table.Row>
-    );
-  }
-
-  return (
-    <Nav.Table.Row>
-      <Nav.Table.HeaderCell scope="col">Medlemskap</Nav.Table.HeaderCell>
-      <Nav.Table.HeaderCell scope="col">Type</Nav.Table.HeaderCell>
-      <Nav.Table.HeaderCell scope="col">Bestemmelse</Nav.Table.HeaderCell>
-      <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>
-    </Nav.Table.Row>
-  );
-};
-
 function MedlemskapsPerioderTabell({ perioder }: { perioder?: Avgiftspliktigperiode[] }) {
   if (!perioder) return null;
 
   const sortertePerioder = [...perioder].sort(Utils.dato.sorterEtterISOFomDato);
 
+  const erHelseutgiftDekkesPerioder = erPeriodeListeHelseutgiftdekkesperiode(perioder);
+
+  if (erHelseutgiftDekkesPerioder) {
+    return (
+      <>
+        {sortertePerioder.map((medlemskapsPeriode) => (
+          <Nav.BodyLong size="small" key={Utils._uuid()} style={{ marginBottom: "1rem" }}>
+            <span className="navds-label navds-label--small">Periode Norge dekker helseutgifter:</span>{" "}
+            {`${Utils.dato.formatterDatoTilNorsk(medlemskapsPeriode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
+              medlemskapsPeriode.tomDato,
+            )}`}
+          </Nav.BodyLong>
+        ))}
+      </>
+    );
+  }
+
   return (
     <Nav.Table size="small" className="periode_tabell">
       <Nav.Table.Header className="header_row">
-        {renderTitler(erPeriodeListeHelseutgiftdekkesperiode(sortertePerioder))}
+        <Nav.Table.Row>
+          <Nav.Table.HeaderCell scope="col">Medlemskap</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell scope="col">Type</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell scope="col">Bestemmelse</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>
+        </Nav.Table.Row>
       </Nav.Table.Header>
       <Nav.Table.Body>
-        {sortertePerioder.map((avgiftspliktigPeriode) => {
-          const hasMedlemskapstype = erMedlemskapsperiodeEllerLovvalgsperiode(avgiftspliktigPeriode);
+        {sortertePerioder.map((medlemskapsPeriode) => {
+          const hasMedlemskapstype = erMedlemskapsperiodeEllerLovvalgsperiode(medlemskapsPeriode);
           return (
             <Nav.Table.Row className="border_top" key={Utils._uuid()}>
               <Nav.Table.DataCell>
-                {`${Utils.dato.formatterDatoTilNorsk(avgiftspliktigPeriode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
-                  avgiftspliktigPeriode.tomDato,
+                {`${Utils.dato.formatterDatoTilNorsk(medlemskapsPeriode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
+                  medlemskapsPeriode.tomDato,
                 )}`}
               </Nav.Table.DataCell>
-              {!erHelseutgiftdekkesperiode(avgiftspliktigPeriode) && (
-                <>
-                  <Nav.Table.DataCell>
-                    {hasMedlemskapstype ? mapMedlemskapstypeTekst(avgiftspliktigPeriode.medlemskapstype) : "-"}
-                  </Nav.Table.DataCell>
-                  <Nav.Table.DataCell>
-                    {hasMedlemskapstype ? KV.kodeTilTerm(avgiftspliktigPeriode.bestemmelse, bestemmelseKoder) : "-"}
-                  </Nav.Table.DataCell>
-                  <Nav.Table.DataCell>
-                    {hasMedlemskapstype
-                      ? KV.kodeTilTerm(avgiftspliktigPeriode.trygdedekning, MKV.KTObjects.trygdedekninger)
-                      : "-"}
-                  </Nav.Table.DataCell>
-                </>
-              )}
+              <Nav.Table.DataCell>
+                {hasMedlemskapstype ? mapMedlemskapstypeTekst(medlemskapsPeriode.medlemskapstype) : "-"}
+              </Nav.Table.DataCell>
+              <Nav.Table.DataCell>
+                {hasMedlemskapstype ? KV.kodeTilTerm(medlemskapsPeriode.bestemmelse, bestemmelseKoder) : "-"}
+              </Nav.Table.DataCell>
+              <Nav.Table.DataCell>
+                {hasMedlemskapstype
+                  ? KV.kodeTilTerm(medlemskapsPeriode.trygdedekning, MKV.KTObjects.trygdedekninger)
+                  : "-"}
+              </Nav.Table.DataCell>
             </Nav.Table.Row>
           );
         })}
