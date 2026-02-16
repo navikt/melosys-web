@@ -35,6 +35,8 @@ import { BOOLSK_STRING } from "../../../../constants";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingArbeidTjenestepersonEllerFlyVedtakSchema from "./vurderingArbeidTjenestepersonEllerFlyVedtakSchema";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT } from "../../../../featuretoggle/toggleNavn";
 
 function InformertMyndighetVelger({ redigerbart, oppdaterData, slettData, informertMyndighetFakta }) {
   useEffect(() => {
@@ -74,16 +76,16 @@ const art11_5_ErValgt = (formValues) =>
 const art11_3B_ErValgt = (formValues) =>
   formValues.lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B;
 
-const skalSendeSed = (formValues) => {
+const skalSendeSed = (formValues, toggleEnabledPensjonistEøs) => {
   const { kreverMottakerinstitusjon } = formValues;
 
   if (art11_5_ErValgt(formValues)) {
     return kreverMottakerinstitusjon;
   }
-  if (art11_3B_ErValgt(formValues)) {
+  if (toggleEnabledPensjonistEøs && art11_3B_ErValgt(formValues)) {
     return formValues.informerUtenlandskTrygdemyndighet;
   }
-  return false;
+  return art11_3B_ErValgt(formValues);
 };
 
 const skalSendeOrienteringsbrev = (selvstendigArbeid) => selvstendigArbeid?.erSelvstendig !== true;
@@ -120,6 +122,7 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
   fattVedtak,
   selvstendigArbeid,
 }) {
+  const toggleEnabledPensjonistEøs = useFeatureToggle(MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT);
   const vedtakErPending = useSelector(vedtakSelectors.ErPendingSelector);
   let oppdaterFørKontroll = true;
 
@@ -158,7 +161,7 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
     },
   ];
 
-  if (skalSendeSed(formValues)) {
+  if (skalSendeSed(formValues, toggleEnabledPensjonistEøs)) {
     pdfDokumenter = [
       ...pdfDokumenter,
       {
@@ -192,10 +195,13 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
     let mottakerinstitusjoner = null;
     if (art11_5_ErValgt(formValues)) {
       mottakerinstitusjoner = formValues.mottakerLand ? [formValues.mottakerinstitusjon] : [];
-    } else if (art11_3B_ErValgt(formValues) && formValues.informerUtenlandskTrygdemyndighet) {
+    } else if (art11_3B_ErValgt(formValues)) {
       mottakerinstitusjoner = formValues.mottakerinstitusjoner
         .filter((inst) => inst.kreverMottakerinstitusjon)
         .map((inst) => inst.id);
+    }
+    if (art11_3B_ErValgt(formValues) && !formValues.informerUtenlandskTrygdemyndighet) {
+      mottakerinstitusjoner = null;
     }
 
     return {
@@ -287,37 +293,35 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
         </Nav.Row>
       )}
 
-      {visMottakerinstitusjonvelgerFlervalg && (
-        <>
-          <Nav.Row>
-            <Nav.Column xs="6">
-              <Skjema.RadioGroup
-                legend="Skal utenlandsk trygdemyndighet informeres med SED A010?"
-                name="informerUtenlandskTrygdemyndighet"
-                readOnly={!redigerbart}
-              >
-                <Nav.HStack gap="16">
-                  <Nav.Radio value>Ja</Nav.Radio>
-                  <Nav.Radio value={false}>Nei</Nav.Radio>
-                </Nav.HStack>
-              </Skjema.RadioGroup>
-            </Nav.Column>
-          </Nav.Row>
-          {formValues.informerUtenlandskTrygdemyndighet && (
-            <Nav.Row>
-              <Nav.Column xs="8">
-                <MottakerinstitusjonvelgerFlervalg
-                  feltnavn="mottakerinstitusjoner"
-                  bucType={EKV.Koder.buctyper.legislation.LA_BUC_05}
-                  redigerbart={redigerbart}
-                  form={form}
-                />
-              </Nav.Column>
-            </Nav.Row>
-          )}
-        </>
+      {visMottakerinstitusjonvelgerFlervalg && toggleEnabledPensjonistEøs && redigerbart && (
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <Skjema.RadioGroup
+              legend="Skal utenlandsk trygdemyndighet informeres med SED A010?"
+              name="informerUtenlandskTrygdemyndighet"
+              readOnly={!redigerbart}
+            >
+              <Nav.HStack gap="16">
+                <Nav.Radio value>Ja</Nav.Radio>
+                <Nav.Radio value={false}>Nei</Nav.Radio>
+              </Nav.HStack>
+            </Skjema.RadioGroup>
+          </Nav.Column>
+        </Nav.Row>
       )}
-      {redigerbart && skalSendeSed(formValues) && (
+      {visMottakerinstitusjonvelgerFlervalg && formValues.informerUtenlandskTrygdemyndighet && (
+        <Nav.Row>
+          <Nav.Column xs="8">
+            <MottakerinstitusjonvelgerFlervalg
+              feltnavn="mottakerinstitusjoner"
+              bucType={EKV.Koder.buctyper.legislation.LA_BUC_05}
+              redigerbart={redigerbart}
+              form={form}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      )}
+      {redigerbart && skalSendeSed(formValues, toggleEnabledPensjonistEøs) && (
         <Nav.Row className="fritekstSed">
           <Nav.Column xs="8">
             <Skjema.Textarea
@@ -406,6 +410,7 @@ const mapStateToProps = (state, ownProps) => {
   const erArt11_3B =
     ownProps.lovvalgsbestemmelseSomSkalVises ===
     MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B;
+
   const informerUtenlandskTrygdemyndighet =
     !Utils._isEmpty(ownProps.informertMyndighetFakta) || erArt11_3B ? true : null;
   const mottakerLand = ownProps.informertMyndighetFakta.subjektID;
