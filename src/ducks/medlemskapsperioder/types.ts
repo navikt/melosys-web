@@ -1,4 +1,4 @@
-import { MedlemskapsperiodeForAvgift } from "../../services/modules/types/periodeTyper";
+import { MedlemskapsperiodeDto } from "../../services/modules/types/periodeTyper";
 
 export const OK_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK";
 export const OK_OPPRETT_MEDLEMSKAPSPERIODE = "medlemskapsperioder/OK_OPPRETT";
@@ -10,7 +10,7 @@ export const PENDING = "medlemskapsperioder/PENDING";
 export const RESET = "medlemskapsperioder/RESET";
 
 export interface Data {
-  medlemskapsperioder?: MedlemskapsperiodeForAvgift[];
+  medlemskapsperioder?: MedlemskapsperiodeDto[];
 }
 
 export interface FeiletAction {
@@ -28,17 +28,17 @@ export interface ResetAction {
 
 export interface OkMedlemskapsperiodeAction {
   type: typeof OK_MEDLEMSKAPSPERIODE;
-  data: MedlemskapsperiodeForAvgift[];
+  data: MedlemskapsperiodeDto[];
 }
 
 export interface OkOpprettMedlemskapsperiodeAction {
   type: typeof OK_OPPRETT_MEDLEMSKAPSPERIODE;
-  data: MedlemskapsperiodeForAvgift;
+  data: MedlemskapsperiodeDto;
 }
 
 export interface OkOppdaterMedlemskapsperiodeAction {
   type: typeof OK_OPPDATER_MEDLEMSKAPSPERIODE;
-  data: MedlemskapsperiodeForAvgift;
+  data: MedlemskapsperiodeDto;
 }
 
 export interface OkSlettMedlemskapsperiodeAction {

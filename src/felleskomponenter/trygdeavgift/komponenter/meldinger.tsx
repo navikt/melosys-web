@@ -2,7 +2,7 @@ import { Inntektskilde, Skatteforhold } from "./types";
 import * as Nav from "../../../navFrontend";
 import * as Utils from "../../../utils";
 import MKV from "../../../melosyskodeverk";
-import { MedlemskapsperiodeForAvgift } from "../../../services/modules/types/periodeTyper";
+import { MedlemskapsperiodeDto } from "../../../services/modules/types/periodeTyper";
 
 const { PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT } = MKV.Koder.inntektskildetype;
 const { INNVILGET } = MKV.Koder.innvilgelsesResultat;
@@ -101,7 +101,7 @@ const erSkattepliktigOgPensjonUføreMedKildeskatt = (
 
 const erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
   inntektskilder: Inntektskilde[],
-  medlemskapsperioder: MedlemskapsperiodeForAvgift[],
+  medlemskapsperioder: MedlemskapsperiodeDto[],
 ) => {
   const pensjonuføretrygdKilder = inntektskilder.filter((inntektskilde) =>
     [PENSJON_UFØRETRYGD, PENSJON_UFØRETRYGD_KILDESKATT].includes(inntektskilde.kildetype),
@@ -127,8 +127,10 @@ const erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon = (
 enum TypeMelding {
   INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE = "INNTEKTSKILDE UTENFOR MEDLEMSKAPSPERIODE",
   INNTEKTSKILDE_UTENFOR_HELSEUTGIFT_DEKKES_PERIODE = "INNTEKTSKILDE UTENFOR HELSEUTGIFT DEKKES PERIODE",
+  INNTEKTSKILDE_UTENFOR_LOVVALGSPERIODE = "INNTEKTSKILDE UTENFOR LOVVALGSPERIODE",
   SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE = "SKATTEFORHOLD UTENFOR MEDLEMSKAPSPERIODE",
   SKATTEFORHOLD_UTENFOR_HELSEUTGIFT_DEKKES_PERIODE = "SKATTEFORHOLD UTENFOR HELSEUTGIFT DEKKES PERIODE",
+  SKATTEFORHOLD_UTENFOR_LOVVALGSPERIODE = "SKATTEFORHOLD UTENFOR LOVVALGSPERIODE",
   BRUTTOINNTEKT_OVER_250K = "BRUTTOINNTEKT_OVER_250K",
   SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT = "SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT",
   PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE = "PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE",
@@ -137,7 +139,7 @@ enum TypeMelding {
 export const finnAktivFeilmelding = (
   inntektskilder: Inntektskilde[],
   skatteforholdsperioder: Skatteforhold[],
-  medlemskapsperioder: MedlemskapsperiodeForAvgift[],
+  medlemskapsperioder: MedlemskapsperiodeDto[],
   innvilgetMedlemskapsperiode?: { fom: string; tom: string },
 ): string | undefined => {
   if (!innvilgetMedlemskapsperiode || innvilgetMedlemskapsperiode.tom == null) return undefined;
@@ -152,6 +154,33 @@ export const finnAktivFeilmelding = (
   if (erPensjonUføretrygdLagtInnForPeriodeMedKunPensjon(inntektskilder, medlemskapsperioder)) {
     return TypeMelding.PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE;
   }
+  if (erSkattepliktigOgPensjonUføreMedKildeskatt(skatteforholdsperioder, inntektskilder)) {
+    return TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT;
+  }
+
+  // Advarsler
+  if (finnesInntektskildeMedBruttoInntektOver250k(inntektskilder)) {
+    return TypeMelding.BRUTTOINNTEKT_OVER_250K;
+  }
+
+  return undefined;
+};
+
+export const finnAktivFeilmeldingEuEøs = (
+  inntektskilder: Inntektskilde[],
+  skatteforholdsperioder: Skatteforhold[],
+  lovvalgsperiode?: { fom: string; tom: string },
+): string | undefined => {
+  if (!lovvalgsperiode) return undefined;
+
+  // Feil
+  if (finnesSkatteforholdPeriodeUtenforMedlemskapsperiode(skatteforholdsperioder, lovvalgsperiode)) {
+    return TypeMelding.SKATTEFORHOLD_UTENFOR_LOVVALGSPERIODE;
+  }
+  if (finnesInntektskildeperiodeUtenforMedlemskapsperiode(inntektskilder, lovvalgsperiode)) {
+    return TypeMelding.INNTEKTSKILDE_UTENFOR_LOVVALGSPERIODE;
+  }
+
   if (erSkattepliktigOgPensjonUføreMedKildeskatt(skatteforholdsperioder, inntektskilder)) {
     return TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT;
   }
@@ -192,8 +221,10 @@ export function feilMeldingBlokkerer(type?: string): boolean {
   switch (type) {
     case TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE:
     case TypeMelding.INNTEKTSKILDE_UTENFOR_HELSEUTGIFT_DEKKES_PERIODE:
+    case TypeMelding.INNTEKTSKILDE_UTENFOR_LOVVALGSPERIODE:
     case TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE:
     case TypeMelding.SKATTEFORHOLD_UTENFOR_HELSEUTGIFT_DEKKES_PERIODE:
+    case TypeMelding.SKATTEFORHOLD_UTENFOR_LOVVALGSPERIODE:
     case TypeMelding.SKATTEPLIKTIG_OG_PENSJON_UFORETRYGD_MED_KILDESKATT:
     case TypeMelding.PENSJON_UFORETRYGD_LAGT_TIL_FOR_PENSJON_PERIODE:
       return true;
@@ -206,8 +237,10 @@ export function feilMeldingBlokkerer(type?: string): boolean {
 export function Feilmelding({ type }: { type?: string }) {
   switch (type) {
     case TypeMelding.INNTEKTSKILDE_UTENFOR_MEDLEMSKAPSPERIODE:
+    case TypeMelding.INNTEKTSKILDE_UTENFOR_LOVVALGSPERIODE:
       return InntektskildeUtenforMedlemskapsperiode;
     case TypeMelding.SKATTEFORHOLD_UTENFOR_MEDLEMSKAPSPERIODE:
+    case TypeMelding.SKATTEFORHOLD_UTENFOR_LOVVALGSPERIODE:
       return SkatteforholdUtenforMedlemskapsperiode;
     case TypeMelding.BRUTTOINNTEKT_OVER_250K:
       return HoyManedinntekt;
