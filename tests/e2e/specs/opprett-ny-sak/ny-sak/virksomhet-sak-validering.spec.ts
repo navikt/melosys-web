@@ -27,6 +27,7 @@ test.describe("'Opprett ny sak for virksomhet", () => {
 
   test('Opprett sak for sakstype "EU/EØS-land" og verifiser at det ikke oppstår noen feil', async ({
     page,
+    apiRecorder,
   }, testInfo) => {
     await opprettNySakPage.velgVirksomhet();
     await opprettNySakPage.fyllInnOrganisasjonsnummer(ORG_NUMBER_VALID);
@@ -47,6 +48,7 @@ test.describe("'Opprett ny sak for virksomhet", () => {
 
   test('Opprett sak for sakstype "Avtaleland" og verifiser at det ikke oppstår noen feil', async ({
     page,
+    apiRecorder,
   }, testInfo) => {
     await opprettNySakPage.velgVirksomhet();
     await opprettNySakPage.fyllInnOrganisasjonsnummer(ORG_NUMBER_VALID);

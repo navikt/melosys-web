@@ -72,7 +72,7 @@ function Saksbehandling({ match, location }: Props) {
     try {
       const behandlingId = Utils._toInteger(behandlingIDFraParam);
       setBehandlingID(behandlingId);
-      dispatch(fagsakOperations.hent(saksnr));
+      await dispatch(fagsakOperations.hent(saksnr));
       const response = await dispatch(behandlingerOperations.hentBehandling(behandlingId));
       const behandling = response.data;
       if (!behandling) return false;

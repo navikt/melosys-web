@@ -55,6 +55,7 @@ test.describe("'Opprett ny sak for bruker", () => {
 
   test('Opprett sak for sakstype "EU/EØS-land" og verifiser at det ikke oppstår noen feil', async ({
     page,
+    apiRecorder,
   }, testInfo) => {
     const opprettNySakPage = await setupOpprettNySakTest(page);
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);
@@ -79,6 +80,7 @@ test.describe("'Opprett ny sak for bruker", () => {
 
   test('Opprett sak for sakstype "EU/EØS-land", sakstema "Medlemsskap og lovvalg", uten å velge fra- til-dato og verifiser at det ikke oppstår noen feil', async ({
     page,
+    apiRecorder,
   }, testInfo) => {
     const opprettNySakPage = await setupOpprettNySakTest(page);
     await opprettNySakPage.fyllInnBrukerId(USER_ID_VALID);

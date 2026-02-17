@@ -228,6 +228,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
   test.describe("Legg til periode med pliktig bestemmelse (bugfix)", () => {
     test("skal vise 'Legg til periode'-knappen for delt grunnlag selv med pliktig bestemmelse", async ({
       page,
+      apiRecorder,
     }, testInfo) => {
       test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
       const { aarsavregningPage } = await setupAarsavregningTest(page, "MEL-1043");
