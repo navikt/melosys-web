@@ -77,15 +77,15 @@ function Saksbehandling({ match, location }: Props) {
       const behandling = response.data;
       if (!behandling) return false;
 
-      dispatch(behandlingsresultatOperations.hent(behandlingId));
+      await dispatch(behandlingsresultatOperations.hent(behandlingId));
 
       if (behandlingOppfriskes) {
         visOppfriskModal();
         return false;
       }
 
-      dispatch(mottatteOpplysningerOperations.hent(behandlingId));
-      dispatch(dokumenterOperations.hentDokumentOversikt(saksnr));
+      await dispatch(mottatteOpplysningerOperations.hent(behandlingId));
+      await dispatch(dokumenterOperations.hentDokumentOversikt(saksnr));
       setSaksopplysningerLastet(true);
       return true;
     } catch (e) {

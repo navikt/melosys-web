@@ -108,32 +108,36 @@ export const lastInnSaksopplysninger = (sakstype, saksnummer, behandlingID) => a
   ]);
 };
 
-export const lastInnSaksopplysningerIngenFlyt = (saksnummer, behandlingID) => (dispatch) => {
-  dispatch(fagsakOperations.hent(saksnummer));
-  dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
-  dispatch(behandlingerOperations.hentBehandling(behandlingID));
-  dispatch(behandlingsresultatOperations.hent(behandlingID));
-};
+export const lastInnSaksopplysningerIngenFlyt = (saksnummer, behandlingID) => (dispatch) =>
+  Promise.all([
+    dispatch(fagsakOperations.hent(saksnummer)),
+    dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
+    dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+    dispatch(behandlingsresultatOperations.hent(behandlingID)),
+  ]);
 
-export const lastInnSaksopplysningerRegistreringUnntaksperioder = (saksnummer, behandlingID) => (dispatch) => {
-  dispatch(fagsakOperations.hent(saksnummer));
-  dispatch(behandlingerOperations.hentBehandling(behandlingID));
-  dispatch(behandlingsresultatOperations.hent(behandlingID));
-  dispatch(avklartefaktaOperations.hent(behandlingID));
-  dispatch(vilkarOperations.hent(behandlingID));
-  dispatch(lovvalgsperioderOperations.hent(behandlingID));
-  dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID));
-  dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
-};
+export const lastInnSaksopplysningerRegistreringUnntaksperioder = (saksnummer, behandlingID) => (dispatch) =>
+  Promise.all([
+    dispatch(fagsakOperations.hent(saksnummer)),
+    dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+    dispatch(behandlingsresultatOperations.hent(behandlingID)),
+    dispatch(avklartefaktaOperations.hent(behandlingID)),
+    dispatch(vilkarOperations.hent(behandlingID)),
+    dispatch(lovvalgsperioderOperations.hent(behandlingID)),
+    dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID)),
+    dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
+  ]);
 
-export const lastInnSaksopplysningerBehandleMottattAOU = (saksnummer, behandlingID) => (dispatch, getState) => {
-  dispatch(behandlingerOperations.hentBehandling(behandlingID));
-  dispatch(behandlingsresultatOperations.hent(behandlingID));
-  dispatch(anmodningsperioderOperations.hent(behandlingID)).then(() => {
-    const anmodningsperiodeID = anmodningsperioderSelectors.AnmodningsperiodeIDSelector(getState());
-    dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID));
-  });
-  dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer));
+export const lastInnSaksopplysningerBehandleMottattAOU = (saksnummer, behandlingID) => async (dispatch, getState) => {
+  await Promise.all([
+    dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+    dispatch(behandlingsresultatOperations.hent(behandlingID)),
+    dispatch(anmodningsperioderOperations.hent(behandlingID)).then(() => {
+      const anmodningsperiodeID = anmodningsperioderSelectors.AnmodningsperiodeIDSelector(getState());
+      return dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID));
+    }),
+    dispatch(dokumenterOperations.hentDokumentOversikt(saksnummer)),
+  ]);
 };
 
 export const resetSaksopplysninger = () => (dispatch) => {
