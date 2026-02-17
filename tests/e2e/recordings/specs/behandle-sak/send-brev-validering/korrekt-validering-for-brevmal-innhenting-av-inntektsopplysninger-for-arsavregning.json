@@ -963,11 +963,11 @@
     {
       "request": {
         "method": "GET",
-        "url": "http://localhost:3333/api/featuretoggle?features=melosys.faktureringskomponent.vis_referanse&features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift",
+        "url": "http://localhost:3333/api/featuretoggle?features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift&features=melosys.faktureringskomponent.vis_referanse&features=melosys.cdm-4-4",
         "pathname": "/api/featuretoggle",
         "normalizedPath": "/api/featuretoggle",
         "query": {
-          "features": "melosys.eos_fakturering_av_trygdeavgift"
+          "features": "melosys.cdm-4-4"
         },
         "headers": {
           "accept": "application/json",
@@ -991,7 +991,8 @@
           "melosys.faktureringskomponenten.ikke-tidligere-perioder": true,
           "melosys.11_3_a_Norge_er_utpekt": true,
           "melosys.eos_fakturering_av_trygdeavgift": true,
-          "melosys.arsavregning.uten.flyt": false
+          "melosys.arsavregning.uten.flyt": false,
+          "melosys.cdm-4-4": true
         }
       }
     },
@@ -1384,7 +1385,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-01-30",
+                    "gyldigFraOgMed": "2016-02-17",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -1407,7 +1408,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-01-30",
+                    "gyldigFraOgMed": "2016-02-17",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
@@ -1529,7 +1530,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-01-30",
+                    "gyldigFraOgMed": "2016-02-17",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -1552,7 +1553,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-01-30",
+                    "gyldigFraOgMed": "2016-02-17",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
@@ -1808,6 +1809,98 @@
                     "bekreftelsesdato": null,
                     "master": "NAV (PDL)",
                     "kilde": "Tyske trygdemyndigheter, TYSKLAND",
+                    "erHistorisk": true,
+                    "__typename": "Sivilstand"
+                  }
+                ],
+                "__typename": "Personopplysninger"
+              },
+              "__typename": "Saksopplysninger"
+            }
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3333/graphql/",
+        "pathname": "/graphql/",
+        "normalizedPath": "/graphql/",
+        "query": {},
+        "headers": {
+          "content-type": "application/json",
+          "accept": "*/*",
+          "authorization": "[REDACTED]"
+        },
+        "body": {
+          "operationName": "hentPersonopplysninger",
+          "variables": {
+            "behandlingID": 23
+          },
+          "query": "query hentPersonopplysninger($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      navn {\n        fornavn\n        mellomnavn\n        etternavn\n        __typename\n      }\n      kjoenn\n      folkeregisterpersonstatuser {\n        kode\n        erHistorisk\n        __typename\n      }\n      folkeregisteridentifikator\n      statsborgerskap {\n        land\n        erHistorisk\n        __typename\n      }\n      sivilstand {\n        type\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
+        }
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "data": {
+            "hentSaksopplysninger": {
+              "persondata": {
+                "navn": {
+                  "fornavn": "KARAFFEL",
+                  "mellomnavn": null,
+                  "etternavn": "TRIVIELL",
+                  "__typename": "Navn"
+                },
+                "kjoenn": "MANN",
+                "folkeregisterpersonstatuser": [
+                  {
+                    "kode": "BOSATT",
+                    "erHistorisk": false,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
+                    "kode": "MIDLERTIDIG",
+                    "erHistorisk": true,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
+                    "kode": "UTFLYTTET",
+                    "erHistorisk": true,
+                    "__typename": "Folkeregisterpersonstatus"
+                  }
+                ],
+                "folkeregisteridentifikator": "30056928150",
+                "statsborgerskap": [
+                  {
+                    "land": "NORGE",
+                    "erHistorisk": false,
+                    "__typename": "Statsborgerskap"
+                  }
+                ],
+                "sivilstand": [
+                  {
+                    "type": "Gift",
+                    "erHistorisk": false,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Gift",
+                    "erHistorisk": false,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Separert",
+                    "erHistorisk": true,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Skilt",
                     "erHistorisk": true,
                     "__typename": "Sivilstand"
                   }

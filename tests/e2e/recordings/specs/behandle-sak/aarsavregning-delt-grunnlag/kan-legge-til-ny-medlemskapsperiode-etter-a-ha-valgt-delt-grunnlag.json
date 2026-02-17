@@ -316,7 +316,7 @@
                 "arbeidsforholdID": "123",
                 "arbeidsforholdIDnav": 123,
                 "ansettelsesPeriode": {
-                  "fom": "2021-01-30",
+                  "fom": "2021-02-17",
                   "tom": null
                 },
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
@@ -332,13 +332,13 @@
                       "term": "KONSULENT"
                     },
                     "gyldighetsperiode": {
-                      "fom": "2021-01-30",
+                      "fom": "2021-02-17",
                       "tom": null
                     },
                     "avtaltArbeidstimerPerUke": 37.5,
                     "stillingsprosent": 100,
                     "beregnetAntallTimerPrUke": 37.5,
-                    "endringsdatoStillingsprosent": "2021-01-30",
+                    "endringsdatoStillingsprosent": "2021-02-17",
                     "skipsregister": null,
                     "skipstype": null,
                     "maritimArbeidsavtale": false,
@@ -434,7 +434,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -463,7 +463,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -492,7 +492,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -521,7 +521,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -550,7 +550,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -579,7 +579,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -608,7 +608,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -637,7 +637,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -666,7 +666,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -695,7 +695,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -724,7 +724,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -753,7 +753,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -782,7 +782,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -811,7 +811,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -840,7 +840,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -869,7 +869,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -898,7 +898,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -927,7 +927,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1148,11 +1148,11 @@
     {
       "request": {
         "method": "GET",
-        "url": "http://localhost:3333/api/featuretoggle?features=melosys.faktureringskomponent.vis_referanse&features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift",
+        "url": "http://localhost:3333/api/featuretoggle?features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift&features=melosys.faktureringskomponent.vis_referanse&features=melosys.cdm-4-4",
         "pathname": "/api/featuretoggle",
         "normalizedPath": "/api/featuretoggle",
         "query": {
-          "features": "melosys.eos_fakturering_av_trygdeavgift"
+          "features": "melosys.cdm-4-4"
         },
         "headers": {
           "accept": "application/json",
@@ -1176,7 +1176,8 @@
           "melosys.faktureringskomponenten.ikke-tidligere-perioder": true,
           "melosys.11_3_a_Norge_er_utpekt": true,
           "melosys.eos_fakturering_av_trygdeavgift": true,
-          "melosys.arsavregning.uten.flyt": false
+          "melosys.arsavregning.uten.flyt": false,
+          "melosys.cdm-4-4": true
         }
       }
     },
@@ -1865,7 +1866,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-01-30",
+                    "gyldigFraOgMed": "2016-02-17",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -1888,7 +1889,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-01-30",
+                    "gyldigFraOgMed": "2016-02-17",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
@@ -1937,11 +1938,11 @@
           "authorization": "[REDACTED]"
         },
         "body": {
-          "operationName": "hentPersoninfo",
+          "operationName": "hentAdresser",
           "variables": {
             "behandlingID": 26
           },
-          "query": "query hentPersoninfo($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      folkeregisterpersonstatuser {\n        kode\n        tekst\n        master\n        kilde\n        fregGyldighetstidspunkt\n        erHistorisk\n        __typename\n      }\n      foedsel {\n        foedeland\n        foedested\n        foedselsaar\n        foedselsdato\n        __typename\n      }\n      sivilstand {\n        type\n        relatertVedSivilstand\n        gyldigFraOgMed\n        bekreftelsesdato\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
+          "query": "query hentAdresser($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      bostedsadresser {\n        coAdressenavn\n        adresse {\n          tilleggsnavn\n          gatenavn\n          husnummerEtasjeLeilighet\n          postboks\n          postnummer\n          poststed\n          region\n          land\n          __typename\n        }\n        gyldigFraOgMed\n        gyldigTilOgMed\n        kilde\n        master\n        erHistorisk\n        __typename\n      }\n      oppholdsadresser {\n        coAdressenavn\n        adresse {\n          tilleggsnavn\n          gatenavn\n          husnummerEtasjeLeilighet\n          postboks\n          postnummer\n          poststed\n          region\n          land\n          __typename\n        }\n        gyldigFraOgMed\n        gyldigTilOgMed\n        kilde\n        master\n        erHistorisk\n        __typename\n      }\n      kontaktadresser {\n        coAdressenavn\n        semistrukturertAdresse {\n          adresselinje1\n          adresselinje2\n          adresselinje3\n          adresselinje4\n          postnummer\n          poststed\n          land\n          __typename\n        }\n        strukturertAdresse {\n          tilleggsnavn\n          gatenavn\n          husnummerEtasjeLeilighet\n          postboks\n          postnummer\n          poststed\n          region\n          land\n          __typename\n        }\n        gyldigFraOgMed\n        gyldigTilOgMed\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
         }
       },
       "response": {
@@ -1954,82 +1955,111 @@
           "data": {
             "hentSaksopplysninger": {
               "persondata": {
-                "folkeregisterpersonstatuser": [
+                "bostedsadresser": [
                   {
-                    "kode": "BOSATT",
-                    "tekst": "Bosatt etter folkeregisterloven",
-                    "master": "FREG",
+                    "coAdressenavn": "Co Yo 1",
+                    "adresse": {
+                      "tilleggsnavn": null,
+                      "gatenavn": "bosted gata 3",
+                      "husnummerEtasjeLeilighet": "42",
+                      "postboks": null,
+                      "postnummer": "0001",
+                      "poststed": null,
+                      "region": null,
+                      "land": "STORBRITANNIA",
+                      "__typename": "StrukturertAdresseformat"
+                    },
+                    "gyldigFraOgMed": "1995-06-16",
+                    "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
-                    "fregGyldighetstidspunkt": "1990-01-01",
+                    "master": "FREG",
                     "erHistorisk": false,
-                    "__typename": "Folkeregisterpersonstatus"
+                    "__typename": "Bostedsadresse"
                   },
                   {
-                    "kode": "MIDLERTIDIG",
-                    "tekst": "Midlertidig (D-nummer)",
-                    "master": "FREG",
+                    "coAdressenavn": null,
+                    "adresse": {
+                      "tilleggsnavn": "tilleggg navn",
+                      "gatenavn": null,
+                      "husnummerEtasjeLeilighet": null,
+                      "postboks": null,
+                      "postnummer": "2414",
+                      "poststed": "ELVERUM",
+                      "region": null,
+                      "land": "NORGE",
+                      "__typename": "StrukturertAdresseformat"
+                    },
+                    "gyldigFraOgMed": "1957-09-12",
+                    "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
-                    "fregGyldighetstidspunkt": "2020-10-22",
-                    "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "UTFLYTTET",
-                    "tekst": "Utflyttet",
                     "master": "FREG",
-                    "kilde": "Folkeregisteret",
-                    "fregGyldighetstidspunkt": "2012-03-15",
                     "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
+                    "__typename": "Bostedsadresse"
                   }
                 ],
-                "foedsel": {
-                  "foedeland": "NO",
-                  "foedested": "OSLO",
-                  "foedselsaar": 1969,
-                  "foedselsdato": "1969-05-30",
-                  "__typename": "Foedsel"
-                },
-                "sivilstand": [
+                "oppholdsadresser": [
                   {
-                    "type": "Gift",
-                    "relatertVedSivilstand": "12028536819",
-                    "gyldigFraOgMed": "2011-02-02",
-                    "bekreftelsesdato": null,
-                    "master": "Freg",
-                    "kilde": "KILDE_DSF",
+                    "coAdressenavn": "CO 3",
+                    "adresse": {
+                      "tilleggsnavn": null,
+                      "gatenavn": "opphold gata 1",
+                      "husnummerEtasjeLeilighet": "42 B",
+                      "postboks": null,
+                      "postnummer": "0001",
+                      "poststed": "OSLO",
+                      "region": null,
+                      "land": "NORGE",
+                      "__typename": "StrukturertAdresseformat"
+                    },
+                    "gyldigFraOgMed": "2016-02-17",
+                    "gyldigTilOgMed": null,
+                    "kilde": "Folkeregisteret",
+                    "master": "FREG",
                     "erHistorisk": false,
-                    "__typename": "Sivilstand"
-                  },
+                    "__typename": "Oppholdsadresse"
+                  }
+                ],
+                "kontaktadresser": [
                   {
-                    "type": "Gift",
-                    "relatertVedSivilstand": "21075114491",
-                    "gyldigFraOgMed": "2019-08-03",
-                    "bekreftelsesdato": null,
-                    "master": "Freg",
-                    "kilde": "FREG",
+                    "coAdressenavn": "CO 2",
+                    "semistrukturertAdresse": null,
+                    "strukturertAdresse": {
+                      "tilleggsnavn": null,
+                      "gatenavn": "kontakt gata 1",
+                      "husnummerEtasjeLeilighet": "42",
+                      "postboks": null,
+                      "postnummer": "0001",
+                      "poststed": null,
+                      "region": null,
+                      "land": "SVERIGE",
+                      "__typename": "StrukturertAdresseformat"
+                    },
+                    "gyldigFraOgMed": "2016-02-17",
+                    "gyldigTilOgMed": null,
+                    "master": "FREG",
+                    "kilde": "Folkeregisteret",
                     "erHistorisk": false,
-                    "__typename": "Sivilstand"
+                    "__typename": "Kontaktadresse"
                   },
                   {
-                    "type": "Separert",
-                    "relatertVedSivilstand": "12028536819",
-                    "gyldigFraOgMed": "2013-01-03",
-                    "bekreftelsesdato": null,
-                    "master": "NAV (PDL)",
-                    "kilde": "Tyske trygdemyndigheter, TYSKLAND",
+                    "coAdressenavn": null,
+                    "semistrukturertAdresse": {
+                      "adresselinje1": null,
+                      "adresselinje2": null,
+                      "adresselinje3": null,
+                      "adresselinje4": null,
+                      "postnummer": "3011",
+                      "poststed": "DRAMMEN",
+                      "land": "NORGE",
+                      "__typename": "SemistrukturertAdresseformat"
+                    },
+                    "strukturertAdresse": null,
+                    "gyldigFraOgMed": null,
+                    "gyldigTilOgMed": null,
+                    "master": "FREG",
+                    "kilde": "Folkeregisteret",
                     "erHistorisk": true,
-                    "__typename": "Sivilstand"
-                  },
-                  {
-                    "type": "Skilt",
-                    "relatertVedSivilstand": null,
-                    "gyldigFraOgMed": "2014-04-09",
-                    "bekreftelsesdato": null,
-                    "master": "NAV (PDL)",
-                    "kilde": "Tyske trygdemyndigheter, TYSKLAND",
-                    "erHistorisk": true,
-                    "__typename": "Sivilstand"
+                    "__typename": "Kontaktadresse"
                   }
                 ],
                 "__typename": "Personopplysninger"

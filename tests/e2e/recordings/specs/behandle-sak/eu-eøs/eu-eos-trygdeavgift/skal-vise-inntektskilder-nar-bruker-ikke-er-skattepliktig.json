@@ -518,7 +518,7 @@
                 "arbeidsforholdID": "123",
                 "arbeidsforholdIDnav": 123,
                 "ansettelsesPeriode": {
-                  "fom": "2021-01-30",
+                  "fom": "2021-02-17",
                   "tom": null
                 },
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
@@ -534,13 +534,13 @@
                       "term": "KONSULENT"
                     },
                     "gyldighetsperiode": {
-                      "fom": "2021-01-30",
+                      "fom": "2021-02-17",
                       "tom": null
                     },
                     "avtaltArbeidstimerPerUke": 37.5,
                     "stillingsprosent": 100,
                     "beregnetAntallTimerPrUke": 37.5,
-                    "endringsdatoStillingsprosent": "2021-01-30",
+                    "endringsdatoStillingsprosent": "2021-02-17",
                     "skipsregister": null,
                     "skipstype": null,
                     "maritimArbeidsavtale": false,
@@ -636,7 +636,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -665,7 +665,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -694,7 +694,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -723,7 +723,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -752,7 +752,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -781,7 +781,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -810,13 +810,42 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-01-01T00:00:00",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
                           "tom": null
                         },
                         "utbetaltIPeriode": "2026-01",
+                        "opplysningspliktigID": "974761076",
+                        "virksomhetID": "888888888",
+                        "inntektsmottakerID": "30056928150",
+                        "inngaarIGrunnlagForTrekk": true,
+                        "utloeserArbeidsgiveravgift": true,
+                        "informasjonsstatus": "InngaarAlltid",
+                        "beskrivelse": "fastloenn"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "aarMaaned": "2026-02",
+                  "arbeidsInntektInformasjon": {
+                    "inntektListe": [
+                      {
+                        "type": "Loennsinntekt",
+                        "beloep": 50000,
+                        "fordel": "kontantytelse",
+                        "inntektskilde": "A-ordningen",
+                        "inntektsperiodetype": "Maaned",
+                        "inntektsstatus": "LoependeInnrapportert",
+                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "opptjeningsland": null,
+                        "opptjeningsperiode": {
+                          "fom": null,
+                          "tom": null
+                        },
+                        "utbetaltIPeriode": "2026-02",
                         "opplysningspliktigID": "974761076",
                         "virksomhetID": "888888888",
                         "inntektsmottakerID": "30056928150",
@@ -1159,11 +1188,11 @@
     {
       "request": {
         "method": "GET",
-        "url": "http://localhost:3333/api/featuretoggle?features=melosys.faktureringskomponent.vis_referanse&features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift",
+        "url": "http://localhost:3333/api/featuretoggle?features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift&features=melosys.faktureringskomponent.vis_referanse&features=melosys.cdm-4-4",
         "pathname": "/api/featuretoggle",
         "normalizedPath": "/api/featuretoggle",
         "query": {
-          "features": "melosys.eos_fakturering_av_trygdeavgift"
+          "features": "melosys.cdm-4-4"
         },
         "headers": {
           "accept": "application/json",
@@ -1187,7 +1216,8 @@
           "melosys.faktureringskomponenten.ikke-tidligere-perioder": true,
           "melosys.11_3_a_Norge_er_utpekt": true,
           "melosys.eos_fakturering_av_trygdeavgift": true,
-          "melosys.arsavregning.uten.flyt": false
+          "melosys.arsavregning.uten.flyt": false,
+          "melosys.cdm-4-4": true
         }
       }
     },
@@ -1847,7 +1877,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-01-30",
+                    "gyldigFraOgMed": "2016-02-17",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -1870,7 +1900,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-01-30",
+                    "gyldigFraOgMed": "2016-02-17",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
@@ -1992,7 +2022,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-01-30",
+                    "gyldigFraOgMed": "2016-02-17",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -2015,7 +2045,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-01-30",
+                    "gyldigFraOgMed": "2016-02-17",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
@@ -2549,56 +2579,6 @@
                     "type": "Skilt",
                     "erHistorisk": true,
                     "__typename": "Sivilstand"
-                  }
-                ],
-                "__typename": "Personopplysninger"
-              },
-              "__typename": "Saksopplysninger"
-            }
-          }
-        }
-      }
-    },
-    {
-      "request": {
-        "method": "POST",
-        "url": "http://localhost:3333/graphql/",
-        "pathname": "/graphql/",
-        "normalizedPath": "/graphql/",
-        "query": {},
-        "headers": {
-          "content-type": "application/json",
-          "accept": "*/*",
-          "authorization": "[REDACTED]"
-        },
-        "body": {
-          "operationName": "hentStatsborgerskap",
-          "variables": {
-            "behandlingID": 54
-          },
-          "query": "query hentStatsborgerskap($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      statsborgerskap {\n        land\n        bekreftelsesdato\n        gyldigFraOgMed\n        gyldigTilOgMed\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
-        }
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "data": {
-            "hentSaksopplysninger": {
-              "persondata": {
-                "statsborgerskap": [
-                  {
-                    "land": "NORGE",
-                    "bekreftelsesdato": null,
-                    "gyldigFraOgMed": "1990-01-01",
-                    "gyldigTilOgMed": null,
-                    "master": "FREG",
-                    "kilde": "Folkeregisteret",
-                    "erHistorisk": false,
-                    "__typename": "Statsborgerskap"
                   }
                 ],
                 "__typename": "Personopplysninger"
