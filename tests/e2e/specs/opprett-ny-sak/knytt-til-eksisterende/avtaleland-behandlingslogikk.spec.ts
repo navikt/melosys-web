@@ -92,6 +92,7 @@ test.describe("Avtaleland behandlingslogikk (regresjon)", () => {
 
   test("Regresjon: Avtaleland med ferdigbehandlede - Ny vurdering og Henvendelse tilgjengelig", async ({
     page,
+    apiRecorder,
   }, testInfo) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 

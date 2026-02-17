@@ -15,6 +15,7 @@ test.describe("'Opprett ny sak/behandling' hovedside", () => {
   });
   test("Klikk på 'Opprett ny sak/behandling' og verifiser at alle forventede elementer er tilstede", async ({
     page,
+    apiRecorder,
   }, testInfo) => {
     await opprettNySakPage.verifiserAlleElementer();
   });
