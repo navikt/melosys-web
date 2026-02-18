@@ -1,6 +1,7 @@
 import {
   Avgiftspliktigperiode,
   erMedlemskapsperiodeEllerLovvalgsperiode,
+  erPeriodeListeHelseutgiftdekkesperiode,
 } from "../../../../../services/modules/types/periodeTyper";
 import * as Utils from "../../../../../utils";
 import * as KV from "../../../../../kodeverk";
@@ -34,6 +35,23 @@ function MedlemskapsPerioderTabell({ perioder }: { perioder?: Avgiftspliktigperi
   if (!perioder) return null;
 
   const sortertePerioder = [...perioder].sort(Utils.dato.sorterEtterISOFomDato);
+
+  const erHelseutgiftDekkesPerioder = erPeriodeListeHelseutgiftdekkesperiode(perioder);
+
+  if (erHelseutgiftDekkesPerioder) {
+    return (
+      <>
+        {sortertePerioder.map((medlemskapsPeriode) => (
+          <Nav.BodyLong size="small" key={Utils._uuid()} style={{ marginBottom: "1rem" }}>
+            <span className="navds-label navds-label--small">Periode Norge dekker helseutgifter:</span>{" "}
+            {`${Utils.dato.formatterDatoTilNorsk(medlemskapsPeriode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
+              medlemskapsPeriode.tomDato,
+            )}`}
+          </Nav.BodyLong>
+        ))}
+      </>
+    );
+  }
 
   return (
     <Nav.Table size="small" className="periode_tabell">

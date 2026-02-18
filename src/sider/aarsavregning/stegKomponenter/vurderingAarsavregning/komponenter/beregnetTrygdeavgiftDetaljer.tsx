@@ -4,6 +4,7 @@ import * as Utils from "../../../../../utils";
 import MKV from "../../../../../melosyskodeverk";
 import * as KV from "../../../../../kodeverk";
 import { formaterTilNorskBelopUtenDesimaler } from "../../../../../utils";
+import { erPeriodeListeHelseutgiftdekkesperiode } from "../../../../../services/modules/types/periodeTyper";
 
 const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 const { MISJONÆR } = MKV.Koder.inntektskildetype;
@@ -28,7 +29,9 @@ export function BeregnetTrygdeavgiftDetaljer({
   medlemskapsTypeErPliktig: boolean;
 }) {
   if (!grunnlag || !grunnlag.avgift) return null;
-
+  const erHelseutgiftDekkesPeriode = erPeriodeListeHelseutgiftdekkesperiode(
+    grunnlag.trygdeavgiftsgrunnlag.avgiftspliktigperioder,
+  );
   const hentDetaljer = (data: Grunnlagsopplysninger): DetaljerInterface[] => {
     return data.avgift.trygdeavgiftsperioder
       .map((period) => {
@@ -76,9 +79,9 @@ export function BeregnetTrygdeavgiftDetaljer({
             <Nav.Table.HeaderCell scope="col">Avgift md.</Nav.Table.HeaderCell>
             <Nav.Table.HeaderCell scope="col">Inntektskilde</Nav.Table.HeaderCell>
             <Nav.Table.HeaderCell scope="col">Bruttoinntekt md.</Nav.Table.HeaderCell>
-            <Nav.Table.HeaderCell scope="col">Betalt aga.?</Nav.Table.HeaderCell>
+            {!erHelseutgiftDekkesPeriode && <Nav.Table.HeaderCell scope="col">Betalt aga.?</Nav.Table.HeaderCell>}
             <Nav.Table.HeaderCell scope="col">Skattepliktig</Nav.Table.HeaderCell>
-            <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>
+            {!erHelseutgiftDekkesPeriode && <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>}
           </Nav.Table.Row>
         </Nav.Table.Header>
         <Nav.Table.Body>
@@ -101,15 +104,19 @@ export function BeregnetTrygdeavgiftDetaljer({
               <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
                 {formaterTilNorskBelopUtenDesimaler(detaljer.inntektPerMd)} kr
               </Nav.Table.DataCell>
-              <Nav.Table.DataCell key={Utils._uuid()}>
-                {arbAvgBetalesKreves(detaljer.inntektskildetype)
-                  ? detaljer.arbeidsgiversavgiftBetales
-                  : "Ikke relevant"}
-              </Nav.Table.DataCell>
+              {!erHelseutgiftDekkesPeriode && (
+                <Nav.Table.DataCell key={Utils._uuid()}>
+                  {arbAvgBetalesKreves(detaljer.inntektskildetype)
+                    ? detaljer.arbeidsgiversavgiftBetales
+                    : "Ikke relevant"}
+                </Nav.Table.DataCell>
+              )}
               <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.skattepliktig}</Nav.Table.DataCell>
-              <Nav.Table.DataCell key={Utils._uuid()}>
-                {KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, detaljer.dekning)}
-              </Nav.Table.DataCell>
+              {!erHelseutgiftDekkesPeriode && (
+                <Nav.Table.DataCell key={Utils._uuid()}>
+                  {KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, detaljer.dekning)}
+                </Nav.Table.DataCell>
+              )}
             </Nav.Table.Row>
           ))}
         </Nav.Table.Body>

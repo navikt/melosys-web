@@ -55,22 +55,22 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
   },
 };
 
-const erInnenforMedlemskapsperiodeTest = {
+const erInnenforAvgiftspliktigperiodeTest = {
   name: "erInnenforMedlemskapsperiode",
   message: UTENFOR_MEDLEMSKAPSPERIODEN,
   test: (datoString, schema) => {
     if (!datoString) return true;
 
     try {
-      const { medlemskapsperiode } = schema.options.context;
+      const { avgiftspliktigperiode } = schema.options.context;
 
-      const medlemskapsperiodeFom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato);
-      const medlemskapsperiodeTom = Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato);
+      const avgiftspliktigperiodeFom = Utils.dato.formatterDatoTilISO(avgiftspliktigperiode.fomDato);
+      const avgiftspliktigperiodeTom = Utils.dato.formatterDatoTilISO(avgiftspliktigperiode.tomDato);
       const isoDatoString = Utils.dato.formatterDatoTilISO(datoString);
 
       if (!isoDatoString) return false;
 
-      return isoDatoString >= medlemskapsperiodeFom && isoDatoString <= medlemskapsperiodeTom;
+      return isoDatoString >= avgiftspliktigperiodeFom && isoDatoString <= avgiftspliktigperiodeTom;
     } catch (error) {
       return false;
     }
@@ -78,12 +78,12 @@ const erInnenforMedlemskapsperiodeTest = {
 };
 
 const skatteforholdsperiodeSchema = object().shape({
-  fomDato: string().required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforMedlemskapsperiodeTest),
+  fomDato: string().required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforAvgiftspliktigperiodeTest),
   tomDato: string()
     .required(MAA_FYLLES_UT)
     .erGyldigDato()
     .erEtterDatofelt("fomDato")
-    .test(erInnenforMedlemskapsperiodeTest),
+    .test(erInnenforAvgiftspliktigperiodeTest),
   skatteplikttype: string().required(MAA_FYLLES_UT),
 });
 
@@ -91,12 +91,12 @@ const inntektskildeSchema = object().shape({
   kildetype: string().required(MAA_FYLLES_UT),
   arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
   bruttoInntekt: string().test(bruttoInntektFyltUtNårDetKrevesTest),
-  fomDato: string().required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforMedlemskapsperiodeTest),
+  fomDato: string().required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforAvgiftspliktigperiodeTest),
   tomDato: string()
     .required(MAA_FYLLES_UT)
     .erGyldigDato()
     .erEtterDatofelt("fomDato")
-    .test(erInnenforMedlemskapsperiodeTest),
+    .test(erInnenforAvgiftspliktigperiodeTest),
   erMaanedsbelop: string(),
 });
 

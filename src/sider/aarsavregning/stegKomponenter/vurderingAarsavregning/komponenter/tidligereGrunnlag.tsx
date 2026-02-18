@@ -3,6 +3,7 @@ import { AarsavregningResponse } from "../../../../../services/modules/aarsavreg
 import {
   erHelseutgiftdekkesperiode,
   erMedlemskapsperiodeEllerLovvalgsperiode,
+  erPeriodeListeHelseutgiftdekkesperiode,
 } from "../../../../../services/modules/types/periodeTyper";
 import MKV from "../../../../../melosyskodeverk";
 import { formaterTilNorskBelopUtenDesimaler } from "../../../../../utils";
@@ -76,6 +77,10 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
                 }
               />
               <GrunnlagTabeller
+                erHelseutgiftDekkesPeriode={erPeriodeListeHelseutgiftdekkesperiode(
+                  aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag
+                    .avgiftspliktigperioder,
+                )}
                 skatteforholdsperioder={
                   aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag
                     .skatteforholdsperioder

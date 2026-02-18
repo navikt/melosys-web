@@ -66,6 +66,12 @@ export const erHelseutgiftdekkesperiode = (
   return periode.type === "HELSEUTGIFTDEKKESPERIODE";
 };
 
+export const erPeriodeListeHelseutgiftdekkesperiode = (
+  perioder: Avgiftspliktigperiode[],
+): perioder is HelseutgiftdekkesperiodeForAvgift[] => {
+  return perioder.every((periode) => periode.type === "HELSEUTGIFTDEKKESPERIODE");
+};
+
 export const erMedlemskapsperiodeEllerLovvalgsperiode = (
   periode: Avgiftspliktigperiode,
 ): periode is MedlemskapsperiodeForAvgift | LovvalgsperiodeForAvgift => {

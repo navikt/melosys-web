@@ -53,6 +53,7 @@ interface InntektskilderProps {
   maxDate?: Date;
   forhindreAutoUtfylling?: boolean;
   laasAar?: boolean;
+  erHelseutgiftDekkesPeriode?: boolean;
 }
 
 const hentInntektskilde = (
@@ -103,6 +104,7 @@ export function Inntektskilder({
   maxDate,
   forhindreAutoUtfylling,
   laasAar,
+  erHelseutgiftDekkesPeriode,
 }: InntektskilderProps) {
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
 
@@ -135,6 +137,7 @@ export function Inntektskilder({
 
         const skalFylleInnArbAvgBetales =
           inntektskilde.kildetype && arbAvgBetalesKreves(inntektskilde.kildetype, medlemskapsTypeErPliktig);
+
         const skalFylleInnBruttoInntekt =
           inntektskilde.kildetype &&
           bruttoInntektKreves(brukerSkattepliktigIHelePerioden, inntektskilde.kildetype, inntektskilde.arbAvgBetales);
@@ -187,51 +190,53 @@ export function Inntektskilder({
               </Forms.Select>
             </Nav.Column>
 
-            <Nav.Column className="arbavgbetales">
-              {skalFylleInnArbAvgBetales ? (
-                <Forms.RadioGroup
-                  legend={index === 0 ? "Betales aga.?" : ""}
-                  hideLegend={index !== 0}
-                  name={`inntektskilder[${index}].arbAvgBetales`}
-                  readOnly={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
-                  control={control}
-                  onChange={(value) => handleEndreArbAvgBetales(index, value)}
-                >
-                  <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
-                    <Nav.Radio
-                      value={BOOLSK_STRING.SANN}
-                      disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
-                    >
-                      Ja
-                    </Nav.Radio>
-                    <Nav.Radio
-                      value={BOOLSK_STRING.USANN}
-                      disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
-                    >
-                      Nei
-                    </Nav.Radio>
-                  </Stack>
-                </Forms.RadioGroup>
-              ) : inntektskilde.kildetype && !arbAvgBetalesKreves(inntektskilde.kildetype, medlemskapsTypeErPliktig) ? (
-                <div className="ikkeRelevant">
-                  {index === 0 && (
-                    <Nav.BodyLong weight="semibold" size="small">
-                      Betales aga.?
-                    </Nav.BodyLong>
-                  )}
-                  <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
-                </div>
-              ) : (
-                <div>
-                  {index === 0 && (
-                    <Nav.BodyLong weight="semibold" size="small">
-                      Betales aga.?
-                    </Nav.BodyLong>
-                  )}
-                </div>
-              )}
-            </Nav.Column>
-
+            {!erHelseutgiftDekkesPeriode && (
+              <Nav.Column className="arbavgbetales">
+                {skalFylleInnArbAvgBetales ? (
+                  <Forms.RadioGroup
+                    legend={index === 0 ? "Betales aga.?" : ""}
+                    hideLegend={index !== 0}
+                    name={`inntektskilder[${index}].arbAvgBetales`}
+                    readOnly={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
+                    control={control}
+                    onChange={(value) => handleEndreArbAvgBetales(index, value)}
+                  >
+                    <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
+                      <Nav.Radio
+                        value={BOOLSK_STRING.SANN}
+                        disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
+                      >
+                        Ja
+                      </Nav.Radio>
+                      <Nav.Radio
+                        value={BOOLSK_STRING.USANN}
+                        disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}
+                      >
+                        Nei
+                      </Nav.Radio>
+                    </Stack>
+                  </Forms.RadioGroup>
+                ) : inntektskilde.kildetype &&
+                  !arbAvgBetalesKreves(inntektskilde.kildetype, medlemskapsTypeErPliktig) ? (
+                  <div className="ikkeRelevant">
+                    {index === 0 && (
+                      <Nav.BodyLong weight="semibold" size="small">
+                        Betales aga.?
+                      </Nav.BodyLong>
+                    )}
+                    <p className={`undertekst ${index === 0 ? "med-overskrift" : "uten-overskrift"}`}>Ikke relevant</p>
+                  </div>
+                ) : (
+                  <div>
+                    {index === 0 && (
+                      <Nav.BodyLong weight="semibold" size="small">
+                        Betales aga.?
+                      </Nav.BodyLong>
+                    )}
+                  </div>
+                )}
+              </Nav.Column>
+            )}
             {skalViseErMaanedsBelopRadioGroup && (
               <Nav.Column className="periode">
                 {skalFylleInnBruttoInntekt ? (
