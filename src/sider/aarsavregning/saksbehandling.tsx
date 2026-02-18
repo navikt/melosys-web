@@ -84,8 +84,10 @@ function Saksbehandling({ match, location }: Props) {
         return false;
       }
 
-      await dispatch(mottatteOpplysningerOperations.hent(behandlingId));
-      await dispatch(dokumenterOperations.hentDokumentOversikt(saksnr));
+      await Promise.all([
+        dispatch(mottatteOpplysningerOperations.hent(behandlingId)),
+        dispatch(dokumenterOperations.hentDokumentOversikt(saksnr)),
+      ]);
       setSaksopplysningerLastet(true);
       return true;
     } catch (e) {
