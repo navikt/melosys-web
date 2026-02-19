@@ -6,7 +6,7 @@ const originalFetch = window.fetch;
 
 export const setTokenInterceptor = async (getAccessToken, accounts) => {
   window.fetch = async (...args) => {
-    const [url, options] = args;
+    const [url, options = {}] = args;
     if (!options.headers) {
       options.headers = {};
     }
@@ -24,7 +24,7 @@ export const setTokenInterceptor = async (getAccessToken, accounts) => {
 
 export const setTokenInterceptorForLocalDevelopment = async () => {
   window.fetch = async (...args) => {
-    const [url, options] = args;
+    const [url, options = {}] = args;
     if (!options.headers) {
       options.headers = {};
     }
