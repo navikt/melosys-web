@@ -1,8 +1,9 @@
 @import "../../../../constants.less";
 
 .fakturainformasjon {
+  overflow-x: auto;
   .fakturainformasjon-tabell {
-    padding: 1em 0 2em 0em;
+    padding: 1em 0 2em 0;
     .fakturaseksjon {
       padding-bottom: 3em;
       .headerseksjon {
@@ -21,7 +22,7 @@
         padding: 0.3em 0;
 
         &:last-child {
-          border-bottom: 0px solid @navGra60;
+          border-bottom: 0 solid @navGra60;
         }
 
         > * {
@@ -66,7 +67,7 @@
 
   .fakturalinje {
     .uten-border {
-      border-bottom: 0px;
+      border-bottom: 0;
     }
   }
   .mellomrom-tekst-tabell {
