@@ -26,6 +26,8 @@ import {
 import * as Mui from "../../../../felleskomponenter/ui";
 import VedleggTable from "../../../../felleskomponenter/vedleggTable";
 import VedleggVelger from "../../../../felleskomponenter/vedleggvelger";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_CDM_4_4 } from "../../../../featuretoggle/toggleNavn";
 import { useIsMounted, useDispatch } from "../../../../hooks";
 import * as KV from "../../../../kodeverk";
 import MKV, { MKVUtils } from "../../../../melosyskodeverk";
@@ -109,6 +111,8 @@ function VurderingArtikkel16Anmodning({
 }: Props & PropsFromRedux & InjectedFormProps<FormValuesProps, Props & PropsFromRedux>) {
   const dispatch = useDispatch();
   const isMounted = useIsMounted();
+  const isCdm44Enabled = useFeatureToggle(MELOSYS_CDM_4_4);
+  const [erFjernarbeidTWFA, setErFjernarbeidTWFA] = useState(false);
   const [lovvalgFeilmelding, setLovvalgFeilmelding] = useState<string | undefined>(undefined);
   const [begrunnelseFeilmelding, setBegrunnelseFeilmelding] = useState<string | undefined>(undefined);
   const [fritekstFeilmelding, setFritekstFeilmelding] = useState<string | undefined>(undefined);
@@ -166,6 +170,7 @@ function VurderingArtikkel16Anmodning({
     await byggAnmodningsperioderHandler();
     await lagreAnmodningsperioderHandler();
     setLovvalgFeilmelding(undefined);
+    setErFjernarbeidTWFA(false);
   };
 
   const handleEndretBegrunnelseFritekst = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -228,6 +233,7 @@ function VurderingArtikkel16Anmodning({
         mottakerinstitusjon: formValues.mottakerinstitusjon || null,
         fritekstSed: formValues.fritekstSed,
         begrunnelseFritekst: unntaksvilkår.begrunnelseFritekst,
+        erFjernarbeidTWFA: erFjernarbeidTWFA || null,
         vedlegg: valgteVedlegg.saksvedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
       };
 
@@ -258,7 +264,7 @@ function VurderingArtikkel16Anmodning({
             fritekst: unntaksvilkår.begrunnelseFritekst,
           },
         },
-        { sedType: EKV.Koder.sedtyper.A001, sedData: { fritekst: formValues?.fritekstSed } },
+        { sedType: EKV.Koder.sedtyper.A001, sedData: { fritekst: formValues?.fritekstSed, erFjernarbeidTWFA } },
       ]
     : [
         {
@@ -337,6 +343,18 @@ function VurderingArtikkel16Anmodning({
             </Nav.Select>
           </Nav.Column>
         </Nav.Row>
+
+        {isCdm44Enabled &&
+          redigerbart &&
+          unntakFraBestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A && (
+            <Nav.Row>
+              <Nav.Column xs="7">
+                <Nav.Checkbox checked={erFjernarbeidTWFA} onChange={(e) => setErFjernarbeidTWFA(e.target.checked)}>
+                  Rammeavtale om fjernarbeid (TWFA)
+                </Nav.Checkbox>
+              </Nav.Column>
+            </Nav.Row>
+          )}
 
         <Nav.Row>
           <Nav.Column xs="7">
