@@ -874,7 +874,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         !debouncedBeregningPagaar &&
         !arrayValideringsfeil &&
         !feilmelding &&
-        endeligAvgiftValg === OPPLYSNINGER_ENDRET && (
+        endeligAvgiftValg === OPPLYSNINGER_ENDRET &&
+        aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag && (
           <SumArsavregningTabell
             harGrunnlagIMelosys={harTidligereTrygdeavgiftsgrunnlag}
             nyTrygdeavgift={aarsavregningResponse?.avregning?.beregnetAvgiftBelop}

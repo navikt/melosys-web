@@ -97,10 +97,10 @@ export function beregnTrygdeavgiftsperioder(
       : [],
   })
     .then(() => {
-      Api.Aarsavregning.hentAarsavregning(behandlingID).then((response: AarsavregningResponse) => {
+      setFeilmelding(undefined);
+      return Api.Aarsavregning.hentAarsavregning(behandlingID).then((response: AarsavregningResponse) => {
         setAarsavregningResponse(response);
       });
-      setFeilmelding(undefined);
     })
     .catch((error) => setFeilmelding(mapFeilmelding(error)));
 }

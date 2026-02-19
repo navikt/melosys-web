@@ -409,6 +409,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         !feilmelding &&
         !arrayValideringsfeil &&
         aarsavregningResponse?.avregning &&
+        aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag &&
         endeligAvgiftValg === OPPLYSNINGER_ENDRET && (
           <SumArsavregningTabell
             nyTrygdeavgift={aarsavregningResponse.avregning.beregnetAvgiftBelop}
