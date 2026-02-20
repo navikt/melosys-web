@@ -55,7 +55,7 @@ vi.mock("../../../../ducks/kontroll", async (importOriginal) => {
     },
     kontrollOperations: {
       ...actual.kontrollOperations,
-      kontrollerAnmodningOmUnntak: vi.fn(),
+      kontrollerAnmodningOmUnntak: vi.fn(() => () => Promise.resolve()),
       resetKontrollFeil: vi.fn(() => ({ type: "KONTROLL_RESET" })),
     },
   };
@@ -109,19 +109,19 @@ describe("VurderingArtikkel16Anmodning - TWFA checkbox", () => {
   it("viser ikke TWFA-checkbox når CDM 4.4 er deaktivert", () => {
     mockUseFeatureToggle.mockReturnValue(false);
     renderWithProviders(<WrappedComponent {...props} />);
-    expect(screen.queryByText("Rammeavtale om fjernarbeid (TWFA)")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Rammeavtale om fjernarbeid/)).not.toBeInTheDocument();
   });
 
   it("viser ikke TWFA-checkbox når CDM 4.4 er aktivert men annen artikkel er valgt", () => {
     mockUseFeatureToggle.mockReturnValue(true);
     renderWithProviders(<WrappedComponent {...props} />);
-    expect(screen.queryByText("Rammeavtale om fjernarbeid (TWFA)")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Rammeavtale om fjernarbeid/)).not.toBeInTheDocument();
   });
 
   it("viser ikke TWFA-checkbox når redigerbart er false", () => {
     mockUseFeatureToggle.mockReturnValue(true);
     renderWithProviders(<WrappedComponent {...props} redigerbart={false} />);
-    expect(screen.queryByText("Rammeavtale om fjernarbeid (TWFA)")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Rammeavtale om fjernarbeid/)).not.toBeInTheDocument();
   });
 
   it("viser TWFA-checkbox når CDM 4.4 er aktivert og artikkel 13(1)(a) er valgt", () => {
@@ -140,7 +140,7 @@ describe("VurderingArtikkel16Anmodning - TWFA checkbox", () => {
         },
       } as any,
     });
-    expect(screen.getByText("Rammeavtale om fjernarbeid (TWFA)")).toBeInTheDocument();
+    expect(screen.getByText(/Rammeavtale om fjernarbeid/)).toBeInTheDocument();
   });
 
   it("kan krysse av og fjerne TWFA-avkrysning", () => {
