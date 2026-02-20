@@ -356,7 +356,7 @@ export function VurderingArtikkel16Anmodning({
             <Nav.Row>
               <Nav.Column xs="7">
                 <Nav.Checkbox checked={erFjernarbeidTWFA} onChange={(e) => setErFjernarbeidTWFA(e.target.checked)}>
-                  Rammeavtale om fjernarbeid {"(TWFA)"}
+                  Rammeavtale om fjernarbeid
                 </Nav.Checkbox>
               </Nav.Column>
             </Nav.Row>
