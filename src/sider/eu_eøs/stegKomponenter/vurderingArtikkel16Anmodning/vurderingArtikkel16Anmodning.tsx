@@ -92,7 +92,7 @@ interface Props {
   lagreOgBestillAnmodningsperioder: (bestillAnmodningsperioderBody: any) => Promise<void>;
 }
 
-function VurderingArtikkel16Anmodning({
+export function VurderingArtikkel16Anmodning({
   oppdaterData,
   tilstand: { unntaksvilkår, muligeBegrunnelseValg },
   slettData,
@@ -233,7 +233,7 @@ function VurderingArtikkel16Anmodning({
         mottakerinstitusjon: formValues.mottakerinstitusjon || null,
         fritekstSed: formValues.fritekstSed,
         begrunnelseFritekst: unntaksvilkår.begrunnelseFritekst,
-        erFjernarbeidTWFA: erFjernarbeidTWFA || null,
+        erFjernarbeidTWFA: isCdm44Enabled && erFjernarbeidTWFA ? true : null,
         vedlegg: valgteVedlegg.saksvedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
       };
 
@@ -264,7 +264,13 @@ function VurderingArtikkel16Anmodning({
             fritekst: unntaksvilkår.begrunnelseFritekst,
           },
         },
-        { sedType: EKV.Koder.sedtyper.A001, sedData: { fritekst: formValues?.fritekstSed, erFjernarbeidTWFA } },
+        {
+          sedType: EKV.Koder.sedtyper.A001,
+          sedData: {
+            fritekst: formValues?.fritekstSed,
+            erFjernarbeidTWFA: isCdm44Enabled && erFjernarbeidTWFA ? true : undefined,
+          },
+        },
       ]
     : [
         {
