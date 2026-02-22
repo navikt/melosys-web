@@ -26,6 +26,8 @@ import {
 import * as Mui from "../../../../felleskomponenter/ui";
 import VedleggTable from "../../../../felleskomponenter/vedleggTable";
 import VedleggVelger from "../../../../felleskomponenter/vedleggvelger";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { MELOSYS_CDM_4_4 } from "../../../../featuretoggle/toggleNavn";
 import { useIsMounted, useDispatch } from "../../../../hooks";
 import * as KV from "../../../../kodeverk";
 import MKV, { MKVUtils } from "../../../../melosyskodeverk";
@@ -57,6 +59,7 @@ const mapStateToProps = (state: RootState) => ({
     mottakerinstitusjon: "",
     kreverMottakerinstitusjon: false,
     fritekstSed: null,
+    erFjernarbeidTWFA: false,
   },
 });
 
@@ -69,6 +72,7 @@ interface FormValuesProps {
   kreverMottakerinstitusjon: boolean;
   fritekstSed: string | null;
   begrunnelseFritekst: string | null;
+  erFjernarbeidTWFA: boolean;
 }
 
 interface Props {
@@ -90,7 +94,7 @@ interface Props {
   lagreOgBestillAnmodningsperioder: (bestillAnmodningsperioderBody: any) => Promise<void>;
 }
 
-function VurderingArtikkel16Anmodning({
+export function VurderingArtikkel16Anmodning({
   oppdaterData,
   tilstand: { unntaksvilkår, muligeBegrunnelseValg },
   slettData,
@@ -99,6 +103,7 @@ function VurderingArtikkel16Anmodning({
   byggAnmodningsperioderHandler,
   lagreAnmodningsperioderHandler,
   lagreVilkarHandler,
+  change,
   touch,
   formIsValid,
   redigerbart,
@@ -109,6 +114,7 @@ function VurderingArtikkel16Anmodning({
 }: Props & PropsFromRedux & InjectedFormProps<FormValuesProps, Props & PropsFromRedux>) {
   const dispatch = useDispatch();
   const isMounted = useIsMounted();
+  const isCdm44Enabled = useFeatureToggle(MELOSYS_CDM_4_4);
   const [lovvalgFeilmelding, setLovvalgFeilmelding] = useState<string | undefined>(undefined);
   const [begrunnelseFeilmelding, setBegrunnelseFeilmelding] = useState<string | undefined>(undefined);
   const [fritekstFeilmelding, setFritekstFeilmelding] = useState<string | undefined>(undefined);
@@ -128,11 +134,18 @@ function VurderingArtikkel16Anmodning({
   const medlemskap = useSelector(behandlingerSelectors.MedlemskapSelector);
   const unntakFraBestemmelse = useSelector(anmodningsperioderSelectors.UnntakFraBestemmelseSelector);
   const fysiskeDokumenter = useSelector(dokumenterSelectors.AlleFysiskeDokumentSelector);
+  const erFjernarbeidTWFA = useSelector((state: RootState) => {
+    const values = getFormValues(KV.Form.ARTIKKEL_16_ANMODNING)(state) as FormValuesProps | undefined;
+    return !!values?.erFjernarbeidTWFA;
+  });
   const mottatteOpplysningerStatus = useSelector(
     mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector,
   ) as string;
   const feltNavnFraBestemmelse =
     lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1 ? "art18_1_anmodning" : "art16_1_anmodning";
+  const erTWFARelevant =
+    isCdm44Enabled &&
+    unntakFraBestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A;
 
   useEffect(() => {
     oppdaterData(konverterVilkarTilStegData(feltNavnFraBestemmelse, unntaksvilkår));
@@ -166,6 +179,7 @@ function VurderingArtikkel16Anmodning({
     await byggAnmodningsperioderHandler();
     await lagreAnmodningsperioderHandler();
     setLovvalgFeilmelding(undefined);
+    change("erFjernarbeidTWFA", false);
   };
 
   const handleEndretBegrunnelseFritekst = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -228,6 +242,7 @@ function VurderingArtikkel16Anmodning({
         mottakerinstitusjon: formValues.mottakerinstitusjon || null,
         fritekstSed: formValues.fritekstSed,
         begrunnelseFritekst: unntaksvilkår.begrunnelseFritekst,
+        erFjernarbeidTWFA: erTWFARelevant ? erFjernarbeidTWFA : null,
         vedlegg: valgteVedlegg.saksvedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
       };
 
@@ -258,7 +273,13 @@ function VurderingArtikkel16Anmodning({
             fritekst: unntaksvilkår.begrunnelseFritekst,
           },
         },
-        { sedType: EKV.Koder.sedtyper.A001, sedData: { fritekst: formValues?.fritekstSed } },
+        {
+          sedType: EKV.Koder.sedtyper.A001,
+          sedData: {
+            fritekst: formValues?.fritekstSed,
+            erFjernarbeidTWFA: erTWFARelevant ? erFjernarbeidTWFA : null,
+          },
+        },
       ]
     : [
         {
@@ -337,6 +358,20 @@ function VurderingArtikkel16Anmodning({
             </Nav.Select>
           </Nav.Column>
         </Nav.Row>
+
+        {erTWFARelevant && (
+          <Nav.Row>
+            <Nav.Column xs="7">
+              <Nav.Checkbox
+                checked={erFjernarbeidTWFA}
+                onChange={(e) => change("erFjernarbeidTWFA", e.target.checked)}
+                disabled={!redigerbart}
+              >
+                Rammeavtale om fjernarbeid
+              </Nav.Checkbox>
+            </Nav.Column>
+          </Nav.Row>
+        )}
 
         <Nav.Row>
           <Nav.Column xs="7">

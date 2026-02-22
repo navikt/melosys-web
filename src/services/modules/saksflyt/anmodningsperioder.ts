@@ -9,6 +9,7 @@ interface Vedlegg {
 export interface AnmodningOmUnntakBestillingReqDto {
   mottakerinstitusjon: string | null;
   fritekstSed: string | null;
+  erFjernarbeidTWFA?: boolean | null;
   vedlegg: Vedlegg[];
 }
 
