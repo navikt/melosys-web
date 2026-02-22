@@ -59,6 +59,7 @@ const mapStateToProps = (state: RootState) => ({
     mottakerinstitusjon: "",
     kreverMottakerinstitusjon: false,
     fritekstSed: null,
+    erFjernarbeidTWFA: false,
   },
 });
 
@@ -71,6 +72,7 @@ interface FormValuesProps {
   kreverMottakerinstitusjon: boolean;
   fritekstSed: string | null;
   begrunnelseFritekst: string | null;
+  erFjernarbeidTWFA: boolean;
 }
 
 interface Props {
@@ -101,6 +103,7 @@ export function VurderingArtikkel16Anmodning({
   byggAnmodningsperioderHandler,
   lagreAnmodningsperioderHandler,
   lagreVilkarHandler,
+  change,
   touch,
   formIsValid,
   redigerbart,
@@ -112,7 +115,6 @@ export function VurderingArtikkel16Anmodning({
   const dispatch = useDispatch();
   const isMounted = useIsMounted();
   const isCdm44Enabled = useFeatureToggle(MELOSYS_CDM_4_4);
-  const [erFjernarbeidTWFA, setErFjernarbeidTWFA] = useState(false);
   const [lovvalgFeilmelding, setLovvalgFeilmelding] = useState<string | undefined>(undefined);
   const [begrunnelseFeilmelding, setBegrunnelseFeilmelding] = useState<string | undefined>(undefined);
   const [fritekstFeilmelding, setFritekstFeilmelding] = useState<string | undefined>(undefined);
@@ -132,11 +134,18 @@ export function VurderingArtikkel16Anmodning({
   const medlemskap = useSelector(behandlingerSelectors.MedlemskapSelector);
   const unntakFraBestemmelse = useSelector(anmodningsperioderSelectors.UnntakFraBestemmelseSelector);
   const fysiskeDokumenter = useSelector(dokumenterSelectors.AlleFysiskeDokumentSelector);
+  const erFjernarbeidTWFA = useSelector((state: RootState) => {
+    const values = getFormValues(KV.Form.ARTIKKEL_16_ANMODNING)(state) as FormValuesProps | undefined;
+    return !!values?.erFjernarbeidTWFA;
+  });
   const mottatteOpplysningerStatus = useSelector(
     mottatteOpplysningerSelectors.MottatteOpplysningerStatusSelector,
   ) as string;
   const feltNavnFraBestemmelse =
     lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1 ? "art18_1_anmodning" : "art16_1_anmodning";
+  const erTWFARelevant =
+    isCdm44Enabled &&
+    unntakFraBestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A;
 
   useEffect(() => {
     oppdaterData(konverterVilkarTilStegData(feltNavnFraBestemmelse, unntaksvilkår));
@@ -170,7 +179,7 @@ export function VurderingArtikkel16Anmodning({
     await byggAnmodningsperioderHandler();
     await lagreAnmodningsperioderHandler();
     setLovvalgFeilmelding(undefined);
-    setErFjernarbeidTWFA(false);
+    change("erFjernarbeidTWFA", false);
   };
 
   const handleEndretBegrunnelseFritekst = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -233,7 +242,7 @@ export function VurderingArtikkel16Anmodning({
         mottakerinstitusjon: formValues.mottakerinstitusjon || null,
         fritekstSed: formValues.fritekstSed,
         begrunnelseFritekst: unntaksvilkår.begrunnelseFritekst,
-        erFjernarbeidTWFA: isCdm44Enabled && erFjernarbeidTWFA ? true : null,
+        erFjernarbeidTWFA: erTWFARelevant ? erFjernarbeidTWFA : null,
         vedlegg: valgteVedlegg.saksvedlegg.map(({ journalpostID, dokumentID }) => ({ journalpostID, dokumentID })),
       };
 
@@ -268,7 +277,7 @@ export function VurderingArtikkel16Anmodning({
           sedType: EKV.Koder.sedtyper.A001,
           sedData: {
             fritekst: formValues?.fritekstSed,
-            erFjernarbeidTWFA: isCdm44Enabled && erFjernarbeidTWFA ? true : undefined,
+            erFjernarbeidTWFA: erTWFARelevant ? erFjernarbeidTWFA : null,
           },
         },
       ]
@@ -350,17 +359,19 @@ export function VurderingArtikkel16Anmodning({
           </Nav.Column>
         </Nav.Row>
 
-        {isCdm44Enabled &&
-          redigerbart &&
-          unntakFraBestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A && (
-            <Nav.Row>
-              <Nav.Column xs="7">
-                <Nav.Checkbox checked={erFjernarbeidTWFA} onChange={(e) => setErFjernarbeidTWFA(e.target.checked)}>
-                  Rammeavtale om fjernarbeid
-                </Nav.Checkbox>
-              </Nav.Column>
-            </Nav.Row>
-          )}
+        {erTWFARelevant && (
+          <Nav.Row>
+            <Nav.Column xs="7">
+              <Nav.Checkbox
+                checked={erFjernarbeidTWFA}
+                onChange={(e) => change("erFjernarbeidTWFA", e.target.checked)}
+                disabled={!redigerbart}
+              >
+                Rammeavtale om fjernarbeid
+              </Nav.Checkbox>
+            </Nav.Column>
+          </Nav.Row>
+        )}
 
         <Nav.Row>
           <Nav.Column xs="7">

@@ -76,12 +76,14 @@ describe("VurderingArtikkel16Anmodning - TWFA checkbox", () => {
         mottakerinstitusjon: "",
         kreverMottakerinstitusjon: false,
         fritekstSed: null,
+        erFjernarbeidTWFA: false,
       },
       initialValues: {
         tidligeremedlemskap: [],
         mottakerinstitusjon: "",
         kreverMottakerinstitusjon: false,
         fritekstSed: null,
+        erFjernarbeidTWFA: false,
       },
       tilstand: {
         unntaksvilkår: {
@@ -118,10 +120,24 @@ describe("VurderingArtikkel16Anmodning - TWFA checkbox", () => {
     expect(screen.queryByText(/Rammeavtale om fjernarbeid/)).not.toBeInTheDocument();
   });
 
-  it("viser ikke TWFA-checkbox når redigerbart er false", () => {
+  it("viser deaktivert TWFA-checkbox når redigerbart er false og artikkel 13(1)(a) er valgt", () => {
     mockUseFeatureToggle.mockReturnValue(true);
-    renderWithProviders(<WrappedComponent {...props} redigerbart={false} />);
-    expect(screen.queryByText(/Rammeavtale om fjernarbeid/)).not.toBeInTheDocument();
+    renderWithProviders(<WrappedComponent {...props} redigerbart={false} />, {
+      preloadedState: {
+        anmodningsperioder: {
+          status: "OK",
+          data: [
+            {
+              unntakFraBestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A,
+              fomDato: "2024-01-01",
+              tomDato: "2024-12-31",
+            },
+          ],
+        },
+      } as any,
+    });
+    const checkbox = screen.getByRole("checkbox", { name: /Rammeavtale om fjernarbeid/i });
+    expect(checkbox).toBeDisabled();
   });
 
   it("viser TWFA-checkbox når CDM 4.4 er aktivert og artikkel 13(1)(a) er valgt", () => {
