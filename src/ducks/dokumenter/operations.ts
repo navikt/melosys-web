@@ -41,6 +41,7 @@ export async function forhandsvisSed(behandlingID: number, sedType: string, data
     begrunnelseUtenlandskMyndighet: data.begrunnelseUtenlandskMyndighet || null,
     vilSendeAnmodningOmMerInformasjon,
     ...(data.a008Formaal && { a008Formaal: data.a008Formaal }),
+    ...(data.erFjernarbeidTWFA != null && { erFjernarbeidTWFA: data.erFjernarbeidTWFA }),
   };
 
   const response = await Api.Dokumenter.pdf.forhandsvisSed(behandlingID, sedType, utfyltdata);
