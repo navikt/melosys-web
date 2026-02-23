@@ -44,7 +44,7 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
       const values = {
         endeligAvgiftValg: OPPLYSNINGER_ENDRET,
         bestemmelse: "FTRL_2_7",
-        medlemskapsperioder: [
+        avgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "dd11ss",
@@ -59,15 +59,15 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
 
       const err = await validate(values, { aar: 2024 });
       expect(err).toBeTruthy();
-      expect(hasError(err, "medlemskapsperioder[0].fomDato", "Skriv inn en gyldig dato")).toBe(true);
-      expect(hasError(err, "medlemskapsperioder[0].fomDato", "Utenfor valgt år")).toBe(false);
+      expect(hasError(err, "avgiftspliktigperioder[0].fomDato", "Skriv inn en gyldig dato")).toBe(true);
+      expect(hasError(err, "avgiftspliktigperioder[0].fomDato", "Utenfor valgt år")).toBe(false);
     });
 
     it("skal vise 'Skriv inn en gyldig dato' for ugyldig input som '99.99.9999'", async () => {
       const values = {
         endeligAvgiftValg: OPPLYSNINGER_ENDRET,
         bestemmelse: "FTRL_2_7",
-        medlemskapsperioder: [
+        avgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "99.99.9999",
@@ -82,15 +82,15 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
 
       const err = await validate(values, { aar: 2024 });
       expect(err).toBeTruthy();
-      expect(hasError(err, "medlemskapsperioder[0].fomDato", "Skriv inn en gyldig dato")).toBe(true);
-      expect(hasError(err, "medlemskapsperioder[0].fomDato", "Utenfor valgt år")).toBe(false);
+      expect(hasError(err, "avgiftspliktigperioder[0].fomDato", "Skriv inn en gyldig dato")).toBe(true);
+      expect(hasError(err, "avgiftspliktigperioder[0].fomDato", "Utenfor valgt år")).toBe(false);
     });
 
     it("skal vise 'Utenfor valgt år' for gyldig dato utenfor året", async () => {
       const values = {
         endeligAvgiftValg: OPPLYSNINGER_ENDRET,
         bestemmelse: "FTRL_2_7",
-        medlemskapsperioder: [
+        avgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "01.01.2023",
@@ -105,15 +105,15 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
 
       const err = await validate(values, { aar: 2024 });
       expect(err).toBeTruthy();
-      expect(hasError(err, "medlemskapsperioder[0].fomDato", "Utenfor valgt år")).toBe(true);
-      expect(hasError(err, "medlemskapsperioder[0].fomDato", "Skriv inn en gyldig dato")).toBe(false);
+      expect(hasError(err, "avgiftspliktigperioder[0].fomDato", "Utenfor valgt år")).toBe(true);
+      expect(hasError(err, "avgiftspliktigperioder[0].fomDato", "Skriv inn en gyldig dato")).toBe(false);
     });
 
     it("skal godta gyldig dato innenfor året", async () => {
       const values = {
         endeligAvgiftValg: OPPLYSNINGER_ENDRET,
         bestemmelse: "FTRL_2_7",
-        medlemskapsperioder: [
+        avgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "01.01.2024",
@@ -143,7 +143,7 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
       const values = {
         endeligAvgiftValg: OPPLYSNINGER_ENDRET,
         bestemmelse: "FTRL_2_7",
-        medlemskapsperioder: [
+        avgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "01.01.2024",
@@ -158,15 +158,15 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
 
       const err = await validate(values, { aar: 2024 });
       expect(err).toBeTruthy();
-      expect(hasError(err, "medlemskapsperioder[0].tomDato", "Skriv inn en gyldig dato")).toBe(true);
-      expect(hasError(err, "medlemskapsperioder[0].tomDato", "Utenfor valgt år")).toBe(false);
+      expect(hasError(err, "avgiftspliktigperioder[0].tomDato", "Skriv inn en gyldig dato")).toBe(true);
+      expect(hasError(err, "avgiftspliktigperioder[0].tomDato", "Utenfor valgt år")).toBe(false);
     });
 
     it("skal vise 'Utenfor valgt år' for gyldig dato utenfor året", async () => {
       const values = {
         endeligAvgiftValg: OPPLYSNINGER_ENDRET,
         bestemmelse: "FTRL_2_7",
-        medlemskapsperioder: [
+        avgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "01.01.2024",
@@ -181,7 +181,7 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
 
       const err = await validate(values, { aar: 2024 });
       expect(err).toBeTruthy();
-      expect(hasError(err, "medlemskapsperioder[0].tomDato", "Utenfor valgt år")).toBe(true);
+      expect(hasError(err, "avgiftspliktigperioder[0].tomDato", "Utenfor valgt år")).toBe(true);
     });
   });
 
@@ -190,7 +190,7 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
       const values = {
         endeligAvgiftValg: OPPLYSNINGER_ENDRET,
         bestemmelse: "FTRL_2_7",
-        medlemskapsperioder: [
+        avgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "01.01.2024",
@@ -220,7 +220,7 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
       const values = {
         endeligAvgiftValg: OPPLYSNINGER_ENDRET,
         bestemmelse: "FTRL_2_7",
-        medlemskapsperioder: [
+        avgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "01.01.2024",
@@ -251,7 +251,7 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
       const values = {
         endeligAvgiftValg: OPPLYSNINGER_ENDRET,
         bestemmelse: "FTRL_2_7",
-        medlemskapsperioder: [
+        avgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "01.01.2024",
@@ -288,7 +288,7 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
       const values = {
         endeligAvgiftValg: OPPLYSNINGER_ENDRET,
         bestemmelse: "FTRL_2_7",
-        medlemskapsperioder: [
+        avgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "01.01.2024",
@@ -327,7 +327,7 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
       const values = {
         endeligAvgiftValg: OPPLYSNINGER_ENDRET,
         bestemmelse: "FTRL_2_7",
-        medlemskapsperioder: [
+        avgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "",
@@ -343,14 +343,14 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
       const err = await validate(values, { aar: 2024 });
       expect(err).toBeTruthy();
       // Skal feile på required, ikke på erInnenforValgtAarTest
-      expect(hasError(err, "medlemskapsperioder[0].fomDato", "Må fylles ut")).toBe(true);
+      expect(hasError(err, "avgiftspliktigperioder[0].fomDato", "Må fylles ut")).toBe(true);
     });
 
     it("skal håndtere delvis utfylt dato", async () => {
       const values = {
         endeligAvgiftValg: OPPLYSNINGER_ENDRET,
         bestemmelse: "FTRL_2_7",
-        medlemskapsperioder: [
+        avgiftspliktigperioder: [
           {
             id: 1,
             fomDato: "01.01",
@@ -365,7 +365,7 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
 
       const err = await validate(values, { aar: 2024 });
       expect(err).toBeTruthy();
-      expect(hasError(err, "medlemskapsperioder[0].fomDato", "Skriv inn en gyldig dato")).toBe(true);
+      expect(hasError(err, "avgiftspliktigperioder[0].fomDato", "Skriv inn en gyldig dato")).toBe(true);
     });
   });
 });

@@ -34,7 +34,7 @@ function BestemmelseSelect({
   lagreMedlemskapsperioderHvisGyldig,
   harLaasteMedlemskapsperioder,
 }: BestemmelseSelectProps) {
-  const medlemskapsperioder = useWatch({ control, name: "medlemskapsperioder" });
+  const medlemskapsperioder = useWatch({ control, name: "avgiftspliktigperioder" });
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
 
   const handleBestemmelseChange = useCallback(
@@ -66,7 +66,7 @@ function BestemmelseSelect({
           trygdedekning: defaultTrygdedekning,
           id: ULAGRET_MEDLEMSKAPSPERIODE_ID,
         }));
-        setValue("medlemskapsperioder", oppdaterteMedlemskapsperioder);
+        setValue("avgiftspliktigperioder", oppdaterteMedlemskapsperioder);
 
         setValue(
           "inntektskilder",

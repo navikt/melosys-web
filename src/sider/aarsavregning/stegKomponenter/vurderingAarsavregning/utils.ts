@@ -70,16 +70,18 @@ export function beregnTrygdeavgiftsperioder(
   options: {
     behandlingID: number;
     medlemskapstypeErPliktig?: boolean;
+    erEøsPensjonist?: boolean;
     setFeilmelding: (error: string | string[] | undefined) => void;
     setAarsavregningResponse: (response: AarsavregningResponse) => void;
   },
 ) {
-  const { behandlingID, medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse } = options;
+  const { behandlingID, medlemskapstypeErPliktig, erEøsPensjonist, setFeilmelding, setAarsavregningResponse } = options;
 
   setFeilmelding(undefined);
   const erBrukerPliktigMedlemOgSkattepliktig =
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formVerdier.skatteforholdsperioder);
-  return Api.Trygdeavgift.beregnTrygdeavgiftsperioder(behandlingID, {
+
+  const trygdeavgiftsgrunnlag = {
     skatteforholdsperioder: formVerdier.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
       fomDato: Utils.dato.formatterDatoTilISO(skatteforhold.fomDato),
       tomDato: Utils.dato.formatterDatoTilISO(skatteforhold.tomDato, null),
@@ -95,7 +97,13 @@ export function beregnTrygdeavgiftsperioder(
           erMaanedsbelop: Utils.streng.uppercaseStrengTilBool(inntektskilde.erMaanedsbelop) || false,
         }))
       : [],
-  })
+  };
+
+  const beregnTrygdeavgiftsperioder = erEøsPensjonist
+    ? Api.Trygdeavgift.eøsPensjonistBeregnTrygdeavgiftsperioder
+    : Api.Trygdeavgift.beregnTrygdeavgiftsperioder;
+
+  return beregnTrygdeavgiftsperioder(behandlingID, trygdeavgiftsgrunnlag)
     .then(() => {
       setFeilmelding(undefined);
       return Api.Aarsavregning.hentAarsavregning(behandlingID).then((response: AarsavregningResponse) => {
@@ -271,7 +279,6 @@ export const validateAarsavregningUtenEllerDeltGrunnlag = async (
         }
       }
     }
-
     // Returner basert på om vi fant relevante feil
     const hasErrors = Object.keys(validationErrors).length > 0;
     return { isValid: !hasErrors, errors: validationErrors };
