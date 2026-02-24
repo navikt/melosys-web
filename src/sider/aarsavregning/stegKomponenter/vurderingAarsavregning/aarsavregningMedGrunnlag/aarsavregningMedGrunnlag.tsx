@@ -16,6 +16,7 @@ import { AarsavregningMedGrunnlagForm } from "./aarsavregningMedGrunnlagForm";
 import * as Nav from "../../../../../navFrontend";
 import MKV from "../../../../../melosyskodeverk";
 import {
+  erHelseutgiftdekkesperiode,
   erMedlemskapsperiode,
   erMedlemskapsperiodeEllerLovvalgsperiode,
   MedlemskapsperiodeForAvgift,
@@ -91,11 +92,14 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
           ? sisteGjeldende.bestemmelse
           : undefined;
 
-      if (
+      const bestemmelseErUendret =
         bestemmelseFraTidligereAvgiftsgrunnlag &&
         eventuellNyBestemmelse &&
-        bestemmelseFraTidligereAvgiftsgrunnlag === eventuellNyBestemmelse
-      ) {
+        bestemmelseFraTidligereAvgiftsgrunnlag === eventuellNyBestemmelse;
+
+      const avgiftspliktigperiodeHarIkkeBestemmelse = sisteGjeldende && erHelseutgiftdekkesperiode(sisteGjeldende);
+
+      if (bestemmelseErUendret || avgiftspliktigperiodeHarIkkeBestemmelse) {
         trygdeavgiftsgrunnlag =
           aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag;
       }
