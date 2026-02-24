@@ -10,33 +10,21 @@
  */
 
 import * as MedlemskapsperioderApi from "../medlemavfolketrygden/medlemskapsperioder";
-import * as LovvalgsperioderApi from "../lovvalgsperioder";
 import * as HelseutgiftApi from "../helseutgiftDekkesPeriode/helseutgiftDekkesPeriode";
-import type {
-  AarsavregningsPeriodeType,
-  Avgiftspliktigperiode,
-  MedlemskapsperiodeForAvgift,
-  LovvalgsperiodeForAvgift,
-  HelseutgiftdekkesperiodeForAvgift,
-  MedlemskapsperiodeDto,
+import {
+  type AarsavregningsPeriodeType,
+  type Avgiftspliktigperiode,
+  type MedlemskapsperiodeForAvgift,
+  type HelseutgiftdekkesperiodeForAvgift,
+  type MedlemskapsperiodeDto,
+  erHelseutgiftdekkesperiode,
+  erMedlemskapsperiode,
 } from "../types/periodeTyper";
-import type { Lovvalgsperiode } from "../lovvalgsperioder";
 import type { HelseutgiftDekkesPeriodeDto } from "../helseutgiftDekkesPeriode/helseutgiftDekkesPeriode";
 
 const mapMedlemskapsperiodeDto = (dto: MedlemskapsperiodeDto): MedlemskapsperiodeForAvgift => ({
   ...dto,
   type: "MEDLEMSKAPSPERIODE",
-});
-
-const mapLovvalgsperiodeDto = (dto: Lovvalgsperiode): LovvalgsperiodeForAvgift => ({
-  fomDato: dto.fomDato,
-  tomDato: dto.tomDato ?? "",
-  id: dto.periodeID ? Number(dto.periodeID) : 0,
-  type: "LOVVALGSPERIODE",
-  bestemmelse: dto.lovvalgsbestemmelse ?? "",
-  innvilgelsesResultat: dto.innvilgelsesResultat,
-  trygdedekning: dto.trygdeDekning,
-  medlemskapstype: dto.medlemskapstype,
 });
 
 const HELSEUTGIFT_SENTINEL_ID = 0;
@@ -60,14 +48,6 @@ const tilMedlemskapsperiodeRequest = (
   innvilgelsesResultat: periode.innvilgelsesResultat,
 });
 
-const tilLovvalgsperiodeRequest = (periode: LovvalgsperiodeForAvgift): LovvalgsperioderApi.OpprettLovvalgsperiode => ({
-  fomDato: periode.fomDato,
-  tomDato: periode.tomDato,
-  lovvalgsbestemmelse: periode.bestemmelse,
-  trygdedekning: periode.trygdedekning,
-  innvilgelsesResultat: periode.innvilgelsesResultat,
-});
-
 const tilHelseutgiftRequest = (
   periode: HelseutgiftdekkesperiodeForAvgift,
   bostedLandkode: string,
@@ -87,77 +67,48 @@ export const hentPerioder = async (
       return perioder.map(mapMedlemskapsperiodeDto);
     }
     case "LOVVALGSPERIODE": {
-      const perioder = await LovvalgsperioderApi.hent(behandlingID);
-      return perioder.map(mapLovvalgsperiodeDto);
+      throw new Error("Lovvalgsperioder er ikke støttet enda");
     }
     case "HELSEUTGIFTDEKKESPERIODE": {
-      try {
-        const periode = await HelseutgiftApi.hentHelseutgiftDekkesPeriode(behandlingID);
-        return [mapHelseutgiftDekkesPeriodeDto(periode)];
-      } catch {
-        return [];
-      }
+      const periode = await HelseutgiftApi.hentHelseutgiftDekkesPeriode(behandlingID);
+      return [mapHelseutgiftDekkesPeriodeDto(periode)];
     }
   }
 };
 
 export const opprettPeriode = async (
-  periodeType: AarsavregningsPeriodeType,
   behandlingID: number,
   periode: Avgiftspliktigperiode,
   bestemmelse: string,
 ): Promise<Avgiftspliktigperiode> => {
-  switch (periodeType) {
-    case "MEDLEMSKAPSPERIODE": {
-      const request = tilMedlemskapsperiodeRequest(periode as MedlemskapsperiodeForAvgift, bestemmelse);
-      const response = await MedlemskapsperioderApi.opprettMedlemskapsperioder(behandlingID, request);
-      return mapMedlemskapsperiodeDto(response);
-    }
-    case "LOVVALGSPERIODE": {
-      const request = tilLovvalgsperiodeRequest(periode as LovvalgsperiodeForAvgift);
-      const perioder = await LovvalgsperioderApi.opprettLovvalgsperiode(behandlingID, request);
-      const nyeste = perioder[perioder.length - 1];
-      return mapLovvalgsperiodeDto(nyeste);
-    }
-    case "HELSEUTGIFTDEKKESPERIODE": {
-      const typed = periode as HelseutgiftdekkesperiodeForAvgift;
-      const request = tilHelseutgiftRequest(typed, typed.bostedLandkode);
-      await HelseutgiftApi.opprettHelseutgiftDekkesPeriode(behandlingID, request);
-      return { ...typed, id: HELSEUTGIFT_SENTINEL_ID };
-    }
+  if (erHelseutgiftdekkesperiode(periode)) {
+    const request = tilHelseutgiftRequest(periode, periode.bostedLandkode);
+    await HelseutgiftApi.opprettHelseutgiftDekkesPeriode(behandlingID, request);
+    return { ...periode, id: HELSEUTGIFT_SENTINEL_ID };
+  } else if (erMedlemskapsperiode(periode)) {
+    const request = tilMedlemskapsperiodeRequest(periode, bestemmelse);
+    const response = await MedlemskapsperioderApi.opprettMedlemskapsperioder(behandlingID, request);
+    return mapMedlemskapsperiodeDto(response);
+  } else {
+    throw new Error("Lovvalgsperioder er ikke støttet enda");
   }
 };
 
 export const oppdaterPeriode = async (
-  periodeType: AarsavregningsPeriodeType,
   behandlingID: number,
   periode: Avgiftspliktigperiode,
   bestemmelse: string,
 ): Promise<Avgiftspliktigperiode> => {
-  switch (periodeType) {
-    case "MEDLEMSKAPSPERIODE": {
-      const typed = periode as MedlemskapsperiodeForAvgift;
-      const request = tilMedlemskapsperiodeRequest(typed, bestemmelse);
-      const response = await MedlemskapsperioderApi.oppdaterMedlemskapsperioder(behandlingID, typed.id, request);
-      return mapMedlemskapsperiodeDto(response);
-    }
-    case "LOVVALGSPERIODE": {
-      const typed = periode as LovvalgsperiodeForAvgift;
-      const fullLovvalgsperiode: Lovvalgsperiode = {
-        periodeID: String(typed.id),
-        fomDato: typed.fomDato,
-        tomDato: typed.tomDato,
-        lovvalgsbestemmelse: typed.bestemmelse,
-        lovvalgsland: "",
-        innvilgelsesResultat: typed.innvilgelsesResultat,
-        trygdeDekning: typed.trygdedekning,
-        medlemskapstype: typed.medlemskapstype,
-      };
-      const response = await LovvalgsperioderApi.oppdaterLovvalgsperiode(behandlingID, typed.id, fullLovvalgsperiode);
-      return mapLovvalgsperiodeDto(response);
-    }
-    case "HELSEUTGIFTDEKKESPERIODE":
-      throw new Error("Oppdatering av helseutgiftdekkesperiode er ikke støttet — bruk opprettPeriode");
+  if (erMedlemskapsperiode(periode)) {
+    const request = tilMedlemskapsperiodeRequest(periode, bestemmelse);
+    const response = await MedlemskapsperioderApi.oppdaterMedlemskapsperioder(behandlingID, periode.id, request);
+    return mapMedlemskapsperiodeDto(response);
+  } else if (erHelseutgiftdekkesperiode(periode)) {
+    const request = tilHelseutgiftRequest(periode, periode.bostedLandkode);
+    await HelseutgiftApi.oppdaterHelseutgiftDekkesPeriode(behandlingID, request);
+    return { ...periode, id: HELSEUTGIFT_SENTINEL_ID };
+  } else {
+    throw new Error("Lovvalgsperioder er ikke støttet enda");
   }
 };
 
@@ -171,8 +122,7 @@ export const slettPeriode = async (
       await MedlemskapsperioderApi.slettMedlemskapsperiode(behandlingID, periodeId);
       return;
     case "LOVVALGSPERIODE":
-      await LovvalgsperioderApi.slettLovvalgsperiode(behandlingID, periodeId);
-      return;
+      throw new Error("Lovvalgsperioder er ikke støttet enda");
     case "HELSEUTGIFTDEKKESPERIODE":
       throw new Error("Sletting av helseutgiftdekkesperiode er ikke støttet");
   }
@@ -187,13 +137,7 @@ export const slettAllePerioder = async (
       await MedlemskapsperioderApi.slettMedlemskapsperioder(behandlingID);
       return;
     case "LOVVALGSPERIODE": {
-      const perioder = await LovvalgsperioderApi.hent(behandlingID);
-      for (const periode of perioder) {
-        if (periode.periodeID) {
-          await LovvalgsperioderApi.slettLovvalgsperiode(behandlingID, Number(periode.periodeID));
-        }
-      }
-      return;
+      throw new Error("Lovvalgsperioder er ikke støttet enda");
     }
     case "HELSEUTGIFTDEKKESPERIODE":
       throw new Error("Sletting av helseutgiftdekkesperiode er ikke støttet");

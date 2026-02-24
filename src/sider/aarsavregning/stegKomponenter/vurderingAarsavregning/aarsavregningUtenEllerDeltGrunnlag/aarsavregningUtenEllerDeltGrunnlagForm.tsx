@@ -277,8 +277,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         const bestemmelse = getValues("bestemmelse") ?? "";
         const skalOpprette = erHelseutgift || erUlagretPeriode(periode.id);
         return await (skalOpprette
-          ? PeriodeAdapter.opprettPeriode(periodeType, behandlingID, periodeMedIsoDatoer, bestemmelse)
-          : PeriodeAdapter.oppdaterPeriode(periodeType, behandlingID, periodeMedIsoDatoer, bestemmelse));
+          ? PeriodeAdapter.opprettPeriode(behandlingID, periodeMedIsoDatoer, bestemmelse)
+          : PeriodeAdapter.oppdaterPeriode(behandlingID, periodeMedIsoDatoer, bestemmelse));
       } catch (error) {
         setFeilmelding("Feil ved lagring av periode");
         /* eslint-disable-next-line no-console */

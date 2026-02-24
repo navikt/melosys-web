@@ -62,17 +62,7 @@ export const lagDefaultPeriode = (periodeType: AarsavregningsPeriodeType): Avgif
     case "MEDLEMSKAPSPERIODE":
       return DEFAULT_MEDLEMSKAPSPERIODE;
     case "LOVVALGSPERIODE":
-      return {
-        id: -1,
-        type: "LOVVALGSPERIODE",
-        fomDato: "",
-        tomDato: "",
-        innvilgelsesResultat: "",
-        medlemskapstype: "",
-        trygdedekning: "",
-        bestemmelse: "",
-        redigerbar: true,
-      };
+      throw new Error("Lovvalgsperioder er ikke støttet enda");
     case "HELSEUTGIFTDEKKESPERIODE":
       return {
         id: ULAGRET_HELSEUTGIFTDEKKESPERIODE_ID,
@@ -203,7 +193,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
 
       for (const periode of perioderFraGrunnlag) {
         const bestemmelse = erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.bestemmelse : "";
-        await PeriodeAdapter.opprettPeriode(periodeType, behandlingID, periode, bestemmelse);
+        await PeriodeAdapter.opprettPeriode(behandlingID, periode, bestemmelse);
       }
 
       const oppdatertePerioder = await PeriodeAdapter.hentPerioder(periodeType, behandlingID);

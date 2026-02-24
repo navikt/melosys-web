@@ -207,7 +207,7 @@ export function Feilmelding({ type }: { type?: string }) {
     case TypeFeilmelding.SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN:
       return (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          Skatteforholdsperioden(e) du har lagt inn dekker ikke hele avgiftsperiodene(e)
+          Skatteforholdsperioden(e) du har lagt inn dekker ikke hele avgiftsperioden(e)
         </Nav.Alert>
       );
     case TypeFeilmelding.OVERLAPPENDE_SKATTEFORHOLDSPERIODER:
@@ -225,7 +225,7 @@ export function Feilmelding({ type }: { type?: string }) {
     case TypeFeilmelding.INNTEKTSKILDER_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN:
       return (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          Inntektsperioden(e) du har lagt inn dekker ikke hele avgiftsperiodene(e)
+          Inntektsperioden(e) du har lagt inn dekker ikke hele avgiftsperioden(e)
         </Nav.Alert>
       );
     default:
