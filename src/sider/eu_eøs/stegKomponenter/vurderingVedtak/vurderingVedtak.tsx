@@ -236,29 +236,35 @@ function VurderingVedtak({
   };
 
   const onSubmit = async () => {
+    // Cancel any pending debounced kontroll to prevent concurrent HTTP requests
+    // that race with vedtak/fatt on SaksopplysningKilde entities
+    debouncedKontrollerBehandling.cancel?.();
+
     if (!validerForm()) return;
 
     setVedtakPending(true);
 
-    validerMottatteOpplysninger()
-      .then(() => {
-        const vedtakRequest = {
-          behandlingsresultatTypeKode: FASTSATT_LOVVALGSLAND,
-          vedtakstype: formValues.vedtakstype || FØRSTEGANGSVEDTAK,
-          fritekst: formValues.vedtaksbrevFritekst,
-          begrunnelseFritekst: formValues.vedtaksbrevFritekst,
-          fritekstSed: formValues.fritekstSed,
-          kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
-          mottakerinstitusjoner: visMottakerinstitusjoner ? [formValues.mottakerinstitusjon] : [],
-          nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
-        };
-        dispatch(vedtakOperations.fatt(behandlingID, vedtakRequest)).then((res) => {
-          if (res.data?.data?.error) {
-            setVedtakPending(false);
-          }
-        });
-      })
-      .catch(() => setVedtakPending(false));
+    try {
+      await validerMottatteOpplysninger();
+
+      const vedtakRequest = {
+        behandlingsresultatTypeKode: FASTSATT_LOVVALGSLAND,
+        vedtakstype: formValues.vedtakstype || FØRSTEGANGSVEDTAK,
+        fritekst: formValues.vedtaksbrevFritekst,
+        begrunnelseFritekst: formValues.vedtaksbrevFritekst,
+        fritekstSed: formValues.fritekstSed,
+        kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
+        mottakerinstitusjoner: visMottakerinstitusjoner ? [formValues.mottakerinstitusjon] : [],
+        nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
+      };
+
+      const res = await dispatch(vedtakOperations.fatt(behandlingID, vedtakRequest));
+      if (res.data?.data?.error) {
+        setVedtakPending(false);
+      }
+    } catch {
+      setVedtakPending(false);
+    }
   };
 
   const { fomDato, tomDato, lovvalgsbestemmelse, tilleggBestemmelse } = lovvalgsperiode;
