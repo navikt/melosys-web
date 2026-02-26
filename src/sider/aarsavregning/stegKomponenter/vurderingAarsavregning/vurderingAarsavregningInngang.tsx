@@ -307,8 +307,8 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           )}
 
           {(valgtÅr || initieltÅr) && (
-            <Nav.Row>
-              <Nav.Column xs="12">
+            <Nav.HStack>
+              <Nav.VStack>
                 <Nav.RadioGroup
                   key={`trygdeavgiftFraAvgiftssystemetRadioGroup ${valgtÅr || initieltÅr || ""}`}
                   onChange={håndterHarTrygdeavgiftFraAvgiftssystemet}
@@ -326,8 +326,10 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                     <Nav.Radio value={false}>Nei</Nav.Radio>
                   </Nav.HStack>
                 </Nav.RadioGroup>
-              </Nav.Column>
-            </Nav.Row>
+
+                {!harTrygdeavgiftFraAvgiftssystemet}
+              </Nav.VStack>
+            </Nav.HStack>
           )}
 
           {!harTrygdeavgiftFraAvgiftssystemetIsPending &&
