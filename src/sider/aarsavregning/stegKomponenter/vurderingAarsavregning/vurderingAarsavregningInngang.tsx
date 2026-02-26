@@ -21,6 +21,7 @@ import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregni
 import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import { TidligereGrunnlag } from "./komponenter/tidligereGrunnlag";
 import * as Utils from "../../../../utils";
+import { InnbetaltTrygdeavgiftInput } from "./komponenter/innbetaltTrygdeavgift";
 
 const { FASTSATT_TRYGDEAVGIFT, IKKE_FASTSATT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
@@ -307,29 +308,35 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           )}
 
           {(valgtÅr || initieltÅr) && (
-            <Nav.HStack>
-              <Nav.VStack>
-                <Nav.RadioGroup
-                  key={`trygdeavgiftFraAvgiftssystemetRadioGroup ${valgtÅr || initieltÅr || ""}`}
-                  onChange={håndterHarTrygdeavgiftFraAvgiftssystemet}
-                  legend={
-                    <LabelMedHjelpetekst
-                      label="Skal du legge til trygdeavgift fra Avgiftssystemet til denne årsavregningen?"
-                      hjelpetekst={harTidligereTrygdeavgiftsgrunnlag ? DELT_GRUNNLAG_HJELPETEKST : ""}
-                    />
-                  }
-                  value={harTrygdeavgiftFraAvgiftssystemet}
-                  readOnly={!redigerbart || harAktivÅrsavregning || forrigeÅrsavregningHarInnbetaltFraAvgiftssystem}
-                >
-                  <Nav.HStack gap="6">
-                    <Nav.Radio value>Ja</Nav.Radio>
-                    <Nav.Radio value={false}>Nei</Nav.Radio>
-                  </Nav.HStack>
-                </Nav.RadioGroup>
+            <>
+              <Nav.HStack>
+                <Nav.VStack>
+                  <Nav.RadioGroup
+                    key={`trygdeavgiftFraAvgiftssystemetRadioGroup ${valgtÅr || initieltÅr || ""}`}
+                    onChange={håndterHarTrygdeavgiftFraAvgiftssystemet}
+                    legend={
+                      <LabelMedHjelpetekst
+                        label="Skal du legge til trygdeavgift fra Avgiftssystemet til denne årsavregningen?"
+                        hjelpetekst={harTidligereTrygdeavgiftsgrunnlag ? DELT_GRUNNLAG_HJELPETEKST : ""}
+                      />
+                    }
+                    value={harTrygdeavgiftFraAvgiftssystemet}
+                    readOnly={!redigerbart || harAktivÅrsavregning || forrigeÅrsavregningHarInnbetaltFraAvgiftssystem}
+                  >
+                    <Nav.HStack gap="6">
+                      <Nav.Radio value>Ja</Nav.Radio>
+                      <Nav.Radio value={false}>Nei</Nav.Radio>
+                    </Nav.HStack>
+                  </Nav.RadioGroup>
+                </Nav.VStack>
+              </Nav.HStack>
 
-                {!harTrygdeavgiftFraAvgiftssystemet}
-              </Nav.VStack>
-            </Nav.HStack>
+              <Nav.HStack>
+                <Nav.VStack>
+                  {!harTrygdeavgiftFraAvgiftssystemet && <InnbetaltTrygdeavgiftInput redigerbart={redigerbart} />}
+                </Nav.VStack>
+              </Nav.HStack>
+            </>
           )}
 
           {!harTrygdeavgiftFraAvgiftssystemetIsPending &&
