@@ -287,6 +287,8 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
   }, [aktivtSteg, formIsValid, formValues?.kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
 
   const onSubmit = async (values, dispatch, props) => {
+    debouncedKontrollerBehandling.cancel?.();
+
     setVedtakPending(true);
 
     if (values.forkortLovvalgsperiode) {
@@ -296,15 +298,15 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
       );
     }
 
-    validerMottatteOpplysninger()
-      .then(() => {
-        fattVedtak(behandlingID, lagFattVedtakEOSReqDto()).then((res) => {
-          if (res.data?.data?.error) {
-            setVedtakPending(false);
-          }
-        });
-      })
-      .catch(() => setVedtakPending(false));
+    try {
+      await validerMottatteOpplysninger();
+      const res = await fattVedtak(behandlingID, lagFattVedtakEOSReqDto());
+      if (res.data?.data?.error) {
+        setVedtakPending(false);
+      }
+    } catch {
+      setVedtakPending(false);
+    }
   };
 
   const fom = Utils.dato.formatterDatoTilNorsk(
