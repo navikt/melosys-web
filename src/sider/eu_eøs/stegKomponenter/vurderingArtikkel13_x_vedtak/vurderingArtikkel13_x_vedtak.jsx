@@ -150,15 +150,15 @@ export function VurderingArtikkel13_x_vedtak({
 
     setVedtakPending(true);
 
-    try {
-      await validerMottatteOpplysninger();
-      const res = await fattVedtak(behandlingID, lagFattVedtakEOSReqDto());
-      if (res.data?.data?.error) {
-        setVedtakPending(false);
-      }
-    } catch {
-      setVedtakPending(false);
-    }
+    validerMottatteOpplysninger()
+      .then(() => {
+        fattVedtak(behandlingID, lagFattVedtakEOSReqDto()).then((res) => {
+          if (res.data?.data?.error) {
+            setVedtakPending(false);
+          }
+        });
+      })
+      .catch(() => setVedtakPending(false));
   };
 
   const stegErGyldig = redigerbart && formIsValid && !harFeilmeldinger;

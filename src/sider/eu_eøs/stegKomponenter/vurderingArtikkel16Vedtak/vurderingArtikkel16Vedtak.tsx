@@ -180,26 +180,24 @@ export function VurderingArtikkel16Vedtak({
 
     setVedtakPending(true);
 
-    try {
-      await validerMottatteOpplysninger();
-
-      const request = {
-        behandlingsresultatTypeKode: FASTSATT_LOVVALGSLAND,
-        fritekst: formValues.vedtaksbrevFritekst,
-        begrunnelseFritekst: formValues.vedtaksbrevFritekst,
-        fritekstSed: null,
-        mottakerinstitusjoner: null,
-        vedtakstype: formValues.vedtakstype || FØRSTEGANGSVEDTAK,
-        nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
-      };
-
-      const res = await dispatch(vedtakOperations.fatt(behandlingID, request));
-      if (res.data?.data?.error) {
-        setVedtakPending(false);
-      }
-    } catch {
-      setVedtakPending(false);
-    }
+    validerMottatteOpplysninger()
+      .then(() => {
+        const request = {
+          behandlingsresultatTypeKode: FASTSATT_LOVVALGSLAND,
+          fritekst: formValues.vedtaksbrevFritekst,
+          begrunnelseFritekst: formValues.vedtaksbrevFritekst,
+          fritekstSed: null,
+          mottakerinstitusjoner: null,
+          vedtakstype: formValues.vedtakstype || FØRSTEGANGSVEDTAK,
+          nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
+        };
+        dispatch(vedtakOperations.fatt(behandlingID, request)).then((res) => {
+          if (res.data?.data?.error) {
+            setVedtakPending(false);
+          }
+        });
+      })
+      .catch(() => setVedtakPending(false));
   };
 
   const { anmodningsperiodeSvarType } = anmodningsperiodesvar;

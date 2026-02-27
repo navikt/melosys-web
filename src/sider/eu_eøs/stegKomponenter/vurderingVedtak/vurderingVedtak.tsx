@@ -244,27 +244,25 @@ function VurderingVedtak({
 
     setVedtakPending(true);
 
-    try {
-      await validerMottatteOpplysninger();
-
-      const vedtakRequest = {
-        behandlingsresultatTypeKode: FASTSATT_LOVVALGSLAND,
-        vedtakstype: formValues.vedtakstype || FØRSTEGANGSVEDTAK,
-        fritekst: formValues.vedtaksbrevFritekst,
-        begrunnelseFritekst: formValues.vedtaksbrevFritekst,
-        fritekstSed: formValues.fritekstSed,
-        kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
-        mottakerinstitusjoner: visMottakerinstitusjoner ? [formValues.mottakerinstitusjon] : [],
-        nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
-      };
-
-      const res = await dispatch(vedtakOperations.fatt(behandlingID, vedtakRequest));
-      if (res.data?.data?.error) {
-        setVedtakPending(false);
-      }
-    } catch {
-      setVedtakPending(false);
-    }
+    validerMottatteOpplysninger()
+      .then(() => {
+        const vedtakRequest = {
+          behandlingsresultatTypeKode: FASTSATT_LOVVALGSLAND,
+          vedtakstype: formValues.vedtakstype || FØRSTEGANGSVEDTAK,
+          fritekst: formValues.vedtaksbrevFritekst,
+          begrunnelseFritekst: formValues.vedtaksbrevFritekst,
+          fritekstSed: formValues.fritekstSed,
+          kopiTilArbeidsgiver: formValues.kopiTilArbeidsgiver,
+          mottakerinstitusjoner: visMottakerinstitusjoner ? [formValues.mottakerinstitusjon] : [],
+          nyVurderingBakgrunn: formValues.vedtakstypebegrunnelse,
+        };
+        dispatch(vedtakOperations.fatt(behandlingID, vedtakRequest)).then((res) => {
+          if (res.data?.data?.error) {
+            setVedtakPending(false);
+          }
+        });
+      })
+      .catch(() => setVedtakPending(false));
   };
 
   const { fomDato, tomDato, lovvalgsbestemmelse, tilleggBestemmelse } = lovvalgsperiode;
