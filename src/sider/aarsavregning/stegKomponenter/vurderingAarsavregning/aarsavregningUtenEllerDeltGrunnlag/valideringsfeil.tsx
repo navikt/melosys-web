@@ -124,7 +124,7 @@ interface AarsavregningValidationParams {
   skatteforholdsperioder: Skatteforhold[];
   inntektskilder: Inntektskilde[];
   medlemskapsperiodeFomTom: BasePeriode;
-  medlemskapsperioder: BasePeriode[];
+  avgiftspliktigperioder: BasePeriode[];
   medlemskapstypeErPliktig: boolean;
 }
 
@@ -148,14 +148,14 @@ export function finnAktivFeilmelding({
   inntektskilder,
   medlemskapsperiodeFomTom,
   medlemskapstypeErPliktig,
-  medlemskapsperioder,
+  avgiftspliktigperioder,
 }: AarsavregningValidationParams): string | undefined {
-  const medlemskapsperioderFeilmelding = finnAktivFeilmeldingForMedlemskapsperioder(medlemskapsperioder);
+  const medlemskapsperioderFeilmelding = finnAktivFeilmeldingForMedlemskapsperioder(avgiftspliktigperioder);
   if (medlemskapsperioderFeilmelding) {
     return medlemskapsperioderFeilmelding;
   }
 
-  const vaskedeMedlemskapsperioder = Utils.dato.vaskOgFormaterDatoerTilIso(medlemskapsperioder);
+  const vaskedeMedlemskapsperioder = Utils.dato.vaskOgFormaterDatoerTilIso(avgiftspliktigperioder);
   const vaskedeSkatteforholdsperioder = Utils.dato.vaskOgFormaterDatoerTilIso(skatteforholdsperioder);
   const vaskedeInntektskilder = Utils.dato.vaskOgFormaterDatoerTilIso(inntektskilder);
 
@@ -195,19 +195,19 @@ export function Feilmelding({ type }: { type?: string }) {
     case TypeFeilmelding.OVERLAPPENDE_MEDLEMSKAPSPERIODER:
       return (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          Medlemskapsperiodene kan ikke overlappe
+          Avgiftsperiodene kan ikke overlappe
         </Nav.Alert>
       );
     case TypeFeilmelding.HAR_OPPHOLDSPERIODER_MEDLEMSKAPSPERIODER:
       return (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          Det er opphold i medlemskapsperiodene.
+          Det er opphold i avgiftsperiodene.
         </Nav.Alert>
       );
     case TypeFeilmelding.SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN:
       return (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          Skatteforholdsperioden(e) du har lagt inn dekker ikke hele medlemskapsperioden(e)
+          Skatteforholdsperioden(e) du har lagt inn dekker ikke hele avgiftsperioden(e)
         </Nav.Alert>
       );
     case TypeFeilmelding.OVERLAPPENDE_SKATTEFORHOLDSPERIODER:
@@ -225,7 +225,7 @@ export function Feilmelding({ type }: { type?: string }) {
     case TypeFeilmelding.INNTEKTSKILDER_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN:
       return (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          Inntektsperioden(e) du har lagt inn dekker ikke hele medlemskapsperioden(e)
+          Inntektsperioden(e) du har lagt inn dekker ikke hele avgiftsperioden(e)
         </Nav.Alert>
       );
     default:

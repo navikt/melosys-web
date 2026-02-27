@@ -50,7 +50,7 @@ describe("finnAktivFeilmelding", () => {
     skatteforholdsperioder: [] as any[],
     inntektskilder: [] as any[],
     medlemskapsperiodeFomTom: { fomDato: "2024-01-01", tomDato: "2024-12-31" },
-    medlemskapsperioder: [{ fomDato: "2024-01-01", tomDato: "2024-12-31" }] as any[],
+    avgiftspliktigperioder: [{ fomDato: "2024-01-01", tomDato: "2024-12-31" }] as any[],
     medlemskapstypeErPliktig: true,
   };
 

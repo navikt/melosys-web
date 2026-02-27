@@ -117,9 +117,9 @@ export class AarsavregningPage extends BehandlingPage {
 
   async getAntallMedlemskapsperioder(): Promise<number> {
     // Vent på at minst ett trygdedekning-felt er synlig før telling
-    const firstSelect = this.page.locator('select[name^="medlemskapsperioder["][name$="].trygdedekning"]').first();
+    const firstSelect = this.page.locator('select[name^="avgiftspliktigperioder["][name$="].trygdedekning"]').first();
     await expect(firstSelect, `${this.ctx}: Første trygdedekning-select skal være synlig`).toBeVisible();
-    return await this.page.locator('select[name^="medlemskapsperioder["][name$="].trygdedekning"]').count();
+    return await this.page.locator('select[name^="avgiftspliktigperioder["][name$="].trygdedekning"]').count();
   }
 
   // Skatteforholdsperiode operasjoner

@@ -6,7 +6,10 @@ import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
 import { Inntektskilde } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Utils from "../../../../../utils";
-import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
+import {
+  erUlagretPeriode,
+  ULAGRET_MEDLEMSKAPSPERIODE_ID,
+} from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import { MedlemskapsperiodeFieldProps } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 
 interface BestemmelseSelectProps {
@@ -34,7 +37,7 @@ function BestemmelseSelect({
   lagreMedlemskapsperioderHvisGyldig,
   harLaasteMedlemskapsperioder,
 }: BestemmelseSelectProps) {
-  const medlemskapsperioder = useWatch({ control, name: "medlemskapsperioder" });
+  const avgiftspliktigperioder = useWatch({ control, name: "avgiftspliktigperioder" });
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
 
   const handleBestemmelseChange = useCallback(
@@ -46,11 +49,7 @@ function BestemmelseSelect({
         setTrygdedekninger(trygdedekningerResponse);
 
         try {
-          if (
-            medlemskapsperioder.some(
-              (periode: MedlemskapsperiodeFieldProps) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID,
-            )
-          ) {
+          if (avgiftspliktigperioder.some((periode: MedlemskapsperiodeFieldProps) => erUlagretPeriode(periode.id))) {
             await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID!);
           }
         } catch (error) {
@@ -61,12 +60,12 @@ function BestemmelseSelect({
 
         const defaultTrygdedekning = trygdedekningerResponse.length === 1 ? trygdedekningerResponse[0] : "";
 
-        const oppdaterteMedlemskapsperioder = medlemskapsperioder.map((periode: MedlemskapsperiodeFieldProps) => ({
+        const oppdaterteMedlemskapsperioder = avgiftspliktigperioder.map((periode: MedlemskapsperiodeFieldProps) => ({
           ...periode,
           trygdedekning: defaultTrygdedekning,
           id: ULAGRET_MEDLEMSKAPSPERIODE_ID,
         }));
-        setValue("medlemskapsperioder", oppdaterteMedlemskapsperioder);
+        setValue("avgiftspliktigperioder", oppdaterteMedlemskapsperioder);
 
         setValue(
           "inntektskilder",
@@ -86,7 +85,7 @@ function BestemmelseSelect({
       }
     },
     [
-      medlemskapsperioder,
+      avgiftspliktigperioder,
       inntektskilder,
       setValue,
       setTrygdedekninger,
