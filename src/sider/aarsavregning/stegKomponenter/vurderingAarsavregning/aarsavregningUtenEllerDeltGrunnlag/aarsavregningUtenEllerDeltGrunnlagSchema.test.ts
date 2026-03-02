@@ -369,3 +369,145 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
     });
   });
 });
+
+describe("aarsavregningUtenEllerDeltGrunnlagSchema - erInnenforAvgiftspliktigperiodeTest dynamiske feilmeldinger", () => {
+  describe("Skatteforholdsperioder", () => {
+    it("skal vise 'Utenfor medlemskapsperiode' når skatteforhold er utenfor medlemskapsperiode", async () => {
+      const values = {
+        endeligAvgiftValg: OPPLYSNINGER_ENDRET,
+        bestemmelse: "FTRL_2_7",
+        avgiftspliktigperioder: [
+          {
+            id: 1,
+            fomDato: "01.01.2024",
+            tomDato: "30.06.2024",
+            trygdedekning: "FULL_DEKNING",
+            medlemskapstype: PLIKTIG,
+            type: "MEDLEMSKAPSPERIODE",
+          },
+        ],
+        skatteforholdsperioder: [
+          {
+            id: 1,
+            fomDato: "01.01.2024",
+            tomDato: "31.12.2024",
+            skatteplikttype: "SKATTEPLIKTIG",
+          },
+        ],
+        inntektskilder: [],
+      };
+
+      const err = await validate(values, { aar: 2024 });
+      expect(err).toBeTruthy();
+      expect(hasError(err, "skatteforholdsperioder[0].tomDato", "Utenfor medlemskapsperiode")).toBe(true);
+    });
+
+    it("skal vise 'Utenfor periode Norge dekker helseutgifter' når skatteforhold er utenfor helseutgiftdekkesperiode", async () => {
+      const values = {
+        endeligAvgiftValg: OPPLYSNINGER_ENDRET,
+        avgiftspliktigperioder: [
+          {
+            id: 1,
+            fomDato: "01.01.2024",
+            tomDato: "30.06.2024",
+            trygdedekning: "",
+            medlemskapstype: PLIKTIG,
+            type: "HELSEUTGIFTDEKKESPERIODE",
+          },
+        ],
+        skatteforholdsperioder: [
+          {
+            id: 1,
+            fomDato: "01.01.2024",
+            tomDato: "31.12.2024",
+            skatteplikttype: "SKATTEPLIKTIG",
+          },
+        ],
+        inntektskilder: [],
+      };
+
+      const err = await validate(values, { aar: 2024 });
+      expect(err).toBeTruthy();
+      expect(hasError(err, "skatteforholdsperioder[0].tomDato", "Utenfor periode Norge dekker helseutgifter")).toBe(
+        true,
+      );
+    });
+  });
+
+  describe("Inntektskilder", () => {
+    it("skal vise 'Utenfor medlemskapsperiode' når inntektskilde er utenfor medlemskapsperiode", async () => {
+      const values = {
+        endeligAvgiftValg: OPPLYSNINGER_ENDRET,
+        bestemmelse: "FTRL_2_7",
+        avgiftspliktigperioder: [
+          {
+            id: 1,
+            fomDato: "01.01.2024",
+            tomDato: "30.06.2024",
+            trygdedekning: "FULL_DEKNING",
+            medlemskapstype: "FRIVILLIG",
+            type: "MEDLEMSKAPSPERIODE",
+          },
+        ],
+        skatteforholdsperioder: [
+          {
+            id: 1,
+            fomDato: "01.01.2024",
+            tomDato: "30.06.2024",
+            skatteplikttype: "SKATTEPLIKTIG",
+          },
+        ],
+        inntektskilder: [
+          {
+            id: 1,
+            kildetype: "NÆRINGSINNTEKT_FRA_NORGE",
+            fomDato: "01.01.2024",
+            tomDato: "31.12.2024",
+            bruttoInntekt: "500000",
+          },
+        ],
+      };
+
+      const err = await validate(values, { aar: 2024 });
+      expect(err).toBeTruthy();
+      expect(hasError(err, "inntektskilder[0].tomDato", "Utenfor medlemskapsperiode")).toBe(true);
+    });
+
+    it("skal vise 'Utenfor periode Norge dekker helseutgifter' når inntektskilde er utenfor helseutgiftdekkesperiode", async () => {
+      const values = {
+        endeligAvgiftValg: OPPLYSNINGER_ENDRET,
+        avgiftspliktigperioder: [
+          {
+            id: 1,
+            fomDato: "01.01.2024",
+            tomDato: "30.06.2024",
+            trygdedekning: "",
+            medlemskapstype: PLIKTIG,
+            type: "HELSEUTGIFTDEKKESPERIODE",
+          },
+        ],
+        skatteforholdsperioder: [
+          {
+            id: 1,
+            fomDato: "01.01.2024",
+            tomDato: "30.06.2024",
+            skatteplikttype: "IKKE_SKATTEPLIKTIG",
+          },
+        ],
+        inntektskilder: [
+          {
+            id: 1,
+            kildetype: "NÆRINGSINNTEKT_FRA_NORGE",
+            fomDato: "01.01.2024",
+            tomDato: "31.12.2024",
+            bruttoInntekt: "500000",
+          },
+        ],
+      };
+
+      const err = await validate(values, { aar: 2024 });
+      expect(err).toBeTruthy();
+      expect(hasError(err, "inntektskilder[0].tomDato", "Utenfor periode Norge dekker helseutgifter")).toBe(true);
+    });
+  });
+});
