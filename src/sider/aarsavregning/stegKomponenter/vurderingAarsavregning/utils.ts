@@ -252,7 +252,6 @@ export const validateAarsavregningUtenEllerDeltGrunnlag = async (
     return { isValid: true, errors: {} };
   } catch (err) {
     const validationErrors: Record<string, string> = {};
-
     if (err instanceof ValidationError) {
       if (err.inner && err.inner.length > 0) {
         err.inner.forEach((error) => {

@@ -304,7 +304,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     },
     [medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse],
   );
-
   const debouncedBeregning = useCallback(() => {
     setDebouncedBeregningPagaar(false);
     if (
@@ -902,7 +901,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
               </Nav.ExpansionCard>
             )}
 
-          {arrayValideringsfeil && <Feilmelding type={arrayValideringsfeil} />}
+          {arrayValideringsfeil && (
+            <Feilmelding type={arrayValideringsfeil} erHelseutgiftDekkesPeriode={erHelseutgift} />
+          )}
         </BorderedFormContainer>
       )}
 

@@ -102,6 +102,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     context: {
       avgiftspliktigperiode,
       medlemskapsTypeErPliktig: medlemskapstypeErPliktig,
+      erHelseutgiftDekkesPeriode,
     },
     mode: "onChange",
     defaultValues: initiellData.formDefaultValues,
@@ -399,7 +400,9 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
               </Nav.ExpansionCard>
             )}
 
-          {arrayValideringsfeil && <Feilmelding type={arrayValideringsfeil} />}
+          {arrayValideringsfeil && (
+            <Feilmelding type={arrayValideringsfeil} erHelseutgiftDekkesPeriode={erHelseutgiftDekkesPeriode} />
+          )}
         </BorderedFormContainer>
       )}
 

@@ -18,6 +18,7 @@ const {
   PENSJON_UFØRETRYGD_KILDESKATT,
 } = MKV.Koder.inntektskildetype;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medlemskapsperiode" };
+const UTENFOR_HELSEDUTGIFTDEKKESPERIODEN = { melding: "Utenfor periode Norge dekker helseutgifter" };
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
@@ -100,10 +101,9 @@ const åpenTomTest = {
 };
 
 // Simple test for checking if a date is within medlemskapsperiode range
-const erInnenforMedlemskapsperiodeTest = {
-  name: "erInnenforMedlemskapsperiode",
-  message: UTENFOR_MEDLEMSKAPSPERIODEN,
-  test: (datoString, schema) => {
+const erInnenforAvgiftspliktigperiodeTest = {
+  name: "erInnenforAvgiftspliktigperiode",
+  test: function (datoString, schema) {
     if (Utils._isEmpty(datoString)) return true;
 
     // MELOSYS-7612: Valider kun komplette datoer for å unngå valideringsfeil under typing
@@ -121,12 +121,22 @@ const erInnenforMedlemskapsperiodeTest = {
     const fom = sortertePerioder[0].fomDato;
     const tom = sortertePerioder[sortertePerioder.length - 1].tomDato;
 
-    return Utils.dato.erIPeriode(
+    const erInnenfor = Utils.dato.erIPeriode(
       Utils.dato.vaskOgFormatterTilISO(fom),
       Utils.dato.vaskOgFormatterTilISO(tom),
       Utils.dato.vaskOgFormatterTilISO(datoString),
       "[]",
     );
+
+    if (!erInnenfor) {
+      const erHelseutgift =
+        avgiftspliktigperioder.length > 0 && avgiftspliktigperioder.every((p) => p.type === "HELSEUTGIFTDEKKESPERIODE");
+      return this.createError({
+        message: erHelseutgift ? UTENFOR_HELSEDUTGIFTDEKKESPERIODEN : UTENFOR_MEDLEMSKAPSPERIODEN,
+      });
+    }
+
+    return true;
   },
 };
 
@@ -150,13 +160,13 @@ const skatteforholdsperiodeSchema = object().shape({
     .required(MAA_FYLLES_UT)
     .erGyldigDato()
     .test(erInnenforValgtAarTest)
-    .test(erInnenforMedlemskapsperiodeTest),
+    .test(erInnenforAvgiftspliktigperiodeTest),
   tomDato: string()
     .required(MAA_FYLLES_UT)
     .erGyldigDato()
     .test(åpenTomTest)
     .test(erInnenforValgtAarTest)
-    .test(erInnenforMedlemskapsperiodeTest)
+    .test(erInnenforAvgiftspliktigperiodeTest)
     .erEtterDatofelt("fomDato"),
   skatteplikttype: string().required(MAA_FYLLES_UT),
 });
@@ -165,11 +175,11 @@ const inntektskildeSchema = object().shape({
   kildetype: string().required(MAA_FYLLES_UT),
   arbAvgBetales: string().test(arbAvgBetalesFyltUtNårDetKrevesTest).nullable(),
   bruttoInntekt: string().test(bruttoInntektFyltUtNårDetKrevesTest),
-  fomDato: string().required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforMedlemskapsperiodeTest),
+  fomDato: string().required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforAvgiftspliktigperiodeTest),
   tomDato: string()
     .required(MAA_FYLLES_UT)
     .erGyldigDato()
-    .test(erInnenforMedlemskapsperiodeTest)
+    .test(erInnenforAvgiftspliktigperiodeTest)
     .erEtterDatofelt("fomDato"),
 });
 
