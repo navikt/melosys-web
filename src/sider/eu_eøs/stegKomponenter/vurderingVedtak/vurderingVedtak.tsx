@@ -236,6 +236,10 @@ function VurderingVedtak({
   };
 
   const onSubmit = async () => {
+    // Cancel any pending debounced kontroll to prevent concurrent HTTP requests
+    // that race with vedtak/fatt on SaksopplysningKilde entities
+    debouncedKontrollerBehandling.cancel?.();
+
     if (!validerForm()) return;
 
     setVedtakPending(true);
