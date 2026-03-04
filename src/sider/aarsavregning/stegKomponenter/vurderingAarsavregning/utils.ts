@@ -118,8 +118,8 @@ export function beregnTrygdeavgiftsperioder(
 export const hentMedlemskapsFomTomDato = (medlemskapsperioder?: BasePeriode[]) => {
   if (medlemskapsperioder && !Utils._isEmpty(medlemskapsperioder)) {
     const sorted = [...medlemskapsperioder].sort(Utils.dato.sorterEtterNorskFomDato);
-    const fomISO = Utils.dato.formatterDatoTilISO(sorted[0].fomDato);
-    const tomISO = Utils.dato.formatterDatoTilISO(sorted[sorted.length - 1].tomDato);
+    const fomISO = Utils.dato.vaskOgFormatterTilISO(sorted[0].fomDato);
+    const tomISO = Utils.dato.vaskOgFormatterTilISO(sorted[sorted.length - 1].tomDato);
     return { fom: fomISO, tom: tomISO };
   }
   return {};

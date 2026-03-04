@@ -49,7 +49,11 @@ function BestemmelseSelect({
         setTrygdedekninger(trygdedekningerResponse);
 
         try {
-          if (avgiftspliktigperioder.some((periode: MedlemskapsperiodeFieldProps) => erUlagretPeriode(periode.id))) {
+          if (
+            avgiftspliktigperioder.some(
+              (periode: MedlemskapsperiodeFieldProps) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID,
+            )
+          ) {
             await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID!);
           }
         } catch (error) {

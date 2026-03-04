@@ -370,6 +370,77 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
   });
 });
 
+describe("aarsavregningUtenEllerDeltGrunnlagSchema - bostedLandkode validering", () => {
+  it("skal kreve bostedLandkode for HELSEUTGIFTDEKKESPERIODE", async () => {
+    const values = {
+      endeligAvgiftValg: OPPLYSNINGER_ENDRET,
+      avgiftspliktigperioder: [
+        {
+          id: 1,
+          fomDato: "01.01.2024",
+          tomDato: "31.12.2024",
+          type: "HELSEUTGIFTDEKKESPERIODE",
+          bostedLandkode: "",
+        },
+      ],
+      skatteforholdsperioder: [
+        { id: 1, fomDato: "01.01.2024", tomDato: "31.12.2024", skatteplikttype: "SKATTEPLIKTIG" },
+      ],
+      inntektskilder: [],
+    };
+
+    const err = await validate(values, { aar: 2024 });
+    expect(err).toBeTruthy();
+    expect(hasError(err, "avgiftspliktigperioder[0].bostedLandkode", "Må fylles ut")).toBe(true);
+  });
+
+  it("skal godta utfylt bostedLandkode for HELSEUTGIFTDEKKESPERIODE", async () => {
+    const values = {
+      endeligAvgiftValg: OPPLYSNINGER_ENDRET,
+      avgiftspliktigperioder: [
+        {
+          id: 1,
+          fomDato: "01.01.2024",
+          tomDato: "31.12.2024",
+          type: "HELSEUTGIFTDEKKESPERIODE",
+          bostedLandkode: "SE",
+        },
+      ],
+      skatteforholdsperioder: [
+        { id: 1, fomDato: "01.01.2024", tomDato: "31.12.2024", skatteplikttype: "SKATTEPLIKTIG" },
+      ],
+      inntektskilder: [],
+    };
+
+    const err = await validate(values, { aar: 2024 });
+    expect(err).toBeNull();
+  });
+
+  it("skal ikke kreve bostedLandkode for MEDLEMSKAPSPERIODE", async () => {
+    const values = {
+      endeligAvgiftValg: OPPLYSNINGER_ENDRET,
+      bestemmelse: "FTRL_2_7",
+      avgiftspliktigperioder: [
+        {
+          id: 1,
+          fomDato: "01.01.2024",
+          tomDato: "31.12.2024",
+          trygdedekning: "FULL_DEKNING",
+          medlemskapstype: PLIKTIG,
+          type: "MEDLEMSKAPSPERIODE",
+        },
+      ],
+      skatteforholdsperioder: [
+        { id: 1, fomDato: "01.01.2024", tomDato: "31.12.2024", skatteplikttype: "SKATTEPLIKTIG" },
+      ],
+      inntektskilder: [],
+    };
+
+    const err = await validate(values, { aar: 2024 });
+    expect(err).toBeNull();
+  });
+});
+
 describe("aarsavregningUtenEllerDeltGrunnlagSchema - erInnenforAvgiftspliktigperiodeTest dynamiske feilmeldinger", () => {
   describe("Skatteforholdsperioder", () => {
     it("skal vise 'Utenfor medlemskapsperiode' når skatteforhold er utenfor medlemskapsperiode", async () => {

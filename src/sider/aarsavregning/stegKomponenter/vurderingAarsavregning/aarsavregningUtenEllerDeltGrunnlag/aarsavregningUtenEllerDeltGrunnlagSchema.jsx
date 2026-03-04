@@ -153,6 +153,11 @@ const medlemskapsperiodeSchema = object().shape({
     then: (schema) => schema.nullable().notRequired(),
     otherwise: (schema) => schema.required(MAA_FYLLES_UT),
   }),
+  bostedLandkode: string().when("type", {
+    is: (type) => type === "HELSEUTGIFTDEKKESPERIODE",
+    then: (schema) => schema.required(MAA_FYLLES_UT),
+    otherwise: (schema) => schema.nullable().notRequired(),
+  }),
 });
 
 const skatteforholdsperiodeSchema = object().shape({
