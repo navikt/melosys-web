@@ -4,7 +4,7 @@ import { behandlingerSelectors } from "../../ducks/behandlinger";
 import * as Utils from "../../utils";
 import * as Nav from "../../navFrontend";
 
-const uoppgittEllerUkjenteLand = ["UOPPGITT", "UKJENT", "KOSOVO"];
+const uoppgittEllerUkjenteLand = ["UOPPGITT", "UKJENT"];
 
 function StatsborgerskapFeil({ className }: { className: string }) {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
