@@ -2,7 +2,10 @@ import { object, string, bool, array } from "yup";
 
 import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
-import { DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN } from "../../../../kodeverk/feilmeldinger";
+import {
+  DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN,
+  DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN,
+} from "../../../../kodeverk/feilmeldinger";
 
 const VELG_EN_VEDTAKSTYPE = { melding: "Velg en vedtakstype" };
 const OPPGI_BEGRUNNELSE = { melding: "Oppgi begrunnelse" };
@@ -26,7 +29,7 @@ const artikkel13_x_vedtak = object().shape({
       is: (behandlingstype) => behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING,
       then: (schema) => schema.required(VELG_EN_VEDTAKSTYPE),
     }),
-  vedtaksbrevFritekst: string().nullable().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
+  vedtaksbrevFritekst: string().nullable().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
   fritekstSed: string().nullable().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
   vedtakstypebegrunnelse: string()
     .nullable()
