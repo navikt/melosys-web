@@ -238,6 +238,7 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
   }, [aktivtSteg, formValues?.vedtakstype, formValues?.kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
 
   const onSubmit = async () => {
+    debouncedKontrollerBehandling.cancel?.();
     await validerMottatteOpplysninger();
     fattVedtak(behandlingID, lagFattVedtakEOSReqDto());
   };

@@ -287,6 +287,8 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
   }, [aktivtSteg, formIsValid, formValues?.kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
 
   const onSubmit = async (values, dispatch, props) => {
+    debouncedKontrollerBehandling.cancel?.();
+
     setVedtakPending(true);
 
     if (values.forkortLovvalgsperiode) {

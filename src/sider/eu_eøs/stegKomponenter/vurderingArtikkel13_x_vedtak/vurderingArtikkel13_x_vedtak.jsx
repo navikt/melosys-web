@@ -146,6 +146,8 @@ export function VurderingArtikkel13_x_vedtak({
   };
 
   const onSubmit = async () => {
+    debouncedKontrollerBehandling.cancel?.();
+
     setVedtakPending(true);
 
     validerMottatteOpplysninger()

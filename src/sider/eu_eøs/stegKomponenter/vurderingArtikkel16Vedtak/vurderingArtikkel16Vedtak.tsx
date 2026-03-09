@@ -170,6 +170,8 @@ export function VurderingArtikkel16Vedtak({
   };
 
   const vedKlikk = async () => {
+    debouncedKontrollerBehandling.cancel?.();
+
     if (!validerForm()) return;
 
     if (formValues.forkortLovvalgsperiode) {

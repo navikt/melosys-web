@@ -59,4 +59,10 @@ describe("StatsborgerskapFeil", () => {
     render(<StatsborgerskapFeil className="test" />);
     expect(screen.getByRole("alert")).toBeDefined();
   });
+
+  it("returnerer null for Kosovo statsborgerskap", () => {
+    mockPersonopplysninger = { statsborgerskap: ["Kosovo"] };
+    const { container } = render(<StatsborgerskapFeil className="test" />);
+    expect(container.innerHTML).toBe("");
+  });
 });
