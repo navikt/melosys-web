@@ -22,3 +22,5 @@ export const DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN = "Du kan ikke skrive mer enn 5
 export const DU_KAN_IKKE_SKRIVE_MER_ENN_462_TEGN = "Du kan ikke skrive mer enn 462 tegn";
 
 export const DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN = "Du kan ikke skrive mer enn 4000 tegn";
+
+export const DU_KAN_IKKE_SKRIVE_MER_ENN_10000_TEGN = "Du kan ikke skrive mer enn 10000 tegn";

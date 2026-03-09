@@ -322,7 +322,7 @@ function VurderingVedtak({
             <Skjema.Textarea
               feltNavn="vedtaksbrevFritekst"
               label="Fritekstfelt til begrunnelse"
-              maxLength={4000}
+              maxLength={10000}
               readOnly={!redigerbart}
             />
           </Nav.Column>

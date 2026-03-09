@@ -1,7 +1,7 @@
 import { object, string, bool, array } from "yup";
 import * as KV from "../../../../kodeverk";
 import {
-  DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN,
+  DU_KAN_IKKE_SKRIVE_MER_ENN_10000_TEGN,
   DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN,
 } from "../../../../kodeverk/feilmeldinger";
 
@@ -23,7 +23,7 @@ const artikkel13_utpek = object().shape({
   }),
   kreverMottakerinstitusjon: bool().required(),
   fritekstSed: string().nullable().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
-  fritekstOrienteringsbrev: string().nullable().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
+  fritekstOrienteringsbrev: string().nullable().max(10000, DU_KAN_IKKE_SKRIVE_MER_ENN_10000_TEGN),
   mottakerinstitusjoner: array().of(
     object().shape({
       kreverMottakerinstitusjon: bool(),

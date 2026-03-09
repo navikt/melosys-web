@@ -70,16 +70,16 @@ describe("vurderingVedtakSchema (eu_eøs)", () => {
     expect(errors.some((e) => e.includes("Mottakerinstitusjon kreves"))).toBe(true);
   });
 
-  it("should reject vedtaksbrevFritekst over 4000 chars", async () => {
+  it("should reject vedtaksbrevFritekst over 10000 chars", async () => {
     const errors = await getErrors(
       schema,
       {
         kreverMottakerinstitusjon: false,
-        vedtaksbrevFritekst: "a".repeat(4001),
+        vedtaksbrevFritekst: "a".repeat(10001),
         fritekstSed: null,
       },
       { behandlingstype: "FØRSTEGANGSBEHANDLING" },
     );
-    expect(errors.some((e) => e.includes("4000 tegn"))).toBe(true);
+    expect(errors.some((e) => e.includes("10000 tegn"))).toBe(true);
   });
 });

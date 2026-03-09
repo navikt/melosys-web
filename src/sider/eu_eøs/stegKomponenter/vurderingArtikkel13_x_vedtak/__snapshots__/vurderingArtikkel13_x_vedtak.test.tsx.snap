@@ -96,10 +96,10 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
             id="333"
             class="navds-sr-only"
           >
-            Tekstområde med plass til 4000 tegn.
+            Tekstområde med plass til 10000 tegn.
           </span>
           <p class="navds-textarea__counter navds-body-short navds-body-short--small">
-            4000 tegn igjen
+            10000 tegn igjen
           </p>
           <div
             class="navds-form-field__error"
