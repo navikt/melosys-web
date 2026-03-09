@@ -191,7 +191,12 @@ function VurderingAvslag12_x_og_16({
       {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
       <Nav.Row>
         <Nav.Column xs="8">
-          <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekst til begrunnelse" readOnly={!redigerbart} />
+          <Skjema.Textarea
+            feltNavn="vedtaksbrevFritekst"
+            label="Fritekst til begrunnelse"
+            readOnly={!redigerbart}
+            maxLength={10000}
+          />
         </Nav.Column>
       </Nav.Row>
       {redigerbart && skalViseSendOrienteringsbrev(sakstype, behandlingstema, erNyVurdering) && (

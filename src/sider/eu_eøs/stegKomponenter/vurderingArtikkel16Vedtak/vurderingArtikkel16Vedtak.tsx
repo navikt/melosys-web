@@ -204,7 +204,12 @@ export function VurderingArtikkel16Vedtak({
 
   const renderFritekstFelt = useCallback(
     () => (
-      <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekstfelt til begrunnelse" readOnly={!redigerbart} />
+      <Skjema.Textarea
+        feltNavn="vedtaksbrevFritekst"
+        label="Fritekstfelt til begrunnelse"
+        readOnly={!redigerbart}
+        maxLength={10000}
+      />
     ),
     [formValues?.vedtaksbrevFritekst, redigerbart],
   );

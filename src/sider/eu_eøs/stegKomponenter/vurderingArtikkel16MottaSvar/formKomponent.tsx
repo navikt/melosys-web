@@ -118,7 +118,12 @@ function FormKomponent({ redigerbart, formValues, oppdaterData, formIsValid }: F
       {visFritekstFelt && (
         <Nav.Row>
           <Nav.Column xs="12">
-            <Skjema.Textarea feltNavn="begrunnelseFritekst" readOnly={!redigerbart} label="Begrunnelse" />
+            <Skjema.Textarea
+              feltNavn="begrunnelseFritekst"
+              readOnly={!redigerbart}
+              label="Begrunnelse"
+              maxLength={10000}
+            />
           </Nav.Column>
         </Nav.Row>
       )}

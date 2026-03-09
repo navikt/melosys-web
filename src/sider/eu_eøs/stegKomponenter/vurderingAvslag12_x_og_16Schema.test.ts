@@ -71,4 +71,22 @@ describe("vurderingAvslag12_x_og_16Schema", () => {
     );
     expect(errors.some((e) => e.includes("Oppgi begrunnelse"))).toBe(true);
   });
+
+  it("skal godta vedtaksbrevFritekst på 10000 tegn", async () => {
+    const errors = await getErrors(
+      schema,
+      { vedtakstype: null, vedtakstypebegrunnelse: null, vedtaksbrevFritekst: "a".repeat(10000) },
+      { behandlingstype: "FØRSTEGANGSBEHANDLING" },
+    );
+    expect(errors).toEqual([]);
+  });
+
+  it("skal avvise vedtaksbrevFritekst over 10000 tegn", async () => {
+    const errors = await getErrors(
+      schema,
+      { vedtakstype: null, vedtakstypebegrunnelse: null, vedtaksbrevFritekst: "a".repeat(10001) },
+      { behandlingstype: "FØRSTEGANGSBEHANDLING" },
+    );
+    expect(errors.some((e) => e.includes("10000 tegn"))).toBe(true);
+  });
 });

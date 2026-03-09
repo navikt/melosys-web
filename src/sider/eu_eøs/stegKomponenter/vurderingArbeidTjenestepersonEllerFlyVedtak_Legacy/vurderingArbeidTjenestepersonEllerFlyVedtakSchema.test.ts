@@ -75,4 +75,22 @@ describe("vurderingArbeidTjenestepersonEllerFlyVedtakSchema (Legacy)", () => {
     );
     expect(errors.some((e) => e.includes("utenlandsk trygdemyndighet"))).toBe(true);
   });
+
+  it("skal godta vedtaksbrevFritekst på 10000 tegn", async () => {
+    const errors = await getErrors(
+      schema,
+      { ...baseValid, vedtaksbrevFritekst: "a".repeat(10000) },
+      { behandlingstype: "FØRSTEGANGSBEHANDLING" },
+    );
+    expect(errors).toEqual([]);
+  });
+
+  it("skal avvise vedtaksbrevFritekst over 10000 tegn", async () => {
+    const errors = await getErrors(
+      schema,
+      { ...baseValid, vedtaksbrevFritekst: "a".repeat(10001) },
+      { behandlingstype: "FØRSTEGANGSBEHANDLING" },
+    );
+    expect(errors.some((e) => e.includes("10000 tegn"))).toBe(true);
+  });
 });

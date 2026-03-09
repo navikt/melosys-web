@@ -2,6 +2,7 @@ import { object, string, bool, array } from "yup";
 
 import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
+import { DU_KAN_IKKE_SKRIVE_MER_ENN_10000_TEGN } from "../../../../kodeverk/feilmeldinger";
 
 const VELG_EN_BESTEMMELSE = "Velg en bestemmelse.";
 const VELG_EN_VEDTAKSTYPE = { melding: "Velg en vedtakstype" };
@@ -56,6 +57,7 @@ const arbeid_tjenesteperson_eller_fly_vedtak = object().shape({
     is: true,
     then: (schema) => schema.required(VELG_LAND),
   }),
+  vedtaksbrevFritekst: string().nullable().max(10000, DU_KAN_IKKE_SKRIVE_MER_ENN_10000_TEGN),
 });
 
 export default arbeid_tjenesteperson_eller_fly_vedtak;

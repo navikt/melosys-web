@@ -97,4 +97,34 @@ describe("vurderingArtikkel16VedtakSchema", () => {
     );
     expect(errors.some((e) => e.includes("Må fylles ut"))).toBe(true);
   });
+
+  it("skal godta vedtaksbrevFritekst på 10000 tegn", async () => {
+    const errors = await getErrors(
+      schema,
+      {
+        forkortLovvalgsperiode: false,
+        vedtaksbrevFritekst: "a".repeat(10000),
+      },
+      {
+        behandlingstype: "FØRSTEGANGSBEHANDLING",
+        lovvalgsperiode: { fomDato: "2024-01-01", tomDato: "2024-12-31" },
+      },
+    );
+    expect(errors).toEqual([]);
+  });
+
+  it("skal avvise vedtaksbrevFritekst over 10000 tegn", async () => {
+    const errors = await getErrors(
+      schema,
+      {
+        forkortLovvalgsperiode: false,
+        vedtaksbrevFritekst: "a".repeat(10001),
+      },
+      {
+        behandlingstype: "FØRSTEGANGSBEHANDLING",
+        lovvalgsperiode: { fomDato: "2024-01-01", tomDato: "2024-12-31" },
+      },
+    );
+    expect(errors.some((e) => e.includes("10000 tegn"))).toBe(true);
+  });
 });
