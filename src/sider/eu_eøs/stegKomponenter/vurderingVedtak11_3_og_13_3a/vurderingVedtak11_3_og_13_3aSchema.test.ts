@@ -41,12 +41,12 @@ describe("vurderingVedtak11_3_og_13_3aSchema", () => {
     expect(errors.length).toBeGreaterThan(0);
   });
 
-  it("should reject begrunnelseFritekst over 4000 chars", async () => {
+  it("should reject begrunnelseFritekst over 10000 chars", async () => {
     const errors = await getErrors(schema, {
       lovvalgsbestemmelse: "ART_11_3_A",
-      begrunnelseFritekst: "a".repeat(4001),
+      begrunnelseFritekst: "a".repeat(10001),
       korterePeriodeChecked: false,
     });
-    expect(errors.some((e) => e.includes("4000 tegn"))).toBe(true);
+    expect(errors.some((e) => e.includes("10000 tegn"))).toBe(true);
   });
 });

@@ -283,7 +283,7 @@ export function VurderingVedtak11_3_og_13_3a({
             onChange={(e: any) => setValue("begrunnelseFritekst", e.target.value)}
             value={formValues.begrunnelseFritekst}
             label="Fritekstfelt til begrunnelse"
-            maxLength={4000}
+            maxLength={10000}
             readOnly={!redigerbart}
           />
         </Nav.Column>
