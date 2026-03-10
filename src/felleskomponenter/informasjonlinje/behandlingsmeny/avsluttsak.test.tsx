@@ -109,7 +109,7 @@ describe("AvsluttSak", () => {
     await renderWithProvidersAsync(<AvsluttSak />, { preloadedState: initialState() });
 
     const knapper = await screen.findAllByRole("button");
-    expect(knapper).toHaveLength(7);
+    expect(knapper).toHaveLength(8);
     expect(knapper.at(0)?.textContent).toBe("Søknaden er innvilget");
     expect(knapper.at(1)?.textContent).toBe("Søknaden er avslått");
     expect(knapper.at(2)?.textContent).toBe("Avslå søknad pga. manglende opplysninger");
