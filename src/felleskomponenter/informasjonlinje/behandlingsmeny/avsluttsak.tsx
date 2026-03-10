@@ -212,14 +212,11 @@ function AvsluttSak() {
   const skalViseSøknadenErAvslått = () => skalViseSøknadenErInnvilget();
 
   const skalViseAnnullerSak = () => {
-    return (
-      !erIkkeTidligerePerioderToggleEnabled &&
-      Boolean(
-        redigerbart &&
-          [FTRL, EU_EOS].includes(sakstype) &&
-          [MEDLEMSKAP_LOVVALG, TRYGDEAVGIFT].includes(sakstema) &&
-          [NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype),
-      )
+    return Boolean(
+      redigerbart &&
+        [FTRL, EU_EOS].includes(sakstype) &&
+        [MEDLEMSKAP_LOVVALG, TRYGDEAVGIFT].includes(sakstema) &&
+        [NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype),
     );
   };
 
