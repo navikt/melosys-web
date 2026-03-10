@@ -114,9 +114,10 @@ describe("AvsluttSak", () => {
     expect(knapper.at(1)?.textContent).toBe("Søknaden er avslått");
     expect(knapper.at(2)?.textContent).toBe("Avslå søknad pga. manglende opplysninger");
     expect(knapper.at(3)?.textContent).toBe("Vedtaket er omgjort (fvl § 35)");
-    expect(knapper.at(4)?.textContent).toBe("Ferdigbehandlet");
-    expect(knapper.at(5)?.textContent).toBe("Søknaden/klagen er trukket");
-    expect(knapper.at(6)?.textContent).toBe("Behandlingen er bortfalt");
+    expect(knapper.at(4)?.textContent).toBe("Saken er annullert");
+    expect(knapper.at(5)?.textContent).toBe("Ferdigbehandlet");
+    expect(knapper.at(6)?.textContent).toBe("Søknaden/klagen er trukket");
+    expect(knapper.at(7)?.textContent).toBe("Behandlingen er bortfalt");
   });
 
   it("viser ingenting når behandling er ikke redigerbart", async () => {
