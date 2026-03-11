@@ -2,7 +2,7 @@ import { object, string, bool } from "yup";
 
 import * as Utils from "../../../../utils";
 import * as KV from "../../../../kodeverk";
-import { DU_KAN_IKKE_SKRIVE_MER_ENN_10000_TEGN } from "../../../../kodeverk/feilmeldinger";
+import { DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN } from "../../../../kodeverk/feilmeldinger";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -84,7 +84,7 @@ const artikkel16_vedtak = object().shape({
         .erGyldigDato()
         .required(MAA_FYLLES_UT),
   }),
-  vedtaksbrevFritekst: string().nullable().max(10000, DU_KAN_IKKE_SKRIVE_MER_ENN_10000_TEGN),
+  vedtaksbrevFritekst: string().nullable().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
 });
 
 export default artikkel16_vedtak;

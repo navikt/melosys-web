@@ -37,20 +37,20 @@ describe("vurderingArtikkel13UtpekLandSchema", () => {
     expect(errors).toEqual([]);
   });
 
-  it("skal godta fritekstOrienteringsbrev på 10000 tegn", async () => {
+  it("skal godta fritekstOrienteringsbrev på 4000 tegn", async () => {
     const errors = await getErrors(schema, {
       ...baseValid,
-      fritekstOrienteringsbrev: "a".repeat(10000),
+      fritekstOrienteringsbrev: "a".repeat(4000),
     });
     expect(errors).toEqual([]);
   });
 
-  it("skal avvise fritekstOrienteringsbrev over 10000 tegn", async () => {
+  it("skal avvise fritekstOrienteringsbrev over 4000 tegn", async () => {
     const errors = await getErrors(schema, {
       ...baseValid,
-      fritekstOrienteringsbrev: "a".repeat(10001),
+      fritekstOrienteringsbrev: "a".repeat(4001),
     });
-    expect(errors.some((e) => e.includes("10000 tegn"))).toBe(true);
+    expect(errors.some((e) => e.includes("4000 tegn"))).toBe(true);
   });
 
   it("skal ikke avvise fritekstOrienteringsbrev på 500 tegn", async () => {

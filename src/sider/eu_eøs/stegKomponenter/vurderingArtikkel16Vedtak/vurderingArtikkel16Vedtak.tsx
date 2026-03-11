@@ -208,7 +208,7 @@ export function VurderingArtikkel16Vedtak({
         feltNavn="vedtaksbrevFritekst"
         label="Fritekstfelt til begrunnelse"
         readOnly={!redigerbart}
-        maxLength={10000}
+        maxLength={4000}
       />
     ),
     [formValues?.vedtaksbrevFritekst, redigerbart],

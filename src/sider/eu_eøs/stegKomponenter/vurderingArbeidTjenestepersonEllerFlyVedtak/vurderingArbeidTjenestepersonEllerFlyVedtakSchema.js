@@ -4,7 +4,7 @@ import MKV from "../../../../melosyskodeverk";
 import * as KV from "../../../../kodeverk";
 import {
   DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN,
-  DU_KAN_IKKE_SKRIVE_MER_ENN_10000_TEGN,
+  DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN,
 } from "../../../../kodeverk/feilmeldinger";
 
 const VELG_EN_VEDTAKSTYPE = { melding: "Velg en vedtakstype" };
@@ -38,7 +38,7 @@ const arbeid_tjenesteperson_eller_fly_vedtak = object().shape({
       }),
     }),
   ),
-  vedtaksbrevFritekst: string().max(10000, DU_KAN_IKKE_SKRIVE_MER_ENN_10000_TEGN).nullable(),
+  vedtaksbrevFritekst: string().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN).nullable(),
   fritekstSed: string().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN).nullable(),
   kreverMottakerinstitusjon: bool().required(),
   mottakerinstitusjon: string().when("kreverMottakerinstitusjon", {

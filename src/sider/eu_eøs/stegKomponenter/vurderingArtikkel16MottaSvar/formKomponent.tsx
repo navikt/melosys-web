@@ -122,7 +122,7 @@ function FormKomponent({ redigerbart, formValues, oppdaterData, formIsValid }: F
               feltNavn="begrunnelseFritekst"
               readOnly={!redigerbart}
               label="Begrunnelse"
-              maxLength={10000}
+              maxLength={4000}
             />
           </Nav.Column>
         </Nav.Row>

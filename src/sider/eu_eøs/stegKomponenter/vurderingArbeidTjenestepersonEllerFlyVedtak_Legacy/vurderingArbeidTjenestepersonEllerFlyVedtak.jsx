@@ -369,7 +369,7 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
             feltNavn="vedtaksbrevFritekst"
             label="Fritekst til begrunnelse"
             readOnly={!redigerbart}
-            maxLength={10000}
+            maxLength={4000}
           />
         </Nav.Column>
       </Nav.Row>

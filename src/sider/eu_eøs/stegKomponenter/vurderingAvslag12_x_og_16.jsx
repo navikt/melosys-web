@@ -195,7 +195,7 @@ function VurderingAvslag12_x_og_16({
             feltNavn="vedtaksbrevFritekst"
             label="Fritekst til begrunnelse"
             readOnly={!redigerbart}
-            maxLength={10000}
+            maxLength={4000}
           />
         </Nav.Column>
       </Nav.Row>

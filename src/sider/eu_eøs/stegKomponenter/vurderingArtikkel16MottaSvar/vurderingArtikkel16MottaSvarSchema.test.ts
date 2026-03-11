@@ -61,21 +61,21 @@ describe("vurderingArtikkel16MottaSvarSchema", () => {
     expect(errors).toEqual([]);
   });
 
-  it("skal godta begrunnelseFritekst på 10000 tegn", async () => {
+  it("skal godta begrunnelseFritekst på 4000 tegn", async () => {
     const errors = await getErrors(
       schema,
-      { endretPeriode: {}, begrunnelseFritekst: "a".repeat(10000) },
+      { endretPeriode: {}, begrunnelseFritekst: "a".repeat(4000) },
       { anmodningsperiodeSvarType: "INNVILGET", soknadsperiode },
     );
     expect(errors).toEqual([]);
   });
 
-  it("skal avvise begrunnelseFritekst over 10000 tegn", async () => {
+  it("skal avvise begrunnelseFritekst over 4000 tegn", async () => {
     const errors = await getErrors(
       schema,
-      { endretPeriode: {}, begrunnelseFritekst: "a".repeat(10001) },
+      { endretPeriode: {}, begrunnelseFritekst: "a".repeat(4001) },
       { anmodningsperiodeSvarType: "INNVILGET", soknadsperiode },
     );
-    expect(errors.some((e) => e.includes("10000 tegn"))).toBe(true);
+    expect(errors.some((e) => e.includes("4000 tegn"))).toBe(true);
   });
 });
