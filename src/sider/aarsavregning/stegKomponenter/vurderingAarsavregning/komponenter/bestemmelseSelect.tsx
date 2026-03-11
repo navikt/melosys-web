@@ -6,10 +6,7 @@ import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
 import { Inntektskilde } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Utils from "../../../../../utils";
-import {
-  erUlagretPeriode,
-  ULAGRET_MEDLEMSKAPSPERIODE_ID,
-} from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
+import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import { MedlemskapsperiodeFieldProps } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 
 interface BestemmelseSelectProps {

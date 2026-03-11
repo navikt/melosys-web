@@ -18,7 +18,7 @@ const {
   PENSJON_UFØRETRYGD_KILDESKATT,
 } = MKV.Koder.inntektskildetype;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medlemskapsperiode" };
-const UTENFOR_HELSEDUTGIFTDEKKESPERIODEN = { melding: "Utenfor periode Norge dekker helseutgifter" };
+const UTENFOR_HELSEUTGIFTDEKKESPERIODEN = { melding: "Utenfor periode Norge dekker helseutgifter" };
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
@@ -132,7 +132,7 @@ const erInnenforAvgiftspliktigperiodeTest = {
       const erHelseutgift =
         avgiftspliktigperioder.length > 0 && avgiftspliktigperioder.every((p) => p.type === "HELSEUTGIFTDEKKESPERIODE");
       return this.createError({
-        message: erHelseutgift ? UTENFOR_HELSEDUTGIFTDEKKESPERIODEN : UTENFOR_MEDLEMSKAPSPERIODEN,
+        message: erHelseutgift ? UTENFOR_HELSEUTGIFTDEKKESPERIODEN : UTENFOR_MEDLEMSKAPSPERIODEN,
       });
     }
 

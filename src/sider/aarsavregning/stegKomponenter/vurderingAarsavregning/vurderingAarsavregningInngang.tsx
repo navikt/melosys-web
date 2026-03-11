@@ -89,17 +89,9 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as any;
-  const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as any;
-  const sakstype = useSelector(fagsakSelectors.SakstypeSelector);
-  const sakstema = useSelector(fagsakSelectors.SakstemaSelector);
   const { oppfriskOgLastInnSaksopplysningerForAarsavregning } = useContext(FellesHandlersContext) as any;
   const dispatch = useDispatch();
-
-  const erEøsPensjonist =
-    sakstype?.kode === MKV.Koder.sakstyper.EU_EOS &&
-    sakstema?.kode === MKV.Koder.sakstemaer.TRYGDEAVGIFT &&
-    behandlingstema === MKV.Koder.behandlinger.behandlingstema.PENSJONIST;
 
   /**
    * Utleder harTrygdeavgiftFraAvgiftssystemet når verdien er null (bakoverkompatibilitet).
