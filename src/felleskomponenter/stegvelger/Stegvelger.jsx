@@ -153,8 +153,8 @@ class Stegvelger extends Component {
     return Api.Fagsaker.aktoer.hent(saksnummer, MKV.Koder.aktoersroller.FULLMEKTIG);
   };
 
-  bekreftOgFortsett = () => {
-    this.publiserStegdata();
+  bekreftOgFortsett = async () => {
+    await this.publiserStegdata();
     this.validerSoknadOgGaTilSteg(this.beregnNesteSteg());
   };
 
