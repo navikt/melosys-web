@@ -95,12 +95,12 @@ describe("vurderingArbeidTjenestepersonEllerFlyVedtakSchema", () => {
     expect(errors.some((e) => e.includes("Velg land"))).toBe(true);
   });
 
-  it("should reject vedtaksbrevFritekst over 500 chars", async () => {
+  it("should reject vedtaksbrevFritekst over 4000 chars", async () => {
     const errors = await getErrors(
       schema,
-      { ...baseValid, vedtaksbrevFritekst: "a".repeat(501) },
+      { ...baseValid, vedtaksbrevFritekst: "a".repeat(4001) },
       { behandlingstype: "FØRSTEGANGSBEHANDLING" },
     );
-    expect(errors.some((e) => e.includes("500 tegn"))).toBe(true);
+    expect(errors.some((e) => e.includes("4000 tegn"))).toBe(true);
   });
 });

@@ -201,7 +201,7 @@ export function VurderingArtikkel13_x_vedtak({
             feltNavn="vedtaksbrevFritekst"
             label="Fritekst til begrunnelse"
             readOnly={!redigerbart}
-            maxLength={500}
+            maxLength={4000}
           />
         </Nav.Column>
       </Nav.Row>

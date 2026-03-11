@@ -365,7 +365,12 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
       {erNyVurdering && <Skjema.Vedtakstype redigerbart={redigerbart} />}
       <Nav.Row className="fritekst">
         <Nav.Column xs="8">
-          <Skjema.Textarea feltNavn="vedtaksbrevFritekst" label="Fritekst til begrunnelse" readOnly={!redigerbart} />
+          <Skjema.Textarea
+            feltNavn="vedtaksbrevFritekst"
+            label="Fritekst til begrunnelse"
+            readOnly={!redigerbart}
+            maxLength={4000}
+          />
         </Nav.Column>
       </Nav.Row>
       {visSendSEDValg && (

@@ -64,17 +64,17 @@ describe("vurderingArtikkel13_x_vedtakSchema", () => {
     expect(errors.some((e) => e.includes("Velg en vedtakstype"))).toBe(true);
   });
 
-  it("should reject vedtaksbrevFritekst over 500 chars", async () => {
+  it("should reject vedtaksbrevFritekst over 4000 chars", async () => {
     const errors = await getErrors(
       schema,
       {
         forkortLovvalgsperiode: false,
-        vedtaksbrevFritekst: "a".repeat(501),
+        vedtaksbrevFritekst: "a".repeat(4001),
         mottakerinstitusjoner: [],
       },
       { behandlingstype: "FØRSTEGANGSBEHANDLING" },
     );
-    expect(errors.some((e) => e.includes("500 tegn"))).toBe(true);
+    expect(errors.some((e) => e.includes("4000 tegn"))).toBe(true);
   });
 
   it("should require mottakerinstitusjon id when kreverMottakerinstitusjon", async () => {
