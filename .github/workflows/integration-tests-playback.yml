@@ -70,7 +70,7 @@ jobs:
           echo "📦 Download the full HTML report from the artifacts below." >> $GITHUB_STEP_SUMMARY
 
       - name: Upload Playwright report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: playwright-report
@@ -81,7 +81,7 @@ jobs:
           retention-days: 7
 
       - name: Upload test artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: test-artifacts
