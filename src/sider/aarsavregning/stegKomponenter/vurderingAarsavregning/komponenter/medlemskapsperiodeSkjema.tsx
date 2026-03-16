@@ -129,12 +129,12 @@ export function AvgiftspliktigperiodeSkjema({
     }
   }, [trygdedekninger, index, setValue, erHelseutgift]);
 
-  const periodeLabelTekst = erHelseutgift ? "Helseutgiftdekkes" : "Medlemskapsperiode";
+  const periodeLabelTekst = erHelseutgift ? `Periode Norge dekker helseutgifter` : "Medlemskapsperiode";
 
   return (
     <>
       <Nav.Row className="periode__rad medlemskapsperiode__rad" key={field.id}>
-        <Nav.Column className="dato">
+        <Nav.Column className={`dato${erHelseutgift && index === 0 ? " dato--helseutgift-label" : ""}`}>
           <Forms.Datovelger
             label={index === 0 ? periodeLabelTekst : ""}
             control={control}

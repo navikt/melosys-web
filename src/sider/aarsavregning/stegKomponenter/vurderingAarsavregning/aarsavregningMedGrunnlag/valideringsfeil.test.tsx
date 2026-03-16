@@ -85,9 +85,26 @@ describe("Feilmelding", () => {
     expect(screen.getByText(/oppholdsperioder/)).toBeDefined();
   });
 
-  it("rendrer inntektskilder dekker ikke", () => {
+  it("rendrer skatteforhold dekker ikke for medlemskapsperiode (default)", () => {
+    render(<Feilmelding type="SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN" />);
+    expect(screen.getByText(/hele medlemskapsperioden\(e\)/)).toBeDefined();
+  });
+
+  it("rendrer skatteforhold dekker ikke for helseutgiftdekkesperiode", () => {
+    render(<Feilmelding type="SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN" erHelseutgiftDekkesPeriode={true} />);
+    expect(screen.getByText(/hele perioden Norge dekker helseutgifter/)).toBeDefined();
+  });
+
+  it("rendrer inntektskilder dekker ikke for medlemskapsperiode (default)", () => {
     render(<Feilmelding type="INNTEKTSKILDER_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN" />);
-    expect(screen.getByText(/Inntektsperioden/)).toBeDefined();
+    expect(screen.getByText(/hele medlemskapsperioden\(e\)/)).toBeDefined();
+  });
+
+  it("rendrer inntektskilder dekker ikke for helseutgiftdekkesperiode", () => {
+    render(
+      <Feilmelding type="INNTEKTSKILDER_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN" erHelseutgiftDekkesPeriode={true} />,
+    );
+    expect(screen.getByText(/hele perioden Norge dekker helseutgifter/)).toBeDefined();
   });
 
   it("rendrer default tom div", () => {

@@ -38,6 +38,7 @@ import { TrygdeavgiftFraAvgiftssystemetInput } from "../komponenter/trygdeavgift
 import {
   beregnTrygdeavgiftsperioder,
   erBrukerSkattepliktigIHelePerioden,
+  erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling,
   hentMedlemskapsFomTomDato,
   validateAarsavregningUtenEllerDeltGrunnlag,
 } from "../utils";
@@ -190,17 +191,22 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     !!initiellData.aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder &&
     initiellData.aarsavregningResponse.sisteGjeldendeAvgiftspliktigperioder.length > 0;
 
-  const finnMedlemskapsperiode = useCallback((perioder: MedlemskapsperiodeFieldProps[]) => {
-    const sorterteGyldigePerioder = perioder
-      .filter((periode: MedlemskapsperiodeFieldProps) => periode.fomDato && periode.tomDato)
-      .sort(Utils.dato.sorterEtterNorskFomDato);
-    const medlemskapsperiodeFomTom = hentMedlemskapsFomTomDato(sorterteGyldigePerioder);
+  const finnMedlemskapsperiode = useCallback(
+    (perioder: MedlemskapsperiodeFieldProps[]) => {
+      const sorterteGyldigePerioder = perioder
+        .filter((periode: MedlemskapsperiodeFieldProps) =>
+          erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling(periode.fomDato, periode.tomDato, initiellData.valgtÅr),
+        )
+        .sort(Utils.dato.sorterEtterNorskFomDato);
+      const medlemskapsperiodeFomTom = hentMedlemskapsFomTomDato(sorterteGyldigePerioder);
 
-    return {
-      fomDato: Utils.dato.vaskOgFormatterDatoTilNorsk(medlemskapsperiodeFomTom?.fom),
-      tomDato: Utils.dato.vaskOgFormatterDatoTilNorsk(medlemskapsperiodeFomTom?.tom),
-    };
-  }, []);
+      return {
+        fomDato: Utils.dato.vaskOgFormatterDatoTilNorsk(medlemskapsperiodeFomTom?.fom),
+        tomDato: Utils.dato.vaskOgFormatterDatoTilNorsk(medlemskapsperiodeFomTom?.tom),
+      };
+    },
+    [initiellData.valgtÅr],
+  );
 
   const medlemskapsperiode = useMemo(() => {
     return finnMedlemskapsperiode(medlemskapsperioder);
@@ -233,6 +239,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       type: periode.type,
       trygdedekning: erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.trygdedekning : "",
       medlemskapstype: erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.medlemskapstype : "PLIKTIG",
+      bostedLandkode: erHelseutgiftdekkesperiode(periode) ? periode.bostedLandkode : "",
     })),
     trygdeavgiftFraAvgiftssystemet: trygdeavgiftFraAvgiftssystemetParam,
     endeligAvgiftValg: endeligAvgiftValgFormState,
@@ -304,7 +311,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     },
     [medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse],
   );
-
   const debouncedBeregning = useCallback(() => {
     setDebouncedBeregningPagaar(false);
     if (
@@ -902,7 +908,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
               </Nav.ExpansionCard>
             )}
 
-          {arrayValideringsfeil && <Feilmelding type={arrayValideringsfeil} />}
+          {arrayValideringsfeil && (
+            <Feilmelding type={arrayValideringsfeil} erHelseutgiftDekkesPeriode={erHelseutgift} />
+          )}
         </BorderedFormContainer>
       )}
 

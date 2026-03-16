@@ -6,10 +6,7 @@ import MKV from "../../../../../melosyskodeverk";
 import * as Api from "../../../../../services/api";
 import { Inntektskilde } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
 import * as Utils from "../../../../../utils";
-import {
-  erUlagretPeriode,
-  ULAGRET_MEDLEMSKAPSPERIODE_ID,
-} from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
+import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import { MedlemskapsperiodeFieldProps } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 
 interface BestemmelseSelectProps {
@@ -49,7 +46,11 @@ function BestemmelseSelect({
         setTrygdedekninger(trygdedekningerResponse);
 
         try {
-          if (avgiftspliktigperioder.some((periode: MedlemskapsperiodeFieldProps) => erUlagretPeriode(periode.id))) {
+          if (
+            avgiftspliktigperioder.some(
+              (periode: MedlemskapsperiodeFieldProps) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID,
+            )
+          ) {
             await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID!);
           }
         } catch (error) {

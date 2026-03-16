@@ -190,7 +190,13 @@ export function finnAktivFeilmelding({
   return undefined;
 }
 
-export function Feilmelding({ type }: { type?: string }) {
+export function Feilmelding({
+  type,
+  erHelseutgiftDekkesPeriode,
+}: {
+  type?: string;
+  erHelseutgiftDekkesPeriode?: boolean;
+}) {
   switch (type) {
     case TypeFeilmelding.OVERLAPPENDE_MEDLEMSKAPSPERIODER:
       return (
@@ -207,7 +213,9 @@ export function Feilmelding({ type }: { type?: string }) {
     case TypeFeilmelding.SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN:
       return (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          Skatteforholdsperioden(e) du har lagt inn dekker ikke hele avgiftsperioden(e)
+          {erHelseutgiftDekkesPeriode
+            ? "Skatteforholdsperioden(e) du har lagt inn dekker ikke hele perioden Norge dekker helseutgifter"
+            : "Skatteforholdsperioden(e) du har lagt inn dekker ikke hele medlemskapsperioden(e)"}
         </Nav.Alert>
       );
     case TypeFeilmelding.OVERLAPPENDE_SKATTEFORHOLDSPERIODER:
@@ -225,7 +233,9 @@ export function Feilmelding({ type }: { type?: string }) {
     case TypeFeilmelding.INNTEKTSKILDER_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN:
       return (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
-          Inntektsperioden(e) du har lagt inn dekker ikke hele avgiftsperioden(e)
+          {erHelseutgiftDekkesPeriode
+            ? "Inntektsperioden(e) du har lagt inn dekker ikke hele perioden Norge dekker helseutgifter"
+            : "Inntektsperioden(e) du har lagt inn dekker ikke hele medlemskapsperioden(e)"}
         </Nav.Alert>
       );
     default:
