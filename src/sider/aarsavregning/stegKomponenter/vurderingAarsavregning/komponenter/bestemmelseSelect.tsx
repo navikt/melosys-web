@@ -9,6 +9,9 @@ import * as Utils from "../../../../../utils";
 import { ULAGRET_MEDLEMSKAPSPERIODE_ID } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import { MedlemskapsperiodeFieldProps } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 
+export const skalSletteEksisterendePerioder = (perioder: MedlemskapsperiodeFieldProps[]): boolean =>
+  perioder.some((periode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID);
+
 interface BestemmelseSelectProps {
   control: Control<any>;
   setValue: (name: string, value: any) => void;
@@ -46,11 +49,7 @@ function BestemmelseSelect({
         setTrygdedekninger(trygdedekningerResponse);
 
         try {
-          if (
-            avgiftspliktigperioder.some(
-              (periode: MedlemskapsperiodeFieldProps) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID,
-            )
-          ) {
+          if (skalSletteEksisterendePerioder(avgiftspliktigperioder)) {
             await Api.MedlemAvFolketrygden.Medlemskapsperioder.slettMedlemskapsperioder(behandlingID!);
           }
         } catch (error) {

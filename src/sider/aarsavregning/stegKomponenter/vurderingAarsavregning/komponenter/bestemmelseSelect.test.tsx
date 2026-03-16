@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { skalSletteEksisterendePerioder } from "./bestemmelseSelect";
 import {
   ULAGRET_MEDLEMSKAPSPERIODE_ID,
   ULAGRET_HELSEUTGIFTDEKKESPERIODE_ID,
@@ -7,14 +8,9 @@ import {
 
 /**
  * Tester betingelsen for når lagrede perioder skal slettes ved bestemmelsesbytte.
- * Logikken fra bestemmelseSelect.tsx:
- *   avgiftspliktigperioder.some((periode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
- *
  * Bugfix (MELOSYS-7636): Når bruker endrer bestemmelse etter å ha lagret perioder,
  * skal eksisterende lagrede perioder slettes via API før nye opprettes.
  */
-const skalSletteEksisterendePerioder = (perioder: MedlemskapsperiodeFieldProps[]): boolean =>
-  perioder.some((periode) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID);
 
 const lagPeriode = (id: number): MedlemskapsperiodeFieldProps => ({
   id,
