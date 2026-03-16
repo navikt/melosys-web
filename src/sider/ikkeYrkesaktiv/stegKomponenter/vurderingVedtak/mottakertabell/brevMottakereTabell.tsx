@@ -10,7 +10,12 @@ import Dokumentliste from "../../../../../felleskomponenter/dokumentliste";
 
 const { IKKE_YRKESAKTIV_VEDTAKSBREV } = MKV.Koder.brev.produserbaredokumenter;
 
-export function BrevMottakereTabell() {
+interface BrevMottakereTabellProps {
+  innledningFritekst?: string;
+  begrunnelseFritekst?: string;
+}
+
+export function BrevMottakereTabell({ innledningFritekst, begrunnelseFritekst }: BrevMottakereTabellProps) {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
 
   const [muligeMottakere] = useAsyncCallbackState(
@@ -30,6 +35,8 @@ export function BrevMottakereTabell() {
         dokumentData: {
           produserbardokument: IKKE_YRKESAKTIV_VEDTAKSBREV,
           mottaker: muligmottaker.hovedMottaker.rolle,
+          innledningFritekst,
+          begrunnelseFritekst,
         },
       },
     ];

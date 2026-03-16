@@ -44,6 +44,18 @@ interface FormValuesProps {
   begrunnelseFritekst?: string;
 }
 
+function FritekstTeller({ verdi, maksLengde }: { verdi?: string; maksLengde: number }) {
+  const lengde = verdi?.length ?? 0;
+  const differanse = maksLengde - lengde;
+  const erOver = differanse < 0;
+
+  return (
+    <Nav.BodyLong size="small" className={`fritekst_teller${erOver ? " fritekst_teller--error" : ""}`}>
+      {erOver ? `${Math.abs(differanse)} tegn for mye` : `${differanse} tegn igjen`}
+    </Nav.BodyLong>
+  );
+}
+
 export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
 
@@ -243,6 +255,7 @@ export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
           className="fritekst_editor"
           disabled={!redigerbart}
         />
+        <FritekstTeller verdi={formValues.innledningFritekst} maksLengde={4000} />
       </Nav.Row>
 
       <Nav.Row>
@@ -255,11 +268,15 @@ export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
           className="fritekst_editor"
           disabled={!redigerbart}
         />
+        <FritekstTeller verdi={formValues.begrunnelseFritekst} maksLengde={4000} />
       </Nav.Row>
 
       {stegErGyldig && (
         <Nav.Row>
-          <BrevMottakereTabell />
+          <BrevMottakereTabell
+            innledningFritekst={formValues.innledningFritekst}
+            begrunnelseFritekst={formValues.begrunnelseFritekst}
+          />
         </Nav.Row>
       )}
 
