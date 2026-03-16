@@ -280,11 +280,12 @@ export function VurderingVedtak11_3_og_13_3a({
       <Nav.Row>
         <Nav.Column xs="7">
           <Nav.Textarea
-            onChange={(e: any) => setValue("begrunnelseFritekst", e.target.value)}
+            onChange={(e: any) => setValue("begrunnelseFritekst", e.target.value, { shouldValidate: true })}
             value={formValues.begrunnelseFritekst}
             label="Fritekstfelt til begrunnelse"
             maxLength={4000}
             readOnly={!redigerbart}
+            error={formState.errors?.begrunnelseFritekst?.message as string}
           />
         </Nav.Column>
       </Nav.Row>
