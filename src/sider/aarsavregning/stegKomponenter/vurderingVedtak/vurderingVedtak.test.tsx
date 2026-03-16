@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { VurderingVedtak } from "./vurderingVedtak";
 import { renderWithProvidersAsync } from "../../../../ducks/test-utils/renderWithProviders";
 import MKV from "../../../../melosyskodeverk";
@@ -39,6 +39,15 @@ vi.mock("../../../../services/api", () => ({
     },
   },
 }));
+
+beforeEach(() => {
+  vi.useFakeTimers({ shouldAdvanceTime: true });
+});
+
+afterEach(() => {
+  vi.runOnlyPendingTimers();
+  vi.useRealTimers();
+});
 
 const { BEREGNET_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 const { FULLMEKTIG_TRYGDEAVGIFT } = MKV.Koder.fullmaktstype;
