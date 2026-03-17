@@ -108,11 +108,19 @@ export function VurderingVideresend({
           <Nav.Row>
             <Nav.Column xs="8">
               <Nav.Alert variant="warning" className="videresendSoknad__warning">
-                Land er ikke satt under «Periode og land». Arbeidsland vil ikke bli inkludert i SED A008.
+                <span>
+                  Land er satt til{" "}
+                  <i>
+                    <b>Flere land. Ikke kjent hvilke.</b>
+                  </i>{" "}
+                  Arbeidsland vil derfor ikke bli oppgitt i SED A008. Du kan endre dette under sidemenypunkt “Periode og
+                  land”.
+                </span>
               </Nav.Alert>
             </Nav.Column>
           </Nav.Row>
         )}
+
         <Nav.Row>
           <Nav.Column xs="8">
             <Skjema.Textarea
