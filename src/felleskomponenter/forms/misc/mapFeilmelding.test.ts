@@ -35,4 +35,24 @@ describe("getErrorMessage", () => {
 
     expect(getErrorMessage(field, formState)).toBeUndefined();
   });
+
+  it("returnerer melding for enkelt felt med ren streng som feilmelding", () => {
+    const field = { name: "begrunnelseFritekst" } as any;
+    const formState = {
+      errors: { begrunnelseFritekst: { message: "Du kan ikke skrive mer enn 4000 tegn" } },
+    } as any;
+
+    expect(getErrorMessage(field, formState)).toBe("Du kan ikke skrive mer enn 4000 tegn");
+  });
+
+  it("returnerer melding for array-felt med ren streng som feilmelding", () => {
+    const field = { name: "perioder[0].startdato" } as any;
+    const formState = {
+      errors: {
+        perioder: [{ startdato: { message: "Startdato er påkrevd" } }],
+      },
+    } as any;
+
+    expect(getErrorMessage(field, formState)).toBe("Startdato er påkrevd");
+  });
 });

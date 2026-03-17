@@ -12,6 +12,10 @@ import {
   ULAGRET_MEDLEMSKAPSPERIODE_ID,
   MedlemskapsperiodeFieldProps,
 } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
+import type {
+  AarsavregningsPeriodeType,
+  HelseutgiftdekkesperiodeForAvgift,
+} from "../../../../../services/modules/types/periodeTyper";
 
 import { useEffect } from "react";
 import { FormValuesProps } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
@@ -69,9 +73,10 @@ export interface PeriodeElementerProps {
   trygdedekninger?: string[];
   setValue: (name: string, value: unknown, options?: { shouldValidate?: boolean; shouldDirty?: boolean }) => void;
   erDeltGrunnlag?: boolean;
+  periodeType?: AarsavregningsPeriodeType;
 }
 
-export function MedlemskapsperiodeSkjema({
+export function AvgiftspliktigperiodeSkjema({
   redigerbart,
   field,
   control,
@@ -85,13 +90,15 @@ export function MedlemskapsperiodeSkjema({
   trygdedekninger = [],
   setValue,
   erDeltGrunnlag = false,
+  periodeType,
 }: PeriodeElementerProps) {
+  const erHelseutgift = periodeType === "HELSEUTGIFTDEKKESPERIODE";
   const pliktigeBestemmelser = usePliktigeBestemmelser();
   const erPliktigBestemmelse = formValues.bestemmelse && pliktigeBestemmelser.includes(formValues.bestemmelse);
 
-  const medlemskapsperioder = formValues.medlemskapsperioder as MedlemskapsperiodeFieldProps[];
+  const medlemskapsperioder = formValues.avgiftspliktigperioder as MedlemskapsperiodeFieldProps[];
   const erPeriodeFraGrunnlag = !medlemskapsperioder[index]?.redigerbar;
-  const kanViseSletteKolonne = redigerbart && medlemskapsperioder.length > 1;
+  const kanViseSletteKolonne = !erHelseutgift && redigerbart && medlemskapsperioder.length > 1;
   const tilOgMedDatoForrigePeriode =
     medlemskapsperioder[index - 1] !== undefined
       ? Utils.dato.norskStringTilDate(medlemskapsperioder[index - 1]?.tomDato)
@@ -117,21 +124,23 @@ export function MedlemskapsperiodeSkjema({
   const erDennePeriodenSlettbar = kanPeriodeSlettes(gjeldendePeriodeForRad, medlemskapsperioder);
 
   useEffect(() => {
-    if (trygdedekninger?.length === 1) {
-      setValue(`medlemskapsperioder[${index}].trygdedekning`, trygdedekninger[0], { shouldValidate: true });
+    if (!erHelseutgift && trygdedekninger?.length === 1) {
+      setValue(`avgiftspliktigperioder[${index}].trygdedekning`, trygdedekninger[0], { shouldValidate: true });
     }
-  }, [trygdedekninger, index, setValue]);
+  }, [trygdedekninger, index, setValue, erHelseutgift]);
+
+  const periodeLabelTekst = erHelseutgift ? `Periode Norge dekker helseutgifter` : "Medlemskapsperiode";
 
   return (
     <>
       <Nav.Row className="periode__rad medlemskapsperiode__rad" key={field.id}>
-        <Nav.Column className="dato">
+        <Nav.Column className={`dato${erHelseutgift && index === 0 ? " dato--helseutgift-label" : ""}`}>
           <Forms.Datovelger
-            label={index === 0 ? "Medlemskapsperiode" : ""}
+            label={index === 0 ? periodeLabelTekst : ""}
             control={control}
             minDate={safeMinDateForFom}
             maxDate={maxDate}
-            name={`medlemskapsperioder[${index}].fomDato`}
+            name={`avgiftspliktigperioder[${index}].fomDato`}
             aria-label={`Fra og med periode ${index + 1}`}
             readOnly={!redigerbart || erPeriodeFraGrunnlag}
           />
@@ -140,29 +149,50 @@ export function MedlemskapsperiodeSkjema({
           <Forms.Datovelger
             label={index === 0 ? <span className="invisible" /> : ""}
             control={control}
-            name={`medlemskapsperioder[${index}].tomDato`}
+            name={`avgiftspliktigperioder[${index}].tomDato`}
             aria-label={`Til og med periode ${index + 1}`}
             minDate={Utils.dato.norskStringTilDate(medlemskapsperioder[index].fomDato) || minDate}
             maxDate={maxDate}
             readOnly={!redigerbart || erPeriodeFraGrunnlag}
           />
         </Nav.Column>
-        <Nav.Column className="trygdedekning">
-          <Forms.Select
-            name={`medlemskapsperioder[${index}].trygdedekning`}
-            label={index === 0 ? "Dekning" : ""}
-            hideLabel={index !== 0}
-            aria-label={`Trygdedekning periode ${index + 1}`}
-            control={control}
-            readOnly={!redigerbart || erPeriodeFraGrunnlag || kunEnTrygdedekning}
-          >
-            {trygdedekninger?.map((dekning) => (
-              <option key={dekning} value={dekning}>
-                {KV.kodeTilTerm(dekning, MKV.KTObjects.trygdedekninger)}
-              </option>
-            ))}
-          </Forms.Select>
-        </Nav.Column>
+        {!erHelseutgift && (
+          <Nav.Column className="trygdedekning">
+            <Forms.Select
+              name={`avgiftspliktigperioder[${index}].trygdedekning`}
+              label={index === 0 ? "Dekning" : ""}
+              hideLabel={index !== 0}
+              aria-label={`Trygdedekning periode ${index + 1}`}
+              control={control}
+              readOnly={!redigerbart || erPeriodeFraGrunnlag || kunEnTrygdedekning}
+            >
+              {trygdedekninger?.map((dekning) => (
+                <option key={dekning} value={dekning}>
+                  {KV.kodeTilTerm(dekning, MKV.KTObjects.trygdedekninger)}
+                </option>
+              ))}
+            </Forms.Select>
+          </Nav.Column>
+        )}
+        {erHelseutgift && (
+          <Nav.Column className="trygdedekning">
+            <Forms.Select
+              name={`avgiftspliktigperioder[${index}].bostedLandkode`}
+              label={index === 0 ? "Bostedsland" : ""}
+              hideLabel={index !== 0}
+              aria-label={`Bostedsland periode ${index + 1}`}
+              control={control}
+              readOnly={!redigerbart || erPeriodeFraGrunnlag}
+              emptyFieldDisabled={!!(medlemskapsperioder[index] as HelseutgiftdekkesperiodeForAvgift)?.bostedLandkode}
+            >
+              {MKV.KTObjects.landkoder.map((item: any) => (
+                <option key={item.kode} value={item.kode}>
+                  {Utils.land.landTekstFormat(item)}
+                </option>
+              ))}
+            </Forms.Select>
+          </Nav.Column>
+        )}
         {kanViseSletteKolonne && (
           <Nav.Column className={index === 0 ? "slett__knapp slett__first" : "slett__knapp"}>
             <Mui.IkonKnapp
@@ -174,7 +204,7 @@ export function MedlemskapsperiodeSkjema({
           </Nav.Column>
         )}
       </Nav.Row>
-      {medlemskapsperioder.length === index + 1 && (!erPliktigBestemmelse || erDeltGrunnlag) && (
+      {!erHelseutgift && medlemskapsperioder.length === index + 1 && (!erPliktigBestemmelse || erDeltGrunnlag) && (
         <div className="legg-til__rad">
           <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add} disabled={!redigerbart || !visLeggTil}>
             Legg til periode

@@ -28,11 +28,10 @@ export interface MedlemskapsperiodeForAvgift extends BasePeriode {
   medlemskapstype: string;
 }
 
-// Helseutgiftdekkesperiode i årsavregning-kontekst - kun datoer
-// NB: HelseutgiftDekkesPeriodeDto (egen fil) brukes for CRUD og har bostedLandkode
 export interface HelseutgiftdekkesperiodeForAvgift extends BasePeriode {
   id: number;
   type: "HELSEUTGIFTDEKKESPERIODE";
+  bostedLandkode: string;
 }
 
 // Lovvalgsperiode - backend har også lovvalgsland og tilleggsbestemmelse, men ikke eksponert i AvgiftspliktigPeriodeDto
@@ -77,3 +76,9 @@ export const erMedlemskapsperiodeEllerLovvalgsperiode = (
 ): periode is MedlemskapsperiodeForAvgift | LovvalgsperiodeForAvgift => {
   return erMedlemskapsperiode(periode) || erLovvalgsperiode(periode);
 };
+
+/**
+ * Periodetype-diskriminator for årsavregningsperioder.
+ * Bestemmer hvilken CRUD-modul som brukes og hvilke felter som er relevante i skjemaet.
+ */
+export type AarsavregningsPeriodeType = "MEDLEMSKAPSPERIODE" | "HELSEUTGIFTDEKKESPERIODE" | "LOVVALGSPERIODE";

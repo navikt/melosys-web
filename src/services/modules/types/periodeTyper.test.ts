@@ -41,6 +41,7 @@ const lagHelseutgiftdekkesperiode = (
   type: "HELSEUTGIFTDEKKESPERIODE",
   fomDato: "2024-01-01",
   tomDato: "2024-12-31",
+  bostedLandkode: "NO",
   ...overrides,
 });
 

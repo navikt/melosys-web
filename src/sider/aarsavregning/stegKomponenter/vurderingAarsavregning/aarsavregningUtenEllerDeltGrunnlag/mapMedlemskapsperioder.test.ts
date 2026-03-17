@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { mapTilMedlemskapsperiodeFieldProps, mapMedlemskapsperioder } from "./aarsavregningUtenEllerDeltGrunnlag";
-import { MedlemskapsperiodeDto } from "../../../../../services/modules/types/periodeTyper";
+import { MedlemskapsperiodeForAvgift } from "../../../../../services/modules/types/periodeTyper";
+
+type MedlemskapsperiodeFieldPropsNarrowed = MedlemskapsperiodeForAvgift & { redigerbar: boolean; feil?: string };
 
 describe("mapTilMedlemskapsperiodeFieldProps", () => {
-  const lagMedlemskapsperiodeDto = (overrides?: Partial<MedlemskapsperiodeDto>): MedlemskapsperiodeDto => ({
+  const lagMedlemskapsperiode = (overrides?: Partial<MedlemskapsperiodeForAvgift>): MedlemskapsperiodeForAvgift => ({
     id: 1,
+    type: "MEDLEMSKAPSPERIODE",
     fomDato: "2023-01-01",
     tomDato: "2023-12-31",
     bestemmelse: "FTRL_2_7",
@@ -15,24 +18,24 @@ describe("mapTilMedlemskapsperiodeFieldProps", () => {
   });
 
   it("skal konvertere ISO-datoer til norsk format", () => {
-    const dto = lagMedlemskapsperiodeDto({
+    const periode = lagMedlemskapsperiode({
       fomDato: "2023-01-01",
       tomDato: "2023-12-31",
     });
 
-    const resultat = mapTilMedlemskapsperiodeFieldProps(dto);
+    const resultat = mapTilMedlemskapsperiodeFieldProps(periode);
 
     expect(resultat.fomDato).toBe("01.01.2023");
     expect(resultat.tomDato).toBe("31.12.2023");
   });
 
   it("skal ikke returnere blanke datoer for gyldige ISO-datoer", () => {
-    const dto = lagMedlemskapsperiodeDto({
+    const periode = lagMedlemskapsperiode({
       fomDato: "2024-06-15",
       tomDato: "2024-11-30",
     });
 
-    const resultat = mapTilMedlemskapsperiodeFieldProps(dto);
+    const resultat = mapTilMedlemskapsperiodeFieldProps(periode);
 
     expect(resultat.fomDato).not.toBe("");
     expect(resultat.tomDato).not.toBe("");
@@ -40,16 +43,16 @@ describe("mapTilMedlemskapsperiodeFieldProps", () => {
     expect(resultat.tomDato).toBe("30.11.2024");
   });
 
-  it("skal ikke ha type-felt (MedlemskapsperiodeDto har ikke type)", () => {
-    const dto = lagMedlemskapsperiodeDto();
+  it("skal beholde type-felt fra Avgiftspliktigperiode", () => {
+    const periode = lagMedlemskapsperiode();
 
-    const resultat = mapTilMedlemskapsperiodeFieldProps(dto);
+    const resultat = mapTilMedlemskapsperiodeFieldProps(periode);
 
-    expect((resultat as any).type).toBeUndefined();
+    expect(resultat.type).toBe("MEDLEMSKAPSPERIODE");
   });
 
-  it("skal beholde alle felt fra MedlemskapsperiodeDto", () => {
-    const dto = lagMedlemskapsperiodeDto({
+  it("skal beholde alle felt fra MedlemskapsperiodeForAvgift", () => {
+    const periode = lagMedlemskapsperiode({
       id: 42,
       bestemmelse: "FTRL_2_9",
       medlemskapstype: "FRIVILLIG",
@@ -57,7 +60,7 @@ describe("mapTilMedlemskapsperiodeFieldProps", () => {
       trygdedekning: "FULL_DEKNING_FTRL",
     });
 
-    const resultat = mapTilMedlemskapsperiodeFieldProps(dto);
+    const resultat = mapTilMedlemskapsperiodeFieldProps(periode) as MedlemskapsperiodeFieldPropsNarrowed;
 
     expect(resultat.id).toBe(42);
     expect(resultat.bestemmelse).toBe("FTRL_2_9");
@@ -67,7 +70,7 @@ describe("mapTilMedlemskapsperiodeFieldProps", () => {
   });
 
   it("skal sette redigerbar=true når periode ikke finnes i sisteGjeldendeAvgiftspliktigePerioder", () => {
-    const dto = lagMedlemskapsperiodeDto({
+    const periode = lagMedlemskapsperiode({
       fomDato: "2023-01-01",
       tomDato: "2023-06-30",
     });
@@ -84,13 +87,13 @@ describe("mapTilMedlemskapsperiodeFieldProps", () => {
       },
     ];
 
-    const resultat = mapTilMedlemskapsperiodeFieldProps(dto, sisteGjeldende);
+    const resultat = mapTilMedlemskapsperiodeFieldProps(periode, sisteGjeldende);
 
     expect(resultat.redigerbar).toBe(true);
   });
 
   it("skal sette redigerbar=false når periode finnes i sisteGjeldendeAvgiftspliktigePerioder", () => {
-    const dto = lagMedlemskapsperiodeDto({
+    const periode = lagMedlemskapsperiode({
       fomDato: "2023-01-01",
       tomDato: "2023-12-31",
     });
@@ -107,15 +110,15 @@ describe("mapTilMedlemskapsperiodeFieldProps", () => {
       },
     ];
 
-    const resultat = mapTilMedlemskapsperiodeFieldProps(dto, sisteGjeldende);
+    const resultat = mapTilMedlemskapsperiodeFieldProps(periode, sisteGjeldende);
 
     expect(resultat.redigerbar).toBe(false);
   });
 
   it("skal sette redigerbar=true når sisteGjeldendeAvgiftspliktigePerioder er undefined", () => {
-    const dto = lagMedlemskapsperiodeDto();
+    const periode = lagMedlemskapsperiode();
 
-    const resultat = mapTilMedlemskapsperiodeFieldProps(dto, undefined);
+    const resultat = mapTilMedlemskapsperiodeFieldProps(periode, undefined);
 
     expect(resultat.redigerbar).toBe(true);
   });
@@ -123,9 +126,10 @@ describe("mapTilMedlemskapsperiodeFieldProps", () => {
 
 describe("mapMedlemskapsperioder", () => {
   it("skal sortere perioder kronologisk og konvertere datoer", () => {
-    const perioder: MedlemskapsperiodeDto[] = [
+    const perioder: MedlemskapsperiodeForAvgift[] = [
       {
         id: 2,
+        type: "MEDLEMSKAPSPERIODE",
         fomDato: "2023-07-01",
         tomDato: "2023-12-31",
         bestemmelse: "FTRL_2_7",
@@ -135,6 +139,7 @@ describe("mapMedlemskapsperioder", () => {
       },
       {
         id: 1,
+        type: "MEDLEMSKAPSPERIODE",
         fomDato: "2023-01-01",
         tomDato: "2023-06-30",
         bestemmelse: "FTRL_2_7",
@@ -153,10 +158,11 @@ describe("mapMedlemskapsperioder", () => {
     expect(resultat[1].tomDato).toBe("31.12.2023");
   });
 
-  it("skal ikke ha type-felt på noen perioder", () => {
-    const perioder: MedlemskapsperiodeDto[] = [
+  it("skal beholde type-felt på alle perioder", () => {
+    const perioder: MedlemskapsperiodeForAvgift[] = [
       {
         id: 1,
+        type: "MEDLEMSKAPSPERIODE",
         fomDato: "2023-01-01",
         tomDato: "2023-12-31",
         bestemmelse: "FTRL_2_7",
@@ -168,7 +174,7 @@ describe("mapMedlemskapsperioder", () => {
 
     const resultat = mapMedlemskapsperioder(perioder);
 
-    expect(resultat.every((p) => (p as any).type === undefined)).toBe(true);
+    expect(resultat.every((p) => p.type === "MEDLEMSKAPSPERIODE")).toBe(true);
   });
 
   it("skal håndtere tom array", () => {

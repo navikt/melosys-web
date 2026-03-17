@@ -42,4 +42,40 @@ describe("vurderingVedtakSchema (ikkeYrkesaktiv)", () => {
     const errors = await getErrors(schema, { nyVurderingBakgrunnValg: null }, { erNyVurdering: false });
     expect(errors).toEqual([]);
   });
+
+  it("skal godta begrunnelseFritekst på 4000 tegn", async () => {
+    const errors = await getErrors(
+      schema,
+      { nyVurderingBakgrunnValg: null, begrunnelseFritekst: "a".repeat(4000) },
+      { erNyVurdering: false },
+    );
+    expect(errors).toEqual([]);
+  });
+
+  it("skal avvise begrunnelseFritekst over 4000 tegn", async () => {
+    const errors = await getErrors(
+      schema,
+      { nyVurderingBakgrunnValg: null, begrunnelseFritekst: "a".repeat(4001) },
+      { erNyVurdering: false },
+    );
+    expect(errors.some((e) => e.includes("4000 tegn"))).toBe(true);
+  });
+
+  it("skal godta innledningFritekst på 4000 tegn", async () => {
+    const errors = await getErrors(
+      schema,
+      { nyVurderingBakgrunnValg: null, innledningFritekst: "a".repeat(4000) },
+      { erNyVurdering: false },
+    );
+    expect(errors).toEqual([]);
+  });
+
+  it("skal avvise innledningFritekst over 4000 tegn", async () => {
+    const errors = await getErrors(
+      schema,
+      { nyVurderingBakgrunnValg: null, innledningFritekst: "a".repeat(4001) },
+      { erNyVurdering: false },
+    );
+    expect(errors.some((e) => e.includes("4000 tegn"))).toBe(true);
+  });
 });

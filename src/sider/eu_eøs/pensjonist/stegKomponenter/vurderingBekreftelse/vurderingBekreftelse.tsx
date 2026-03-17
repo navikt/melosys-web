@@ -60,6 +60,18 @@ interface Props {
 const { FØRSTEGANG } = MKV.Koder.behandlinger.behandlingstyper;
 const { PENSJONIST } = MKV.Koder.behandlinger.behandlingstema;
 
+function FritekstTeller({ verdi, maksLengde }: { verdi?: string; maksLengde: number }) {
+  const lengde = verdi?.length ?? 0;
+  const differanse = maksLengde - lengde;
+  const erOver = differanse < 0;
+
+  return (
+    <Nav.BodyLong size="small" className={`fritekst_teller${erOver ? " fritekst_teller--error" : ""}`}>
+      {erOver ? `${Math.abs(differanse)} tegn for mye` : `${differanse} tegn igjen`}
+    </Nav.BodyLong>
+  );
+}
+
 function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
@@ -281,7 +293,17 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
         disabled={!redigerbart}
         label="Fritekst"
       />
-      <Dokumentliste behandlingID={behandlingID} dokumenter={pdfDokumenter} />
+      <FritekstTeller verdi={formValues.begrunnelseFritekst} maksLengde={4000} />
+      <Dokumentliste
+        behandlingID={behandlingID}
+        dokumenter={pdfDokumenter.map((dok) => ({
+          ...dok,
+          dokumentData: {
+            ...dok.dokumentData,
+            begrunnelseFritekst: formValues.begrunnelseFritekst,
+          },
+        }))}
+      />
       <Mui.StegKnapper
         bekreftTekst="Bekreft og send orienteringsbrev til bruker"
         bekreftKnappProps={{

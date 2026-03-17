@@ -34,7 +34,7 @@ function BestemmelseSelect({
   lagreMedlemskapsperioderHvisGyldig,
   harLaasteMedlemskapsperioder,
 }: BestemmelseSelectProps) {
-  const medlemskapsperioder = useWatch({ control, name: "medlemskapsperioder" });
+  const avgiftspliktigperioder = useWatch({ control, name: "avgiftspliktigperioder" });
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
 
   const handleBestemmelseChange = useCallback(
@@ -47,7 +47,7 @@ function BestemmelseSelect({
 
         try {
           if (
-            medlemskapsperioder.some(
+            avgiftspliktigperioder.some(
               (periode: MedlemskapsperiodeFieldProps) => periode.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID,
             )
           ) {
@@ -61,12 +61,12 @@ function BestemmelseSelect({
 
         const defaultTrygdedekning = trygdedekningerResponse.length === 1 ? trygdedekningerResponse[0] : "";
 
-        const oppdaterteMedlemskapsperioder = medlemskapsperioder.map((periode: MedlemskapsperiodeFieldProps) => ({
+        const oppdaterteMedlemskapsperioder = avgiftspliktigperioder.map((periode: MedlemskapsperiodeFieldProps) => ({
           ...periode,
           trygdedekning: defaultTrygdedekning,
           id: ULAGRET_MEDLEMSKAPSPERIODE_ID,
         }));
-        setValue("medlemskapsperioder", oppdaterteMedlemskapsperioder);
+        setValue("avgiftspliktigperioder", oppdaterteMedlemskapsperioder);
 
         setValue(
           "inntektskilder",
@@ -86,7 +86,7 @@ function BestemmelseSelect({
       }
     },
     [
-      medlemskapsperioder,
+      avgiftspliktigperioder,
       inntektskilder,
       setValue,
       setTrygdedekninger,

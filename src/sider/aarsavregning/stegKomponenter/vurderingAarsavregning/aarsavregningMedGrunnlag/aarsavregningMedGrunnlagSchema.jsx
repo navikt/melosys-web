@@ -17,6 +17,7 @@ const {
 } = MKV.Koder.inntektskildetype;
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medl.periode" };
+const UTENFOR_HELSEUTGIFTDEKKESPERIODEN = { melding: "Utenfor periode Norge dekker helseutgifter" };
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
   !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
@@ -56,13 +57,12 @@ const bruttoInntektFyltUtNårDetKrevesTest = {
 };
 
 const erInnenforAvgiftspliktigperiodeTest = {
-  name: "erInnenforMedlemskapsperiode",
-  message: UTENFOR_MEDLEMSKAPSPERIODEN,
-  test: (datoString, schema) => {
+  name: "erInnenforAvgiftspliktigperiode",
+  test: function (datoString, schema) {
     if (!datoString) return true;
 
     try {
-      const { avgiftspliktigperiode } = schema.options.context;
+      const { avgiftspliktigperiode, erHelseutgiftDekkesPeriode } = schema.options.context;
 
       const avgiftspliktigperiodeFom = Utils.dato.formatterDatoTilISO(avgiftspliktigperiode.fomDato);
       const avgiftspliktigperiodeTom = Utils.dato.formatterDatoTilISO(avgiftspliktigperiode.tomDato);
@@ -70,7 +70,15 @@ const erInnenforAvgiftspliktigperiodeTest = {
 
       if (!isoDatoString) return false;
 
-      return isoDatoString >= avgiftspliktigperiodeFom && isoDatoString <= avgiftspliktigperiodeTom;
+      const erInnenfor = isoDatoString >= avgiftspliktigperiodeFom && isoDatoString <= avgiftspliktigperiodeTom;
+
+      if (!erInnenfor) {
+        return this.createError({
+          message: erHelseutgiftDekkesPeriode ? UTENFOR_HELSEUTGIFTDEKKESPERIODEN : UTENFOR_MEDLEMSKAPSPERIODEN,
+        });
+      }
+
+      return true;
     } catch (error) {
       return false;
     }

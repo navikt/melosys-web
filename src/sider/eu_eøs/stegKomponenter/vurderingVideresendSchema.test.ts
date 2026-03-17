@@ -47,4 +47,20 @@ describe("vurderingVideresendSchema", () => {
     });
     expect(errors.some((e) => e.includes("Velg mottakerinstitusjon"))).toBe(true);
   });
+
+  it("skal godta orienteringsbrevFritekst på 4000 tegn", async () => {
+    const errors = await getErrors(schema, {
+      kreverMottakerinstitusjon: false,
+      orienteringsbrevFritekst: "a".repeat(4000),
+    });
+    expect(errors).toEqual([]);
+  });
+
+  it("skal avvise orienteringsbrevFritekst over 4000 tegn", async () => {
+    const errors = await getErrors(schema, {
+      kreverMottakerinstitusjon: false,
+      orienteringsbrevFritekst: "a".repeat(4001),
+    });
+    expect(errors.some((e) => e.includes("4000 tegn"))).toBe(true);
+  });
 });

@@ -302,7 +302,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           {aarsavregningResponse && harTidligereTrygdeavgiftsgrunnlag === false && (
             <Nav.Alert variant="info" className="alertstripe_feilmelding">
               <Nav.BodyLong size="small">
-                Det er ingen informasjon om perioder med medlemskap og forskuddsvis fakturert trygdeavgift i Melosys.
+                Det er ingen informasjon om forskuddsvis fakturert trygdeavgift i Melosys.
               </Nav.BodyLong>
             </Nav.Alert>
           )}

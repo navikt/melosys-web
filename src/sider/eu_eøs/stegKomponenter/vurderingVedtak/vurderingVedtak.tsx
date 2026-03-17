@@ -236,6 +236,10 @@ function VurderingVedtak({
   };
 
   const onSubmit = async () => {
+    // Cancel any pending debounced kontroll to prevent concurrent HTTP requests
+    // that race with vedtak/fatt on SaksopplysningKilde entities
+    debouncedKontrollerBehandling.cancel?.();
+
     if (!validerForm()) return;
 
     setVedtakPending(true);
@@ -318,7 +322,7 @@ function VurderingVedtak({
             <Skjema.Textarea
               feltNavn="vedtaksbrevFritekst"
               label="Fritekstfelt til begrunnelse"
-              maxLength={500}
+              maxLength={4000}
               readOnly={!redigerbart}
             />
           </Nav.Column>
