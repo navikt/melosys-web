@@ -104,17 +104,17 @@ export function VurderingVideresend({
         <Nav.Heading level="1" className="stegvelgertittel">
           Videresending av søknad
         </Nav.Heading>
-        {flereLandUkjentHvilke && (
+        {isA008Cdm44Enabled && redigerbart && flereLandUkjentHvilke && (
           <Nav.Row>
             <Nav.Column xs="8">
               <Nav.Alert variant="warning" className="videresendSoknad__warning">
                 <span>
                   Land er satt til{" "}
-                  <i>
-                    <b>Flere land. Ikke kjent hvilke.</b>
-                  </i>{" "}
-                  Arbeidsland vil derfor ikke bli oppgitt i SED A008. Du kan endre dette under sidemenypunkt “Periode og
-                  land”.
+                  <em>
+                    <strong>Flere land. Ikke kjent hvilke.</strong>
+                  </em>{" "}
+                  Arbeidsland vil derfor ikke bli oppgitt i SED A008. Du kan endre dette under sidemenypunkt "Periode og
+                  land".
                 </span>
               </Nav.Alert>
             </Nav.Column>
