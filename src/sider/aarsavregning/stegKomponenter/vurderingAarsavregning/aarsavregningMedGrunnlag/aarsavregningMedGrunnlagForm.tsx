@@ -31,7 +31,8 @@ import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
 import { erPeriodeListeHelseutgiftdekkesperiode } from "../../../../../services/modules/types/periodeTyper";
 
-const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
+const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT, OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET } =
+  MKV.Koder.endeligAvgiftValg;
 
 interface MappedFormState {
   skatteforholdsperioder: Array<{
@@ -126,7 +127,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const endeligAvgiftValg = watch("endeligAvgiftValg");
   const manueltAvgiftBeloep = watch("manueltAvgiftBeloep");
   const debouncedBeregningRef = useRef<ReturnType<typeof Utils._debounce> | null>(null);
-
   const mapFormState = (
     skatteforholdsperioderFormState: Skatteforhold[],
     inntektskilderFormState: Inntektskilde[],
@@ -168,12 +168,12 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       !redigerbart ||
       !aarsavregningID ||
       endeligAvgiftValg !== OPPLYSNINGER_ENDRET ||
+      endeligAvgiftValg !== OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET ||
       beregningPaagar ||
       endrerEndeligAvgiftValg
     ) {
       return;
     }
-
     const formState = mapFormState(getValues("skatteforholdsperioder"), getValues("inntektskilder"));
 
     if (!Utils._isEqual(formState, previousFormValues) && formIsValid && !isValidating) {
@@ -233,7 +233,13 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       debouncedBeregningRef.current.cancel();
     }
     if (debouncedBeregningRef.current) {
-      if (redigerbart && aarsavregningID && endeligAvgiftValg === OPPLYSNINGER_ENDRET && !endrerEndeligAvgiftValg) {
+      if (
+        redigerbart &&
+        aarsavregningID &&
+        (endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
+          endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) &&
+        !endrerEndeligAvgiftValg
+      ) {
         const currentFormState = mapFormState(getValues("skatteforholdsperioder"), getValues("inntektskilder"));
 
         if (!Utils._isEqual(currentFormState, previousFormValues)) {
@@ -251,7 +257,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     () =>
       Boolean(
         formIsValid &&
-          endeligAvgiftValg === OPPLYSNINGER_ENDRET &&
+          (endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
+            endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) &&
           aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag &&
           !feilmelding &&
           !arrayValideringsfeil,
@@ -326,85 +333,87 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         endeligAvgiftValg={endeligAvgiftValg}
       />
 
-      {endeligAvgiftValg === OPPLYSNINGER_ENDRET && !endrerEndeligAvgiftValg && (
-        <BorderedFormContainer>
-          <Nav.Heading className="endelige_opplysninger_heading" level="2">
-            Inntekts- og skatteopplysninger for endelig trygdeavgift
-          </Nav.Heading>
+      {(endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
+        endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) &&
+        !endrerEndeligAvgiftValg && (
+          <BorderedFormContainer>
+            <Nav.Heading className="endelige_opplysninger_heading" level="2">
+              Inntekts- og skatteopplysninger for endelig trygdeavgift
+            </Nav.Heading>
 
-          {erHelseutgiftDekkesPeriode ? (
-            avgiftspliktigperioder?.map((periode) => (
-              <Nav.BodyLong size="small" key={Utils._uuid()} style={{ marginBottom: "1rem" }}>
-                <span className="navds-label navds-label--small">Periode Norge dekker helseutgifter:</span>{" "}
-                {`${Utils.dato.formatterDatoTilNorsk(periode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
-                  periode.tomDato,
-                )}`}
-              </Nav.BodyLong>
-            ))
-          ) : (
-            <MedlemskapsperioderDisplay medlemskapsperioder={innvilgetMedlemskapsperioder} />
-          )}
-
-          <Skatteforholdsperioder
-            formValues={formValues}
-            redigerbart={redigerbart && !beregningPaagar}
-            remove={skattRemove}
-            append={skattAppend}
-            control={control}
-            fields={skattFields}
-            minDate={minDate}
-            maxDate={maxDate}
-          />
-          {!trygdeAvgiftSkalIkkeBetalesTilNav && (
-            <Inntektskilder
-              defaultPeriode={avgiftspliktigperiode}
-              formValues={formValues}
-              redigerbart={redigerbart && !beregningPaagar}
-              update={inntektUpdate}
-              remove={inntektRemove}
-              append={inntektAppend}
-              control={control}
-              fields={inntektFields}
-              medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
-              skalViseErMaanedsBelopRadioGroup
-              bestemmelse={innvilgetMedlemskapsperioder[0]?.bestemmelse}
-              minDate={minDate}
-              maxDate={maxDate}
-              erHelseutgiftDekkesPeriode={erHelseutgiftDekkesPeriode}
-            />
-          )}
-
-          {trygdeAvgiftSkalIkkeBetalesTilNav && <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />}
-
-          {formIsValid &&
-            !debouncedBeregningPagaar &&
-            !beregningPaagar &&
-            !feilmelding &&
-            !arrayValideringsfeil &&
-            !trygdeAvgiftSkalIkkeBetalesTilNav &&
-            aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag && (
-              <Nav.ExpansionCard
-                className="beregnetTrygdeavgiftDetaljer"
-                aria-label="trygdeavgiftdetaljer"
-                size="small"
-              >
-                <Nav.ExpansionCard.Header>
-                  <Nav.ExpansionCard.Title size="small">Vis detaljert beregning</Nav.ExpansionCard.Title>
-                </Nav.ExpansionCard.Header>
-                <Nav.ExpansionCard.Content>
-                  <BeregnetTrygdeavgiftDetaljer
-                    grunnlag={aarsavregningResponse.nyttTrygdeavgiftsGrunnlag}
-                    medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
-                  />
-                </Nav.ExpansionCard.Content>
-              </Nav.ExpansionCard>
+            {erHelseutgiftDekkesPeriode ? (
+              avgiftspliktigperioder?.map((periode) => (
+                <Nav.BodyLong size="small" key={Utils._uuid()} style={{ marginBottom: "1rem" }}>
+                  <span className="navds-label navds-label--small">Periode Norge dekker helseutgifter:</span>{" "}
+                  {`${Utils.dato.formatterDatoTilNorsk(periode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
+                    periode.tomDato,
+                  )}`}
+                </Nav.BodyLong>
+              ))
+            ) : (
+              <MedlemskapsperioderDisplay medlemskapsperioder={innvilgetMedlemskapsperioder} />
             )}
 
-          {arrayValideringsfeil && (
-            <Feilmelding type={arrayValideringsfeil} erHelseutgiftDekkesPeriode={erHelseutgiftDekkesPeriode} />
-          )}
-        </BorderedFormContainer>
-      )}
+            <Skatteforholdsperioder
+              formValues={formValues}
+              redigerbart={redigerbart && !beregningPaagar}
+              remove={skattRemove}
+              append={skattAppend}
+              control={control}
+              fields={skattFields}
+              minDate={minDate}
+              maxDate={maxDate}
+            />
+            {!trygdeAvgiftSkalIkkeBetalesTilNav && (
+              <Inntektskilder
+                defaultPeriode={avgiftspliktigperiode}
+                formValues={formValues}
+                redigerbart={redigerbart && !beregningPaagar}
+                update={inntektUpdate}
+                remove={inntektRemove}
+                append={inntektAppend}
+                control={control}
+                fields={inntektFields}
+                medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
+                skalViseErMaanedsBelopRadioGroup
+                bestemmelse={innvilgetMedlemskapsperioder[0]?.bestemmelse}
+                minDate={minDate}
+                maxDate={maxDate}
+                erHelseutgiftDekkesPeriode={erHelseutgiftDekkesPeriode}
+              />
+            )}
+
+            {trygdeAvgiftSkalIkkeBetalesTilNav && <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />}
+
+            {formIsValid &&
+              !debouncedBeregningPagaar &&
+              !beregningPaagar &&
+              !feilmelding &&
+              !arrayValideringsfeil &&
+              !trygdeAvgiftSkalIkkeBetalesTilNav &&
+              aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag && (
+                <Nav.ExpansionCard
+                  className="beregnetTrygdeavgiftDetaljer"
+                  aria-label="trygdeavgiftdetaljer"
+                  size="small"
+                >
+                  <Nav.ExpansionCard.Header>
+                    <Nav.ExpansionCard.Title size="small">Vis detaljert beregning</Nav.ExpansionCard.Title>
+                  </Nav.ExpansionCard.Header>
+                  <Nav.ExpansionCard.Content>
+                    <BeregnetTrygdeavgiftDetaljer
+                      grunnlag={aarsavregningResponse.nyttTrygdeavgiftsGrunnlag}
+                      medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
+                    />
+                  </Nav.ExpansionCard.Content>
+                </Nav.ExpansionCard>
+              )}
+
+            {arrayValideringsfeil && (
+              <Feilmelding type={arrayValideringsfeil} erHelseutgiftDekkesPeriode={erHelseutgiftDekkesPeriode} />
+            )}
+          </BorderedFormContainer>
+        )}
 
       {formIsValid &&
         !debouncedBeregningPagaar &&
@@ -413,7 +422,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         !arrayValideringsfeil &&
         aarsavregningResponse?.avregning &&
         aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag &&
-        endeligAvgiftValg === OPPLYSNINGER_ENDRET && (
+        (endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
+          endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) && (
           <SumArsavregningTabell
             nyTrygdeavgift={aarsavregningResponse.avregning.beregnetAvgiftBelop}
             tidligereTrygdeavgift={aarsavregningResponse.avregning.tidligereFakturertBeloep}

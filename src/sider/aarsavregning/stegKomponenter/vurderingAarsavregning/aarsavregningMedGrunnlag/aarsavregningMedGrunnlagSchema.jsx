@@ -15,7 +15,8 @@ const {
   PENSJON_UFØRETRYGD,
   PENSJON_UFØRETRYGD_KILDESKATT,
 } = MKV.Koder.inntektskildetype;
-const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
+const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT, OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET } =
+  MKV.Koder.endeligAvgiftValg;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medl.periode" };
 const UTENFOR_HELSEUTGIFTDEKKESPERIODEN = { melding: "Utenfor periode Norge dekker helseutgifter" };
 
@@ -111,14 +112,17 @@ const inntektskildeSchema = object().shape({
 const aarsavregningMedGrunnlagSchema = object().shape({
   endeligAvgiftValg: string().required(MAA_FYLLES_UT),
   skatteforholdsperioder: array().when(["endeligAvgiftValg"], {
-    is: (endeligAvgiftValg) => endeligAvgiftValg === OPPLYSNINGER_ENDRET,
+    is: (endeligAvgiftValg) =>
+      endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
+      endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET,
     then: (schema) => schema.min(1, "Minst en skatteforholdsperiode").of(skatteforholdsperiodeSchema),
     otherwise: (schema) => schema,
   }),
   inntektskilder: array().when(["$medlemskapsTypeErPliktig", "endeligAvgiftValg", "skatteforholdsperioder"], {
     is: (medlemskapsTypeErPliktig, endeligAvgiftValg, skatteforholdsperioder) => {
       return (
-        endeligAvgiftValg === OPPLYSNINGER_ENDRET &&
+        (endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
+          endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) &&
         (!medlemskapsTypeErPliktig || !erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder))
       );
     },

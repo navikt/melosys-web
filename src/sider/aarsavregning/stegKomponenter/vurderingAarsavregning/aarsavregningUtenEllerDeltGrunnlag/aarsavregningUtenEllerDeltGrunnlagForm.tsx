@@ -52,7 +52,8 @@ import {
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding, finnAktivFeilmeldingForMedlemskapsperioder } from "./valideringsfeil";
 
-const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
+const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT, OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET } =
+  MKV.Koder.endeligAvgiftValg;
 
 const getChangedDependencies = (
   currentDeps: Record<string, unknown>,
@@ -319,7 +320,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       endrerBestemmelse ||
       beregningPaagar ||
       lagreMedlemskapsperioderPaagar ||
-      endeligAvgiftValg !== OPPLYSNINGER_ENDRET
+      endeligAvgiftValg !== OPPLYSNINGER_ENDRET ||
+      endeligAvgiftValg !== OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET
     ) {
       return;
     }
@@ -602,7 +604,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   // Håndterer kjøring av beregninger når skjemaverdier endres
   useEffect(() => {
-    if (endeligAvgiftValg !== OPPLYSNINGER_ENDRET) {
+    if (
+      endeligAvgiftValg !== OPPLYSNINGER_ENDRET ||
+      endeligAvgiftValg !== OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET
+    ) {
       setDebouncedBeregningPagaar(false);
       setArrayValideringsfeil(undefined);
       if (debouncedBeregningRef.current?.cancel) {
@@ -688,7 +693,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   ]);
 
   const stegErGyldig = useMemo(() => {
-    if (endeligAvgiftValg === OPPLYSNINGER_ENDRET) {
+    if (
+      endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
+      endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET
+    ) {
       return Boolean(
         formIsValid &&
           aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag &&
@@ -790,7 +798,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const minDate = initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 0, 1) : undefined;
   const maxDate =
     initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 11, 31, 23, 59, 59, 999) : undefined;
-
   return (
     <div className="vurderingAarsavregning">
       {harTrygdeavgiftFraAvgiftssystemet && (
@@ -808,7 +815,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         endeligAvgiftValg={endeligAvgiftValg}
       />
 
-      {endeligAvgiftValg === OPPLYSNINGER_ENDRET && (
+      {(endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
+        endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) && (
         <BorderedFormContainer>
           <Nav.Heading className="endelige_opplysninger_heading" level="2">
             Inntekts- og skatteopplysninger for endelig trygdeavgift
@@ -920,7 +928,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         !debouncedBeregningPagaar &&
         !arrayValideringsfeil &&
         !feilmelding &&
-        endeligAvgiftValg === OPPLYSNINGER_ENDRET &&
+        (endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
+          endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) &&
         aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag && (
           <SumArsavregningTabell
             harGrunnlagIMelosys={harTidligereTrygdeavgiftsgrunnlag}
