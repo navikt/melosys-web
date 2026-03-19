@@ -320,8 +320,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       endrerBestemmelse ||
       beregningPaagar ||
       lagreMedlemskapsperioderPaagar ||
-      endeligAvgiftValg !== OPPLYSNINGER_ENDRET ||
-      endeligAvgiftValg !== OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET
+      endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT
     ) {
       return;
     }

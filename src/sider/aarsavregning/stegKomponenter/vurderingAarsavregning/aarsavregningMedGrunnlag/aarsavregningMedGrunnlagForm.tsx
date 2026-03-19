@@ -30,6 +30,7 @@ import { InitiellData } from "./aarsavregningMedGrunnlag";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
 import { erPeriodeListeHelseutgiftdekkesperiode } from "../../../../../services/modules/types/periodeTyper";
+import { AvgiftspliktigperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
 
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT, OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET } =
   MKV.Koder.endeligAvgiftValg;
@@ -164,16 +165,17 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
   const debouncedBeregning = useCallback(() => {
     setDebouncedBeregningPagaar(false);
+
     if (
       !redigerbart ||
       !aarsavregningID ||
-      endeligAvgiftValg !== OPPLYSNINGER_ENDRET ||
-      endeligAvgiftValg !== OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET ||
+      endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT ||
       beregningPaagar ||
       endrerEndeligAvgiftValg
     ) {
       return;
     }
+
     const formState = mapFormState(getValues("skatteforholdsperioder"), getValues("inntektskilder"));
 
     if (!Utils._isEqual(formState, previousFormValues) && formIsValid && !isValidating) {
@@ -340,19 +342,21 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             <Nav.Heading className="endelige_opplysninger_heading" level="2">
               Inntekts- og skatteopplysninger for endelig trygdeavgift
             </Nav.Heading>
+            {endeligAvgiftValg !== OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET &&
+              (erHelseutgiftDekkesPeriode ? (
+                avgiftspliktigperioder?.map((periode) => (
+                  <Nav.BodyLong size="small" key={Utils._uuid()} style={{ marginBottom: "1rem" }}>
+                    <span className="navds-label navds-label--small">Periode Norge dekker helseutgifter:</span>{" "}
+                    {`${Utils.dato.formatterDatoTilNorsk(periode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
+                      periode.tomDato,
+                    )}`}
+                  </Nav.BodyLong>
+                ))
+              ) : (
+                <MedlemskapsperioderDisplay medlemskapsperioder={innvilgetMedlemskapsperioder} />
+              ))}
 
-            {erHelseutgiftDekkesPeriode ? (
-              avgiftspliktigperioder?.map((periode) => (
-                <Nav.BodyLong size="small" key={Utils._uuid()} style={{ marginBottom: "1rem" }}>
-                  <span className="navds-label navds-label--small">Periode Norge dekker helseutgifter:</span>{" "}
-                  {`${Utils.dato.formatterDatoTilNorsk(periode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
-                    periode.tomDato,
-                  )}`}
-                </Nav.BodyLong>
-              ))
-            ) : (
-              <MedlemskapsperioderDisplay medlemskapsperioder={innvilgetMedlemskapsperioder} />
-            )}
+            {endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET}
 
             <Skatteforholdsperioder
               formValues={formValues}
