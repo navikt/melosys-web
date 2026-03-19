@@ -604,7 +604,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   // Håndterer kjøring av beregninger når skjemaverdier endres
   useEffect(() => {
     if (
-      endeligAvgiftValg !== OPPLYSNINGER_ENDRET ||
+      endeligAvgiftValg !== OPPLYSNINGER_ENDRET &&
       endeligAvgiftValg !== OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET
     ) {
       setDebouncedBeregningPagaar(false);

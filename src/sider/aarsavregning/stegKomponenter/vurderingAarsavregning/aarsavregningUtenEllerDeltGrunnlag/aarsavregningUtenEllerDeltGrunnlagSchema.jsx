@@ -193,7 +193,7 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
   bestemmelse: string().when(["endeligAvgiftValg", "avgiftspliktigperioder"], {
     is: (endeligAvgiftValg, avgiftspliktigperioder) => {
       if (
-        endeligAvgiftValg !== OPPLYSNINGER_ENDRET ||
+        endeligAvgiftValg !== OPPLYSNINGER_ENDRET &&
         endeligAvgiftValg !== OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET
       )
         return false;
@@ -234,7 +234,7 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
   inntektskilder: array().when(["avgiftspliktigperioder", "skatteforholdsperioder", "endeligAvgiftValg"], {
     is: (avgiftspliktigperioder, skatteforholdsperioder, endeligAvgiftValg) => {
       if (
-        endeligAvgiftValg !== OPPLYSNINGER_ENDRET ||
+        endeligAvgiftValg !== OPPLYSNINGER_ENDRET &&
         endeligAvgiftValg !== OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET
       )
         return false;

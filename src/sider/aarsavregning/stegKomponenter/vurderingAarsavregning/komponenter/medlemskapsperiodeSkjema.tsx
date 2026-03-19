@@ -74,6 +74,7 @@ export interface PeriodeElementerProps {
   setValue: (name: string, value: unknown, options?: { shouldValidate?: boolean; shouldDirty?: boolean }) => void;
   erDeltGrunnlag?: boolean;
   periodeType?: AarsavregningsPeriodeType;
+  skjulBostedLand?: boolean;
 }
 
 export function AvgiftspliktigperiodeSkjema({
@@ -91,6 +92,7 @@ export function AvgiftspliktigperiodeSkjema({
   setValue,
   erDeltGrunnlag = false,
   periodeType,
+  skjulBostedLand = false,
 }: PeriodeElementerProps) {
   const erHelseutgift = periodeType === "HELSEUTGIFTDEKKESPERIODE";
   const pliktigeBestemmelser = usePliktigeBestemmelser();
@@ -174,7 +176,7 @@ export function AvgiftspliktigperiodeSkjema({
             </Forms.Select>
           </Nav.Column>
         )}
-        {erHelseutgift && (
+        {erHelseutgift && !skjulBostedLand && (
           <Nav.Column className="trygdedekning">
             <Forms.Select
               name={`avgiftspliktigperioder[${index}].bostedLandkode`}

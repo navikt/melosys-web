@@ -1,9 +1,11 @@
+/* eslint-disable max-lines */
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
+import { medlemskapsperioderOperations } from "../../../../../ducks/medlemskapsperioder";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import { Inntektskilder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder";
 import { Skatteforholdsperioder } from "../../../../../felleskomponenter/trygdeavgift/komponenter/skatteforholdsperioder";
@@ -12,10 +14,18 @@ import {
   Inntektskilde,
   Skatteforhold,
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/types";
+import { useDispatch } from "../../../../../hooks";
 import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import * as PeriodeAdapter from "../../../../../services/modules/aarsavregning/periodeApiAdapter";
+import {
+  erMedlemskapsperiodeEllerLovvalgsperiode,
+  erHelseutgiftdekkesperiode as erHelseutgiftdekkesperiodeTypeGuard,
+  erPeriodeListeHelseutgiftdekkesperiode,
+} from "../../../../../services/modules/types/periodeTyper";
+import type { Avgiftspliktigperiode } from "../../../../../services/modules/types/periodeTyper";
 import * as Utils from "../../../../../utils";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
@@ -23,14 +33,18 @@ import { BorderedFormContainer } from "../komponenter/borderedFormContainer";
 import { EndeligAvgiftValgRadioGroup } from "../komponenter/endeligAvgiftValgRadioGroup";
 import { ManuellAvgiftFormPart } from "../komponenter/manuellAvgiftFormPart";
 import { MedlemskapsperioderDisplay } from "../komponenter/medlemskapsperiodeDisplay";
+import { AvgiftspliktigperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden, finnMedlemskapsperiode } from "../utils";
 import "../vurderingAarsavregningInngang.less";
+import {
+  erUlagretPeriode,
+  lagDefaultPeriode,
+  MedlemskapsperiodeFieldProps,
+} from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import { InitiellData } from "./aarsavregningMedGrunnlag";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
-import { erPeriodeListeHelseutgiftdekkesperiode } from "../../../../../services/modules/types/periodeTyper";
-import { AvgiftspliktigperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
 
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT, OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET } =
   MKV.Koder.endeligAvgiftValg;
@@ -67,19 +81,33 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const [endrerEndeligAvgiftValg, setEndrerEndeligAvgiftValg] = useState(false);
   const [debouncedBeregningPagaar, setDebouncedBeregningPagaar] = useState(false);
   const [arrayValideringsfeil, setArrayValideringsfeil] = useState<string | undefined>(undefined);
+  const [trygdedekninger, setTrygdedekninger] = useState<string[]>(initiellData.trygdedekninger || []);
+  const [lagreMedlemskapsperioderPaagar, setLagreMedlemskapsperioderPaagar] = useState(false);
+  const [lagredeMedlemskapsperioder, setLagredeMedlemskapsperioder] = useState<MedlemskapsperiodeFieldProps[]>(
+    initiellData.formDefaultValues.avgiftspliktigperioder || [],
+  );
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
+  const dispatch = useDispatch();
+
+  const periodeType = initiellData.periodeType;
+  const erHelseutgift = periodeType === "HELSEUTGIFTDEKKESPERIODE";
 
   const { innvilgetMedlemskapsperioder, medlemskapstypeErPliktig } = initiellData;
-  const avgiftspliktigperioder = aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder;
-  const avgiftspliktigperiode = useMemo(() => {
+  const sisteGjeldendeAvgiftspliktigperioder = aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder;
+  const erHelseutgiftDekkesPeriode = sisteGjeldendeAvgiftspliktigperioder
+    ? erPeriodeListeHelseutgiftdekkesperiode(sisteGjeldendeAvgiftspliktigperioder)
+    : false;
+
+  // Compute initial avgiftspliktigperiode for the non-editable case (used as useForm context for schema validation)
+  const initialAvgiftspliktigperiode = useMemo(() => {
     if (innvilgetMedlemskapsperioder.length > 0) {
       return finnMedlemskapsperiode(innvilgetMedlemskapsperioder);
     }
-    if (avgiftspliktigperioder) {
-      const perioderMedNorskDato = avgiftspliktigperioder.map((p) => ({
+    if (sisteGjeldendeAvgiftspliktigperioder) {
+      const perioderMedNorskDato = sisteGjeldendeAvgiftspliktigperioder.map((p) => ({
         ...p,
         fomDato: Utils.dato.formatterDatoTilNorsk(p.fomDato),
         tomDato: Utils.dato.formatterDatoTilNorsk(p.tomDato),
@@ -87,10 +115,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       return finnMedlemskapsperiode(perioderMedNorskDato);
     }
     return undefined;
-  }, [innvilgetMedlemskapsperioder, avgiftspliktigperioder]);
-  const erHelseutgiftDekkesPeriode = avgiftspliktigperioder
-    ? erPeriodeListeHelseutgiftdekkesperiode(avgiftspliktigperioder)
-    : false;
+  }, [innvilgetMedlemskapsperioder, sisteGjeldendeAvgiftspliktigperioder]);
 
   const {
     control,
@@ -102,9 +127,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   } = useForm({
     resolver: yupResolver(aarsavregningMedGrunnlagSchema),
     context: {
-      avgiftspliktigperiode,
+      avgiftspliktigperiode: initialAvgiftspliktigperiode,
       medlemskapsTypeErPliktig: medlemskapstypeErPliktig,
       erHelseutgiftDekkesPeriode,
+      aar: initiellData.valgtÅr,
     },
     mode: "onChange",
     defaultValues: initiellData.formDefaultValues,
@@ -122,12 +148,43 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     update: inntektUpdate,
   } = useFieldArray({ control, name: "inntektskilder" });
 
+  const {
+    fields: medlemskapsperioderFields,
+    append: medlemskapsperioderAppend,
+    remove: medlemskapsperioderRemove,
+  } = useFieldArray({ control, name: "avgiftspliktigperioder" });
+
   const formValues = watch();
   const skatteforholdsperioder = watch("skatteforholdsperioder");
   const inntektskilder = watch("inntektskilder");
   const endeligAvgiftValg = watch("endeligAvgiftValg");
   const manueltAvgiftBeloep = watch("manueltAvgiftBeloep");
+  const medlemskapsperioder = watch("avgiftspliktigperioder");
+  const medlemskapsperioderForrigeAntall = useRef(medlemskapsperioder?.length || 0);
   const debouncedBeregningRef = useRef<ReturnType<typeof Utils._debounce> | null>(null);
+
+  // Compute avgiftspliktigperiode: when editable periods, derive from form field; otherwise from innvilget/response
+  const avgiftspliktigperiode = useMemo(() => {
+    if (
+      endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET &&
+      medlemskapsperioder &&
+      medlemskapsperioder.length > 0
+    ) {
+      return finnMedlemskapsperiode(medlemskapsperioder);
+    }
+    if (innvilgetMedlemskapsperioder.length > 0) {
+      return finnMedlemskapsperiode(innvilgetMedlemskapsperioder);
+    }
+    if (sisteGjeldendeAvgiftspliktigperioder) {
+      const perioderMedNorskDato = sisteGjeldendeAvgiftspliktigperioder.map((p) => ({
+        ...p,
+        fomDato: Utils.dato.formatterDatoTilNorsk(p.fomDato),
+        tomDato: Utils.dato.formatterDatoTilNorsk(p.tomDato),
+      }));
+      return finnMedlemskapsperiode(perioderMedNorskDato);
+    }
+    return undefined;
+  }, [innvilgetMedlemskapsperioder, sisteGjeldendeAvgiftspliktigperioder, endeligAvgiftValg, medlemskapsperioder]);
   const mapFormState = (
     skatteforholdsperioderFormState: Skatteforhold[],
     inntektskilderFormState: Inntektskilde[],
@@ -151,6 +208,182 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       .sort(Utils.dato.sorterEtterNorskFomDato),
   });
 
+  // --- Period CRUD handlers for editable avgiftspliktigperioder ---
+  const lagreMedlemskapsperiodeHvisEndret = async (
+    periode: MedlemskapsperiodeFieldProps,
+    lagredePerioder: MedlemskapsperiodeFieldProps[],
+    index: number,
+  ) => {
+    const periodeMedIsoDatoer: MedlemskapsperiodeFieldProps = {
+      ...periode,
+      fomDato: Utils.dato.vaskOgFormatterTilISO(periode.fomDato, "") as string,
+      tomDato: Utils.dato.vaskOgFormatterTilISO(periode.tomDato, "") as string,
+    };
+    if (erMedlemskapsperiodeEllerLovvalgsperiode(periodeMedIsoDatoer)) {
+      periodeMedIsoDatoer.innvilgelsesResultat = MKV.Koder.innvilgelsesResultat.INNVILGET;
+    }
+
+    const lagretMedlemskapsperiode = lagredePerioder[index];
+    const trygdedekningNå = erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.trygdedekning : "";
+    const trygdedekningLagret =
+      lagretMedlemskapsperiode && erMedlemskapsperiodeEllerLovvalgsperiode(lagretMedlemskapsperiode)
+        ? lagretMedlemskapsperiode.trygdedekning
+        : "";
+    const bostedLandkodeNå = erHelseutgiftdekkesperiodeTypeGuard(periode) ? periode.bostedLandkode : "";
+    const bostedLandkodeLagret =
+      lagretMedlemskapsperiode && erHelseutgiftdekkesperiodeTypeGuard(lagretMedlemskapsperiode)
+        ? lagretMedlemskapsperiode.bostedLandkode
+        : "";
+    const harEndringer =
+      !lagretMedlemskapsperiode ||
+      erUlagretPeriode(periode.id) ||
+      periode.fomDato !== lagretMedlemskapsperiode.fomDato ||
+      periode.tomDato !== lagretMedlemskapsperiode.tomDato ||
+      trygdedekningNå !== trygdedekningLagret ||
+      bostedLandkodeNå !== bostedLandkodeLagret;
+
+    if (harEndringer) {
+      try {
+        const bestemmelse = innvilgetMedlemskapsperioder[0]?.bestemmelse || "";
+        const skalOpprette = erHelseutgift || erUlagretPeriode(periode.id);
+        return await (skalOpprette
+          ? PeriodeAdapter.opprettPeriode(behandlingID, periodeMedIsoDatoer, bestemmelse)
+          : PeriodeAdapter.oppdaterPeriode(behandlingID, periodeMedIsoDatoer, bestemmelse));
+      } catch (error) {
+        setFeilmelding("Feil ved lagring av periode");
+        return undefined;
+      }
+    }
+
+    return undefined;
+  };
+
+  const lagreMedlemskapsperioder = useCallback(
+    async (medlemskapsperioderFormValues: MedlemskapsperiodeFieldProps[]) => {
+      type LagretPeriodeMedIndex = Avgiftspliktigperiode & { formValuesIndex: number };
+      const endredeMedlemskapsperioder: LagretPeriodeMedIndex[] = [];
+      for (const [index, periode] of medlemskapsperioderFormValues.entries()) {
+        const lagretPeriode = await lagreMedlemskapsperiodeHvisEndret(periode, lagredeMedlemskapsperioder, index);
+        if (lagretPeriode)
+          endredeMedlemskapsperioder.push({
+            ...lagretPeriode,
+            formValuesIndex: index,
+          });
+      }
+
+      if (endredeMedlemskapsperioder.length > 0) {
+        setFeilmelding(undefined);
+        setArrayValideringsfeil(undefined);
+
+        const oppdaterteMedlemskapsperioder = medlemskapsperioderFormValues.map((periode, index: number) => {
+          const lagretPeriodeMedID = endredeMedlemskapsperioder.find(
+            (backendPeriode) => backendPeriode.formValuesIndex === index,
+          );
+          if (lagretPeriodeMedID) {
+            return {
+              ...periode,
+              ...(erMedlemskapsperiodeEllerLovvalgsperiode(lagretPeriodeMedID)
+                ? { medlemskapstype: lagretPeriodeMedID.medlemskapstype }
+                : {}),
+              id: lagretPeriodeMedID.id,
+            };
+          }
+          return periode;
+        });
+
+        setLagredeMedlemskapsperioder(oppdaterteMedlemskapsperioder);
+        setValue("avgiftspliktigperioder", oppdaterteMedlemskapsperioder);
+      }
+    },
+    [setValue, setLagredeMedlemskapsperioder, lagredeMedlemskapsperioder],
+  );
+
+  const debouncedLagreMedlemskapsperioder = useCallback(
+    Utils._debounce(
+      (medlemskapsperioderFormValues: MedlemskapsperiodeFieldProps[], callbackEtterLagring: () => void) => {
+        lagreMedlemskapsperioder(medlemskapsperioderFormValues).finally(() => {
+          if (callbackEtterLagring) callbackEtterLagring();
+        });
+      },
+      350,
+    ),
+    [lagreMedlemskapsperioder],
+  );
+
+  const medlemskapsperioderHarBrukerendringer = (
+    medlemskapsperioderNå: MedlemskapsperiodeFieldProps[],
+    medlemskapsperioderTidligere: MedlemskapsperiodeFieldProps[],
+  ) => {
+    const nåværendeListeMedRelevanteFelter = medlemskapsperioderNå.map((periode) => ({
+      fomDato: periode.fomDato,
+      tomDato: periode.tomDato,
+      trygdedekning: erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.trygdedekning : "",
+      bostedLandkode: erHelseutgiftdekkesperiodeTypeGuard(periode) ? periode.bostedLandkode : "",
+    }));
+
+    const forrigeListeMedRelevanteFelter = medlemskapsperioderTidligere.map((periode) => ({
+      fomDato: periode.fomDato,
+      tomDato: periode.tomDato,
+      trygdedekning: erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.trygdedekning : "",
+      bostedLandkode: erHelseutgiftdekkesperiodeTypeGuard(periode) ? periode.bostedLandkode : "",
+    }));
+
+    return !Utils._isEqual(nåværendeListeMedRelevanteFelter, forrigeListeMedRelevanteFelter);
+  };
+
+  const leggTilDefaultMedlemskapsperiode = () => {
+    if (periodeType) {
+      medlemskapsperioderAppend(lagDefaultPeriode(periodeType));
+    }
+  };
+
+  const slettMedlemskapsperiode = async (index: number) => {
+    const periode = medlemskapsperioder[index];
+    try {
+      setLagreMedlemskapsperioderPaagar(true);
+      if (erUlagretPeriode(periode.id)) {
+        medlemskapsperioderRemove(index);
+      } else {
+        if (periodeType) {
+          await PeriodeAdapter.slettPeriode(periodeType, behandlingID, periode.id);
+        }
+        medlemskapsperioderRemove(index);
+        if (periodeType === "MEDLEMSKAPSPERIODE") {
+          dispatch(medlemskapsperioderOperations.hentMedlemskapsperioder(behandlingID));
+        }
+      }
+      setLagreMedlemskapsperioderPaagar(false);
+    } catch (error) {
+      setFeilmelding("Feil ved sletting av periode");
+    }
+  };
+
+  // Auto-save periods when they change (only for editable periods)
+  useEffect(() => {
+    if (endeligAvgiftValg !== OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET || !medlemskapsperioder) return;
+
+    const lagreMedlemskapsperioderEffect = async () => {
+      if (redigerbart && !lagreMedlemskapsperioderPaagar) {
+        if (medlemskapsperioder.length !== medlemskapsperioderForrigeAntall.current) {
+          medlemskapsperioderForrigeAntall.current = medlemskapsperioder.length;
+          setArrayValideringsfeil(undefined);
+          return;
+        }
+        if (!medlemskapsperioderHarBrukerendringer(medlemskapsperioder, lagredeMedlemskapsperioder)) {
+          return;
+        }
+
+        setLagreMedlemskapsperioderPaagar(true);
+        const medlemskapsperioderTilLagring = [...medlemskapsperioder];
+        debouncedLagreMedlemskapsperioder(medlemskapsperioderTilLagring, () => {
+          setLagreMedlemskapsperioderPaagar(false);
+        });
+      }
+    };
+
+    lagreMedlemskapsperioderEffect();
+  }, [medlemskapsperioder, redigerbart, endeligAvgiftValg]);
+
   const handleBeregnTrygdeavgiftsperioder = useCallback(
     async (formVerdier: FieldValue<FormValuesProps>) => {
       await beregnTrygdeavgiftsperioder(formVerdier, {
@@ -171,7 +404,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       !aarsavregningID ||
       endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT ||
       beregningPaagar ||
-      endrerEndeligAvgiftValg
+      endrerEndeligAvgiftValg ||
+      lagreMedlemskapsperioderPaagar
     ) {
       return;
     }
@@ -206,6 +440,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     endeligAvgiftValg,
     beregningPaagar,
     endrerEndeligAvgiftValg,
+    lagreMedlemskapsperioderPaagar,
     getValues,
     formIsValid,
     isValidating,
@@ -240,7 +475,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         aarsavregningID &&
         (endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
           endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) &&
-        !endrerEndeligAvgiftValg
+        !endrerEndeligAvgiftValg &&
+        !lagreMedlemskapsperioderPaagar
       ) {
         const currentFormState = mapFormState(getValues("skatteforholdsperioder"), getValues("inntektskilder"));
 
@@ -253,7 +489,15 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         }
       }
     }
-  }, [skatteforholdsperioder, endeligAvgiftValg, inntektskilder, formIsValid, isValidating, endrerEndeligAvgiftValg]);
+  }, [
+    skatteforholdsperioder,
+    endeligAvgiftValg,
+    inntektskilder,
+    formIsValid,
+    isValidating,
+    endrerEndeligAvgiftValg,
+    lagreMedlemskapsperioderPaagar,
+  ]);
 
   const stegErGyldig = useMemo(
     () =>
@@ -263,7 +507,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) &&
           aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag &&
           !feilmelding &&
-          !arrayValideringsfeil,
+          !arrayValideringsfeil &&
+          !lagreMedlemskapsperioderPaagar,
       ) ||
       Boolean(
         endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT &&
@@ -272,7 +517,14 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           formIsValid &&
           !feilmelding,
       ),
-    [endeligAvgiftValg, formIsValid, aarsavregningResponse, feilmelding, arrayValideringsfeil],
+    [
+      endeligAvgiftValg,
+      formIsValid,
+      aarsavregningResponse,
+      feilmelding,
+      arrayValideringsfeil,
+      lagreMedlemskapsperioderPaagar,
+    ],
   );
 
   useEffect(() => {
@@ -310,10 +562,24 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     // noinspection JSIgnoredPromiseFromCall
     trigger();
 
-    if (stegErGyldig && !beregningPaagar && !endrerEndeligAvgiftValg && !debouncedBeregningPagaar) {
+    if (
+      stegErGyldig &&
+      !beregningPaagar &&
+      !endrerEndeligAvgiftValg &&
+      !debouncedBeregningPagaar &&
+      !lagreMedlemskapsperioderPaagar
+    ) {
       bekreft();
     }
-  }, [trigger, stegErGyldig, beregningPaagar, bekreft, endrerEndeligAvgiftValg, debouncedBeregningPagaar]);
+  }, [
+    trigger,
+    stegErGyldig,
+    beregningPaagar,
+    bekreft,
+    endrerEndeligAvgiftValg,
+    debouncedBeregningPagaar,
+    lagreMedlemskapsperioderPaagar,
+  ]);
 
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
@@ -344,7 +610,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             </Nav.Heading>
             {endeligAvgiftValg !== OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET &&
               (erHelseutgiftDekkesPeriode ? (
-                avgiftspliktigperioder?.map((periode) => (
+                sisteGjeldendeAvgiftspliktigperioder?.map((periode) => (
                   <Nav.BodyLong size="small" key={Utils._uuid()} style={{ marginBottom: "1rem" }}>
                     <span className="navds-label navds-label--small">Periode Norge dekker helseutgifter:</span>{" "}
                     {`${Utils.dato.formatterDatoTilNorsk(periode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
@@ -356,7 +622,30 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
                 <MedlemskapsperioderDisplay medlemskapsperioder={innvilgetMedlemskapsperioder} />
               ))}
 
-            {endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET}
+            {endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET && medlemskapsperioderFields && (
+              <div className="perioder">
+                {medlemskapsperioderFields.map((field, index: number) => (
+                  <AvgiftspliktigperiodeSkjema
+                    key={field.id}
+                    redigerbart={redigerbart && !beregningPaagar}
+                    control={control}
+                    field={field}
+                    index={index}
+                    remove={slettMedlemskapsperiode}
+                    formValues={formValues}
+                    handleLeggTil={leggTilDefaultMedlemskapsperiode}
+                    visLeggTil={!erHelseutgiftDekkesPeriode}
+                    maxDate={maxDate}
+                    minDate={minDate}
+                    trygdedekninger={erHelseutgiftDekkesPeriode ? [] : trygdedekninger}
+                    setValue={setValue}
+                    erDeltGrunnlag={false}
+                    periodeType={periodeType}
+                    skjulBostedLand={erHelseutgiftDekkesPeriode}
+                  />
+                ))}
+              </div>
+            )}
 
             <Skatteforholdsperioder
               formValues={formValues}
@@ -465,7 +754,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
       <Nav.Button
         variant="primary"
-        loading={beregningPaagar || debouncedBeregningPagaar}
+        loading={beregningPaagar || debouncedBeregningPagaar || lagreMedlemskapsperioderPaagar}
         disabled={!redigerbart}
         onClick={håndterBekreft}
       >
