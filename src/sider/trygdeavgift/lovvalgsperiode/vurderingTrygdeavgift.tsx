@@ -79,7 +79,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
 
   const alleTrygdeavgiftsperioderHarNullBeløp = lagretTrygdeavgift?.trygdeavgiftsperioder.every(
-    (periode) => periode.avgiftPerMd === 0,
+    (periode) => periode.avgiftPerMd === 0 && !periode.beregningstype,
   );
 
   const formattedDefaultPeriode = () => {
