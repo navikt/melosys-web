@@ -1,4 +1,5 @@
 import { Grunnlagsopplysninger } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { Beregningstype } from "../../../../../services/modules/trygdeavgift";
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 import MKV from "../../../../../melosyskodeverk";
@@ -9,16 +10,28 @@ import { erPeriodeListeHelseutgiftdekkesperiode } from "../../../../../services/
 const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 const { MISJONÆR } = MKV.Koder.inntektskildetype;
 
+function formaterSats(detaljer: DetaljerInterface): string {
+  switch (detaljer.beregningstype) {
+    case "TJUEFEM_PROSENT_REGEL":
+      return "**";
+    case "MINSTEBELOEP":
+      return "*";
+    default:
+      return detaljer.avgiftssats?.toString() ?? "";
+  }
+}
+
 interface DetaljerInterface {
   fom: string;
   tom: string;
   inntektskildetype: string;
   arbeidsgiversavgiftBetales: string;
   inntektPerMd: number;
-  avgiftssats: number;
+  avgiftssats: number | null;
   avgiftPerMd: number;
   skattepliktig: string;
   dekning: string;
+  beregningstype?: Beregningstype | null;
 }
 
 export function BeregnetTrygdeavgiftDetaljer({
@@ -62,12 +75,17 @@ export function BeregnetTrygdeavgiftDetaljer({
           skattepliktig:
             overlappingSkatteforhold && overlappingSkatteforhold.skatteplikttype === SKATTEPLIKTIG ? "Ja" : "Nei",
           dekning,
+          beregningstype: period.beregningstype,
         };
       })
       .sort(Utils.dato.sorterEtterISOFomDato);
   };
 
   const arbAvgBetalesKreves = (kildetype: string) => !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
+
+  const detaljerListe = hentDetaljer(grunnlag);
+  const harMinstebeloep = detaljerListe.some((d) => d.beregningstype === "MINSTEBELOEP");
+  const har25ProsentRegel = detaljerListe.some((d) => d.beregningstype === "TJUEFEM_PROSENT_REGEL");
 
   return (
     <div className="tidligereGrunnlagPanel">
@@ -85,7 +103,7 @@ export function BeregnetTrygdeavgiftDetaljer({
           </Nav.Table.Row>
         </Nav.Table.Header>
         <Nav.Table.Body>
-          {hentDetaljer(grunnlag).map((detaljer) => (
+          {detaljerListe.map((detaljer) => (
             <Nav.Table.Row className="border_top" key={Utils._uuid()}>
               <Nav.Table.DataCell key={Utils._uuid()}>
                 {`${Utils.dato.formatterDatoTilNorsk(detaljer.fom)} - ${Utils.dato.formatterDatoTilNorsk(
@@ -93,7 +111,7 @@ export function BeregnetTrygdeavgiftDetaljer({
                 )}`}
               </Nav.Table.DataCell>
               <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
-                {detaljer.avgiftssats}
+                {formaterSats(detaljer)}
               </Nav.Table.DataCell>
               <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
                 {formaterTilNorskBelopUtenDesimaler(detaljer.avgiftPerMd)} kr
@@ -121,6 +139,14 @@ export function BeregnetTrygdeavgiftDetaljer({
           ))}
         </Nav.Table.Body>
       </Nav.Table>
+      {(harMinstebeloep || har25ProsentRegel) && (
+        <div className="forklaringstekster">
+          {harMinstebeloep && <p>* Inntekten er lavere enn minstebeløpet for trygdeavgift.</p>}
+          {har25ProsentRegel && (
+            <p>** Trygdeavgiften kan maks utgjøre 25 % av inntekten som overstiger minstebeløpet.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

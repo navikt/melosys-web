@@ -7,6 +7,17 @@ import { Spinner } from "../../spinner";
 
 import "./trygdeavgiftsperioderTabell.less";
 
+function formaterSats(periode: Trygdeavgiftsperiode): string {
+  switch (periode.beregningstype) {
+    case "TJUEFEM_PROSENT_REGEL":
+      return "**";
+    case "MINSTEBELOEP":
+      return "*";
+    default:
+      return periode.avgiftssats?.toString() ?? "";
+  }
+}
+
 function TrygdeavgiftsperioderTabell({
   perioder,
   lagrePending,
@@ -19,6 +30,9 @@ function TrygdeavgiftsperioderTabell({
   if (!perioder) return null;
 
   const sortertePerioder = [...perioder].sort(Utils.dato.sorterEtterISOFomDato);
+
+  const harMinstebeloep = sortertePerioder.some((p) => p.beregningstype === "MINSTEBELOEP");
+  const har25ProsentRegel = sortertePerioder.some((p) => p.beregningstype === "TJUEFEM_PROSENT_REGEL");
 
   return (
     <div className="tabell-container">
@@ -54,7 +68,7 @@ function TrygdeavgiftsperioderTabell({
                 {KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, trygdeavgiftsperiode.inntektskildetype)}
               </Nav.Table.DataCell>
               <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
-                {trygdeavgiftsperiode.avgiftssats}
+                {formaterSats(trygdeavgiftsperiode)}
               </Nav.Table.DataCell>
               <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
                 <b>{trygdeavgiftsperiode.avgiftPerMd}</b> nkr
@@ -63,6 +77,14 @@ function TrygdeavgiftsperioderTabell({
           ))}
         </Nav.Table.Body>
       </Nav.Table>
+      {(harMinstebeloep || har25ProsentRegel) && (
+        <div className="forklaringstekster">
+          {harMinstebeloep && <p>* Inntekten er lavere enn minstebeløpet for trygdeavgift.</p>}
+          {har25ProsentRegel && (
+            <p>** Trygdeavgiften kan maks utgjøre 25 % av inntekten som overstiger minstebeløpet.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

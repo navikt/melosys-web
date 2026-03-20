@@ -1,6 +1,6 @@
 import { getAsJson, postAsJson, putAsJson } from "../../utils";
 import { AARSAVREGNING, API_BASE_URL, BEHANDLINGER, FAGSAKER } from "../../api-constants";
-import { InntektskildeDto, SkatteforholdDto } from "../trygdeavgift";
+import { Beregningstype, InntektskildeDto, SkatteforholdDto } from "../trygdeavgift";
 import { Avgiftspliktigperiode } from "../types/periodeTyper";
 
 export interface AarsavregningResponse {
@@ -52,8 +52,9 @@ export interface Trygdeavgiftsperiode {
   inntektskildetype: string;
   arbeidsgiversavgiftBetales: boolean;
   inntektPerMd: number;
-  avgiftssats: number;
+  avgiftssats: number | null;
   avgiftPerMd: number;
+  beregningstype?: Beregningstype | null;
 }
 
 export interface Avregning {
