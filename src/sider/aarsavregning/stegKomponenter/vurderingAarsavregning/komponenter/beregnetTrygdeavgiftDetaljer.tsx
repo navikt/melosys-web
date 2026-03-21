@@ -1,5 +1,9 @@
 import { Grunnlagsopplysninger } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { Beregningstype } from "../../../../../services/modules/trygdeavgift";
+import {
+  formaterSats,
+  Beregningsforklaringer,
+} from "../../../../../felleskomponenter/trygdeavgift/komponenter/beregningsforklaring";
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 import MKV from "../../../../../melosyskodeverk";
@@ -9,17 +13,6 @@ import { erPeriodeListeHelseutgiftdekkesperiode } from "../../../../../services/
 
 const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
 const { MISJONÆR } = MKV.Koder.inntektskildetype;
-
-function formaterSats(detaljer: DetaljerInterface): string {
-  switch (detaljer.beregningstype) {
-    case "TJUEFEM_PROSENT_REGEL":
-      return "**";
-    case "MINSTEBELOEP":
-      return "*";
-    default:
-      return detaljer.avgiftssats?.toString() ?? "";
-  }
-}
 
 interface DetaljerInterface {
   fom: string;
@@ -84,8 +77,6 @@ export function BeregnetTrygdeavgiftDetaljer({
   const arbAvgBetalesKreves = (kildetype: string) => !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
 
   const detaljerListe = hentDetaljer(grunnlag);
-  const harMinstebeloep = detaljerListe.some((d) => d.beregningstype === "MINSTEBELOEP");
-  const har25ProsentRegel = detaljerListe.some((d) => d.beregningstype === "TJUEFEM_PROSENT_REGEL");
 
   return (
     <div className="tidligereGrunnlagPanel">
@@ -139,14 +130,7 @@ export function BeregnetTrygdeavgiftDetaljer({
           ))}
         </Nav.Table.Body>
       </Nav.Table>
-      {(harMinstebeloep || har25ProsentRegel) && (
-        <div className="forklaringstekster">
-          {harMinstebeloep && <p>* Inntekten er lavere enn minstebeløpet for trygdeavgift.</p>}
-          {har25ProsentRegel && (
-            <p>** Trygdeavgiften kan maks utgjøre 25 % av inntekten som overstiger minstebeløpet.</p>
-          )}
-        </div>
-      )}
+      <Beregningsforklaringer perioder={detaljerListe} />
     </div>
   );
 }

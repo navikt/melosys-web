@@ -4,19 +4,9 @@ import * as Utils from "../../../utils";
 import * as Nav from "../../../navFrontend";
 import { Trygdeavgiftsperiode } from "../../../services/modules/trygdeavgift";
 import { Spinner } from "../../spinner";
+import { formaterSats, Beregningsforklaringer } from "./beregningsforklaring";
 
 import "./trygdeavgiftsperioderTabell.less";
-
-function formaterSats(periode: Trygdeavgiftsperiode): string {
-  switch (periode.beregningstype) {
-    case "TJUEFEM_PROSENT_REGEL":
-      return "**";
-    case "MINSTEBELOEP":
-      return "*";
-    default:
-      return periode.avgiftssats?.toString() ?? "";
-  }
-}
 
 function TrygdeavgiftsperioderTabell({
   perioder,
@@ -30,9 +20,6 @@ function TrygdeavgiftsperioderTabell({
   if (!perioder) return null;
 
   const sortertePerioder = [...perioder].sort(Utils.dato.sorterEtterISOFomDato);
-
-  const harMinstebeloep = sortertePerioder.some((p) => p.beregningstype === "MINSTEBELOEP");
-  const har25ProsentRegel = sortertePerioder.some((p) => p.beregningstype === "TJUEFEM_PROSENT_REGEL");
 
   return (
     <div className="tabell-container">
@@ -77,14 +64,7 @@ function TrygdeavgiftsperioderTabell({
           ))}
         </Nav.Table.Body>
       </Nav.Table>
-      {(harMinstebeloep || har25ProsentRegel) && (
-        <div className="forklaringstekster">
-          {harMinstebeloep && <p>* Inntekten er lavere enn minstebeløpet for trygdeavgift.</p>}
-          {har25ProsentRegel && (
-            <p>** Trygdeavgiften kan maks utgjøre 25 % av inntekten som overstiger minstebeløpet.</p>
-          )}
-        </div>
-      )}
+      <Beregningsforklaringer perioder={sortertePerioder} />
     </div>
   );
 }

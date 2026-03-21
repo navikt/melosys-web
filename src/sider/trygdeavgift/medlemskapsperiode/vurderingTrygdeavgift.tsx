@@ -31,6 +31,7 @@ import {
 } from "../../../felleskomponenter/trygdeavgift/komponenter/types";
 import MKV from "../../../melosyskodeverk";
 import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../../services/modules/trygdeavgift";
+import { erOrdinaerBeregning } from "../../../felleskomponenter/trygdeavgift/komponenter/beregningsforklaring";
 import "./vurderingTrygdeavgift.less";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 
@@ -74,7 +75,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
 
   const alleTrygdeavgiftsperioderHarNullBeløp = lagretTrygdeavgift?.trygdeavgiftsperioder.every(
-    (periode) => periode.avgiftPerMd === 0 && !periode.beregningstype,
+    (periode) => periode.avgiftPerMd === 0 && erOrdinaerBeregning(periode.beregningstype),
   );
 
   const medlemskapsTypeErPliktig = medlemskapsperioder.every(
