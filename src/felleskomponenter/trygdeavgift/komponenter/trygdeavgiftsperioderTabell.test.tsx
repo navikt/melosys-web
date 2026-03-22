@@ -76,7 +76,7 @@ describe("TrygdeavgiftsperioderTabell", () => {
     expect(screen.getByText("Laster...")).toBeDefined();
   });
 
-  it("viser ** for 25%-regel", () => {
+  it("viser * for 25%-regel", () => {
     const perioder = [
       lagPeriode("2024-01-01", "2024-12-31", {
         avgiftssats: null,
@@ -85,10 +85,10 @@ describe("TrygdeavgiftsperioderTabell", () => {
       }),
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
-    expect(screen.getByText("**")).toBeDefined();
+    expect(screen.getByText("*")).toBeDefined();
   });
 
-  it("viser * for minstebeløp", () => {
+  it("viser ** for minstebeløp", () => {
     const perioder = [
       lagPeriode("2024-01-01", "2024-12-31", {
         avgiftssats: null,
@@ -97,7 +97,7 @@ describe("TrygdeavgiftsperioderTabell", () => {
       }),
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
-    expect(screen.getByText("*")).toBeDefined();
+    expect(screen.getByText("**")).toBeDefined();
   });
 
   it("viser tallverdi for ordinær beregningstype", () => {
@@ -123,16 +123,18 @@ describe("TrygdeavgiftsperioderTabell", () => {
       }),
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
-    expect(screen.getByText("* Inntekten er lavere enn minstebeløpet for trygdeavgift.")).toBeDefined();
     expect(
-      screen.getByText("** Trygdeavgiften kan maks utgjøre 25 % av inntekten som overstiger minstebeløpet."),
+      screen.getByText(
+        "* Beregnet etter 25 %-regelen: Trygdeavgift skal ikke utgjøre mer enn 25 % av inntekt over minstebeløpet.",
+      ),
     ).toBeDefined();
+    expect(screen.getByText("** Inntekten er under minstebeløpet.")).toBeDefined();
   });
 
   it("viser ingen fotnoter for kun ordinære perioder", () => {
     const perioder = [lagPeriode("2024-01-01", "2024-12-31")];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
-    expect(screen.queryByText(/Inntekten er lavere enn minstebeløpet/)).toBeNull();
-    expect(screen.queryByText(/Trygdeavgiften kan maks utgjøre 25/)).toBeNull();
+    expect(screen.queryByText(/Beregnet etter 25 %-regelen/)).toBeNull();
+    expect(screen.queryByText(/Inntekten er under minstebeløpet/)).toBeNull();
   });
 });

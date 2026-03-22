@@ -8,11 +8,11 @@ interface MedBeregningstype {
 }
 
 const BEREGNINGSTYPE_FORKLARINGER = {
-  MINSTEBELOEP: { symbol: "*", tekst: "Inntekten er lavere enn minstebeløpet for trygdeavgift." },
   TJUEFEM_PROSENT_REGEL: {
-    symbol: "**",
-    tekst: "Trygdeavgiften kan maks utgjøre 25 % av inntekten som overstiger minstebeløpet.",
+    symbol: "*",
+    tekst: "Beregnet etter 25 %-regelen: Trygdeavgift skal ikke utgjøre mer enn 25 % av inntekt over minstebeløpet.",
   },
+  MINSTEBELOEP: { symbol: "**", tekst: "Inntekten er under minstebeløpet." },
 } as const;
 
 export function formaterSats(periode: MedBeregningstype): string {
