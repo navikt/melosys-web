@@ -16,11 +16,14 @@ const BEREGNINGSTYPE_FORKLARINGER = {
 } as const;
 
 export function formaterSats(periode: MedBeregningstype): string {
-  const forklaring =
-    periode.beregningstype &&
-    BEREGNINGSTYPE_FORKLARINGER[periode.beregningstype as keyof typeof BEREGNINGSTYPE_FORKLARINGER];
-  if (forklaring) return forklaring.symbol;
-  return periode.avgiftssats?.toString() ?? "";
+  switch (periode.beregningstype) {
+    case "TJUEFEM_PROSENT_REGEL":
+      return "*";
+    case "MINSTEBELOEP":
+      return "**";
+    default:
+      return periode.avgiftssats?.toString() ?? "";
+  }
 }
 
 export function erOrdinaerBeregning(beregningstype?: Beregningstype | null): boolean {
