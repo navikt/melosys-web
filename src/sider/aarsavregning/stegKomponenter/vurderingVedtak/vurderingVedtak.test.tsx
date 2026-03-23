@@ -65,7 +65,7 @@ describe("VurderingVedtak", () => {
         beregnetAvgiftBelop: 28000,
         manueltAvgiftBeloep: undefined,
       },
-      harTrygdeavgiftFraAvgiftssystemet: true,
+      harInnbetaltTrygdeavgift: true,
       sisteGjeldendeAvgiftspliktigperioder: [],
       tidligereTrygdeavgiftsGrunnlagsopplysninger: {
         trygdeavgiftsgrunnlag: {
@@ -244,7 +244,7 @@ describe("MELOSYS-7114: Obligatorisk begrunnelse", () => {
       beregnetAvgiftBelop: 28000,
       manueltAvgiftBeloep: undefined,
     },
-    harTrygdeavgiftFraAvgiftssystemet: false,
+    harInnbetaltTrygdeavgift: false,
     sisteGjeldendeAvgiftspliktigperioder: [],
     tidligereTrygdeavgiftsGrunnlagsopplysninger: undefined,
     ...overrides,

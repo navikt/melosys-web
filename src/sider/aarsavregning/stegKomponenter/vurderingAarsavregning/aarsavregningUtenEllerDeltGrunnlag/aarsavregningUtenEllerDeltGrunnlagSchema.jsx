@@ -206,9 +206,9 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
     then: (schema) => schema.min(1, "Minst en medlemskapsperiode").of(medlemskapsperiodeSchema),
     otherwise: (schema) => schema,
   }),
-  trygdeavgiftFraAvgiftssystemet: string().when(["$harTrygdeavgiftFraAvgiftssystemet", "avgiftspliktigperioder"], {
-    is: (harTrygdeavgiftFraAvgiftssystemet, avgiftspliktigperioder) => {
-      if (!harTrygdeavgiftFraAvgiftssystemet) return false;
+  trygdeavgiftFraAvgiftssystemet: string().when(["$harInnbetaltTrygdeavgift,", "avgiftspliktigperioder"], {
+    is: (harInnbetaltTrygdeavgift, avgiftspliktigperioder) => {
+      if (!harInnbetaltTrygdeavgift) return false;
       const erHelseutgift =
         avgiftspliktigperioder?.length > 0 &&
         avgiftspliktigperioder.every((p) => p.type === "HELSEUTGIFTDEKKESPERIODE");
