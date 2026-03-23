@@ -266,8 +266,8 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
   });
 
   describe("erDeltGrunnlag-beregning", () => {
-    it("skal returnere true når både harTrygdeavgiftFraAvgiftssystemet og tidligereTrygdeavgiftsGrunnlagsopplysninger finnes", () => {
-      const harTrygdeavgiftFraAvgiftssystemet = true;
+    it("skal returnere true når både harInnbetaltTrygdeavgift og tidligereTrygdeavgiftsGrunnlagsopplysninger finnes", () => {
+      const harInnbetaltTrygdeavgift = true;
       const aarsavregningResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
@@ -288,13 +288,13 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
 
       // Simuler logikken fra aarsavregningUtenEllerDeltGrunnlagForm.tsx linje 191-193
       const erDeltGrunnlag =
-        harTrygdeavgiftFraAvgiftssystemet && !!aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
+        harInnbetaltTrygdeavgift && !!aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
 
       expect(erDeltGrunnlag).toBe(true);
     });
 
-    it("skal returnere false når harTrygdeavgiftFraAvgiftssystemet er false", () => {
-      const harTrygdeavgiftFraAvgiftssystemet = false;
+    it("skal returnere false når harInnbetaltTrygdeavgift er false", () => {
+      const harInnbetaltTrygdeavgift = false;
       const aarsavregningResponse: AarsavregningResponse = {
         aarsavregningID: 1,
         aar: 2023,
@@ -314,7 +314,7 @@ describe("AarsavregningUtenEllerDeltGrunnlag - Bestemmelse-logikk", () => {
       };
 
       const erDeltGrunnlag =
-        harTrygdeavgiftFraAvgiftssystemet && !!aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
+        harInnbetaltTrygdeavgift && !!aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
 
       expect(erDeltGrunnlag).toBe(false);
     });

@@ -10,7 +10,7 @@ export interface AarsavregningResponse {
   sisteGjeldendeAvgiftspliktigperioder?: Avgiftspliktigperiode[];
   nyttTrygdeavgiftsGrunnlag?: Grunnlagsopplysninger;
   avregning?: Avregning;
-  harTrygdeavgiftFraAvgiftssystemet?: boolean;
+  harInnbetaltTrygdeavgift?: boolean;
   endeligAvgiftValg?: string;
   harSkjoennsfastsattInntekt?: boolean;
 }
@@ -19,8 +19,8 @@ export interface AarsavregningRequest {
   avregning: Omit<Avregning, "tidligereFakturertBeloep">;
 }
 
-export interface OppdaterHarTrygdeavgiftFraAvgiftssystemetRequest {
-  harTrygdeavgiftFraAvgiftssystemet: boolean;
+export interface OppdaterHarInnbetaltTrygdeavgift {
+  harInnbetaltTrygdeavgift: boolean;
 }
 
 export interface OppdaterHarSkjoennsfastsattInntektRequest {
@@ -87,9 +87,9 @@ export const lagAarsavregning = (
 ): Promise<AarsavregningResponse> =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}`, request);
 
-export const oppdaterHarTrygdeavgiftFraAvgiftssystemet = (
+export const oppdaterHarInnbetaltTrygdeavgift = (
   behandlingID: number,
-  request: OppdaterHarTrygdeavgiftFraAvgiftssystemetRequest,
+  request: OppdaterHarInnbetaltTrygdeavgift,
 ): Promise<AarsavregningResponse> =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/grunnlagstype`, request);
 

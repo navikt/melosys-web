@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import {
   hentAarsavregning,
   lagAarsavregning,
-  oppdaterHarTrygdeavgiftFraAvgiftssystemet,
+  oppdaterHarInnbetaltTrygdeavgift,
   oppdaterHarSkjoennsfastsattInntekt,
   oppdaterEndeligAvgiftValg,
   hentFiltrertAarsavregningList,
@@ -25,10 +25,8 @@ describe("aarsavregning", () => {
     expect(lagAarsavregning(1, { aar: 2024 })).toBeInstanceOf(Promise);
   });
 
-  it("oppdaterHarTrygdeavgiftFraAvgiftssystemet returnerer promise", () => {
-    expect(oppdaterHarTrygdeavgiftFraAvgiftssystemet(1, { harTrygdeavgiftFraAvgiftssystemet: true })).toBeInstanceOf(
-      Promise,
-    );
+  it("oppdaterHarInnbetaltTrygdeavgift returnerer promise", () => {
+    expect(oppdaterHarInnbetaltTrygdeavgift(1, { harInnbetaltTrygdeavgift: true })).toBeInstanceOf(Promise);
   });
 
   it("oppdaterHarSkjoennsfastsattInntekt returnerer promise", () => {

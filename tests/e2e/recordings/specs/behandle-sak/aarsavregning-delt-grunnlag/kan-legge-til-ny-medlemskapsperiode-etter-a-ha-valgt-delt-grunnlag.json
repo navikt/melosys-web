@@ -74,7 +74,7 @@
             "trygdeavgiftFraAvgiftssystemet": null,
             "manueltAvgiftBeloep": null
           },
-          "harTrygdeavgiftFraAvgiftssystemet": true,
+          "harInnbetaltTrygdeavgift": true,
           "endeligAvgiftValg": "OPPLYSNINGER_ENDRET",
           "harSkjoennsfastsattInntekt": false
         }
@@ -1580,7 +1580,7 @@
           "authorization": "[REDACTED]"
         },
         "body": {
-          "harTrygdeavgiftFraAvgiftssystemet": true
+          "harInnbetaltTrygdeavgift": true
         }
       },
       "response": {
@@ -1616,7 +1616,7 @@
             "trygdeavgiftFraAvgiftssystemet": null,
             "manueltAvgiftBeloep": null
           },
-          "harTrygdeavgiftFraAvgiftssystemet": true,
+          "harInnbetaltTrygdeavgift": true,
           "endeligAvgiftValg": "OPPLYSNINGER_ENDRET",
           "harSkjoennsfastsattInntekt": false
         }

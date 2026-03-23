@@ -275,7 +275,7 @@ export class AarsavregningPage extends BehandlingPage {
 
     if (!isChecked) {
       // Sett opp lytter for API-respons FØR vi klikker på radioknappen
-      // Dette sikrer at vi venter på at backend har oppdatert harTrygdeavgiftFraAvgiftssystemet
+      // Dette sikrer at vi venter på at backend har oppdatert harInnbetaltTrygdeavgift
       const grunnlagstypeResponsePromise = this.page.waitForResponse(
         (response) =>
           response.url().includes("/grunnlagstype") &&
@@ -297,7 +297,7 @@ export class AarsavregningPage extends BehandlingPage {
         );
       }
 
-      // Vent på at API-kallet for oppdaterHarTrygdeavgiftFraAvgiftssystemet fullføres
+      // Vent på at API-kallet for oppdaterHarInnbetaltTrygdeavgift fullføres
       await grunnlagstypeResponsePromise;
     }
 

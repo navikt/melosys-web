@@ -34,7 +34,7 @@ import { EndeligAvgiftValgRadioGroup } from "../komponenter/endeligAvgiftValgRad
 import { ManuellAvgiftFormPart } from "../komponenter/manuellAvgiftFormPart";
 import { AvgiftspliktigperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
-import { TrygdeavgiftFraAvgiftssystemetInput } from "../komponenter/trygdeavgiftFraAvgiftssystemetInput";
+import { InnbetaltTrygdeavgiftInput } from "../komponenter/innbetaltTrygdeavgiftInput";
 import {
   beregnTrygdeavgiftsperioder,
   erBrukerSkattepliktigIHelePerioden,
@@ -81,7 +81,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   initiellData,
   bekreft,
   oppdaterStatus,
-  harTrygdeavgiftFraAvgiftssystemet,
+  harInnbetaltTrygdeavgift,
   harTidligereTrygdeavgiftsgrunnlag,
 }: {
   initiellData: {
@@ -94,7 +94,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   };
   bekreft: () => void;
   oppdaterStatus: (isValid: boolean) => void;
-  harTrygdeavgiftFraAvgiftssystemet: boolean;
+  harInnbetaltTrygdeavgift: boolean;
   harTidligereTrygdeavgiftsgrunnlag: boolean;
 }) {
   const [feilmelding, setFeilmelding] = useState<string | string[] | undefined>(undefined);
@@ -130,7 +130,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     resolver: yupResolver(aarsavregningUtenEllerDeltGrunnlagSchema),
     context: {
       aar: initiellData.valgtÅr,
-      harTrygdeavgiftFraAvgiftssystemet,
+      harInnbetaltTrygdeavgift,
     },
     mode: "onChange",
     defaultValues: initiellData.formDefaultValues,
@@ -184,8 +184,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   }, [medlemskapsperioder, erHelseutgift]);
 
   const erDeltGrunnlag =
-    harTrygdeavgiftFraAvgiftssystemet &&
-    !!initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
+    harInnbetaltTrygdeavgift && !!initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
 
   const harLaasteMedlemskapsperioder =
     !!initiellData.aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder &&
@@ -470,7 +469,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
         const context = {
           aar: initiellData.valgtÅr,
-          harTrygdeavgiftFraAvgiftssystemet,
+          harInnbetaltTrygdeavgift,
         };
         const { isValid: erGyldigSkjema } = await validateAarsavregningUtenEllerDeltGrunnlag(
           getValues(),
@@ -508,7 +507,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       };
       const context = {
         aar: initiellData.valgtÅr,
-        harTrygdeavgiftFraAvgiftssystemet,
+        harInnbetaltTrygdeavgift,
       };
       validateAarsavregningUtenEllerDeltGrunnlag(completeFormData, context, "avgiftspliktigperioder")
         .then(async ({ isValid }) => {
@@ -655,7 +654,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       if (!Utils._isEqual(currentFormState, previousFormState)) {
         const context = {
           aar: initiellData.valgtÅr,
-          harTrygdeavgiftFraAvgiftssystemet,
+          harInnbetaltTrygdeavgift,
         };
         validateAarsavregningUtenEllerDeltGrunnlag(currentFormState, context).then(({ isValid }) => {
           if (!isValid) {
@@ -793,8 +792,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   return (
     <div className="vurderingAarsavregning">
-      {harTrygdeavgiftFraAvgiftssystemet && (
-        <TrygdeavgiftFraAvgiftssystemetInput
+      {harInnbetaltTrygdeavgift && (
+        <InnbetaltTrygdeavgiftInput
           control={control}
           redigerbart={skjemaErRedigerbart}
           erNyAarsavregning={Boolean(tidligereAarsavregningTrygdeavgiftFraAvgiftssystem)}
