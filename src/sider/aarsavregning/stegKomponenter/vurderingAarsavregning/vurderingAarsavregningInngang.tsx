@@ -340,7 +340,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                 bekreft={bekreft}
                 aktivtSteg={aktivtSteg}
                 oppdaterStatus={oppdaterStatus}
-                harTrygdeavgiftFraAvgiftssystemet={Boolean(harInnbetaltTrygdeavgift)}
+                harInnbetaltTrygdeavgift={Boolean(harInnbetaltTrygdeavgift)}
                 harTidligereTrygdeavgiftsgrunnlag={Boolean(harTidligereTrygdeavgiftsgrunnlag)}
               />
             )}
