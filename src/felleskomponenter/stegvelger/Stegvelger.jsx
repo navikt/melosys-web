@@ -552,28 +552,33 @@ class Stegvelger extends Component {
 
     this.setState({ aktivtStegNummer: nyttStegNummer });
 
-    if (redigerbart) {
-      if (sakstype !== MKV.Koder.sakstyper.FTRL) {
-        await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
+    try {
+      if (redigerbart) {
+        if (sakstype !== MKV.Koder.sakstyper.FTRL) {
+          await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
 
-        if (flytHarIkkeVurderingPeriode || erVurderingPeriode) {
-          await lagreLovvalgsperioderHandler();
+          if (flytHarIkkeVurderingPeriode || erVurderingPeriode) {
+            await lagreLovvalgsperioderHandler();
+          }
+
+          if (!anmodningErSendtUtland) {
+            await lagreAvklartefaktaHandler();
+            await lagreVilkarHandler();
+            await lagreAnmodningsperioderHandler();
+            await lagreUtpekingsperioderHandler();
+          }
         }
 
-        if (!anmodningErSendtUtland) {
-          await lagreAvklartefaktaHandler();
-          await lagreVilkarHandler();
-          await lagreAnmodningsperioderHandler();
-          await lagreUtpekingsperioderHandler();
+        if (this.erSisteSteg(nyttStegNummer)) {
+          await lagreMottatteOpplysningerHandler();
         }
       }
-
-      if (this.erSisteSteg(nyttStegNummer)) {
-        await lagreMottatteOpplysningerHandler();
-      }
+    } catch (error) {
+      /* eslint-disable-next-line no-console */
+      console.error("Feil ved lagring under stegovergang:", error);
+    } finally {
+      this.oppdaterAktuelleSteg(nyttStegNummer, true);
     }
-
-    this.oppdaterAktuelleSteg(nyttStegNummer, true);
   };
 
   /** Beregn neste steg i rekken, men ikke lenger enn
