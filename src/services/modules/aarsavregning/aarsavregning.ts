@@ -19,7 +19,7 @@ export interface AarsavregningRequest {
   avregning: Omit<Avregning, "tidligereFakturertBeloep">;
 }
 
-export interface OppdaterHarInnbetaltTrygdeavgift {
+export interface OppdaterHarInnbetaltTrygdeavgiftRequest {
   harInnbetaltTrygdeavgift: boolean;
 }
 
@@ -89,7 +89,7 @@ export const lagAarsavregning = (
 
 export const oppdaterHarInnbetaltTrygdeavgift = (
   behandlingID: number,
-  request: OppdaterHarInnbetaltTrygdeavgift,
+  request: OppdaterHarInnbetaltTrygdeavgiftRequest,
 ): Promise<AarsavregningResponse> =>
   postAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${AARSAVREGNING}/grunnlagstype`, request);
 
