@@ -52,7 +52,6 @@ export function VurderingArtikkel13_x_vedtak({
   mottatteOpplysningerStatus,
 }) {
   const [vedtakPending, setVedtakPending] = useState(false);
-  let oppdaterFørKontroll = true;
 
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
@@ -70,11 +69,13 @@ export function VurderingArtikkel13_x_vedtak({
         behandlingID,
         vedtakstype: data.formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FORELOEPIG_FASTSATT_LOVVALGSLAND,
-        skalRegisteropplysningerOppdateres: oppdaterFørKontroll,
+        skalRegisteropplysningerOppdateres: false, // Saga handles this - don't update here to avoid race condition
       };
-      oppdaterFørKontroll = false;
-      await kontrollerFerdigbehandling(request);
-      setVedtakPending(false);
+      try {
+        await kontrollerFerdigbehandling(request);
+      } finally {
+        setVedtakPending(false);
+      }
     }
   };
   const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontrollerBehandling, 500), [
