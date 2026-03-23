@@ -110,7 +110,7 @@ interface Props {
   bekreft: () => void;
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
-  harTrygdeavgiftFraAvgiftssystemet: boolean;
+  harInnbetaltTrygdeavgift: boolean;
   harTidligereTrygdeavgiftsgrunnlag: boolean;
 }
 
@@ -130,7 +130,7 @@ export interface AarsavregningFormValuesProps extends FormValuesProps {
 export function AarsavregningUtenEllerDeltGrunnlag({
   bekreft,
   oppdaterStatus,
-  harTrygdeavgiftFraAvgiftssystemet,
+  harInnbetaltTrygdeavgift,
   harTidligereTrygdeavgiftsgrunnlag,
 }: Props) {
   const [isLoading, setIsLoading] = useState(true);
@@ -182,7 +182,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
 
     if (
       redigerbart &&
-      harTrygdeavgiftFraAvgiftssystemet &&
+      harInnbetaltTrygdeavgift &&
       innvilgedePerioder.length === 0 &&
       aarsavregningRes?.sisteGjeldendeAvgiftspliktigperioder &&
       periodeType !== "HELSEUTGIFTDEKKESPERIODE"
@@ -266,7 +266,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
           (erEøsPensjonist ? "HELSEUTGIFTDEKKESPERIODE" : "MEDLEMSKAPSPERIODE");
 
         const deltGrunnlagAarsavregningHarIkkeNyttGrunnlag =
-          harTrygdeavgiftFraAvgiftssystemet && aarsavregningRes && !aarsavregningRes.nyttTrygdeavgiftsGrunnlag;
+          harInnbetaltTrygdeavgift && aarsavregningRes && !aarsavregningRes.nyttTrygdeavgiftsGrunnlag;
 
         const tidligerePeriode =
           aarsavregningRes?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
@@ -341,7 +341,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
     };
 
     lastInitiellData();
-  }, [behandlingID, harTrygdeavgiftFraAvgiftssystemet]);
+  }, [behandlingID, harInnbetaltTrygdeavgift]);
 
   const memoizedOppdaterStatus = useCallback((erGyldig: boolean) => {
     oppdaterStatus(erGyldig);
@@ -356,7 +356,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
       initiellData={initiellData}
       bekreft={bekreft}
       oppdaterStatus={memoizedOppdaterStatus}
-      harTrygdeavgiftFraAvgiftssystemet={harTrygdeavgiftFraAvgiftssystemet}
+      harInnbetaltTrygdeavgift={harInnbetaltTrygdeavgift}
       harTidligereTrygdeavgiftsgrunnlag={harTidligereTrygdeavgiftsgrunnlag}
     />
   );
