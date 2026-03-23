@@ -16,7 +16,7 @@ import { InnbetaltTrygdeavgiftInput } from "./innbetaltTrygdeavgiftInput";
 describe("InnbetaltTrygdeavgiftInput", () => {
   it("rendrer label", () => {
     render(<InnbetaltTrygdeavgiftInput control={{} as any} redigerbart={true} erNyAarsavregning={false} />);
-    expect(screen.getByText("Trygdeavgift fra Avgiftssystemet")).toBeDefined();
+    expect(screen.getByText("Innbetalt trygdeavgift")).toBeDefined();
   });
 
   it("viser beskrivelse for ny årsavregning", () => {
