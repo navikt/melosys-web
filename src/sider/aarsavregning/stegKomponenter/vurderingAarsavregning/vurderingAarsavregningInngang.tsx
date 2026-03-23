@@ -21,7 +21,6 @@ import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregni
 import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import { TidligereGrunnlag } from "./komponenter/tidligereGrunnlag";
 import * as Utils from "../../../../utils";
-import { InnbetaltTrygdeavgiftInput } from "./komponenter/innbetaltTrygdeavgift";
 
 const { FASTSATT_TRYGDEAVGIFT, IKKE_FASTSATT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
@@ -312,7 +311,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                   onChange={håndterHarInnbetaltTrygdeavgift}
                   legend={
                     <LabelMedHjelpetekst
-                      label="Skal du legge til trygdeavgift fra Avgiftssystemet til denne årsavregningen?"
+                      label="Avviker innbetalt trygdeavgift fra tidligere beregnet avgift?"
                       hjelpetekst={harTidligereTrygdeavgiftsgrunnlag ? DELT_GRUNNLAG_HJELPETEKST : ""}
                     />
                   }
