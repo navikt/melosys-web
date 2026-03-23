@@ -371,8 +371,11 @@ export const ArbeidsgivereNorgeSelector = createSelector(
     // tilbake i tid, skal også inntekt i selve perioden vises.
     let { fom: soknadPeriodeStart, tom: soknadPeriodeSlutt } = oppholdsPeriode;
     const { fom: sedLovvalgsperiodeFom, tom: sedLovvalgsperiodeTom } = sedLovvalgsperiode;
+    const foersteHelseutgiftDekkesPeriode = Array.isArray(helseutgiftDekkesPeriode?.data)
+      ? helseutgiftDekkesPeriode.data[0]
+      : undefined;
     const { fomDato: helseutgiftDekkesPeriodeFom, tomDato: helseutgiftDekkesPeriodeTom } =
-      helseutgiftDekkesPeriode?.data ?? {};
+      foersteHelseutgiftDekkesPeriode ?? {};
 
     if (helseutgiftDekkesPeriodeFom) {
       soknadPeriodeStart = helseutgiftDekkesPeriodeFom;

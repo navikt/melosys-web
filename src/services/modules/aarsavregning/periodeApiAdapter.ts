@@ -27,12 +27,10 @@ const mapMedlemskapsperiodeDto = (dto: MedlemskapsperiodeDto): Medlemskapsperiod
   type: "MEDLEMSKAPSPERIODE",
 });
 
-const HELSEUTGIFT_SENTINEL_ID = 0;
-
 const mapHelseutgiftDekkesPeriodeDto = (dto: HelseutgiftDekkesPeriodeDto): HelseutgiftdekkesperiodeForAvgift => ({
   fomDato: dto.fomDato,
   tomDato: dto.tomDato,
-  id: HELSEUTGIFT_SENTINEL_ID,
+  id: dto.id ?? 0,
   type: "HELSEUTGIFTDEKKESPERIODE",
   bostedLandkode: dto.bostedLandkode,
 });
@@ -70,8 +68,8 @@ export const hentPerioder = async (
       throw new Error("Lovvalgsperioder er ikke støttet enda");
     }
     case "HELSEUTGIFTDEKKESPERIODE": {
-      const periode = await HelseutgiftApi.hentHelseutgiftDekkesPeriode(behandlingID);
-      return [mapHelseutgiftDekkesPeriodeDto(periode)];
+      const perioder = await HelseutgiftApi.hentHelseutgiftDekkesPerioder(behandlingID);
+      return perioder.map(mapHelseutgiftDekkesPeriodeDto);
     }
   }
 };
@@ -83,8 +81,8 @@ export const opprettPeriode = async (
 ): Promise<Avgiftspliktigperiode> => {
   if (erHelseutgiftdekkesperiode(periode)) {
     const request = tilHelseutgiftRequest(periode, periode.bostedLandkode);
-    await HelseutgiftApi.opprettHelseutgiftDekkesPeriode(behandlingID, request);
-    return { ...periode, id: HELSEUTGIFT_SENTINEL_ID };
+    const response = await HelseutgiftApi.opprettHelseutgiftDekkesPeriode(behandlingID, request);
+    return mapHelseutgiftDekkesPeriodeDto(response);
   } else if (erMedlemskapsperiode(periode)) {
     const request = tilMedlemskapsperiodeRequest(periode, bestemmelse);
     const response = await MedlemskapsperioderApi.opprettMedlemskapsperioder(behandlingID, request);
@@ -105,8 +103,8 @@ export const oppdaterPeriode = async (
     return mapMedlemskapsperiodeDto(response);
   } else if (erHelseutgiftdekkesperiode(periode)) {
     const request = tilHelseutgiftRequest(periode, periode.bostedLandkode);
-    await HelseutgiftApi.oppdaterHelseutgiftDekkesPeriode(behandlingID, request);
-    return { ...periode, id: HELSEUTGIFT_SENTINEL_ID };
+    const response = await HelseutgiftApi.oppdaterHelseutgiftDekkesPeriode(behandlingID, periode.id, request);
+    return mapHelseutgiftDekkesPeriodeDto(response);
   } else {
     throw new Error("Lovvalgsperioder er ikke støttet enda");
   }
@@ -124,7 +122,8 @@ export const slettPeriode = async (
     case "LOVVALGSPERIODE":
       throw new Error("Lovvalgsperioder er ikke støttet enda");
     case "HELSEUTGIFTDEKKESPERIODE":
-      throw new Error("Sletting av helseutgiftdekkesperiode er ikke støttet");
+      await HelseutgiftApi.slettHelseutgiftDekkesPeriode(behandlingID, periodeId);
+      return;
   }
 };
 
@@ -139,7 +138,14 @@ export const slettAllePerioder = async (
     case "LOVVALGSPERIODE": {
       throw new Error("Lovvalgsperioder er ikke støttet enda");
     }
-    case "HELSEUTGIFTDEKKESPERIODE":
-      throw new Error("Sletting av helseutgiftdekkesperiode er ikke støttet");
+    case "HELSEUTGIFTDEKKESPERIODE": {
+      const perioder = await HelseutgiftApi.hentHelseutgiftDekkesPerioder(behandlingID);
+      for (const periode of perioder) {
+        if (periode.id) {
+          await HelseutgiftApi.slettHelseutgiftDekkesPeriode(behandlingID, periode.id);
+        }
+      }
+      return;
+    }
   }
 };
