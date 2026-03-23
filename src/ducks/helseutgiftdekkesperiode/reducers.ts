@@ -17,7 +17,7 @@ export default function reducer(state = initialState, action: Types.Action) {
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };
     case Types.OK:
-      return { ...state, status: STATUS.OK, data: action.data };
+      return { ...state, status: STATUS.OK, data: action.data ?? {} };
     case Types.FEILET:
       return { ...state, status: STATUS.ERROR, data: action.data };
     default:
