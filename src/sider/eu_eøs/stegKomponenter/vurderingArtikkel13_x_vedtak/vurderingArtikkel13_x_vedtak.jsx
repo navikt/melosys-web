@@ -69,7 +69,7 @@ export function VurderingArtikkel13_x_vedtak({
         behandlingID,
         vedtakstype: data.formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
         behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FORELOEPIG_FASTSATT_LOVVALGSLAND,
-        skalRegisteropplysningerOppdateres: false, // Saga handles this - don't update here to avoid race condition
+        skalRegisteropplysningerOppdateres: false, // Backend oppdaterer registeropplysninger ved vedtak - ikke her, unngår race condition
       };
       try {
         await kontrollerFerdigbehandling(request);
