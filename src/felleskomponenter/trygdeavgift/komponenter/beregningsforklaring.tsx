@@ -1,6 +1,6 @@
 import { Beregningstype } from "../../../services/modules/trygdeavgift";
 
-import "./trygdeavgiftsperioderTabell.less";
+import "./beregningsforklaring.less";
 
 interface MedBeregningstype {
   beregningstype?: Beregningstype | null;
