@@ -26,6 +26,21 @@ export function erOrdinaerBeregning(beregningstype?: Beregningstype | null): boo
   return !beregningstype || beregningstype === "ORDINAER";
 }
 
+const AVGIFTSDEL_TEKST: Record<string, string> = {
+  HELSE: "Helsedel",
+  PENSJON: "Pensjonsdel",
+};
+
+export function formaterDekning(
+  periode: { avgiftsdel?: string | null; trygdedekning: string },
+  finnTerm: (kode: string) => string,
+): string {
+  if (periode.avgiftsdel && AVGIFTSDEL_TEKST[periode.avgiftsdel]) {
+    return AVGIFTSDEL_TEKST[periode.avgiftsdel];
+  }
+  return finnTerm(periode.trygdedekning);
+}
+
 export function formaterInntektskilde(
   periode: { harSammenslåtteInntektskilder?: boolean; inntektskildetype: string },
   finnTerm: (kode: string) => string,

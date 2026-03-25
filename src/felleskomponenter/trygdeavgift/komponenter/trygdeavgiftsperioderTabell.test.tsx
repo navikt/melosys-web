@@ -166,4 +166,34 @@ describe("TrygdeavgiftsperioderTabell", () => {
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
     expect(screen.queryByText(/Mer enn en inntektskilde/)).toBeNull();
   });
+
+  it("viser Helsedel når avgiftsdel er HELSE", () => {
+    const perioder = [
+      lagPeriode("2024-01-01", "2024-12-31", {
+        avgiftssats: null,
+        beregningstype: "TJUEFEM_PROSENT_REGEL",
+        avgiftsdel: "HELSE",
+      }),
+    ];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(screen.getByText("Helsedel")).toBeDefined();
+  });
+
+  it("viser Pensjonsdel når avgiftsdel er PENSJON", () => {
+    const perioder = [
+      lagPeriode("2024-01-01", "2024-12-31", {
+        avgiftssats: null,
+        beregningstype: "TJUEFEM_PROSENT_REGEL",
+        avgiftsdel: "PENSJON",
+      }),
+    ];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(screen.getByText("Pensjonsdel")).toBeDefined();
+  });
+
+  it("viser normal dekning når avgiftsdel er null", () => {
+    const perioder = [lagPeriode("2024-01-01", "2024-12-31")];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(screen.getByText("FULL")).toBeDefined();
+  });
 });

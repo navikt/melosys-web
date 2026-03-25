@@ -4,7 +4,7 @@ import * as Utils from "../../../utils";
 import * as Nav from "../../../navFrontend";
 import { Trygdeavgiftsperiode } from "../../../services/modules/trygdeavgift";
 import { Spinner } from "../../spinner";
-import { formaterSats, formaterInntektskilde, Beregningsforklaringer } from "./beregningsforklaring";
+import { formaterSats, formaterDekning, formaterInntektskilde, Beregningsforklaringer } from "./beregningsforklaring";
 
 import "./trygdeavgiftsperioderTabell.less";
 
@@ -48,7 +48,9 @@ function TrygdeavgiftsperioderTabell({
               </Nav.Table.DataCell>
               {!erEøsPensjonist && (
                 <Nav.Table.DataCell key={Utils._uuid()}>
-                  {KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, trygdeavgiftsperiode.trygdedekning)}
+                  {formaterDekning(trygdeavgiftsperiode, (kode) =>
+                    KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, kode),
+                  )}
                 </Nav.Table.DataCell>
               )}
               <Nav.Table.DataCell key={Utils._uuid()}>

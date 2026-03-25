@@ -56,6 +56,7 @@ export interface Trygdeavgiftsperiode {
   avgiftPerMd: number;
   beregningstype?: Beregningstype | null;
   harSammenslåtteInntektskilder?: boolean;
+  avgiftsdel?: string | null;
 }
 
 export interface Avregning {

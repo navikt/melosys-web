@@ -2,6 +2,7 @@ import { Grunnlagsopplysninger } from "../../../../../services/modules/aarsavreg
 import { Beregningstype } from "../../../../../services/modules/trygdeavgift";
 import {
   formaterSats,
+  formaterDekning,
   formaterInntektskilde,
   Beregningsforklaringer,
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/beregningsforklaring";
@@ -27,6 +28,7 @@ interface DetaljerInterface {
   dekning: string;
   beregningstype?: Beregningstype | null;
   harSammenslåtteInntektskilder?: boolean;
+  avgiftsdel?: string | null;
 }
 
 export function BeregnetTrygdeavgiftDetaljer({
@@ -72,6 +74,7 @@ export function BeregnetTrygdeavgiftDetaljer({
           dekning,
           beregningstype: period.beregningstype,
           harSammenslåtteInntektskilder: period.harSammenslåtteInntektskilder,
+          avgiftsdel: period.avgiftsdel,
         };
       })
       .sort(Utils.dato.sorterEtterISOFomDato);
@@ -126,7 +129,9 @@ export function BeregnetTrygdeavgiftDetaljer({
               <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.skattepliktig}</Nav.Table.DataCell>
               {!erHelseutgiftDekkesPeriode && (
                 <Nav.Table.DataCell key={Utils._uuid()}>
-                  {KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, detaljer.dekning)}
+                  {formaterDekning({ avgiftsdel: detaljer.avgiftsdel, trygdedekning: detaljer.dekning }, (kode) =>
+                    KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, kode),
+                  )}
                 </Nav.Table.DataCell>
               )}
             </Nav.Table.Row>
