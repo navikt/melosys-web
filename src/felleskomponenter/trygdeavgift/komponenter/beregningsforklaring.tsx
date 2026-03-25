@@ -5,6 +5,7 @@ import "./beregningsforklaring.less";
 interface MedBeregningstype {
   beregningstype?: Beregningstype | null;
   avgiftssats: number | null;
+  harSammenslåtteInntektskilder?: boolean;
 }
 
 const BEREGNINGSTYPE_FORKLARINGER: Partial<Record<Beregningstype, { symbol: string; tekst: string }>> = {
@@ -25,14 +26,23 @@ export function erOrdinaerBeregning(beregningstype?: Beregningstype | null): boo
   return !beregningstype || beregningstype === "ORDINAER";
 }
 
+export function formaterInntektskilde(
+  periode: { harSammenslåtteInntektskilder?: boolean; inntektskildetype: string },
+  finnTerm: (kode: string) => string,
+): string {
+  if (periode.harSammenslåtteInntektskilder) return "***";
+  return finnTerm(periode.inntektskildetype);
+}
+
 export function Beregningsforklaringer({ perioder }: { perioder: MedBeregningstype[] }) {
   const typer = new Set(perioder.map((p) => p.beregningstype).filter(Boolean));
+  const harSammenslåtte = perioder.some((p) => p.harSammenslåtteInntektskilder);
 
   const aktuelleForklaringer = (Object.keys(BEREGNINGSTYPE_FORKLARINGER) as Beregningstype[])
     .filter((type) => typer.has(type))
     .map((type) => BEREGNINGSTYPE_FORKLARINGER[type]!);
 
-  if (aktuelleForklaringer.length === 0) return null;
+  if (aktuelleForklaringer.length === 0 && !harSammenslåtte) return null;
 
   return (
     <div className="forklaringstekster">
@@ -41,6 +51,7 @@ export function Beregningsforklaringer({ perioder }: { perioder: MedBeregningsty
           {symbol} {tekst}
         </p>
       ))}
+      {harSammenslåtte && <p key="sammenslatt">*** Mer enn en inntektskilde</p>}
     </div>
   );
 }

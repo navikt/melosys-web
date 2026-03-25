@@ -2,6 +2,7 @@ import { Grunnlagsopplysninger } from "../../../../../services/modules/aarsavreg
 import { Beregningstype } from "../../../../../services/modules/trygdeavgift";
 import {
   formaterSats,
+  formaterInntektskilde,
   Beregningsforklaringer,
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/beregningsforklaring";
 import * as Nav from "../../../../../navFrontend";
@@ -25,6 +26,7 @@ interface DetaljerInterface {
   skattepliktig: string;
   dekning: string;
   beregningstype?: Beregningstype | null;
+  harSammenslåtteInntektskilder?: boolean;
 }
 
 export function BeregnetTrygdeavgiftDetaljer({
@@ -69,6 +71,7 @@ export function BeregnetTrygdeavgiftDetaljer({
             overlappingSkatteforhold && overlappingSkatteforhold.skatteplikttype === SKATTEPLIKTIG ? "Ja" : "Nei",
           dekning,
           beregningstype: period.beregningstype,
+          harSammenslåtteInntektskilder: period.harSammenslåtteInntektskilder,
         };
       })
       .sort(Utils.dato.sorterEtterISOFomDato);
@@ -108,7 +111,7 @@ export function BeregnetTrygdeavgiftDetaljer({
                 {formaterTilNorskBelopUtenDesimaler(detaljer.avgiftPerMd)} kr
               </Nav.Table.DataCell>
               <Nav.Table.DataCell key={Utils._uuid()}>
-                {KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, detaljer.inntektskildetype)}
+                {formaterInntektskilde(detaljer, (kode) => KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, kode))}
               </Nav.Table.DataCell>
               <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
                 {formaterTilNorskBelopUtenDesimaler(detaljer.inntektPerMd)} kr

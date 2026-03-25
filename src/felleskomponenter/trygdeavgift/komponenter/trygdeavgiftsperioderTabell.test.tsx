@@ -137,4 +137,33 @@ describe("TrygdeavgiftsperioderTabell", () => {
     expect(screen.queryByText(/Beregnet etter 25 %-regelen/)).toBeNull();
     expect(screen.queryByText(/Inntekten er under minstebeløpet/)).toBeNull();
   });
+
+  it("viser *** for sammenslåtte inntektskilder", () => {
+    const perioder = [
+      lagPeriode("2024-01-01", "2024-12-31", {
+        avgiftssats: null,
+        beregningstype: "TJUEFEM_PROSENT_REGEL",
+        harSammenslåtteInntektskilder: true,
+      }),
+    ];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(screen.getByText("***")).toBeDefined();
+    expect(screen.queryByText("LØNN")).toBeNull();
+  });
+
+  it("viser *** fotnote når sammenslåtte inntektskilder finnes", () => {
+    const perioder = [
+      lagPeriode("2024-01-01", "2024-12-31", {
+        harSammenslåtteInntektskilder: true,
+      }),
+    ];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(screen.getByText("*** Mer enn en inntektskilde")).toBeDefined();
+  });
+
+  it("viser ingen *** fotnote når ingen sammenslåtte inntektskilder", () => {
+    const perioder = [lagPeriode("2024-01-01", "2024-12-31")];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(screen.queryByText(/Mer enn en inntektskilde/)).toBeNull();
+  });
 });

@@ -4,7 +4,7 @@ import * as Utils from "../../../utils";
 import * as Nav from "../../../navFrontend";
 import { Trygdeavgiftsperiode } from "../../../services/modules/trygdeavgift";
 import { Spinner } from "../../spinner";
-import { formaterSats, Beregningsforklaringer } from "./beregningsforklaring";
+import { formaterSats, formaterInntektskilde, Beregningsforklaringer } from "./beregningsforklaring";
 
 import "./trygdeavgiftsperioderTabell.less";
 
@@ -52,7 +52,9 @@ function TrygdeavgiftsperioderTabell({
                 </Nav.Table.DataCell>
               )}
               <Nav.Table.DataCell key={Utils._uuid()}>
-                {KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, trygdeavgiftsperiode.inntektskildetype)}
+                {formaterInntektskilde(trygdeavgiftsperiode, (kode) =>
+                  KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, kode),
+                )}
               </Nav.Table.DataCell>
               <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
                 {formaterSats(trygdeavgiftsperiode)}
