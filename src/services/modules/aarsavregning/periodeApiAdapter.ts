@@ -140,10 +140,14 @@ export const slettAllePerioder = async (
     }
     case "HELSEUTGIFTDEKKESPERIODE": {
       const perioder = await HelseutgiftApi.hentHelseutgiftDekkesPerioder(behandlingID);
-      for (const periode of perioder) {
-        if (periode.id) {
-          await HelseutgiftApi.slettHelseutgiftDekkesPeriode(behandlingID, periode.id);
-        }
+      const results = await Promise.allSettled(
+        perioder
+          .filter((periode) => periode.id)
+          .map((periode) => HelseutgiftApi.slettHelseutgiftDekkesPeriode(behandlingID, periode.id!)),
+      );
+      const feilede = results.filter((r) => r.status === "rejected");
+      if (feilede.length > 0) {
+        throw new Error(`Klarte ikke å slette ${feilede.length} av ${perioder.length} helseutgiftdekkes-perioder`);
       }
       return;
     }

@@ -47,6 +47,9 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const helseutgiftDekkesPerioder = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector).data;
   const helseutgiftDekkesPeriode = Array.isArray(helseutgiftDekkesPerioder) ? helseutgiftDekkesPerioder[0] : undefined;
+  // Ref er nødvendig fordi oppdaterEllerOpprettHelseutgiftDekkesPeriode brukes
+  // i debouncedLagreHelseutgiftPeriode (useMemo), som fanger en stale closure.
+  // Ref sikrer at vi alltid leser siste verdi.
   const helseutgiftDekkesPeriodeRef = useRef(helseutgiftDekkesPeriode);
   helseutgiftDekkesPeriodeRef.current = helseutgiftDekkesPeriode;
   const { fomDato, tomDato, bostedLandkode } = helseutgiftDekkesPeriode ?? {};
