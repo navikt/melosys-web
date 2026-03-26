@@ -75,7 +75,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   );
 
   const alleTrygdeavgiftsperioderHarNullBeløp = lagretTrygdeavgift?.trygdeavgiftsperioder.every(
-    (periode) => periode.avgiftPerMd === 0 && erOrdinaerBeregning(periode.beregningstype),
+    (periode) => periode.avgiftPerMd === 0 && erOrdinaerBeregning(periode.beregningsregel),
   );
 
   const medlemskapsTypeErPliktig = medlemskapsperioder.every(

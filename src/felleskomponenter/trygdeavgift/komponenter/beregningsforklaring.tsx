@@ -1,14 +1,14 @@
-import { Beregningstype } from "../../../services/modules/trygdeavgift";
+import { Beregningsregel } from "../../../services/modules/trygdeavgift";
 
 import "./beregningsforklaring.less";
 
-interface MedBeregningstype {
-  beregningstype?: Beregningstype | null;
+interface MedBeregningsregel {
+  beregningsregel?: Beregningsregel | null;
   avgiftssats: number | null;
   harSammenslåtteInntektskilder?: boolean;
 }
 
-const BEREGNINGSTYPE_FORKLARINGER: Partial<Record<Beregningstype, { symbol: string; tekst: string }>> = {
+const BEREGNINGSREGEL_FORKLARINGER: Partial<Record<Beregningsregel, { symbol: string; tekst: string }>> = {
   TJUEFEM_PROSENT_REGEL: {
     symbol: "*",
     tekst: "Beregnet etter 25 %-regelen: Trygdeavgift skal ikke utgjøre mer enn 25 % av inntekt over minstebeløpet.",
@@ -16,14 +16,14 @@ const BEREGNINGSTYPE_FORKLARINGER: Partial<Record<Beregningstype, { symbol: stri
   MINSTEBELOEP: { symbol: "**", tekst: "Inntekten er under minstebeløpet." },
 };
 
-export function formaterSats(periode: MedBeregningstype): string {
-  const forklaring = periode.beregningstype ? BEREGNINGSTYPE_FORKLARINGER[periode.beregningstype] : undefined;
+export function formaterSats(periode: MedBeregningsregel): string {
+  const forklaring = periode.beregningsregel ? BEREGNINGSREGEL_FORKLARINGER[periode.beregningsregel] : undefined;
   if (forklaring) return forklaring.symbol;
   return periode.avgiftssats?.toString() ?? "";
 }
 
-export function erOrdinaerBeregning(beregningstype?: Beregningstype | null): boolean {
-  return !beregningstype || beregningstype === "ORDINAER";
+export function erOrdinaerBeregning(beregningsregel?: Beregningsregel | null): boolean {
+  return !beregningsregel || beregningsregel === "ORDINAER";
 }
 
 const AVGIFTSDEL_TEKST: Record<string, string> = {
@@ -49,13 +49,13 @@ export function formaterInntektskilde(
   return finnTerm(periode.inntektskildetype);
 }
 
-export function Beregningsforklaringer({ perioder }: { perioder: MedBeregningstype[] }) {
-  const typer = new Set(perioder.map((p) => p.beregningstype).filter(Boolean));
+export function Beregningsforklaringer({ perioder }: { perioder: MedBeregningsregel[] }) {
+  const typer = new Set(perioder.map((p) => p.beregningsregel).filter(Boolean));
   const harSammenslåtte = perioder.some((p) => p.harSammenslåtteInntektskilder);
 
-  const aktuelleForklaringer = (Object.keys(BEREGNINGSTYPE_FORKLARINGER) as Beregningstype[])
+  const aktuelleForklaringer = (Object.keys(BEREGNINGSREGEL_FORKLARINGER) as Beregningsregel[])
     .filter((type) => typer.has(type))
-    .map((type) => BEREGNINGSTYPE_FORKLARINGER[type]!);
+    .map((type) => BEREGNINGSREGEL_FORKLARINGER[type]!);
 
   if (aktuelleForklaringer.length === 0 && !harSammenslåtte) return null;
 

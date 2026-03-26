@@ -23,7 +23,7 @@ export interface TrygdeavgiftMottakerDto {
   trygdeavgiftMottaker: KTObject;
 }
 
-export type Beregningstype = "ORDINAER" | "TJUEFEM_PROSENT_REGEL" | "MINSTEBELOEP";
+export type Beregningsregel = "ORDINAER" | "TJUEFEM_PROSENT_REGEL" | "MINSTEBELOEP";
 
 export interface Trygdeavgiftsperiode {
   fom: string;
@@ -32,7 +32,7 @@ export interface Trygdeavgiftsperiode {
   inntektskildetype: string;
   avgiftssats: number | null;
   avgiftPerMd: number;
-  beregningstype?: Beregningstype | null;
+  beregningsregel?: Beregningsregel | null;
   harSammenslåtteInntektskilder?: boolean;
   avgiftsdel?: string | null;
 }

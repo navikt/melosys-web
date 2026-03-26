@@ -1,5 +1,5 @@
 import { Grunnlagsopplysninger } from "../../../../../services/modules/aarsavregning/aarsavregning";
-import { Beregningstype } from "../../../../../services/modules/trygdeavgift";
+import { Beregningsregel } from "../../../../../services/modules/trygdeavgift";
 import {
   formaterSats,
   formaterDekning,
@@ -26,7 +26,7 @@ interface DetaljerInterface {
   avgiftPerMd: number;
   skattepliktig: string;
   dekning: string;
-  beregningstype?: Beregningstype | null;
+  beregningsregel?: Beregningsregel | null;
   harSammenslåtteInntektskilder?: boolean;
   avgiftsdel?: string | null;
 }
@@ -72,7 +72,7 @@ export function BeregnetTrygdeavgiftDetaljer({
           skattepliktig:
             overlappingSkatteforhold && overlappingSkatteforhold.skatteplikttype === SKATTEPLIKTIG ? "Ja" : "Nei",
           dekning,
-          beregningstype: period.beregningstype,
+          beregningsregel: period.beregningsregel,
           harSammenslåtteInntektskilder: period.harSammenslåtteInntektskilder,
           avgiftsdel: period.avgiftsdel,
         };

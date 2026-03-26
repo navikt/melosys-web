@@ -81,7 +81,7 @@ describe("TrygdeavgiftsperioderTabell", () => {
       lagPeriode("2024-01-01", "2024-12-31", {
         avgiftssats: null,
         avgiftPerMd: 3448,
-        beregningstype: "TJUEFEM_PROSENT_REGEL",
+        beregningsregel: "TJUEFEM_PROSENT_REGEL",
       }),
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
@@ -93,33 +93,33 @@ describe("TrygdeavgiftsperioderTabell", () => {
       lagPeriode("2024-01-01", "2024-12-31", {
         avgiftssats: null,
         avgiftPerMd: 0,
-        beregningstype: "MINSTEBELOEP",
+        beregningsregel: "MINSTEBELOEP",
       }),
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
     expect(screen.getByText("**")).toBeDefined();
   });
 
-  it("viser tallverdi for ordinær beregningstype", () => {
+  it("viser tallverdi for ordinær beregningsregel", () => {
     const perioder = [
       lagPeriode("2024-01-01", "2024-12-31", {
         avgiftssats: 6.8,
-        beregningstype: "ORDINAER",
+        beregningsregel: "ORDINAER",
       }),
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
     expect(screen.getByText("6.8")).toBeDefined();
   });
 
-  it("viser fotnoter kun når relevante beregningstyper finnes", () => {
+  it("viser fotnoter kun når relevante beregningsregler finnes", () => {
     const perioder = [
       lagPeriode("2024-01-01", "2024-06-30", {
         avgiftssats: null,
-        beregningstype: "MINSTEBELOEP",
+        beregningsregel: "MINSTEBELOEP",
       }),
       lagPeriode("2024-07-01", "2024-12-31", {
         avgiftssats: null,
-        beregningstype: "TJUEFEM_PROSENT_REGEL",
+        beregningsregel: "TJUEFEM_PROSENT_REGEL",
       }),
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
@@ -142,7 +142,7 @@ describe("TrygdeavgiftsperioderTabell", () => {
     const perioder = [
       lagPeriode("2024-01-01", "2024-12-31", {
         avgiftssats: null,
-        beregningstype: "TJUEFEM_PROSENT_REGEL",
+        beregningsregel: "TJUEFEM_PROSENT_REGEL",
         harSammenslåtteInntektskilder: true,
       }),
     ];
@@ -171,7 +171,7 @@ describe("TrygdeavgiftsperioderTabell", () => {
     const perioder = [
       lagPeriode("2024-01-01", "2024-12-31", {
         avgiftssats: null,
-        beregningstype: "TJUEFEM_PROSENT_REGEL",
+        beregningsregel: "TJUEFEM_PROSENT_REGEL",
         avgiftsdel: "HELSE",
       }),
     ];
@@ -183,7 +183,7 @@ describe("TrygdeavgiftsperioderTabell", () => {
     const perioder = [
       lagPeriode("2024-01-01", "2024-12-31", {
         avgiftssats: null,
-        beregningstype: "TJUEFEM_PROSENT_REGEL",
+        beregningsregel: "TJUEFEM_PROSENT_REGEL",
         avgiftsdel: "PENSJON",
       }),
     ];
