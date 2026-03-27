@@ -10,7 +10,7 @@ export const STATUS = {
 
 const toJson = async (response) => {
   if (response.status === 204) {
-    return null;
+    return {};
   }
   try {
     return await response.clone().json();
