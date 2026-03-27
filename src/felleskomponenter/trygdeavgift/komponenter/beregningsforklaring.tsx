@@ -13,7 +13,7 @@ const BEREGNINGSREGEL_FORKLARINGER: Partial<Record<Beregningsregel, { symbol: st
     symbol: "*",
     tekst: "Beregnet etter 25 %-regelen: Trygdeavgift skal ikke utgjøre mer enn 25 % av inntekt over minstebeløpet.",
   },
-  MINSTEBELOEP: { symbol: "**", tekst: "Inntekten er under minstebeløpet." },
+  MINSTEBELØP: { symbol: "**", tekst: "Inntekten er under minstebeløpet." },
 };
 
 export function formaterSats(periode: MedBeregningsregel): string {
@@ -23,7 +23,7 @@ export function formaterSats(periode: MedBeregningsregel): string {
 }
 
 export function erOrdinaerBeregning(beregningsregel?: Beregningsregel | null): boolean {
-  return !beregningsregel || beregningsregel === "ORDINAER";
+  return !beregningsregel || beregningsregel === "ORDINÆR";
 }
 
 const AVGIFTSDEL_TEKST: Record<string, string> = {

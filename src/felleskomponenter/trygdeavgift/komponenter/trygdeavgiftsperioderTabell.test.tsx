@@ -93,7 +93,7 @@ describe("TrygdeavgiftsperioderTabell", () => {
       lagPeriode("2024-01-01", "2024-12-31", {
         avgiftssats: null,
         avgiftPerMd: 0,
-        beregningsregel: "MINSTEBELOEP",
+        beregningsregel: "MINSTEBELØP",
       }),
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
@@ -104,7 +104,7 @@ describe("TrygdeavgiftsperioderTabell", () => {
     const perioder = [
       lagPeriode("2024-01-01", "2024-12-31", {
         avgiftssats: 6.8,
-        beregningsregel: "ORDINAER",
+        beregningsregel: "ORDINÆR",
       }),
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
@@ -115,7 +115,7 @@ describe("TrygdeavgiftsperioderTabell", () => {
     const perioder = [
       lagPeriode("2024-01-01", "2024-06-30", {
         avgiftssats: null,
-        beregningsregel: "MINSTEBELOEP",
+        beregningsregel: "MINSTEBELØP",
       }),
       lagPeriode("2024-07-01", "2024-12-31", {
         avgiftssats: null,
