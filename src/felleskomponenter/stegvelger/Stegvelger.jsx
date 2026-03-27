@@ -2,6 +2,7 @@ import { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import PT from "prop-types";
+import { Alert } from "@navikt/ds-react";
 
 import MKV from "../../melosyskodeverk";
 import * as MPT from "../../proptypes";
@@ -61,6 +62,7 @@ class Stegvelger extends Component {
     stegStores: byggStegStores(),
     visMottatteOpplysningerFeilmeldinger: false,
     harTrygdeavgiftperiode: false,
+    lagreFeil: false,
   };
 
   aktiv = true;
@@ -527,6 +529,8 @@ class Stegvelger extends Component {
    * @param nyttStegNummer Number Steget som det skal byttes til.
    */
   tilSteg = async (nyttStegNummer) => {
+    this.setState({ lagreFeil: false });
+
     const {
       artikkel16_anmodning_skjema,
       soknad_skjema,
@@ -550,29 +554,35 @@ class Stegvelger extends Component {
 
     const flytHarIkkeVurderingPeriode = !(eøsFaktureringAvTrygdeavgiftToggleEnabled && erArbeidTjenestepersonEllerFly);
 
-    this.setState({ aktivtStegNummer: nyttStegNummer });
+    try {
+      if (redigerbart) {
+        if (sakstype !== MKV.Koder.sakstyper.FTRL) {
+          await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
 
-    if (redigerbart) {
-      if (sakstype !== MKV.Koder.sakstyper.FTRL) {
-        await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
+          if (flytHarIkkeVurderingPeriode || erVurderingPeriode) {
+            await lagreLovvalgsperioderHandler();
+          }
 
-        if (flytHarIkkeVurderingPeriode || erVurderingPeriode) {
-          await lagreLovvalgsperioderHandler();
+          if (!anmodningErSendtUtland) {
+            await lagreAvklartefaktaHandler();
+            await lagreVilkarHandler();
+            await lagreAnmodningsperioderHandler();
+            await lagreUtpekingsperioderHandler();
+          }
         }
 
-        if (!anmodningErSendtUtland) {
-          await lagreAvklartefaktaHandler();
-          await lagreVilkarHandler();
-          await lagreAnmodningsperioderHandler();
-          await lagreUtpekingsperioderHandler();
+        if (this.erSisteSteg(nyttStegNummer)) {
+          await lagreMottatteOpplysningerHandler();
         }
       }
-
-      if (this.erSisteSteg(nyttStegNummer)) {
-        await lagreMottatteOpplysningerHandler();
-      }
+    } catch (error) {
+      /* eslint-disable-next-line no-console */
+      console.error("Feil ved lagring under stegovergang:", error);
+      this.setState({ lagreFeil: true });
+      return;
     }
 
+    this.setState({ aktivtStegNummer: nyttStegNummer });
     this.oppdaterAktuelleSteg(nyttStegNummer, true);
   };
 
@@ -608,7 +618,7 @@ class Stegvelger extends Component {
   }
 
   render() {
-    const { visMottatteOpplysningerFeilmeldinger, aktivtStegNummer, aktuelleSteg } = this.state;
+    const { visMottatteOpplysningerFeilmeldinger, aktivtStegNummer, aktuelleSteg, lagreFeil } = this.state;
     const { redigerbart, oppsummering } = this.props;
     const visFeilmeldinger =
       this.erVedtakSteg(aktivtStegNummer) || aktuelleSteg[aktivtStegNummer]?.id === STEG.ARTIKKEL_16_ANMODNING;
@@ -618,6 +628,11 @@ class Stegvelger extends Component {
       <div className="stegvelger panelSeksjon">
         <StegLinje steg={aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
         <StatsborgerskapFeil className="varselmelding" />
+        {lagreFeil && (
+          <Alert variant="error" className="varselmelding">
+            Kunne ikke lagre. Prøv igjen.
+          </Alert>
+        )}
         {!redigerbart && <Innsynsmelding />}
         {visFeilmeldinger && <Feilmeldinger />}
         {erNyVurdering && redigerbart && inngangStegErAktivt && <NyVurderingMelding />}
