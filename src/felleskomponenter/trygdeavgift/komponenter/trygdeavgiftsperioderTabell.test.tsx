@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 vi.mock("../../../navFrontend", () => ({
+  Alert: ({ children }: any) => <div role="alert">{children}</div>,
   Table: Object.assign(({ children }: any) => <table>{children}</table>, {
     Header: ({ children }: any) => <thead>{children}</thead>,
     Body: ({ children }: any) => <tbody>{children}</tbody>,
@@ -88,12 +89,16 @@ describe("TrygdeavgiftsperioderTabell", () => {
     expect(screen.getByText("*")).toBeDefined();
   });
 
-  it("viser ** for minstebeløp", () => {
+  it("viser ** fotnote for minstebeløp når det er blanding av beregningsregler", () => {
     const perioder = [
-      lagPeriode("2024-01-01", "2024-12-31", {
+      lagPeriode("2024-01-01", "2024-06-30", {
         avgiftssats: null,
         avgiftPerMd: 0,
         beregningsregel: "MINSTEBELØP",
+      }),
+      lagPeriode("2024-07-01", "2024-12-31", {
+        avgiftssats: 6.8,
+        beregningsregel: "ORDINÆR",
       }),
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
@@ -191,9 +196,28 @@ describe("TrygdeavgiftsperioderTabell", () => {
     expect(screen.getByText("Pensjonsdel")).toBeDefined();
   });
 
-  it("viser normal dekning når avgiftsdel er null", () => {
-    const perioder = [lagPeriode("2024-01-01", "2024-12-31")];
+  it("viser infomelding i stedet for tabell når alle perioder er MINSTEBELØP", () => {
+    const perioder = [
+      lagPeriode("2024-01-01", "2024-06-30", { avgiftssats: null, avgiftPerMd: 0, beregningsregel: "MINSTEBELØP" }),
+      lagPeriode("2024-07-01", "2024-12-31", { avgiftssats: null, avgiftPerMd: 0, beregningsregel: "MINSTEBELØP" }),
+    ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
-    expect(screen.getByText("FULL")).toBeDefined();
+    expect(screen.getByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet.")).toBeDefined();
+    expect(screen.queryByText("Trygdeperiode")).toBeNull();
+  });
+
+  it("viser tabell (ikke infomelding) når kun noen perioder er MINSTEBELØP", () => {
+    const perioder = [
+      lagPeriode("2024-01-01", "2024-06-30", { avgiftssats: null, avgiftPerMd: 0, beregningsregel: "MINSTEBELØP" }),
+      lagPeriode("2024-07-01", "2024-12-31", { avgiftssats: 6.8, beregningsregel: "ORDINÆR" }),
+    ];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(screen.queryByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet.")).toBeNull();
+    expect(screen.getByText("Trygdeperiode")).toBeDefined();
+  });
+
+  it("viser ingen infomelding når ingen perioder", () => {
+    render(<TrygdeavgiftsperioderTabell perioder={[]} lagrePending={false} />);
+    expect(screen.queryByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet.")).toBeNull();
   });
 });
