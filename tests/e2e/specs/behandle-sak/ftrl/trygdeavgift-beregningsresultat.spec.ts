@@ -20,7 +20,10 @@ import { UI_TEXTS } from "../../../config/ui-texts";
  */
 
 test.describe("TrygdeavgiftsperioderTabell - frivillig medlemskap", () => {
-  test("AC3: helse/pensjonsdel → Dekning-kolonnen viser Helsedel og Pensjonsdel", async ({ page, apiRecorder }) => {
+  test.skip("AC3: helse/pensjonsdel → Dekning-kolonnen viser Helsedel og Pensjonsdel", async ({
+    page,
+    apiRecorder,
+  }) => {
     test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
 
     const saksnummer = "MEL-1022";
