@@ -12,6 +12,30 @@ export class AarsavregningPage extends BehandlingPage {
     super(page, saksnummer);
   }
 
+  // Klikk på Årsavregning-fanen for å navigere til årsavregning-visning
+  async klikkÅrsavregningFane(): Promise<void> {
+    const tab = this.page.getByRole("tab", { name: "Årsavregning" });
+    const erSynlig = await tab.isVisible({ timeout: 2000 }).catch(() => false);
+    if (erSynlig) {
+      await tab.click();
+    }
+  }
+
+  // Vent på at "Legg til periode"-knappen er synlig
+  async ventPåLeggTilPeriodeKnapp(): Promise<void> {
+    await expect(
+      this.page.getByRole("button", { name: UI_TEXTS.BUTTONS.LEGG_TIL_PERIODE }),
+      `${this.ctx}: "Legg til periode"-knappen skal være synlig`,
+    ).toBeVisible();
+  }
+
+  // Verifiser at "Legg til periode"-knappen er synlig og aktiv
+  async verifiserLeggTilPeriodeKnapp(): Promise<void> {
+    const knapp = this.page.getByRole("button", { name: UI_TEXTS.BUTTONS.LEGG_TIL_PERIODE });
+    await expect(knapp, `${this.ctx}: "Legg til periode"-knappen skal være synlig`).toBeVisible();
+    await expect(knapp, `${this.ctx}: "Legg til periode"-knappen skal være aktiv`).toBeEnabled();
+  }
+
   // Hent første tilgjengelige år fra dropdown-en (ikke "Velg...")
   async hentFørsteTilgjengeligeÅr(): Promise<string> {
     const årSelect = await finnCombobox("År", this.page, 5000);
@@ -26,7 +50,7 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   // År dropdown
-  async velgÅr(år: string) {
+  async velgÅr(år: string): Promise<void> {
     const årSelect = await finnCombobox("År", this.page, 5000);
 
     // Sett opp lyttere for API-kall FØR vi velger år
@@ -67,12 +91,12 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   // Bestemmelse
-  async velgBestemmelse(bestemmelse: string) {
+  async velgBestemmelse(bestemmelse: string): Promise<void> {
     await velgFraListe("Bestemmelse", bestemmelse, this.page);
   }
 
   // Medlemskapsperiode operasjoner
-  async leggTilMedlemskapsperiode() {
+  async leggTilMedlemskapsperiode(): Promise<void> {
     // Tell antall perioder før klikk
     const perioder = this.page.locator(".medlemskapsperiode__rad");
     const antallFør = await perioder.count();
@@ -84,7 +108,7 @@ export class AarsavregningPage extends BehandlingPage {
     await expect(perioder, `${this.ctx}: Ny medlemskapsperiode skal være lagt til`).toHaveCount(antallFør + 1);
   }
 
-  async fyllUtMedlemskapsperiodeFomDato(index: number, dato: string) {
+  async fyllUtMedlemskapsperiodeFomDato(index: number, dato: string): Promise<void> {
     // Finn wrapper med aria-label, så finn textbox inni
     const wrapper = this.page.locator(`[aria-label="Fra og med periode ${index + 1}"]`);
     await expect(wrapper, `${this.ctx}: Wrapper for fom-dato periode ${index + 1} ikke funnet`).toBeVisible();
@@ -92,7 +116,7 @@ export class AarsavregningPage extends BehandlingPage {
     await input.fill(dato);
   }
 
-  async fyllUtMedlemskapsperiodeTomDato(index: number, dato: string) {
+  async fyllUtMedlemskapsperiodeTomDato(index: number, dato: string): Promise<void> {
     // Finn wrapper med aria-label, så finn textbox inni
     const wrapper = this.page.locator(`[aria-label="Til og med periode ${index + 1}"]`);
     await expect(wrapper, `${this.ctx}: Wrapper for tom-dato periode ${index + 1} ikke funnet`).toBeVisible();
@@ -100,11 +124,11 @@ export class AarsavregningPage extends BehandlingPage {
     await input.fill(dato);
   }
 
-  async velgTrygdedekning(index: number, dekning: string) {
+  async velgTrygdedekning(index: number, dekning: string): Promise<void> {
     await velgFraListe(`Trygdedekning periode ${index + 1}`, dekning, this.page);
   }
 
-  async getMedlemskapsperiodeFomDato(index: number): Promise<string> {
+  async hentMedlemskapsperiodeFomDato(index: number): Promise<string> {
     const allInputs = await this.page
       .locator('.perioder input[type="text"]:visible, .perioder input:not([type]):visible')
       .all();
@@ -115,7 +139,7 @@ export class AarsavregningPage extends BehandlingPage {
     return (await allInputs[inputIndex].inputValue()) || "";
   }
 
-  async getAntallMedlemskapsperioder(): Promise<number> {
+  async hentAntallMedlemskapsperioder(): Promise<number> {
     // Vent på at minst ett trygdedekning-felt er synlig før telling
     const firstSelect = this.page.locator('select[name^="avgiftspliktigperioder["][name$="].trygdedekning"]').first();
     await expect(firstSelect, `${this.ctx}: Første trygdedekning-select skal være synlig`).toBeVisible();
@@ -123,12 +147,12 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   // Skatteforholdsperiode operasjoner
-  async klikkLeggTilSkatteforhold() {
+  async klikkLeggTilSkatteforhold(): Promise<void> {
     const knapp = await finnKnapp(UI_TEXTS.BUTTONS.LEGG_TIL_SKATTEFORHOLD, this.page);
     await knapp.click();
   }
 
-  async fyllUtSkatteforholdFomDato(index: number, dato: string) {
+  async fyllUtSkatteforholdFomDato(index: number, dato: string): Promise<void> {
     // Vent på at skatteforhold-seksjonen er synlig ved å sjekke for første textbox med label "Skatteforhold"
     const firstSkattLabel = this.page.locator('text="Skatteforhold"').first();
     await expect(firstSkattLabel, `${this.ctx}: Label 'Skatteforhold' skal være synlig`).toBeVisible();
@@ -151,7 +175,7 @@ export class AarsavregningPage extends BehandlingPage {
     await allInputs[inputIndex].fill(dato);
   }
 
-  async fyllUtSkatteforholdTomDato(index: number, dato: string) {
+  async fyllUtSkatteforholdTomDato(index: number, dato: string): Promise<void> {
     const firstSkattLabel = this.page.locator('text="Skatteforhold"').first();
     await expect(firstSkattLabel, `${this.ctx}: Label 'Skatteforhold' skal være synlig`).toBeVisible();
 
@@ -171,7 +195,7 @@ export class AarsavregningPage extends BehandlingPage {
     await allInputs[inputIndex].fill(dato);
   }
 
-  async velgSkatteplikttype(index: number, type: string) {
+  async velgSkatteplikttype(index: number, type: string): Promise<void> {
     // Skatteplikttype er en RadioGroup med "Ja"/"Nei", ikke en select
     // type parameter kan være "Ja" eller "Nei" (eller "Skattepliktig"/"Ikke skattepliktig")
     const radioValue = type.toLowerCase().includes("ja") || type.toLowerCase().includes("skattepliktig") ? "Ja" : "Nei";
@@ -184,12 +208,12 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   // Inntektsperiode operasjoner
-  async klikkLeggTilInntekt() {
+  async klikkLeggTilInntekt(): Promise<void> {
     const knapp = await finnKnapp(UI_TEXTS.BUTTONS.LEGG_TIL_INNTEKT, this.page);
     await knapp.click();
   }
 
-  async fyllUtInntektsperiodeFomDato(index: number, dato: string) {
+  async fyllUtInntektsperiodeFomDato(index: number, dato: string): Promise<void> {
     // Vent på at inntektsperiode-seksjonen er synlig
     const firstInntektLabel = this.page.locator('text="Inntektsperiode"').first();
     await expect(firstInntektLabel, `${this.ctx}: Label 'Inntektsperiode' skal være synlig`).toBeVisible();
@@ -211,7 +235,7 @@ export class AarsavregningPage extends BehandlingPage {
     await allInputs[inputIndex].fill(dato);
   }
 
-  async fyllUtInntektsperiodeTomDato(index: number, dato: string) {
+  async fyllUtInntektsperiodeTomDato(index: number, dato: string): Promise<void> {
     const firstInntektLabel = this.page.locator('text="Inntektsperiode"').first();
     await expect(firstInntektLabel, `${this.ctx}: Label 'Inntektsperiode' skal være synlig`).toBeVisible();
 
@@ -228,7 +252,7 @@ export class AarsavregningPage extends BehandlingPage {
     await allInputs[inputIndex].fill(dato);
   }
 
-  async velgKildetype(index: number, type: string) {
+  async velgKildetype(index: number, type: string): Promise<void> {
     // Bruk aria-label tilnærming for select, eller fall tilbake til name attribute hvis det fungerer
     const select = this.page.locator(`select[name="inntektskilder[${index}].kildetype"]`);
     await expect(select, `${this.ctx}: Kildetype-select for inntektsperiode ${index} skal være synlig`).toBeVisible();
@@ -247,7 +271,7 @@ export class AarsavregningPage extends BehandlingPage {
     await select.selectOption({ label: type });
   }
 
-  async fyllUtBruttoInntekt(index: number, belop: string) {
+  async fyllUtBruttoInntekt(index: number, belop: string): Promise<void> {
     const firstInntektLabel = this.page.locator('text="Inntektsperiode"').first();
     await expect(firstInntektLabel, `${this.ctx}: Label 'Inntektsperiode' skal være synlig`).toBeVisible();
 
@@ -266,7 +290,7 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   // Trygdeavgift fra Avgiftssystemet (delt grunnlag)
-  async velgDeltGrunnlagJa() {
+  async velgDeltGrunnlagJa(): Promise<void> {
     const jaRadio = this.page.getByRole("radio", { name: "Ja" }).first();
     await expect(jaRadio, `${this.ctx}: Radio-button 'Ja' skal være synlig`).toBeVisible();
 
@@ -286,16 +310,13 @@ export class AarsavregningPage extends BehandlingPage {
 
       // Prøv å velge radioknappen - hvis den er readonly vil dette feile
       // men vi fanger feilen og gir en mer beskrivende feilmelding
-      try {
-        await jaRadio.check({ timeout: 5000 });
-      } catch {
-        // Radioknappen er sannsynligvis readonly - sjekk om dette er forventet
-        throw new Error(
-          `${this.ctx}: Kunne ikke velge 'Ja' radioknapp. ` +
-            `Feltet er sannsynligvis readonly (forrigeÅrsavregningHarInnbetaltFraAvgiftssystem=true). ` +
-            `Denne testdataen støtter ikke delt grunnlag-test.`,
-        );
-      }
+      await expect(
+        jaRadio,
+        `${this.ctx}: Kunne ikke velge 'Ja' radioknapp. ` +
+          `Feltet er sannsynligvis readonly (forrigeÅrsavregningHarInnbetaltFraAvgiftssystem=true). ` +
+          `Denne testdataen støtter ikke delt grunnlag-test.`,
+      ).toBeEnabled({ timeout: 5000 });
+      await jaRadio.check();
 
       // Vent på at API-kallet for oppdaterHarTrygdeavgiftFraAvgiftssystemet fullføres
       await grunnlagstypeResponsePromise;
@@ -318,7 +339,7 @@ export class AarsavregningPage extends BehandlingPage {
   }
 
   // Datepicker-spesifikke metoder for å teste datovelger
-  async klikkMedlemskapsperiodeFomDatepicker(index: number) {
+  async klikkMedlemskapsperiodeFomDatepicker(index: number): Promise<void> {
     await finnCombobox(`Trygdedekning periode ${index + 1}`, this.page, 10000);
 
     const allInputs = await this.page
@@ -338,19 +359,19 @@ export class AarsavregningPage extends BehandlingPage {
     await datepickerButton.click();
   }
 
-  async verifiserDatepickerErAktiv() {
+  async verifiserDatepickerErAktiv(): Promise<void> {
     // NAV Design System bruker et dialog element for datepicker
     const datepicker = this.page.getByRole("dialog");
     await expect(datepicker, `${this.ctx}: Datepicker-dialog skal være synlig`).toBeVisible();
   }
 
-  async verifiserDatepickerIkkeErAktiv() {
+  async verifiserDatepickerIkkeErAktiv(): Promise<void> {
     // NAV Design System bruker et dialog element for datepicker
     const datepicker = this.page.getByRole("dialog");
     await expect(datepicker, `${this.ctx}: Datepicker-dialog skal ikke være synlig`).not.toBeVisible();
   }
 
-  async velgDatoIDatepicker(dato: Date) {
+  async velgDatoIDatepicker(dato: Date): Promise<void> {
     // NAV Design System bruker gridcell med button inne i dialog
     const dag = dato.getDate().toString();
 
@@ -363,12 +384,12 @@ export class AarsavregningPage extends BehandlingPage {
     await datoKnapp.click();
   }
 
-  async verifiserIngenFeilmelding(tekst: string) {
+  async verifiserIngenFeilmelding(tekst: string): Promise<void> {
     const error = this.page.locator('[class*="error"], [class*="feil"]').filter({ hasText: new RegExp(tekst, "i") });
     await expect(error, `${this.ctx}: Feilmelding "${tekst}" skal ikke være synlig`).not.toBeVisible();
   }
   // Verifiser at siden er lastet
-  async verifiserAarsavregningside() {
+  async verifiserAarsavregningside(): Promise<void> {
     await expect(
       this.page.getByRole("heading", { name: "Årsavregning" }),
       `${this.ctx}: Årsavregning-overskrift skal være synlig`,

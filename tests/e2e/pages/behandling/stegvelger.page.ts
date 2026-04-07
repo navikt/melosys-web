@@ -17,7 +17,7 @@ export class StegvelgerPage extends BehandlingPage {
    * Hent steg-tittel (h1) i aktivt steg
    */
   private get stegTittel(): Locator {
-    return this.page.locator("h1.stegvelgertittel");
+    return this.page.locator("h1.stegvelgertittel").first();
   }
 
   /**
@@ -116,10 +116,16 @@ export class StegvelgerPage extends BehandlingPage {
    * - Arbeidsland (RadioGroup: "Velg land fra liste" + MultiSelect)
    * - Trygdedekning (Select)
    */
-  async fyllUtInngangMinimum(fomDato: string, arbeidsland: string = "Sverige"): Promise<void> {
+  async fyllUtInngangMinimum(fomDato: string, arbeidsland: string = "Sverige", tomDato?: string): Promise<void> {
     // Fyll ut fra og med dato
     await setDatoFelt("Fra og med", fomDato, this.page);
     await this.page.keyboard.press("Tab"); // Lukk evt. datepicker
+
+    // Fyll ut til og med dato hvis oppgitt
+    if (tomDato) {
+      await setDatoFelt("Til og med", tomDato, this.page);
+      await this.page.keyboard.press("Tab");
+    }
 
     // Velg "Velg land fra liste" radio
     await velgRadioknapp("Velg land fra liste", this.page);
@@ -209,9 +215,10 @@ export class StegvelgerPage extends BehandlingPage {
 
     // Verifiser at en bestemmelse faktisk ble valgt (ikke "Velg...")
     const selectedValue = await bestemmelseSelect.inputValue();
-    if (!selectedValue) {
-      throw new Error(`${this.ctx}: Kunne ikke velge bestemmelse - ingen option ble valgt (fant ${count} options)`);
-    }
+    expect(
+      selectedValue,
+      `${this.ctx}: Kunne ikke velge bestemmelse - ingen option ble valgt (fant ${count} options)`,
+    ).toBeTruthy();
 
     // Vent på at React prosesserer change
     await this.page.waitForTimeout(500);
@@ -278,6 +285,41 @@ export class StegvelgerPage extends BehandlingPage {
     }
 
     // Velg resultat for første periode
+    const resultatSelect = this.page.getByRole("combobox", { name: UI_TEXTS.LABELS.RESULTAT }).first();
+    if (await resultatSelect.isVisible({ timeout: 2000 }).catch(() => false)) {
+      const selectedIndex = await resultatSelect.evaluate((el: HTMLSelectElement) => el.selectedIndex);
+      if (selectedIndex <= 0) {
+        await resultatSelect.selectOption({ index: 1 });
+      }
+    }
+
+    await this.page.waitForTimeout(500);
+  }
+
+  /**
+   * Fyll ut Perioder-steget med spesifikt år (for å unngå "tidligere år"-advarsel på Trygdeavgift)
+   */
+  async fyllUtPerioderMedÅr(år: string): Promise<void> {
+    await setDatoFelt("Til og med", `31.12.${år}`, this.page);
+    await this.page.waitForTimeout(300);
+
+    const trygdedekningSelect = this.page.getByRole("combobox", { name: "Trygdedekning" }).first();
+    if (await trygdedekningSelect.isVisible({ timeout: 2000 }).catch(() => false)) {
+      await this.page.waitForFunction(
+        (selector) => {
+          const select = document.querySelector(selector) as HTMLSelectElement;
+          return select && select.options.length > 1;
+        },
+        'select[name*="trygdedekning"]',
+        { timeout: 10000 },
+      );
+
+      const selectedIndex = await trygdedekningSelect.evaluate((el: HTMLSelectElement) => el.selectedIndex);
+      if (selectedIndex <= 0) {
+        await trygdedekningSelect.selectOption({ index: 1 });
+      }
+    }
+
     const resultatSelect = this.page.getByRole("combobox", { name: UI_TEXTS.LABELS.RESULTAT }).first();
     if (await resultatSelect.isVisible({ timeout: 2000 }).catch(() => false)) {
       const selectedIndex = await resultatSelect.evaluate((el: HTMLSelectElement) => el.selectedIndex);

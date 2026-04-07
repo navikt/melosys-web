@@ -16,7 +16,7 @@ async function setupSendBrevTest(page: Page, saksnummer: PrepopulertSaksnummer):
   await sendBrevPage.goto(url);
 
   await page.waitForLoadState("domcontentloaded");
-  await sendBrevPage.clickSendBrevTab();
+  await sendBrevPage.klikkSendBrevFane();
 
   return sendBrevPage;
 }
@@ -35,7 +35,7 @@ test.describe("Verifiser disable/enable av 'Send brev' knapp", () => {
     apiRecorder,
   }, testInfo) => {
     const sendBrevPage = await setupSendBrevTest(page, "MEL-1004");
-    await sendBrevPage.selectFirstMottaker();
+    await sendBrevPage.velgFørsteMottaker();
     await sendBrevPage.verifiserSendKnappDeaktivert();
   });
 
@@ -44,8 +44,8 @@ test.describe("Verifiser disable/enable av 'Send brev' knapp", () => {
     apiRecorder,
   }, testInfo) => {
     const sendBrevPage = await setupSendBrevTest(page, "MEL-1005");
-    await sendBrevPage.selectFirstMottaker();
-    await sendBrevPage.selectFirstBrevmal();
+    await sendBrevPage.velgFørsteMottaker();
+    await sendBrevPage.velgFørsteBrevmal();
     await sendBrevPage.verifiserSendKnappAktivert();
   });
 });
@@ -56,9 +56,9 @@ test.describe("Validering av brevmaler for mottaker 'Bruker eller brukers fullme
     apiRecorder,
   }, testInfo) => {
     const sendBrevPage = await setupSendBrevTest(page, "MEL-1006");
-    await sendBrevPage.selectMottakerByLabel("Bruker eller brukers fullmektig");
-    await sendBrevPage.selectBrevmalByLabel("Melding om manglende opplysninger til bruker");
-    await sendBrevPage.clickSendBrev();
+    await sendBrevPage.velgMottakerVedLabel("Bruker eller brukers fullmektig");
+    await sendBrevPage.velgBrevmalVedLabel("Melding om manglende opplysninger til bruker");
+    await sendBrevPage.klikkSendBrev();
 
     await assertErrors(page, [
       "Du må velge minst én av standardtekst eller fritekst",
@@ -68,9 +68,9 @@ test.describe("Validering av brevmaler for mottaker 'Bruker eller brukers fullme
 
   test("Korrekt validering for brevmal 'Fritekstbrev til bruker'", async ({ page, apiRecorder }, testInfo) => {
     const sendBrevPage = await setupSendBrevTest(page, "MEL-1007");
-    await sendBrevPage.selectMottakerByLabel("Bruker eller brukers fullmektig");
-    await sendBrevPage.selectBrevmalByLabel("Fritekstbrev til bruker");
-    await sendBrevPage.clickSendBrev();
+    await sendBrevPage.velgMottakerVedLabel("Bruker eller brukers fullmektig");
+    await sendBrevPage.velgBrevmalVedLabel("Fritekstbrev til bruker");
+    await sendBrevPage.klikkSendBrev();
 
     await assertErrors(page, [
       "Du må velge overskrift til brevet",
@@ -97,11 +97,11 @@ test.describe("Validering av årsavregning brevmaler", () => {
     await sendBrevPage.goto(url);
 
     await page.waitForLoadState("domcontentloaded");
-    await sendBrevPage.clickSendBrevTab();
+    await sendBrevPage.klikkSendBrevFane();
 
-    await sendBrevPage.selectMottakerByLabel("Bruker eller brukers fullmektig");
-    await sendBrevPage.selectBrevmalByLabel("Innhenting av inntektsopplysninger for årsavregning");
-    await sendBrevPage.clickSendBrev();
+    await sendBrevPage.velgMottakerVedLabel("Bruker eller brukers fullmektig");
+    await sendBrevPage.velgBrevmalVedLabel("Innhenting av inntektsopplysninger for årsavregning");
+    await sendBrevPage.klikkSendBrev();
 
     await assertErrors(page, ["Du må velge minst én av standardtekst eller fritekst"]);
   });

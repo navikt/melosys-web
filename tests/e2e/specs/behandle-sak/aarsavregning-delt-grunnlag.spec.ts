@@ -40,11 +40,8 @@ async function setupAarsavregningTest(page: Page, saksnummer: PrepopulertSaksnum
 
   await page.waitForLoadState("domcontentloaded");
 
-  // Naviger til årsavregning-tab (antatt lignende struktur som send-brev)
-  const aarsavregningTab = page.locator('button[role="tab"]:has-text("Årsavregning")');
-  if (await aarsavregningTab.isVisible({ timeout: 2000 }).catch(() => false)) {
-    await aarsavregningTab.click();
-  }
+  // Naviger til årsavregning-tab
+  await aarsavregningPage.klikkÅrsavregningFane();
 
   await aarsavregningPage.verifiserAarsavregningside();
 
@@ -75,13 +72,13 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
       // Tell antall eksisterende medlemskapsperioder (systemet kan ha lagt til en automatisk)
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      const antallFør = await aarsavregningPage.hentAntallMedlemskapsperioder();
 
       // Legg til ny medlemskapsperiode
       await aarsavregningPage.leggTilMedlemskapsperiode();
 
       // Verifiser at en ny periode er lagt til
-      const antallEtter = await aarsavregningPage.getAntallMedlemskapsperioder();
+      const antallEtter = await aarsavregningPage.hentAntallMedlemskapsperioder();
       expect(antallEtter).toBe(antallFør + 1);
 
       // Fyll ut datoer for den nye perioden (manuelt)
@@ -104,7 +101,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      const antallFør = await aarsavregningPage.hentAntallMedlemskapsperioder();
 
       // Legg til ny medlemskapsperiode
       await aarsavregningPage.leggTilMedlemskapsperiode();
@@ -125,7 +122,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.verifiserDatepickerIkkeErAktiv();
 
       // Verifiser at feltet har en verdi
-      const fomVerdi = await aarsavregningPage.getMedlemskapsperiodeFomDato(nyPeriodeIndex);
+      const fomVerdi = await aarsavregningPage.hentMedlemskapsperiodeFomDato(nyPeriodeIndex);
       expect(fomVerdi).not.toBe("");
     });
 
@@ -139,7 +136,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgDeltGrunnlagJa();
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      const antallFør = await aarsavregningPage.hentAntallMedlemskapsperioder();
 
       // Legg til ny medlemskapsperiode
       await aarsavregningPage.leggTilMedlemskapsperiode();
@@ -171,7 +168,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
       // Først, legg til medlemskapsperiode som dekker perioden
-      const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      const antallMedlemskapFør = await aarsavregningPage.hentAntallMedlemskapsperioder();
       await aarsavregningPage.leggTilMedlemskapsperiode();
 
       const nyMedlemIndex = antallMedlemskapFør;
@@ -199,10 +196,10 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
       // Vent på at "Legg til periode"-knappen blir synlig
-      await page.locator('button:has-text("Legg til periode")').waitFor({ state: "visible" });
+      await aarsavregningPage.ventPåLeggTilPeriodeKnapp();
 
       // Først, legg til medlemskapsperiode
-      const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      const antallMedlemskapFør = await aarsavregningPage.hentAntallMedlemskapsperioder();
       await aarsavregningPage.leggTilMedlemskapsperiode();
 
       const nyMedlemIndex = antallMedlemskapFør;
@@ -239,16 +236,9 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       // § 2-7 er en pliktig bestemmelse
       await aarsavregningPage.velgBestemmelse("§ 2-7 første ledd (opphold i Norge)");
 
-      // Vent på at "Legg til periode"-knappen blir synlig
-      await page.locator('button:has-text("Legg til periode")').waitFor({ state: "visible" });
-
-      // Verifiser at "Legg til periode"-knappen er synlig
+      // Verifiser at "Legg til periode"-knappen er synlig og aktiv
       // Dette var buggen: Knappen ble skjult for pliktige bestemmelser selv med delt grunnlag
-      const leggTilKnapp = page.locator('button:has-text("Legg til periode")');
-      await expect(leggTilKnapp).toBeVisible();
-
-      // Verifiser at knappen er klikkbar (ikke disabled)
-      await expect(leggTilKnapp).toBeEnabled();
+      await aarsavregningPage.verifiserLeggTilPeriodeKnapp();
     });
 
     test("kan legge til ny periode med pliktig bestemmelse og delt grunnlag", async ({
@@ -263,13 +253,13 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       // Velg en PLIKTIG bestemmelse
       await aarsavregningPage.velgBestemmelse("§ 2-7 første ledd (opphold i Norge)");
 
-      const antallFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      const antallFør = await aarsavregningPage.hentAntallMedlemskapsperioder();
 
       // Klikk på "Legg til periode"-knappen
       await aarsavregningPage.leggTilMedlemskapsperiode();
 
       // Verifiser at en ny periode er lagt til
-      const antallEtter = await aarsavregningPage.getAntallMedlemskapsperioder();
+      const antallEtter = await aarsavregningPage.hentAntallMedlemskapsperioder();
       expect(antallEtter).toBe(antallFør + 1);
 
       // Fyll ut den nye perioden
@@ -295,7 +285,7 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
       // Først, legg til medlemskapsperiode som dekker perioden
-      const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      const antallMedlemskapFør = await aarsavregningPage.hentAntallMedlemskapsperioder();
       await aarsavregningPage.leggTilMedlemskapsperiode();
 
       const nyMedlemIndex = antallMedlemskapFør;
@@ -330,10 +320,10 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
       // Vent på at "Legg til periode"-knappen blir synlig
-      await page.locator('button:has-text("Legg til periode")').waitFor({ state: "visible" });
+      await aarsavregningPage.ventPåLeggTilPeriodeKnapp();
 
       // Først, legg til medlemskapsperiode
-      const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      const antallMedlemskapFør = await aarsavregningPage.hentAntallMedlemskapsperioder();
       await aarsavregningPage.leggTilMedlemskapsperiode();
 
       const nyMedlemIndex = antallMedlemskapFør;
@@ -369,10 +359,10 @@ test.describe("Årsavregning delt grunnlag - Alle tester", () => {
       await aarsavregningPage.velgBestemmelse("§ 2-8 første ledd bokstav a (arbeidstaker)");
 
       // Vent på at "Legg til periode"-knappen blir synlig
-      await page.locator('button:has-text("Legg til periode")').waitFor({ state: "visible" });
+      await aarsavregningPage.ventPåLeggTilPeriodeKnapp();
 
       // Legg til medlemskapsperiode som dekker hele året
-      const antallMedlemskapFør = await aarsavregningPage.getAntallMedlemskapsperioder();
+      const antallMedlemskapFør = await aarsavregningPage.hentAntallMedlemskapsperioder();
       await aarsavregningPage.leggTilMedlemskapsperiode();
 
       const nyMedlemIndex = antallMedlemskapFør;

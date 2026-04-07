@@ -2,11 +2,12 @@ import { Page } from "@playwright/test";
 import { setDatoFelt } from "../../utils/testUtils";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
+import { StegvelgerPage } from "./stegvelger.page";
 
 /**
  * Page Object Model for Inngang-steget
  */
-export class InngangPage extends BehandlingPage {
+export class InngangPage extends StegvelgerPage {
   constructor(page: Page, saksnummer: PrepopulertSaksnummer) {
     super(page, saksnummer);
   }
@@ -29,6 +30,14 @@ export class InngangPage extends BehandlingPage {
    * Velg bostedsland for EØS pensjonist-saker
    * @param landkode - Landkode (f.eks. "SE" for Sverige, "DK" for Danmark)
    */
+  /**
+   * Velg trygdedekning fra dropdown på Inngang-steget
+   * @param label - Synlig tekst i dropdown (f.eks. "Helsedel (§ 2-9)")
+   */
+  async velgTrygdedekning(label: string): Promise<void> {
+    await this.page.getByRole("combobox", { name: "Trygdedekning" }).selectOption({ label });
+  }
+
   async velgLand(landkode: string): Promise<void> {
     const landSelect = this.page.getByLabel("Bostedsland");
     // Vent på at debounced API-kall fullføres
