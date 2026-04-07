@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "recordedAt": "2025-01-01T00:00:00.000Z",
-  "testFile": "/Users/ragnarwestad/develop/nav/melosys-web-2/tests/e2e/specs/behandle-sak/ftrl/navigasjon.spec.ts",
+  "testFile": "/Users/ragnarwestad/develop/nav/melosys-web/tests/e2e/specs/behandle-sak/ftrl/navigasjon.spec.ts",
   "testName": "Navigasjon gjennom alle steg med minimum input",
   "exchanges": [
     {
@@ -195,7 +195,7 @@
         },
         "body": [
           {
-            "id": 1,
+            "id": 36,
             "fomDato": "2024-01-01",
             "tomDato": "2024-12-31",
             "bestemmelse": "FTRL_KAP2_2_5_FØRSTE_LEDD_A",
@@ -617,7 +617,7 @@
                 "arbeidsforholdID": "123",
                 "arbeidsforholdIDnav": 123,
                 "ansettelsesPeriode": {
-                  "fom": "2021-02-17",
+                  "fom": "2021-04-07",
                   "tom": null
                 },
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
@@ -633,13 +633,13 @@
                       "term": "KONSULENT"
                     },
                     "gyldighetsperiode": {
-                      "fom": "2021-02-17",
+                      "fom": "2021-04-07",
                       "tom": null
                     },
                     "avtaltArbeidstimerPerUke": 37.5,
                     "stillingsprosent": 100,
                     "beregnetAntallTimerPrUke": 37.5,
-                    "endringsdatoStillingsprosent": "2021-02-17",
+                    "endringsdatoStillingsprosent": "2021-04-07",
                     "skipsregister": null,
                     "skipstype": null,
                     "maritimArbeidsavtale": false,
@@ -735,7 +735,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -764,7 +764,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -793,7 +793,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -822,7 +822,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -851,7 +851,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -880,7 +880,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -909,7 +909,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -938,7 +938,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -967,7 +967,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -996,7 +996,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1025,7 +1025,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1054,7 +1054,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1083,7 +1083,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1112,7 +1112,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1141,7 +1141,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1170,7 +1170,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1199,7 +1199,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1228,7 +1228,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1257,7 +1257,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1286,7 +1286,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1315,7 +1315,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1344,7 +1344,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1373,7 +1373,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1402,7 +1402,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1431,7 +1431,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1460,7 +1460,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1489,7 +1489,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1518,7 +1518,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1547,7 +1547,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1576,7 +1576,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1605,7 +1605,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1634,13 +1634,71 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
                           "tom": null
                         },
                         "utbetaltIPeriode": "2026-02",
+                        "opplysningspliktigID": "974761076",
+                        "virksomhetID": "888888888",
+                        "inntektsmottakerID": "30056928150",
+                        "inngaarIGrunnlagForTrekk": true,
+                        "utloeserArbeidsgiveravgift": true,
+                        "informasjonsstatus": "InngaarAlltid",
+                        "beskrivelse": "fastloenn"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "aarMaaned": "2026-03",
+                  "arbeidsInntektInformasjon": {
+                    "inntektListe": [
+                      {
+                        "type": "Loennsinntekt",
+                        "beloep": 50000,
+                        "fordel": "kontantytelse",
+                        "inntektskilde": "A-ordningen",
+                        "inntektsperiodetype": "Maaned",
+                        "inntektsstatus": "LoependeInnrapportert",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
+                        "opptjeningsland": null,
+                        "opptjeningsperiode": {
+                          "fom": null,
+                          "tom": null
+                        },
+                        "utbetaltIPeriode": "2026-03",
+                        "opplysningspliktigID": "974761076",
+                        "virksomhetID": "888888888",
+                        "inntektsmottakerID": "30056928150",
+                        "inngaarIGrunnlagForTrekk": true,
+                        "utloeserArbeidsgiveravgift": true,
+                        "informasjonsstatus": "InngaarAlltid",
+                        "beskrivelse": "fastloenn"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "aarMaaned": "2026-04",
+                  "arbeidsInntektInformasjon": {
+                    "inntektListe": [
+                      {
+                        "type": "Loennsinntekt",
+                        "beloep": 50000,
+                        "fordel": "kontantytelse",
+                        "inntektskilde": "A-ordningen",
+                        "inntektsperiodetype": "Maaned",
+                        "inntektsstatus": "LoependeInnrapportert",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
+                        "opptjeningsland": null,
+                        "opptjeningsperiode": {
+                          "fom": null,
+                          "tom": null
+                        },
+                        "utbetaltIPeriode": "2026-04",
                         "opplysningspliktigID": "974761076",
                         "virksomhetID": "888888888",
                         "inntektsmottakerID": "30056928150",
@@ -3943,7 +4001,7 @@
         },
         "body": [
           {
-            "id": 1,
+            "id": 36,
             "fomDato": "2024-01-01",
             "tomDato": null,
             "bestemmelse": "FTRL_KAP2_2_5_FØRSTE_LEDD_A",
@@ -4486,7 +4544,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-02-17",
+                    "gyldigFraOgMed": "2016-04-07",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -4509,7 +4567,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-02-17",
+                    "gyldigFraOgMed": "2016-04-07",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
@@ -4631,7 +4689,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-02-17",
+                    "gyldigFraOgMed": "2016-04-07",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -4654,7 +4712,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-02-17",
+                    "gyldigFraOgMed": "2016-04-07",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
@@ -5396,6 +5454,56 @@
                     "type": "Skilt",
                     "erHistorisk": true,
                     "__typename": "Sivilstand"
+                  }
+                ],
+                "__typename": "Personopplysninger"
+              },
+              "__typename": "Saksopplysninger"
+            }
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3333/graphql/",
+        "pathname": "/graphql/",
+        "normalizedPath": "/graphql/",
+        "query": {},
+        "headers": {
+          "content-type": "application/json",
+          "accept": "*/*",
+          "authorization": "[REDACTED]"
+        },
+        "body": {
+          "operationName": "hentStatsborgerskap",
+          "variables": {
+            "behandlingID": 21
+          },
+          "query": "query hentStatsborgerskap($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      statsborgerskap {\n        land\n        bekreftelsesdato\n        gyldigFraOgMed\n        gyldigTilOgMed\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
+        }
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "data": {
+            "hentSaksopplysninger": {
+              "persondata": {
+                "statsborgerskap": [
+                  {
+                    "land": "NORGE",
+                    "bekreftelsesdato": null,
+                    "gyldigFraOgMed": "1990-01-01",
+                    "gyldigTilOgMed": null,
+                    "master": "FREG",
+                    "kilde": "Folkeregisteret",
+                    "erHistorisk": false,
+                    "__typename": "Statsborgerskap"
                   }
                 ],
                 "__typename": "Personopplysninger"
@@ -5559,8 +5667,8 @@
     {
       "request": {
         "method": "PUT",
-        "url": "http://localhost:3333/api/behandlinger/21/medlemskapsperioder/1",
-        "pathname": "/api/behandlinger/21/medlemskapsperioder/1",
+        "url": "http://localhost:3333/api/behandlinger/21/medlemskapsperioder/36",
+        "pathname": "/api/behandlinger/21/medlemskapsperioder/36",
         "normalizedPath": "/api/behandlinger/:behandlingId/medlemskapsperioder/:id",
         "query": {},
         "headers": {
@@ -5583,7 +5691,7 @@
           "content-type": "application/json"
         },
         "body": {
-          "id": 1,
+          "id": 36,
           "fomDato": "2024-01-01",
           "tomDato": "2024-12-31",
           "bestemmelse": "FTRL_KAP2_2_5_FØRSTE_LEDD_A",

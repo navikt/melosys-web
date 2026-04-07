@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "recordedAt": "2025-01-01T00:00:00.000Z",
-  "testFile": "/Users/ragnarwestad/develop/nav/melosys-web-2/tests/e2e/specs/opprett-ny-sak/ny-sak/bruker-sak-validering.spec.ts",
+  "testFile": "/Users/ragnarwestad/develop/nav/melosys-web/tests/e2e/specs/opprett-ny-sak/ny-sak/bruker-sak-validering.spec.ts",
   "testName": "Opprett sak for sakstype \"EU/EØS-land\" og verifiser at det ikke oppstår noen feil",
   "exchanges": [
     {
@@ -1094,7 +1094,7 @@
           "journalforing": [],
           "saksbehandling": [
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "3",
               "prioritet": "NORM",
@@ -1135,7 +1135,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "4",
               "prioritet": "NORM",
@@ -1182,7 +1182,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "5",
               "prioritet": "NORM",
@@ -1229,7 +1229,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "6",
               "prioritet": "NORM",
@@ -1276,7 +1276,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "7",
               "prioritet": "NORM",
@@ -1323,7 +1323,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "8",
               "prioritet": "NORM",
@@ -1370,7 +1370,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "9",
               "prioritet": "NORM",
@@ -1411,7 +1411,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "10",
               "prioritet": "NORM",
@@ -1452,7 +1452,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "11",
               "prioritet": "NORM",
@@ -1493,7 +1493,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "12",
               "prioritet": "NORM",
@@ -1534,7 +1534,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "13",
               "prioritet": "NORM",
@@ -1575,7 +1575,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "14",
               "prioritet": "NORM",
@@ -1616,7 +1616,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "15",
               "prioritet": "NORM",
@@ -1657,15 +1657,15 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
-              "oppgaveID": "66",
+              "oppgaveID": "69",
               "prioritet": "NORM",
               "navn": "TRIVIELL KARAFFEL",
               "hovedpartIdent": "30056928150",
               "versjon": 1,
               "behandling": {
-                "behandlingID": 72,
+                "behandlingID": 75,
                 "behandlingstype": {
                   "kode": "ÅRSAVREGNING",
                   "term": "Årsavregning"
@@ -1704,7 +1704,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "18",
               "prioritet": "NORM",
@@ -1751,7 +1751,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "19",
               "prioritet": "NORM",
@@ -1792,7 +1792,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "20",
               "prioritet": "NORM",
@@ -1839,7 +1839,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "22",
               "prioritet": "NORM",
@@ -1886,7 +1886,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "23",
               "prioritet": "NORM",
@@ -1927,7 +1927,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "24",
               "prioritet": "NORM",
@@ -1974,7 +1974,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "25",
               "prioritet": "NORM",
@@ -2021,7 +2021,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "26",
               "prioritet": "NORM",
@@ -2068,7 +2068,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "27",
               "prioritet": "NORM",
@@ -2115,7 +2115,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "28",
               "prioritet": "NORM",
@@ -2156,7 +2156,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "29",
               "prioritet": "NORM",
@@ -2197,7 +2197,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "30",
               "prioritet": "NORM",
@@ -2238,7 +2238,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "31",
               "prioritet": "NORM",
@@ -2279,7 +2279,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "32",
               "prioritet": "NORM",
@@ -2320,7 +2320,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "33",
               "prioritet": "NORM",
@@ -2361,7 +2361,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "34",
               "prioritet": "NORM",
@@ -2402,7 +2402,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "35",
               "prioritet": "NORM",
@@ -2443,7 +2443,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "36",
               "prioritet": "NORM",
@@ -2484,7 +2484,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "37",
               "prioritet": "NORM",
@@ -2525,7 +2525,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "38",
               "prioritet": "NORM",
@@ -2566,7 +2566,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "39",
               "prioritet": "NORM",
@@ -2607,7 +2607,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "40",
               "prioritet": "NORM",
@@ -2648,7 +2648,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "41",
               "prioritet": "NORM",
@@ -2689,7 +2689,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "42",
               "prioritet": "NORM",
@@ -2736,7 +2736,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "43",
               "prioritet": "NORM",
@@ -2783,7 +2783,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "44",
               "prioritet": "NORM",
@@ -2830,7 +2830,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "45",
               "prioritet": "NORM",
@@ -2877,7 +2877,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "46",
               "prioritet": "NORM",
@@ -2924,7 +2924,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "47",
               "prioritet": "NORM",
@@ -2971,7 +2971,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "48",
               "prioritet": "NORM",
@@ -3018,7 +3018,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "49",
               "prioritet": "NORM",
@@ -3059,7 +3059,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "50",
               "prioritet": "NORM",
@@ -3100,7 +3100,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "51",
               "prioritet": "NORM",
@@ -3141,7 +3141,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "52",
               "prioritet": "NORM",
@@ -3188,7 +3188,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "53",
               "prioritet": "NORM",
@@ -3235,7 +3235,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "54",
               "prioritet": "NORM",
@@ -3282,7 +3282,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "55",
               "prioritet": "NORM",
@@ -3329,7 +3329,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "56",
               "prioritet": "NORM",
@@ -3364,13 +3364,19 @@
                 "kode": "TRYGDEAVGIFT",
                 "term": "Trygdeavgift"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": ["SE"],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1055\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "57",
               "prioritet": "NORM",
@@ -3405,13 +3411,19 @@
                 "kode": "TRYGDEAVGIFT",
                 "term": "Trygdeavgift"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": ["SE"],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1056\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "58",
               "prioritet": "NORM",
@@ -3452,7 +3464,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "59",
               "prioritet": "NORM",
@@ -3493,7 +3505,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "60",
               "prioritet": "NORM",
@@ -3534,7 +3546,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "61",
               "prioritet": "NORM",
@@ -3575,7 +3587,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "62",
               "prioritet": "NORM",
@@ -3616,7 +3628,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "63",
               "prioritet": "NORM",
@@ -3657,7 +3669,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "64",
               "prioritet": "NORM",
@@ -3698,7 +3710,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "65",
               "prioritet": "NORM",
@@ -3737,6 +3749,135 @@
               "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1071\n",
               "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-07-06",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "66",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 72,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "PENSJONIST",
+                  "term": "Pensjonist/uføretrygdet"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-01-01T00:00:00.000Z",
+                "endretDato": "2025-01-01T00:00:00.000Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1072",
+              "sakstype": {
+                "kode": "EU_EOS",
+                "term": "EU/EØS-land"
+              },
+              "sakstema": {
+                "kode": "TRYGDEAVGIFT",
+                "term": "Trygdeavgift"
+              },
+              "land": {
+                "landkoder": ["SE"],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1072\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-07-06",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "67",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 73,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "PENSJONIST",
+                  "term": "Pensjonist/uføretrygdet"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-01-01T00:00:00.000Z",
+                "endretDato": "2025-01-01T00:00:00.000Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1073",
+              "sakstype": {
+                "kode": "EU_EOS",
+                "term": "EU/EØS-land"
+              },
+              "sakstema": {
+                "kode": "TRYGDEAVGIFT",
+                "term": "Trygdeavgift"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1073\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-07-06",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "68",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 74,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "PENSJONIST",
+                  "term": "Pensjonist/uføretrygdet"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-01-01T00:00:00.000Z",
+                "endretDato": "2025-01-01T00:00:00.000Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1074",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "TRYGDEAVGIFT",
+                "term": "Trygdeavgift"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1074\n",
+              "sisteNotat": null
             }
           ]
         }
@@ -3765,15 +3906,15 @@
           "journalforing": [],
           "saksbehandling": [
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
-              "oppgaveID": "67",
+              "oppgaveID": "70",
               "prioritet": "NORM",
               "navn": "TRIVIELL KARAFFEL",
               "hovedpartIdent": "30056928150",
               "versjon": 1,
               "behandling": {
-                "behandlingID": 73,
+                "behandlingID": 76,
                 "behandlingstype": {
                   "kode": "FØRSTEGANG",
                   "term": "Førstegangsbehandling"
@@ -3812,7 +3953,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "3",
               "prioritet": "NORM",
@@ -3853,7 +3994,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "4",
               "prioritet": "NORM",
@@ -3900,7 +4041,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "5",
               "prioritet": "NORM",
@@ -3947,7 +4088,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "6",
               "prioritet": "NORM",
@@ -3994,7 +4135,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "7",
               "prioritet": "NORM",
@@ -4041,7 +4182,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "8",
               "prioritet": "NORM",
@@ -4088,7 +4229,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "9",
               "prioritet": "NORM",
@@ -4129,7 +4270,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "10",
               "prioritet": "NORM",
@@ -4170,7 +4311,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "11",
               "prioritet": "NORM",
@@ -4211,7 +4352,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "12",
               "prioritet": "NORM",
@@ -4252,7 +4393,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "13",
               "prioritet": "NORM",
@@ -4293,7 +4434,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "14",
               "prioritet": "NORM",
@@ -4334,7 +4475,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "15",
               "prioritet": "NORM",
@@ -4375,15 +4516,15 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
-              "oppgaveID": "66",
+              "oppgaveID": "69",
               "prioritet": "NORM",
               "navn": "TRIVIELL KARAFFEL",
               "hovedpartIdent": "30056928150",
               "versjon": 1,
               "behandling": {
-                "behandlingID": 72,
+                "behandlingID": 75,
                 "behandlingstype": {
                   "kode": "ÅRSAVREGNING",
                   "term": "Årsavregning"
@@ -4422,7 +4563,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "18",
               "prioritet": "NORM",
@@ -4469,7 +4610,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "19",
               "prioritet": "NORM",
@@ -4510,7 +4651,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "20",
               "prioritet": "NORM",
@@ -4557,7 +4698,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "22",
               "prioritet": "NORM",
@@ -4604,7 +4745,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "23",
               "prioritet": "NORM",
@@ -4645,7 +4786,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "24",
               "prioritet": "NORM",
@@ -4692,7 +4833,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "25",
               "prioritet": "NORM",
@@ -4739,7 +4880,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "26",
               "prioritet": "NORM",
@@ -4786,7 +4927,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "27",
               "prioritet": "NORM",
@@ -4833,7 +4974,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "28",
               "prioritet": "NORM",
@@ -4874,7 +5015,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "29",
               "prioritet": "NORM",
@@ -4915,7 +5056,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "30",
               "prioritet": "NORM",
@@ -4956,7 +5097,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "31",
               "prioritet": "NORM",
@@ -4997,7 +5138,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "32",
               "prioritet": "NORM",
@@ -5038,7 +5179,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "33",
               "prioritet": "NORM",
@@ -5079,7 +5220,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "34",
               "prioritet": "NORM",
@@ -5120,7 +5261,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "35",
               "prioritet": "NORM",
@@ -5161,7 +5302,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "36",
               "prioritet": "NORM",
@@ -5202,7 +5343,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "37",
               "prioritet": "NORM",
@@ -5243,7 +5384,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "38",
               "prioritet": "NORM",
@@ -5284,7 +5425,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "39",
               "prioritet": "NORM",
@@ -5325,7 +5466,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "40",
               "prioritet": "NORM",
@@ -5366,7 +5507,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "41",
               "prioritet": "NORM",
@@ -5407,7 +5548,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "42",
               "prioritet": "NORM",
@@ -5454,7 +5595,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "43",
               "prioritet": "NORM",
@@ -5501,7 +5642,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "44",
               "prioritet": "NORM",
@@ -5548,7 +5689,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "45",
               "prioritet": "NORM",
@@ -5595,7 +5736,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "46",
               "prioritet": "NORM",
@@ -5642,7 +5783,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "47",
               "prioritet": "NORM",
@@ -5689,7 +5830,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "48",
               "prioritet": "NORM",
@@ -5736,7 +5877,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "49",
               "prioritet": "NORM",
@@ -5777,7 +5918,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "50",
               "prioritet": "NORM",
@@ -5818,7 +5959,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "51",
               "prioritet": "NORM",
@@ -5859,7 +6000,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "52",
               "prioritet": "NORM",
@@ -5906,7 +6047,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "53",
               "prioritet": "NORM",
@@ -5953,7 +6094,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "54",
               "prioritet": "NORM",
@@ -6000,7 +6141,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "55",
               "prioritet": "NORM",
@@ -6047,7 +6188,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "56",
               "prioritet": "NORM",
@@ -6082,13 +6223,19 @@
                 "kode": "TRYGDEAVGIFT",
                 "term": "Trygdeavgift"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": ["SE"],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1055\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "57",
               "prioritet": "NORM",
@@ -6123,13 +6270,19 @@
                 "kode": "TRYGDEAVGIFT",
                 "term": "Trygdeavgift"
               },
-              "land": null,
-              "periode": null,
+              "land": {
+                "landkoder": ["SE"],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1056\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "58",
               "prioritet": "NORM",
@@ -6170,7 +6323,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "59",
               "prioritet": "NORM",
@@ -6211,7 +6364,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "60",
               "prioritet": "NORM",
@@ -6252,7 +6405,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "61",
               "prioritet": "NORM",
@@ -6293,7 +6446,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "62",
               "prioritet": "NORM",
@@ -6334,7 +6487,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "63",
               "prioritet": "NORM",
@@ -6375,7 +6528,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "64",
               "prioritet": "NORM",
@@ -6416,7 +6569,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-05-18",
+              "aktivTil": "2026-07-06",
               "ansvarligID": "Z123456",
               "oppgaveID": "65",
               "prioritet": "NORM",
@@ -6454,6 +6607,135 @@
               "land": null,
               "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1071\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-07-06",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "66",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 72,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "PENSJONIST",
+                  "term": "Pensjonist/uføretrygdet"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-01-01T00:00:00.000Z",
+                "endretDato": "2025-01-01T00:00:00.000Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1072",
+              "sakstype": {
+                "kode": "EU_EOS",
+                "term": "EU/EØS-land"
+              },
+              "sakstema": {
+                "kode": "TRYGDEAVGIFT",
+                "term": "Trygdeavgift"
+              },
+              "land": {
+                "landkoder": ["SE"],
+                "flereLandUkjentHvilke": false
+              },
+              "periode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1072\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-07-06",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "67",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 73,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "PENSJONIST",
+                  "term": "Pensjonist/uføretrygdet"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-01-01T00:00:00.000Z",
+                "endretDato": "2025-01-01T00:00:00.000Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1073",
+              "sakstype": {
+                "kode": "EU_EOS",
+                "term": "EU/EØS-land"
+              },
+              "sakstema": {
+                "kode": "TRYGDEAVGIFT",
+                "term": "Trygdeavgift"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1073\n",
+              "sisteNotat": null
+            },
+            {
+              "aktivTil": "2026-07-06",
+              "ansvarligID": "Z123456",
+              "oppgaveID": "68",
+              "prioritet": "NORM",
+              "navn": "TRIVIELL KARAFFEL",
+              "hovedpartIdent": "30056928150",
+              "versjon": 1,
+              "behandling": {
+                "behandlingID": 74,
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "PENSJONIST",
+                  "term": "Pensjonist/uføretrygdet"
+                },
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "erUnderOppdatering": false,
+                "registrertDato": "2025-01-01T00:00:00.000Z",
+                "endretDato": "2025-01-01T00:00:00.000Z",
+                "svarFrist": null
+              },
+              "saksnummer": "MEL-1074",
+              "sakstype": {
+                "kode": "FTRL",
+                "term": "Utenfor avtaleland"
+              },
+              "sakstema": {
+                "kode": "TRYGDEAVGIFT",
+                "term": "Trygdeavgift"
+              },
+              "land": null,
+              "periode": null,
+              "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1074\n",
               "sisteNotat": null
             }
           ]
@@ -7530,7 +7812,7 @@
                 "svarFrist": null
               },
               {
-                "behandlingID": 72,
+                "behandlingID": 75,
                 "tittel": "Årsavregning",
                 "behandlingsstatus": {
                   "kode": "OPPRETTET",
@@ -9734,12 +10016,12 @@
               "term": "Saken er opprettet"
             },
             "land": {
-              "landkoder": [],
+              "landkoder": ["SE"],
               "flereLandUkjentHvilke": false
             },
             "periode": {
-              "fom": null,
-              "tom": null
+              "fom": "2026-01-01",
+              "tom": "2026-12-31"
             },
             "opprettetDato": "2025-01-01T00:00:00.000Z",
             "behandlingOversikter": [
@@ -9788,12 +10070,12 @@
               "term": "Saken er opprettet"
             },
             "land": {
-              "landkoder": [],
+              "landkoder": ["SE"],
               "flereLandUkjentHvilke": false
             },
             "periode": {
-              "fom": null,
-              "tom": null
+              "fom": "2026-01-01",
+              "tom": "2026-12-31"
             },
             "opprettetDato": "2025-01-01T00:00:00.000Z",
             "behandlingOversikter": [
@@ -10635,6 +10917,168 @@
               }
             ],
             "hovedpartRolle": "BRUKER"
+          },
+          {
+            "saksnummer": "MEL-1072",
+            "navn": "TRIVIELL KARAFFEL",
+            "sakstema": {
+              "kode": "TRYGDEAVGIFT",
+              "term": "Trygdeavgift"
+            },
+            "sakstype": {
+              "kode": "EU_EOS",
+              "term": "EU/EØS-land"
+            },
+            "saksstatus": {
+              "kode": "OPPRETTET",
+              "term": "Saken er opprettet"
+            },
+            "land": {
+              "landkoder": ["SE"],
+              "flereLandUkjentHvilke": false
+            },
+            "periode": {
+              "fom": "2026-01-01",
+              "tom": "2026-12-31"
+            },
+            "opprettetDato": "2025-01-01T00:00:00.000Z",
+            "behandlingOversikter": [
+              {
+                "behandlingID": 72,
+                "tittel": "Førstegangsbehandling",
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "PENSJONIST",
+                  "term": "Pensjonist/uføretrygdet"
+                },
+                "soknadsperiode": {
+                  "fom": null,
+                  "tom": null
+                },
+                "opprettetDato": "2025-01-01T00:00:00.000Z",
+                "behandlingsresultattype": {
+                  "kode": "IKKE_FASTSATT",
+                  "term": "Ikke fastsatt"
+                },
+                "svarFrist": null
+              }
+            ],
+            "hovedpartRolle": "BRUKER"
+          },
+          {
+            "saksnummer": "MEL-1073",
+            "navn": "TRIVIELL KARAFFEL",
+            "sakstema": {
+              "kode": "TRYGDEAVGIFT",
+              "term": "Trygdeavgift"
+            },
+            "sakstype": {
+              "kode": "EU_EOS",
+              "term": "EU/EØS-land"
+            },
+            "saksstatus": {
+              "kode": "OPPRETTET",
+              "term": "Saken er opprettet"
+            },
+            "land": {
+              "landkoder": [],
+              "flereLandUkjentHvilke": false
+            },
+            "periode": {
+              "fom": null,
+              "tom": null
+            },
+            "opprettetDato": "2025-01-01T00:00:00.000Z",
+            "behandlingOversikter": [
+              {
+                "behandlingID": 73,
+                "tittel": "Førstegangsbehandling",
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "PENSJONIST",
+                  "term": "Pensjonist/uføretrygdet"
+                },
+                "soknadsperiode": {
+                  "fom": null,
+                  "tom": null
+                },
+                "opprettetDato": "2025-01-01T00:00:00.000Z",
+                "behandlingsresultattype": {
+                  "kode": "IKKE_FASTSATT",
+                  "term": "Ikke fastsatt"
+                },
+                "svarFrist": null
+              }
+            ],
+            "hovedpartRolle": "BRUKER"
+          },
+          {
+            "saksnummer": "MEL-1074",
+            "navn": "TRIVIELL KARAFFEL",
+            "sakstema": {
+              "kode": "TRYGDEAVGIFT",
+              "term": "Trygdeavgift"
+            },
+            "sakstype": {
+              "kode": "FTRL",
+              "term": "Utenfor avtaleland"
+            },
+            "saksstatus": {
+              "kode": "OPPRETTET",
+              "term": "Saken er opprettet"
+            },
+            "land": {
+              "landkoder": [],
+              "flereLandUkjentHvilke": false
+            },
+            "periode": {
+              "fom": null,
+              "tom": null
+            },
+            "opprettetDato": "2025-01-01T00:00:00.000Z",
+            "behandlingOversikter": [
+              {
+                "behandlingID": 74,
+                "tittel": "Førstegangsbehandling",
+                "behandlingsstatus": {
+                  "kode": "UNDER_BEHANDLING",
+                  "term": "Behandlingen pågår"
+                },
+                "behandlingstype": {
+                  "kode": "FØRSTEGANG",
+                  "term": "Førstegangsbehandling"
+                },
+                "behandlingstema": {
+                  "kode": "PENSJONIST",
+                  "term": "Pensjonist/uføretrygdet"
+                },
+                "soknadsperiode": {
+                  "fom": null,
+                  "tom": null
+                },
+                "opprettetDato": "2025-01-01T00:00:00.000Z",
+                "behandlingsresultattype": {
+                  "kode": "IKKE_FASTSATT",
+                  "term": "Ikke fastsatt"
+                },
+                "svarFrist": null
+              }
+            ],
+            "hovedpartRolle": "BRUKER"
           }
         ]
       }
@@ -10655,7 +11099,7 @@
           "behandlingstema": "ARBEID_KUN_NORGE",
           "behandlingstype": "FØRSTEGANG",
           "skalTilordnes": false,
-          "mottaksdato": "2026-02-17",
+          "mottaksdato": "2026-04-07",
           "behandlingsaarsakType": "SØKNAD",
           "hovedpart": "BRUKER",
           "brukerID": "30056928150",
