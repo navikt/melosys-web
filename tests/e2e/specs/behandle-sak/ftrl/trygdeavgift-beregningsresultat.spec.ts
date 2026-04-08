@@ -8,53 +8,50 @@ import { UI_TEXTS } from "../../../config/ui-texts";
 /**
  * E2E-test for TrygdeavgiftsperioderTabell - beregningsresultat for frivillig medlemskap (FTRL)
  *
- * Dekker akseptansekriterium AC3 fra todo 82 (MELOSYS-7988):
+ * Dekker akseptansekriterium AC3 fra MELOSYS-7989:
  * - AC3: Helse/pensjonsdel → Dekning-kolonnen viser "Helsedel" og "Pensjonsdel"
  *
+ * Tester:
+ * - FTRL YRKESAKTIV (MEL-1022): Inngang → Virksomhet → Bestemmelse → Perioder → Trygdeavgift
+ *
  * Strategi:
- * - FTRL MEDLEMSKAP_LOVVALG YRKESAKTIV-sak (MEL-1022) med § 2-8 (frivillig)
- * - Inngang: "Helsedel" trygdedekning (kompatibel med § 2-8)
- * - Navigerer Inngang → Virksomhet → Bestemmelse → Perioder → Trygdeavgift
- * - Ikke-skattepliktig + Næringsinntekt med 9000 kr/md → 25%-regel → helse/pensjonsdel splittes
+ * - Frivillig § 2-8 med "Helse- og pensjonsdel" trygdedekning
+ * - Ikke-skattepliktig + Næringsinntekt → 25%-regel → helse/pensjonsdel splittes
  * - Ekte API-kall mot /trygdeavgift/beregning
+ *
+ * NB: FTRL PENSJONIST mangler prepopulert testdata-sak (alle FTRL-saker er YRKESAKTIV)
  */
 
 test.describe("TrygdeavgiftsperioderTabell - frivillig medlemskap", () => {
-  test.skip("AC3: helse/pensjonsdel → Dekning-kolonnen viser Helsedel og Pensjonsdel", async ({
-    page,
-    apiRecorder,
-  }) => {
-    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
-
-    const saksnummer = "MEL-1022";
-    // === STEG 1: Inngang (Helsedel-dekning, kompatibel med frivillig § 2-8) ===
+  /**
+   * Navigerer gjennom FTRL-stegvelgeren: Inngang → Virksomhet → Bestemmelse → Perioder → Trygdeavgift
+   * Setter opp § 2-8 (frivillig) med "Helse- og pensjonsdel" trygdedekning
+   */
+  async function navigerFtrlTilTrygdeavgift(
+    page: import("@playwright/test").Page,
+    saksnummer: "MEL-1022",
+  ): Promise<TrygdeavgiftPage> {
     const inngangPage = new InngangPage(page, saksnummer);
     await inngangPage.goto(hentPrepopulertSakUrl(saksnummer));
 
     await inngangPage.verifiserSteg("Oppgi opplysninger fra søknaden");
     await inngangPage.fyllUtInngangMinimum("01.01.2026", "Sverige", "31.12.2026");
-    // Overstyr trygdedekning til "Helse- og pensjonsdel" (fyllUtInngangMinimum velger "Full dekning" som er inkompatibel med § 2-8)
     await inngangPage.velgTrygdedekning("Helse- og pensjonsdel (§ 2-9)");
     await page.waitForTimeout(300);
     await inngangPage.klikkBekreftOgFortsett();
 
-    // === STEG 2: Virksomhet ===
     const trygdeavgiftPage = new TrygdeavgiftPage(page, saksnummer);
     await trygdeavgiftPage.verifiserSteg("Virksomhet");
     await trygdeavgiftPage.velgFørsteVirksomhet();
     await trygdeavgiftPage.klikkBekreftOgFortsett();
 
-    // === STEG 3: Bestemmelse (§ 2-8 første ledd bokstav a → frivillig medlemskap) ===
     await trygdeavgiftPage.verifiserSteg("Bestemmelse");
     await trygdeavgiftPage.velgBestemmelse("§ 2-8");
     await trygdeavgiftPage.klikkBekreftOgFortsett();
 
-    // === STEG 4: Perioder (inneværende år) ===
     await trygdeavgiftPage.verifiserSteg("Medlemskapsperioder");
-    // await stegvelgerPage.fyllUtPerioderMedÅr("2026");
     await trygdeavgiftPage.klikkBekreftOgFortsett();
 
-    // === STEG 5: Trygdeavgift — vent på initial GET beregning før interaksjon
     await trygdeavgiftPage.verifiserSteg(UI_TEXTS.STEG.TRYGDEAVGIFT);
     await page
       .waitForResponse((resp) => resp.url().includes("/trygdeavgift/beregning") && resp.request().method() === "GET", {
@@ -62,11 +59,21 @@ test.describe("TrygdeavgiftsperioderTabell - frivillig medlemskap", () => {
       })
       .catch(() => {});
 
+    return trygdeavgiftPage;
+  }
+
+  test("FTRL Yrkesaktiv AC3: helse/pensjonsdel → Dekning-kolonnen viser Helsedel og Pensjonsdel", async ({
+    page,
+    apiRecorder,
+  }) => {
+    test.setTimeout(TIMEOUT_FOR_COMPLEX_TESTS);
+
+    const trygdeavgiftPage = await navigerFtrlTilTrygdeavgift(page, "MEL-1022");
+
     await trygdeavgiftPage.velgSkattepliktig(0, false);
     await trygdeavgiftPage.velgInntektskilde("Næringsinntekt fra Norge");
-    await trygdeavgiftPage.fyllInnBruttoinntektNr(0, "20000");
+    await trygdeavgiftPage.fyllInnBruttoinntektOgVentPåBeregning("20000");
 
-    // Verifiser helse/pensjonsdel via POM
     await trygdeavgiftPage.verifiserHelsePensjonsdel();
   });
 });
