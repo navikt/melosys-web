@@ -10,6 +10,7 @@ import {
 import { VurderingTrygdeavgift } from "./vurderingTrygdeavgift";
 import * as Api from "../../../services/api";
 import { useFeatureToggle } from "../../../featuretoggle";
+import TrygdeavgiftsperioderTabell from "../../../felleskomponenter/trygdeavgift/komponenter/trygdeavgiftsperioderTabell";
 
 vi.mock("../../../services/api", () => ({
   Trygdeavgift: {
@@ -32,7 +33,7 @@ vi.mock("../../../felleskomponenter/trygdeavgift/komponenter/inntektskilder", ()
 }));
 
 vi.mock("../../../felleskomponenter/trygdeavgift/komponenter/trygdeavgiftsperioderTabell", () => ({
-  default: () => <div data-testid="trygdeavgiftstabell">TrygdeavgiftsperioderTabell</div>,
+  default: vi.fn(() => <div data-testid="trygdeavgiftstabell">TrygdeavgiftsperioderTabell</div>),
 }));
 
 const createMockBeregnetTrygdeavgift = (overrides = {}) => ({
@@ -459,6 +460,138 @@ describe("VurderingTrygdeavgift (lovvalgsperiode)", () => {
       expect(screen.getByText(/må du angi sluttdato på lovvalgsperiode/)).toBeInTheDocument();
       await waitFor(() => {
         expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe("25%-regel og minstebeløp — dataflyt til TrygdeavgiftsperioderTabell", () => {
+    const mockPerioderMedBeregningsregel = (perioder: any[]) => {
+      vi.mocked(Api.Trygdeavgift.hentBeregnetTrygdeavgift).mockResolvedValue(
+        createMockBeregnetTrygdeavgift({
+          trygdeavgiftsperioder: perioder,
+          trygdeavgiftsgrunnlag: {
+            skatteforholdsperioder: [
+              { fomDato: "2024-01-01", tomDato: "2024-12-31", skatteplikttype: "IKKE_SKATTEPLIKTIG" },
+            ],
+            inntektskilder: [
+              {
+                type: "ARBEIDSINNTEKT",
+                arbeidsgiversavgiftBetales: false,
+                avgiftspliktigInntekt: 9000,
+                fomDato: "2024-01-01",
+                tomDato: "2024-12-31",
+                erMaanedsbelop: true,
+              },
+            ],
+          },
+        }) as any,
+      );
+      vi.mocked(Api.Trygdeavgift.beregnTrygdeavgiftsperioder).mockResolvedValue(
+        createMockBeregnetTrygdeavgift({ trygdeavgiftsperioder: perioder }) as any,
+      );
+    };
+
+    const hentTabellPerioder = (): any[] | undefined => {
+      const calls = vi.mocked(TrygdeavgiftsperioderTabell).mock.calls;
+      const sisteKall = calls[calls.length - 1];
+      return sisteKall?.[0]?.perioder;
+    };
+
+    it("sender perioder med beregningsregel TJUEFEM_PROSENT_REGEL til tabellen (AC2)", async () => {
+      mockPerioderMedBeregningsregel([
+        {
+          fom: "2024-01-01",
+          tom: "2024-12-31",
+          avgiftssats: null,
+          avgiftPerMd: 3448,
+          beregningsregel: "TJUEFEM_PROSENT_REGEL",
+        },
+      ]);
+
+      renderComponent();
+
+      await waitFor(() => {
+        const perioder = hentTabellPerioder();
+        expect(perioder).toBeDefined();
+        expect(perioder![0].beregningsregel).toBe("TJUEFEM_PROSENT_REGEL");
+      });
+    });
+
+    it("sender perioder med beregningsregel MINSTEBELØP til tabellen (AC1)", async () => {
+      mockPerioderMedBeregningsregel([
+        { fom: "2024-01-01", tom: "2024-12-31", avgiftssats: null, avgiftPerMd: 0, beregningsregel: "MINSTEBELØP" },
+      ]);
+
+      renderComponent();
+
+      await waitFor(() => {
+        const perioder = hentTabellPerioder();
+        expect(perioder).toBeDefined();
+        expect(perioder![0].beregningsregel).toBe("MINSTEBELØP");
+      });
+    });
+
+    it("sender perioder med harSammenslåtteInntektskilder til tabellen (AC4)", async () => {
+      mockPerioderMedBeregningsregel([
+        {
+          fom: "2024-01-01",
+          tom: "2024-12-31",
+          avgiftssats: null,
+          avgiftPerMd: 3448,
+          beregningsregel: "TJUEFEM_PROSENT_REGEL",
+          harSammenslåtteInntektskilder: true,
+        },
+      ]);
+
+      renderComponent();
+
+      await waitFor(() => {
+        const perioder = hentTabellPerioder();
+        expect(perioder).toBeDefined();
+        expect(perioder![0].harSammenslåtteInntektskilder).toBe(true);
+      });
+    });
+
+    it("sender perioder med avgiftsdel til tabellen (AC3)", async () => {
+      mockPerioderMedBeregningsregel([
+        {
+          fom: "2024-01-01",
+          tom: "2024-12-31",
+          avgiftssats: null,
+          avgiftPerMd: 2924,
+          beregningsregel: "TJUEFEM_PROSENT_REGEL",
+          avgiftsdel: "PENSJON",
+        },
+        {
+          fom: "2024-04-08",
+          tom: "2024-12-31",
+          avgiftssats: 9.1,
+          avgiftPerMd: 1820,
+          beregningsregel: "ORDINÆR",
+          avgiftsdel: "HELSE",
+        },
+      ]);
+
+      renderComponent();
+
+      await waitFor(() => {
+        const perioder = hentTabellPerioder();
+        expect(perioder).toBeDefined();
+        expect(perioder!.length).toBe(2);
+        expect(perioder![0].avgiftsdel).toBe("PENSJON");
+        expect(perioder![1].avgiftsdel).toBe("HELSE");
+      });
+    });
+
+    it("sender ikke erEøsPensjonist til tabellen for lovvalgsperiode", async () => {
+      mockPerioderMedBeregningsregel([{ fom: "2024-01-01", tom: "2024-12-31", avgiftssats: 5.1, avgiftPerMd: 10200 }]);
+
+      renderComponent();
+
+      await waitFor(() => {
+        const calls = vi.mocked(TrygdeavgiftsperioderTabell).mock.calls;
+        const sisteKall = calls[calls.length - 1];
+        expect(sisteKall?.[0]?.erEøsPensjonist).toBeFalsy();
       });
     });
   });
