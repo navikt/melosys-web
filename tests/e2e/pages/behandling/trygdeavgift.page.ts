@@ -61,7 +61,19 @@ export class TrygdeavgiftPage extends StegvelgerPage {
       `${this.ctx}: Fant ikke valget "${valgtekst}" for skatteforholdsperiode ${indeks}`,
     ).toBeVisible();
 
-    await radioInput.check({ force: true });
+    // Retry-loop: useEffect([lovvalgsperiode]) kan resette skatteforholdsperioder
+    // etter at radio er klikket. Vi prøver opptil 5 ganger med økende ventetid.
+    const maxRetries = 5;
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      await radioInput.check({ force: true });
+      await this.page.waitForTimeout(attempt * 300);
+      if (await radioInput.isChecked()) break;
+      if (attempt === maxRetries) {
+        throw new Error(
+          `${this.ctx}: Klarte ikke velge "${valgtekst}" for skatteforholdsperiode ${indeks} etter ${maxRetries} forsøk`,
+        );
+      }
+    }
   }
 
   /**
