@@ -7,7 +7,7 @@ describe("helseutgiftdekkesperiode reducer", () => {
   it("returnerer initial state", () => {
     const state = reducer(undefined, {} as any);
     expect(state.status).toBe(STATUS.NOT_STARTED);
-    expect(state.data).toEqual({});
+    expect(state.data).toEqual([]);
   });
 
   it("setter PENDING", () => {
@@ -15,7 +15,7 @@ describe("helseutgiftdekkesperiode reducer", () => {
   });
 
   it("setter OK med data", () => {
-    const data = { fom: "2024-01-01" };
+    const data = [{ id: 1, fomDato: "2024-01-01", tomDato: "2024-12-31" }];
     const next = reducer(undefined, { type: Types.OK, data } as any);
     expect(next.status).toBe(STATUS.OK);
     expect(next.data).toEqual(data);

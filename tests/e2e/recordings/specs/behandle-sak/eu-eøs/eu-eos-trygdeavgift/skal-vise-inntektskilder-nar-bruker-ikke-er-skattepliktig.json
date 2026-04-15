@@ -165,10 +165,12 @@
         "body": null
       },
       "response": {
-        "status": 204,
-        "statusText": "No Content",
-        "headers": {},
-        "body": null
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
       }
     },
     {
@@ -190,11 +192,13 @@
         "headers": {
           "content-type": "application/json"
         },
-        "body": {
-          "fomDato": "2026-01-01",
-          "tomDato": "2026-12-31",
-          "bostedLandkode": "SE"
-        }
+        "body": [
+          {
+            "fomDato": "2026-01-01",
+            "tomDato": "2026-12-31",
+            "bostedLandkode": "SE"
+          }
+        ]
       }
     },
     {
@@ -216,11 +220,13 @@
         "headers": {
           "content-type": "application/json"
         },
-        "body": {
-          "fomDato": "2026-01-01",
-          "tomDato": "2026-12-31",
-          "bostedLandkode": "SE"
-        }
+        "body": [
+          {
+            "fomDato": "2026-01-01",
+            "tomDato": "2026-12-31",
+            "bostedLandkode": "SE"
+          }
+        ]
       }
     },
     {
