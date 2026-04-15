@@ -216,7 +216,7 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
       expect(hasError(err, "skatteforholdsperioder[0].fomDato", "Utenfor valgt år")).toBe(false);
     });
 
-    it("skal vise 'Utenfor valgt år' for gyldig dato utenfor året", async () => {
+    it("skal vise 'Utenfor medlemskapsperiode' for gyldig dato utenfor medlemskapsperioden", async () => {
       const values = {
         endeligAvgiftValg: OPPLYSNINGER_ENDRET,
         bestemmelse: "FTRL_2_7",
@@ -242,7 +242,7 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
 
       const err = await validate(values, { aar: 2024 });
       expect(err).toBeTruthy();
-      expect(hasError(err, "skatteforholdsperioder[0].fomDato", "Utenfor valgt år")).toBe(true);
+      expect(hasError(err, "skatteforholdsperioder[0].fomDato", "Utenfor medlemskapsperiode")).toBe(true);
     });
   });
 

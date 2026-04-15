@@ -161,16 +161,11 @@ const medlemskapsperiodeSchema = object().shape({
 });
 
 const skatteforholdsperiodeSchema = object().shape({
-  fomDato: string()
-    .required(MAA_FYLLES_UT)
-    .erGyldigDato()
-    .test(erInnenforValgtAarTest)
-    .test(erInnenforAvgiftspliktigperiodeTest),
+  fomDato: string().required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforAvgiftspliktigperiodeTest),
   tomDato: string()
     .required(MAA_FYLLES_UT)
     .erGyldigDato()
     .test(åpenTomTest)
-    .test(erInnenforValgtAarTest)
     .test(erInnenforAvgiftspliktigperiodeTest)
     .erEtterDatofelt("fomDato"),
   skatteplikttype: string().required(MAA_FYLLES_UT),
