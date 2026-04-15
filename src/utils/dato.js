@@ -14,9 +14,9 @@ const MAX_AR_FREM_I_TID = 10;
 
 /**
  * Z indikerer at datoen er i UTC tidssone, i vinteren er det 1 time forskjell mellom UTC og norsk tid.
- * 08:00 er derfor kl 09:00 i norsk tid.
+ * 14:19 er derfor kl 15:19 i norsk tid.
  */
-const FLYT_PRODUKSJON_DATO_EØS_11_3_B = moment("2026-02-26T08:00:00Z");
+const FLYT_PRODUKSJON_DATO_EØS_11_3_B = moment("2026-03-10T14:19:00Z");
 
 /** Gjør et beste forsøk på å vaske inputdato. Dersom vask ikke er mulig (feks ved helt feil datoformat eller
  * ugyldig dato, returner false.

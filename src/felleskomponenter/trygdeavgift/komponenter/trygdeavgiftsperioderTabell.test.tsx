@@ -32,14 +32,16 @@ vi.mock("../../spinner", () => ({
 }));
 
 import TrygdeavgiftsperioderTabell from "./trygdeavgiftsperioderTabell";
+import { Trygdeavgiftsperiode } from "../../../services/modules/trygdeavgift";
 
-const lagPeriode = (fom: string, tom: string) => ({
+const lagPeriode = (fom: string, tom: string, overrides?: Partial<Trygdeavgiftsperiode>): Trygdeavgiftsperiode => ({
   fom,
   tom,
   trygdedekning: "FULL",
   inntektskildetype: "LØNN",
-  avgiftssats: "7.8",
-  avgiftPerMd: "1234",
+  avgiftssats: 7.8,
+  avgiftPerMd: 1234,
+  ...overrides,
 });
 
 describe("TrygdeavgiftsperioderTabell", () => {
@@ -61,8 +63,8 @@ describe("TrygdeavgiftsperioderTabell", () => {
     expect(screen.queryByText("Dekning")).toBeNull();
   });
 
-  it("rendrer periodedata", () => {
-    const perioder = [lagPeriode("2024-01-01", "2024-06-30")] as any;
+  it("rendrer periodedata med ordinær sats", () => {
+    const perioder = [lagPeriode("2024-01-01", "2024-06-30")];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
     expect(screen.getByText("2024-01-01 - 2024-06-30")).toBeDefined();
     expect(screen.getByText("7.8")).toBeDefined();
@@ -72,5 +74,126 @@ describe("TrygdeavgiftsperioderTabell", () => {
   it("viser spinner når lagrePending", () => {
     render(<TrygdeavgiftsperioderTabell perioder={[]} lagrePending={true} />);
     expect(screen.getByText("Laster...")).toBeDefined();
+  });
+
+  it("viser * for 25%-regel", () => {
+    const perioder = [
+      lagPeriode("2024-01-01", "2024-12-31", {
+        avgiftssats: null,
+        avgiftPerMd: 3448,
+        beregningsregel: "TJUEFEM_PROSENT_REGEL",
+      }),
+    ];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(screen.getByText("*")).toBeDefined();
+  });
+
+  it("viser ** for minstebeløp", () => {
+    const perioder = [
+      lagPeriode("2024-01-01", "2024-12-31", {
+        avgiftssats: null,
+        avgiftPerMd: 0,
+        beregningsregel: "MINSTEBELØP",
+      }),
+    ];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(screen.getByText("**")).toBeDefined();
+  });
+
+  it("viser tallverdi for ordinær beregningsregel", () => {
+    const perioder = [
+      lagPeriode("2024-01-01", "2024-12-31", {
+        avgiftssats: 6.8,
+        beregningsregel: "ORDINÆR",
+      }),
+    ];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(screen.getByText("6.8")).toBeDefined();
+  });
+
+  it("viser fotnoter kun når relevante beregningsregler finnes", () => {
+    const perioder = [
+      lagPeriode("2024-01-01", "2024-06-30", {
+        avgiftssats: null,
+        beregningsregel: "MINSTEBELØP",
+      }),
+      lagPeriode("2024-07-01", "2024-12-31", {
+        avgiftssats: null,
+        beregningsregel: "TJUEFEM_PROSENT_REGEL",
+      }),
+    ];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(
+      screen.getByText(
+        "* Beregnet etter 25 %-regelen: Trygdeavgift skal ikke utgjøre mer enn 25 % av inntekt over minstebeløpet.",
+      ),
+    ).toBeDefined();
+    expect(screen.getByText("** Inntekten er under minstebeløpet.")).toBeDefined();
+  });
+
+  it("viser ingen fotnoter for kun ordinære perioder", () => {
+    const perioder = [lagPeriode("2024-01-01", "2024-12-31")];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(screen.queryByText(/Beregnet etter 25 %-regelen/)).toBeNull();
+    expect(screen.queryByText(/Inntekten er under minstebeløpet/)).toBeNull();
+  });
+
+  it("viser *** for sammenslåtte inntektskilder", () => {
+    const perioder = [
+      lagPeriode("2024-01-01", "2024-12-31", {
+        avgiftssats: null,
+        beregningsregel: "TJUEFEM_PROSENT_REGEL",
+        harSammenslåtteInntektskilder: true,
+      }),
+    ];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(screen.getByText("***")).toBeDefined();
+    expect(screen.queryByText("LØNN")).toBeNull();
+  });
+
+  it("viser *** fotnote når sammenslåtte inntektskilder finnes", () => {
+    const perioder = [
+      lagPeriode("2024-01-01", "2024-12-31", {
+        harSammenslåtteInntektskilder: true,
+      }),
+    ];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(screen.getByText("*** Mer enn en inntektskilde")).toBeDefined();
+  });
+
+  it("viser ingen *** fotnote når ingen sammenslåtte inntektskilder", () => {
+    const perioder = [lagPeriode("2024-01-01", "2024-12-31")];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(screen.queryByText(/Mer enn en inntektskilde/)).toBeNull();
+  });
+
+  it("viser Helsedel når avgiftsdel er HELSE", () => {
+    const perioder = [
+      lagPeriode("2024-01-01", "2024-12-31", {
+        avgiftssats: null,
+        beregningsregel: "TJUEFEM_PROSENT_REGEL",
+        avgiftsdel: "HELSE",
+      }),
+    ];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(screen.getByText("Helsedel")).toBeDefined();
+  });
+
+  it("viser Pensjonsdel når avgiftsdel er PENSJON", () => {
+    const perioder = [
+      lagPeriode("2024-01-01", "2024-12-31", {
+        avgiftssats: null,
+        beregningsregel: "TJUEFEM_PROSENT_REGEL",
+        avgiftsdel: "PENSJON",
+      }),
+    ];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(screen.getByText("Pensjonsdel")).toBeDefined();
+  });
+
+  it("viser normal dekning når avgiftsdel er null", () => {
+    const perioder = [lagPeriode("2024-01-01", "2024-12-31")];
+    render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
+    expect(screen.getByText("FULL")).toBeDefined();
   });
 });
