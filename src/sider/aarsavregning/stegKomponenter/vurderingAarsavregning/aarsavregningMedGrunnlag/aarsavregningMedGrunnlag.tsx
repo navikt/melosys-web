@@ -112,8 +112,8 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
       return {
         skatteforholdsperioder: [{}],
         inntektskilder: [{}],
-        endeligAvgiftValg: "",
-        manueltAvgiftBeloep: undefined,
+        endeligAvgiftValg: endeligAvgiftValg || "",
+        manueltAvgiftBeloep,
       };
     }
 
