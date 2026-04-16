@@ -29,6 +29,7 @@ import {
 } from "../../../felleskomponenter/trygdeavgift/komponenter/types";
 import MKV from "../../../melosyskodeverk";
 import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../../services/modules/trygdeavgift";
+import { erOrdinaerBeregning } from "../../../felleskomponenter/trygdeavgift/komponenter/beregningsforklaring";
 import "./vurderingTrygdeavgift.less";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 
@@ -66,9 +67,12 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const helseutgiftDekkesPeriodeData = useSelector(
     helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector,
   ).data;
+  const foersteHelseutgiftDekkesPeriode = Array.isArray(helseutgiftDekkesPeriodeData)
+    ? helseutgiftDekkesPeriodeData[0]
+    : undefined;
   const helseutgiftDekkesPeriode = {
-    fom: helseutgiftDekkesPeriodeData.fomDato,
-    tom: helseutgiftDekkesPeriodeData.tomDato,
+    fom: foersteHelseutgiftDekkesPeriode?.fomDato ?? "",
+    tom: foersteHelseutgiftDekkesPeriode?.tomDato ?? "",
   };
 
   const erEøsPensjonist = sakstype === EU_EOS && behandlingstema === PENSJONIST;
@@ -80,7 +84,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const [lagrePending, setLagrePending] = useState(false);
   const alleTrygdeavgiftsperioderHarNullBeløp = lagretTrygdeavgift?.trygdeavgiftsperioder.every(
-    (periode) => periode.avgiftPerMd === 0,
+    (periode) => periode.avgiftPerMd === 0 && erOrdinaerBeregning(periode.beregningsregel),
   );
 
   const formattedDefaultPeriode = () => {
