@@ -28,7 +28,7 @@ function opprettHelseutgiftDekkesPeriode(behandlingresultatID: number, data: Hel
   return doThenDispatch(
     () =>
       Api.HelseutgiftDekningPeriode.opprettHelseutgiftDekkesPeriode(behandlingresultatID, data).then(() =>
-        Api.HelseutgiftDekningPeriode.hentHelseutgiftDekkesPerioder(behandlingresultatID).catch(() => []),
+        Api.HelseutgiftDekningPeriode.hentHelseutgiftDekkesPerioder(behandlingresultatID),
       ),
     {
       OK: Types.OK,
@@ -46,7 +46,7 @@ function oppdaterHelseutgiftDekkesPeriode(behandlingresultatID: number, data: He
   return doThenDispatch(
     () =>
       Api.HelseutgiftDekningPeriode.oppdaterHelseutgiftDekkesPeriode(behandlingresultatID, periodeId, data).then(() =>
-        Api.HelseutgiftDekningPeriode.hentHelseutgiftDekkesPerioder(behandlingresultatID).catch(() => []),
+        Api.HelseutgiftDekningPeriode.hentHelseutgiftDekkesPerioder(behandlingresultatID),
       ),
     {
       OK: Types.OK,
