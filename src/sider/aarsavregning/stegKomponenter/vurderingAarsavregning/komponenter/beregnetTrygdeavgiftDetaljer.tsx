@@ -1,4 +1,11 @@
 import { Grunnlagsopplysninger } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { Beregningsregel } from "../../../../../services/modules/trygdeavgift";
+import {
+  formaterSats,
+  formaterDekning,
+  formaterInntektskilde,
+  Beregningsforklaringer,
+} from "../../../../../felleskomponenter/trygdeavgift/komponenter/beregningsforklaring";
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 import MKV from "../../../../../melosyskodeverk";
@@ -15,10 +22,13 @@ interface DetaljerInterface {
   inntektskildetype: string;
   arbeidsgiversavgiftBetales: string;
   inntektPerMd: number;
-  avgiftssats: number;
+  avgiftssats: number | null;
   avgiftPerMd: number;
   skattepliktig: string;
   dekning: string;
+  beregningsregel?: Beregningsregel | null;
+  harSammenslåtteInntektskilder?: boolean;
+  avgiftsdel?: string | null;
 }
 
 export function BeregnetTrygdeavgiftDetaljer({
@@ -62,12 +72,17 @@ export function BeregnetTrygdeavgiftDetaljer({
           skattepliktig:
             overlappingSkatteforhold && overlappingSkatteforhold.skatteplikttype === SKATTEPLIKTIG ? "Ja" : "Nei",
           dekning,
+          beregningsregel: period.beregningsregel,
+          harSammenslåtteInntektskilder: period.harSammenslåtteInntektskilder,
+          avgiftsdel: period.avgiftsdel,
         };
       })
       .sort(Utils.dato.sorterEtterISOFomDato);
   };
 
   const arbAvgBetalesKreves = (kildetype: string) => !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
+
+  const detaljerListe = hentDetaljer(grunnlag);
 
   return (
     <div className="tidligereGrunnlagPanel">
@@ -85,7 +100,7 @@ export function BeregnetTrygdeavgiftDetaljer({
           </Nav.Table.Row>
         </Nav.Table.Header>
         <Nav.Table.Body>
-          {hentDetaljer(grunnlag).map((detaljer) => (
+          {detaljerListe.map((detaljer) => (
             <Nav.Table.Row className="border_top" key={Utils._uuid()}>
               <Nav.Table.DataCell key={Utils._uuid()}>
                 {`${Utils.dato.formatterDatoTilNorsk(detaljer.fom)} - ${Utils.dato.formatterDatoTilNorsk(
@@ -93,13 +108,13 @@ export function BeregnetTrygdeavgiftDetaljer({
                 )}`}
               </Nav.Table.DataCell>
               <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
-                {detaljer.avgiftssats}
+                {formaterSats(detaljer)}
               </Nav.Table.DataCell>
               <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
                 {formaterTilNorskBelopUtenDesimaler(detaljer.avgiftPerMd)} kr
               </Nav.Table.DataCell>
               <Nav.Table.DataCell key={Utils._uuid()}>
-                {KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, detaljer.inntektskildetype)}
+                {formaterInntektskilde(detaljer, (kode) => KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, kode))}
               </Nav.Table.DataCell>
               <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
                 {formaterTilNorskBelopUtenDesimaler(detaljer.inntektPerMd)} kr
@@ -114,13 +129,16 @@ export function BeregnetTrygdeavgiftDetaljer({
               <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.skattepliktig}</Nav.Table.DataCell>
               {!erHelseutgiftDekkesPeriode && (
                 <Nav.Table.DataCell key={Utils._uuid()}>
-                  {KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, detaljer.dekning)}
+                  {formaterDekning({ avgiftsdel: detaljer.avgiftsdel, trygdedekning: detaljer.dekning }, (kode) =>
+                    KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, kode),
+                  )}
                 </Nav.Table.DataCell>
               )}
             </Nav.Table.Row>
           ))}
         </Nav.Table.Body>
       </Nav.Table>
+      <Beregningsforklaringer perioder={detaljerListe} />
     </div>
   );
 }
