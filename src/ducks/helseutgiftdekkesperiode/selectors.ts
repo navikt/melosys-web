@@ -12,14 +12,14 @@ import { STATUS } from "../../services";
 
 export const HelseutgiftDekkesPeriodeSelector: Selector<
   RootState,
-  StateSection<HelseutgiftDekkesPeriodeDto[]>
+  StateSection<HelseutgiftDekkesPeriodeDto>
 > = createSelector(
   (state: RootState) => state.helseutgiftdekkesperiode,
   (helseutgiftdekkesperiode) => {
     if (helseutgiftdekkesperiode?.status === STATUS.ERROR) {
       return {
         ...helseutgiftdekkesperiode,
-        data: [] as HelseutgiftDekkesPeriodeDto[],
+        data: {} as HelseutgiftDekkesPeriodeDto,
       };
     }
     return helseutgiftdekkesperiode;

@@ -5,7 +5,7 @@ import * as Types from "./types";
 import { HelseutgiftDekkesPeriodeDto } from "../../services/modules/helseutgiftDekkesPeriode/helseutgiftDekkesPeriode";
 
 export function hentHelseutgiftDekkesPeriode(behandlingresultatID: number) {
-  return doThenDispatch(() => Api.HelseutgiftDekningPeriode.hentHelseutgiftDekkesPerioder(behandlingresultatID), {
+  return doThenDispatch(() => Api.HelseutgiftDekningPeriode.hentHelseutgiftDekkesPeriode(behandlingresultatID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -26,10 +26,7 @@ export function oppdaterEllerOpprettHelseutgiftDekkesPeriode(
 
 function opprettHelseutgiftDekkesPeriode(behandlingresultatID: number, data: HelseutgiftDekkesPeriodeDto) {
   return doThenDispatch(
-    () =>
-      Api.HelseutgiftDekningPeriode.opprettHelseutgiftDekkesPeriode(behandlingresultatID, data).then(() =>
-        Api.HelseutgiftDekningPeriode.hentHelseutgiftDekkesPerioder(behandlingresultatID),
-      ),
+    () => Api.HelseutgiftDekningPeriode.opprettHelseutgiftDekkesPeriode(behandlingresultatID, data),
     {
       OK: Types.OK,
       FEILET: Types.FEILET,
@@ -39,15 +36,8 @@ function opprettHelseutgiftDekkesPeriode(behandlingresultatID: number, data: Hel
 }
 
 function oppdaterHelseutgiftDekkesPeriode(behandlingresultatID: number, data: HelseutgiftDekkesPeriodeDto) {
-  const periodeId = data.id;
-  if (!periodeId) {
-    throw new Error("Kan ikke oppdatere helseutgift dekkes periode uten id");
-  }
   return doThenDispatch(
-    () =>
-      Api.HelseutgiftDekningPeriode.oppdaterHelseutgiftDekkesPeriode(behandlingresultatID, periodeId, data).then(() =>
-        Api.HelseutgiftDekningPeriode.hentHelseutgiftDekkesPerioder(behandlingresultatID),
-      ),
+    () => Api.HelseutgiftDekningPeriode.oppdaterHelseutgiftDekkesPeriode(behandlingresultatID, data),
     {
       OK: Types.OK,
       FEILET: Types.FEILET,

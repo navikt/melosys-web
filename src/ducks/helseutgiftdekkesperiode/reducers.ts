@@ -9,7 +9,7 @@ import * as Types from "./types";
 
 const initialState = {
   status: STATUS.NOT_STARTED,
-  data: [] as any[],
+  data: {},
 };
 
 export default function reducer(state = initialState, action: Types.Action) {

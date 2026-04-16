@@ -16,7 +16,7 @@ import {
   helseutgiftDekkesPeriodeSelector,
 } from "../../../../../ducks/helseutgiftdekkesperiode";
 import { HelseutgiftDekkesPeriodeDto } from "../../../../../services/modules/helseutgiftDekkesPeriode/helseutgiftDekkesPeriode";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { UkjentSluttdatoMedlemskapsperiode } from "../../../../ftrl/saksbehandling/stegKomponenter/vurderingPeriode/komponenter/ukjentSluttdatoMedlemskapsperiode";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 import { FellesHandlersContext } from "../../../../../contexts";
@@ -45,11 +45,8 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
     helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeErPendingSelector,
   );
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
-  const helseutgiftDekkesPerioder = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector).data;
-  const helseutgiftDekkesPeriode = Array.isArray(helseutgiftDekkesPerioder) ? helseutgiftDekkesPerioder[0] : undefined;
-  const helseutgiftDekkesPeriodeRef = useRef(helseutgiftDekkesPeriode);
-  helseutgiftDekkesPeriodeRef.current = helseutgiftDekkesPeriode;
-  const { fomDato, tomDato, bostedLandkode } = helseutgiftDekkesPeriode ?? {};
+  const helseutgiftDekkesPeriode = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector).data;
+  const { fomDato, tomDato, bostedLandkode } = helseutgiftDekkesPeriode;
   const [ukjentSluttdatoKey, setUkjentSluttdatoKey] = useState("");
   const lagretUkjentSluttdato = useSelector(oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector);
   const [ukjentSluttdatoMedlemskapsperiode, setUkjentSluttdatoMedlemskapsperiode] = useState(
@@ -139,18 +136,15 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
   };
 
   const oppdaterEllerOpprettHelseutgiftDekkesPeriode = async (formValues: HelseutgiftDekkesPeriodeDto) => {
-    const current = helseutgiftDekkesPeriodeRef.current;
-    const erNy = !current;
     await dispatch(
       helseutgiftDekkesPeriodeOperations.oppdaterEllerOpprettHelseutgiftDekkesPeriode(
         behandlingID,
         {
-          id: current?.id,
           fomDato: Utils.dato.formatterDatoTilISO(formValues.fomDato),
           tomDato: Utils.dato.formatterDatoTilISO(formValues.tomDato),
           bostedLandkode: formValues.bostedLandkode,
         } as HelseutgiftDekkesPeriodeDto,
-        erNy,
+        Utils._isEmpty(helseutgiftDekkesPeriode),
       ),
     );
   };

@@ -67,12 +67,9 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const helseutgiftDekkesPeriodeData = useSelector(
     helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector,
   ).data;
-  const foersteHelseutgiftDekkesPeriode = Array.isArray(helseutgiftDekkesPeriodeData)
-    ? helseutgiftDekkesPeriodeData[0]
-    : undefined;
   const helseutgiftDekkesPeriode = {
-    fom: foersteHelseutgiftDekkesPeriode?.fomDato ?? "",
-    tom: foersteHelseutgiftDekkesPeriode?.tomDato ?? "",
+    fom: helseutgiftDekkesPeriodeData.fomDato,
+    tom: helseutgiftDekkesPeriodeData.tomDato,
   };
 
   const erEøsPensjonist = sakstype === EU_EOS && behandlingstema === PENSJONIST;
