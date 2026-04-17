@@ -20,7 +20,9 @@ import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetek
 import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
 import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import { TidligereGrunnlag } from "./komponenter/tidligereGrunnlag";
+import { ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../featuretoggle/toggleNavn";
 import * as Utils from "../../../../utils";
+import { useFeatureToggle } from "../../../../featuretoggle";
 
 const { FASTSATT_TRYGDEAVGIFT, IKKE_FASTSATT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
@@ -127,7 +129,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     } else {
       // Bakoverkompatibilitet: utled verdi fra eksisterende data
       const utledetVerdi = utledHarTrygdeavgiftFraAvgiftssystemetNårNull(res);
-      setHarInnbetaltTrygdeavgift(utledetVerdi);
+      setHarInnbetaltTrygdeavgift(utledetVerdi ?? false);
     }
 
     setHarTidligereTrygdeavgiftsgrunnlag(
@@ -227,6 +229,18 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const antallÅrTilbakeITid = 6;
   const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
 
+  const trygdeavgiftAvvikLabelHjelpetekst = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST) ? (
+    <LabelMedHjelpetekst
+      label="Avviker innbetalt trygdeavgift fra tidligere beregnet avgift?"
+      hjelpetekst={harTidligereTrygdeavgiftsgrunnlag ? DELT_GRUNNLAG_HJELPETEKST : ""}
+    />
+  ) : (
+    <LabelMedHjelpetekst
+      label="Skal du legge til trygdeavgift fra Avgiftssystemet til denne årsavregningen?"
+      hjelpetekst={harTidligereTrygdeavgiftsgrunnlag ? DELT_GRUNNLAG_HJELPETEKST : ""}
+    />
+  );
+
   return (
     <div className="vurderingAarsavregning">
       <Nav.Heading level="1" className="stegvelgertittel">
@@ -309,12 +323,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                 <Nav.RadioGroup
                   key={`innbetaltTrygdeavgiftRadioGroup ${valgtÅr || initieltÅr || ""}`}
                   onChange={håndterHarInnbetaltTrygdeavgift}
-                  legend={
-                    <LabelMedHjelpetekst
-                      label="Avviker innbetalt trygdeavgift fra tidligere beregnet avgift?"
-                      hjelpetekst={harTidligereTrygdeavgiftsgrunnlag ? DELT_GRUNNLAG_HJELPETEKST : ""}
-                    />
-                  }
+                  legend={trygdeavgiftAvvikLabelHjelpetekst}
                   value={harInnbetaltTrygdeavgift}
                   readOnly={!redigerbart || harAktivÅrsavregning || forrigeÅrsavregningHarInnbetaltFraAvgiftssystem}
                 >
