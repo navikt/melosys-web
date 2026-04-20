@@ -30,7 +30,7 @@ export interface OppdaterHarSkjoennsfastsattInntektRequest {
 export interface Grunnlagsopplysninger {
   trygdeavgiftsgrunnlag: Trygdeavgiftsgrunnlag;
   avgift: Avgift;
-  tidligereTrygdeavgiftFraAvgiftssystemet?: number;
+  tidligereInnbetaltTrygdeavgift?: number;
   tidligereÅrsavregningManueltAvgiftBeloep?: number;
 }
 
@@ -63,7 +63,7 @@ export interface Avregning {
   beregnetAvgiftBelop?: number;
   tidligereFakturertBeloep?: number;
   tilFaktureringBeloep?: number;
-  trygdeavgiftFraAvgiftssystemet?: number;
+  innbetaltTrygdeavgift?: number;
   manueltAvgiftBeloep?: number;
 }
 

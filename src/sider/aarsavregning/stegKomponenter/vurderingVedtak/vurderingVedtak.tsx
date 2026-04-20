@@ -373,20 +373,20 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   };
 
   const tidligereTrygdeavgift = lagretAarsavregning?.avregning?.tidligereFakturertBeloep;
-  const trygdeavgiftFraAvgiftssystemet = lagretAarsavregning?.avregning?.trygdeavgiftFraAvgiftssystemet;
+  const innbetaltTrygdeavgift = lagretAarsavregning?.avregning?.innbetaltTrygdeavgift;
   const nyTrygdeavgift =
     lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT
       ? lagretAarsavregning?.avregning?.manueltAvgiftBeloep
       : lagretAarsavregning?.avregning?.beregnetAvgiftBelop;
 
-  const tidligereTrygdeavgiftFraAvgiftssystemet =
-    lagretAarsavregning?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet;
+  const tidligereInnbetaltTrygdeavgift =
+    lagretAarsavregning?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereInnbetaltTrygdeavgift;
 
   const sumTilFakturaEllerRefusjon = beregnSumTilFakturaEllerRefusjon(
     nyTrygdeavgift,
     tidligereTrygdeavgift,
-    trygdeavgiftFraAvgiftssystemet,
-    tidligereTrygdeavgiftFraAvgiftssystemet,
+    innbetaltTrygdeavgift,
+    tidligereInnbetaltTrygdeavgift,
   );
   const erDifferanseUnderMinstebeløp = Math.abs(sumTilFakturaEllerRefusjon) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
   const erNullKroner = sumTilFakturaEllerRefusjon === 0;
@@ -423,9 +423,9 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       <SumArsavregningTabell
         nyTrygdeavgift={nyTrygdeavgift}
         tidligereTrygdeavgift={tidligereTrygdeavgift}
-        tidligereTrygdeavgiftAvgiftssystem={trygdeavgiftFraAvgiftssystemet}
+        tidligereInnbetaltTrygdeavgift={innbetaltTrygdeavgift}
         harGrunnlagIMelosys={tidligereTrygdeavgift !== null || lagretAarsavregning?.harInnbetaltTrygdeavgift === true}
-        tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={tidligereTrygdeavgiftFraAvgiftssystemet}
+        tidligereAarsavregningInnbetaltTrygdeavgift={tidligereInnbetaltTrygdeavgift}
       />
 
       <Forms.Checkbox

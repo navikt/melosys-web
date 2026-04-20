@@ -121,7 +121,7 @@ export interface MedlemskapTomFomDatoer {
 
 export interface AarsavregningFormValuesProps extends FormValuesProps {
   avgiftspliktigperioder: MedlemskapsperiodeFieldProps[];
-  trygdeavgiftFraAvgiftssystemet?: string;
+  innbetaltTrygdeavgift?: string;
   bestemmelse?: string;
   endeligAvgiftValg: string;
   manueltAvgiftBeloep?: string;
@@ -149,7 +149,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
       avgiftspliktigperioder: [DEFAULT_MEDLEMSKAPSPERIODE],
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
-      trygdeavgiftFraAvgiftssystemet: "",
+      innbetaltTrygdeavgift: "",
       endeligAvgiftValg: "",
       manueltAvgiftBeloep: "",
     },
@@ -289,10 +289,10 @@ export function AarsavregningUtenEllerDeltGrunnlag({
         const bestemmelse = getBestemmelse(mappedPerioder, periodeType);
         const trygdedekninger = await getTrygdedekninger(bestemmelse);
 
-        const trygdeavgiftFraAvgiftssystemet =
-          aarsavregningRes?.avregning?.trygdeavgiftFraAvgiftssystemet !== undefined &&
-          aarsavregningRes?.avregning?.trygdeavgiftFraAvgiftssystemet !== null
-            ? aarsavregningRes?.avregning?.trygdeavgiftFraAvgiftssystemet
+        const innbetaltTrygdeavgift =
+          aarsavregningRes?.avregning?.innbetaltTrygdeavgift !== undefined &&
+          aarsavregningRes?.avregning?.innbetaltTrygdeavgift !== null
+            ? aarsavregningRes?.avregning?.innbetaltTrygdeavgift
             : "";
         const manueltAvgiftBeloep =
           aarsavregningRes?.avregning?.manueltAvgiftBeloep !== undefined &&
@@ -305,7 +305,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
         const formDefaultValues: FieldValue<AarsavregningFormValuesProps> = {
           avgiftspliktigperioder: mappedPerioder.length ? mappedPerioder : [defaultPeriode],
           bestemmelse,
-          trygdeavgiftFraAvgiftssystemet,
+          innbetaltTrygdeavgift,
           endeligAvgiftValg: aarsavregningRes?.endeligAvgiftValg || "",
           manueltAvgiftBeloep,
           skatteforholdsperioder: mapTilSkatteforholdProps(

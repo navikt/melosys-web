@@ -37,7 +37,7 @@ describe("SumArsavregningTabell", () => {
 
   it("shows current year Avgiftssystem row with correct label when value is provided", () => {
     const { rerender } = render(
-      <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereTrygdeavgiftAvgiftssystem={8000} />,
+      <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereInnbetaltTrygdeavgift={8000} />,
     );
     // Label for current year's input
     const currentRow = screen.getByText("Trygdeavgift fra Avgiftssystemet").closest("tr");
@@ -50,7 +50,7 @@ describe("SumArsavregningTabell", () => {
 
   it("shows previous year Avgiftssystem row with correct label when value is provided", () => {
     const { rerender } = render(
-      <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={5000} />,
+      <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereAarsavregningInnbetaltTrygdeavgift={5000} />,
     );
     // Label for previous year's value in a correction scenario
     const previousRow = screen.getByText("Tidligere trygdeavgift fra Avgiftssystemet").closest("tr");
@@ -66,7 +66,7 @@ describe("SumArsavregningTabell", () => {
       <SumArsavregningTabell
         nyTrygdeavgift={50000}
         tidligereTrygdeavgift={20000}
-        tidligereTrygdeavgiftAvgiftssystem={10000} // Current year input
+        tidligereInnbetaltTrygdeavgift={10000} // Current year input
         harGrunnlagIMelosys={true}
       />,
     );
@@ -91,8 +91,8 @@ describe("SumArsavregningTabell", () => {
       <SumArsavregningTabell
         nyTrygdeavgift={50000}
         tidligereTrygdeavgift={20000}
-        tidligereTrygdeavgiftAvgiftssystem={10000} // Current year input
-        tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={5000} // Previous year value
+        tidligereInnbetaltTrygdeavgift={10000} // Current year input
+        tidligereAarsavregningInnbetaltTrygdeavgift={5000} // Previous year value
         harGrunnlagIMelosys={true}
       />,
     );
@@ -113,8 +113,8 @@ describe("SumArsavregningTabell", () => {
       <SumArsavregningTabell
         nyTrygdeavgift={50000}
         tidligereTrygdeavgift={20000}
-        tidligereTrygdeavgiftAvgiftssystem={10000}
-        tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={5000}
+        tidligereInnbetaltTrygdeavgift={10000}
+        tidligereAarsavregningInnbetaltTrygdeavgift={5000}
         harGrunnlagIMelosys={true}
       />,
     );

@@ -71,7 +71,7 @@
             "beregnetAvgiftBelop": null,
             "tidligereFakturertBeloep": null,
             "tilFaktureringBeloep": null,
-            "trygdeavgiftFraAvgiftssystemet": null,
+            "innbetaltTrygdeavgift": null,
             "manueltAvgiftBeloep": null
           },
           "harInnbetaltTrygdeavgift": true,
@@ -1167,6 +1167,7 @@
           "content-type": "application/json"
         },
         "body": {
+          "melosys.arsavregning.eos_pensjonist": true,
           "melosys.faktureringskomponent.vis_referanse": true,
           "melosys.pensjonist": true,
           "melosys.pensjonist_eos": true,
@@ -1613,7 +1614,7 @@
             "beregnetAvgiftBelop": null,
             "tidligereFakturertBeloep": null,
             "tilFaktureringBeloep": null,
-            "trygdeavgiftFraAvgiftssystemet": null,
+            "innbetaltTrygdeavgift": null,
             "manueltAvgiftBeloep": null
           },
           "harInnbetaltTrygdeavgift": true,
@@ -1668,7 +1669,7 @@
             "beregnetAvgiftBelop": null,
             "tidligereFakturertBeloep": null,
             "tilFaktureringBeloep": null,
-            "trygdeavgiftFraAvgiftssystemet": null,
+            "innbetaltTrygdeavgift": null,
             "manueltAvgiftBeloep": null
           },
           "harTrygdeavgiftFraAvgiftssystemet": null,

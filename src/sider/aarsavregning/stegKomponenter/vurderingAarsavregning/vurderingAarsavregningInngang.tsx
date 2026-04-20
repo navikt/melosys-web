@@ -93,21 +93,20 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const dispatch = useDispatch();
 
   /**
-   * Utleder harTrygdeavgiftFraAvgiftssystemet når verdien er null (bakoverkompatibilitet).
+   * Utleder harInnbetaltTrygdeavgift når verdien er null (bakoverkompatibilitet).
    *
    * Eldre behandlinger kan ha null pga. bug der verdien ikke ble lagret.
    * Vi infererer verdien basert på om brukeren har fylt ut avhengige felter:
-   * - Hvis trygdeavgiftFraAvgiftssystemet har verdi → brukeren valgte "Ja" → returnerer true
+   * - Hvis innbetaltTrygdeavgift har verdi → brukeren valgte "Ja" → returnerer true
    * - Hvis andre felter (manueltAvgiftBeloep, nyttTrygdeavgiftsGrunnlag) er fylt ut → brukeren valgte "Nei" → returnerer false
    * - Ellers → ny årsavregning hvor brukeren ikke har svart ennå → returnerer undefined
    */
-  const utledHarTrygdeavgiftFraAvgiftssystemetNårNull = (res: AarsavregningResponse): boolean | undefined => {
-    // Sjekk om brukeren har lagt til trygdeavgift fra avgiftssystemet (valgte "Ja")
-    const harTrygdeavgiftFraAvgiftssystemet =
-      res.avregning?.trygdeavgiftFraAvgiftssystemet !== null &&
-      res.avregning?.trygdeavgiftFraAvgiftssystemet !== undefined;
+  const utledHarInnbetaltTrygdeavgiftNårNull = (res: AarsavregningResponse): boolean | undefined => {
+    // Sjekk om brukeren har lagt til innbetalt trygdeavgift (valgte "Ja")
+    const harInnbetaltTrygdeavgift =
+      res.avregning?.innbetaltTrygdeavgift !== null && res.avregning?.innbetaltTrygdeavgift !== undefined;
 
-    if (harTrygdeavgiftFraAvgiftssystemet) {
+    if (harInnbetaltTrygdeavgift) {
       return true;
     }
 
@@ -128,7 +127,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       setHarInnbetaltTrygdeavgift(res.harInnbetaltTrygdeavgift);
     } else {
       // Bakoverkompatibilitet: utled verdi fra eksisterende data
-      const utledetVerdi = utledHarTrygdeavgiftFraAvgiftssystemetNårNull(res);
+      const utledetVerdi = utledHarInnbetaltTrygdeavgiftNårNull(res);
       setHarInnbetaltTrygdeavgift(utledetVerdi ?? false);
     }
 
@@ -218,11 +217,9 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
         undefined,
   );
-  const forrigeÅrsavregningHarInnbetaltFraAvgiftssystem = Boolean(
-    aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet !==
-      null &&
-      aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet !==
-        undefined,
+  const forrigeÅrsavregningHarInnbetaltTrygdeavgift = Boolean(
+    aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereInnbetaltTrygdeavgift !== null &&
+      aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereInnbetaltTrygdeavgift !== undefined,
   );
 
   const sisteMuligeÅr = new Date().getFullYear() - 1;
@@ -325,7 +322,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                   onChange={håndterHarInnbetaltTrygdeavgift}
                   legend={trygdeavgiftAvvikLabelHjelpetekst}
                   value={harInnbetaltTrygdeavgift}
-                  readOnly={!redigerbart || harAktivÅrsavregning || forrigeÅrsavregningHarInnbetaltFraAvgiftssystem}
+                  readOnly={!redigerbart || harAktivÅrsavregning || forrigeÅrsavregningHarInnbetaltTrygdeavgift}
                 >
                   <Nav.HStack gap="6">
                     <Nav.Radio value>Ja</Nav.Radio>
