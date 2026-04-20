@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { FieldValue, useFieldArray, useForm } from "react-hook-form";
+import { FieldValue, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
@@ -159,7 +159,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const inntektskilder = watch("inntektskilder");
   const endeligAvgiftValg = watch("endeligAvgiftValg");
   const manueltAvgiftBeloep = watch("manueltAvgiftBeloep");
-  const medlemskapsperioder = watch("avgiftspliktigperioder");
+  const medlemskapsperioder = useWatch({ control, name: "avgiftspliktigperioder" });
   const medlemskapsperioderForrigeAntall = useRef(medlemskapsperioder?.length || 0);
   const debouncedBeregningRef = useRef<ReturnType<typeof Utils._debounce> | null>(null);
 
@@ -214,6 +214,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     lagredePerioder: MedlemskapsperiodeFieldProps[],
     index: number,
   ) => {
+    if (!periode.redigerbar) return undefined;
+
     const periodeMedIsoDatoer: MedlemskapsperiodeFieldProps = {
       ...periode,
       fomDato: Utils.dato.vaskOgFormatterTilISO(periode.fomDato, "") as string,
@@ -243,9 +245,12 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       bostedLandkodeNå !== bostedLandkodeLagret;
 
     if (harEndringer) {
+      if (!periodeMedIsoDatoer.fomDato || !periodeMedIsoDatoer.tomDato) {
+        return undefined;
+      }
       try {
         const bestemmelse = innvilgetMedlemskapsperioder[0]?.bestemmelse || "";
-        const skalOpprette = erHelseutgift || erUlagretPeriode(periode.id);
+        const skalOpprette = erUlagretPeriode(periode.id);
         return await (skalOpprette
           ? PeriodeAdapter.opprettPeriode(behandlingID, periodeMedIsoDatoer, bestemmelse)
           : PeriodeAdapter.oppdaterPeriode(behandlingID, periodeMedIsoDatoer, bestemmelse));
@@ -370,6 +375,14 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           return;
         }
         if (!medlemskapsperioderHarBrukerendringer(medlemskapsperioder, lagredeMedlemskapsperioder)) {
+          return;
+        }
+
+        const erAllePerioderGyldige = medlemskapsperioder.every((periode) => {
+          if (!periode.fomDato || !periode.tomDato) return false;
+          return true;
+        });
+        if (!erAllePerioderGyldige) {
           return;
         }
 
@@ -591,7 +604,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const minDate = initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 0, 1) : undefined;
   const maxDate =
     initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 11, 31, 23, 59, 59, 999) : undefined;
-
   return (
     <>
       <EndeligAvgiftValgRadioGroup
@@ -599,6 +611,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         redigerbart={redigerbart}
         handleEndeligAvgiftValgChange={handleEndeligAvgiftValgChange}
         endeligAvgiftValg={endeligAvgiftValg}
+        endretPeriodeFraAvgiftssystemetValg={true}
       />
 
       {(endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
@@ -634,7 +647,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
                     remove={slettMedlemskapsperiode}
                     formValues={formValues}
                     handleLeggTil={leggTilDefaultMedlemskapsperiode}
-                    visLeggTil={!erHelseutgiftDekkesPeriode}
+                    visLeggTil={true}
                     maxDate={maxDate}
                     minDate={minDate}
                     trygdedekninger={erHelseutgiftDekkesPeriode ? [] : trygdedekninger}

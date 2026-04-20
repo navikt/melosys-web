@@ -13,6 +13,7 @@ interface EndeligAvgiftValgRadioGroupProps {
   redigerbart: boolean;
   handleEndeligAvgiftValgChange: (value: string) => void;
   endeligAvgiftValg?: string;
+  endretPeriodeFraAvgiftssystemetValg?: boolean;
 }
 
 export function EndeligAvgiftValgRadioGroup({
@@ -20,6 +21,7 @@ export function EndeligAvgiftValgRadioGroup({
   redigerbart,
   handleEndeligAvgiftValgChange,
   endeligAvgiftValg,
+  endretPeriodeFraAvgiftssystemetValg,
 }: EndeligAvgiftValgRadioGroupProps) {
   const erPensjonistEØSToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST_EØS);
 
@@ -39,7 +41,7 @@ export function EndeligAvgiftValgRadioGroup({
           <Nav.Radio value={OPPLYSNINGER_ENDRET} className={endeligAvgiftValg === OPPLYSNINGER_ENDRET ? "checked" : ""}>
             Beregn endelig trygdeavgift
           </Nav.Radio>
-          {erPensjonistEØSToggleEnabled && (
+          {erPensjonistEØSToggleEnabled && endretPeriodeFraAvgiftssystemetValg && (
             <Nav.Radio
               value={OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET}
               className={endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET ? "checked" : ""}

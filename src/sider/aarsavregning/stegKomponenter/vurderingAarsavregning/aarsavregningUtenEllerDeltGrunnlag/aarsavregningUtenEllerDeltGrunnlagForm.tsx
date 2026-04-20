@@ -812,6 +812,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         redigerbart={skjemaErRedigerbart}
         handleEndeligAvgiftValgChange={handleEndeligAvgiftValgChange}
         endeligAvgiftValg={endeligAvgiftValg}
+        endretPeriodeFraAvgiftssystemetValg={erDeltGrunnlag}
       />
 
       {(endeligAvgiftValg === OPPLYSNINGER_ENDRET ||

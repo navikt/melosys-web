@@ -206,7 +206,7 @@ export function AvgiftspliktigperiodeSkjema({
           </Nav.Column>
         )}
       </Nav.Row>
-      {!erHelseutgift && medlemskapsperioder.length === index + 1 && (!erPliktigBestemmelse || erDeltGrunnlag) && (
+      {medlemskapsperioder.length === index + 1 && (!erPliktigBestemmelse || erDeltGrunnlag) && (
         <div className="legg-til__rad">
           <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add} disabled={!redigerbart || !visLeggTil}>
             Legg til periode
