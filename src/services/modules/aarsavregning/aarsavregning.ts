@@ -10,7 +10,7 @@ export interface AarsavregningResponse {
   sisteGjeldendeAvgiftspliktigperioder?: Avgiftspliktigperiode[];
   nyttTrygdeavgiftsGrunnlag?: Grunnlagsopplysninger;
   avregning?: Avregning;
-  harInnbetaltTrygdeavgift?: boolean;
+  harInnbetaltTrygdeavgift?: boolean | null;
   endeligAvgiftValg?: string;
   harSkjoennsfastsattInntekt?: boolean;
 }

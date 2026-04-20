@@ -124,7 +124,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   };
 
   const utledGrunnlagstypeForÅrsavregning = (res: AarsavregningResponse) => {
-    if (res.harInnbetaltTrygdeavgift !== null) {
+    if (res.harInnbetaltTrygdeavgift != null) {
       setHarInnbetaltTrygdeavgift(res.harInnbetaltTrygdeavgift);
     } else {
       // Bakoverkompatibilitet: utled verdi fra eksisterende data
