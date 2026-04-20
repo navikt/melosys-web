@@ -6,7 +6,7 @@ import { useDispatch } from "../../hooks";
 
 import * as Skjema from "../skjema";
 import * as Nav from "../../navFrontend";
-import { journalforingOperations, PrepareKnyttTilSakFormResult, journalforingTypes } from "../../ducks/journalforing";
+import { journalforingOperations, journalforingTypes, PrepareKnyttTilSakFormResult } from "../../ducks/journalforing";
 import * as Utils from "../../utils";
 
 import "./knyttTilSak.less";
@@ -156,13 +156,14 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
       <div className="knyttTilSak__behandlingspanel">
         {erJournalføring ? (
           <Nav.Alert variant="info" className="feilmelding_innrykk">
-            Du kan ikke opprette en ny behandling på eksisterende sak som er opphørt/henlagt/bortfalt/annullert i
-            Melosys, men du kan knytte dokumentet til den avsluttede behandlingen
+            Du kan ikke opprette en ny behandling på eksisterende sak som er
+            opphørt/henlagt/bortfalt/annullert/videresendt i Melosys, men du kan knytte dokumentet til den avsluttede
+            behandlingen
           </Nav.Alert>
         ) : (
           <Nav.Alert variant="warning" className="feilmelding_innrykk">
-            Du kan ikke opprette en ny behandling på eksisterende sak som er opphørt/henlagt/bortfalt/annullert i
-            Melosys
+            Du kan ikke opprette en ny behandling på eksisterende sak som er
+            opphørt/henlagt/bortfalt/annullert/videresendt i Melosys
           </Nav.Alert>
         )}
       </div>
