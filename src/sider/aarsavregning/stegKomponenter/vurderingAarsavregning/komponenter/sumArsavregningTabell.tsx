@@ -28,6 +28,14 @@ export function SumArsavregningTabell({
 
   const erÅrsavregningEøsPensjonistToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
 
+  const innbetaltTrygdeavgiftLabel = erÅrsavregningEøsPensjonistToggleEnabled
+    ? "Innbetalt trygdeavgift"
+    : "Trygdeavgift fra Avgiftssystemet";
+
+  const tidligereAarsavregningInnbetaltTrygdeavgiftLabel = erÅrsavregningEøsPensjonistToggleEnabled
+    ? "Tidligere innbetalt trygdeavgift"
+    : "Tidligere trygdeavgift fra Avgiftssystemet";
+
   return (
     <Nav.Box className="sumArsavregningTabell" background="surface-subtle">
       <Nav.Table size="small" width={500} className="periode_tabell">
@@ -54,11 +62,7 @@ export function SumArsavregningTabell({
             tidligereAarsavregningInnbetaltTrygdeavgift !== null && (
               <Nav.Table.Row>
                 <Nav.Table.DataCell scope="col">+</Nav.Table.DataCell>
-                {erÅrsavregningEøsPensjonistToggleEnabled ? (
-                  <Nav.Table.DataCell scope="col">Tidligere innbetalt trygdeavgift</Nav.Table.DataCell>
-                ) : (
-                  <Nav.Table.DataCell scope="col">Tidligere trygdeavgift fra Avgiftssystemet</Nav.Table.DataCell>
-                )}
+                <Nav.Table.DataCell scope="col">{tidligereAarsavregningInnbetaltTrygdeavgiftLabel}</Nav.Table.DataCell>
                 <Nav.Table.DataCell align="right" key={Utils._uuid()}>
                   {formaterTilNorskBelop(tidligereAarsavregningInnbetaltTrygdeavgift || 0)} kr
                 </Nav.Table.DataCell>
@@ -67,11 +71,7 @@ export function SumArsavregningTabell({
           {tidligereInnbetaltTrygdeavgift !== undefined && tidligereInnbetaltTrygdeavgift !== null && (
             <Nav.Table.Row>
               <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>
-              {erÅrsavregningEøsPensjonistToggleEnabled ? (
-                <Nav.Table.DataCell scope="col">Innbetalt trygdeavgift</Nav.Table.DataCell>
-              ) : (
-                <Nav.Table.DataCell scope="col">Trygdeavgift fra Avgiftssystemet</Nav.Table.DataCell>
-              )}
+              <Nav.Table.DataCell scope="col">{innbetaltTrygdeavgiftLabel}</Nav.Table.DataCell>
               <Nav.Table.DataCell align="right" key={Utils._uuid()}>
                 {formaterTilNorskBelop(tidligereInnbetaltTrygdeavgift || 0)} kr
               </Nav.Table.DataCell>
