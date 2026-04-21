@@ -12,6 +12,41 @@ export class AarsavregningPage extends BehandlingPage {
     super(page, saksnummer);
   }
 
+  /**
+   * Overstyr featuretoggle-respons for testen.
+   *
+   * Mock-serverens recording-matcher klarer ikke alltid å returnere riktig
+   * featuretoggle-respons (URL-en med gjentatte `features=`-parametere parses
+   * forskjellig av recorder vs. Express, så exact-match feiler og fallback
+   * kan returnere en hvilken som helst featuretoggle-recording).
+   *
+   * Denne metoden registrerer en route-handler som overskriver responsen
+   * med de gitte overrides flettet inn i den faktiske responsen fra mock-
+   * serveren. Må kalles FØR navigasjon for at den første featuretoggle-
+   * forespørselen skal fanges opp.
+   *
+   * @example
+   *   await aarsavregningPage.overstyrFeatureToggles({
+   *     "melosys.arsavregning.eos_pensjonist": true,
+   *   });
+   */
+  async overstyrFeatureToggles(overrides: Record<string, boolean>) {
+    await this.page.route("**/api/featuretoggle*", async (route) => {
+      let body: Record<string, boolean> = {};
+      try {
+        const response = await route.fetch();
+        body = (await response.json()) as Record<string, boolean>;
+      } catch {
+        // Hvis fetch feiler (f.eks. ingen recording matchet), bruk bare overrides
+      }
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ ...body, ...overrides }),
+      });
+    });
+  }
+
   // Hent første tilgjengelige år fra dropdown-en (ikke "Velg...")
   async hentFørsteTilgjengeligeÅr(): Promise<string> {
     const årSelect = await finnCombobox("År", this.page, 5000);
@@ -284,21 +319,9 @@ export class AarsavregningPage extends BehandlingPage {
         { timeout: 15000 },
       );
 
-      // Prøv å velge radioknappen - hvis den er readonly vil dette feile
-      // men vi fanger feilen og gir en mer beskrivende feilmelding
-      try {
-        await jaRadio.check({ timeout: 5000 });
-      } catch {
-        // Radioknappen er sannsynligvis readonly - sjekk om dette er forventet
-        throw new Error(
-          `${this.ctx}: Kunne ikke velge 'Ja' radioknapp. ` +
-            `Feltet er sannsynligvis readonly (forrigeÅrsavregningHarInnbetaltFraAvgiftssystem=true). ` +
-            `Denne testdataen støtter ikke delt grunnlag-test.`,
-        );
-      }
-
-      // Vent på at API-kallet for oppdaterHarInnbetaltTrygdeavgift fullføres
+      await jaRadio.click();
       await grunnlagstypeResponsePromise;
+      await expect(jaRadio).toBeChecked();
     }
 
     // Vent på at "Beregn endelig trygdeavgift" radioknappen vises
