@@ -11,6 +11,7 @@ import type { BasePeriode } from "../../../../services/modules/types/periodeType
 import { InntektskildeDto, SkatteforholdDto } from "../../../../services/modules/trygdeavgift";
 import MKV from "../../../../melosyskodeverk";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlagSchema";
+
 import { ValidationError } from "yup";
 
 const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;

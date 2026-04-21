@@ -283,7 +283,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     if (harEndringer) {
       try {
         const bestemmelse = getValues("bestemmelse") ?? "";
-        const skalOpprette = erHelseutgift || erUlagretPeriode(periode.id);
+        const skalOpprette = erUlagretPeriode(periode.id);
         return await (skalOpprette
           ? PeriodeAdapter.opprettPeriode(behandlingID, periodeMedIsoDatoer, bestemmelse)
           : PeriodeAdapter.oppdaterPeriode(behandlingID, periodeMedIsoDatoer, bestemmelse));
@@ -460,8 +460,38 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     const lagreMedlemskapsperioderEffect = async () => {
       if (redigerbart && !endrerBestemmelse && !lagreMedlemskapsperioderPaagar) {
         if (medlemskapsperioder.length !== medlemskapsperioderForrigeAntall.current) {
-          // Når vi kommer inn her, betyr det at bruker har trykket på "Legg til"-knappen, som automtisk gjør skjema invalid.
           medlemskapsperioderForrigeAntall.current = medlemskapsperioder.length;
+
+          // Ved sletting/legg til: valider at perioder og skatt/inntekt fortsatt er gyldige
+          if (medlemskapsperioder.length > 0) {
+            const aktivFeilmeldingForPerioder = finnAktivFeilmeldingForMedlemskapsperioder(medlemskapsperioder);
+            if (aktivFeilmeldingForPerioder) {
+              setArrayValideringsfeil(aktivFeilmeldingForPerioder);
+              return;
+            }
+            const oppdatertAvgiftspliktigperiode = finnMedlemskapsperiode(medlemskapsperioder);
+            if (oppdatertAvgiftspliktigperiode) {
+              const formState = mapFormState(
+                getValues("skatteforholdsperioder"),
+                getValues("inntektskilder"),
+                medlemskapsperioder,
+                getValues("trygdeavgiftFraAvgiftssystemet"),
+                getValues("endeligAvgiftValg"),
+                getValues("bestemmelse"),
+              );
+              const aktivFeilmelding = finnAktivFeilmelding({
+                skatteforholdsperioder: formState.skatteforholdsperioder,
+                inntektskilder: formState.inntektskilder,
+                medlemskapsperiodeFomTom: oppdatertAvgiftspliktigperiode,
+                medlemskapstypeErPliktig,
+                avgiftspliktigperioder: medlemskapsperioder,
+              });
+              if (aktivFeilmelding) {
+                setArrayValideringsfeil(aktivFeilmelding);
+                return;
+              }
+            }
+          }
           setArrayValideringsfeil(undefined);
           return;
         }
@@ -492,6 +522,29 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         const medlemskapsperioderTilLagring = [...medlemskapsperioder];
         debouncedLagreMedlemskapsperioder(medlemskapsperioderTilLagring, () => {
           setLagreMedlemskapsperioderPaagar(false);
+
+          // Re-valider at skatt/inntekt dekker den (mulig utvidede) samlede perioden
+          const oppdatertAvgiftspliktigperiode = finnMedlemskapsperiode(medlemskapsperioderTilLagring);
+          if (oppdatertAvgiftspliktigperiode) {
+            const formStateEtterLagring = mapFormState(
+              getValues("skatteforholdsperioder"),
+              getValues("inntektskilder"),
+              medlemskapsperioderTilLagring,
+              getValues("trygdeavgiftFraAvgiftssystemet"),
+              getValues("endeligAvgiftValg"),
+              getValues("bestemmelse"),
+            );
+            const aktivFeilmelding = finnAktivFeilmelding({
+              skatteforholdsperioder: formStateEtterLagring.skatteforholdsperioder,
+              inntektskilder: formStateEtterLagring.inntektskilder,
+              medlemskapsperiodeFomTom: oppdatertAvgiftspliktigperiode,
+              medlemskapstypeErPliktig,
+              avgiftspliktigperioder: medlemskapsperioderTilLagring,
+            });
+            if (aktivFeilmelding) {
+              setArrayValideringsfeil(aktivFeilmelding);
+            }
+          }
         });
       }
     };
@@ -523,7 +576,14 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   );
 
   const leggTilDefaultMedlemskapsperiode = () => {
-    medlemskapsperioderAppend(lagDefaultPeriode(periodeType));
+    const defaultPeriode = lagDefaultPeriode(periodeType);
+    if (periodeType === "HELSEUTGIFTDEKKESPERIODE") {
+      const eksisterendeLandkode = medlemskapsperioder.find((p) => p.bostedLandkode)?.bostedLandkode;
+      if (eksisterendeLandkode) {
+        defaultPeriode.bostedLandkode = eksisterendeLandkode;
+      }
+    }
+    medlemskapsperioderAppend(defaultPeriode);
   };
 
   const slettMedlemskapsperiode = async (index: number) => {
@@ -663,7 +723,17 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         };
         validateAarsavregningUtenEllerDeltGrunnlag(currentFormState, context).then(({ isValid }) => {
           if (!isValid) {
-            setArrayValideringsfeil(undefined);
+            // Schema-validering feilet, men sjekk om det er skatt/inntekt-feilmeldinger som bør vises
+            const medlemskapsperioderFormState = getValues("avgiftspliktigperioder");
+            const medlemskapsperiodeFomTom = finnMedlemskapsperiode(medlemskapsperioderFormState);
+            const aktivFeilmelding = finnAktivFeilmelding({
+              skatteforholdsperioder: currentFormState.skatteforholdsperioder,
+              inntektskilder: currentFormState.inntektskilder,
+              medlemskapsperiodeFomTom,
+              avgiftspliktigperioder: medlemskapsperioderFormState,
+              medlemskapstypeErPliktig,
+            });
+            setArrayValideringsfeil(aktivFeilmelding ?? undefined);
             return;
           }
           setDebouncedBeregningPagaar(true);
@@ -848,7 +918,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                 remove={slettMedlemskapsperiode}
                 formValues={formValues}
                 handleLeggTil={leggTilDefaultMedlemskapsperiode}
-                visLeggTil={!erHelseutgift}
+                visLeggTil={true}
                 maxDate={maxDate}
                 minDate={minDate}
                 trygdedekninger={erHelseutgift ? [] : trygdedekninger}

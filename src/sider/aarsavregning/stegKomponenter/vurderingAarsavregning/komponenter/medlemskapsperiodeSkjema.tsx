@@ -100,7 +100,7 @@ export function AvgiftspliktigperiodeSkjema({
 
   const medlemskapsperioder = formValues.avgiftspliktigperioder as MedlemskapsperiodeFieldProps[];
   const erPeriodeFraGrunnlag = !medlemskapsperioder[index]?.redigerbar;
-  const kanViseSletteKolonne = !erHelseutgift && redigerbart && medlemskapsperioder.length > 1;
+  const kanViseSletteKolonne = redigerbart && medlemskapsperioder.length > 1;
   const tilOgMedDatoForrigePeriode =
     medlemskapsperioder[index - 1] !== undefined
       ? Utils.dato.norskStringTilDate(medlemskapsperioder[index - 1]?.tomDato)
@@ -184,7 +184,11 @@ export function AvgiftspliktigperiodeSkjema({
               hideLabel={index !== 0}
               aria-label={`Bostedsland periode ${index + 1}`}
               control={control}
-              readOnly={!redigerbart || erPeriodeFraGrunnlag}
+              readOnly={
+                !redigerbart ||
+                erPeriodeFraGrunnlag ||
+                (index > 0 && !!(medlemskapsperioder[0] as HelseutgiftdekkesperiodeForAvgift)?.bostedLandkode)
+              }
               emptyFieldDisabled={!!(medlemskapsperioder[index] as HelseutgiftdekkesperiodeForAvgift)?.bostedLandkode}
             >
               {MKV.KTObjects.landkoder.map((item: any) => (

@@ -142,23 +142,35 @@ const erInnenforAvgiftspliktigperiodeTest = {
 };
 
 const medlemskapsperiodeSchema = object().shape({
-  fomDato: string().required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforValgtAarTest),
-  tomDato: string()
-    .required(MAA_FYLLES_UT)
-    .erGyldigDato()
-    .erEtterDatofelt("fomDato")
-    .test(åpenTomTest)
-    .test(erInnenforValgtAarTest),
+  fomDato: string().when("id", {
+    is: (id) => erUlagretPeriode(id),
+    then: (schema) => schema.nullable().notRequired().erGyldigDato().test(erInnenforValgtAarTest),
+    otherwise: (schema) => schema.required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforValgtAarTest),
+  }),
+  tomDato: string().when("id", {
+    is: (id) => erUlagretPeriode(id),
+    then: (schema) =>
+      schema
+        .nullable()
+        .notRequired()
+        .erGyldigDato()
+        .erEtterDatofelt("fomDato")
+        .test(åpenTomTest)
+        .test(erInnenforValgtAarTest),
+    otherwise: (schema) =>
+      schema
+        .required(MAA_FYLLES_UT)
+        .erGyldigDato()
+        .erEtterDatofelt("fomDato")
+        .test(åpenTomTest)
+        .test(erInnenforValgtAarTest),
+  }),
   trygdedekning: string().when("type", {
     is: (type) => type === "HELSEUTGIFTDEKKESPERIODE",
     then: (schema) => schema.nullable().notRequired(),
     otherwise: (schema) => schema.required(MAA_FYLLES_UT),
   }),
-  bostedLandkode: string().when("type", {
-    is: (type) => type === "HELSEUTGIFTDEKKESPERIODE",
-    then: (schema) => schema.required(MAA_FYLLES_UT),
-    otherwise: (schema) => schema.nullable().notRequired(),
-  }),
+  bostedLandkode: string().nullable().notRequired(),
 });
 
 const skatteforholdsperiodeSchema = object().shape({
