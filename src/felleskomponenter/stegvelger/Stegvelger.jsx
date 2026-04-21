@@ -118,21 +118,21 @@ class Stegvelger extends Component {
     const behandlingsstatusErMottattSvarAnmodning =
       prevProps.oppsummering.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.SVAR_ANMODNING_MOTTATT;
 
-    if (oppfriskStartet) {
+    const haandterOppfrisk = (endreFokus) => {
       if (aktivtStegNummer === 0) {
-        this.resetTilForsteSteg(false);
+        this.resetTilForsteSteg(endreFokus);
       } else {
-        this.oppdaterAktuelleSteg(aktivtStegNummer, false);
+        this.oppdaterAktuelleSteg(aktivtStegNummer, endreFokus);
       }
+    };
+
+    if (oppfriskStartet) {
+      haandterOppfrisk(false);
       return;
     }
 
     if (oppfriskFerdig) {
-      if (aktivtStegNummer === 0) {
-        this.resetTilForsteSteg(true);
-      } else {
-        this.oppdaterAktuelleSteg(aktivtStegNummer, true);
-      }
+      haandterOppfrisk(true);
       return;
     }
 
