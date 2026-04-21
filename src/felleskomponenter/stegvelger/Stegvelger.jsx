@@ -65,6 +65,8 @@ class Stegvelger extends Component {
 
   aktiv = true;
 
+  byterSteg = false;
+
   async componentDidMount() {
     this.aktiv = true;
     const { behandlingID, sakstype } = this.props;
@@ -104,6 +106,9 @@ class Stegvelger extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
+    if (this.byterSteg) {
+      return;
+    }
     const { aktivtStegNummer, aktuelleSteg } = this.state;
     const oppfriskStartet = !prevProps.behandlingOppfriskes && this.props.behandlingOppfriskes;
     const oppfriskFerdig = prevProps.behandlingOppfriskes && !this.props.behandlingOppfriskes;
@@ -113,13 +118,21 @@ class Stegvelger extends Component {
     const behandlingsstatusErMottattSvarAnmodning =
       prevProps.oppsummering.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.SVAR_ANMODNING_MOTTATT;
 
-    if (oppfriskStartet || (this.props.behandlingOppfriskes && aktivtStegNummer !== 0)) {
-      this.resetTilForsteSteg(false);
+    if (oppfriskStartet) {
+      if (aktivtStegNummer === 0) {
+        this.resetTilForsteSteg(false);
+      } else {
+        this.oppdaterAktuelleSteg(aktivtStegNummer, false);
+      }
       return;
     }
 
     if (oppfriskFerdig) {
-      this.resetTilForsteSteg(true);
+      if (aktivtStegNummer === 0) {
+        this.resetTilForsteSteg(true);
+      } else {
+        this.oppdaterAktuelleSteg(aktivtStegNummer, true);
+      }
       return;
     }
 
@@ -550,6 +563,8 @@ class Stegvelger extends Component {
 
     const flytHarIkkeVurderingPeriode = !(eøsFaktureringAvTrygdeavgiftToggleEnabled && erArbeidTjenestepersonEllerFly);
 
+    this.byterSteg = true;
+    this.debouncedOppdaterAktuelleSteg.cancel?.();
     this.setState({ aktivtStegNummer: nyttStegNummer });
 
     try {
@@ -576,6 +591,8 @@ class Stegvelger extends Component {
     } catch (error) {
       /* eslint-disable-next-line no-console */
       console.error("Feil ved lagring under stegovergang:", error);
+    } finally {
+      this.byterSteg = false;
     }
 
     this.oppdaterAktuelleSteg(nyttStegNummer, true);
