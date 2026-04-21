@@ -67,6 +67,8 @@ class Stegvelger extends Component {
 
   byterSteg = false;
 
+  transisjonId = 0;
+
   async componentDidMount() {
     this.aktiv = true;
     const { behandlingID, sakstype } = this.props;
@@ -564,6 +566,7 @@ class Stegvelger extends Component {
     const flytHarIkkeVurderingPeriode = !(eøsFaktureringAvTrygdeavgiftToggleEnabled && erArbeidTjenestepersonEllerFly);
 
     this.byterSteg = true;
+    const minTransisjonId = ++this.transisjonId;
     this.debouncedOppdaterAktuelleSteg.cancel?.();
     this.setState({ aktivtStegNummer: nyttStegNummer });
 
@@ -592,10 +595,14 @@ class Stegvelger extends Component {
       /* eslint-disable-next-line no-console */
       console.error("Feil ved lagring under stegovergang:", error);
     } finally {
-      this.byterSteg = false;
+      if (this.transisjonId === minTransisjonId) {
+        this.byterSteg = false;
+      }
     }
 
-    this.oppdaterAktuelleSteg(nyttStegNummer, true);
+    if (this.transisjonId === minTransisjonId) {
+      this.oppdaterAktuelleSteg(nyttStegNummer, true);
+    }
   };
 
   /** Beregn neste steg i rekken, men ikke lenger enn
