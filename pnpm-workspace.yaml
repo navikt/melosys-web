@@ -1,6 +1,10 @@
 packages:
   - .
 
+minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+  - "@navikt/melosys-kodeverk"
+
 onlyBuiltDependencies:
   - "@parcel/watcher"
   - esbuild
