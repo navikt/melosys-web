@@ -55,6 +55,40 @@ exports[`VurderingVedtak > should render snapshot with realistic data 1`] = `
               scope="col"
               class="navds-table__data-cell navds-body-short navds-body-short--small"
             >
+              +
+            </td>
+            <td
+              scope="col"
+              class="navds-table__data-cell navds-body-short navds-body-short--small"
+            >
+              Tidligere trygdeavgift fra Avgiftssystemet
+            </td>
+            <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+              27&nbsp;000,00 kr
+            </td>
+          </tr>
+          <tr class="navds-table__row navds-table__row--shade-on-hover">
+            <td
+              scope="col"
+              class="navds-table__data-cell navds-body-short navds-body-short--small"
+            >
+              -
+            </td>
+            <td
+              scope="col"
+              class="navds-table__data-cell navds-body-short navds-body-short--small"
+            >
+              Trygdeavgift fra Avgiftssystemet
+            </td>
+            <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+              30&nbsp;000,00 kr
+            </td>
+          </tr>
+          <tr class="navds-table__row navds-table__row--shade-on-hover">
+            <td
+              scope="col"
+              class="navds-table__data-cell navds-body-short navds-body-short--small"
+            >
               =
             </td>
             <td
@@ -65,7 +99,7 @@ exports[`VurderingVedtak > should render snapshot with realistic data 1`] = `
             </td>
             <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
               <b>
-                3&nbsp;000,00&nbsp;kr&nbsp;
+                0,00&nbsp;kr&nbsp;
               </b>
             </td>
           </tr>
@@ -121,136 +155,7 @@ exports[`VurderingVedtak > should render snapshot with realistic data 1`] = `
     <div class="row trygdeavgift">
       <div class="col col-xs-12">
         <p class="info navds-body-long navds-body-long--small">
-          <br>
-          Faktura på 3&nbsp;000,00 kr sendes til:
-          <b>
-            Acme AS
-          </b>
         </p>
-      </div>
-    </div>
-    <div
-      class="navds-confirmation-panel navds-form-field navds-confirmation-panel--small"
-      data-color-role="warning"
-    >
-      <div class="navds-confirmation-panel__inner">
-        <div
-          id="333"
-          class="navds-confirmation-panel__content navds-body-long navds-body-long--small"
-        >
-          <p class="navds-body-long navds-body-long--small navds-typo--semibold">
-            Husk at det vanligvis er arbeidsgiver som skal motta faktura
-          </p>
-          <p class="navds-body-long navds-body-long--small">
-            Hvis bruker har oppgitt en annen fullmektig for betaling, skal du spørre bruker om det er riktig.
-            <br>
-            <br>
-            Kontroller at
-          </p>
-          <div class="navds-list navds-list--small navds-body-long navds-body-long--small">
-            <ul role="list">
-              <li class="navds-list__item mb-0">
-                <div class="navds-list__item-marker navds-list__item-marker--bullet">
-                  <svg
-                    width="0.375rem"
-                    height="0.375rem"
-                    viewbox="0 0 6 6"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                    focusable="false"
-                    role="img"
-                  >
-                    <rect
-                      width="6"
-                      height="6"
-                      rx="3"
-                      fill="currentColor"
-                    >
-                    </rect>
-                  </svg>
-                </div>
-                <div>
-                  organisasjonsnummeret som er oppgitt tilhører riktig enhet i virksomheten
-                </div>
-              </li>
-              <li class="navds-list__item mb-0">
-                <div class="navds-list__item-marker navds-list__item-marker--bullet">
-                  <svg
-                    width="0.375rem"
-                    height="0.375rem"
-                    viewbox="0 0 6 6"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                    focusable="false"
-                    role="img"
-                  >
-                    <rect
-                      width="6"
-                      height="6"
-                      rx="3"
-                      fill="currentColor"
-                    >
-                    </rect>
-                  </svg>
-                </div>
-                <div>
-                  organisasjonsnummeret er registrert i OeBS
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="navds-checkbox navds-checkbox--small">
-          <input
-            id="333"
-            aria-describedby="333"
-            class="navds-checkbox__input"
-            aria-labelledby="333"
-            type="checkbox"
-          >
-          <label
-            for="333"
-            class="navds-checkbox__label"
-          >
-            <span class="navds-checkbox__icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="0.8125rem"
-                height="0.625rem"
-                viewbox="0 0 13 10"
-                fill="none"
-                focusable="false"
-                role="img"
-                aria-hidden="true"
-              >
-                <path
-                  d="M4.03524 6.41478L10.4752 0.404669C11.0792 -0.160351 12.029 -0.130672 12.5955 0.47478C13.162 1.08027 13.1296 2.03007 12.5245 2.59621L5.02111 9.59934C4.74099 9.85904 4.37559 10 4.00025 10C3.60651 10 3.22717 9.84621 2.93914 9.56111L0.439143 7.06111C-0.146381 6.47558 -0.146381 5.52542 0.439143 4.93989C1.02467 4.35437 1.97483 4.35437 2.56036 4.93989L4.03524 6.41478Z"
-                  fill="currentColor"
-                >
-                </path>
-              </svg>
-            </span>
-            <span class="navds-checkbox__icon-indeterminate">
-            </span>
-            <span class="navds-checkbox__content">
-              <span
-                id="333"
-                aria-hidden="true"
-                class="navds-checkbox__label-text navds-body-short navds-body-short--small"
-              >
-                Jeg bekrefter at fullmektig for betaling er riktig
-              </span>
-            </span>
-          </label>
-        </div>
-      </div>
-      <div
-        class="navds-form-field__error"
-        id="333"
-        role="alert"
-      >
       </div>
     </div>
     <div class="htmlEditor fritekst_editor">
@@ -1142,8 +1047,7 @@ exports[`VurderingVedtak > should render snapshot with realistic data 1`] = `
     <div class="stegKnapper">
       <button
         type="submit"
-        class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small navds-button--loading navds-button--disabled"
-        disabled
+        class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small navds-button--loading"
       >
         <svg
           aria-labelledby="333"
