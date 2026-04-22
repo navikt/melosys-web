@@ -1,8 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import { SumArsavregningTabell } from "./sumArsavregningTabell";
+import useFeatureToggle from "../../../../../featuretoggle/useFeatureToggle";
 
 // Mock dependencies
+vi.mock("../../../../../featuretoggle/useFeatureToggle", () => ({
+  default: vi.fn(),
+}));
+
 vi.mock("../../../../../utils", async (importOriginal) => {
   const actual = await importOriginal<typeof import("../../../../../utils")>();
   return {
@@ -11,9 +16,10 @@ vi.mock("../../../../../utils", async (importOriginal) => {
   };
 });
 
-describe("SumArsavregningTabell", () => {
+describe("SumArsavregningTabell - Toggle Disabled", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(useFeatureToggle).mockReturnValue(false);
   });
 
   it("renders table with required headers", () => {
@@ -120,5 +126,63 @@ describe("SumArsavregningTabell", () => {
     );
 
     expect(container.firstChild).toMatchSnapshot();
+  });
+});
+
+describe("SumArsavregningTabell - Toggle Enabled", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+  });
+
+  it("shows current year Avgiftssystem row with correct label when value is provided", () => {
+    const { rerender } = render(
+      <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereInnbetaltTrygdeavgift={8000} />,
+    );
+    // Label for current year's input
+    const currentRow = screen.getByText("Innbetalt trygdeavgift").closest("tr");
+    expect(within(currentRow!).getByText("8 000 kr")).toBeInTheDocument();
+
+    rerender(<SumArsavregningTabell harGrunnlagIMelosys={false} />);
+
+    expect(screen.queryByText("Innbetalt trygdeavgift")).not.toBeInTheDocument();
+  });
+
+  it("shows previous year Avgiftssystem row with correct label when value is provided", () => {
+    const { rerender } = render(
+      <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereAarsavregningInnbetaltTrygdeavgift={5000} />,
+    );
+    // Label for previous year's value in a correction scenario
+    const previousRow = screen.getByText("Tidligere innbetalt trygdeavgift").closest("tr");
+    expect(within(previousRow!).getByText("5 000 kr")).toBeInTheDocument();
+
+    rerender(<SumArsavregningTabell harGrunnlagIMelosys={false} />);
+
+    expect(screen.queryByText("Tidligere innbetalt trygdeavgift")).not.toBeInTheDocument();
+  });
+
+  it("calculates and displays difference correctly without previous year avgiftssystem", () => {
+    render(
+      <SumArsavregningTabell
+        nyTrygdeavgift={50000}
+        tidligereTrygdeavgift={20000}
+        tidligereInnbetaltTrygdeavgift={10000} // Current year input
+        harGrunnlagIMelosys={true}
+      />,
+    );
+    // 50000 - 20000 - 10000 = 20000
+    expect(screen.getByText("50 000 kr")).toBeInTheDocument();
+
+    // Check value in "Tidligere beregnet trygdeavgift fra Melosys" row
+    const melosysRow = screen.getByText("Tidligere beregnet trygdeavgift").closest("tr");
+    expect(within(melosysRow!).getByText("20 000 kr")).toBeInTheDocument();
+
+    // Check value in "Innbetalt trygdeavgift" row
+    const avgiftssystemRow = screen.getByText("Innbetalt trygdeavgift").closest("tr");
+    expect(within(avgiftssystemRow!).getByText("10 000 kr")).toBeInTheDocument();
+
+    // Check value in "Differanse" row
+    const differanseRow = screen.getByText("Differanse").closest("tr");
+    expect(within(differanseRow!).getByText("20 000 kr")).toBeInTheDocument();
   });
 });

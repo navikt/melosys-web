@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SumArsavregningTabell > renders correctly with all possible data 1`] = `
+exports[`SumArsavregningTabell - Toggle Disabled > renders correctly with all possible data 1`] = `
 
 <div
   style="--__ac-box-background: var(--a-surface-subtle);"
@@ -74,6 +74,110 @@ exports[`SumArsavregningTabell > renders correctly with all possible data 1`] = 
           class="navds-table__data-cell navds-body-short navds-body-short--small"
         >
           Trygdeavgift fra Avgiftssystemet
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          10&nbsp;000 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          =
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Differanse
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          <b>
+            25&nbsp;000&nbsp;kr&nbsp;
+          </b>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+`;
+
+exports[`SumArsavregningTabell - Toggle Enabled > renders correctly with all possible data 1`] = `
+
+<div
+  style="--__ac-box-background: var(--a-surface-subtle);"
+  class="navds-box sumArsavregningTabell navds-box-bg"
+>
+  <table
+    width="500"
+    class="navds-table navds-table--small periode_tabell"
+  >
+    <tbody class="navds-table__body">
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+        </td>
+        <td
+          width="400"
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Endelig beregnet trygdeavgift
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          50&nbsp;000 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          -
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Tidligere beregnet trygdeavgift
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          20&nbsp;000 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          +
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Tidligere innbetalt trygdeavgift
+        </td>
+        <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+          5&nbsp;000 kr
+        </td>
+      </tr>
+      <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          -
+        </td>
+        <td
+          scope="col"
+          class="navds-table__data-cell navds-body-short navds-body-short--small"
+        >
+          Innbetalt trygdeavgift
         </td>
         <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
           10&nbsp;000 kr
