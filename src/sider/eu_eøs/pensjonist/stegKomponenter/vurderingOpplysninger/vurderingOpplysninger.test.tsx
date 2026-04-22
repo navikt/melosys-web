@@ -175,11 +175,14 @@ describe("VurderingOpplysninger", () => {
       redigerbart: true,
     },
     helseutgiftdekkesperiode: {
-      data: {
-        fomDato: "2025-01-01",
-        tomDato: "2025-12-31",
-        bostedLandkode: "NO",
-      },
+      data: [
+        {
+          id: 1,
+          fomDato: "2025-01-01",
+          tomDato: "2025-12-31",
+          bostedLandkode: "NO",
+        },
+      ],
     },
     oppsummertfakta: {
       data: {

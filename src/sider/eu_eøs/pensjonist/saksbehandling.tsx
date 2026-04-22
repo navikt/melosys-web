@@ -46,7 +46,10 @@ function Saksbehandling({ match, location }: Props) {
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.RegisteropplysningerHentetSelector);
-  const helseutgiftDekkesPeriode = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector);
+  const helseutgiftDekkesPerioder = useSelector(helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector);
+  const foersteHelseutgiftDekkesPeriode = Array.isArray(helseutgiftDekkesPerioder?.data)
+    ? helseutgiftDekkesPerioder.data[0]
+    : undefined;
   const { startOgVisOppfriskModal, visOppfriskModal, behandlingOppfriskes } = useContext(FellesHandlersContext) as any;
 
   const [behandlingID, setBehandlingID] = useState(-1);
@@ -141,9 +144,9 @@ function Saksbehandling({ match, location }: Props) {
             </div>
             <CollapsiblePanel defaultExpanded={panelExpanded} onToggle={setPanelExpanded} direction="RIGHT">
               <Oppsummering
-                helseDekkesPeriodeFom={Utils.dato.formatterDatoTilNorsk(helseutgiftDekkesPeriode?.data.fomDato)}
-                helseDekkesPeriodeTom={Utils.dato.formatterDatoTilNorsk(helseutgiftDekkesPeriode?.data.tomDato)}
-                bostedsland={KV.kodeTilObjekt(helseutgiftDekkesPeriode?.data.bostedLandkode, MKV.KTObjects.landkoder)}
+                helseDekkesPeriodeFom={Utils.dato.formatterDatoTilNorsk(foersteHelseutgiftDekkesPeriode?.fomDato)}
+                helseDekkesPeriodeTom={Utils.dato.formatterDatoTilNorsk(foersteHelseutgiftDekkesPeriode?.tomDato)}
+                bostedsland={KV.kodeTilObjekt(foersteHelseutgiftDekkesPeriode?.bostedLandkode, MKV.KTObjects.landkoder)}
               />
               <SaksoversiktLenke />
               <SideDialog tabs={defaultTabs} />
