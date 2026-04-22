@@ -1,8 +1,7 @@
 import { expect, Page } from "@playwright/test";
 import { UI_TEXTS } from "../../config/ui-texts";
-import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
-import { finnCombobox, velgFraListe } from "../../utils/testUtils";
+import { velgFraListe } from "../../utils/testUtils";
 import { StegvelgerPage } from "./stegvelger.page";
 
 /**
