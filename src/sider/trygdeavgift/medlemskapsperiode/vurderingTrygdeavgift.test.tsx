@@ -307,6 +307,31 @@ describe("VurderingTrygdeavgift", () => {
       });
     });
 
+    it("viser 'Foreløpig beregnet trygdeavgift'-seksjonen når alle perioder er MINSTEBELØP med 0 i avgift", async () => {
+      mockPerioderMedBeregningsregel([
+        { fom: "2024-01-01", tom: "2024-12-31", avgiftssats: null, avgiftPerMd: 0, beregningsregel: "MINSTEBELØP" },
+      ]);
+
+      renderComponent();
+
+      await waitFor(() => {
+        expect(screen.getByRole("heading", { name: /Foreløpig beregnet trygdeavgift/ })).toBeInTheDocument();
+      });
+    });
+
+    it("skjuler 'Foreløpig beregnet trygdeavgift'-seksjonen når alle ordinære perioder har 0 i avgift", async () => {
+      mockPerioderMedBeregningsregel([
+        { fom: "2024-01-01", tom: "2024-12-31", avgiftssats: 0, avgiftPerMd: 0, beregningsregel: "ORDINÆR" },
+      ]);
+
+      renderComponent();
+
+      await waitFor(() => {
+        expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled();
+      });
+      expect(screen.queryByRole("heading", { name: /Foreløpig beregnet trygdeavgift/ })).not.toBeInTheDocument();
+    });
+
     it("sender perioder med harSammenslåtteInntektskilder til tabellen (AC4)", async () => {
       mockPerioderMedBeregningsregel([
         {

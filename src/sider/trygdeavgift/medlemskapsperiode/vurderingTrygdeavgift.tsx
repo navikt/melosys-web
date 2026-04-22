@@ -74,7 +74,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     undefined,
   );
 
-  const alleTrygdeavgiftsperioderHarNullBeløp = lagretTrygdeavgift?.trygdeavgiftsperioder.every(
+  const ingenTrygdeavgiftÅVise = lagretTrygdeavgift?.trygdeavgiftsperioder.every(
     (periode) => periode.avgiftPerMd === 0 && erOrdinaerBeregning(periode.beregningsregel),
   );
 
@@ -381,7 +381,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
       <Feilmelding type={aktivFeilmeldingType} />
 
-      {trygdeavgiftErIkkeTom && !alleTrygdeavgiftsperioderHarNullBeløp && stegErGyldig && (
+      {trygdeavgiftErIkkeTom && !ingenTrygdeavgiftÅVise && stegErGyldig && (
         <>
           <Nav.Heading size="xsmall">Foreløpig beregnet trygdeavgift</Nav.Heading>
           <TrygdeavgiftsperioderTabell
