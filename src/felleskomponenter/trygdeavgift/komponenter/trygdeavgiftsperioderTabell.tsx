@@ -4,7 +4,14 @@ import * as Utils from "../../../utils";
 import * as Nav from "../../../navFrontend";
 import { Trygdeavgiftsperiode } from "../../../services/modules/trygdeavgift";
 import { Spinner } from "../../spinner";
-import { formaterSats, formaterDekning, formaterInntektskilde, Beregningsforklaringer } from "./beregningsforklaring";
+import {
+  formaterSats,
+  formaterDekning,
+  formaterInntektskilde,
+  Beregningsforklaringer,
+  erUnderMinstebeløp,
+  MINSTEBELØP_ALERT_TEKST,
+} from "./beregningsforklaring";
 
 import "./trygdeavgiftsperioderTabell.less";
 
@@ -20,8 +27,7 @@ function TrygdeavgiftsperioderTabell({
   if (!perioder) return null;
 
   const sortertePerioder = [...perioder].sort(Utils.dato.sorterEtterISOFomDato);
-  const alleUnderMinstebeløp =
-    sortertePerioder.length > 0 && sortertePerioder.every((p) => p.beregningsregel === "MINSTEBELØP");
+  const alleUnderMinstebeløp = sortertePerioder.length > 0 && sortertePerioder.every(erUnderMinstebeløp);
 
   return (
     <div className="tabell-container">
@@ -31,9 +37,7 @@ function TrygdeavgiftsperioderTabell({
         </div>
       )}
       {alleUnderMinstebeløp ? (
-        <Nav.Alert variant="info" className="infomelding">
-          Trygdeavgift skal ikke betales da inntekten er under minstebeløpet.
-        </Nav.Alert>
+        <Nav.Alert variant="info">{MINSTEBELØP_ALERT_TEKST}</Nav.Alert>
       ) : (
         <>
           <Nav.Table size="small" className="periode_tabell">
