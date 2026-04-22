@@ -65,7 +65,7 @@ class Stegvelger extends Component {
 
   aktiv = true;
 
-  byterSteg = false;
+  bytterSteg = false;
 
   transisjonId = 0;
 
@@ -108,7 +108,7 @@ class Stegvelger extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.byterSteg) {
+    if (this.bytterSteg) {
       return;
     }
     const { aktivtStegNummer, aktuelleSteg } = this.state;
@@ -565,7 +565,7 @@ class Stegvelger extends Component {
 
     const flytHarIkkeVurderingPeriode = !(eøsFaktureringAvTrygdeavgiftToggleEnabled && erArbeidTjenestepersonEllerFly);
 
-    this.byterSteg = true;
+    this.bytterSteg = true;
     const minTransisjonId = ++this.transisjonId;
     this.debouncedOppdaterAktuelleSteg.cancel?.();
     this.setState({ aktivtStegNummer: nyttStegNummer });
@@ -596,7 +596,7 @@ class Stegvelger extends Component {
       console.error("Feil ved lagring under stegovergang:", error);
     } finally {
       if (this.transisjonId === minTransisjonId) {
-        this.byterSteg = false;
+        this.bytterSteg = false;
       }
     }
 
