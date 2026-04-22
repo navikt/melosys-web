@@ -27,10 +27,6 @@ export class InngangPage extends StegvelgerPage {
   }
 
   /**
-   * Velg bostedsland for EØS pensjonist-saker
-   * @param landkode - Landkode (f.eks. "SE" for Sverige, "DK" for Danmark)
-   */
-  /**
    * Velg trygdedekning fra dropdown på Inngang-steget
    * @param label - Synlig tekst i dropdown (f.eks. "Helsedel (§ 2-9)")
    */
@@ -38,6 +34,10 @@ export class InngangPage extends StegvelgerPage {
     await this.page.getByRole("combobox", { name: "Trygdedekning" }).selectOption({ label });
   }
 
+  /**
+   * Velg bostedsland for EØS pensjonist-saker
+   * @param landkode - Landkode (f.eks. "SE" for Sverige, "DK" for Danmark)
+   */
   async velgLand(landkode: string): Promise<void> {
     const landSelect = this.page.getByLabel("Bostedsland");
     // Vent på at debounced API-kall fullføres
