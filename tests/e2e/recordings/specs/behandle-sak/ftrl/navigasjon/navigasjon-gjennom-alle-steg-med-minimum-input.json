@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "recordedAt": "2025-01-01T00:00:00.000Z",
-  "testFile": "/Users/ragnarwestad/develop/nav/melosys-web-2/tests/e2e/specs/behandle-sak/ftrl/navigasjon.spec.ts",
+  "testFile": "/Users/Chak.Kwan.Hui/Documents/Melosys/Projects/melosys-web/tests/e2e/specs/behandle-sak/ftrl/navigasjon.spec.ts",
   "testName": "Navigasjon gjennom alle steg med minimum input",
   "exchanges": [
     {
@@ -226,18 +226,18 @@
           "content-type": "application/json"
         },
         "body": {
-          "behandlingsresultatTypeKode": "IKKE_FASTSATT",
-          "begrunnelseKoder": [],
+          "aarsavregningID": null,
           "begrunnelseFritekst": null,
+          "begrunnelseKoder": [],
+          "behandlingsresultatTypeKode": "IKKE_FASTSATT",
+          "fakturaserieReferanse": null,
           "innledningFritekst": null,
-          "trygdeavgiftFritekst": null,
+          "kontrollresultatBegrunnelseKoder": [],
           "nyVurderingBakgrunn": null,
+          "trygdeavgiftFritekst": null,
           "utfallRegistreringUnntak": null,
           "utfallUtpeking": null,
-          "vedtakstype": null,
-          "kontrollresultatBegrunnelseKoder": [],
-          "fakturaserieReferanse": null,
-          "aarsavregningID": null
+          "vedtakstype": null
         }
       }
     },
@@ -261,18 +261,18 @@
           "content-type": "application/json"
         },
         "body": {
-          "behandlingsresultatTypeKode": "IKKE_FASTSATT",
-          "begrunnelseKoder": [],
+          "aarsavregningID": null,
           "begrunnelseFritekst": null,
+          "begrunnelseKoder": [],
+          "behandlingsresultatTypeKode": "IKKE_FASTSATT",
+          "fakturaserieReferanse": null,
           "innledningFritekst": null,
-          "trygdeavgiftFritekst": null,
+          "kontrollresultatBegrunnelseKoder": [],
           "nyVurderingBakgrunn": null,
+          "trygdeavgiftFritekst": null,
           "utfallRegistreringUnntak": null,
           "utfallUtpeking": null,
-          "vedtakstype": null,
-          "kontrollresultatBegrunnelseKoder": [],
-          "fakturaserieReferanse": null,
-          "aarsavregningID": null
+          "vedtakstype": null
         }
       }
     },
@@ -517,28 +517,28 @@
         "body": {
           "behandlingID": 21,
           "oppsummering": {
+            "behandlingsfrist": "2025-01-01",
+            "behandlingsresultattype": {
+              "kode": "IKKE_FASTSATT",
+              "term": "Ikke fastsatt"
+            },
             "behandlingsstatus": {
               "kode": "UNDER_BEHANDLING",
               "term": "Behandlingen pågår"
-            },
-            "behandlingstype": {
-              "kode": "FØRSTEGANG",
-              "term": "Førstegangsbehandling"
             },
             "behandlingstema": {
               "kode": "YRKESAKTIV",
               "term": "Yrkesaktiv"
             },
-            "registrertDato": "2025-01-01T00:00:00.000Z",
-            "endretDato": "2025-01-01T00:00:00.000Z",
+            "behandlingstype": {
+              "kode": "FØRSTEGANG",
+              "term": "Førstegangsbehandling"
+            },
             "endretAvNavn": "Lokal Testbruker",
+            "endretDato": "2025-01-01T00:00:00.000Z",
+            "registrertDato": "2025-01-01T00:00:00.000Z",
             "sisteOpplysningerHentetDato": null,
-            "svarFrist": null,
-            "behandlingsfrist": "2025-01-01",
-            "behandlingsresultattype": {
-              "kode": "IKKE_FASTSATT",
-              "term": "Ikke fastsatt"
-            }
+            "svarFrist": null
           },
           "saksopplysninger": {
             "arbeidsforhold": [],
@@ -551,15 +551,15 @@
               "frilansInntektMaanedListe": []
             },
             "sed": {
-              "rinaSaksnummer": null,
-              "rinaDokumentID": null,
+              "bucType": null,
+              "erEndring": false,
               "fnr": null,
-              "lovvalgsperiode": null,
               "lovvalgsbestemmelse": null,
               "lovvalgslandKode": null,
-              "erEndring": false,
-              "sedType": null,
-              "bucType": null
+              "lovvalgsperiode": null,
+              "rinaDokumentID": null,
+              "rinaSaksnummer": null,
+              "sedType": null
             }
           },
           "redigerbart": true
@@ -588,39 +588,37 @@
         "body": {
           "behandlingID": 21,
           "oppsummering": {
+            "behandlingsfrist": "2025-01-01",
+            "behandlingsresultattype": {
+              "kode": "IKKE_FASTSATT",
+              "term": "Ikke fastsatt"
+            },
             "behandlingsstatus": {
               "kode": "UNDER_BEHANDLING",
               "term": "Behandlingen pågår"
-            },
-            "behandlingstype": {
-              "kode": "FØRSTEGANG",
-              "term": "Førstegangsbehandling"
             },
             "behandlingstema": {
               "kode": "YRKESAKTIV",
               "term": "Yrkesaktiv"
             },
-            "registrertDato": "2025-01-01T00:00:00.000Z",
-            "endretDato": "2025-01-01T00:00:00.000Z",
+            "behandlingstype": {
+              "kode": "FØRSTEGANG",
+              "term": "Førstegangsbehandling"
+            },
             "endretAvNavn": "Lokal Testbruker",
+            "endretDato": "2025-01-01T00:00:00.000Z",
+            "registrertDato": "2025-01-01T00:00:00.000Z",
             "sisteOpplysningerHentetDato": "2025-01-01T00:00:00.000Z",
-            "svarFrist": null,
-            "behandlingsfrist": "2025-01-01",
-            "behandlingsresultattype": {
-              "kode": "IKKE_FASTSATT",
-              "term": "Ikke fastsatt"
-            }
+            "svarFrist": null
           },
           "saksopplysninger": {
             "arbeidsforhold": [
               {
-                "arbeidsforholdID": "123",
-                "arbeidsforholdIDnav": 123,
+                "Aordning": null,
                 "ansettelsesPeriode": {
-                  "fom": "2021-02-17",
+                  "fom": "2021-04-22",
                   "tom": null
                 },
-                "arbeidsforholdstype": "ordinaertArbeidsforhold",
                 "arbeidsavtaler": [
                   {
                     "arbeidstidsordning": {
@@ -633,13 +631,13 @@
                       "term": "KONSULENT"
                     },
                     "gyldighetsperiode": {
-                      "fom": "2021-02-17",
+                      "fom": "2021-04-22",
                       "tom": null
                     },
                     "avtaltArbeidstimerPerUke": 37.5,
                     "stillingsprosent": 100,
                     "beregnetAntallTimerPrUke": 37.5,
-                    "endringsdatoStillingsprosent": "2021-02-17",
+                    "endringsdatoStillingsprosent": "2021-04-22",
                     "skipsregister": null,
                     "skipstype": null,
                     "maritimArbeidsavtale": false,
@@ -648,74 +646,76 @@
                     "fartsomraade": null
                   }
                 ],
-                "permisjonOgPermittering": [],
-                "utenlandsopphold": [],
-                "arbeidsgivertype": "ORGANISASJON",
+                "arbeidsforholdID": "123",
+                "arbeidsforholdIDnav": 123,
+                "arbeidsforholdstype": "ordinaertArbeidsforhold",
                 "arbeidsgiverID": "999999999",
+                "arbeidsgivertype": "ORGANISASJON",
                 "arbeidstakerID": "30056928150",
-                "opplysningspliktigtype": "ORGANISASJON",
                 "opplysningspliktigID": "999999999",
+                "opplysningspliktigtype": "ORGANISASJON",
                 "opprettelsestidspunkt": "2025-01-01T00:00:00.000Z",
+                "permisjonOgPermittering": [],
                 "sistBekreftet": "2025-01-01T00:00:00.000Z",
-                "Aordning": null,
-                "timerTimelonnet": []
+                "timerTimelonnet": [],
+                "utenlandsopphold": []
               }
             ],
             "organisasjoner": [
               {
-                "orgnr": "888888888",
+                "forretningsadresse": {
+                  "gateadresse": {
+                    "gatenavn": "Adresselinje1",
+                    "gatenummer": null,
+                    "husbokstav": null,
+                    "husnummer": null
+                  },
+                  "land": "NORGE",
+                  "postnr": "0010",
+                  "poststed": "Oslo"
+                },
                 "navn": "Steinars Stein AS",
                 "oppstartdato": null,
                 "organisasjonsform": "Aksjeselskap",
-                "forretningsadresse": {
-                  "gateadresse": {
-                    "gatenavn": "Adresselinje1",
-                    "gatenummer": null,
-                    "husnummer": null,
-                    "husbokstav": null
-                  },
-                  "postnr": "0010",
-                  "poststed": "Oslo",
-                  "land": "NORGE"
-                },
+                "orgnr": "888888888",
                 "postadresse": {
                   "gateadresse": {
                     "gatenavn": "Adresselinje1",
                     "gatenummer": null,
-                    "husnummer": null,
-                    "husbokstav": null
+                    "husbokstav": null,
+                    "husnummer": null
                   },
+                  "land": "NORGE",
                   "postnr": "0010",
-                  "poststed": "Oslo",
-                  "land": "NORGE"
+                  "poststed": "Oslo"
                 }
               },
               {
-                "orgnr": "999999999",
-                "navn": "Ståles Stål AS",
-                "oppstartdato": null,
-                "organisasjonsform": "Aksjeselskap",
                 "forretningsadresse": {
                   "gateadresse": {
                     "gatenavn": "Adresselinje1",
                     "gatenummer": null,
-                    "husnummer": null,
-                    "husbokstav": null
+                    "husbokstav": null,
+                    "husnummer": null
                   },
+                  "land": "NORGE",
                   "postnr": "0010",
-                  "poststed": "Oslo",
-                  "land": "NORGE"
+                  "poststed": "Oslo"
                 },
+                "navn": "Ståles Stål AS",
+                "oppstartdato": null,
+                "organisasjonsform": "Aksjeselskap",
+                "orgnr": "999999999",
                 "postadresse": {
                   "gateadresse": {
                     "gatenavn": "Adresselinje1",
                     "gatenummer": null,
-                    "husnummer": null,
-                    "husbokstav": null
+                    "husbokstav": null,
+                    "husnummer": null
                   },
+                  "land": "NORGE",
                   "postnr": "0010",
-                  "poststed": "Oslo",
-                  "land": "NORGE"
+                  "poststed": "Oslo"
                 }
               }
             ],
@@ -735,7 +735,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -764,7 +764,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -793,7 +793,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -822,7 +822,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -851,7 +851,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -880,7 +880,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -909,7 +909,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -938,7 +938,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -967,7 +967,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -996,7 +996,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1025,7 +1025,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1054,7 +1054,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1083,7 +1083,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1112,7 +1112,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1141,7 +1141,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1170,7 +1170,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1199,7 +1199,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1228,7 +1228,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1257,7 +1257,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1286,7 +1286,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1315,7 +1315,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1344,7 +1344,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1373,7 +1373,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1402,7 +1402,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1431,7 +1431,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1460,7 +1460,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1489,7 +1489,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1518,7 +1518,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1547,7 +1547,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1576,7 +1576,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1605,7 +1605,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1634,7 +1634,7 @@
                         "inntektskilde": "A-ordningen",
                         "inntektsperiodetype": "Maaned",
                         "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-02-01T00:00:00",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
                         "opptjeningsland": null,
                         "opptjeningsperiode": {
                           "fom": null,
@@ -1651,20 +1651,78 @@
                       }
                     ]
                   }
+                },
+                {
+                  "aarMaaned": "2026-03",
+                  "arbeidsInntektInformasjon": {
+                    "inntektListe": [
+                      {
+                        "type": "Loennsinntekt",
+                        "beloep": 50000,
+                        "fordel": "kontantytelse",
+                        "inntektskilde": "A-ordningen",
+                        "inntektsperiodetype": "Maaned",
+                        "inntektsstatus": "LoependeInnrapportert",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
+                        "opptjeningsland": null,
+                        "opptjeningsperiode": {
+                          "fom": null,
+                          "tom": null
+                        },
+                        "utbetaltIPeriode": "2026-03",
+                        "opplysningspliktigID": "974761076",
+                        "virksomhetID": "888888888",
+                        "inntektsmottakerID": "30056928150",
+                        "inngaarIGrunnlagForTrekk": true,
+                        "utloeserArbeidsgiveravgift": true,
+                        "informasjonsstatus": "InngaarAlltid",
+                        "beskrivelse": "fastloenn"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "aarMaaned": "2026-04",
+                  "arbeidsInntektInformasjon": {
+                    "inntektListe": [
+                      {
+                        "type": "Loennsinntekt",
+                        "beloep": 50000,
+                        "fordel": "kontantytelse",
+                        "inntektskilde": "A-ordningen",
+                        "inntektsperiodetype": "Maaned",
+                        "inntektsstatus": "LoependeInnrapportert",
+                        "levereringstidspunkt": "2026-04-01T00:00:00",
+                        "opptjeningsland": null,
+                        "opptjeningsperiode": {
+                          "fom": null,
+                          "tom": null
+                        },
+                        "utbetaltIPeriode": "2026-04",
+                        "opplysningspliktigID": "974761076",
+                        "virksomhetID": "888888888",
+                        "inntektsmottakerID": "30056928150",
+                        "inngaarIGrunnlagForTrekk": true,
+                        "utloeserArbeidsgiveravgift": true,
+                        "informasjonsstatus": "InngaarAlltid",
+                        "beskrivelse": "fastloenn"
+                      }
+                    ]
+                  }
                 }
               ],
               "frilansInntektMaanedListe": []
             },
             "sed": {
-              "rinaSaksnummer": null,
-              "rinaDokumentID": null,
+              "bucType": null,
+              "erEndring": false,
               "fnr": null,
-              "lovvalgsperiode": null,
               "lovvalgsbestemmelse": null,
               "lovvalgslandKode": null,
-              "erEndring": false,
-              "sedType": null,
-              "bucType": null
+              "lovvalgsperiode": null,
+              "rinaDokumentID": null,
+              "rinaSaksnummer": null,
+              "sedType": null
             }
           },
           "redigerbart": true
@@ -1853,8 +1911,16 @@
           "content-type": "application/json"
         },
         "body": {
-          "saksnummer": "MEL-1021",
+          "betalingsvalg": null,
+          "endretDato": "2025-01-01T00:00:00.000Z",
           "gsakSaksnummer": null,
+          "hovedpartRolle": "BRUKER",
+          "registrertDato": "2025-01-01T00:00:00.000Z",
+          "saksnummer": "MEL-1021",
+          "saksstatus": {
+            "kode": "OPPRETTET",
+            "term": "Saken er opprettet"
+          },
           "sakstema": {
             "kode": "MEDLEMSKAP_LOVVALG",
             "term": "Medlemskap og lovvalg"
@@ -1862,15 +1928,7 @@
           "sakstype": {
             "kode": "FTRL",
             "term": "Utenfor avtaleland"
-          },
-          "saksstatus": {
-            "kode": "OPPRETTET",
-            "term": "Saken er opprettet"
-          },
-          "betalingsvalg": null,
-          "registrertDato": "2025-01-01T00:00:00.000Z",
-          "endretDato": "2025-01-01T00:00:00.000Z",
-          "hovedpartRolle": "BRUKER"
+          }
         }
       }
     },
@@ -1894,8 +1952,16 @@
           "content-type": "application/json"
         },
         "body": {
-          "saksnummer": "MEL-1021",
+          "betalingsvalg": null,
+          "endretDato": "2025-01-01T00:00:00.000Z",
           "gsakSaksnummer": null,
+          "hovedpartRolle": "BRUKER",
+          "registrertDato": "2025-01-01T00:00:00.000Z",
+          "saksnummer": "MEL-1021",
+          "saksstatus": {
+            "kode": "OPPRETTET",
+            "term": "Saken er opprettet"
+          },
           "sakstema": {
             "kode": "MEDLEMSKAP_LOVVALG",
             "term": "Medlemskap og lovvalg"
@@ -1903,22 +1969,14 @@
           "sakstype": {
             "kode": "FTRL",
             "term": "Utenfor avtaleland"
-          },
-          "saksstatus": {
-            "kode": "OPPRETTET",
-            "term": "Saken er opprettet"
-          },
-          "betalingsvalg": null,
-          "registrertDato": "2025-01-01T00:00:00.000Z",
-          "endretDato": "2025-01-01T00:00:00.000Z",
-          "hovedpartRolle": "BRUKER"
+          }
         }
       }
     },
     {
       "request": {
         "method": "GET",
-        "url": "http://localhost:3333/api/featuretoggle?features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift&features=melosys.faktureringskomponent.vis_referanse&features=melosys.cdm-4-4",
+        "url": "http://localhost:3333/api/featuretoggle?features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.arsavregning.eos_pensjonist&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift&features=melosys.faktureringskomponent.vis_referanse&features=melosys.cdm-4-4",
         "pathname": "/api/featuretoggle",
         "normalizedPath": "/api/featuretoggle",
         "query": {
@@ -1946,6 +2004,7 @@
           "melosys.faktureringskomponenten.ikke-tidligere-perioder": true,
           "melosys.11_3_a_Norge_er_utpekt": true,
           "melosys.eos_fakturering_av_trygdeavgift": true,
+          "melosys.arsavregning.eos_pensjonist": true,
           "melosys.arsavregning.uten.flyt": false,
           "melosys.cdm-4-4": true
         }
@@ -3365,71 +3424,71 @@
         },
         "body": {
           "data": {
-            "soeknadsland": {
-              "landkoder": [],
-              "flereLandUkjentHvilke": false
+            "arbeidPaaLand": {
+              "erFastArbeidssted": null,
+              "erHjemmekontor": null,
+              "fysiskeArbeidssteder": []
+            },
+            "bosted": {
+              "antallMaanederINorge": 0,
+              "intensjonOmRetur": null,
+              "oppgittAdresse": {
+                "tilleggsnavn": null,
+                "gatenavn": null,
+                "husnummerEtasjeLeilighet": null,
+                "postboks": null,
+                "postnummer": null,
+                "poststed": null,
+                "region": null,
+                "landkode": null
+              }
+            },
+            "foretakUtland": [],
+            "juridiskArbeidsgiverNorge": {
+              "andelKontrakterINorge": null,
+              "andelOmsetningINorge": null,
+              "andelOppdragINorge": null,
+              "andelRekruttertINorge": null,
+              "antallAdmAnsatte": null,
+              "antallAnsatte": null,
+              "antallUtsendte": null,
+              "ekstraArbeidsgivere": [],
+              "erOffentligVirksomhet": null
+            },
+            "luftfartBaser": [],
+            "maritimtArbeid": [],
+            "oppholdUtland": {
+              "ektefelleEllerBarnINorge": null,
+              "oppholdsPeriode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppholdslandkoder": [],
+              "studentFinansieringKode": null,
+              "studentSemester": null
             },
             "periode": {
               "fom": null,
               "tom": null
             },
             "personOpplysninger": {
-              "utenlandskIdent": [],
+              "foedestedOgLand": null,
               "medfolgendeFamilie": [],
-              "foedestedOgLand": null
+              "utenlandskIdent": []
             },
-            "arbeidPaaLand": {
-              "fysiskeArbeidssteder": [],
-              "erHjemmekontor": null,
-              "erFastArbeidssted": null
-            },
-            "foretakUtland": [],
-            "oppholdUtland": {
-              "oppholdslandkoder": [],
-              "oppholdsPeriode": {
-                "fom": null,
-                "tom": null
-              },
-              "studentFinansieringKode": null,
-              "studentSemester": null,
-              "ektefelleEllerBarnINorge": null
-            },
+            "representantIUtlandet": null,
             "selvstendigArbeid": {
               "erSelvstendig": null,
               "selvstendigForetak": []
             },
-            "juridiskArbeidsgiverNorge": {
-              "antallAdmAnsatte": null,
-              "antallAnsatte": null,
-              "antallUtsendte": null,
-              "andelOmsetningINorge": null,
-              "andelOppdragINorge": null,
-              "andelKontrakterINorge": null,
-              "andelRekruttertINorge": null,
-              "ekstraArbeidsgivere": [],
-              "erOffentligVirksomhet": null
+            "soeknadsland": {
+              "landkoder": [],
+              "flereLandUkjentHvilke": false
             },
-            "maritimtArbeid": [],
-            "luftfartBaser": [],
-            "bosted": {
-              "intensjonOmRetur": null,
-              "antallMaanederINorge": 0,
-              "oppgittAdresse": {
-                "tilleggsnavn": null,
-                "gatenavn": null,
-                "husnummerEtasjeLeilighet": null,
-                "postboks": null,
-                "postnummer": null,
-                "poststed": null,
-                "region": null,
-                "landkode": null
-              }
-            },
-            "trygdedekning": null,
-            "representantIUtlandet": null
+            "trygdedekning": null
           },
-          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS",
-          "mottaksdato": "2025-01-01"
+          "mottaksdato": "2025-01-01",
+          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS"
         }
       }
     },
@@ -3454,55 +3513,14 @@
         },
         "body": {
           "data": {
-            "soeknadsland": {
-              "landkoder": ["SE"],
-              "flereLandUkjentHvilke": false
-            },
-            "periode": {
-              "fom": "2024-01-01",
-              "tom": null
-            },
-            "personOpplysninger": {
-              "utenlandskIdent": [],
-              "medfolgendeFamilie": [],
-              "foedestedOgLand": null
-            },
             "arbeidPaaLand": {
-              "fysiskeArbeidssteder": [],
+              "erFastArbeidssted": null,
               "erHjemmekontor": null,
-              "erFastArbeidssted": null
+              "fysiskeArbeidssteder": []
             },
-            "foretakUtland": [],
-            "oppholdUtland": {
-              "oppholdslandkoder": [],
-              "oppholdsPeriode": {
-                "fom": null,
-                "tom": null
-              },
-              "studentFinansieringKode": null,
-              "studentSemester": null,
-              "ektefelleEllerBarnINorge": null
-            },
-            "selvstendigArbeid": {
-              "erSelvstendig": null,
-              "selvstendigForetak": []
-            },
-            "juridiskArbeidsgiverNorge": {
-              "antallAdmAnsatte": 0,
-              "antallAnsatte": 0,
-              "antallUtsendte": 0,
-              "andelOmsetningINorge": 0,
-              "andelOppdragINorge": 0,
-              "andelKontrakterINorge": 0,
-              "andelRekruttertINorge": 0,
-              "ekstraArbeidsgivere": [],
-              "erOffentligVirksomhet": null
-            },
-            "maritimtArbeid": [],
-            "luftfartBaser": [],
             "bosted": {
-              "intensjonOmRetur": null,
               "antallMaanederINorge": 0,
+              "intensjonOmRetur": null,
               "oppgittAdresse": {
                 "tilleggsnavn": null,
                 "gatenavn": null,
@@ -3514,11 +3532,52 @@
                 "landkode": null
               }
             },
-            "trygdedekning": "FULL_DEKNING_FTRL",
-            "representantIUtlandet": null
+            "foretakUtland": [],
+            "juridiskArbeidsgiverNorge": {
+              "andelKontrakterINorge": 0,
+              "andelOmsetningINorge": 0,
+              "andelOppdragINorge": 0,
+              "andelRekruttertINorge": 0,
+              "antallAdmAnsatte": 0,
+              "antallAnsatte": 0,
+              "antallUtsendte": 0,
+              "ekstraArbeidsgivere": [],
+              "erOffentligVirksomhet": null
+            },
+            "luftfartBaser": [],
+            "maritimtArbeid": [],
+            "oppholdUtland": {
+              "ektefelleEllerBarnINorge": null,
+              "oppholdsPeriode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppholdslandkoder": [],
+              "studentFinansieringKode": null,
+              "studentSemester": null
+            },
+            "periode": {
+              "fom": "2024-01-01",
+              "tom": null
+            },
+            "personOpplysninger": {
+              "foedestedOgLand": null,
+              "medfolgendeFamilie": [],
+              "utenlandskIdent": []
+            },
+            "representantIUtlandet": null,
+            "selvstendigArbeid": {
+              "erSelvstendig": null,
+              "selvstendigForetak": []
+            },
+            "soeknadsland": {
+              "landkoder": ["SE"],
+              "flereLandUkjentHvilke": false
+            },
+            "trygdedekning": "FULL_DEKNING_FTRL"
           },
-          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS",
-          "mottaksdato": "2025-01-01"
+          "mottaksdato": "2025-01-01",
+          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS"
         }
       }
     },
@@ -3543,55 +3602,14 @@
         },
         "body": {
           "data": {
-            "soeknadsland": {
-              "landkoder": ["SE"],
-              "flereLandUkjentHvilke": false
-            },
-            "periode": {
-              "fom": "2024-01-01",
-              "tom": null
-            },
-            "personOpplysninger": {
-              "utenlandskIdent": [],
-              "medfolgendeFamilie": [],
-              "foedestedOgLand": null
-            },
             "arbeidPaaLand": {
-              "fysiskeArbeidssteder": [],
+              "erFastArbeidssted": null,
               "erHjemmekontor": null,
-              "erFastArbeidssted": null
+              "fysiskeArbeidssteder": []
             },
-            "foretakUtland": [],
-            "oppholdUtland": {
-              "oppholdslandkoder": [],
-              "oppholdsPeriode": {
-                "fom": null,
-                "tom": null
-              },
-              "studentFinansieringKode": null,
-              "studentSemester": null,
-              "ektefelleEllerBarnINorge": null
-            },
-            "selvstendigArbeid": {
-              "erSelvstendig": null,
-              "selvstendigForetak": []
-            },
-            "juridiskArbeidsgiverNorge": {
-              "antallAdmAnsatte": 0,
-              "antallAnsatte": 0,
-              "antallUtsendte": 0,
-              "andelOmsetningINorge": 0,
-              "andelOppdragINorge": 0,
-              "andelKontrakterINorge": 0,
-              "andelRekruttertINorge": 0,
-              "ekstraArbeidsgivere": [],
-              "erOffentligVirksomhet": null
-            },
-            "maritimtArbeid": [],
-            "luftfartBaser": [],
             "bosted": {
-              "intensjonOmRetur": null,
               "antallMaanederINorge": 0,
+              "intensjonOmRetur": null,
               "oppgittAdresse": {
                 "tilleggsnavn": null,
                 "gatenavn": null,
@@ -3603,11 +3621,52 @@
                 "landkode": null
               }
             },
-            "trygdedekning": "FULL_DEKNING_FTRL",
-            "representantIUtlandet": null
+            "foretakUtland": [],
+            "juridiskArbeidsgiverNorge": {
+              "andelKontrakterINorge": 0,
+              "andelOmsetningINorge": 0,
+              "andelOppdragINorge": 0,
+              "andelRekruttertINorge": 0,
+              "antallAdmAnsatte": 0,
+              "antallAnsatte": 0,
+              "antallUtsendte": 0,
+              "ekstraArbeidsgivere": [],
+              "erOffentligVirksomhet": null
+            },
+            "luftfartBaser": [],
+            "maritimtArbeid": [],
+            "oppholdUtland": {
+              "ektefelleEllerBarnINorge": null,
+              "oppholdsPeriode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppholdslandkoder": [],
+              "studentFinansieringKode": null,
+              "studentSemester": null
+            },
+            "periode": {
+              "fom": "2024-01-01",
+              "tom": null
+            },
+            "personOpplysninger": {
+              "foedestedOgLand": null,
+              "medfolgendeFamilie": [],
+              "utenlandskIdent": []
+            },
+            "representantIUtlandet": null,
+            "selvstendigArbeid": {
+              "erSelvstendig": null,
+              "selvstendigForetak": []
+            },
+            "soeknadsland": {
+              "landkoder": ["SE"],
+              "flereLandUkjentHvilke": false
+            },
+            "trygdedekning": "FULL_DEKNING_FTRL"
           },
-          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS",
-          "mottaksdato": "2025-01-01"
+          "mottaksdato": "2025-01-01",
+          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS"
         }
       }
     },
@@ -3979,18 +4038,18 @@
           "content-type": "application/json"
         },
         "body": {
-          "behandlingsresultatTypeKode": "IKKE_FASTSATT",
-          "begrunnelseKoder": [],
+          "aarsavregningID": null,
           "begrunnelseFritekst": "",
+          "begrunnelseKoder": [],
+          "behandlingsresultatTypeKode": "IKKE_FASTSATT",
+          "fakturaserieReferanse": null,
           "innledningFritekst": "",
-          "trygdeavgiftFritekst": "",
+          "kontrollresultatBegrunnelseKoder": [],
           "nyVurderingBakgrunn": null,
+          "trygdeavgiftFritekst": "",
           "utfallRegistreringUnntak": null,
           "utfallUtpeking": null,
-          "vedtakstype": null,
-          "kontrollresultatBegrunnelseKoder": [],
-          "fakturaserieReferanse": null,
-          "aarsavregningID": null
+          "vedtakstype": null
         }
       }
     },
@@ -4117,55 +4176,14 @@
         },
         "body": {
           "data": {
-            "soeknadsland": {
-              "landkoder": ["SE"],
-              "flereLandUkjentHvilke": false
-            },
-            "periode": {
-              "fom": "2024-01-01",
-              "tom": null
-            },
-            "personOpplysninger": {
-              "utenlandskIdent": [],
-              "medfolgendeFamilie": [],
-              "foedestedOgLand": null
-            },
             "arbeidPaaLand": {
-              "fysiskeArbeidssteder": [],
+              "erFastArbeidssted": null,
               "erHjemmekontor": null,
-              "erFastArbeidssted": null
+              "fysiskeArbeidssteder": []
             },
-            "foretakUtland": [],
-            "oppholdUtland": {
-              "oppholdslandkoder": [],
-              "oppholdsPeriode": {
-                "fom": null,
-                "tom": null
-              },
-              "studentFinansieringKode": null,
-              "studentSemester": null,
-              "ektefelleEllerBarnINorge": null
-            },
-            "selvstendigArbeid": {
-              "erSelvstendig": null,
-              "selvstendigForetak": []
-            },
-            "juridiskArbeidsgiverNorge": {
-              "antallAdmAnsatte": 0,
-              "antallAnsatte": 0,
-              "antallUtsendte": 0,
-              "andelOmsetningINorge": 0,
-              "andelOppdragINorge": 0,
-              "andelKontrakterINorge": 0,
-              "andelRekruttertINorge": 0,
-              "ekstraArbeidsgivere": [],
-              "erOffentligVirksomhet": null
-            },
-            "maritimtArbeid": [],
-            "luftfartBaser": [],
             "bosted": {
-              "intensjonOmRetur": null,
               "antallMaanederINorge": 0,
+              "intensjonOmRetur": null,
               "oppgittAdresse": {
                 "tilleggsnavn": null,
                 "gatenavn": null,
@@ -4177,11 +4195,52 @@
                 "landkode": null
               }
             },
-            "trygdedekning": "FULL_DEKNING_FTRL",
-            "representantIUtlandet": null
+            "foretakUtland": [],
+            "juridiskArbeidsgiverNorge": {
+              "andelKontrakterINorge": 0,
+              "andelOmsetningINorge": 0,
+              "andelOppdragINorge": 0,
+              "andelRekruttertINorge": 0,
+              "antallAdmAnsatte": 0,
+              "antallAnsatte": 0,
+              "antallUtsendte": 0,
+              "ekstraArbeidsgivere": [],
+              "erOffentligVirksomhet": null
+            },
+            "luftfartBaser": [],
+            "maritimtArbeid": [],
+            "oppholdUtland": {
+              "ektefelleEllerBarnINorge": null,
+              "oppholdsPeriode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppholdslandkoder": [],
+              "studentFinansieringKode": null,
+              "studentSemester": null
+            },
+            "periode": {
+              "fom": "2024-01-01",
+              "tom": null
+            },
+            "personOpplysninger": {
+              "foedestedOgLand": null,
+              "medfolgendeFamilie": [],
+              "utenlandskIdent": []
+            },
+            "representantIUtlandet": null,
+            "selvstendigArbeid": {
+              "erSelvstendig": null,
+              "selvstendigForetak": []
+            },
+            "soeknadsland": {
+              "landkoder": ["SE"],
+              "flereLandUkjentHvilke": false
+            },
+            "trygdedekning": "FULL_DEKNING_FTRL"
           },
-          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS",
-          "mottaksdato": "2025-01-01"
+          "mottaksdato": "2025-01-01",
+          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS"
         }
       }
     },
@@ -4271,55 +4330,14 @@
         },
         "body": {
           "data": {
-            "soeknadsland": {
-              "landkoder": ["SE"],
-              "flereLandUkjentHvilke": false
-            },
-            "periode": {
-              "fom": "2024-01-01",
-              "tom": null
-            },
-            "personOpplysninger": {
-              "utenlandskIdent": [],
-              "medfolgendeFamilie": [],
-              "foedestedOgLand": null
-            },
             "arbeidPaaLand": {
-              "fysiskeArbeidssteder": [],
+              "erFastArbeidssted": null,
               "erHjemmekontor": null,
-              "erFastArbeidssted": null
+              "fysiskeArbeidssteder": []
             },
-            "foretakUtland": [],
-            "oppholdUtland": {
-              "oppholdslandkoder": [],
-              "oppholdsPeriode": {
-                "fom": null,
-                "tom": null
-              },
-              "studentFinansieringKode": null,
-              "studentSemester": null,
-              "ektefelleEllerBarnINorge": null
-            },
-            "selvstendigArbeid": {
-              "erSelvstendig": null,
-              "selvstendigForetak": []
-            },
-            "juridiskArbeidsgiverNorge": {
-              "antallAdmAnsatte": 0,
-              "antallAnsatte": 0,
-              "antallUtsendte": 0,
-              "andelOmsetningINorge": 0,
-              "andelOppdragINorge": 0,
-              "andelKontrakterINorge": 0,
-              "andelRekruttertINorge": 0,
-              "ekstraArbeidsgivere": [],
-              "erOffentligVirksomhet": null
-            },
-            "maritimtArbeid": [],
-            "luftfartBaser": [],
             "bosted": {
-              "intensjonOmRetur": null,
               "antallMaanederINorge": 0,
+              "intensjonOmRetur": null,
               "oppgittAdresse": {
                 "tilleggsnavn": null,
                 "gatenavn": null,
@@ -4331,11 +4349,52 @@
                 "landkode": null
               }
             },
-            "trygdedekning": "FULL_DEKNING_FTRL",
-            "representantIUtlandet": null
+            "foretakUtland": [],
+            "juridiskArbeidsgiverNorge": {
+              "andelKontrakterINorge": 0,
+              "andelOmsetningINorge": 0,
+              "andelOppdragINorge": 0,
+              "andelRekruttertINorge": 0,
+              "antallAdmAnsatte": 0,
+              "antallAnsatte": 0,
+              "antallUtsendte": 0,
+              "ekstraArbeidsgivere": [],
+              "erOffentligVirksomhet": null
+            },
+            "luftfartBaser": [],
+            "maritimtArbeid": [],
+            "oppholdUtland": {
+              "ektefelleEllerBarnINorge": null,
+              "oppholdsPeriode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppholdslandkoder": [],
+              "studentFinansieringKode": null,
+              "studentSemester": null
+            },
+            "periode": {
+              "fom": "2024-01-01",
+              "tom": null
+            },
+            "personOpplysninger": {
+              "foedestedOgLand": null,
+              "medfolgendeFamilie": [],
+              "utenlandskIdent": []
+            },
+            "representantIUtlandet": null,
+            "selvstendigArbeid": {
+              "erSelvstendig": null,
+              "selvstendigForetak": []
+            },
+            "soeknadsland": {
+              "landkoder": ["SE"],
+              "flereLandUkjentHvilke": false
+            },
+            "trygdedekning": "FULL_DEKNING_FTRL"
           },
-          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS",
-          "mottaksdato": "2025-01-01"
+          "mottaksdato": "2025-01-01",
+          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS"
         }
       }
     },
@@ -4377,25 +4436,25 @@
         },
         "body": [
           {
-            "vilkaar": "FTRL_2_5_NORSK_STATSBORGER_EØS_BORGER",
-            "oppfylt": true,
-            "begrunnelseKoder": [],
             "begrunnelseFritekst": null,
-            "begrunnelseFritekstEngelsk": null
+            "begrunnelseFritekstEngelsk": null,
+            "begrunnelseKoder": [],
+            "oppfylt": true,
+            "vilkaar": "FTRL_2_5_NORSK_STATSBORGER_EØS_BORGER"
           },
           {
-            "vilkaar": "FTRL_2_5_NORSKE_STATS_TJENESTE",
-            "oppfylt": true,
-            "begrunnelseKoder": [],
             "begrunnelseFritekst": null,
-            "begrunnelseFritekstEngelsk": null
+            "begrunnelseFritekstEngelsk": null,
+            "begrunnelseKoder": [],
+            "oppfylt": true,
+            "vilkaar": "FTRL_2_5_NORSKE_STATS_TJENESTE"
           },
           {
-            "vilkaar": "FTRL_ARBEIDSTAKER",
-            "oppfylt": true,
-            "begrunnelseKoder": [],
             "begrunnelseFritekst": null,
-            "begrunnelseFritekstEngelsk": null
+            "begrunnelseFritekstEngelsk": null,
+            "begrunnelseKoder": [],
+            "oppfylt": true,
+            "vilkaar": "FTRL_ARBEIDSTAKER"
           }
         ]
       }
@@ -4486,7 +4545,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-02-17",
+                    "gyldigFraOgMed": "2016-04-22",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -4509,7 +4568,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-02-17",
+                    "gyldigFraOgMed": "2016-04-22",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
@@ -4631,7 +4690,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-02-17",
+                    "gyldigFraOgMed": "2016-04-22",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -4654,7 +4713,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-02-17",
+                    "gyldigFraOgMed": "2016-04-22",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
@@ -5396,56 +5455,6 @@
                     "type": "Skilt",
                     "erHistorisk": true,
                     "__typename": "Sivilstand"
-                  }
-                ],
-                "__typename": "Personopplysninger"
-              },
-              "__typename": "Saksopplysninger"
-            }
-          }
-        }
-      }
-    },
-    {
-      "request": {
-        "method": "POST",
-        "url": "http://localhost:3333/graphql/",
-        "pathname": "/graphql/",
-        "normalizedPath": "/graphql/",
-        "query": {},
-        "headers": {
-          "content-type": "application/json",
-          "accept": "*/*",
-          "authorization": "[REDACTED]"
-        },
-        "body": {
-          "operationName": "hentStatsborgerskap",
-          "variables": {
-            "behandlingID": 21
-          },
-          "query": "query hentStatsborgerskap($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      statsborgerskap {\n        land\n        bekreftelsesdato\n        gyldigFraOgMed\n        gyldigTilOgMed\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
-        }
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "data": {
-            "hentSaksopplysninger": {
-              "persondata": {
-                "statsborgerskap": [
-                  {
-                    "land": "NORGE",
-                    "bekreftelsesdato": null,
-                    "gyldigFraOgMed": "1990-01-01",
-                    "gyldigTilOgMed": null,
-                    "master": "FREG",
-                    "kilde": "Folkeregisteret",
-                    "erHistorisk": false,
-                    "__typename": "Statsborgerskap"
                   }
                 ],
                 "__typename": "Personopplysninger"

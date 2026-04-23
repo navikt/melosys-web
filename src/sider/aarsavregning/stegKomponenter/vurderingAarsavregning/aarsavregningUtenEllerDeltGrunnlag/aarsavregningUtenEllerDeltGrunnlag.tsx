@@ -110,7 +110,7 @@ interface Props {
   bekreft: () => void;
   aktivtSteg: boolean;
   oppdaterStatus: (isValid: boolean) => void;
-  harTrygdeavgiftFraAvgiftssystemet: boolean;
+  harInnbetaltTrygdeavgift: boolean;
   harTidligereTrygdeavgiftsgrunnlag: boolean;
 }
 
@@ -121,7 +121,7 @@ export interface MedlemskapTomFomDatoer {
 
 export interface AarsavregningFormValuesProps extends FormValuesProps {
   avgiftspliktigperioder: MedlemskapsperiodeFieldProps[];
-  trygdeavgiftFraAvgiftssystemet?: string;
+  innbetaltTrygdeavgift?: string;
   bestemmelse?: string;
   endeligAvgiftValg: string;
   manueltAvgiftBeloep?: string;
@@ -130,7 +130,7 @@ export interface AarsavregningFormValuesProps extends FormValuesProps {
 export function AarsavregningUtenEllerDeltGrunnlag({
   bekreft,
   oppdaterStatus,
-  harTrygdeavgiftFraAvgiftssystemet,
+  harInnbetaltTrygdeavgift,
   harTidligereTrygdeavgiftsgrunnlag,
 }: Props) {
   const [isLoading, setIsLoading] = useState(true);
@@ -149,7 +149,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
       avgiftspliktigperioder: [DEFAULT_MEDLEMSKAPSPERIODE],
       skatteforholdsperioder: [{}],
       inntektskilder: [{}],
-      trygdeavgiftFraAvgiftssystemet: "",
+      innbetaltTrygdeavgift: "",
       endeligAvgiftValg: "",
       manueltAvgiftBeloep: "",
     },
@@ -182,7 +182,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
 
     if (
       redigerbart &&
-      harTrygdeavgiftFraAvgiftssystemet &&
+      harInnbetaltTrygdeavgift &&
       innvilgedePerioder.length === 0 &&
       aarsavregningRes?.sisteGjeldendeAvgiftspliktigperioder &&
       periodeType !== "HELSEUTGIFTDEKKESPERIODE"
@@ -266,7 +266,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
           (erEøsPensjonist ? "HELSEUTGIFTDEKKESPERIODE" : "MEDLEMSKAPSPERIODE");
 
         const deltGrunnlagAarsavregningHarIkkeNyttGrunnlag =
-          harTrygdeavgiftFraAvgiftssystemet && aarsavregningRes && !aarsavregningRes.nyttTrygdeavgiftsGrunnlag;
+          harInnbetaltTrygdeavgift && aarsavregningRes && !aarsavregningRes.nyttTrygdeavgiftsGrunnlag;
 
         const tidligerePeriode =
           aarsavregningRes?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag
@@ -289,10 +289,10 @@ export function AarsavregningUtenEllerDeltGrunnlag({
         const bestemmelse = getBestemmelse(mappedPerioder, periodeType);
         const trygdedekninger = await getTrygdedekninger(bestemmelse);
 
-        const trygdeavgiftFraAvgiftssystemet =
-          aarsavregningRes?.avregning?.trygdeavgiftFraAvgiftssystemet !== undefined &&
-          aarsavregningRes?.avregning?.trygdeavgiftFraAvgiftssystemet !== null
-            ? aarsavregningRes?.avregning?.trygdeavgiftFraAvgiftssystemet
+        const innbetaltTrygdeavgift =
+          aarsavregningRes?.avregning?.innbetaltTrygdeavgift !== undefined &&
+          aarsavregningRes?.avregning?.innbetaltTrygdeavgift !== null
+            ? aarsavregningRes?.avregning?.innbetaltTrygdeavgift
             : "";
         const manueltAvgiftBeloep =
           aarsavregningRes?.avregning?.manueltAvgiftBeloep !== undefined &&
@@ -305,7 +305,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
         const formDefaultValues: FieldValue<AarsavregningFormValuesProps> = {
           avgiftspliktigperioder: mappedPerioder.length ? mappedPerioder : [defaultPeriode],
           bestemmelse,
-          trygdeavgiftFraAvgiftssystemet,
+          innbetaltTrygdeavgift,
           endeligAvgiftValg: aarsavregningRes?.endeligAvgiftValg || "",
           manueltAvgiftBeloep,
           skatteforholdsperioder: mapTilSkatteforholdProps(
@@ -341,7 +341,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
     };
 
     lastInitiellData();
-  }, [behandlingID, harTrygdeavgiftFraAvgiftssystemet]);
+  }, [behandlingID, harInnbetaltTrygdeavgift]);
 
   const memoizedOppdaterStatus = useCallback((erGyldig: boolean) => {
     oppdaterStatus(erGyldig);
@@ -356,7 +356,7 @@ export function AarsavregningUtenEllerDeltGrunnlag({
       initiellData={initiellData}
       bekreft={bekreft}
       oppdaterStatus={memoizedOppdaterStatus}
-      harTrygdeavgiftFraAvgiftssystemet={harTrygdeavgiftFraAvgiftssystemet}
+      harInnbetaltTrygdeavgift={harInnbetaltTrygdeavgift}
       harTidligereTrygdeavgiftsgrunnlag={harTidligereTrygdeavgiftsgrunnlag}
     />
   );

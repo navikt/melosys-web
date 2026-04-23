@@ -240,7 +240,7 @@ export const erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling = (
  */
 export const validateAarsavregningUtenEllerDeltGrunnlag = async (
   values: unknown,
-  context: { aar?: number; harTrygdeavgiftFraAvgiftssystemet?: boolean },
+  context: { aar?: number; harInnbetaltTrygdeavgift?: boolean },
   path: string | null = null,
 ): Promise<{ isValid: boolean; errors: Record<string, string> }> => {
   try {

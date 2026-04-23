@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SumArsavregningTabell > renders correctly with all possible data 1`] = `
+exports[`SumArsavregningTabell - Toggle Disabled > renders correctly with all possible data 1`] = `
 
 <div
   style="--__ac-box-background: var(--a-surface-subtle);"
