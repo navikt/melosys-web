@@ -371,13 +371,43 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
 });
 
 describe("aarsavregningUtenEllerDeltGrunnlagSchema - bostedLandkode validering", () => {
-  it("skal godta tom bostedLandkode for HELSEUTGIFTDEKKESPERIODE", async () => {
+  it("skal kreve bostedLandkode for første HELSEUTGIFTDEKKESPERIODE uten eksisterende periode", async () => {
+    const values = {
+      endeligAvgiftValg: OPPLYSNINGER_ENDRET,
+      avgiftspliktigperioder: [
+        {
+          id: -2,
+          fomDato: "01.01.2024",
+          tomDato: "31.12.2024",
+          type: "HELSEUTGIFTDEKKESPERIODE",
+          bostedLandkode: "",
+        },
+      ],
+      skatteforholdsperioder: [
+        { id: 1, fomDato: "01.01.2024", tomDato: "31.12.2024", skatteplikttype: "SKATTEPLIKTIG" },
+      ],
+      inntektskilder: [],
+    };
+
+    const err = await validate(values, { aar: 2024 });
+    expect(err).toBeTruthy();
+    expect(hasError(err, "avgiftspliktigperioder[0].bostedLandkode", "Må fylles ut")).toBe(true);
+  });
+
+  it("skal godta tom bostedLandkode for ny HELSEUTGIFTDEKKESPERIODE når det finnes en lagret periode", async () => {
     const values = {
       endeligAvgiftValg: OPPLYSNINGER_ENDRET,
       avgiftspliktigperioder: [
         {
           id: 1,
           fomDato: "01.01.2024",
+          tomDato: "30.06.2024",
+          type: "HELSEUTGIFTDEKKESPERIODE",
+          bostedLandkode: "SE",
+        },
+        {
+          id: -2,
+          fomDato: "01.07.2024",
           tomDato: "31.12.2024",
           type: "HELSEUTGIFTDEKKESPERIODE",
           bostedLandkode: "",
