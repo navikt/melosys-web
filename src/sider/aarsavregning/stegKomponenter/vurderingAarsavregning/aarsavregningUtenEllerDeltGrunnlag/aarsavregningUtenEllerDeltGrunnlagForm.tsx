@@ -34,7 +34,7 @@ import { EndeligAvgiftValgRadioGroup } from "../komponenter/endeligAvgiftValgRad
 import { ManuellAvgiftFormPart } from "../komponenter/manuellAvgiftFormPart";
 import { AvgiftspliktigperiodeSkjema } from "../komponenter/medlemskapsperiodeSkjema";
 import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
-import { TrygdeavgiftFraAvgiftssystemetInput } from "../komponenter/trygdeavgiftFraAvgiftssystemetInput";
+import { InnbetaltTrygdeavgiftInput } from "../komponenter/innbetaltTrygdeavgiftInput";
 import {
   beregnTrygdeavgiftsperioder,
   erBrukerSkattepliktigIHelePerioden,
@@ -51,6 +51,8 @@ import {
 } from "./aarsavregningUtenEllerDeltGrunnlag";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding, finnAktivFeilmeldingForMedlemskapsperioder } from "./valideringsfeil";
+import { ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../../featuretoggle/toggleNavn";
+import useFeatureToggle from "../../../../../featuretoggle/useFeatureToggle";
 
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
 
@@ -81,7 +83,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   initiellData,
   bekreft,
   oppdaterStatus,
-  harTrygdeavgiftFraAvgiftssystemet,
+  harInnbetaltTrygdeavgift,
   harTidligereTrygdeavgiftsgrunnlag,
 }: {
   initiellData: {
@@ -94,7 +96,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   };
   bekreft: () => void;
   oppdaterStatus: (isValid: boolean) => void;
-  harTrygdeavgiftFraAvgiftssystemet: boolean;
+  harInnbetaltTrygdeavgift: boolean;
   harTidligereTrygdeavgiftsgrunnlag: boolean;
 }) {
   const [feilmelding, setFeilmelding] = useState<string | string[] | undefined>(undefined);
@@ -117,6 +119,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
+  const erÅrsavregningEøsPensjonistToggle = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
+
   const dispatch = useDispatch();
 
   const {
@@ -130,7 +134,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     resolver: yupResolver(aarsavregningUtenEllerDeltGrunnlagSchema),
     context: {
       aar: initiellData.valgtÅr,
-      harTrygdeavgiftFraAvgiftssystemet,
+      harInnbetaltTrygdeavgift,
     },
     mode: "onChange",
     defaultValues: initiellData.formDefaultValues,
@@ -159,14 +163,14 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const bestemmelse = useWatch({ control, name: "bestemmelse" });
   const medlemskapsperioder = useWatch({ control, name: "avgiftspliktigperioder" });
   const medlemskapsperioderForrigeAntall = useRef(medlemskapsperioder.length);
-  const trygdeavgiftFraAvgiftssystemet = useWatch({ control, name: "trygdeavgiftFraAvgiftssystemet" });
+  const innbetaltTrygdeavgift = useWatch({ control, name: "innbetaltTrygdeavgift" });
   const skatteforholdsperioder = useWatch({ control, name: "skatteforholdsperioder" });
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
   const endeligAvgiftValg = useWatch({ control, name: "endeligAvgiftValg" });
   const manueltAvgiftBeloep = useWatch({ control, name: "manueltAvgiftBeloep" });
 
   const debouncedBeregningRef = useRef<ReturnType<typeof Utils._debounce> | null>(null);
-  const forrigetrygdeavgiftFraAvgiftssystemet = useRef(trygdeavgiftFraAvgiftssystemet);
+  const forrigeInnbetaltTrygdeavgift = useRef(innbetaltTrygdeavgift);
   const previousDepsRef = useRef<Record<string, unknown> | null>(null);
 
   const periodeType = initiellData.periodeType;
@@ -184,8 +188,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   }, [medlemskapsperioder, erHelseutgift]);
 
   const erDeltGrunnlag =
-    harTrygdeavgiftFraAvgiftssystemet &&
-    !!initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
+    harInnbetaltTrygdeavgift && !!initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
 
   const harLaasteMedlemskapsperioder =
     !!initiellData.aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder &&
@@ -216,7 +219,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     skatteforholdsperioderFormState: Skatteforhold[],
     inntektskilderFormState: Inntektskilde[],
     medlemskapsperioderFormState: MedlemskapsperiodeFieldProps[],
-    trygdeavgiftFraAvgiftssystemetParam: number | undefined,
+    innbetaltTrygdeavgiftParam: number | undefined,
     endeligAvgiftValgFormState: string | undefined,
     bestemmelseFormState: string | undefined,
   ) => ({
@@ -241,7 +244,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       medlemskapstype: erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.medlemskapstype : "PLIKTIG",
       bostedLandkode: erHelseutgiftdekkesperiode(periode) ? periode.bostedLandkode : "",
     })),
-    trygdeavgiftFraAvgiftssystemet: trygdeavgiftFraAvgiftssystemetParam,
+    innbetaltTrygdeavgift: innbetaltTrygdeavgiftParam,
     endeligAvgiftValg: endeligAvgiftValgFormState,
     bestemmelse: bestemmelseFormState,
   });
@@ -329,7 +332,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       getValues("skatteforholdsperioder"),
       getValues("inntektskilder"),
       medlemskapsperioderFormState,
-      getValues("trygdeavgiftFraAvgiftssystemet"),
+      getValues("innbetaltTrygdeavgift"),
       getValues("endeligAvgiftValg"),
       getValues("bestemmelse"),
     );
@@ -470,7 +473,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
         const context = {
           aar: initiellData.valgtÅr,
-          harTrygdeavgiftFraAvgiftssystemet,
+          harInnbetaltTrygdeavgift,
         };
         const { isValid: erGyldigSkjema } = await validateAarsavregningUtenEllerDeltGrunnlag(
           getValues(),
@@ -508,7 +511,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       };
       const context = {
         aar: initiellData.valgtÅr,
-        harTrygdeavgiftFraAvgiftssystemet,
+        harInnbetaltTrygdeavgift,
       };
       validateAarsavregningUtenEllerDeltGrunnlag(completeFormData, context, "avgiftspliktigperioder")
         .then(async ({ isValid }) => {
@@ -547,7 +550,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     }
   };
 
-  const handleOppdatertrygdeavgiftFraAvgiftssystemet = async (
+  const handleOppdaterInnbetaltTrygdeavgift = async (
     behandlingid: number,
     request: Api.Aarsavregning.AarsavregningRequest,
     aarsavregningid?: number,
@@ -556,14 +559,18 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     await Api.Aarsavregning.oppdaterAarsavregning(behandlingid, request, aarsavregningid)
       .then(setAarsavregningResponse)
       .catch(() => {
-        setFeilmelding("Feil ved oppdatering av tidligere fakturert trygdeavgift i avgiftssystemet");
+        setFeilmelding(
+          erÅrsavregningEøsPensjonistToggle
+            ? "Feil ved oppdatering av tidligere fakturert innbetalt trygdeavgift"
+            : "Feil ved oppdatering av tidligere fakturert trygdeavgift i avgiftssystemet",
+        );
       });
   };
 
-  const debouncedOppdatertrygdeavgiftFraAvgiftssystemet = useCallback(
+  const debouncedOppdaterInnbetaltTrygdeavgift = useCallback(
     Utils._debounce(
       (request: Api.Aarsavregning.AarsavregningRequest) =>
-        handleOppdatertrygdeavgiftFraAvgiftssystemet(behandlingID, request, aarsavregningID),
+        handleOppdaterInnbetaltTrygdeavgift(behandlingID, request, aarsavregningID),
       350,
     ),
     [aarsavregningID],
@@ -573,18 +580,18 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   useEffect(() => {
     if (
       redigerbart &&
-      forrigetrygdeavgiftFraAvgiftssystemet.current !== trygdeavgiftFraAvgiftssystemet &&
-      trygdeavgiftFraAvgiftssystemet !== aarsavregningResponse?.avregning?.trygdeavgiftFraAvgiftssystemet
+      forrigeInnbetaltTrygdeavgift.current !== innbetaltTrygdeavgift &&
+      innbetaltTrygdeavgift !== aarsavregningResponse?.avregning?.innbetaltTrygdeavgift
     ) {
-      debouncedOppdatertrygdeavgiftFraAvgiftssystemet({
+      debouncedOppdaterInnbetaltTrygdeavgift({
         avregning: {
-          trygdeavgiftFraAvgiftssystemet,
+          innbetaltTrygdeavgift,
         },
       });
     }
 
-    forrigetrygdeavgiftFraAvgiftssystemet.current = trygdeavgiftFraAvgiftssystemet;
-  }, [trygdeavgiftFraAvgiftssystemet]);
+    forrigeInnbetaltTrygdeavgift.current = innbetaltTrygdeavgift;
+  }, [innbetaltTrygdeavgift]);
 
   // Lager en ny debounce funksjon når beregning callback endres
   useEffect(() => {
@@ -617,7 +624,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       formIsValid,
       lagreMedlemskapsperioderPaagar,
       endrerBestemmelse,
-      trygdeavgiftFraAvgiftssystemet,
+      innbetaltTrygdeavgift,
       endeligAvgiftValg,
       aarsavregningID,
       redigerbart,
@@ -644,7 +651,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         getValues("skatteforholdsperioder"),
         getValues("inntektskilder"),
         getValues("avgiftspliktigperioder"),
-        getValues("trygdeavgiftFraAvgiftssystemet"),
+        getValues("innbetaltTrygdeavgift"),
         getValues("endeligAvgiftValg"),
         getValues("bestemmelse"),
       );
@@ -655,7 +662,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       if (!Utils._isEqual(currentFormState, previousFormState)) {
         const context = {
           aar: initiellData.valgtÅr,
-          harTrygdeavgiftFraAvgiftssystemet,
+          harInnbetaltTrygdeavgift,
         };
         validateAarsavregningUtenEllerDeltGrunnlag(currentFormState, context).then(({ isValid }) => {
           if (!isValid) {
@@ -677,7 +684,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     formIsValid,
     lagreMedlemskapsperioderPaagar,
     endrerBestemmelse,
-    trygdeavgiftFraAvgiftssystemet,
+    innbetaltTrygdeavgift,
     endeligAvgiftValg,
     aarsavregningID,
     redigerbart,
@@ -778,9 +785,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder);
   const skjemaErRedigerbart = redigerbart && !endrerBestemmelse && !beregningPaagar;
 
-  const tidligereAarsavregningTrygdeavgiftFraAvgiftssystem =
-    initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger
-      ?.tidligereTrygdeavgiftFraAvgiftssystemet;
+  const tidligereAarsavregningInnbetaltTrygdeavgift =
+    initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereInnbetaltTrygdeavgift;
 
   const tidligereAarsavregningErManueltBeregnet = Boolean(
     initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger
@@ -793,11 +799,11 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   return (
     <div className="vurderingAarsavregning">
-      {harTrygdeavgiftFraAvgiftssystemet && (
-        <TrygdeavgiftFraAvgiftssystemetInput
+      {harInnbetaltTrygdeavgift && (
+        <InnbetaltTrygdeavgiftInput
           control={control}
           redigerbart={skjemaErRedigerbart}
-          erNyAarsavregning={Boolean(tidligereAarsavregningTrygdeavgiftFraAvgiftssystem)}
+          erNyAarsavregning={Boolean(tidligereAarsavregningInnbetaltTrygdeavgift)}
         />
       )}
 
@@ -926,8 +932,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             harGrunnlagIMelosys={harTidligereTrygdeavgiftsgrunnlag}
             nyTrygdeavgift={aarsavregningResponse?.avregning?.beregnetAvgiftBelop}
             tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
-            tidligereTrygdeavgiftAvgiftssystem={aarsavregningResponse?.avregning?.trygdeavgiftFraAvgiftssystemet}
-            tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={tidligereAarsavregningTrygdeavgiftFraAvgiftssystem}
+            tidligereInnbetaltTrygdeavgift={aarsavregningResponse?.avregning?.innbetaltTrygdeavgift}
+            tidligereAarsavregningInnbetaltTrygdeavgift={tidligereAarsavregningInnbetaltTrygdeavgift}
           />
         )}
 
@@ -951,10 +957,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             harGrunnlagIMelosys={harTidligereTrygdeavgiftsgrunnlag}
             nyTrygdeavgift={Number(manueltAvgiftBeloep)}
             tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
-            tidligereTrygdeavgiftAvgiftssystem={
-              trygdeavgiftFraAvgiftssystemet ? Number(trygdeavgiftFraAvgiftssystemet) : undefined
-            }
-            tidligereAarsavregningTrygdeavgiftFraAvgiftssystem={tidligereAarsavregningTrygdeavgiftFraAvgiftssystem}
+            tidligereInnbetaltTrygdeavgift={innbetaltTrygdeavgift ? Number(innbetaltTrygdeavgift) : undefined}
+            tidligereAarsavregningInnbetaltTrygdeavgift={tidligereAarsavregningInnbetaltTrygdeavgift}
           />
         )}
 

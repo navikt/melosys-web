@@ -36,6 +36,41 @@ export class AarsavregningPage extends BehandlingPage {
     await expect(knapp, `${this.ctx}: "Legg til periode"-knappen skal være aktiv`).toBeEnabled();
   }
 
+  /**
+   * Overstyr featuretoggle-respons for testen.
+   *
+   * Mock-serverens recording-matcher klarer ikke alltid å returnere riktig
+   * featuretoggle-respons (URL-en med gjentatte `features=`-parametere parses
+   * forskjellig av recorder vs. Express, så exact-match feiler og fallback
+   * kan returnere en hvilken som helst featuretoggle-recording).
+   *
+   * Denne metoden registrerer en route-handler som overskriver responsen
+   * med de gitte overrides flettet inn i den faktiske responsen fra mock-
+   * serveren. Må kalles FØR navigasjon for at den første featuretoggle-
+   * forespørselen skal fanges opp.
+   *
+   * @example
+   *   await aarsavregningPage.overstyrFeatureToggles({
+   *     "melosys.arsavregning.eos_pensjonist": true,
+   *   });
+   */
+  async overstyrFeatureToggles(overrides: Record<string, boolean>) {
+    await this.page.route("**/api/featuretoggle*", async (route) => {
+      let body: Record<string, boolean> = {};
+      try {
+        const response = await route.fetch();
+        body = (await response.json()) as Record<string, boolean>;
+      } catch {
+        // Hvis fetch feiler (f.eks. ingen recording matchet), bruk bare overrides
+      }
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ ...body, ...overrides }),
+      });
+    });
+  }
+
   // Hent første tilgjengelige år fra dropdown-en (ikke "Velg...")
   async hentFørsteTilgjengeligeÅr(): Promise<string> {
     const årSelect = await finnCombobox("År", this.page, 5000);
@@ -82,11 +117,11 @@ export class AarsavregningPage extends BehandlingPage {
     // Vent på at data for året har lastet ved å sjekke at spørsmålet om trygdeavgift fra Avgiftssystemet vises
     // Bestemmelse-dropdown vises ikke før etter at brukeren har svart på dette spørsmålet og valgt "endeligAvgiftValg"
     const trygdeavgiftSpørsmålTekst = this.page.getByText(
-      "Skal du legge til trygdeavgift fra Avgiftssystemet til denne årsavregningen?",
+      "Avviker innbetalt trygdeavgift fra tidligere beregnet avgift?",
     );
     await expect(
       trygdeavgiftSpørsmålTekst,
-      `${this.ctx}: Spørsmål om trygdeavgift fra avgiftssystemet skal være synlig etter årsskifte`,
+      `${this.ctx}: Spørsmål om innbetalt trygdeavgift skal være synlig etter årsskifte`,
     ).toBeVisible();
   }
 
@@ -299,7 +334,7 @@ export class AarsavregningPage extends BehandlingPage {
 
     if (!isChecked) {
       // Sett opp lytter for API-respons FØR vi klikker på radioknappen
-      // Dette sikrer at vi venter på at backend har oppdatert harTrygdeavgiftFraAvgiftssystemet
+      // Dette sikrer at vi venter på at backend har oppdatert harInnbetaltTrygdeavgift
       const grunnlagstypeResponsePromise = this.page.waitForResponse(
         (response) =>
           response.url().includes("/grunnlagstype") &&
@@ -318,8 +353,9 @@ export class AarsavregningPage extends BehandlingPage {
       ).toBeEnabled({ timeout: 5000 });
       await jaRadio.check();
 
-      // Vent på at API-kallet for oppdaterHarTrygdeavgiftFraAvgiftssystemet fullføres
+      // Vent på at API-kallet for oppdaterHarInnbetaltTrygdeavgift fullføres
       await grunnlagstypeResponsePromise;
+      await expect(jaRadio).toBeChecked();
     }
 
     // Vent på at "Beregn endelig trygdeavgift" radioknappen vises

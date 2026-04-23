@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "recordedAt": "2025-01-01T00:00:00.000Z",
-  "testFile": "/Users/ragnarwestad/develop/nav/melosys-web/tests/e2e/specs/behandle-sak/aarsavregning-delt-grunnlag.spec.ts",
+  "testFile": "/Users/Chak.Kwan.Hui/Documents/Melosys/Projects/melosys-web/tests/e2e/specs/behandle-sak/aarsavregning-delt-grunnlag.spec.ts",
   "testName": "Kan legge til ny medlemskapsperiode etter å ha valgt delt grunnlag",
   "exchanges": [
     {
@@ -61,7 +61,7 @@
               "totalInntekt": 0,
               "totalAvgift": 0
             },
-            "tidligereTrygdeavgiftFraAvgiftssystemet": null,
+            "tidligereInnbetaltTrygdeavgift": null,
             "tidligereÅrsavregningManueltAvgiftBeloep": null
           },
           "sisteGjeldendeAvgiftspliktigperioder": [],
@@ -71,13 +71,87 @@
             "beregnetAvgiftBelop": null,
             "tidligereFakturertBeloep": null,
             "tilFaktureringBeloep": null,
-            "trygdeavgiftFraAvgiftssystemet": null,
+            "innbetaltTrygdeavgift": null,
             "manueltAvgiftBeloep": null
           },
-          "harTrygdeavgiftFraAvgiftssystemet": true,
+          "harInnbetaltTrygdeavgift": null,
           "endeligAvgiftValg": "OPPLYSNINGER_ENDRET",
           "harSkjoennsfastsattInntekt": false
         }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:3333/api/behandlinger/26/aarsavregninger",
+        "pathname": "/api/behandlinger/26/aarsavregninger",
+        "normalizedPath": "/api/behandlinger/:behandlingId/aarsavregninger",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "aarsavregningID": 26,
+          "aar": 2025,
+          "tidligereTrygdeavgiftsGrunnlagsopplysninger": {
+            "trygdeavgiftsgrunnlag": {
+              "avgiftspliktigperioder": [],
+              "skatteforholdsperioder": [],
+              "inntektskperioder": []
+            },
+            "avgift": {
+              "trygdeavgiftsperioder": [],
+              "totalInntekt": 0,
+              "totalAvgift": 0
+            },
+            "tidligereInnbetaltTrygdeavgift": null,
+            "tidligereÅrsavregningManueltAvgiftBeloep": null
+          },
+          "sisteGjeldendeAvgiftspliktigperioder": [],
+          "nyttTrygdeavgiftsGrunnlag": null,
+          "endeligAvgift": null,
+          "avregning": {
+            "beregnetAvgiftBelop": null,
+            "tidligereFakturertBeloep": null,
+            "tilFaktureringBeloep": null,
+            "innbetaltTrygdeavgift": null,
+            "manueltAvgiftBeloep": null
+          },
+          "harInnbetaltTrygdeavgift": true,
+          "endeligAvgiftValg": "OPPLYSNINGER_ENDRET",
+          "harSkjoennsfastsattInntekt": false
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:3333/api/behandlinger/26/medlemskapsperioder",
+        "pathname": "/api/behandlinger/26/medlemskapsperioder",
+        "normalizedPath": "/api/behandlinger/:behandlingId/medlemskapsperioder",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
       }
     },
     {
@@ -315,7 +389,7 @@
               {
                 "Aordning": null,
                 "ansettelsesPeriode": {
-                  "fom": "2021-04-23",
+                  "fom": "2021-04-22",
                   "tom": null
                 },
                 "arbeidsavtaler": [
@@ -330,13 +404,13 @@
                       "term": "KONSULENT"
                     },
                     "gyldighetsperiode": {
-                      "fom": "2021-04-23",
+                      "fom": "2021-04-22",
                       "tom": null
                     },
                     "avtaltArbeidstimerPerUke": 37.5,
                     "stillingsprosent": 100,
                     "beregnetAntallTimerPrUke": 37.5,
-                    "endringsdatoStillingsprosent": "2021-04-23",
+                    "endringsdatoStillingsprosent": "2021-04-22",
                     "skipsregister": null,
                     "skipstype": null,
                     "maritimArbeidsavtale": false,
@@ -1148,7 +1222,7 @@
     {
       "request": {
         "method": "GET",
-        "url": "http://localhost:3333/api/featuretoggle?features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift&features=melosys.faktureringskomponent.vis_referanse&features=melosys.cdm-4-4",
+        "url": "http://localhost:3333/api/featuretoggle?features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.arsavregning.eos_pensjonist&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift&features=melosys.faktureringskomponent.vis_referanse&features=melosys.cdm-4-4",
         "pathname": "/api/featuretoggle",
         "normalizedPath": "/api/featuretoggle",
         "query": {
@@ -1176,8 +1250,55 @@
           "melosys.faktureringskomponenten.ikke-tidligere-perioder": true,
           "melosys.11_3_a_Norge_er_utpekt": true,
           "melosys.eos_fakturering_av_trygdeavgift": true,
+          "melosys.arsavregning.eos_pensjonist": true,
           "melosys.arsavregning.uten.flyt": false,
           "melosys.cdm-4-4": true
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:3333/api/ftrl/bestemmelser/?behandlingstema=YRKESAKTIV",
+        "pathname": "/api/ftrl/bestemmelser/",
+        "normalizedPath": "/api/ftrl/bestemmelser/",
+        "query": {
+          "behandlingstema": "YRKESAKTIV"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "bestemmelser": [
+            "FTRL_KAP2_2_1",
+            "FTRL_KAP2_2_2",
+            "FTRL_KAP2_2_3_ANDRE_LEDD",
+            "FTRL_KAP2_2_5_FØRSTE_LEDD_A",
+            "FTRL_KAP2_2_5_FØRSTE_LEDD_B",
+            "FTRL_KAP2_2_5_FØRSTE_LEDD_C",
+            "FTRL_KAP2_2_5_FØRSTE_LEDD_D",
+            "FTRL_KAP2_2_5_FØRSTE_LEDD_E",
+            "FTRL_KAP2_2_5_FØRSTE_LEDD_F",
+            "FTRL_KAP2_2_5_FØRSTE_LEDD_G",
+            "FTRL_KAP2_2_7_FØRSTE_LEDD",
+            "FTRL_KAP2_2_7A",
+            "FTRL_KAP2_2_8_FØRSTE_LEDD_A",
+            "FTRL_KAP2_2_8_FØRSTE_LEDD_B",
+            "FTRL_KAP2_2_8_ANDRE_LEDD",
+            "ARKTISK_RÅDS_SEKRETARIAT_ART16",
+            "DET_INTERNASJONALE_BARENTSSEKRETARIATET_ART14",
+            "DEN_NORDATLANTISKE_SJØPATTEDYRKOMMISJON_ART16",
+            "TILLEGGSAVTALE_NATO"
+          ]
         }
       }
     },
@@ -1580,7 +1701,7 @@
           "authorization": "[REDACTED]"
         },
         "body": {
-          "harTrygdeavgiftFraAvgiftssystemet": true
+          "harInnbetaltTrygdeavgift": true
         }
       },
       "response": {
@@ -1603,7 +1724,7 @@
               "totalInntekt": 0,
               "totalAvgift": 0
             },
-            "tidligereTrygdeavgiftFraAvgiftssystemet": null,
+            "tidligereInnbetaltTrygdeavgift": null,
             "tidligereÅrsavregningManueltAvgiftBeloep": null
           },
           "sisteGjeldendeAvgiftspliktigperioder": [],
@@ -1613,10 +1734,10 @@
             "beregnetAvgiftBelop": null,
             "tidligereFakturertBeloep": null,
             "tilFaktureringBeloep": null,
-            "trygdeavgiftFraAvgiftssystemet": null,
+            "innbetaltTrygdeavgift": null,
             "manueltAvgiftBeloep": null
           },
-          "harTrygdeavgiftFraAvgiftssystemet": true,
+          "harInnbetaltTrygdeavgift": true,
           "endeligAvgiftValg": "OPPLYSNINGER_ENDRET",
           "harSkjoennsfastsattInntekt": false
         }
@@ -1658,7 +1779,7 @@
               "totalInntekt": 0,
               "totalAvgift": 0
             },
-            "tidligereTrygdeavgiftFraAvgiftssystemet": null,
+            "tidligereInnbetaltTrygdeavgift": null,
             "tidligereÅrsavregningManueltAvgiftBeloep": null
           },
           "sisteGjeldendeAvgiftspliktigperioder": [],
@@ -1668,10 +1789,10 @@
             "beregnetAvgiftBelop": null,
             "tidligereFakturertBeloep": null,
             "tilFaktureringBeloep": null,
-            "trygdeavgiftFraAvgiftssystemet": null,
+            "innbetaltTrygdeavgift": null,
             "manueltAvgiftBeloep": null
           },
-          "harTrygdeavgiftFraAvgiftssystemet": null,
+          "harInnbetaltTrygdeavgift": null,
           "endeligAvgiftValg": "OPPLYSNINGER_ENDRET",
           "harSkjoennsfastsattInntekt": false
         }
@@ -1866,7 +1987,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-04-23",
+                    "gyldigFraOgMed": "2016-04-22",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -1889,7 +2010,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-04-23",
+                    "gyldigFraOgMed": "2016-04-22",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",

@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "recordedAt": "2025-01-01T00:00:00.000Z",
-  "testFile": "/Users/ragnarwestad/develop/nav/melosys-web/tests/e2e/specs/opprett-ny-sak/knytt-til-eksisterende/utenfor-avtaleland-behandlingslogikk.spec.ts",
+  "testFile": "/Users/Chak.Kwan.Hui/Documents/Melosys/Projects/melosys-web/tests/e2e/specs/opprett-ny-sak/knytt-til-eksisterende/utenfor-avtaleland-behandlingslogikk.spec.ts",
   "testName": "Utenfor avtaleland med avsluttet behandling - alle behandlingstyper tilgjengelige",
   "exchanges": [
     {
@@ -49,10 +49,10 @@
         },
         "body": {
           "virksomheter": {
-            "virksomhetIDer": ["999999999"]
+            "virksomhetIDer": []
           },
           "arbeidsland": {
-            "arbeidsland": ["SE"]
+            "arbeidsland": []
           },
           "fullstendigManglendeInnbetaling": false,
           "ikkeYrkesaktivFamilieRelasjonstype": null,
@@ -105,17 +105,7 @@
         "headers": {
           "content-type": "application/json"
         },
-        "body": [
-          {
-            "id": 10,
-            "fomDato": "2026-01-01",
-            "tomDato": "2026-12-31",
-            "bestemmelse": "FTRL_KAP2_2_5_FØRSTE_LEDD_A",
-            "innvilgelsesResultat": "INNVILGET",
-            "trygdedekning": "FULL_DEKNING_FTRL",
-            "medlemskapstype": "PLIKTIG"
-          }
-        ]
+        "body": []
       }
     },
     {
@@ -150,116 +140,6 @@
           "utfallRegistreringUnntak": null,
           "utfallUtpeking": null,
           "vedtakstype": null
-        }
-      }
-    },
-    {
-      "request": {
-        "method": "GET",
-        "url": "http://localhost:3333/api/behandlinger/20/trygdeavgift/beregning",
-        "pathname": "/api/behandlinger/20/trygdeavgift/beregning",
-        "normalizedPath": "/api/behandlinger/:behandlingId/trygdeavgift/beregning",
-        "query": {},
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "trygdeavgiftsperioder": [
-            {
-              "fom": "2026-01-01",
-              "tom": "2026-12-31",
-              "trygdedekning": "FULL_DEKNING_FTRL",
-              "inntektskildetype": "NÆRINGSINNTEKT",
-              "avgiftssats": null,
-              "avgiftPerMd": 173,
-              "beregningsregel": "TJUEFEM_PROSENT_REGEL",
-              "harSammenslåtteInntektskilder": false,
-              "avgiftsdel": null
-            }
-          ],
-          "trygdeavgiftsgrunnlag": {
-            "skatteforholdsperioder": [
-              {
-                "fomDato": "2026-01-01",
-                "tomDato": "2026-12-31",
-                "skatteplikttype": "IKKE_SKATTEPLIKTIG"
-              }
-            ],
-            "inntektskilder": [
-              {
-                "type": "NÆRINGSINNTEKT",
-                "arbeidsgiversavgiftBetales": false,
-                "avgiftspliktigInntekt": 9000,
-                "fomDato": "2026-01-01",
-                "tomDato": "2026-12-31",
-                "erMaanedsbelop": true
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "request": {
-        "method": "GET",
-        "url": "http://localhost:3333/api/behandlinger/20/trygdeavgift/beregning",
-        "pathname": "/api/behandlinger/20/trygdeavgift/beregning",
-        "normalizedPath": "/api/behandlinger/:behandlingId/trygdeavgift/beregning",
-        "query": {},
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "trygdeavgiftsperioder": [
-            {
-              "fom": "2026-01-01",
-              "tom": "2026-12-31",
-              "trygdedekning": "FULL_DEKNING_FTRL",
-              "inntektskildetype": "NÆRINGSINNTEKT",
-              "avgiftssats": null,
-              "avgiftPerMd": 173,
-              "beregningsregel": "TJUEFEM_PROSENT_REGEL",
-              "harSammenslåtteInntektskilder": false,
-              "avgiftsdel": null
-            }
-          ],
-          "trygdeavgiftsgrunnlag": {
-            "skatteforholdsperioder": [
-              {
-                "fomDato": "2026-01-01",
-                "tomDato": "2026-12-31",
-                "skatteplikttype": "IKKE_SKATTEPLIKTIG"
-              }
-            ],
-            "inntektskilder": [
-              {
-                "type": "NÆRINGSINNTEKT",
-                "arbeidsgiversavgiftBetales": false,
-                "avgiftspliktigInntekt": 9000,
-                "fomDato": "2026-01-01",
-                "tomDato": "2026-12-31",
-                "erMaanedsbelop": true
-              }
-            ]
-          }
         }
       }
     },
@@ -305,413 +185,17 @@
             "endretAvNavn": "Lokal Testbruker",
             "endretDato": "2025-01-01T00:00:00.000Z",
             "registrertDato": "2025-01-01T00:00:00.000Z",
-            "sisteOpplysningerHentetDato": "2025-01-01T00:00:00.000Z",
+            "sisteOpplysningerHentetDato": null,
             "svarFrist": null
           },
           "saksopplysninger": {
-            "arbeidsforhold": [
-              {
-                "Aordning": null,
-                "ansettelsesPeriode": {
-                  "fom": "2021-04-23",
-                  "tom": null
-                },
-                "arbeidsavtaler": [
-                  {
-                    "arbeidstidsordning": {
-                      "kode": "ikkeSkift",
-                      "term": "Ikke skift"
-                    },
-                    "avloenningstype": "",
-                    "yrke": {
-                      "kode": "0013008",
-                      "term": "KONSULENT"
-                    },
-                    "gyldighetsperiode": {
-                      "fom": "2021-04-23",
-                      "tom": null
-                    },
-                    "avtaltArbeidstimerPerUke": 37.5,
-                    "stillingsprosent": 100,
-                    "beregnetAntallTimerPrUke": 37.5,
-                    "endringsdatoStillingsprosent": "2021-04-23",
-                    "skipsregister": null,
-                    "skipstype": null,
-                    "maritimArbeidsavtale": false,
-                    "beregnetStillingsprosent": null,
-                    "antallTimerGammeltAa": null,
-                    "fartsomraade": null
-                  }
-                ],
-                "arbeidsforholdID": "123",
-                "arbeidsforholdIDnav": 123,
-                "arbeidsforholdstype": "ordinaertArbeidsforhold",
-                "arbeidsgiverID": "999999999",
-                "arbeidsgivertype": "ORGANISASJON",
-                "arbeidstakerID": "30056928150",
-                "opplysningspliktigID": "999999999",
-                "opplysningspliktigtype": "ORGANISASJON",
-                "opprettelsestidspunkt": "2025-01-01T00:00:00.000Z",
-                "permisjonOgPermittering": [],
-                "sistBekreftet": "2025-01-01T00:00:00.000Z",
-                "timerTimelonnet": [],
-                "utenlandsopphold": []
-              }
-            ],
-            "organisasjoner": [
-              {
-                "forretningsadresse": {
-                  "gateadresse": {
-                    "gatenavn": "Adresselinje1",
-                    "gatenummer": null,
-                    "husbokstav": null,
-                    "husnummer": null
-                  },
-                  "land": "NORGE",
-                  "postnr": "0010",
-                  "poststed": "Oslo"
-                },
-                "navn": "Steinars Stein AS",
-                "oppstartdato": null,
-                "organisasjonsform": "Aksjeselskap",
-                "orgnr": "888888888",
-                "postadresse": {
-                  "gateadresse": {
-                    "gatenavn": "Adresselinje1",
-                    "gatenummer": null,
-                    "husbokstav": null,
-                    "husnummer": null
-                  },
-                  "land": "NORGE",
-                  "postnr": "0010",
-                  "poststed": "Oslo"
-                }
-              },
-              {
-                "forretningsadresse": {
-                  "gateadresse": {
-                    "gatenavn": "Adresselinje1",
-                    "gatenummer": null,
-                    "husbokstav": null,
-                    "husnummer": null
-                  },
-                  "land": "NORGE",
-                  "postnr": "0010",
-                  "poststed": "Oslo"
-                },
-                "navn": "Ståles Stål AS",
-                "oppstartdato": null,
-                "organisasjonsform": "Aksjeselskap",
-                "orgnr": "999999999",
-                "postadresse": {
-                  "gateadresse": {
-                    "gatenavn": "Adresselinje1",
-                    "gatenummer": null,
-                    "husbokstav": null,
-                    "husnummer": null
-                  },
-                  "land": "NORGE",
-                  "postnr": "0010",
-                  "poststed": "Oslo"
-                }
-              }
-            ],
+            "arbeidsforhold": [],
+            "organisasjoner": [],
             "medlemskap": {
               "medlemsperiode": []
             },
             "inntekt": {
-              "arbeidsInntektMaanedListe": [
-                {
-                  "aarMaaned": "2025-07",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-04-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2025-07",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2025-08",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-04-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2025-08",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2025-09",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-04-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2025-09",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2025-10",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-04-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2025-10",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2025-11",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-04-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2025-11",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2025-12",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-04-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2025-12",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2026-01",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-04-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2026-01",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2026-02",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-04-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2026-02",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2026-03",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-04-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2026-03",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "aarMaaned": "2026-04",
-                  "arbeidsInntektInformasjon": {
-                    "inntektListe": [
-                      {
-                        "type": "Loennsinntekt",
-                        "beloep": 50000,
-                        "fordel": "kontantytelse",
-                        "inntektskilde": "A-ordningen",
-                        "inntektsperiodetype": "Maaned",
-                        "inntektsstatus": "LoependeInnrapportert",
-                        "levereringstidspunkt": "2026-04-01T00:00:00",
-                        "opptjeningsland": null,
-                        "opptjeningsperiode": {
-                          "fom": null,
-                          "tom": null
-                        },
-                        "utbetaltIPeriode": "2026-04",
-                        "opplysningspliktigID": "974761076",
-                        "virksomhetID": "888888888",
-                        "inntektsmottakerID": "30056928150",
-                        "inngaarIGrunnlagForTrekk": true,
-                        "utloeserArbeidsgiveravgift": true,
-                        "informasjonsstatus": "InngaarAlltid",
-                        "beskrivelse": "fastloenn"
-                      }
-                    ]
-                  }
-                }
-              ],
+              "arbeidsInntektMaanedListe": [],
               "frilansInntektMaanedListe": []
             },
             "sed": {
@@ -755,6 +239,30 @@
     {
       "request": {
         "method": "GET",
+        "url": "http://localhost:3333/api/fagsaker/MEL-1020/aktoerer/?rolleKode=FULLMEKTIG",
+        "pathname": "/api/fagsaker/MEL-1020/aktoerer/",
+        "normalizedPath": "/api/fagsaker/:saksnummer/aktoerer/",
+        "query": {
+          "rolleKode": "FULLMEKTIG"
+        },
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
         "url": "http://localhost:3333/api/fagsaker/MEL-1020/dokumenter",
         "pathname": "/api/fagsaker/MEL-1020/dokumenter",
         "normalizedPath": "/api/fagsaker/:saksnummer/dokumenter",
@@ -772,6 +280,30 @@
           "content-type": "application/json"
         },
         "body": []
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:3333/api/fagsaker/MEL-1020/trygdeavgift/oppsummering",
+        "pathname": "/api/fagsaker/MEL-1020/trygdeavgift/oppsummering",
+        "normalizedPath": "/api/fagsaker/:saksnummer/trygdeavgift/oppsummering",
+        "query": {},
+        "headers": {
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "harBehandlingMedTrygdeavgift": false
+        }
       }
     },
     {
@@ -866,7 +398,7 @@
     {
       "request": {
         "method": "GET",
-        "url": "http://localhost:3333/api/featuretoggle?features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift&features=melosys.faktureringskomponent.vis_referanse&features=melosys.cdm-4-4",
+        "url": "http://localhost:3333/api/featuretoggle?features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.arsavregning.eos_pensjonist&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift&features=melosys.faktureringskomponent.vis_referanse&features=melosys.cdm-4-4",
         "pathname": "/api/featuretoggle",
         "normalizedPath": "/api/featuretoggle",
         "query": {
@@ -894,6 +426,7 @@
           "melosys.faktureringskomponenten.ikke-tidligere-perioder": true,
           "melosys.11_3_a_Norge_er_utpekt": true,
           "melosys.eos_fakturering_av_trygdeavgift": true,
+          "melosys.arsavregning.eos_pensjonist": true,
           "melosys.arsavregning.uten.flyt": false,
           "melosys.cdm-4-4": true
         }
@@ -902,7 +435,7 @@
     {
       "request": {
         "method": "GET",
-        "url": "http://localhost:3333/api/featuretoggle?features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift&features=melosys.faktureringskomponent.vis_referanse&features=melosys.cdm-4-4",
+        "url": "http://localhost:3333/api/featuretoggle?features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.arsavregning.eos_pensjonist&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift&features=melosys.faktureringskomponent.vis_referanse&features=melosys.cdm-4-4",
         "pathname": "/api/featuretoggle",
         "normalizedPath": "/api/featuretoggle",
         "query": {
@@ -930,6 +463,7 @@
           "melosys.faktureringskomponenten.ikke-tidligere-perioder": true,
           "melosys.11_3_a_Norge_er_utpekt": true,
           "melosys.eos_fakturering_av_trygdeavgift": true,
+          "melosys.arsavregning.eos_pensjonist": true,
           "melosys.arsavregning.uten.flyt": false,
           "melosys.cdm-4-4": true
         }
@@ -938,7 +472,7 @@
     {
       "request": {
         "method": "GET",
-        "url": "http://localhost:3333/api/featuretoggle?features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift&features=melosys.faktureringskomponent.vis_referanse&features=melosys.cdm-4-4",
+        "url": "http://localhost:3333/api/featuretoggle?features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.arsavregning.eos_pensjonist&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift&features=melosys.faktureringskomponent.vis_referanse&features=melosys.cdm-4-4",
         "pathname": "/api/featuretoggle",
         "normalizedPath": "/api/featuretoggle",
         "query": {
@@ -966,233 +500,10 @@
           "melosys.faktureringskomponenten.ikke-tidligere-perioder": true,
           "melosys.11_3_a_Norge_er_utpekt": true,
           "melosys.eos_fakturering_av_trygdeavgift": true,
+          "melosys.arsavregning.eos_pensjonist": true,
           "melosys.arsavregning.uten.flyt": false,
           "melosys.cdm-4-4": true
         }
-      }
-    },
-    {
-      "request": {
-        "method": "GET",
-        "url": "http://localhost:3333/api/ftrl/bestemmelser/?behandlingstema=YRKESAKTIV&trygdedekning=FULL_DEKNING_FTRL",
-        "pathname": "/api/ftrl/bestemmelser/",
-        "normalizedPath": "/api/ftrl/bestemmelser/",
-        "query": {
-          "behandlingstema": "YRKESAKTIV",
-          "trygdedekning": "FULL_DEKNING_FTRL"
-        },
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "bestemmelser": [
-            "FTRL_KAP2_2_1",
-            "FTRL_KAP2_2_2",
-            "FTRL_KAP2_2_3_ANDRE_LEDD",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_A",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_B",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_C",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_D",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_E",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_F",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_G",
-            "FTRL_KAP2_2_7_FØRSTE_LEDD",
-            "FTRL_KAP2_2_7A",
-            "ARKTISK_RÅDS_SEKRETARIAT_ART16",
-            "DET_INTERNASJONALE_BARENTSSEKRETARIATET_ART14",
-            "DEN_NORDATLANTISKE_SJØPATTEDYRKOMMISJON_ART16",
-            "TILLEGGSAVTALE_NATO"
-          ]
-        }
-      }
-    },
-    {
-      "request": {
-        "method": "GET",
-        "url": "http://localhost:3333/api/ftrl/bestemmelser/?behandlingstema=YRKESAKTIV",
-        "pathname": "/api/ftrl/bestemmelser/",
-        "normalizedPath": "/api/ftrl/bestemmelser/",
-        "query": {
-          "behandlingstema": "YRKESAKTIV"
-        },
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "bestemmelser": [
-            "FTRL_KAP2_2_1",
-            "FTRL_KAP2_2_2",
-            "FTRL_KAP2_2_3_ANDRE_LEDD",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_A",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_B",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_C",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_D",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_E",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_F",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_G",
-            "FTRL_KAP2_2_7_FØRSTE_LEDD",
-            "FTRL_KAP2_2_7A",
-            "FTRL_KAP2_2_8_FØRSTE_LEDD_A",
-            "FTRL_KAP2_2_8_FØRSTE_LEDD_B",
-            "FTRL_KAP2_2_8_ANDRE_LEDD",
-            "ARKTISK_RÅDS_SEKRETARIAT_ART16",
-            "DET_INTERNASJONALE_BARENTSSEKRETARIATET_ART14",
-            "DEN_NORDATLANTISKE_SJØPATTEDYRKOMMISJON_ART16",
-            "TILLEGGSAVTALE_NATO"
-          ]
-        }
-      }
-    },
-    {
-      "request": {
-        "method": "GET",
-        "url": "http://localhost:3333/api/ftrl/bestemmelser/FTRL_KAP2_2_5_F%C3%98RSTE_LEDD_A/avklartefakta/?behandlingID=20",
-        "pathname": "/api/ftrl/bestemmelser/FTRL_KAP2_2_5_F%C3%98RSTE_LEDD_A/avklartefakta/",
-        "normalizedPath": "/api/ftrl/bestemmelser/FTRL_KAP2_2_5_F%C3%98RSTE_LEDD_A/avklartefakta/",
-        "query": {
-          "behandlingID": "20"
-        },
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "avklarteFakta": []
-        }
-      }
-    },
-    {
-      "request": {
-        "method": "GET",
-        "url": "http://localhost:3333/api/ftrl/bestemmelser/FTRL_KAP2_2_5_F%C3%98RSTE_LEDD_A/vilkaar/?behandlingID=20&behandlingstema=YRKESAKTIV",
-        "pathname": "/api/ftrl/bestemmelser/FTRL_KAP2_2_5_F%C3%98RSTE_LEDD_A/vilkaar/",
-        "normalizedPath": "/api/ftrl/bestemmelser/FTRL_KAP2_2_5_F%C3%98RSTE_LEDD_A/vilkaar/",
-        "query": {
-          "behandlingID": "20",
-          "behandlingstema": "YRKESAKTIV"
-        },
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "vilkår": [
-            {
-              "vilkår": "FTRL_2_5_NORSK_STATSBORGER_EØS_BORGER",
-              "defaultOppfylt": null,
-              "muligeBegrunnelser": []
-            },
-            {
-              "vilkår": "FTRL_2_5_NORSKE_STATS_TJENESTE",
-              "defaultOppfylt": null,
-              "muligeBegrunnelser": []
-            },
-            {
-              "vilkår": "FTRL_ARBEIDSTAKER",
-              "defaultOppfylt": null,
-              "muligeBegrunnelser": []
-            }
-          ]
-        }
-      }
-    },
-    {
-      "request": {
-        "method": "GET",
-        "url": "http://localhost:3333/api/ftrl/bestemmelser/pliktige",
-        "pathname": "/api/ftrl/bestemmelser/pliktige",
-        "normalizedPath": "/api/ftrl/bestemmelser/pliktige",
-        "query": {},
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "bestemmelser": [
-            "FTRL_KAP2_2_1",
-            "FTRL_KAP2_2_2",
-            "FTRL_KAP2_2_3_ANDRE_LEDD",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_A",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_B",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_C",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_D",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_E",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_F",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_G",
-            "FTRL_KAP2_2_5_FØRSTE_LEDD_H",
-            "FTRL_KAP2_2_5_ANDRE_LEDD",
-            "ARKTISK_RÅDS_SEKRETARIAT_ART16",
-            "DET_INTERNASJONALE_BARENTSSEKRETARIATET_ART14",
-            "DEN_NORDATLANTISKE_SJØPATTEDYRKOMMISJON_ART16",
-            "TILLEGGSAVTALE_NATO"
-          ]
-        }
-      }
-    },
-    {
-      "request": {
-        "method": "GET",
-        "url": "http://localhost:3333/api/ftrl/innvilgelsesresultat/?behandlingstype=F%C3%98RSTEGANG",
-        "pathname": "/api/ftrl/innvilgelsesresultat/",
-        "normalizedPath": "/api/ftrl/innvilgelsesresultat/",
-        "query": {
-          "behandlingstype": "FØRSTEGANG"
-        },
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": ["INNVILGET", "AVSLAATT"]
       }
     },
     {
@@ -2343,30 +1654,6 @@
     {
       "request": {
         "method": "GET",
-        "url": "http://localhost:3333/api/medlemskapsperioder/trygdedekning/lovlige-kombinasjoner?bestemmelse=FTRL_KAP2_2_5_F%C3%98RSTE_LEDD_A",
-        "pathname": "/api/medlemskapsperioder/trygdedekning/lovlige-kombinasjoner",
-        "normalizedPath": "/api/medlemskapsperioder/trygdedekning/lovlige-kombinasjoner",
-        "query": {
-          "bestemmelse": "FTRL_KAP2_2_5_FØRSTE_LEDD_A"
-        },
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": ["FULL_DEKNING_FTRL"]
-      }
-    },
-    {
-      "request": {
-        "method": "GET",
         "url": "http://localhost:3333/api/mottatteopplysninger/20",
         "pathname": "/api/mottatteopplysninger/20",
         "normalizedPath": "/api/mottatteopplysninger/:id",
@@ -2406,13 +1693,13 @@
             },
             "foretakUtland": [],
             "juridiskArbeidsgiverNorge": {
-              "andelKontrakterINorge": 0,
-              "andelOmsetningINorge": 0,
-              "andelOppdragINorge": 0,
-              "andelRekruttertINorge": 0,
-              "antallAdmAnsatte": 0,
-              "antallAnsatte": 0,
-              "antallUtsendte": 0,
+              "andelKontrakterINorge": null,
+              "andelOmsetningINorge": null,
+              "andelOppdragINorge": null,
+              "andelRekruttertINorge": null,
+              "antallAdmAnsatte": null,
+              "antallAnsatte": null,
+              "antallUtsendte": null,
               "ekstraArbeidsgivere": [],
               "erOffentligVirksomhet": null
             },
@@ -2429,8 +1716,8 @@
               "studentSemester": null
             },
             "periode": {
-              "fom": "2026-01-01",
-              "tom": "2026-12-31"
+              "fom": null,
+              "tom": null
             },
             "personOpplysninger": {
               "foedestedOgLand": null,
@@ -2443,99 +1730,10 @@
               "selvstendigForetak": []
             },
             "soeknadsland": {
-              "landkoder": ["SE"],
+              "landkoder": [],
               "flereLandUkjentHvilke": false
             },
-            "trygdedekning": "FULL_DEKNING_FTRL"
-          },
-          "mottaksdato": "2025-01-01",
-          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS"
-        }
-      }
-    },
-    {
-      "request": {
-        "method": "GET",
-        "url": "http://localhost:3333/api/mottatteopplysninger/20",
-        "pathname": "/api/mottatteopplysninger/20",
-        "normalizedPath": "/api/mottatteopplysninger/:id",
-        "query": {},
-        "headers": {
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": null
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "data": {
-            "arbeidPaaLand": {
-              "erFastArbeidssted": null,
-              "erHjemmekontor": null,
-              "fysiskeArbeidssteder": []
-            },
-            "bosted": {
-              "antallMaanederINorge": 0,
-              "intensjonOmRetur": null,
-              "oppgittAdresse": {
-                "tilleggsnavn": null,
-                "gatenavn": null,
-                "husnummerEtasjeLeilighet": null,
-                "postboks": null,
-                "postnummer": null,
-                "poststed": null,
-                "region": null,
-                "landkode": null
-              }
-            },
-            "foretakUtland": [],
-            "juridiskArbeidsgiverNorge": {
-              "andelKontrakterINorge": 0,
-              "andelOmsetningINorge": 0,
-              "andelOppdragINorge": 0,
-              "andelRekruttertINorge": 0,
-              "antallAdmAnsatte": 0,
-              "antallAnsatte": 0,
-              "antallUtsendte": 0,
-              "ekstraArbeidsgivere": [],
-              "erOffentligVirksomhet": null
-            },
-            "luftfartBaser": [],
-            "maritimtArbeid": [],
-            "oppholdUtland": {
-              "ektefelleEllerBarnINorge": null,
-              "oppholdsPeriode": {
-                "fom": null,
-                "tom": null
-              },
-              "oppholdslandkoder": [],
-              "studentFinansieringKode": null,
-              "studentSemester": null
-            },
-            "periode": {
-              "fom": "2026-01-01",
-              "tom": "2026-12-31"
-            },
-            "personOpplysninger": {
-              "foedestedOgLand": null,
-              "medfolgendeFamilie": [],
-              "utenlandskIdent": []
-            },
-            "representantIUtlandet": null,
-            "selvstendigArbeid": {
-              "erSelvstendig": null,
-              "selvstendigForetak": []
-            },
-            "soeknadsland": {
-              "landkoder": ["SE"],
-              "flereLandUkjentHvilke": false
-            },
-            "trygdedekning": "FULL_DEKNING_FTRL"
+            "trygdedekning": null
           },
           "mottaksdato": "2025-01-01",
           "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS"
@@ -2565,7 +1763,7 @@
           "journalforing": [],
           "saksbehandling": [
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "3",
               "prioritet": "NORM",
@@ -2606,7 +1804,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "4",
               "prioritet": "NORM",
@@ -2653,7 +1851,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "5",
               "prioritet": "NORM",
@@ -2700,7 +1898,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "6",
               "prioritet": "NORM",
@@ -2747,7 +1945,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "7",
               "prioritet": "NORM",
@@ -2794,7 +1992,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "8",
               "prioritet": "NORM",
@@ -2841,7 +2039,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "9",
               "prioritet": "NORM",
@@ -2882,7 +2080,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "10",
               "prioritet": "NORM",
@@ -2923,7 +2121,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "11",
               "prioritet": "NORM",
@@ -2964,7 +2162,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "12",
               "prioritet": "NORM",
@@ -3005,7 +2203,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "13",
               "prioritet": "NORM",
@@ -3046,7 +2244,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "14",
               "prioritet": "NORM",
@@ -3081,19 +2279,13 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": "2026-01-01",
-                "tom": "2026-12-31"
-              },
+              "land": null,
+              "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1013\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "15",
               "prioritet": "NORM",
@@ -3134,7 +2326,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "18",
               "prioritet": "NORM",
@@ -3181,7 +2373,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "19",
               "prioritet": "NORM",
@@ -3216,19 +2408,13 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": "2026-01-01",
-                "tom": "2026-12-31"
-              },
+              "land": null,
+              "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1018\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "20",
               "prioritet": "NORM",
@@ -3275,7 +2461,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "21",
               "prioritet": "NORM",
@@ -3310,19 +2496,13 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": "2026-01-01",
-                "tom": "2026-12-31"
-              },
+              "land": null,
+              "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1020\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "22",
               "prioritet": "NORM",
@@ -3369,7 +2549,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "23",
               "prioritet": "NORM",
@@ -3404,19 +2584,13 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": "2026-01-01",
-                "tom": "2026-12-31"
-              },
+              "land": null,
+              "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1022\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "24",
               "prioritet": "NORM",
@@ -3463,7 +2637,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "25",
               "prioritet": "NORM",
@@ -3510,7 +2684,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "26",
               "prioritet": "NORM",
@@ -3557,7 +2731,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "27",
               "prioritet": "NORM",
@@ -3604,7 +2778,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "28",
               "prioritet": "NORM",
@@ -3645,7 +2819,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "29",
               "prioritet": "NORM",
@@ -3686,7 +2860,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "30",
               "prioritet": "NORM",
@@ -3727,7 +2901,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "31",
               "prioritet": "NORM",
@@ -3768,7 +2942,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "32",
               "prioritet": "NORM",
@@ -3809,7 +2983,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "33",
               "prioritet": "NORM",
@@ -3850,7 +3024,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "34",
               "prioritet": "NORM",
@@ -3891,7 +3065,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "35",
               "prioritet": "NORM",
@@ -3932,7 +3106,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "36",
               "prioritet": "NORM",
@@ -3973,7 +3147,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "37",
               "prioritet": "NORM",
@@ -4014,7 +3188,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "38",
               "prioritet": "NORM",
@@ -4055,7 +3229,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "39",
               "prioritet": "NORM",
@@ -4096,7 +3270,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "40",
               "prioritet": "NORM",
@@ -4137,7 +3311,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "41",
               "prioritet": "NORM",
@@ -4178,7 +3352,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "42",
               "prioritet": "NORM",
@@ -4225,7 +3399,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "43",
               "prioritet": "NORM",
@@ -4272,7 +3446,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "44",
               "prioritet": "NORM",
@@ -4319,7 +3493,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "45",
               "prioritet": "NORM",
@@ -4366,7 +3540,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "46",
               "prioritet": "NORM",
@@ -4413,7 +3587,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "47",
               "prioritet": "NORM",
@@ -4460,7 +3634,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "48",
               "prioritet": "NORM",
@@ -4507,7 +3681,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "49",
               "prioritet": "NORM",
@@ -4548,7 +3722,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "50",
               "prioritet": "NORM",
@@ -4589,7 +3763,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "51",
               "prioritet": "NORM",
@@ -4630,7 +3804,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "52",
               "prioritet": "NORM",
@@ -4677,7 +3851,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "53",
               "prioritet": "NORM",
@@ -4724,7 +3898,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "54",
               "prioritet": "NORM",
@@ -4771,7 +3945,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "55",
               "prioritet": "NORM",
@@ -4818,7 +3992,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "56",
               "prioritet": "NORM",
@@ -4853,19 +4027,13 @@
                 "kode": "TRYGDEAVGIFT",
                 "term": "Trygdeavgift"
               },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": null,
-                "tom": null
-              },
+              "land": null,
+              "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1055\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "57",
               "prioritet": "NORM",
@@ -4900,19 +4068,13 @@
                 "kode": "TRYGDEAVGIFT",
                 "term": "Trygdeavgift"
               },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": null,
-                "tom": null
-              },
+              "land": null,
+              "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1056\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "58",
               "prioritet": "NORM",
@@ -4953,7 +4115,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "59",
               "prioritet": "NORM",
@@ -4994,7 +4156,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "60",
               "prioritet": "NORM",
@@ -5035,7 +4197,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "61",
               "prioritet": "NORM",
@@ -5076,7 +4238,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "62",
               "prioritet": "NORM",
@@ -5117,7 +4279,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "63",
               "prioritet": "NORM",
@@ -5158,7 +4320,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "64",
               "prioritet": "NORM",
@@ -5199,7 +4361,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "65",
               "prioritet": "NORM",
@@ -5238,135 +4400,6 @@
               "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1071\n",
               "sisteNotat": null
-            },
-            {
-              "aktivTil": "2026-07-22",
-              "ansvarligID": "Z123456",
-              "oppgaveID": "66",
-              "prioritet": "NORM",
-              "navn": "TRIVIELL KARAFFEL",
-              "hovedpartIdent": "30056928150",
-              "versjon": 1,
-              "behandling": {
-                "behandlingID": 72,
-                "behandlingstype": {
-                  "kode": "FØRSTEGANG",
-                  "term": "Førstegangsbehandling"
-                },
-                "behandlingstema": {
-                  "kode": "PENSJONIST",
-                  "term": "Pensjonist/uføretrygdet"
-                },
-                "behandlingsstatus": {
-                  "kode": "UNDER_BEHANDLING",
-                  "term": "Behandlingen pågår"
-                },
-                "erUnderOppdatering": false,
-                "registrertDato": "2025-01-01T00:00:00.000Z",
-                "endretDato": "2025-01-01T00:00:00.000Z",
-                "svarFrist": null
-              },
-              "saksnummer": "MEL-1072",
-              "sakstype": {
-                "kode": "EU_EOS",
-                "term": "EU/EØS-land"
-              },
-              "sakstema": {
-                "kode": "TRYGDEAVGIFT",
-                "term": "Trygdeavgift"
-              },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": null,
-                "tom": null
-              },
-              "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1072\n",
-              "sisteNotat": null
-            },
-            {
-              "aktivTil": "2026-07-22",
-              "ansvarligID": "Z123456",
-              "oppgaveID": "67",
-              "prioritet": "NORM",
-              "navn": "TRIVIELL KARAFFEL",
-              "hovedpartIdent": "30056928150",
-              "versjon": 1,
-              "behandling": {
-                "behandlingID": 73,
-                "behandlingstype": {
-                  "kode": "FØRSTEGANG",
-                  "term": "Førstegangsbehandling"
-                },
-                "behandlingstema": {
-                  "kode": "PENSJONIST",
-                  "term": "Pensjonist/uføretrygdet"
-                },
-                "behandlingsstatus": {
-                  "kode": "UNDER_BEHANDLING",
-                  "term": "Behandlingen pågår"
-                },
-                "erUnderOppdatering": false,
-                "registrertDato": "2025-01-01T00:00:00.000Z",
-                "endretDato": "2025-01-01T00:00:00.000Z",
-                "svarFrist": null
-              },
-              "saksnummer": "MEL-1073",
-              "sakstype": {
-                "kode": "EU_EOS",
-                "term": "EU/EØS-land"
-              },
-              "sakstema": {
-                "kode": "TRYGDEAVGIFT",
-                "term": "Trygdeavgift"
-              },
-              "land": null,
-              "periode": null,
-              "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1073\n",
-              "sisteNotat": null
-            },
-            {
-              "aktivTil": "2026-07-22",
-              "ansvarligID": "Z123456",
-              "oppgaveID": "68",
-              "prioritet": "NORM",
-              "navn": "TRIVIELL KARAFFEL",
-              "hovedpartIdent": "30056928150",
-              "versjon": 1,
-              "behandling": {
-                "behandlingID": 74,
-                "behandlingstype": {
-                  "kode": "FØRSTEGANG",
-                  "term": "Førstegangsbehandling"
-                },
-                "behandlingstema": {
-                  "kode": "PENSJONIST",
-                  "term": "Pensjonist/uføretrygdet"
-                },
-                "behandlingsstatus": {
-                  "kode": "UNDER_BEHANDLING",
-                  "term": "Behandlingen pågår"
-                },
-                "erUnderOppdatering": false,
-                "registrertDato": "2025-01-01T00:00:00.000Z",
-                "endretDato": "2025-01-01T00:00:00.000Z",
-                "svarFrist": null
-              },
-              "saksnummer": "MEL-1074",
-              "sakstype": {
-                "kode": "FTRL",
-                "term": "Utenfor avtaleland"
-              },
-              "sakstema": {
-                "kode": "TRYGDEAVGIFT",
-                "term": "Trygdeavgift"
-              },
-              "land": null,
-              "periode": null,
-              "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1074\n",
-              "sisteNotat": null
             }
           ]
         }
@@ -5395,7 +4428,7 @@
           "journalforing": [],
           "saksbehandling": [
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "3",
               "prioritet": "NORM",
@@ -5436,7 +4469,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "4",
               "prioritet": "NORM",
@@ -5483,7 +4516,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "5",
               "prioritet": "NORM",
@@ -5530,7 +4563,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "6",
               "prioritet": "NORM",
@@ -5577,7 +4610,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "7",
               "prioritet": "NORM",
@@ -5624,7 +4657,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "8",
               "prioritet": "NORM",
@@ -5671,7 +4704,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "9",
               "prioritet": "NORM",
@@ -5712,7 +4745,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "10",
               "prioritet": "NORM",
@@ -5753,7 +4786,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "11",
               "prioritet": "NORM",
@@ -5794,7 +4827,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "12",
               "prioritet": "NORM",
@@ -5835,7 +4868,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "13",
               "prioritet": "NORM",
@@ -5876,7 +4909,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "14",
               "prioritet": "NORM",
@@ -5911,19 +4944,13 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": "2026-01-01",
-                "tom": "2026-12-31"
-              },
+              "land": null,
+              "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1013\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "15",
               "prioritet": "NORM",
@@ -5964,54 +4991,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
-              "ansvarligID": "Z123456",
-              "oppgaveID": "69",
-              "prioritet": "NORM",
-              "navn": "TRIVIELL KARAFFEL",
-              "hovedpartIdent": "30056928150",
-              "versjon": 1,
-              "behandling": {
-                "behandlingID": 75,
-                "behandlingstype": {
-                  "kode": "ÅRSAVREGNING",
-                  "term": "Årsavregning"
-                },
-                "behandlingstema": {
-                  "kode": "YRKESAKTIV",
-                  "term": "Yrkesaktiv"
-                },
-                "behandlingsstatus": {
-                  "kode": "OPPRETTET",
-                  "term": "Behandlingen er opprettet"
-                },
-                "erUnderOppdatering": false,
-                "registrertDato": "2025-01-01T00:00:00.000Z",
-                "endretDato": "2025-01-01T00:00:00.000Z",
-                "svarFrist": null
-              },
-              "saksnummer": "MEL-1014",
-              "sakstype": {
-                "kode": "FTRL",
-                "term": "Utenfor avtaleland"
-              },
-              "sakstema": {
-                "kode": "MEDLEMSKAP_LOVVALG",
-                "term": "Medlemskap og lovvalg"
-              },
-              "land": {
-                "landkoder": [],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": null,
-                "tom": null
-              },
-              "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1014\n",
-              "sisteNotat": null
-            },
-            {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "18",
               "prioritet": "NORM",
@@ -6058,7 +5038,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "19",
               "prioritet": "NORM",
@@ -6093,19 +5073,13 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": "2026-01-01",
-                "tom": "2026-12-31"
-              },
+              "land": null,
+              "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1018\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "20",
               "prioritet": "NORM",
@@ -6152,7 +5126,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "22",
               "prioritet": "NORM",
@@ -6199,7 +5173,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "23",
               "prioritet": "NORM",
@@ -6234,19 +5208,13 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": "2026-01-01",
-                "tom": "2026-12-31"
-              },
+              "land": null,
+              "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1022\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "24",
               "prioritet": "NORM",
@@ -6293,7 +5261,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "25",
               "prioritet": "NORM",
@@ -6340,7 +5308,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "26",
               "prioritet": "NORM",
@@ -6387,7 +5355,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "27",
               "prioritet": "NORM",
@@ -6434,7 +5402,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "28",
               "prioritet": "NORM",
@@ -6475,7 +5443,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "29",
               "prioritet": "NORM",
@@ -6516,7 +5484,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "30",
               "prioritet": "NORM",
@@ -6557,7 +5525,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "31",
               "prioritet": "NORM",
@@ -6598,7 +5566,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "32",
               "prioritet": "NORM",
@@ -6639,7 +5607,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "33",
               "prioritet": "NORM",
@@ -6680,7 +5648,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "34",
               "prioritet": "NORM",
@@ -6721,7 +5689,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "35",
               "prioritet": "NORM",
@@ -6762,7 +5730,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "36",
               "prioritet": "NORM",
@@ -6803,7 +5771,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "37",
               "prioritet": "NORM",
@@ -6844,7 +5812,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "38",
               "prioritet": "NORM",
@@ -6885,7 +5853,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "39",
               "prioritet": "NORM",
@@ -6926,7 +5894,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "40",
               "prioritet": "NORM",
@@ -6967,7 +5935,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "41",
               "prioritet": "NORM",
@@ -7008,7 +5976,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "42",
               "prioritet": "NORM",
@@ -7055,7 +6023,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "43",
               "prioritet": "NORM",
@@ -7102,7 +6070,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "44",
               "prioritet": "NORM",
@@ -7149,7 +6117,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "45",
               "prioritet": "NORM",
@@ -7196,7 +6164,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "46",
               "prioritet": "NORM",
@@ -7243,7 +6211,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "47",
               "prioritet": "NORM",
@@ -7290,7 +6258,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "48",
               "prioritet": "NORM",
@@ -7337,7 +6305,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "49",
               "prioritet": "NORM",
@@ -7378,7 +6346,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "50",
               "prioritet": "NORM",
@@ -7419,7 +6387,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "51",
               "prioritet": "NORM",
@@ -7460,7 +6428,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "52",
               "prioritet": "NORM",
@@ -7507,7 +6475,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "53",
               "prioritet": "NORM",
@@ -7554,7 +6522,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "54",
               "prioritet": "NORM",
@@ -7601,7 +6569,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "55",
               "prioritet": "NORM",
@@ -7648,7 +6616,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "56",
               "prioritet": "NORM",
@@ -7683,19 +6651,13 @@
                 "kode": "TRYGDEAVGIFT",
                 "term": "Trygdeavgift"
               },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": null,
-                "tom": null
-              },
+              "land": null,
+              "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1055\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "57",
               "prioritet": "NORM",
@@ -7730,19 +6692,13 @@
                 "kode": "TRYGDEAVGIFT",
                 "term": "Trygdeavgift"
               },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": null,
-                "tom": null
-              },
+              "land": null,
+              "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1056\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "58",
               "prioritet": "NORM",
@@ -7783,7 +6739,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "59",
               "prioritet": "NORM",
@@ -7824,7 +6780,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "60",
               "prioritet": "NORM",
@@ -7865,7 +6821,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "61",
               "prioritet": "NORM",
@@ -7906,7 +6862,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "62",
               "prioritet": "NORM",
@@ -7947,7 +6903,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "63",
               "prioritet": "NORM",
@@ -7988,7 +6944,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "64",
               "prioritet": "NORM",
@@ -8029,7 +6985,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "65",
               "prioritet": "NORM",
@@ -8068,135 +7024,6 @@
               "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1071\n",
               "sisteNotat": null
-            },
-            {
-              "aktivTil": "2026-07-22",
-              "ansvarligID": "Z123456",
-              "oppgaveID": "66",
-              "prioritet": "NORM",
-              "navn": "TRIVIELL KARAFFEL",
-              "hovedpartIdent": "30056928150",
-              "versjon": 1,
-              "behandling": {
-                "behandlingID": 72,
-                "behandlingstype": {
-                  "kode": "FØRSTEGANG",
-                  "term": "Førstegangsbehandling"
-                },
-                "behandlingstema": {
-                  "kode": "PENSJONIST",
-                  "term": "Pensjonist/uføretrygdet"
-                },
-                "behandlingsstatus": {
-                  "kode": "UNDER_BEHANDLING",
-                  "term": "Behandlingen pågår"
-                },
-                "erUnderOppdatering": false,
-                "registrertDato": "2025-01-01T00:00:00.000Z",
-                "endretDato": "2025-01-01T00:00:00.000Z",
-                "svarFrist": null
-              },
-              "saksnummer": "MEL-1072",
-              "sakstype": {
-                "kode": "EU_EOS",
-                "term": "EU/EØS-land"
-              },
-              "sakstema": {
-                "kode": "TRYGDEAVGIFT",
-                "term": "Trygdeavgift"
-              },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": null,
-                "tom": null
-              },
-              "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1072\n",
-              "sisteNotat": null
-            },
-            {
-              "aktivTil": "2026-07-22",
-              "ansvarligID": "Z123456",
-              "oppgaveID": "67",
-              "prioritet": "NORM",
-              "navn": "TRIVIELL KARAFFEL",
-              "hovedpartIdent": "30056928150",
-              "versjon": 1,
-              "behandling": {
-                "behandlingID": 73,
-                "behandlingstype": {
-                  "kode": "FØRSTEGANG",
-                  "term": "Førstegangsbehandling"
-                },
-                "behandlingstema": {
-                  "kode": "PENSJONIST",
-                  "term": "Pensjonist/uføretrygdet"
-                },
-                "behandlingsstatus": {
-                  "kode": "UNDER_BEHANDLING",
-                  "term": "Behandlingen pågår"
-                },
-                "erUnderOppdatering": false,
-                "registrertDato": "2025-01-01T00:00:00.000Z",
-                "endretDato": "2025-01-01T00:00:00.000Z",
-                "svarFrist": null
-              },
-              "saksnummer": "MEL-1073",
-              "sakstype": {
-                "kode": "EU_EOS",
-                "term": "EU/EØS-land"
-              },
-              "sakstema": {
-                "kode": "TRYGDEAVGIFT",
-                "term": "Trygdeavgift"
-              },
-              "land": null,
-              "periode": null,
-              "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1073\n",
-              "sisteNotat": null
-            },
-            {
-              "aktivTil": "2026-07-22",
-              "ansvarligID": "Z123456",
-              "oppgaveID": "68",
-              "prioritet": "NORM",
-              "navn": "TRIVIELL KARAFFEL",
-              "hovedpartIdent": "30056928150",
-              "versjon": 1,
-              "behandling": {
-                "behandlingID": 74,
-                "behandlingstype": {
-                  "kode": "FØRSTEGANG",
-                  "term": "Førstegangsbehandling"
-                },
-                "behandlingstema": {
-                  "kode": "PENSJONIST",
-                  "term": "Pensjonist/uføretrygdet"
-                },
-                "behandlingsstatus": {
-                  "kode": "UNDER_BEHANDLING",
-                  "term": "Behandlingen pågår"
-                },
-                "erUnderOppdatering": false,
-                "registrertDato": "2025-01-01T00:00:00.000Z",
-                "endretDato": "2025-01-01T00:00:00.000Z",
-                "svarFrist": null
-              },
-              "saksnummer": "MEL-1074",
-              "sakstype": {
-                "kode": "FTRL",
-                "term": "Utenfor avtaleland"
-              },
-              "sakstema": {
-                "kode": "TRYGDEAVGIFT",
-                "term": "Trygdeavgift"
-              },
-              "land": null,
-              "periode": null,
-              "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1074\n",
-              "sisteNotat": null
             }
           ]
         }
@@ -8225,7 +7052,7 @@
           "journalforing": [],
           "saksbehandling": [
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "3",
               "prioritet": "NORM",
@@ -8266,7 +7093,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "4",
               "prioritet": "NORM",
@@ -8313,7 +7140,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "5",
               "prioritet": "NORM",
@@ -8360,7 +7187,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "6",
               "prioritet": "NORM",
@@ -8407,7 +7234,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "7",
               "prioritet": "NORM",
@@ -8454,7 +7281,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "8",
               "prioritet": "NORM",
@@ -8501,7 +7328,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "9",
               "prioritet": "NORM",
@@ -8542,7 +7369,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "10",
               "prioritet": "NORM",
@@ -8583,7 +7410,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "11",
               "prioritet": "NORM",
@@ -8624,7 +7451,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "12",
               "prioritet": "NORM",
@@ -8665,7 +7492,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "13",
               "prioritet": "NORM",
@@ -8706,7 +7533,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "14",
               "prioritet": "NORM",
@@ -8741,19 +7568,13 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": "2026-01-01",
-                "tom": "2026-12-31"
-              },
+              "land": null,
+              "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1013\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "15",
               "prioritet": "NORM",
@@ -8794,15 +7615,15 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
-              "oppgaveID": "69",
+              "oppgaveID": "66",
               "prioritet": "NORM",
               "navn": "TRIVIELL KARAFFEL",
               "hovedpartIdent": "30056928150",
               "versjon": 1,
               "behandling": {
-                "behandlingID": 75,
+                "behandlingID": 72,
                 "behandlingstype": {
                   "kode": "ÅRSAVREGNING",
                   "term": "Årsavregning"
@@ -8841,7 +7662,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "18",
               "prioritet": "NORM",
@@ -8888,7 +7709,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "19",
               "prioritet": "NORM",
@@ -8923,19 +7744,13 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": "2026-01-01",
-                "tom": "2026-12-31"
-              },
+              "land": null,
+              "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1018\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "20",
               "prioritet": "NORM",
@@ -8982,7 +7797,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "22",
               "prioritet": "NORM",
@@ -9029,7 +7844,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "23",
               "prioritet": "NORM",
@@ -9064,19 +7879,13 @@
                 "kode": "MEDLEMSKAP_LOVVALG",
                 "term": "Medlemskap og lovvalg"
               },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": "2026-01-01",
-                "tom": "2026-12-31"
-              },
+              "land": null,
+              "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1022\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "24",
               "prioritet": "NORM",
@@ -9123,7 +7932,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "25",
               "prioritet": "NORM",
@@ -9170,7 +7979,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "26",
               "prioritet": "NORM",
@@ -9217,7 +8026,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "27",
               "prioritet": "NORM",
@@ -9264,7 +8073,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "28",
               "prioritet": "NORM",
@@ -9305,7 +8114,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "29",
               "prioritet": "NORM",
@@ -9346,7 +8155,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "30",
               "prioritet": "NORM",
@@ -9387,7 +8196,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "31",
               "prioritet": "NORM",
@@ -9428,7 +8237,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "32",
               "prioritet": "NORM",
@@ -9469,7 +8278,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "33",
               "prioritet": "NORM",
@@ -9510,7 +8319,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "34",
               "prioritet": "NORM",
@@ -9551,7 +8360,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "35",
               "prioritet": "NORM",
@@ -9592,7 +8401,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "36",
               "prioritet": "NORM",
@@ -9633,7 +8442,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "37",
               "prioritet": "NORM",
@@ -9674,7 +8483,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "38",
               "prioritet": "NORM",
@@ -9715,7 +8524,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "39",
               "prioritet": "NORM",
@@ -9756,7 +8565,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "40",
               "prioritet": "NORM",
@@ -9797,7 +8606,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "41",
               "prioritet": "NORM",
@@ -9838,7 +8647,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "42",
               "prioritet": "NORM",
@@ -9885,7 +8694,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "43",
               "prioritet": "NORM",
@@ -9932,7 +8741,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "44",
               "prioritet": "NORM",
@@ -9979,7 +8788,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "45",
               "prioritet": "NORM",
@@ -10026,7 +8835,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "46",
               "prioritet": "NORM",
@@ -10073,7 +8882,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "47",
               "prioritet": "NORM",
@@ -10120,7 +8929,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "48",
               "prioritet": "NORM",
@@ -10167,7 +8976,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "49",
               "prioritet": "NORM",
@@ -10208,7 +9017,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "50",
               "prioritet": "NORM",
@@ -10249,7 +9058,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "51",
               "prioritet": "NORM",
@@ -10290,7 +9099,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "52",
               "prioritet": "NORM",
@@ -10337,7 +9146,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "53",
               "prioritet": "NORM",
@@ -10384,7 +9193,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "54",
               "prioritet": "NORM",
@@ -10431,7 +9240,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "55",
               "prioritet": "NORM",
@@ -10478,7 +9287,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "56",
               "prioritet": "NORM",
@@ -10513,19 +9322,13 @@
                 "kode": "TRYGDEAVGIFT",
                 "term": "Trygdeavgift"
               },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": null,
-                "tom": null
-              },
+              "land": null,
+              "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1055\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "57",
               "prioritet": "NORM",
@@ -10560,19 +9363,13 @@
                 "kode": "TRYGDEAVGIFT",
                 "term": "Trygdeavgift"
               },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": null,
-                "tom": null
-              },
+              "land": null,
+              "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1056\n",
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "58",
               "prioritet": "NORM",
@@ -10613,7 +9410,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "59",
               "prioritet": "NORM",
@@ -10654,7 +9451,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "60",
               "prioritet": "NORM",
@@ -10695,7 +9492,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "61",
               "prioritet": "NORM",
@@ -10736,7 +9533,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "62",
               "prioritet": "NORM",
@@ -10777,7 +9574,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "63",
               "prioritet": "NORM",
@@ -10818,7 +9615,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "64",
               "prioritet": "NORM",
@@ -10859,7 +9656,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-22",
+              "aktivTil": "2026-07-21",
               "ansvarligID": "Z123456",
               "oppgaveID": "65",
               "prioritet": "NORM",
@@ -10897,135 +9694,6 @@
               "land": null,
               "periode": null,
               "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1071\n",
-              "sisteNotat": null
-            },
-            {
-              "aktivTil": "2026-07-22",
-              "ansvarligID": "Z123456",
-              "oppgaveID": "66",
-              "prioritet": "NORM",
-              "navn": "TRIVIELL KARAFFEL",
-              "hovedpartIdent": "30056928150",
-              "versjon": 1,
-              "behandling": {
-                "behandlingID": 72,
-                "behandlingstype": {
-                  "kode": "FØRSTEGANG",
-                  "term": "Førstegangsbehandling"
-                },
-                "behandlingstema": {
-                  "kode": "PENSJONIST",
-                  "term": "Pensjonist/uføretrygdet"
-                },
-                "behandlingsstatus": {
-                  "kode": "UNDER_BEHANDLING",
-                  "term": "Behandlingen pågår"
-                },
-                "erUnderOppdatering": false,
-                "registrertDato": "2025-01-01T00:00:00.000Z",
-                "endretDato": "2025-01-01T00:00:00.000Z",
-                "svarFrist": null
-              },
-              "saksnummer": "MEL-1072",
-              "sakstype": {
-                "kode": "EU_EOS",
-                "term": "EU/EØS-land"
-              },
-              "sakstema": {
-                "kode": "TRYGDEAVGIFT",
-                "term": "Trygdeavgift"
-              },
-              "land": {
-                "landkoder": ["SE"],
-                "flereLandUkjentHvilke": false
-              },
-              "periode": {
-                "fom": null,
-                "tom": null
-              },
-              "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1072\n",
-              "sisteNotat": null
-            },
-            {
-              "aktivTil": "2026-07-22",
-              "ansvarligID": "Z123456",
-              "oppgaveID": "67",
-              "prioritet": "NORM",
-              "navn": "TRIVIELL KARAFFEL",
-              "hovedpartIdent": "30056928150",
-              "versjon": 1,
-              "behandling": {
-                "behandlingID": 73,
-                "behandlingstype": {
-                  "kode": "FØRSTEGANG",
-                  "term": "Førstegangsbehandling"
-                },
-                "behandlingstema": {
-                  "kode": "PENSJONIST",
-                  "term": "Pensjonist/uføretrygdet"
-                },
-                "behandlingsstatus": {
-                  "kode": "UNDER_BEHANDLING",
-                  "term": "Behandlingen pågår"
-                },
-                "erUnderOppdatering": false,
-                "registrertDato": "2025-01-01T00:00:00.000Z",
-                "endretDato": "2025-01-01T00:00:00.000Z",
-                "svarFrist": null
-              },
-              "saksnummer": "MEL-1073",
-              "sakstype": {
-                "kode": "EU_EOS",
-                "term": "EU/EØS-land"
-              },
-              "sakstema": {
-                "kode": "TRYGDEAVGIFT",
-                "term": "Trygdeavgift"
-              },
-              "land": null,
-              "periode": null,
-              "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1073\n",
-              "sisteNotat": null
-            },
-            {
-              "aktivTil": "2026-07-22",
-              "ansvarligID": "Z123456",
-              "oppgaveID": "68",
-              "prioritet": "NORM",
-              "navn": "TRIVIELL KARAFFEL",
-              "hovedpartIdent": "30056928150",
-              "versjon": 1,
-              "behandling": {
-                "behandlingID": 74,
-                "behandlingstype": {
-                  "kode": "FØRSTEGANG",
-                  "term": "Førstegangsbehandling"
-                },
-                "behandlingstema": {
-                  "kode": "PENSJONIST",
-                  "term": "Pensjonist/uføretrygdet"
-                },
-                "behandlingsstatus": {
-                  "kode": "UNDER_BEHANDLING",
-                  "term": "Behandlingen pågår"
-                },
-                "erUnderOppdatering": false,
-                "registrertDato": "2025-01-01T00:00:00.000Z",
-                "endretDato": "2025-01-01T00:00:00.000Z",
-                "svarFrist": null
-              },
-              "saksnummer": "MEL-1074",
-              "sakstype": {
-                "kode": "FTRL",
-                "term": "Utenfor avtaleland"
-              },
-              "sakstema": {
-                "kode": "TRYGDEAVGIFT",
-                "term": "Trygdeavgift"
-              },
-              "land": null,
-              "periode": null,
-              "oppgaveBeskrivelse": "--- 01.01.2025 00:00 (srvmelosys, Melosys) ---\n  - MEL-1074\n",
               "sisteNotat": null
             }
           ]
@@ -11411,69 +10079,7 @@
         "headers": {
           "content-type": "application/json"
         },
-        "body": [
-          {
-            "begrunnelseFritekst": null,
-            "begrunnelseFritekstEngelsk": null,
-            "begrunnelseKoder": [],
-            "oppfylt": true,
-            "vilkaar": "FTRL_2_5_NORSK_STATSBORGER_EØS_BORGER"
-          },
-          {
-            "begrunnelseFritekst": null,
-            "begrunnelseFritekstEngelsk": null,
-            "begrunnelseKoder": [],
-            "oppfylt": true,
-            "vilkaar": "FTRL_2_5_NORSKE_STATS_TJENESTE"
-          },
-          {
-            "begrunnelseFritekst": null,
-            "begrunnelseFritekstEngelsk": null,
-            "begrunnelseKoder": [],
-            "oppfylt": true,
-            "vilkaar": "FTRL_ARBEIDSTAKER"
-          }
-        ]
-      }
-    },
-    {
-      "request": {
-        "method": "POST",
-        "url": "http://localhost:3333/api/behandlinger/20/resultat/fritekst",
-        "pathname": "/api/behandlinger/20/resultat/fritekst",
-        "normalizedPath": "/api/behandlinger/:behandlingId/resultat/fritekst",
-        "query": {},
-        "headers": {
-          "content-type": "application/json",
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": {
-          "innledningFritekst": "",
-          "begrunnelseFritekst": "",
-          "trygdeavgiftFritekst": ""
-        }
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "aarsavregningID": null,
-          "begrunnelseFritekst": "",
-          "begrunnelseKoder": [],
-          "behandlingsresultatTypeKode": "IKKE_FASTSATT",
-          "fakturaserieReferanse": null,
-          "innledningFritekst": "",
-          "kontrollresultatBegrunnelseKoder": [],
-          "nyVurderingBakgrunn": null,
-          "trygdeavgiftFritekst": "",
-          "utfallRegistreringUnntak": null,
-          "utfallUtpeking": null,
-          "vedtakstype": null
-        }
+        "body": []
       }
     },
     {
@@ -11497,43 +10103,6 @@
         "statusText": "No Content",
         "headers": {},
         "body": null
-      }
-    },
-    {
-      "request": {
-        "method": "POST",
-        "url": "http://localhost:3333/api/dokumenter/v2/mulige-mottakere/20",
-        "pathname": "/api/dokumenter/v2/mulige-mottakere/20",
-        "normalizedPath": "/api/dokumenter/v2/mulige-mottakere/:id",
-        "query": {},
-        "headers": {
-          "content-type": "application/json",
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": {
-          "produserbartdokument": "PLIKTIG_MEDLEM_FTRL",
-          "orgnr": null
-        }
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "hovedMottaker": {
-            "mottakerNavn": "TRIVIELL KARAFFEL",
-            "dokumentNavn": "Vedtak om pliktig medlemskap",
-            "rolle": "BRUKER",
-            "orgnr": null,
-            "aktørId": null,
-            "institusjonID": null
-          },
-          "kopiMottakere": [],
-          "fasteMottakere": []
-        }
       }
     },
     {
@@ -12225,12 +10794,12 @@
               "term": "Saken er opprettet"
             },
             "land": {
-              "landkoder": ["SE"],
+              "landkoder": [],
               "flereLandUkjentHvilke": false
             },
             "periode": {
-              "fom": "2026-01-01",
-              "tom": "2026-12-31"
+              "fom": null,
+              "tom": null
             },
             "opprettetDato": "2025-01-01T00:00:00.000Z",
             "behandlingOversikter": [
@@ -12250,8 +10819,8 @@
                   "term": "Yrkesaktiv"
                 },
                 "soknadsperiode": {
-                  "fom": "2026-01-01",
-                  "tom": "2026-12-31"
+                  "fom": null,
+                  "tom": null
                 },
                 "opprettetDato": "2025-01-01T00:00:00.000Z",
                 "behandlingsresultattype": {
@@ -12315,7 +10884,7 @@
                 "svarFrist": null
               },
               {
-                "behandlingID": 75,
+                "behandlingID": 72,
                 "tittel": "Årsavregning",
                 "behandlingsstatus": {
                   "kode": "OPPRETTET",
@@ -12521,12 +11090,12 @@
               "term": "Saken er opprettet"
             },
             "land": {
-              "landkoder": ["SE"],
+              "landkoder": [],
               "flereLandUkjentHvilke": false
             },
             "periode": {
-              "fom": "2026-01-01",
-              "tom": "2026-12-31"
+              "fom": null,
+              "tom": null
             },
             "opprettetDato": "2025-01-01T00:00:00.000Z",
             "behandlingOversikter": [
@@ -12546,8 +11115,8 @@
                   "term": "Yrkesaktiv"
                 },
                 "soknadsperiode": {
-                  "fom": "2026-01-01",
-                  "tom": "2026-12-31"
+                  "fom": null,
+                  "tom": null
                 },
                 "opprettetDato": "2025-01-01T00:00:00.000Z",
                 "behandlingsresultattype": {
@@ -12654,8 +11223,8 @@
                   "term": "Yrkesaktiv"
                 },
                 "soknadsperiode": {
-                  "fom": "2026-01-01",
-                  "tom": "2026-12-31"
+                  "fom": null,
+                  "tom": null
                 },
                 "opprettetDato": "2025-01-01T00:00:00.000Z",
                 "behandlingsresultattype": {
@@ -12737,12 +11306,12 @@
               "term": "Saken er opprettet"
             },
             "land": {
-              "landkoder": ["SE"],
+              "landkoder": [],
               "flereLandUkjentHvilke": false
             },
             "periode": {
-              "fom": "2026-01-01",
-              "tom": "2026-12-31"
+              "fom": null,
+              "tom": null
             },
             "opprettetDato": "2025-01-01T00:00:00.000Z",
             "behandlingOversikter": [
@@ -12762,8 +11331,8 @@
                   "term": "Yrkesaktiv"
                 },
                 "soknadsperiode": {
-                  "fom": "2026-01-01",
-                  "tom": "2026-12-31"
+                  "fom": null,
+                  "tom": null
                 },
                 "opprettetDato": "2025-01-01T00:00:00.000Z",
                 "behandlingsresultattype": {
@@ -14519,12 +13088,12 @@
               "term": "Saken er opprettet"
             },
             "land": {
-              "landkoder": ["SE"],
+              "landkoder": [],
               "flereLandUkjentHvilke": false
             },
             "periode": {
-              "fom": "2026-01-01",
-              "tom": "2026-12-31"
+              "fom": null,
+              "tom": null
             },
             "opprettetDato": "2025-01-01T00:00:00.000Z",
             "behandlingOversikter": [
@@ -14573,12 +13142,12 @@
               "term": "Saken er opprettet"
             },
             "land": {
-              "landkoder": ["SE"],
+              "landkoder": [],
               "flereLandUkjentHvilke": false
             },
             "periode": {
-              "fom": "2026-01-01",
-              "tom": "2026-12-31"
+              "fom": null,
+              "tom": null
             },
             "opprettetDato": "2025-01-01T00:00:00.000Z",
             "behandlingOversikter": [
@@ -15420,469 +13989,8 @@
               }
             ],
             "hovedpartRolle": "BRUKER"
-          },
-          {
-            "saksnummer": "MEL-1072",
-            "navn": "TRIVIELL KARAFFEL",
-            "sakstema": {
-              "kode": "TRYGDEAVGIFT",
-              "term": "Trygdeavgift"
-            },
-            "sakstype": {
-              "kode": "EU_EOS",
-              "term": "EU/EØS-land"
-            },
-            "saksstatus": {
-              "kode": "OPPRETTET",
-              "term": "Saken er opprettet"
-            },
-            "land": {
-              "landkoder": ["SE"],
-              "flereLandUkjentHvilke": false
-            },
-            "periode": {
-              "fom": "2026-01-01",
-              "tom": "2026-12-31"
-            },
-            "opprettetDato": "2025-01-01T00:00:00.000Z",
-            "behandlingOversikter": [
-              {
-                "behandlingID": 72,
-                "tittel": "Førstegangsbehandling",
-                "behandlingsstatus": {
-                  "kode": "UNDER_BEHANDLING",
-                  "term": "Behandlingen pågår"
-                },
-                "behandlingstype": {
-                  "kode": "FØRSTEGANG",
-                  "term": "Førstegangsbehandling"
-                },
-                "behandlingstema": {
-                  "kode": "PENSJONIST",
-                  "term": "Pensjonist/uføretrygdet"
-                },
-                "soknadsperiode": {
-                  "fom": null,
-                  "tom": null
-                },
-                "opprettetDato": "2025-01-01T00:00:00.000Z",
-                "behandlingsresultattype": {
-                  "kode": "IKKE_FASTSATT",
-                  "term": "Ikke fastsatt"
-                },
-                "svarFrist": null
-              }
-            ],
-            "hovedpartRolle": "BRUKER"
-          },
-          {
-            "saksnummer": "MEL-1073",
-            "navn": "TRIVIELL KARAFFEL",
-            "sakstema": {
-              "kode": "TRYGDEAVGIFT",
-              "term": "Trygdeavgift"
-            },
-            "sakstype": {
-              "kode": "EU_EOS",
-              "term": "EU/EØS-land"
-            },
-            "saksstatus": {
-              "kode": "OPPRETTET",
-              "term": "Saken er opprettet"
-            },
-            "land": {
-              "landkoder": [],
-              "flereLandUkjentHvilke": false
-            },
-            "periode": {
-              "fom": null,
-              "tom": null
-            },
-            "opprettetDato": "2025-01-01T00:00:00.000Z",
-            "behandlingOversikter": [
-              {
-                "behandlingID": 73,
-                "tittel": "Førstegangsbehandling",
-                "behandlingsstatus": {
-                  "kode": "UNDER_BEHANDLING",
-                  "term": "Behandlingen pågår"
-                },
-                "behandlingstype": {
-                  "kode": "FØRSTEGANG",
-                  "term": "Førstegangsbehandling"
-                },
-                "behandlingstema": {
-                  "kode": "PENSJONIST",
-                  "term": "Pensjonist/uføretrygdet"
-                },
-                "soknadsperiode": {
-                  "fom": null,
-                  "tom": null
-                },
-                "opprettetDato": "2025-01-01T00:00:00.000Z",
-                "behandlingsresultattype": {
-                  "kode": "IKKE_FASTSATT",
-                  "term": "Ikke fastsatt"
-                },
-                "svarFrist": null
-              }
-            ],
-            "hovedpartRolle": "BRUKER"
-          },
-          {
-            "saksnummer": "MEL-1074",
-            "navn": "TRIVIELL KARAFFEL",
-            "sakstema": {
-              "kode": "TRYGDEAVGIFT",
-              "term": "Trygdeavgift"
-            },
-            "sakstype": {
-              "kode": "FTRL",
-              "term": "Utenfor avtaleland"
-            },
-            "saksstatus": {
-              "kode": "OPPRETTET",
-              "term": "Saken er opprettet"
-            },
-            "land": {
-              "landkoder": [],
-              "flereLandUkjentHvilke": false
-            },
-            "periode": {
-              "fom": null,
-              "tom": null
-            },
-            "opprettetDato": "2025-01-01T00:00:00.000Z",
-            "behandlingOversikter": [
-              {
-                "behandlingID": 74,
-                "tittel": "Førstegangsbehandling",
-                "behandlingsstatus": {
-                  "kode": "UNDER_BEHANDLING",
-                  "term": "Behandlingen pågår"
-                },
-                "behandlingstype": {
-                  "kode": "FØRSTEGANG",
-                  "term": "Førstegangsbehandling"
-                },
-                "behandlingstema": {
-                  "kode": "PENSJONIST",
-                  "term": "Pensjonist/uføretrygdet"
-                },
-                "soknadsperiode": {
-                  "fom": null,
-                  "tom": null
-                },
-                "opprettetDato": "2025-01-01T00:00:00.000Z",
-                "behandlingsresultattype": {
-                  "kode": "IKKE_FASTSATT",
-                  "term": "Ikke fastsatt"
-                },
-                "svarFrist": null
-              }
-            ],
-            "hovedpartRolle": "BRUKER"
           }
         ]
-      }
-    },
-    {
-      "request": {
-        "method": "POST",
-        "url": "http://localhost:3333/api/mottatteopplysninger/20",
-        "pathname": "/api/mottatteopplysninger/20",
-        "normalizedPath": "/api/mottatteopplysninger/:id",
-        "query": {},
-        "headers": {
-          "content-type": "application/json",
-          "accept": "application/json",
-          "authorization": "[REDACTED]"
-        },
-        "body": {
-          "data": {
-            "juridiskArbeidsgiverNorge": {
-              "antallAnsatte": 0,
-              "antallAdmAnsatte": 0,
-              "antallUtsendte": 0,
-              "andelOmsetningINorge": 0,
-              "andelOppdragINorge": 0,
-              "andelKontrakterINorge": 0,
-              "andelRekruttertINorge": 0,
-              "ekstraArbeidsgivere": [],
-              "erOffentligVirksomhet": null
-            },
-            "personOpplysninger": {
-              "foedestedOgLand": null,
-              "medfolgendeFamilie": []
-            },
-            "foretakUtland": [],
-            "oppholdUtland": {
-              "oppholdsPeriode": {
-                "fom": null,
-                "tom": null
-              },
-              "oppholdslandkoder": [],
-              "ektefelleEllerBarnINorge": null,
-              "studentSemester": null,
-              "studentFinansieringKode": null
-            },
-            "bosted": {
-              "intensjonOmRetur": null,
-              "antallMaanederINorge": 0,
-              "oppgittAdresse": {
-                "tilleggsnavn": null,
-                "gatenavn": null,
-                "husnummerEtasjeLeilighet": null,
-                "region": null,
-                "postboks": null,
-                "postnummer": null,
-                "poststed": null,
-                "landkode": null
-              }
-            },
-            "selvstendigArbeid": {
-              "erSelvstendig": null,
-              "selvstendigForetak": []
-            },
-            "soeknadsland": {
-              "landkoder": ["SE"],
-              "flereLandUkjentHvilke": false
-            },
-            "periode": {
-              "fom": "2026-01-01",
-              "tom": "2026-12-31"
-            },
-            "arbeidPaaLand": {
-              "fysiskeArbeidssteder": [],
-              "erHjemmekontor": null,
-              "erFastArbeidssted": null
-            },
-            "maritimtArbeid": [],
-            "luftfartBaser": [],
-            "trygdedekning": "FULL_DEKNING_FTRL",
-            "representantIUtlandet": null
-          }
-        }
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "data": {
-            "arbeidPaaLand": {
-              "erFastArbeidssted": null,
-              "erHjemmekontor": null,
-              "fysiskeArbeidssteder": []
-            },
-            "bosted": {
-              "antallMaanederINorge": 0,
-              "intensjonOmRetur": null,
-              "oppgittAdresse": {
-                "tilleggsnavn": null,
-                "gatenavn": null,
-                "husnummerEtasjeLeilighet": null,
-                "postboks": null,
-                "postnummer": null,
-                "poststed": null,
-                "region": null,
-                "landkode": null
-              }
-            },
-            "foretakUtland": [],
-            "juridiskArbeidsgiverNorge": {
-              "andelKontrakterINorge": 0,
-              "andelOmsetningINorge": 0,
-              "andelOppdragINorge": 0,
-              "andelRekruttertINorge": 0,
-              "antallAdmAnsatte": 0,
-              "antallAnsatte": 0,
-              "antallUtsendte": 0,
-              "ekstraArbeidsgivere": [],
-              "erOffentligVirksomhet": null
-            },
-            "luftfartBaser": [],
-            "maritimtArbeid": [],
-            "oppholdUtland": {
-              "ektefelleEllerBarnINorge": null,
-              "oppholdsPeriode": {
-                "fom": null,
-                "tom": null
-              },
-              "oppholdslandkoder": [],
-              "studentFinansieringKode": null,
-              "studentSemester": null
-            },
-            "periode": {
-              "fom": "2026-01-01",
-              "tom": "2026-12-31"
-            },
-            "personOpplysninger": {
-              "foedestedOgLand": null,
-              "medfolgendeFamilie": [],
-              "utenlandskIdent": []
-            },
-            "representantIUtlandet": null,
-            "selvstendigArbeid": {
-              "erSelvstendig": null,
-              "selvstendigForetak": []
-            },
-            "soeknadsland": {
-              "landkoder": ["SE"],
-              "flereLandUkjentHvilke": false
-            },
-            "trygdedekning": "FULL_DEKNING_FTRL"
-          },
-          "mottaksdato": "2025-01-01",
-          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS"
-        }
-      }
-    },
-    {
-      "request": {
-        "method": "POST",
-        "url": "http://localhost:3333/graphql/",
-        "pathname": "/graphql/",
-        "normalizedPath": "/graphql/",
-        "query": {},
-        "headers": {
-          "content-type": "application/json",
-          "accept": "*/*",
-          "authorization": "[REDACTED]"
-        },
-        "body": {
-          "operationName": "hentAdresser",
-          "variables": {
-            "behandlingID": 20
-          },
-          "query": "query hentAdresser($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      bostedsadresser {\n        coAdressenavn\n        adresse {\n          tilleggsnavn\n          gatenavn\n          husnummerEtasjeLeilighet\n          postboks\n          postnummer\n          poststed\n          region\n          land\n          __typename\n        }\n        gyldigFraOgMed\n        gyldigTilOgMed\n        kilde\n        master\n        erHistorisk\n        __typename\n      }\n      oppholdsadresser {\n        coAdressenavn\n        adresse {\n          tilleggsnavn\n          gatenavn\n          husnummerEtasjeLeilighet\n          postboks\n          postnummer\n          poststed\n          region\n          land\n          __typename\n        }\n        gyldigFraOgMed\n        gyldigTilOgMed\n        kilde\n        master\n        erHistorisk\n        __typename\n      }\n      kontaktadresser {\n        coAdressenavn\n        semistrukturertAdresse {\n          adresselinje1\n          adresselinje2\n          adresselinje3\n          adresselinje4\n          postnummer\n          poststed\n          land\n          __typename\n        }\n        strukturertAdresse {\n          tilleggsnavn\n          gatenavn\n          husnummerEtasjeLeilighet\n          postboks\n          postnummer\n          poststed\n          region\n          land\n          __typename\n        }\n        gyldigFraOgMed\n        gyldigTilOgMed\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
-        }
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "data": {
-            "hentSaksopplysninger": {
-              "persondata": {
-                "bostedsadresser": [
-                  {
-                    "coAdressenavn": "Co Yo 1",
-                    "adresse": {
-                      "tilleggsnavn": null,
-                      "gatenavn": "bosted gata 3",
-                      "husnummerEtasjeLeilighet": "42",
-                      "postboks": null,
-                      "postnummer": "0001",
-                      "poststed": null,
-                      "region": null,
-                      "land": "STORBRITANNIA",
-                      "__typename": "StrukturertAdresseformat"
-                    },
-                    "gyldigFraOgMed": "1995-06-16",
-                    "gyldigTilOgMed": null,
-                    "kilde": "Folkeregisteret",
-                    "master": "FREG",
-                    "erHistorisk": false,
-                    "__typename": "Bostedsadresse"
-                  },
-                  {
-                    "coAdressenavn": null,
-                    "adresse": {
-                      "tilleggsnavn": "tilleggg navn",
-                      "gatenavn": null,
-                      "husnummerEtasjeLeilighet": null,
-                      "postboks": null,
-                      "postnummer": "2414",
-                      "poststed": "ELVERUM",
-                      "region": null,
-                      "land": "NORGE",
-                      "__typename": "StrukturertAdresseformat"
-                    },
-                    "gyldigFraOgMed": "1957-09-12",
-                    "gyldigTilOgMed": null,
-                    "kilde": "Folkeregisteret",
-                    "master": "FREG",
-                    "erHistorisk": true,
-                    "__typename": "Bostedsadresse"
-                  }
-                ],
-                "oppholdsadresser": [
-                  {
-                    "coAdressenavn": "CO 3",
-                    "adresse": {
-                      "tilleggsnavn": null,
-                      "gatenavn": "opphold gata 1",
-                      "husnummerEtasjeLeilighet": "42 B",
-                      "postboks": null,
-                      "postnummer": "0001",
-                      "poststed": "OSLO",
-                      "region": null,
-                      "land": "NORGE",
-                      "__typename": "StrukturertAdresseformat"
-                    },
-                    "gyldigFraOgMed": "2016-04-23",
-                    "gyldigTilOgMed": null,
-                    "kilde": "Folkeregisteret",
-                    "master": "FREG",
-                    "erHistorisk": false,
-                    "__typename": "Oppholdsadresse"
-                  }
-                ],
-                "kontaktadresser": [
-                  {
-                    "coAdressenavn": "CO 2",
-                    "semistrukturertAdresse": null,
-                    "strukturertAdresse": {
-                      "tilleggsnavn": null,
-                      "gatenavn": "kontakt gata 1",
-                      "husnummerEtasjeLeilighet": "42",
-                      "postboks": null,
-                      "postnummer": "0001",
-                      "poststed": null,
-                      "region": null,
-                      "land": "SVERIGE",
-                      "__typename": "StrukturertAdresseformat"
-                    },
-                    "gyldigFraOgMed": "2016-04-23",
-                    "gyldigTilOgMed": null,
-                    "master": "FREG",
-                    "kilde": "Folkeregisteret",
-                    "erHistorisk": false,
-                    "__typename": "Kontaktadresse"
-                  },
-                  {
-                    "coAdressenavn": null,
-                    "semistrukturertAdresse": {
-                      "adresselinje1": null,
-                      "adresselinje2": null,
-                      "adresselinje3": null,
-                      "adresselinje4": null,
-                      "postnummer": "3011",
-                      "poststed": "DRAMMEN",
-                      "land": "NORGE",
-                      "__typename": "SemistrukturertAdresseformat"
-                    },
-                    "strukturertAdresse": null,
-                    "gyldigFraOgMed": null,
-                    "gyldigTilOgMed": null,
-                    "master": "FREG",
-                    "kilde": "Folkeregisteret",
-                    "erHistorisk": true,
-                    "__typename": "Kontaktadresse"
-                  }
-                ],
-                "__typename": "Personopplysninger"
-              },
-              "__typename": "Saksopplysninger"
-            }
-          }
-        }
       }
     },
     {
@@ -15939,238 +14047,6 @@
           "authorization": "[REDACTED]"
         },
         "body": {
-          "operationName": "hentPersoninfo",
-          "variables": {
-            "behandlingID": 20
-          },
-          "query": "query hentPersoninfo($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      folkeregisterpersonstatuser {\n        kode\n        tekst\n        master\n        kilde\n        fregGyldighetstidspunkt\n        erHistorisk\n        __typename\n      }\n      foedsel {\n        foedeland\n        foedested\n        foedselsaar\n        foedselsdato\n        __typename\n      }\n      sivilstand {\n        type\n        relatertVedSivilstand\n        gyldigFraOgMed\n        bekreftelsesdato\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
-        }
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "data": {
-            "hentSaksopplysninger": {
-              "persondata": {
-                "folkeregisterpersonstatuser": [
-                  {
-                    "kode": "BOSATT",
-                    "tekst": "Bosatt etter folkeregisterloven",
-                    "master": "FREG",
-                    "kilde": "Folkeregisteret",
-                    "fregGyldighetstidspunkt": "1990-01-01",
-                    "erHistorisk": false,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "MIDLERTIDIG",
-                    "tekst": "Midlertidig (D-nummer)",
-                    "master": "FREG",
-                    "kilde": "Folkeregisteret",
-                    "fregGyldighetstidspunkt": "2020-10-22",
-                    "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "UTFLYTTET",
-                    "tekst": "Utflyttet",
-                    "master": "FREG",
-                    "kilde": "Folkeregisteret",
-                    "fregGyldighetstidspunkt": "2012-03-15",
-                    "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  }
-                ],
-                "foedsel": {
-                  "foedeland": "NO",
-                  "foedested": "OSLO",
-                  "foedselsaar": 1969,
-                  "foedselsdato": "1969-05-30",
-                  "__typename": "Foedsel"
-                },
-                "sivilstand": [
-                  {
-                    "type": "Gift",
-                    "relatertVedSivilstand": "12028536819",
-                    "gyldigFraOgMed": "2011-02-02",
-                    "bekreftelsesdato": null,
-                    "master": "Freg",
-                    "kilde": "KILDE_DSF",
-                    "erHistorisk": false,
-                    "__typename": "Sivilstand"
-                  },
-                  {
-                    "type": "Gift",
-                    "relatertVedSivilstand": "21075114491",
-                    "gyldigFraOgMed": "2019-08-03",
-                    "bekreftelsesdato": null,
-                    "master": "Freg",
-                    "kilde": "FREG",
-                    "erHistorisk": false,
-                    "__typename": "Sivilstand"
-                  },
-                  {
-                    "type": "Separert",
-                    "relatertVedSivilstand": "12028536819",
-                    "gyldigFraOgMed": "2013-01-03",
-                    "bekreftelsesdato": null,
-                    "master": "NAV (PDL)",
-                    "kilde": "Tyske trygdemyndigheter, TYSKLAND",
-                    "erHistorisk": true,
-                    "__typename": "Sivilstand"
-                  },
-                  {
-                    "type": "Skilt",
-                    "relatertVedSivilstand": null,
-                    "gyldigFraOgMed": "2014-04-09",
-                    "bekreftelsesdato": null,
-                    "master": "NAV (PDL)",
-                    "kilde": "Tyske trygdemyndigheter, TYSKLAND",
-                    "erHistorisk": true,
-                    "__typename": "Sivilstand"
-                  }
-                ],
-                "__typename": "Personopplysninger"
-              },
-              "__typename": "Saksopplysninger"
-            }
-          }
-        }
-      }
-    },
-    {
-      "request": {
-        "method": "POST",
-        "url": "http://localhost:3333/graphql/",
-        "pathname": "/graphql/",
-        "normalizedPath": "/graphql/",
-        "query": {},
-        "headers": {
-          "content-type": "application/json",
-          "accept": "*/*",
-          "authorization": "[REDACTED]"
-        },
-        "body": {
-          "operationName": "hentPersoninfo",
-          "variables": {
-            "behandlingID": 20
-          },
-          "query": "query hentPersoninfo($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      folkeregisterpersonstatuser {\n        kode\n        tekst\n        master\n        kilde\n        fregGyldighetstidspunkt\n        erHistorisk\n        __typename\n      }\n      foedsel {\n        foedeland\n        foedested\n        foedselsaar\n        foedselsdato\n        __typename\n      }\n      sivilstand {\n        type\n        relatertVedSivilstand\n        gyldigFraOgMed\n        bekreftelsesdato\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
-        }
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "data": {
-            "hentSaksopplysninger": {
-              "persondata": {
-                "folkeregisterpersonstatuser": [
-                  {
-                    "kode": "BOSATT",
-                    "tekst": "Bosatt etter folkeregisterloven",
-                    "master": "FREG",
-                    "kilde": "Folkeregisteret",
-                    "fregGyldighetstidspunkt": "1990-01-01",
-                    "erHistorisk": false,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "MIDLERTIDIG",
-                    "tekst": "Midlertidig (D-nummer)",
-                    "master": "FREG",
-                    "kilde": "Folkeregisteret",
-                    "fregGyldighetstidspunkt": "2020-10-22",
-                    "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "UTFLYTTET",
-                    "tekst": "Utflyttet",
-                    "master": "FREG",
-                    "kilde": "Folkeregisteret",
-                    "fregGyldighetstidspunkt": "2012-03-15",
-                    "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  }
-                ],
-                "foedsel": {
-                  "foedeland": "NO",
-                  "foedested": "OSLO",
-                  "foedselsaar": 1969,
-                  "foedselsdato": "1969-05-30",
-                  "__typename": "Foedsel"
-                },
-                "sivilstand": [
-                  {
-                    "type": "Gift",
-                    "relatertVedSivilstand": "12028536819",
-                    "gyldigFraOgMed": "2011-02-02",
-                    "bekreftelsesdato": null,
-                    "master": "Freg",
-                    "kilde": "KILDE_DSF",
-                    "erHistorisk": false,
-                    "__typename": "Sivilstand"
-                  },
-                  {
-                    "type": "Gift",
-                    "relatertVedSivilstand": "21075114491",
-                    "gyldigFraOgMed": "2019-08-03",
-                    "bekreftelsesdato": null,
-                    "master": "Freg",
-                    "kilde": "FREG",
-                    "erHistorisk": false,
-                    "__typename": "Sivilstand"
-                  },
-                  {
-                    "type": "Separert",
-                    "relatertVedSivilstand": "12028536819",
-                    "gyldigFraOgMed": "2013-01-03",
-                    "bekreftelsesdato": null,
-                    "master": "NAV (PDL)",
-                    "kilde": "Tyske trygdemyndigheter, TYSKLAND",
-                    "erHistorisk": true,
-                    "__typename": "Sivilstand"
-                  },
-                  {
-                    "type": "Skilt",
-                    "relatertVedSivilstand": null,
-                    "gyldigFraOgMed": "2014-04-09",
-                    "bekreftelsesdato": null,
-                    "master": "NAV (PDL)",
-                    "kilde": "Tyske trygdemyndigheter, TYSKLAND",
-                    "erHistorisk": true,
-                    "__typename": "Sivilstand"
-                  }
-                ],
-                "__typename": "Personopplysninger"
-              },
-              "__typename": "Saksopplysninger"
-            }
-          }
-        }
-      }
-    },
-    {
-      "request": {
-        "method": "POST",
-        "url": "http://localhost:3333/graphql/",
-        "pathname": "/graphql/",
-        "normalizedPath": "/graphql/",
-        "query": {},
-        "headers": {
-          "content-type": "application/json",
-          "accept": "*/*",
-          "authorization": "[REDACTED]"
-        },
-        "body": {
           "operationName": "hentPersonopplysninger",
           "variables": {
             "behandlingID": 20
@@ -16240,198 +14116,6 @@
                     "type": "Skilt",
                     "erHistorisk": true,
                     "__typename": "Sivilstand"
-                  }
-                ],
-                "__typename": "Personopplysninger"
-              },
-              "__typename": "Saksopplysninger"
-            }
-          }
-        }
-      }
-    },
-    {
-      "request": {
-        "method": "POST",
-        "url": "http://localhost:3333/graphql/",
-        "pathname": "/graphql/",
-        "normalizedPath": "/graphql/",
-        "query": {},
-        "headers": {
-          "content-type": "application/json",
-          "accept": "*/*",
-          "authorization": "[REDACTED]"
-        },
-        "body": {
-          "operationName": "hentPersonopplysninger",
-          "variables": {
-            "behandlingID": 20
-          },
-          "query": "query hentPersonopplysninger($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      navn {\n        fornavn\n        mellomnavn\n        etternavn\n        __typename\n      }\n      kjoenn\n      folkeregisterpersonstatuser {\n        kode\n        erHistorisk\n        __typename\n      }\n      folkeregisteridentifikator\n      statsborgerskap {\n        land\n        erHistorisk\n        __typename\n      }\n      sivilstand {\n        type\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
-        }
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "data": {
-            "hentSaksopplysninger": {
-              "persondata": {
-                "navn": {
-                  "fornavn": "KARAFFEL",
-                  "mellomnavn": null,
-                  "etternavn": "TRIVIELL",
-                  "__typename": "Navn"
-                },
-                "kjoenn": "MANN",
-                "folkeregisterpersonstatuser": [
-                  {
-                    "kode": "BOSATT",
-                    "erHistorisk": false,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "MIDLERTIDIG",
-                    "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  },
-                  {
-                    "kode": "UTFLYTTET",
-                    "erHistorisk": true,
-                    "__typename": "Folkeregisterpersonstatus"
-                  }
-                ],
-                "folkeregisteridentifikator": "30056928150",
-                "statsborgerskap": [
-                  {
-                    "land": "NORGE",
-                    "erHistorisk": false,
-                    "__typename": "Statsborgerskap"
-                  }
-                ],
-                "sivilstand": [
-                  {
-                    "type": "Gift",
-                    "erHistorisk": false,
-                    "__typename": "Sivilstand"
-                  },
-                  {
-                    "type": "Gift",
-                    "erHistorisk": false,
-                    "__typename": "Sivilstand"
-                  },
-                  {
-                    "type": "Separert",
-                    "erHistorisk": true,
-                    "__typename": "Sivilstand"
-                  },
-                  {
-                    "type": "Skilt",
-                    "erHistorisk": true,
-                    "__typename": "Sivilstand"
-                  }
-                ],
-                "__typename": "Personopplysninger"
-              },
-              "__typename": "Saksopplysninger"
-            }
-          }
-        }
-      }
-    },
-    {
-      "request": {
-        "method": "POST",
-        "url": "http://localhost:3333/graphql/",
-        "pathname": "/graphql/",
-        "normalizedPath": "/graphql/",
-        "query": {},
-        "headers": {
-          "content-type": "application/json",
-          "accept": "*/*",
-          "authorization": "[REDACTED]"
-        },
-        "body": {
-          "operationName": "hentStatsborgerskap",
-          "variables": {
-            "behandlingID": 20
-          },
-          "query": "query hentStatsborgerskap($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      statsborgerskap {\n        land\n        bekreftelsesdato\n        gyldigFraOgMed\n        gyldigTilOgMed\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
-        }
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "data": {
-            "hentSaksopplysninger": {
-              "persondata": {
-                "statsborgerskap": [
-                  {
-                    "land": "NORGE",
-                    "bekreftelsesdato": null,
-                    "gyldigFraOgMed": "1990-01-01",
-                    "gyldigTilOgMed": null,
-                    "master": "FREG",
-                    "kilde": "Folkeregisteret",
-                    "erHistorisk": false,
-                    "__typename": "Statsborgerskap"
-                  }
-                ],
-                "__typename": "Personopplysninger"
-              },
-              "__typename": "Saksopplysninger"
-            }
-          }
-        }
-      }
-    },
-    {
-      "request": {
-        "method": "POST",
-        "url": "http://localhost:3333/graphql/",
-        "pathname": "/graphql/",
-        "normalizedPath": "/graphql/",
-        "query": {},
-        "headers": {
-          "content-type": "application/json",
-          "accept": "*/*",
-          "authorization": "[REDACTED]"
-        },
-        "body": {
-          "operationName": "hentStatsborgerskap",
-          "variables": {
-            "behandlingID": 20
-          },
-          "query": "query hentStatsborgerskap($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      statsborgerskap {\n        land\n        bekreftelsesdato\n        gyldigFraOgMed\n        gyldigTilOgMed\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
-        }
-      },
-      "response": {
-        "status": 200,
-        "statusText": "OK",
-        "headers": {
-          "content-type": "application/json"
-        },
-        "body": {
-          "data": {
-            "hentSaksopplysninger": {
-              "persondata": {
-                "statsborgerskap": [
-                  {
-                    "land": "NORGE",
-                    "bekreftelsesdato": null,
-                    "gyldigFraOgMed": "1990-01-01",
-                    "gyldigTilOgMed": null,
-                    "master": "FREG",
-                    "kilde": "Folkeregisteret",
-                    "erHistorisk": false,
-                    "__typename": "Statsborgerskap"
                   }
                 ],
                 "__typename": "Personopplysninger"

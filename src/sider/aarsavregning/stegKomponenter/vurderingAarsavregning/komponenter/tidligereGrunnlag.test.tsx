@@ -57,7 +57,7 @@ describe("TidligereGrunnlag", () => {
         totalInntekt: 500000,
         totalAvgift: 25500,
       },
-      tidligereTrygdeavgiftFraAvgiftssystemet: undefined,
+      tidligereInnbetaltTrygdeavgift: undefined,
       tidligereÅrsavregningManueltAvgiftBeloep: undefined,
     },
     ...overrides,
@@ -87,7 +87,7 @@ describe("TidligereGrunnlag", () => {
           totalInntekt: 0,
           totalAvgift: 0,
         },
-        tidligereTrygdeavgiftFraAvgiftssystemet: undefined,
+        tidligereInnbetaltTrygdeavgift: undefined,
         tidligereÅrsavregningManueltAvgiftBeloep: 15000,
       },
     });

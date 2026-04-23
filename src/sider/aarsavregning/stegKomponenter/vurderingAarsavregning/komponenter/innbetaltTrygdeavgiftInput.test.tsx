@@ -11,26 +11,26 @@ vi.mock("../../../../../felleskomponenter/forms", () => ({
   ),
 }));
 
-import { TrygdeavgiftFraAvgiftssystemetInput } from "./trygdeavgiftFraAvgiftssystemetInput";
+import { InnbetaltTrygdeavgiftInput } from "./innbetaltTrygdeavgiftInput";
 
-describe("TrygdeavgiftFraAvgiftssystemetInput", () => {
+describe("InnbetaltTrygdeavgiftInput", () => {
   it("rendrer label", () => {
-    render(<TrygdeavgiftFraAvgiftssystemetInput control={{} as any} redigerbart={true} erNyAarsavregning={false} />);
-    expect(screen.getByText("Trygdeavgift fra Avgiftssystemet")).toBeDefined();
+    render(<InnbetaltTrygdeavgiftInput control={{} as any} redigerbart={true} erNyAarsavregning={false} />);
+    expect(screen.getByText("Innbetalt trygdeavgift")).toBeDefined();
   });
 
   it("viser beskrivelse for ny årsavregning", () => {
-    render(<TrygdeavgiftFraAvgiftssystemetInput control={{} as any} redigerbart={true} erNyAarsavregning={true} />);
+    render(<InnbetaltTrygdeavgiftInput control={{} as any} redigerbart={true} erNyAarsavregning={true} />);
     expect(screen.getByText("Du skal kun endre hvis tidligere oppgitte beløp er feil")).toBeDefined();
   });
 
   it("viser ingen beskrivelse for eksisterende årsavregning", () => {
-    render(<TrygdeavgiftFraAvgiftssystemetInput control={{} as any} redigerbart={true} erNyAarsavregning={false} />);
+    render(<InnbetaltTrygdeavgiftInput control={{} as any} redigerbart={true} erNyAarsavregning={false} />);
     expect(screen.queryByText("Du skal kun endre hvis tidligere oppgitte beløp er feil")).toBeNull();
   });
 
   it("er readOnly når ikke redigerbart", () => {
-    render(<TrygdeavgiftFraAvgiftssystemetInput control={{} as any} redigerbart={false} erNyAarsavregning={false} />);
+    render(<InnbetaltTrygdeavgiftInput control={{} as any} redigerbart={false} erNyAarsavregning={false} />);
     expect(screen.getByRole("textbox").getAttribute("readonly")).not.toBeNull();
   });
 });

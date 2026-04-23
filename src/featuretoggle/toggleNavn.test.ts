@@ -2,8 +2,8 @@ import { describe, it, expect } from "vitest";
 import { alleToggleNavn, FEATURE_TOGGLE, MELOSYS_PENSJONIST, ÅRSAVREGNING } from "./toggleNavn";
 
 describe("toggleNavn", () => {
-  it("alleToggleNavn inneholder 11 toggles", () => {
-    expect(alleToggleNavn).toHaveLength(11);
+  it("alleToggleNavn inneholder 12 toggles", () => {
+    expect(alleToggleNavn).toHaveLength(12);
   });
 
   it("FEATURE_TOGGLE er definert", () => {
