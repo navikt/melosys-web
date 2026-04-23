@@ -23,10 +23,10 @@ export function hentAlleFakturaserierForSak(saksnummer: string) {
   return doThenDispatch(
     async () => {
       const referanser = await Api.Fagsaker.fagsak.hentFakturaserieReferanser(saksnummer);
-      const alleSerier = await Promise.all(
+      const resultater = await Promise.allSettled(
         referanser.map((ref: string) => Api.Faktureringskomponenten.hentFakturaserie(ref)),
       );
-      return alleSerier;
+      return resultater.filter((r): r is PromiseFulfilledResult<any> => r.status === "fulfilled").map((r) => r.value);
     },
     {
       OK: Types.OK,
