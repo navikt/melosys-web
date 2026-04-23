@@ -51,6 +51,8 @@ import {
 } from "./aarsavregningUtenEllerDeltGrunnlag";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding, finnAktivFeilmeldingForMedlemskapsperioder } from "./valideringsfeil";
+import { useFeatureToggle } from "../../../../../featuretoggle";
+import { MELOSYS_PENSJONIST_EØS } from "../../../../../featuretoggle/toggleNavn";
 
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT, OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET } =
   MKV.Koder.endeligAvgiftValg;
@@ -165,6 +167,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
   const endeligAvgiftValg = useWatch({ control, name: "endeligAvgiftValg" });
   const manueltAvgiftBeloep = useWatch({ control, name: "manueltAvgiftBeloep" });
+  const erPensjonistToggleEnabled_EØS = useFeatureToggle(MELOSYS_PENSJONIST_EØS);
 
   const debouncedBeregningRef = useRef<ReturnType<typeof Utils._debounce> | null>(null);
   const forrigetrygdeavgiftFraAvgiftssystemet = useRef(trygdeavgiftFraAvgiftssystemet);
@@ -918,7 +921,11 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                 remove={slettMedlemskapsperiode}
                 formValues={formValues}
                 handleLeggTil={leggTilDefaultMedlemskapsperiode}
-                visLeggTil={true}
+                visLeggTil={
+                  (erPensjonistToggleEnabled_EØS === true &&
+                    endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) ||
+                  erPensjonistToggleEnabled_EØS === false
+                }
                 maxDate={maxDate}
                 minDate={minDate}
                 trygdedekninger={erHelseutgift ? [] : trygdedekninger}
