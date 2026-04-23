@@ -128,12 +128,8 @@ describe("TrygdeavgiftsperioderTabell", () => {
       }),
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
-    expect(
-      screen.getByText(
-        "* Beregnet etter 25 %-regelen: Trygdeavgift skal ikke utgjøre mer enn 25 % av inntekt over minstebeløpet.",
-      ),
-    ).toBeDefined();
-    expect(screen.getByText("** Inntekten er under minstebeløpet.")).toBeDefined();
+    expect(screen.getByText("* Beregnet etter 25 %-regelen")).toBeDefined();
+    expect(screen.getByText("** Inntekten er under minstebeløpet")).toBeDefined();
   });
 
   it("viser ingen fotnoter for kun ordinære perioder", () => {

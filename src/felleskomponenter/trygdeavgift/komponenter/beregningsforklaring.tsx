@@ -17,11 +17,11 @@ interface Beregningsregelforklaring {
 const BEREGNINGSREGEL_FORKLARINGER: Partial<Record<Beregningsregel, Beregningsregelforklaring>> = {
   TJUEFEM_PROSENT_REGEL: {
     symbol: "*",
-    tekst: "Beregnet etter 25 %-regelen: Trygdeavgift skal ikke utgjøre mer enn 25 % av inntekt over minstebeløpet.",
+    tekst: "Beregnet etter 25 %-regelen",
   },
   MINSTEBELØP: {
     symbol: "**",
-    tekst: "Inntekten er under minstebeløpet.",
+    tekst: "Inntekten er under minstebeløpet",
     alertTekst: "Trygdeavgift skal ikke betales da inntekten er under minstebeløpet.",
   },
 };

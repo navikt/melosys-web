@@ -206,11 +206,7 @@ export class TrygdeavgiftPage extends StegvelgerPage {
   async verifiser25ProsentRegel(): Promise<void> {
     await this.verifiserTrygdeavgiftsTabellSynlig();
     await expect(this.page.getByRole("cell", { name: "*" })).toBeVisible();
-    await expect(
-      this.page.getByText(
-        "* Beregnet etter 25 %-regelen: Trygdeavgift skal ikke utgjøre mer enn 25 % av inntekt over minstebeløpet.",
-      ),
-    ).toBeVisible();
+    await expect(this.page.getByText("* Beregnet etter 25 %-regelen")).toBeVisible();
   }
 
   /**
