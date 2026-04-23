@@ -23,6 +23,8 @@ describe("EndeligAvgiftValgRadioGroup", () => {
     redigerbart: true,
     handleEndeligAvgiftValgChange: vi.fn(),
     endeligAvgiftValg: undefined as string | undefined,
+    endretPeriodeFraAvgiftssystemetValg: true,
+    harInnbetaltTrygdeavgift: true,
   };
 
   it("rendrer alle radioknapper", () => {

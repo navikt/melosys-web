@@ -371,7 +371,7 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - Datovalidering (MELOSYS-761
 });
 
 describe("aarsavregningUtenEllerDeltGrunnlagSchema - bostedLandkode validering", () => {
-  it("skal kreve bostedLandkode for HELSEUTGIFTDEKKESPERIODE", async () => {
+  it("skal godta tom bostedLandkode for HELSEUTGIFTDEKKESPERIODE", async () => {
     const values = {
       endeligAvgiftValg: OPPLYSNINGER_ENDRET,
       avgiftspliktigperioder: [
@@ -390,8 +390,7 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - bostedLandkode validering",
     };
 
     const err = await validate(values, { aar: 2024 });
-    expect(err).toBeTruthy();
-    expect(hasError(err, "avgiftspliktigperioder[0].bostedLandkode", "Må fylles ut")).toBe(true);
+    expect(err).toBeFalsy();
   });
 
   it("skal godta utfylt bostedLandkode for HELSEUTGIFTDEKKESPERIODE", async () => {
