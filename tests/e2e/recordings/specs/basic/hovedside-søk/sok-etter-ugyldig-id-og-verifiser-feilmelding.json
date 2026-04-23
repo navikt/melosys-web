@@ -1105,6 +1105,35 @@
           }
         ]
       }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3333/api/fagsaker/sok?aktiveBehandlinger=false",
+        "pathname": "/api/fagsaker/sok",
+        "normalizedPath": "/api/fagsaker/sok",
+        "query": {
+          "aktiveBehandlinger": "false"
+        },
+        "headers": {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": {
+          "ident": null,
+          "saksnummer": "INVALID123",
+          "orgnr": null
+        }
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": []
+      }
     }
   ]
 }

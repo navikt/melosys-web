@@ -107,7 +107,7 @@
         },
         "body": [
           {
-            "id": 150,
+            "id": 10,
             "fomDato": "2026-01-01",
             "tomDato": "2026-12-31",
             "bestemmelse": "FTRL_KAP2_2_5_FØRSTE_LEDD_A",
@@ -138,18 +138,18 @@
           "content-type": "application/json"
         },
         "body": {
-          "behandlingsresultatTypeKode": "IKKE_FASTSATT",
-          "begrunnelseKoder": [],
+          "aarsavregningID": null,
           "begrunnelseFritekst": null,
+          "begrunnelseKoder": [],
+          "behandlingsresultatTypeKode": "IKKE_FASTSATT",
+          "fakturaserieReferanse": null,
           "innledningFritekst": null,
-          "trygdeavgiftFritekst": null,
+          "kontrollresultatBegrunnelseKoder": [],
           "nyVurderingBakgrunn": null,
+          "trygdeavgiftFritekst": null,
           "utfallRegistreringUnntak": null,
           "utfallUtpeking": null,
-          "vedtakstype": null,
-          "kontrollresultatBegrunnelseKoder": [],
-          "fakturaserieReferanse": null,
-          "aarsavregningID": null
+          "vedtakstype": null
         }
       }
     },
@@ -180,7 +180,7 @@
               "trygdedekning": "FULL_DEKNING_FTRL",
               "inntektskildetype": "NÆRINGSINNTEKT",
               "avgiftssats": null,
-              "avgiftPerMd": 174,
+              "avgiftPerMd": 173,
               "beregningsregel": "TJUEFEM_PROSENT_REGEL",
               "harSammenslåtteInntektskilder": false,
               "avgiftsdel": null
@@ -235,7 +235,7 @@
               "trygdedekning": "FULL_DEKNING_FTRL",
               "inntektskildetype": "NÆRINGSINNTEKT",
               "avgiftssats": null,
-              "avgiftPerMd": 174,
+              "avgiftPerMd": 173,
               "beregningsregel": "TJUEFEM_PROSENT_REGEL",
               "harSammenslåtteInntektskilder": false,
               "avgiftsdel": null
@@ -285,39 +285,37 @@
         "body": {
           "behandlingID": 20,
           "oppsummering": {
+            "behandlingsfrist": "2025-01-01",
+            "behandlingsresultattype": {
+              "kode": "IKKE_FASTSATT",
+              "term": "Ikke fastsatt"
+            },
             "behandlingsstatus": {
               "kode": "UNDER_BEHANDLING",
               "term": "Behandlingen pågår"
-            },
-            "behandlingstype": {
-              "kode": "FØRSTEGANG",
-              "term": "Førstegangsbehandling"
             },
             "behandlingstema": {
               "kode": "YRKESAKTIV",
               "term": "Yrkesaktiv"
             },
-            "registrertDato": "2025-01-01T00:00:00.000Z",
-            "endretDato": "2025-01-01T00:00:00.000Z",
+            "behandlingstype": {
+              "kode": "FØRSTEGANG",
+              "term": "Førstegangsbehandling"
+            },
             "endretAvNavn": "Lokal Testbruker",
+            "endretDato": "2025-01-01T00:00:00.000Z",
+            "registrertDato": "2025-01-01T00:00:00.000Z",
             "sisteOpplysningerHentetDato": "2025-01-01T00:00:00.000Z",
-            "svarFrist": null,
-            "behandlingsfrist": "2025-01-01",
-            "behandlingsresultattype": {
-              "kode": "IKKE_FASTSATT",
-              "term": "Ikke fastsatt"
-            }
+            "svarFrist": null
           },
           "saksopplysninger": {
             "arbeidsforhold": [
               {
-                "arbeidsforholdID": "123",
-                "arbeidsforholdIDnav": 123,
+                "Aordning": null,
                 "ansettelsesPeriode": {
-                  "fom": "2021-04-08",
+                  "fom": "2021-04-23",
                   "tom": null
                 },
-                "arbeidsforholdstype": "ordinaertArbeidsforhold",
                 "arbeidsavtaler": [
                   {
                     "arbeidstidsordning": {
@@ -330,13 +328,13 @@
                       "term": "KONSULENT"
                     },
                     "gyldighetsperiode": {
-                      "fom": "2021-04-08",
+                      "fom": "2021-04-23",
                       "tom": null
                     },
                     "avtaltArbeidstimerPerUke": 37.5,
                     "stillingsprosent": 100,
                     "beregnetAntallTimerPrUke": 37.5,
-                    "endringsdatoStillingsprosent": "2021-04-08",
+                    "endringsdatoStillingsprosent": "2021-04-23",
                     "skipsregister": null,
                     "skipstype": null,
                     "maritimArbeidsavtale": false,
@@ -345,74 +343,76 @@
                     "fartsomraade": null
                   }
                 ],
-                "permisjonOgPermittering": [],
-                "utenlandsopphold": [],
-                "arbeidsgivertype": "ORGANISASJON",
+                "arbeidsforholdID": "123",
+                "arbeidsforholdIDnav": 123,
+                "arbeidsforholdstype": "ordinaertArbeidsforhold",
                 "arbeidsgiverID": "999999999",
+                "arbeidsgivertype": "ORGANISASJON",
                 "arbeidstakerID": "30056928150",
-                "opplysningspliktigtype": "ORGANISASJON",
                 "opplysningspliktigID": "999999999",
+                "opplysningspliktigtype": "ORGANISASJON",
                 "opprettelsestidspunkt": "2025-01-01T00:00:00.000Z",
+                "permisjonOgPermittering": [],
                 "sistBekreftet": "2025-01-01T00:00:00.000Z",
-                "Aordning": null,
-                "timerTimelonnet": []
+                "timerTimelonnet": [],
+                "utenlandsopphold": []
               }
             ],
             "organisasjoner": [
               {
-                "orgnr": "888888888",
+                "forretningsadresse": {
+                  "gateadresse": {
+                    "gatenavn": "Adresselinje1",
+                    "gatenummer": null,
+                    "husbokstav": null,
+                    "husnummer": null
+                  },
+                  "land": "NORGE",
+                  "postnr": "0010",
+                  "poststed": "Oslo"
+                },
                 "navn": "Steinars Stein AS",
                 "oppstartdato": null,
                 "organisasjonsform": "Aksjeselskap",
-                "forretningsadresse": {
-                  "gateadresse": {
-                    "gatenavn": "Adresselinje1",
-                    "gatenummer": null,
-                    "husnummer": null,
-                    "husbokstav": null
-                  },
-                  "postnr": "0010",
-                  "poststed": "Oslo",
-                  "land": "NORGE"
-                },
+                "orgnr": "888888888",
                 "postadresse": {
                   "gateadresse": {
                     "gatenavn": "Adresselinje1",
                     "gatenummer": null,
-                    "husnummer": null,
-                    "husbokstav": null
+                    "husbokstav": null,
+                    "husnummer": null
                   },
+                  "land": "NORGE",
                   "postnr": "0010",
-                  "poststed": "Oslo",
-                  "land": "NORGE"
+                  "poststed": "Oslo"
                 }
               },
               {
-                "orgnr": "999999999",
-                "navn": "Ståles Stål AS",
-                "oppstartdato": null,
-                "organisasjonsform": "Aksjeselskap",
                 "forretningsadresse": {
                   "gateadresse": {
                     "gatenavn": "Adresselinje1",
                     "gatenummer": null,
-                    "husnummer": null,
-                    "husbokstav": null
+                    "husbokstav": null,
+                    "husnummer": null
                   },
+                  "land": "NORGE",
                   "postnr": "0010",
-                  "poststed": "Oslo",
-                  "land": "NORGE"
+                  "poststed": "Oslo"
                 },
+                "navn": "Ståles Stål AS",
+                "oppstartdato": null,
+                "organisasjonsform": "Aksjeselskap",
+                "orgnr": "999999999",
                 "postadresse": {
                   "gateadresse": {
                     "gatenavn": "Adresselinje1",
                     "gatenummer": null,
-                    "husnummer": null,
-                    "husbokstav": null
+                    "husbokstav": null,
+                    "husnummer": null
                   },
+                  "land": "NORGE",
                   "postnr": "0010",
-                  "poststed": "Oslo",
-                  "land": "NORGE"
+                  "poststed": "Oslo"
                 }
               }
             ],
@@ -715,15 +715,15 @@
               "frilansInntektMaanedListe": []
             },
             "sed": {
-              "rinaSaksnummer": null,
-              "rinaDokumentID": null,
+              "bucType": null,
+              "erEndring": false,
               "fnr": null,
-              "lovvalgsperiode": null,
               "lovvalgsbestemmelse": null,
               "lovvalgslandKode": null,
-              "erEndring": false,
-              "sedType": null,
-              "bucType": null
+              "lovvalgsperiode": null,
+              "rinaDokumentID": null,
+              "rinaSaksnummer": null,
+              "sedType": null
             }
           },
           "redigerbart": true
@@ -842,8 +842,16 @@
           "content-type": "application/json"
         },
         "body": {
-          "saksnummer": "MEL-1020",
+          "betalingsvalg": null,
+          "endretDato": "2025-01-01T00:00:00.000Z",
           "gsakSaksnummer": null,
+          "hovedpartRolle": "BRUKER",
+          "registrertDato": "2025-01-01T00:00:00.000Z",
+          "saksnummer": "MEL-1020",
+          "saksstatus": {
+            "kode": "OPPRETTET",
+            "term": "Saken er opprettet"
+          },
           "sakstema": {
             "kode": "MEDLEMSKAP_LOVVALG",
             "term": "Medlemskap og lovvalg"
@@ -851,15 +859,7 @@
           "sakstype": {
             "kode": "FTRL",
             "term": "Utenfor avtaleland"
-          },
-          "saksstatus": {
-            "kode": "OPPRETTET",
-            "term": "Saken er opprettet"
-          },
-          "betalingsvalg": null,
-          "registrertDato": "2025-01-01T00:00:00.000Z",
-          "endretDato": "2025-01-01T00:00:00.000Z",
-          "hovedpartRolle": "BRUKER"
+          }
         }
       }
     },
@@ -2385,55 +2385,14 @@
         },
         "body": {
           "data": {
-            "soeknadsland": {
-              "landkoder": ["SE"],
-              "flereLandUkjentHvilke": false
-            },
-            "periode": {
-              "fom": "2026-01-01",
-              "tom": "2026-12-31"
-            },
-            "personOpplysninger": {
-              "utenlandskIdent": [],
-              "medfolgendeFamilie": [],
-              "foedestedOgLand": null
-            },
             "arbeidPaaLand": {
-              "fysiskeArbeidssteder": [],
+              "erFastArbeidssted": null,
               "erHjemmekontor": null,
-              "erFastArbeidssted": null
+              "fysiskeArbeidssteder": []
             },
-            "foretakUtland": [],
-            "oppholdUtland": {
-              "oppholdslandkoder": [],
-              "oppholdsPeriode": {
-                "fom": null,
-                "tom": null
-              },
-              "studentFinansieringKode": null,
-              "studentSemester": null,
-              "ektefelleEllerBarnINorge": null
-            },
-            "selvstendigArbeid": {
-              "erSelvstendig": null,
-              "selvstendigForetak": []
-            },
-            "juridiskArbeidsgiverNorge": {
-              "antallAdmAnsatte": 0,
-              "antallAnsatte": 0,
-              "antallUtsendte": 0,
-              "andelOmsetningINorge": 0,
-              "andelOppdragINorge": 0,
-              "andelKontrakterINorge": 0,
-              "andelRekruttertINorge": 0,
-              "ekstraArbeidsgivere": [],
-              "erOffentligVirksomhet": null
-            },
-            "maritimtArbeid": [],
-            "luftfartBaser": [],
             "bosted": {
-              "intensjonOmRetur": null,
               "antallMaanederINorge": 0,
+              "intensjonOmRetur": null,
               "oppgittAdresse": {
                 "tilleggsnavn": null,
                 "gatenavn": null,
@@ -2445,11 +2404,52 @@
                 "landkode": null
               }
             },
-            "trygdedekning": "FULL_DEKNING_FTRL",
-            "representantIUtlandet": null
+            "foretakUtland": [],
+            "juridiskArbeidsgiverNorge": {
+              "andelKontrakterINorge": 0,
+              "andelOmsetningINorge": 0,
+              "andelOppdragINorge": 0,
+              "andelRekruttertINorge": 0,
+              "antallAdmAnsatte": 0,
+              "antallAnsatte": 0,
+              "antallUtsendte": 0,
+              "ekstraArbeidsgivere": [],
+              "erOffentligVirksomhet": null
+            },
+            "luftfartBaser": [],
+            "maritimtArbeid": [],
+            "oppholdUtland": {
+              "ektefelleEllerBarnINorge": null,
+              "oppholdsPeriode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppholdslandkoder": [],
+              "studentFinansieringKode": null,
+              "studentSemester": null
+            },
+            "periode": {
+              "fom": "2026-01-01",
+              "tom": "2026-12-31"
+            },
+            "personOpplysninger": {
+              "foedestedOgLand": null,
+              "medfolgendeFamilie": [],
+              "utenlandskIdent": []
+            },
+            "representantIUtlandet": null,
+            "selvstendigArbeid": {
+              "erSelvstendig": null,
+              "selvstendigForetak": []
+            },
+            "soeknadsland": {
+              "landkoder": ["SE"],
+              "flereLandUkjentHvilke": false
+            },
+            "trygdedekning": "FULL_DEKNING_FTRL"
           },
-          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS",
-          "mottaksdato": "2025-01-01"
+          "mottaksdato": "2025-01-01",
+          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS"
         }
       }
     },
@@ -2474,55 +2474,14 @@
         },
         "body": {
           "data": {
-            "soeknadsland": {
-              "landkoder": ["SE"],
-              "flereLandUkjentHvilke": false
-            },
-            "periode": {
-              "fom": "2026-01-01",
-              "tom": "2026-12-31"
-            },
-            "personOpplysninger": {
-              "utenlandskIdent": [],
-              "medfolgendeFamilie": [],
-              "foedestedOgLand": null
-            },
             "arbeidPaaLand": {
-              "fysiskeArbeidssteder": [],
+              "erFastArbeidssted": null,
               "erHjemmekontor": null,
-              "erFastArbeidssted": null
+              "fysiskeArbeidssteder": []
             },
-            "foretakUtland": [],
-            "oppholdUtland": {
-              "oppholdslandkoder": [],
-              "oppholdsPeriode": {
-                "fom": null,
-                "tom": null
-              },
-              "studentFinansieringKode": null,
-              "studentSemester": null,
-              "ektefelleEllerBarnINorge": null
-            },
-            "selvstendigArbeid": {
-              "erSelvstendig": null,
-              "selvstendigForetak": []
-            },
-            "juridiskArbeidsgiverNorge": {
-              "antallAdmAnsatte": 0,
-              "antallAnsatte": 0,
-              "antallUtsendte": 0,
-              "andelOmsetningINorge": 0,
-              "andelOppdragINorge": 0,
-              "andelKontrakterINorge": 0,
-              "andelRekruttertINorge": 0,
-              "ekstraArbeidsgivere": [],
-              "erOffentligVirksomhet": null
-            },
-            "maritimtArbeid": [],
-            "luftfartBaser": [],
             "bosted": {
-              "intensjonOmRetur": null,
               "antallMaanederINorge": 0,
+              "intensjonOmRetur": null,
               "oppgittAdresse": {
                 "tilleggsnavn": null,
                 "gatenavn": null,
@@ -2534,11 +2493,52 @@
                 "landkode": null
               }
             },
-            "trygdedekning": "FULL_DEKNING_FTRL",
-            "representantIUtlandet": null
+            "foretakUtland": [],
+            "juridiskArbeidsgiverNorge": {
+              "andelKontrakterINorge": 0,
+              "andelOmsetningINorge": 0,
+              "andelOppdragINorge": 0,
+              "andelRekruttertINorge": 0,
+              "antallAdmAnsatte": 0,
+              "antallAnsatte": 0,
+              "antallUtsendte": 0,
+              "ekstraArbeidsgivere": [],
+              "erOffentligVirksomhet": null
+            },
+            "luftfartBaser": [],
+            "maritimtArbeid": [],
+            "oppholdUtland": {
+              "ektefelleEllerBarnINorge": null,
+              "oppholdsPeriode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppholdslandkoder": [],
+              "studentFinansieringKode": null,
+              "studentSemester": null
+            },
+            "periode": {
+              "fom": "2026-01-01",
+              "tom": "2026-12-31"
+            },
+            "personOpplysninger": {
+              "foedestedOgLand": null,
+              "medfolgendeFamilie": [],
+              "utenlandskIdent": []
+            },
+            "representantIUtlandet": null,
+            "selvstendigArbeid": {
+              "erSelvstendig": null,
+              "selvstendigForetak": []
+            },
+            "soeknadsland": {
+              "landkoder": ["SE"],
+              "flereLandUkjentHvilke": false
+            },
+            "trygdedekning": "FULL_DEKNING_FTRL"
           },
-          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS",
-          "mottaksdato": "2025-01-01"
+          "mottaksdato": "2025-01-01",
+          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS"
         }
       }
     },
@@ -2565,7 +2565,7 @@
           "journalforing": [],
           "saksbehandling": [
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "3",
               "prioritet": "NORM",
@@ -2606,7 +2606,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "4",
               "prioritet": "NORM",
@@ -2653,7 +2653,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "5",
               "prioritet": "NORM",
@@ -2700,7 +2700,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "6",
               "prioritet": "NORM",
@@ -2747,7 +2747,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "7",
               "prioritet": "NORM",
@@ -2794,7 +2794,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "8",
               "prioritet": "NORM",
@@ -2841,7 +2841,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "9",
               "prioritet": "NORM",
@@ -2882,7 +2882,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "10",
               "prioritet": "NORM",
@@ -2923,7 +2923,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "11",
               "prioritet": "NORM",
@@ -2964,7 +2964,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "12",
               "prioritet": "NORM",
@@ -3005,7 +3005,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "13",
               "prioritet": "NORM",
@@ -3046,7 +3046,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "14",
               "prioritet": "NORM",
@@ -3093,7 +3093,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "15",
               "prioritet": "NORM",
@@ -3134,7 +3134,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "18",
               "prioritet": "NORM",
@@ -3181,7 +3181,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "19",
               "prioritet": "NORM",
@@ -3228,7 +3228,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "20",
               "prioritet": "NORM",
@@ -3275,7 +3275,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "21",
               "prioritet": "NORM",
@@ -3322,7 +3322,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "22",
               "prioritet": "NORM",
@@ -3369,7 +3369,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "23",
               "prioritet": "NORM",
@@ -3416,7 +3416,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "24",
               "prioritet": "NORM",
@@ -3463,7 +3463,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "25",
               "prioritet": "NORM",
@@ -3510,7 +3510,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "26",
               "prioritet": "NORM",
@@ -3557,7 +3557,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "27",
               "prioritet": "NORM",
@@ -3604,7 +3604,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "28",
               "prioritet": "NORM",
@@ -3645,7 +3645,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "29",
               "prioritet": "NORM",
@@ -3686,7 +3686,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "30",
               "prioritet": "NORM",
@@ -3727,7 +3727,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "31",
               "prioritet": "NORM",
@@ -3768,7 +3768,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "32",
               "prioritet": "NORM",
@@ -3809,7 +3809,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "33",
               "prioritet": "NORM",
@@ -3850,7 +3850,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "34",
               "prioritet": "NORM",
@@ -3891,7 +3891,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "35",
               "prioritet": "NORM",
@@ -3932,7 +3932,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "36",
               "prioritet": "NORM",
@@ -3973,7 +3973,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "37",
               "prioritet": "NORM",
@@ -4014,7 +4014,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "38",
               "prioritet": "NORM",
@@ -4055,7 +4055,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "39",
               "prioritet": "NORM",
@@ -4096,7 +4096,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "40",
               "prioritet": "NORM",
@@ -4137,7 +4137,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "41",
               "prioritet": "NORM",
@@ -4178,7 +4178,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "42",
               "prioritet": "NORM",
@@ -4225,7 +4225,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "43",
               "prioritet": "NORM",
@@ -4272,7 +4272,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "44",
               "prioritet": "NORM",
@@ -4319,7 +4319,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "45",
               "prioritet": "NORM",
@@ -4366,7 +4366,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "46",
               "prioritet": "NORM",
@@ -4413,7 +4413,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "47",
               "prioritet": "NORM",
@@ -4460,7 +4460,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "48",
               "prioritet": "NORM",
@@ -4507,7 +4507,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "49",
               "prioritet": "NORM",
@@ -4548,7 +4548,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "50",
               "prioritet": "NORM",
@@ -4589,7 +4589,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "51",
               "prioritet": "NORM",
@@ -4630,7 +4630,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "52",
               "prioritet": "NORM",
@@ -4677,7 +4677,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "53",
               "prioritet": "NORM",
@@ -4724,7 +4724,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "54",
               "prioritet": "NORM",
@@ -4771,7 +4771,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "55",
               "prioritet": "NORM",
@@ -4818,7 +4818,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "56",
               "prioritet": "NORM",
@@ -4865,7 +4865,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "57",
               "prioritet": "NORM",
@@ -4912,7 +4912,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "58",
               "prioritet": "NORM",
@@ -4953,7 +4953,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "59",
               "prioritet": "NORM",
@@ -4994,7 +4994,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "60",
               "prioritet": "NORM",
@@ -5035,7 +5035,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "61",
               "prioritet": "NORM",
@@ -5076,7 +5076,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "62",
               "prioritet": "NORM",
@@ -5117,7 +5117,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "63",
               "prioritet": "NORM",
@@ -5158,7 +5158,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "64",
               "prioritet": "NORM",
@@ -5199,7 +5199,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "65",
               "prioritet": "NORM",
@@ -5240,7 +5240,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "66",
               "prioritet": "NORM",
@@ -5287,7 +5287,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "67",
               "prioritet": "NORM",
@@ -5328,7 +5328,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "68",
               "prioritet": "NORM",
@@ -5395,7 +5395,7 @@
           "journalforing": [],
           "saksbehandling": [
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "3",
               "prioritet": "NORM",
@@ -5436,7 +5436,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "4",
               "prioritet": "NORM",
@@ -5483,7 +5483,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "5",
               "prioritet": "NORM",
@@ -5530,7 +5530,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "6",
               "prioritet": "NORM",
@@ -5577,7 +5577,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "7",
               "prioritet": "NORM",
@@ -5624,7 +5624,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "8",
               "prioritet": "NORM",
@@ -5671,7 +5671,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "9",
               "prioritet": "NORM",
@@ -5712,7 +5712,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "10",
               "prioritet": "NORM",
@@ -5753,7 +5753,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "11",
               "prioritet": "NORM",
@@ -5794,7 +5794,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "12",
               "prioritet": "NORM",
@@ -5835,7 +5835,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "13",
               "prioritet": "NORM",
@@ -5876,7 +5876,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "14",
               "prioritet": "NORM",
@@ -5923,7 +5923,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "15",
               "prioritet": "NORM",
@@ -5964,7 +5964,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "69",
               "prioritet": "NORM",
@@ -6011,7 +6011,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "18",
               "prioritet": "NORM",
@@ -6058,7 +6058,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "19",
               "prioritet": "NORM",
@@ -6105,7 +6105,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "20",
               "prioritet": "NORM",
@@ -6152,7 +6152,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "22",
               "prioritet": "NORM",
@@ -6199,7 +6199,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "23",
               "prioritet": "NORM",
@@ -6246,7 +6246,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "24",
               "prioritet": "NORM",
@@ -6293,7 +6293,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "25",
               "prioritet": "NORM",
@@ -6340,7 +6340,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "26",
               "prioritet": "NORM",
@@ -6387,7 +6387,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "27",
               "prioritet": "NORM",
@@ -6434,7 +6434,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "28",
               "prioritet": "NORM",
@@ -6475,7 +6475,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "29",
               "prioritet": "NORM",
@@ -6516,7 +6516,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "30",
               "prioritet": "NORM",
@@ -6557,7 +6557,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "31",
               "prioritet": "NORM",
@@ -6598,7 +6598,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "32",
               "prioritet": "NORM",
@@ -6639,7 +6639,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "33",
               "prioritet": "NORM",
@@ -6680,7 +6680,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "34",
               "prioritet": "NORM",
@@ -6721,7 +6721,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "35",
               "prioritet": "NORM",
@@ -6762,7 +6762,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "36",
               "prioritet": "NORM",
@@ -6803,7 +6803,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "37",
               "prioritet": "NORM",
@@ -6844,7 +6844,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "38",
               "prioritet": "NORM",
@@ -6885,7 +6885,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "39",
               "prioritet": "NORM",
@@ -6926,7 +6926,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "40",
               "prioritet": "NORM",
@@ -6967,7 +6967,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "41",
               "prioritet": "NORM",
@@ -7008,7 +7008,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "42",
               "prioritet": "NORM",
@@ -7055,7 +7055,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "43",
               "prioritet": "NORM",
@@ -7102,7 +7102,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "44",
               "prioritet": "NORM",
@@ -7149,7 +7149,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "45",
               "prioritet": "NORM",
@@ -7196,7 +7196,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "46",
               "prioritet": "NORM",
@@ -7243,7 +7243,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "47",
               "prioritet": "NORM",
@@ -7290,7 +7290,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "48",
               "prioritet": "NORM",
@@ -7337,7 +7337,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "49",
               "prioritet": "NORM",
@@ -7378,7 +7378,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "50",
               "prioritet": "NORM",
@@ -7419,7 +7419,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "51",
               "prioritet": "NORM",
@@ -7460,7 +7460,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "52",
               "prioritet": "NORM",
@@ -7507,7 +7507,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "53",
               "prioritet": "NORM",
@@ -7554,7 +7554,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "54",
               "prioritet": "NORM",
@@ -7601,7 +7601,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "55",
               "prioritet": "NORM",
@@ -7648,7 +7648,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "56",
               "prioritet": "NORM",
@@ -7695,7 +7695,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "57",
               "prioritet": "NORM",
@@ -7742,7 +7742,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "58",
               "prioritet": "NORM",
@@ -7783,7 +7783,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "59",
               "prioritet": "NORM",
@@ -7824,7 +7824,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "60",
               "prioritet": "NORM",
@@ -7865,7 +7865,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "61",
               "prioritet": "NORM",
@@ -7906,7 +7906,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "62",
               "prioritet": "NORM",
@@ -7947,7 +7947,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "63",
               "prioritet": "NORM",
@@ -7988,7 +7988,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "64",
               "prioritet": "NORM",
@@ -8029,7 +8029,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "65",
               "prioritet": "NORM",
@@ -8070,7 +8070,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "66",
               "prioritet": "NORM",
@@ -8117,7 +8117,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "67",
               "prioritet": "NORM",
@@ -8158,7 +8158,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "68",
               "prioritet": "NORM",
@@ -8225,7 +8225,7 @@
           "journalforing": [],
           "saksbehandling": [
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "3",
               "prioritet": "NORM",
@@ -8266,7 +8266,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "4",
               "prioritet": "NORM",
@@ -8313,7 +8313,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "5",
               "prioritet": "NORM",
@@ -8360,7 +8360,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "6",
               "prioritet": "NORM",
@@ -8407,7 +8407,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "7",
               "prioritet": "NORM",
@@ -8454,7 +8454,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "8",
               "prioritet": "NORM",
@@ -8501,7 +8501,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "9",
               "prioritet": "NORM",
@@ -8542,7 +8542,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "10",
               "prioritet": "NORM",
@@ -8583,7 +8583,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "11",
               "prioritet": "NORM",
@@ -8624,7 +8624,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "12",
               "prioritet": "NORM",
@@ -8665,7 +8665,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "13",
               "prioritet": "NORM",
@@ -8706,7 +8706,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "14",
               "prioritet": "NORM",
@@ -8753,7 +8753,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "15",
               "prioritet": "NORM",
@@ -8794,7 +8794,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "69",
               "prioritet": "NORM",
@@ -8841,7 +8841,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "18",
               "prioritet": "NORM",
@@ -8888,7 +8888,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "19",
               "prioritet": "NORM",
@@ -8935,7 +8935,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "20",
               "prioritet": "NORM",
@@ -8982,7 +8982,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "22",
               "prioritet": "NORM",
@@ -9029,7 +9029,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "23",
               "prioritet": "NORM",
@@ -9076,7 +9076,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "24",
               "prioritet": "NORM",
@@ -9123,7 +9123,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "25",
               "prioritet": "NORM",
@@ -9170,7 +9170,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "26",
               "prioritet": "NORM",
@@ -9217,7 +9217,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "27",
               "prioritet": "NORM",
@@ -9264,7 +9264,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "28",
               "prioritet": "NORM",
@@ -9305,7 +9305,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "29",
               "prioritet": "NORM",
@@ -9346,7 +9346,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "30",
               "prioritet": "NORM",
@@ -9387,7 +9387,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "31",
               "prioritet": "NORM",
@@ -9428,7 +9428,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "32",
               "prioritet": "NORM",
@@ -9469,7 +9469,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "33",
               "prioritet": "NORM",
@@ -9510,7 +9510,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "34",
               "prioritet": "NORM",
@@ -9551,7 +9551,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "35",
               "prioritet": "NORM",
@@ -9592,7 +9592,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "36",
               "prioritet": "NORM",
@@ -9633,7 +9633,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "37",
               "prioritet": "NORM",
@@ -9674,7 +9674,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "38",
               "prioritet": "NORM",
@@ -9715,7 +9715,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "39",
               "prioritet": "NORM",
@@ -9756,7 +9756,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "40",
               "prioritet": "NORM",
@@ -9797,7 +9797,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "41",
               "prioritet": "NORM",
@@ -9838,7 +9838,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "42",
               "prioritet": "NORM",
@@ -9885,7 +9885,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "43",
               "prioritet": "NORM",
@@ -9932,7 +9932,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "44",
               "prioritet": "NORM",
@@ -9979,7 +9979,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "45",
               "prioritet": "NORM",
@@ -10026,7 +10026,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "46",
               "prioritet": "NORM",
@@ -10073,7 +10073,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "47",
               "prioritet": "NORM",
@@ -10120,7 +10120,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "48",
               "prioritet": "NORM",
@@ -10167,7 +10167,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "49",
               "prioritet": "NORM",
@@ -10208,7 +10208,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "50",
               "prioritet": "NORM",
@@ -10249,7 +10249,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "51",
               "prioritet": "NORM",
@@ -10290,7 +10290,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "52",
               "prioritet": "NORM",
@@ -10337,7 +10337,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "53",
               "prioritet": "NORM",
@@ -10384,7 +10384,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "54",
               "prioritet": "NORM",
@@ -10431,7 +10431,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "55",
               "prioritet": "NORM",
@@ -10478,7 +10478,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "56",
               "prioritet": "NORM",
@@ -10525,7 +10525,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "57",
               "prioritet": "NORM",
@@ -10572,7 +10572,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "58",
               "prioritet": "NORM",
@@ -10613,7 +10613,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "59",
               "prioritet": "NORM",
@@ -10654,7 +10654,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "60",
               "prioritet": "NORM",
@@ -10695,7 +10695,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "61",
               "prioritet": "NORM",
@@ -10736,7 +10736,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "62",
               "prioritet": "NORM",
@@ -10777,7 +10777,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "63",
               "prioritet": "NORM",
@@ -10818,7 +10818,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "64",
               "prioritet": "NORM",
@@ -10859,7 +10859,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "65",
               "prioritet": "NORM",
@@ -10900,7 +10900,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "66",
               "prioritet": "NORM",
@@ -10947,7 +10947,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "67",
               "prioritet": "NORM",
@@ -10988,7 +10988,7 @@
               "sisteNotat": null
             },
             {
-              "aktivTil": "2026-07-07",
+              "aktivTil": "2026-07-22",
               "ansvarligID": "Z123456",
               "oppgaveID": "68",
               "prioritet": "NORM",
@@ -11413,27 +11413,67 @@
         },
         "body": [
           {
-            "vilkaar": "FTRL_2_5_NORSK_STATSBORGER_EØS_BORGER",
-            "oppfylt": true,
-            "begrunnelseKoder": [],
             "begrunnelseFritekst": null,
-            "begrunnelseFritekstEngelsk": null
+            "begrunnelseFritekstEngelsk": null,
+            "begrunnelseKoder": [],
+            "oppfylt": true,
+            "vilkaar": "FTRL_2_5_NORSK_STATSBORGER_EØS_BORGER"
           },
           {
-            "vilkaar": "FTRL_2_5_NORSKE_STATS_TJENESTE",
-            "oppfylt": true,
-            "begrunnelseKoder": [],
             "begrunnelseFritekst": null,
-            "begrunnelseFritekstEngelsk": null
+            "begrunnelseFritekstEngelsk": null,
+            "begrunnelseKoder": [],
+            "oppfylt": true,
+            "vilkaar": "FTRL_2_5_NORSKE_STATS_TJENESTE"
           },
           {
-            "vilkaar": "FTRL_ARBEIDSTAKER",
-            "oppfylt": true,
-            "begrunnelseKoder": [],
             "begrunnelseFritekst": null,
-            "begrunnelseFritekstEngelsk": null
+            "begrunnelseFritekstEngelsk": null,
+            "begrunnelseKoder": [],
+            "oppfylt": true,
+            "vilkaar": "FTRL_ARBEIDSTAKER"
           }
         ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3333/api/behandlinger/20/resultat/fritekst",
+        "pathname": "/api/behandlinger/20/resultat/fritekst",
+        "normalizedPath": "/api/behandlinger/:behandlingId/resultat/fritekst",
+        "query": {},
+        "headers": {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "authorization": "[REDACTED]"
+        },
+        "body": {
+          "innledningFritekst": "",
+          "begrunnelseFritekst": "",
+          "trygdeavgiftFritekst": ""
+        }
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "aarsavregningID": null,
+          "begrunnelseFritekst": "",
+          "begrunnelseKoder": [],
+          "behandlingsresultatTypeKode": "IKKE_FASTSATT",
+          "fakturaserieReferanse": null,
+          "innledningFritekst": "",
+          "kontrollresultatBegrunnelseKoder": [],
+          "nyVurderingBakgrunn": null,
+          "trygdeavgiftFritekst": "",
+          "utfallRegistreringUnntak": null,
+          "utfallUtpeking": null,
+          "vedtakstype": null
+        }
       }
     },
     {
@@ -15632,55 +15672,14 @@
         },
         "body": {
           "data": {
-            "soeknadsland": {
-              "landkoder": ["SE"],
-              "flereLandUkjentHvilke": false
-            },
-            "periode": {
-              "fom": "2026-01-01",
-              "tom": "2026-12-31"
-            },
-            "personOpplysninger": {
-              "utenlandskIdent": [],
-              "medfolgendeFamilie": [],
-              "foedestedOgLand": null
-            },
             "arbeidPaaLand": {
-              "fysiskeArbeidssteder": [],
+              "erFastArbeidssted": null,
               "erHjemmekontor": null,
-              "erFastArbeidssted": null
+              "fysiskeArbeidssteder": []
             },
-            "foretakUtland": [],
-            "oppholdUtland": {
-              "oppholdslandkoder": [],
-              "oppholdsPeriode": {
-                "fom": null,
-                "tom": null
-              },
-              "studentFinansieringKode": null,
-              "studentSemester": null,
-              "ektefelleEllerBarnINorge": null
-            },
-            "selvstendigArbeid": {
-              "erSelvstendig": null,
-              "selvstendigForetak": []
-            },
-            "juridiskArbeidsgiverNorge": {
-              "antallAdmAnsatte": 0,
-              "antallAnsatte": 0,
-              "antallUtsendte": 0,
-              "andelOmsetningINorge": 0,
-              "andelOppdragINorge": 0,
-              "andelKontrakterINorge": 0,
-              "andelRekruttertINorge": 0,
-              "ekstraArbeidsgivere": [],
-              "erOffentligVirksomhet": null
-            },
-            "maritimtArbeid": [],
-            "luftfartBaser": [],
             "bosted": {
-              "intensjonOmRetur": null,
               "antallMaanederINorge": 0,
+              "intensjonOmRetur": null,
               "oppgittAdresse": {
                 "tilleggsnavn": null,
                 "gatenavn": null,
@@ -15692,11 +15691,52 @@
                 "landkode": null
               }
             },
-            "trygdedekning": "FULL_DEKNING_FTRL",
-            "representantIUtlandet": null
+            "foretakUtland": [],
+            "juridiskArbeidsgiverNorge": {
+              "andelKontrakterINorge": 0,
+              "andelOmsetningINorge": 0,
+              "andelOppdragINorge": 0,
+              "andelRekruttertINorge": 0,
+              "antallAdmAnsatte": 0,
+              "antallAnsatte": 0,
+              "antallUtsendte": 0,
+              "ekstraArbeidsgivere": [],
+              "erOffentligVirksomhet": null
+            },
+            "luftfartBaser": [],
+            "maritimtArbeid": [],
+            "oppholdUtland": {
+              "ektefelleEllerBarnINorge": null,
+              "oppholdsPeriode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppholdslandkoder": [],
+              "studentFinansieringKode": null,
+              "studentSemester": null
+            },
+            "periode": {
+              "fom": "2026-01-01",
+              "tom": "2026-12-31"
+            },
+            "personOpplysninger": {
+              "foedestedOgLand": null,
+              "medfolgendeFamilie": [],
+              "utenlandskIdent": []
+            },
+            "representantIUtlandet": null,
+            "selvstendigArbeid": {
+              "erSelvstendig": null,
+              "selvstendigForetak": []
+            },
+            "soeknadsland": {
+              "landkoder": ["SE"],
+              "flereLandUkjentHvilke": false
+            },
+            "trygdedekning": "FULL_DEKNING_FTRL"
           },
-          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS",
-          "mottaksdato": "2025-01-01"
+          "mottaksdato": "2025-01-01",
+          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS"
         }
       }
     },
@@ -15786,7 +15826,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-04-08",
+                    "gyldigFraOgMed": "2016-04-23",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -15809,7 +15849,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-04-08",
+                    "gyldigFraOgMed": "2016-04-23",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
