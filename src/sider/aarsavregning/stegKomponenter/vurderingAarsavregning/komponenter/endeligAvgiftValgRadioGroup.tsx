@@ -3,7 +3,7 @@ import * as Forms from "../../../../../felleskomponenter/forms";
 import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import { useFeatureToggle } from "../../../../../featuretoggle";
-import { MELOSYS_PENSJONIST_EØS } from "../../../../../featuretoggle/toggleNavn";
+import { MELOSYS_PENSJONIST_EØS, ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../../featuretoggle/toggleNavn";
 
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT, OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET } =
   MKV.Koder.endeligAvgiftValg;
@@ -14,6 +14,7 @@ interface EndeligAvgiftValgRadioGroupProps {
   handleEndeligAvgiftValgChange: (value: string) => void;
   endeligAvgiftValg?: string;
   endretPeriodeFraAvgiftssystemetValg?: boolean;
+  harInnbetaltTrygdeavgift?: boolean;
 }
 
 export function EndeligAvgiftValgRadioGroup({
@@ -22,9 +23,9 @@ export function EndeligAvgiftValgRadioGroup({
   handleEndeligAvgiftValgChange,
   endeligAvgiftValg,
   endretPeriodeFraAvgiftssystemetValg,
+  harInnbetaltTrygdeavgift,
 }: EndeligAvgiftValgRadioGroupProps) {
-  const erPensjonistEØSToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST_EØS);
-
+  const erPensjonistEØSToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
   return (
     <div className="endeligAvgiftValg_radio_group">
       <Forms.RadioGroup
@@ -41,7 +42,7 @@ export function EndeligAvgiftValgRadioGroup({
           <Nav.Radio value={OPPLYSNINGER_ENDRET} className={endeligAvgiftValg === OPPLYSNINGER_ENDRET ? "checked" : ""}>
             Beregn endelig trygdeavgift
           </Nav.Radio>
-          {erPensjonistEØSToggleEnabled && endretPeriodeFraAvgiftssystemetValg && (
+          {erPensjonistEØSToggleEnabled && endretPeriodeFraAvgiftssystemetValg && harInnbetaltTrygdeavgift && (
             <Nav.Radio
               value={OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET}
               className={endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET ? "checked" : ""}

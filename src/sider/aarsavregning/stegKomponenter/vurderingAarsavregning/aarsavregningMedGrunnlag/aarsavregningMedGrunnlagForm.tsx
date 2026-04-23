@@ -46,7 +46,7 @@ import { InitiellData } from "./aarsavregningMedGrunnlag";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
 import { useFeatureToggle } from "../../../../../featuretoggle";
-import { MELOSYS_PENSJONIST_EØS } from "../../../../../featuretoggle/toggleNavn";
+import { MELOSYS_PENSJONIST_EØS, ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../../featuretoggle/toggleNavn";
 
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT, OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET } =
   MKV.Koder.endeligAvgiftValg;
@@ -93,7 +93,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
   const dispatch = useDispatch();
-  const erPensjonistToggleEnabled_EØS = useFeatureToggle(MELOSYS_PENSJONIST_EØS);
+  const erPensjonistToggleEnabled_EØS = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
 
   const periodeType = initiellData.periodeType;
   const erHelseutgift = periodeType === "HELSEUTGIFTDEKKESPERIODE";

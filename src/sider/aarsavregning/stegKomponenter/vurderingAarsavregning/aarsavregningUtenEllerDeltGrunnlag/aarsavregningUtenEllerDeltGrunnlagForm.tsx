@@ -51,7 +51,7 @@ import {
 } from "./aarsavregningUtenEllerDeltGrunnlag";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding, finnAktivFeilmeldingForMedlemskapsperioder } from "./valideringsfeil";
-import { MELOSYS_PENSJONIST_EØS, ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../../featuretoggle/toggleNavn";
+import { ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../../featuretoggle/toggleNavn";
 import useFeatureToggle from "../../../../../featuretoggle/useFeatureToggle";
 
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT, OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET } =
@@ -169,7 +169,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
   const endeligAvgiftValg = useWatch({ control, name: "endeligAvgiftValg" });
   const manueltAvgiftBeloep = useWatch({ control, name: "manueltAvgiftBeloep" });
-  const erPensjonistToggleEnabled_EØS = useFeatureToggle(MELOSYS_PENSJONIST_EØS);
+  const erPensjonistToggleEnabled_EØS = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
 
   const debouncedBeregningRef = useRef<ReturnType<typeof Utils._debounce> | null>(null);
   const forrigeInnbetaltTrygdeavgift = useRef(innbetaltTrygdeavgift);
@@ -890,6 +890,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         handleEndeligAvgiftValgChange={handleEndeligAvgiftValgChange}
         endeligAvgiftValg={endeligAvgiftValg}
         endretPeriodeFraAvgiftssystemetValg={erDeltGrunnlag}
+        harInnbetaltTrygdeavgift={harInnbetaltTrygdeavgift}
       />
 
       {(endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
