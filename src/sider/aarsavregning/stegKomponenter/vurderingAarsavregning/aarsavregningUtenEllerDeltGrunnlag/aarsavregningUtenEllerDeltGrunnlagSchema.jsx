@@ -170,28 +170,11 @@ const medlemskapsperiodeSchema = object().shape({
     then: (schema) => schema.nullable().notRequired(),
     otherwise: (schema) => schema.required(MAA_FYLLES_UT),
   }),
-  bostedLandkode: string()
-    .nullable()
-    .when(["type", "id"], {
-      is: (type, id) => type === "HELSEUTGIFTDEKKESPERIODE" && !erUlagretPeriode(id),
-      then: (schema) => schema.notRequired(),
-      otherwise: (schema) =>
-        schema.test({
-          name: "bostedLandkodeKrevesForFørsteHelseutgift",
-          message: MAA_FYLLES_UT,
-          test: function (value) {
-            const { type } = this.parent;
-            if (type !== "HELSEUTGIFTDEKKESPERIODE") return true;
-            // Første helseutgift-periode må ha bostedLandkode
-            const { avgiftspliktigperioder } = this.from[1].value;
-            const harEksisterendeHelseutgiftPeriode = avgiftspliktigperioder?.some(
-              (p) => p.type === "HELSEUTGIFTDEKKESPERIODE" && !erUlagretPeriode(p.id),
-            );
-            if (harEksisterendeHelseutgiftPeriode) return true;
-            return !Utils._isEmpty(value);
-          },
-        }),
-    }),
+  bostedLandkode: string().when("type", {
+    is: (type) => type === "HELSEUTGIFTDEKKESPERIODE",
+    then: (schema) => schema.required(MAA_FYLLES_UT),
+    otherwise: (schema) => schema.nullable().notRequired(),
+  }),
 });
 
 const skatteforholdsperiodeSchema = object().shape({
