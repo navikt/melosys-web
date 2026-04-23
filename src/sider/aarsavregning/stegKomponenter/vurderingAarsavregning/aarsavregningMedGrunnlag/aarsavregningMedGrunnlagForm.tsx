@@ -43,6 +43,7 @@ import {
   MedlemskapsperiodeFieldProps,
 } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import { InitiellData } from "./aarsavregningMedGrunnlag";
+import { AvgiftspliktigperiodeFieldProps } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
 import { useFeatureToggle } from "../../../../../featuretoggle";
@@ -381,7 +382,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           return;
         }
 
-        const erAllePerioderGyldige = medlemskapsperioder.every((periode) => {
+        const erAllePerioderGyldige = medlemskapsperioder.every((periode: AvgiftspliktigperiodeFieldProps) => {
           if (!periode.fomDato || !periode.tomDato) return false;
           return true;
         });

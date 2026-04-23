@@ -20,6 +20,7 @@ import type {
   BasePeriode,
   AarsavregningsPeriodeType,
   Avgiftspliktigperiode,
+  HelseutgiftdekkesperiodeForAvgift,
 } from "../../../../../services/modules/types/periodeTyper";
 import {
   erMedlemskapsperiodeEllerLovvalgsperiode,
@@ -582,8 +583,13 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const leggTilDefaultMedlemskapsperiode = () => {
     const defaultPeriode = lagDefaultPeriode(periodeType);
     if (periodeType === "HELSEUTGIFTDEKKESPERIODE") {
-      const eksisterendeLandkode = medlemskapsperioder.find((p) => p.bostedLandkode)?.bostedLandkode;
-      if (eksisterendeLandkode) {
+      const eksisterendeLandkode = medlemskapsperioder.find(
+        (
+          p: MedlemskapsperiodeFieldProps,
+        ): p is HelseutgiftdekkesperiodeForAvgift & { redigerbar: boolean; feil?: string } =>
+          p.type === "HELSEUTGIFTDEKKESPERIODE" && !!p.bostedLandkode,
+      )?.bostedLandkode;
+      if (eksisterendeLandkode && defaultPeriode.type === "HELSEUTGIFTDEKKESPERIODE") {
         defaultPeriode.bostedLandkode = eksisterendeLandkode;
       }
     }
