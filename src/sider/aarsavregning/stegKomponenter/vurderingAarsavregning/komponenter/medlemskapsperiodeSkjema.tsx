@@ -9,8 +9,8 @@ import * as Nav from "../../../../../navFrontend";
 import * as Ikoner from "../../../../../resources/images";
 import * as Utils from "../../../../../utils";
 import {
-  ULAGRET_MEDLEMSKAPSPERIODE_ID,
   MedlemskapsperiodeFieldProps,
+  erUlagretPeriode,
 } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import type {
   AarsavregningsPeriodeType,
@@ -27,7 +27,7 @@ const kanPeriodeSlettes = (
   gjeldendePeriode: MedlemskapsperiodeFieldProps,
   allePerioderIListe: MedlemskapsperiodeFieldProps[],
 ): boolean => {
-  const erPeriodeUlagret = !gjeldendePeriode.id || gjeldendePeriode.id === ULAGRET_MEDLEMSKAPSPERIODE_ID;
+  const erPeriodeUlagret = !gjeldendePeriode.id || erUlagretPeriode(gjeldendePeriode.id);
   if (erPeriodeUlagret) {
     return true; // Ulagret er alltid slettbar
   }
@@ -37,7 +37,7 @@ const kanPeriodeSlettes = (
   }
 
   const alleLagredePerioderSortert = [...allePerioderIListe]
-    .filter((p) => p.id && p.id !== ULAGRET_MEDLEMSKAPSPERIODE_ID)
+    .filter((p) => p.id && !erUlagretPeriode(p.id))
     .sort((a, b) => {
       const aDate = Utils.dato.norskStringTilDate(a.fomDato);
       const bDate = Utils.dato.norskStringTilDate(b.fomDato);

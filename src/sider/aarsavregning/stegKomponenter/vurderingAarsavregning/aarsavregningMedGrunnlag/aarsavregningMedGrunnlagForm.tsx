@@ -25,7 +25,10 @@ import {
   erHelseutgiftdekkesperiode as erHelseutgiftdekkesperiodeTypeGuard,
   erPeriodeListeHelseutgiftdekkesperiode,
 } from "../../../../../services/modules/types/periodeTyper";
-import type { Avgiftspliktigperiode } from "../../../../../services/modules/types/periodeTyper";
+import type {
+  Avgiftspliktigperiode,
+  HelseutgiftdekkesperiodeForAvgift,
+} from "../../../../../services/modules/types/periodeTyper";
 import * as Utils from "../../../../../utils";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
 import { BeregnetTrygdeavgiftDetaljer } from "../komponenter/beregnetTrygdeavgiftDetaljer";
@@ -47,7 +50,7 @@ import { AvgiftspliktigperiodeFieldProps } from "../aarsavregningUtenEllerDeltGr
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
 import { useFeatureToggle } from "../../../../../featuretoggle";
-import { MELOSYS_PENSJONIST_EØS, ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../../featuretoggle/toggleNavn";
+import { ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../../featuretoggle/toggleNavn";
 
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT, OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET } =
   MKV.Koder.endeligAvgiftValg;
@@ -342,7 +345,19 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
   const leggTilDefaultMedlemskapsperiode = () => {
     if (periodeType) {
-      medlemskapsperioderAppend(lagDefaultPeriode(periodeType));
+      const defaultPeriode = lagDefaultPeriode(periodeType);
+      if (periodeType === "HELSEUTGIFTDEKKESPERIODE") {
+        const eksisterendeLandkode = medlemskapsperioder.find(
+          (
+            p: MedlemskapsperiodeFieldProps,
+          ): p is HelseutgiftdekkesperiodeForAvgift & { redigerbar: boolean; feil?: string } =>
+            p.type === "HELSEUTGIFTDEKKESPERIODE" && !!p.bostedLandkode,
+        )?.bostedLandkode;
+        if (eksisterendeLandkode && defaultPeriode.type === "HELSEUTGIFTDEKKESPERIODE") {
+          defaultPeriode.bostedLandkode = eksisterendeLandkode;
+        }
+      }
+      medlemskapsperioderAppend(defaultPeriode);
     }
   };
 
@@ -616,6 +631,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         handleEndeligAvgiftValgChange={handleEndeligAvgiftValgChange}
         endeligAvgiftValg={endeligAvgiftValg}
         endretPeriodeFraAvgiftssystemetValg={true}
+        harInnbetaltTrygdeavgift={aarsavregningResponse?.harInnbetaltTrygdeavgift}
       />
 
       {(endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
@@ -652,9 +668,9 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
                     formValues={formValues}
                     handleLeggTil={leggTilDefaultMedlemskapsperiode}
                     visLeggTil={
-                      erPensjonistToggleEnabled_EØS === false ||
-                      endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
-                      endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET
+                      (erPensjonistToggleEnabled_EØS === true &&
+                        endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) ||
+                      (erPensjonistToggleEnabled_EØS === false && !erHelseutgift)
                     }
                     maxDate={maxDate}
                     minDate={minDate}

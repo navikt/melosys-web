@@ -3,7 +3,7 @@ import * as Forms from "../../../../../felleskomponenter/forms";
 import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import { useFeatureToggle } from "../../../../../featuretoggle";
-import { MELOSYS_PENSJONIST_EØS, ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../../featuretoggle/toggleNavn";
+import { ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../../featuretoggle/toggleNavn";
 
 const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT, OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET } =
   MKV.Koder.endeligAvgiftValg;
