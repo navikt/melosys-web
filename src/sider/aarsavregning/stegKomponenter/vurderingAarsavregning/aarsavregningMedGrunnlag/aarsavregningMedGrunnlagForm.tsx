@@ -668,9 +668,9 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
                     formValues={formValues}
                     handleLeggTil={leggTilDefaultMedlemskapsperiode}
                     visLeggTil={
-                      (erPensjonistToggleEnabled_EØS === true &&
-                        endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) ||
-                      (erPensjonistToggleEnabled_EØS === false && !erHelseutgift)
+                      erPensjonistToggleEnabled_EØS === true
+                        ? endeligAvgiftValg !== MANUELL_ENDELIG_AVGIFT && !erHelseutgift
+                        : !erHelseutgift
                     }
                     maxDate={maxDate}
                     minDate={minDate}
