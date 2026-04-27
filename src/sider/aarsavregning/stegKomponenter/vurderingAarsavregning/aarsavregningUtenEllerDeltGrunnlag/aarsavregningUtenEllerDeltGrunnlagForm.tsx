@@ -170,7 +170,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
   const endeligAvgiftValg = useWatch({ control, name: "endeligAvgiftValg" });
   const manueltAvgiftBeloep = useWatch({ control, name: "manueltAvgiftBeloep" });
-  const erPensjonistToggleEnabled_EØS = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
+  const erEøsPensjonistToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
 
   const debouncedBeregningRef = useRef<ReturnType<typeof Utils._debounce> | null>(null);
   const forrigeInnbetaltTrygdeavgift = useRef(innbetaltTrygdeavgift);
@@ -933,7 +933,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                 formValues={formValues}
                 handleLeggTil={leggTilDefaultMedlemskapsperiode}
                 visLeggTil={
-                  erPensjonistToggleEnabled_EØS === true
+                  erEøsPensjonistToggleEnabled === true
                     ? endeligAvgiftValg !== MANUELL_ENDELIG_AVGIFT && !erHelseutgift
                     : !erHelseutgift
                 }

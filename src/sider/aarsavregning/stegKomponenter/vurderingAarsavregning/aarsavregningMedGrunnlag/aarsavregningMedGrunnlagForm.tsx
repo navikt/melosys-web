@@ -97,7 +97,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const aarsavregningID = useSelector(behandlingsresultatSelectors.ÅrsavregningIDSelector);
   const dispatch = useDispatch();
-  const erPensjonistToggleEnabled_EØS = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
+  const erEøsPensjonistToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
 
   const periodeType = initiellData.periodeType;
   const erHelseutgift = periodeType === "HELSEUTGIFTDEKKESPERIODE";
@@ -668,7 +668,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
                     formValues={formValues}
                     handleLeggTil={leggTilDefaultMedlemskapsperiode}
                     visLeggTil={
-                      erPensjonistToggleEnabled_EØS === true
+                      erEøsPensjonistToggleEnabled === true
                         ? endeligAvgiftValg !== MANUELL_ENDELIG_AVGIFT && !erHelseutgift
                         : !erHelseutgift
                     }
