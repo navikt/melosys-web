@@ -195,26 +195,26 @@
         },
         "body": [
           {
-            "id": 11,
+            "id": 55,
             "fomDato": "2026-01-01",
-            "tomDato": "2026-04-22",
+            "tomDato": "2026-04-26",
             "bestemmelse": "FTRL_KAP2_2_8_FØRSTE_LEDD_A",
             "innvilgelsesResultat": "AVSLAATT",
             "trygdedekning": "FTRL_2_9_FØRSTE_LEDD_A_HELSE",
             "medlemskapstype": "FRIVILLIG"
           },
           {
-            "id": 12,
+            "id": 56,
             "fomDato": "2026-01-01",
-            "tomDato": "2026-04-22",
+            "tomDato": "2026-04-26",
             "bestemmelse": "FTRL_KAP2_2_8_FØRSTE_LEDD_A",
             "innvilgelsesResultat": "INNVILGET",
             "trygdedekning": "FTRL_2_9_FØRSTE_LEDD_B_PENSJON",
             "medlemskapstype": "FRIVILLIG"
           },
           {
-            "id": 13,
-            "fomDato": "2026-04-23",
+            "id": 57,
+            "fomDato": "2026-04-27",
             "tomDato": "2026-12-31",
             "bestemmelse": "FTRL_KAP2_2_8_FØRSTE_LEDD_A",
             "innvilgelsesResultat": "INNVILGET",
@@ -695,7 +695,7 @@
               {
                 "Aordning": null,
                 "ansettelsesPeriode": {
-                  "fom": "2021-04-23",
+                  "fom": "2021-04-27",
                   "tom": null
                 },
                 "arbeidsavtaler": [
@@ -710,13 +710,13 @@
                       "term": "KONSULENT"
                     },
                     "gyldighetsperiode": {
-                      "fom": "2021-04-23",
+                      "fom": "2021-04-27",
                       "tom": null
                     },
                     "avtaltArbeidstimerPerUke": 37.5,
                     "stillingsprosent": 100,
                     "beregnetAntallTimerPrUke": 37.5,
-                    "endringsdatoStillingsprosent": "2021-04-23",
+                    "endringsdatoStillingsprosent": "2021-04-27",
                     "skipsregister": null,
                     "skipstype": null,
                     "maritimArbeidsavtale": false,
@@ -1335,7 +1335,7 @@
     {
       "request": {
         "method": "GET",
-        "url": "http://localhost:3333/api/featuretoggle?features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift&features=melosys.faktureringskomponent.vis_referanse&features=melosys.cdm-4-4",
+        "url": "http://localhost:3333/api/featuretoggle?features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.arsavregning.eos_pensjonist&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift&features=melosys.faktureringskomponent.vis_referanse&features=melosys.cdm-4-4",
         "pathname": "/api/featuretoggle",
         "normalizedPath": "/api/featuretoggle",
         "query": {
@@ -1363,6 +1363,7 @@
           "melosys.faktureringskomponenten.ikke-tidligere-perioder": true,
           "melosys.11_3_a_Norge_er_utpekt": true,
           "melosys.eos_fakturering_av_trygdeavgift": true,
+          "melosys.arsavregning.eos_pensjonist": true,
           "melosys.arsavregning.uten.flyt": false,
           "melosys.cdm-4-4": true
         }
@@ -3353,26 +3354,26 @@
         },
         "body": [
           {
-            "id": 11,
+            "id": 55,
             "fomDato": "2026-01-01",
-            "tomDato": "2026-04-22",
+            "tomDato": "2026-04-26",
             "bestemmelse": "FTRL_KAP2_2_8_FØRSTE_LEDD_A",
             "innvilgelsesResultat": "AVSLAATT",
             "trygdedekning": "FTRL_2_9_FØRSTE_LEDD_A_HELSE",
             "medlemskapstype": "FRIVILLIG"
           },
           {
-            "id": 12,
+            "id": 56,
             "fomDato": "2026-01-01",
-            "tomDato": "2026-04-22",
+            "tomDato": "2026-04-26",
             "bestemmelse": "FTRL_KAP2_2_8_FØRSTE_LEDD_A",
             "innvilgelsesResultat": "INNVILGET",
             "trygdedekning": "FTRL_2_9_FØRSTE_LEDD_B_PENSJON",
             "medlemskapstype": "FRIVILLIG"
           },
           {
-            "id": 13,
-            "fomDato": "2026-04-23",
+            "id": 57,
+            "fomDato": "2026-04-27",
             "tomDato": "2026-12-31",
             "bestemmelse": "FTRL_KAP2_2_8_FØRSTE_LEDD_A",
             "innvilgelsesResultat": "INNVILGET",
@@ -3874,7 +3875,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-04-23",
+                    "gyldigFraOgMed": "2016-04-27",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -3897,7 +3898,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-04-23",
+                    "gyldigFraOgMed": "2016-04-27",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
@@ -4019,7 +4020,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-04-23",
+                    "gyldigFraOgMed": "2016-04-27",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -4042,7 +4043,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-04-23",
+                    "gyldigFraOgMed": "2016-04-27",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
@@ -4323,6 +4324,214 @@
           "authorization": "[REDACTED]"
         },
         "body": {
+          "operationName": "hentPersoninfo",
+          "variables": {
+            "behandlingID": 22
+          },
+          "query": "query hentPersoninfo($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      folkeregisterpersonstatuser {\n        kode\n        tekst\n        master\n        kilde\n        fregGyldighetstidspunkt\n        erHistorisk\n        __typename\n      }\n      foedsel {\n        foedeland\n        foedested\n        foedselsaar\n        foedselsdato\n        __typename\n      }\n      sivilstand {\n        type\n        relatertVedSivilstand\n        gyldigFraOgMed\n        bekreftelsesdato\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
+        }
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "data": {
+            "hentSaksopplysninger": {
+              "persondata": {
+                "folkeregisterpersonstatuser": [
+                  {
+                    "kode": "BOSATT",
+                    "tekst": "Bosatt etter folkeregisterloven",
+                    "master": "FREG",
+                    "kilde": "Folkeregisteret",
+                    "fregGyldighetstidspunkt": "1990-01-01",
+                    "erHistorisk": false,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
+                    "kode": "MIDLERTIDIG",
+                    "tekst": "Midlertidig (D-nummer)",
+                    "master": "FREG",
+                    "kilde": "Folkeregisteret",
+                    "fregGyldighetstidspunkt": "2020-10-22",
+                    "erHistorisk": true,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
+                    "kode": "UTFLYTTET",
+                    "tekst": "Utflyttet",
+                    "master": "FREG",
+                    "kilde": "Folkeregisteret",
+                    "fregGyldighetstidspunkt": "2012-03-15",
+                    "erHistorisk": true,
+                    "__typename": "Folkeregisterpersonstatus"
+                  }
+                ],
+                "foedsel": {
+                  "foedeland": "NO",
+                  "foedested": "OSLO",
+                  "foedselsaar": 1969,
+                  "foedselsdato": "1969-05-30",
+                  "__typename": "Foedsel"
+                },
+                "sivilstand": [
+                  {
+                    "type": "Gift",
+                    "relatertVedSivilstand": "12028536819",
+                    "gyldigFraOgMed": "2011-02-02",
+                    "bekreftelsesdato": null,
+                    "master": "Freg",
+                    "kilde": "KILDE_DSF",
+                    "erHistorisk": false,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Gift",
+                    "relatertVedSivilstand": "21075114491",
+                    "gyldigFraOgMed": "2019-08-03",
+                    "bekreftelsesdato": null,
+                    "master": "Freg",
+                    "kilde": "FREG",
+                    "erHistorisk": false,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Separert",
+                    "relatertVedSivilstand": "12028536819",
+                    "gyldigFraOgMed": "2013-01-03",
+                    "bekreftelsesdato": null,
+                    "master": "NAV (PDL)",
+                    "kilde": "Tyske trygdemyndigheter, TYSKLAND",
+                    "erHistorisk": true,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Skilt",
+                    "relatertVedSivilstand": null,
+                    "gyldigFraOgMed": "2014-04-09",
+                    "bekreftelsesdato": null,
+                    "master": "NAV (PDL)",
+                    "kilde": "Tyske trygdemyndigheter, TYSKLAND",
+                    "erHistorisk": true,
+                    "__typename": "Sivilstand"
+                  }
+                ],
+                "__typename": "Personopplysninger"
+              },
+              "__typename": "Saksopplysninger"
+            }
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3333/graphql/",
+        "pathname": "/graphql/",
+        "normalizedPath": "/graphql/",
+        "query": {},
+        "headers": {
+          "content-type": "application/json",
+          "accept": "*/*",
+          "authorization": "[REDACTED]"
+        },
+        "body": {
+          "operationName": "hentPersonopplysninger",
+          "variables": {
+            "behandlingID": 22
+          },
+          "query": "query hentPersonopplysninger($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      navn {\n        fornavn\n        mellomnavn\n        etternavn\n        __typename\n      }\n      kjoenn\n      folkeregisterpersonstatuser {\n        kode\n        erHistorisk\n        __typename\n      }\n      folkeregisteridentifikator\n      statsborgerskap {\n        land\n        erHistorisk\n        __typename\n      }\n      sivilstand {\n        type\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
+        }
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "data": {
+            "hentSaksopplysninger": {
+              "persondata": {
+                "navn": {
+                  "fornavn": "KARAFFEL",
+                  "mellomnavn": null,
+                  "etternavn": "TRIVIELL",
+                  "__typename": "Navn"
+                },
+                "kjoenn": "MANN",
+                "folkeregisterpersonstatuser": [
+                  {
+                    "kode": "BOSATT",
+                    "erHistorisk": false,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
+                    "kode": "MIDLERTIDIG",
+                    "erHistorisk": true,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
+                    "kode": "UTFLYTTET",
+                    "erHistorisk": true,
+                    "__typename": "Folkeregisterpersonstatus"
+                  }
+                ],
+                "folkeregisteridentifikator": "30056928150",
+                "statsborgerskap": [
+                  {
+                    "land": "NORGE",
+                    "erHistorisk": false,
+                    "__typename": "Statsborgerskap"
+                  }
+                ],
+                "sivilstand": [
+                  {
+                    "type": "Gift",
+                    "erHistorisk": false,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Gift",
+                    "erHistorisk": false,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Separert",
+                    "erHistorisk": true,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Skilt",
+                    "erHistorisk": true,
+                    "__typename": "Sivilstand"
+                  }
+                ],
+                "__typename": "Personopplysninger"
+              },
+              "__typename": "Saksopplysninger"
+            }
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3333/graphql/",
+        "pathname": "/graphql/",
+        "normalizedPath": "/graphql/",
+        "query": {},
+        "headers": {
+          "content-type": "application/json",
+          "accept": "*/*",
+          "authorization": "[REDACTED]"
+        },
+        "body": {
           "operationName": "hentPersonopplysninger",
           "variables": {
             "behandlingID": 22
@@ -4576,6 +4785,56 @@
                     "type": "Skilt",
                     "erHistorisk": true,
                     "__typename": "Sivilstand"
+                  }
+                ],
+                "__typename": "Personopplysninger"
+              },
+              "__typename": "Saksopplysninger"
+            }
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3333/graphql/",
+        "pathname": "/graphql/",
+        "normalizedPath": "/graphql/",
+        "query": {},
+        "headers": {
+          "content-type": "application/json",
+          "accept": "*/*",
+          "authorization": "[REDACTED]"
+        },
+        "body": {
+          "operationName": "hentStatsborgerskap",
+          "variables": {
+            "behandlingID": 22
+          },
+          "query": "query hentStatsborgerskap($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      statsborgerskap {\n        land\n        bekreftelsesdato\n        gyldigFraOgMed\n        gyldigTilOgMed\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
+        }
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "data": {
+            "hentSaksopplysninger": {
+              "persondata": {
+                "statsborgerskap": [
+                  {
+                    "land": "NORGE",
+                    "bekreftelsesdato": null,
+                    "gyldigFraOgMed": "1990-01-01",
+                    "gyldigTilOgMed": null,
+                    "master": "FREG",
+                    "kilde": "Folkeregisteret",
+                    "erHistorisk": false,
+                    "__typename": "Statsborgerskap"
                   }
                 ],
                 "__typename": "Personopplysninger"
@@ -4689,8 +4948,8 @@
     {
       "request": {
         "method": "PUT",
-        "url": "http://localhost:3333/api/behandlinger/22/medlemskapsperioder/11",
-        "pathname": "/api/behandlinger/22/medlemskapsperioder/11",
+        "url": "http://localhost:3333/api/behandlinger/22/medlemskapsperioder/55",
+        "pathname": "/api/behandlinger/22/medlemskapsperioder/55",
         "normalizedPath": "/api/behandlinger/:behandlingId/medlemskapsperioder/:id",
         "query": {},
         "headers": {
@@ -4700,7 +4959,7 @@
         },
         "body": {
           "fomDato": "2026-01-01",
-          "tomDato": "2026-04-22",
+          "tomDato": "2026-04-26",
           "trygdedekning": "FTRL_2_9_FØRSTE_LEDD_A_HELSE",
           "bestemmelse": "FTRL_KAP2_2_8_FØRSTE_LEDD_A",
           "innvilgelsesResultat": "AVSLAATT"
@@ -4713,9 +4972,9 @@
           "content-type": "application/json"
         },
         "body": {
-          "id": 11,
+          "id": 55,
           "fomDato": "2026-01-01",
-          "tomDato": "2026-04-22",
+          "tomDato": "2026-04-26",
           "bestemmelse": "FTRL_KAP2_2_8_FØRSTE_LEDD_A",
           "innvilgelsesResultat": "AVSLAATT",
           "trygdedekning": "FTRL_2_9_FØRSTE_LEDD_A_HELSE",
@@ -4726,8 +4985,8 @@
     {
       "request": {
         "method": "PUT",
-        "url": "http://localhost:3333/api/behandlinger/22/medlemskapsperioder/12",
-        "pathname": "/api/behandlinger/22/medlemskapsperioder/12",
+        "url": "http://localhost:3333/api/behandlinger/22/medlemskapsperioder/56",
+        "pathname": "/api/behandlinger/22/medlemskapsperioder/56",
         "normalizedPath": "/api/behandlinger/:behandlingId/medlemskapsperioder/:id",
         "query": {},
         "headers": {
@@ -4737,7 +4996,7 @@
         },
         "body": {
           "fomDato": "2026-01-01",
-          "tomDato": "2026-04-22",
+          "tomDato": "2026-04-26",
           "trygdedekning": "FTRL_2_9_FØRSTE_LEDD_B_PENSJON",
           "bestemmelse": "FTRL_KAP2_2_8_FØRSTE_LEDD_A",
           "innvilgelsesResultat": "INNVILGET"
@@ -4750,9 +5009,9 @@
           "content-type": "application/json"
         },
         "body": {
-          "id": 12,
+          "id": 56,
           "fomDato": "2026-01-01",
-          "tomDato": "2026-04-22",
+          "tomDato": "2026-04-26",
           "bestemmelse": "FTRL_KAP2_2_8_FØRSTE_LEDD_A",
           "innvilgelsesResultat": "INNVILGET",
           "trygdedekning": "FTRL_2_9_FØRSTE_LEDD_B_PENSJON",
@@ -4763,8 +5022,8 @@
     {
       "request": {
         "method": "PUT",
-        "url": "http://localhost:3333/api/behandlinger/22/medlemskapsperioder/13",
-        "pathname": "/api/behandlinger/22/medlemskapsperioder/13",
+        "url": "http://localhost:3333/api/behandlinger/22/medlemskapsperioder/57",
+        "pathname": "/api/behandlinger/22/medlemskapsperioder/57",
         "normalizedPath": "/api/behandlinger/:behandlingId/medlemskapsperioder/:id",
         "query": {},
         "headers": {
@@ -4773,7 +5032,7 @@
           "authorization": "[REDACTED]"
         },
         "body": {
-          "fomDato": "2026-04-23",
+          "fomDato": "2026-04-27",
           "tomDato": "2026-12-31",
           "trygdedekning": "FTRL_2_9_FØRSTE_LEDD_C_HELSE_PENSJON",
           "bestemmelse": "FTRL_KAP2_2_8_FØRSTE_LEDD_A",
@@ -4787,8 +5046,8 @@
           "content-type": "application/json"
         },
         "body": {
-          "id": 13,
-          "fomDato": "2026-04-23",
+          "id": 57,
+          "fomDato": "2026-04-27",
           "tomDato": "2026-12-31",
           "bestemmelse": "FTRL_KAP2_2_8_FØRSTE_LEDD_A",
           "innvilgelsesResultat": "INNVILGET",
@@ -4849,7 +5108,7 @@
               "avgiftsdel": "PENSJON"
             },
             {
-              "fom": "2026-04-23",
+              "fom": "2026-04-27",
               "tom": "2026-12-31",
               "trygdedekning": "FTRL_2_9_FØRSTE_LEDD_C_HELSE_PENSJON",
               "inntektskildetype": "NÆRINGSINNTEKT_FRA_NORGE",
