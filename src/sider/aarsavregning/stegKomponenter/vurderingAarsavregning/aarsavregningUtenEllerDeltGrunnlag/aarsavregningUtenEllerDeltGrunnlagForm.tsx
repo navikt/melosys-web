@@ -267,8 +267,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     }
 
     const lagretMedlemskapsperiode = lagredePerioder[index];
-    const trygdedekningNå = erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.trygdedekning : "";
-    const trygdedekningLagret =
+    const nyTrygdedekning = erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.trygdedekning : "";
+    const lagredeTrygdedekning =
       lagretMedlemskapsperiode && erMedlemskapsperiodeEllerLovvalgsperiode(lagretMedlemskapsperiode)
         ? lagretMedlemskapsperiode.trygdedekning
         : "";
@@ -282,7 +282,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       erUlagretPeriode(periode.id) ||
       periode.fomDato !== lagretMedlemskapsperiode.fomDato ||
       periode.tomDato !== lagretMedlemskapsperiode.tomDato ||
-      trygdedekningNå !== trygdedekningLagret ||
+      nyTrygdedekning !== lagredeTrygdedekning ||
       bostedLandkodeNå !== bostedLandkodeLagret;
 
     if (harEndringer) {

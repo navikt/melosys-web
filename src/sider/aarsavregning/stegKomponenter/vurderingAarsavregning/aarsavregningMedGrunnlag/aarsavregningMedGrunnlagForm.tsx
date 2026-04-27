@@ -215,8 +215,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       .sort(Utils.dato.sorterEtterNorskFomDato),
   });
 
-  // --- Period CRUD handlers for editable avgiftspliktigperioder ---
-  const lagreMedlemskapsperiodeHvisEndret = async (
+  const lagreAvgiftspliktigperiodeHvisEndret = async (
     periode: MedlemskapsperiodeFieldProps,
     lagredePerioder: MedlemskapsperiodeFieldProps[],
     index: number,
@@ -233,8 +232,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     }
 
     const lagretMedlemskapsperiode = lagredePerioder[index];
-    const trygdedekningNå = erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.trygdedekning : "";
-    const trygdedekningLagret =
+    const nyTrygdedekning = erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.trygdedekning : "";
+    const lagredeTrygdedekning =
       lagretMedlemskapsperiode && erMedlemskapsperiodeEllerLovvalgsperiode(lagretMedlemskapsperiode)
         ? lagretMedlemskapsperiode.trygdedekning
         : "";
@@ -248,7 +247,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       erUlagretPeriode(periode.id) ||
       periode.fomDato !== lagretMedlemskapsperiode.fomDato ||
       periode.tomDato !== lagretMedlemskapsperiode.tomDato ||
-      trygdedekningNå !== trygdedekningLagret ||
+      nyTrygdedekning !== lagredeTrygdedekning ||
       bostedLandkodeNå !== bostedLandkodeLagret;
 
     if (harEndringer) {
@@ -275,7 +274,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       type LagretPeriodeMedIndex = Avgiftspliktigperiode & { formValuesIndex: number };
       const endredeMedlemskapsperioder: LagretPeriodeMedIndex[] = [];
       for (const [index, periode] of medlemskapsperioderFormValues.entries()) {
-        const lagretPeriode = await lagreMedlemskapsperiodeHvisEndret(periode, lagredeMedlemskapsperioder, index);
+        const lagretPeriode = await lagreAvgiftspliktigperiodeHvisEndret(periode, lagredeMedlemskapsperioder, index);
         if (lagretPeriode)
           endredeMedlemskapsperioder.push({
             ...lagretPeriode,
