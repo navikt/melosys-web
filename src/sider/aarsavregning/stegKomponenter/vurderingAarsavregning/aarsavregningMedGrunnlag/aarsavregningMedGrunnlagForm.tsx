@@ -43,6 +43,7 @@ import "../vurderingAarsavregningInngang.less";
 import {
   erUlagretPeriode,
   lagDefaultPeriode,
+  mapPerioder,
   MedlemskapsperiodeFieldProps,
 } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import { InitiellData } from "./aarsavregningMedGrunnlag";
@@ -568,8 +569,21 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   }, [stegErGyldig]);
 
   const handleEndeligAvgiftValgChange = useCallback(
-    (value: string) => {
+    async (value: string) => {
       setEndrerEndeligAvgiftValg(true);
+
+      if (erEøsPensjonistToggleEnabled && periodeType) {
+        try {
+          await PeriodeAdapter.slettPerioderFraAvgiftssystemet(periodeType, behandlingID);
+          const gjenværendePerioder = await PeriodeAdapter.hentPerioder(periodeType, behandlingID);
+          const perioderSomFormValues = mapPerioder(gjenværendePerioder, sisteGjeldendeAvgiftspliktigperioder);
+          setValue("avgiftspliktigperioder", perioderSomFormValues, { shouldValidate: false });
+          setLagredeMedlemskapsperioder(perioderSomFormValues);
+        } catch (error) {
+          setFeilmelding("Feil ved sletting av perioder fra avgiftssystemet");
+        }
+      }
+
       Api.Aarsavregning.oppdaterEndeligAvgiftValg(behandlingID, value, aarsavregningID)
         .then((res) => {
           setPreviousFormValues(null);
@@ -580,7 +594,18 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           setEndrerEndeligAvgiftValg(false);
         });
     },
-    [aarsavregningID, setAarsavregningResponse, setEndrerEndeligAvgiftValg, Api.Aarsavregning, behandlingID, setValue],
+    [
+      aarsavregningID,
+      setAarsavregningResponse,
+      setEndrerEndeligAvgiftValg,
+      Api.Aarsavregning,
+      behandlingID,
+      setValue,
+      erEøsPensjonistToggleEnabled,
+      periodeType,
+      setLagredeMedlemskapsperioder,
+      sisteGjeldendeAvgiftspliktigperioder,
+    ],
   );
 
   const debouncedOppdaterManueltAvgiftBeloep = useCallback(

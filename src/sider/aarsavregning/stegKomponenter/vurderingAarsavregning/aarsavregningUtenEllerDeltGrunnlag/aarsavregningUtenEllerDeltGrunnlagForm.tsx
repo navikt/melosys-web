@@ -47,6 +47,7 @@ import {
   AarsavregningFormValuesProps,
   DEFAULT_MEDLEMSKAPSPERIODE,
   lagDefaultPeriode,
+  mapPerioder,
   MedlemskapsperiodeFieldProps,
   erUlagretPeriode,
 } from "./aarsavregningUtenEllerDeltGrunnlag";
@@ -822,8 +823,22 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   }, [medlemskapsperiode]);
 
   const handleEndeligAvgiftValgChange = useCallback(
-    (value: string) => {
+    async (value: string) => {
       setFeilmelding(undefined);
+
+      if (erEøsPensjonistToggleEnabled && periodeType) {
+        try {
+          await PeriodeAdapter.slettPerioderFraAvgiftssystemet(periodeType, behandlingID);
+          const gjenværendePerioder = await PeriodeAdapter.hentPerioder(periodeType, behandlingID);
+          const sisteGjeldende = initiellData.aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder;
+          const perioderSomFormValues = mapPerioder(gjenværendePerioder, sisteGjeldende);
+          setValue("avgiftspliktigperioder", perioderSomFormValues, { shouldValidate: false });
+          setLagredeMedlemskapsperioder(perioderSomFormValues);
+        } catch (error) {
+          setFeilmelding("Feil ved sletting av perioder fra avgiftssystemet");
+        }
+      }
+
       Api.Aarsavregning.oppdaterEndeligAvgiftValg(behandlingID, value, aarsavregningID).then((res) => {
         if (res) {
           setAarsavregningResponse(res);
@@ -834,7 +849,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         }
       });
     },
-    [aarsavregningID, behandlingID, setValue],
+    [aarsavregningID, behandlingID, setValue, erEøsPensjonistToggleEnabled, periodeType, setLagredeMedlemskapsperioder],
   );
 
   const debouncedOppdaterManueltAvgiftBeloep = useCallback(
@@ -883,7 +898,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   const skalViseLeggTilForFtrl =
     erEøsPensjonistToggleEnabled === true
-      ? endeligAvgiftValg !== MANUELL_ENDELIG_AVGIFT && !erHelseutgift
+      ? endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET && !erHelseutgift
       : !erHelseutgift;
 
   const skalViseLeggTilForEøsPensjonister =
