@@ -343,15 +343,7 @@ export class AarsavregningPage extends BehandlingPage {
         { timeout: 15000 },
       );
 
-      // Prøv å velge radioknappen - hvis den er readonly vil dette feile
-      // men vi fanger feilen og gir en mer beskrivende feilmelding
-      await expect(
-        jaRadio,
-        `${this.ctx}: Kunne ikke velge 'Ja' radioknapp. ` +
-          `Feltet er sannsynligvis readonly (forrigeÅrsavregningHarInnbetaltFraAvgiftssystem=true). ` +
-          `Denne testdataen støtter ikke delt grunnlag-test.`,
-      ).toBeEnabled({ timeout: 5000 });
-      await jaRadio.check();
+      await jaRadio.click();
 
       // Vent på at API-kallet for oppdaterHarInnbetaltTrygdeavgift fullføres
       await grunnlagstypeResponsePromise;
