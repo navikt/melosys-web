@@ -577,8 +577,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           await PeriodeAdapter.slettPerioderFraAvgiftssystemet(periodeType, behandlingID);
           const gjenværendePerioder = await PeriodeAdapter.hentPerioder(periodeType, behandlingID);
           const perioderSomFormValues = mapPerioder(gjenværendePerioder, sisteGjeldendeAvgiftspliktigperioder);
-          setValue("avgiftspliktigperioder", perioderSomFormValues, { shouldValidate: false });
-          setLagredeMedlemskapsperioder(perioderSomFormValues);
+          const oppdatertePerioder =
+            perioderSomFormValues.length > 0 ? perioderSomFormValues : [lagDefaultPeriode(periodeType)];
+          setValue("avgiftspliktigperioder", oppdatertePerioder, { shouldValidate: false });
+          setLagredeMedlemskapsperioder(oppdatertePerioder);
         } catch (error) {
           setFeilmelding("Feil ved sletting av perioder fra avgiftssystemet");
         }

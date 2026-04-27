@@ -832,8 +832,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           const gjenværendePerioder = await PeriodeAdapter.hentPerioder(periodeType, behandlingID);
           const sisteGjeldende = initiellData.aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder;
           const perioderSomFormValues = mapPerioder(gjenværendePerioder, sisteGjeldende);
-          setValue("avgiftspliktigperioder", perioderSomFormValues, { shouldValidate: false });
-          setLagredeMedlemskapsperioder(perioderSomFormValues);
+          const oppdatertePerioder =
+            perioderSomFormValues.length > 0 ? perioderSomFormValues : [lagDefaultPeriode(periodeType)];
+          setValue("avgiftspliktigperioder", oppdatertePerioder, { shouldValidate: false });
+          setLagredeMedlemskapsperioder(oppdatertePerioder);
         } catch (error) {
           setFeilmelding("Feil ved sletting av perioder fra avgiftssystemet");
         }
