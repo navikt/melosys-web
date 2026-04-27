@@ -215,14 +215,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       .sort(Utils.dato.sorterEtterNorskFomDato),
   });
 
-  const lagreAvgiftspliktigperiodeHvisEndret = async (
-    periode: MedlemskapsperiodeFieldProps,
-    lagredePerioder: MedlemskapsperiodeFieldProps[],
-    index: number,
-  ) => {
-    if (!periode.redigerbar) return undefined;
-
-    const periodeMedIsoDatoer: MedlemskapsperiodeFieldProps = {
+  const tilPeriodeMedIsoDatoer = (periode: MedlemskapsperiodeFieldProps): MedlemskapsperiodeFieldProps => {
+    const periodeMedIsoDatoer = {
       ...periode,
       fomDato: Utils.dato.vaskOgFormatterTilISO(periode.fomDato, "") as string,
       tomDato: Utils.dato.vaskOgFormatterTilISO(periode.tomDato, "") as string,
@@ -230,43 +224,54 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     if (erMedlemskapsperiodeEllerLovvalgsperiode(periodeMedIsoDatoer)) {
       periodeMedIsoDatoer.innvilgelsesResultat = MKV.Koder.innvilgelsesResultat.INNVILGET;
     }
+    return periodeMedIsoDatoer;
+  };
 
-    const lagretMedlemskapsperiode = lagredePerioder[index];
+  const harPeriodeEndringer = (
+    periode: MedlemskapsperiodeFieldProps,
+    lagretPeriode?: MedlemskapsperiodeFieldProps,
+  ): boolean => {
+    if (!lagretPeriode || erUlagretPeriode(periode.id)) return true;
+
     const nyTrygdedekning = erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.trygdedekning : "";
-    const lagredeTrygdedekning =
-      lagretMedlemskapsperiode && erMedlemskapsperiodeEllerLovvalgsperiode(lagretMedlemskapsperiode)
-        ? lagretMedlemskapsperiode.trygdedekning
-        : "";
-    const bostedLandkodeNå = erHelseutgiftdekkesperiodeTypeGuard(periode) ? periode.bostedLandkode : "";
-    const bostedLandkodeLagret =
-      lagretMedlemskapsperiode && erHelseutgiftdekkesperiodeTypeGuard(lagretMedlemskapsperiode)
-        ? lagretMedlemskapsperiode.bostedLandkode
-        : "";
-    const harEndringer =
-      !lagretMedlemskapsperiode ||
-      erUlagretPeriode(periode.id) ||
-      periode.fomDato !== lagretMedlemskapsperiode.fomDato ||
-      periode.tomDato !== lagretMedlemskapsperiode.tomDato ||
-      nyTrygdedekning !== lagredeTrygdedekning ||
-      bostedLandkodeNå !== bostedLandkodeLagret;
+    const lagretTrygdedekning = erMedlemskapsperiodeEllerLovvalgsperiode(lagretPeriode)
+      ? lagretPeriode.trygdedekning
+      : "";
 
-    if (harEndringer) {
-      if (!periodeMedIsoDatoer.fomDato || !periodeMedIsoDatoer.tomDato) {
-        return undefined;
-      }
-      try {
-        const bestemmelse = innvilgetMedlemskapsperioder[0]?.bestemmelse || "";
-        const skalOpprette = erUlagretPeriode(periode.id);
-        return await (skalOpprette
-          ? PeriodeAdapter.opprettPeriode(behandlingID, periodeMedIsoDatoer, bestemmelse)
-          : PeriodeAdapter.oppdaterPeriode(behandlingID, periodeMedIsoDatoer, bestemmelse));
-      } catch (error) {
-        setFeilmelding("Feil ved lagring av periode");
-        return undefined;
-      }
+    const nyBostedLandkode = erHelseutgiftdekkesperiodeTypeGuard(periode) ? periode.bostedLandkode : "";
+    const lagretBostedLandkode = erHelseutgiftdekkesperiodeTypeGuard(lagretPeriode) ? lagretPeriode.bostedLandkode : "";
+
+    return (
+      periode.fomDato !== lagretPeriode.fomDato ||
+      periode.tomDato !== lagretPeriode.tomDato ||
+      nyTrygdedekning !== lagretTrygdedekning ||
+      nyBostedLandkode !== lagretBostedLandkode
+    );
+  };
+
+  const lagreAvgiftspliktigperiodeHvisEndret = async (
+    periode: MedlemskapsperiodeFieldProps,
+    lagredePerioder: MedlemskapsperiodeFieldProps[],
+    index: number,
+  ) => {
+    if (!periode.redigerbar) return undefined;
+
+    const lagretPeriode = lagredePerioder[index];
+    if (!harPeriodeEndringer(periode, lagretPeriode)) return undefined;
+
+    const periodeMedIsoDatoer = tilPeriodeMedIsoDatoer(periode);
+    if (!periodeMedIsoDatoer.fomDato || !periodeMedIsoDatoer.tomDato) return undefined;
+
+    try {
+      const bestemmelse = innvilgetMedlemskapsperioder[0]?.bestemmelse || "";
+      const skalOpprette = erUlagretPeriode(periode.id);
+      return await (skalOpprette
+        ? PeriodeAdapter.opprettPeriode(behandlingID, periodeMedIsoDatoer, bestemmelse)
+        : PeriodeAdapter.oppdaterPeriode(behandlingID, periodeMedIsoDatoer, bestemmelse));
+    } catch (error) {
+      setFeilmelding("Feil ved lagring av periode");
+      return undefined;
     }
-
-    return undefined;
   };
 
   const lagreMedlemskapsperioder = useCallback(
