@@ -898,7 +898,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   const skalViseLeggTilForFtrl =
     erEøsPensjonistToggleEnabled === true
-      ? endeligAvgiftValg !== MANUELL_ENDELIG_AVGIFT && !erHelseutgift
+      ? endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET && !erHelseutgift
       : !erHelseutgift;
 
   const skalViseLeggTilForEøsPensjonister =
