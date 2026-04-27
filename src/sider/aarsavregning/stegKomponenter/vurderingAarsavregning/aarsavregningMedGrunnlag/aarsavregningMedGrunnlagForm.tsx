@@ -627,6 +627,19 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const minDate = initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 0, 1) : undefined;
   const maxDate =
     initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 11, 31, 23, 59, 59, 999) : undefined;
+
+  const skalViseLeggTilForFtrl =
+    erEøsPensjonistToggleEnabled === true
+      ? endeligAvgiftValg !== MANUELL_ENDELIG_AVGIFT && !erHelseutgift
+      : !erHelseutgift;
+
+  const skalViseLeggTilForEøsPensjonister =
+    erEøsPensjonistToggleEnabled === true
+      ? endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET
+      : !erHelseutgift;
+
+  const skalViseLeggTil = erHelseutgift ? skalViseLeggTilForEøsPensjonister : skalViseLeggTilForFtrl;
+
   return (
     <>
       <EndeligAvgiftValgRadioGroup
@@ -671,11 +684,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
                     remove={slettMedlemskapsperiode}
                     formValues={formValues}
                     handleLeggTil={leggTilDefaultMedlemskapsperiode}
-                    visLeggTil={
-                      erEøsPensjonistToggleEnabled === true
-                        ? endeligAvgiftValg !== MANUELL_ENDELIG_AVGIFT && !erHelseutgift
-                        : !erHelseutgift
-                    }
+                    visLeggTil={skalViseLeggTil}
                     maxDate={maxDate}
                     minDate={minDate}
                     trygdedekninger={erHelseutgiftDekkesPeriode ? [] : trygdedekninger}
