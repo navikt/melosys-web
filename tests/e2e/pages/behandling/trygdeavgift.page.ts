@@ -215,7 +215,7 @@ export class TrygdeavgiftPage extends StegvelgerPage {
   async verifiserSammenslåtteInntektskilder(): Promise<void> {
     await this.verifiserTrygdeavgiftsTabellSynlig();
     await expect(this.page.getByRole("cell", { name: "***" })).toBeVisible();
-    await expect(this.page.getByText("*** Mer enn en inntektskilde")).toBeVisible();
+    await expect(this.page.getByText("*** Mer enn en inntekt")).toBeVisible();
   }
 
   /**

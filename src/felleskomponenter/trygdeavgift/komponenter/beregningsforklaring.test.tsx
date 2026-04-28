@@ -120,7 +120,7 @@ describe("Beregningsforklaringer", () => {
         perioder={[{ beregningsregel: null, avgiftssats: 8.2, harSammenslåtteInntektskilder: true }]}
       />,
     );
-    expect(screen.getByText(/Mer enn en inntektskilde/)).toBeInTheDocument();
+    expect(screen.getByText(/Mer enn en inntekt/)).toBeInTheDocument();
   });
 
   it("viser alle forklaringer ved kombinasjon av regler og sammenslåtte inntektskilder", () => {
@@ -134,7 +134,7 @@ describe("Beregningsforklaringer", () => {
     );
     expect(screen.getByText(/Beregnet etter 25 %-regelen/)).toBeInTheDocument();
     expect(screen.getByText(/Inntekten er under minstebeløpet/)).toBeInTheDocument();
-    expect(screen.getByText(/Mer enn en inntektskilde/)).toBeInTheDocument();
+    expect(screen.getByText(/Mer enn en inntekt/)).toBeInTheDocument();
   });
 
   it("viser ikke duplikat fotnote for samme beregningsregel i flere perioder", () => {

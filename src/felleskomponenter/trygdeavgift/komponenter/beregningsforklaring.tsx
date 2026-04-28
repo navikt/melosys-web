@@ -82,7 +82,7 @@ export function Beregningsforklaringer({ perioder }: { perioder: MedBeregningsre
           {symbol} {tekst}
         </p>
       ))}
-      {harSammenslåtte && <p key="sammenslatt">*** Mer enn en inntektskilde</p>}
+      {harSammenslåtte && <p key="sammenslatt">*** Mer enn en inntekt</p>}
     </div>
   );
 }

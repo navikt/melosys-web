@@ -217,7 +217,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
 
     const rows = screen.getAllByRole("row");
     expect(rows[1]).toHaveTextContent("***");
-    expect(screen.getByText(/Mer enn en inntektskilde/)).toBeInTheDocument();
+    expect(screen.getByText(/Mer enn en inntekt/)).toBeInTheDocument();
   });
 
   it("viser 'Helsedel' i Dekning-kolonne for avgiftsdel HELSE", () => {
@@ -243,6 +243,6 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
 
     expect(screen.queryByText(/Beregnet etter 25 %-regelen/)).not.toBeInTheDocument();
     expect(screen.queryByText(/Inntekten er under minstebeløpet/)).not.toBeInTheDocument();
-    expect(screen.queryByText(/Mer enn en inntektskilde/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Mer enn en inntekt/)).not.toBeInTheDocument();
   });
 });

@@ -159,13 +159,13 @@ describe("TrygdeavgiftsperioderTabell", () => {
       }),
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
-    expect(screen.getByText("*** Mer enn en inntektskilde")).toBeDefined();
+    expect(screen.getByText("*** Mer enn en inntekt")).toBeDefined();
   });
 
   it("viser ingen *** fotnote når ingen sammenslåtte inntektskilder", () => {
     const perioder = [lagPeriode("2024-01-01", "2024-12-31")];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
-    expect(screen.queryByText(/Mer enn en inntektskilde/)).toBeNull();
+    expect(screen.queryByText(/Mer enn en inntekt/)).toBeNull();
   });
 
   it("viser Helsedel når avgiftsdel er HELSE", () => {
