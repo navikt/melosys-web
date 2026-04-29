@@ -384,6 +384,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       setLagreMedlemskapsperioderPaagar(false);
     } catch (error) {
       setFeilmelding("Feil ved sletting av periode");
+    } finally {
+      setLagreMedlemskapsperioderPaagar(false);
     }
   };
 
