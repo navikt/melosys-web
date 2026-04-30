@@ -153,3 +153,20 @@ export const slettAllePerioder = async (
     }
   }
 };
+
+export const slettPerioderFraAvgiftssystemet = async (
+  periodeType: AarsavregningsPeriodeType,
+  behandlingID: number,
+): Promise<void> => {
+  const kilde = "AVGIFT_SYSTEMET";
+  switch (periodeType) {
+    case "MEDLEMSKAPSPERIODE":
+      await MedlemskapsperioderApi.slettMedlemskapsperioderMedKilde(behandlingID, kilde);
+      return;
+    case "LOVVALGSPERIODE":
+      throw new Error("Lovvalgsperioder er ikke støttet enda");
+    case "HELSEUTGIFTDEKKESPERIODE":
+      await HelseutgiftApi.slettHelseutgiftDekkesPeriodeMedKilde(behandlingID, kilde);
+      return;
+  }
+};

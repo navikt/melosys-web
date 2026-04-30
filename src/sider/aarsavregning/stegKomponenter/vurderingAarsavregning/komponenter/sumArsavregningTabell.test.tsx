@@ -162,6 +162,7 @@ describe("SumArsavregningTabell - Toggle Enabled", () => {
   });
 
   it("calculates and displays difference correctly without previous year avgiftssystem", () => {
+    vi.mocked(useFeatureToggle).mockReturnValue(false);
     render(
       <SumArsavregningTabell
         nyTrygdeavgift={50000}
@@ -177,8 +178,8 @@ describe("SumArsavregningTabell - Toggle Enabled", () => {
     const melosysRow = screen.getByText("Tidligere beregnet trygdeavgift").closest("tr");
     expect(within(melosysRow!).getByText("20 000 kr")).toBeInTheDocument();
 
-    // Check value in "Innbetalt trygdeavgift" row
-    const avgiftssystemRow = screen.getByText("Innbetalt trygdeavgift").closest("tr");
+    // Check value in "Trygdeavgift fra Avgiftssystemet" row (label when toggle is off)
+    const avgiftssystemRow = screen.getByText("Trygdeavgift fra Avgiftssystemet").closest("tr");
     expect(within(avgiftssystemRow!).getByText("10 000 kr")).toBeInTheDocument();
 
     // Check value in "Differanse" row

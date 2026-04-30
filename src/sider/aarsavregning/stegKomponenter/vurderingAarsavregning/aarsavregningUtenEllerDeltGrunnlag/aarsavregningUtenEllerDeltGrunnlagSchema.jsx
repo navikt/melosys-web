@@ -19,7 +19,8 @@ const {
 } = MKV.Koder.inntektskildetype;
 const UTENFOR_MEDLEMSKAPSPERIODEN = { melding: "Utenfor medlemskapsperiode" };
 const UTENFOR_HELSEUTGIFTDEKKESPERIODEN = { melding: "Utenfor periode Norge dekker helseutgifter" };
-const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
+const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT, OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET } =
+  MKV.Koder.endeligAvgiftValg;
 
 export const arbAvgBetalesKreves = (kildetype, medlemskapsTypeErPliktig) =>
   !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
@@ -141,13 +142,29 @@ const erInnenforAvgiftspliktigperiodeTest = {
 };
 
 const medlemskapsperiodeSchema = object().shape({
-  fomDato: string().required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforValgtAarTest),
-  tomDato: string()
-    .required(MAA_FYLLES_UT)
-    .erGyldigDato()
-    .erEtterDatofelt("fomDato")
-    .test(åpenTomTest)
-    .test(erInnenforValgtAarTest),
+  fomDato: string().when("id", {
+    is: (id) => erUlagretPeriode(id),
+    then: (schema) => schema.nullable().notRequired().erGyldigDato().test(erInnenforValgtAarTest),
+    otherwise: (schema) => schema.required(MAA_FYLLES_UT).erGyldigDato().test(erInnenforValgtAarTest),
+  }),
+  tomDato: string().when("id", {
+    is: (id) => erUlagretPeriode(id),
+    then: (schema) =>
+      schema
+        .nullable()
+        .notRequired()
+        .erGyldigDato()
+        .erEtterDatofelt("fomDato")
+        .test(åpenTomTest)
+        .test(erInnenforValgtAarTest),
+    otherwise: (schema) =>
+      schema
+        .required(MAA_FYLLES_UT)
+        .erGyldigDato()
+        .erEtterDatofelt("fomDato")
+        .test(åpenTomTest)
+        .test(erInnenforValgtAarTest),
+  }),
   trygdedekning: string().when("type", {
     is: (type) => type === "HELSEUTGIFTDEKKESPERIODE",
     then: (schema) => schema.nullable().notRequired(),
@@ -186,7 +203,11 @@ const inntektskildeSchema = object().shape({
 const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
   bestemmelse: string().when(["endeligAvgiftValg", "avgiftspliktigperioder"], {
     is: (endeligAvgiftValg, avgiftspliktigperioder) => {
-      if (endeligAvgiftValg !== OPPLYSNINGER_ENDRET) return false;
+      if (
+        endeligAvgiftValg !== OPPLYSNINGER_ENDRET &&
+        endeligAvgiftValg !== OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET
+      )
+        return false;
       const erHelseutgift =
         avgiftspliktigperioder?.length > 0 &&
         avgiftspliktigperioder.every((p) => p.type === "HELSEUTGIFTDEKKESPERIODE");
@@ -197,7 +218,9 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
   }),
   endeligAvgiftValg: string().required(MAA_FYLLES_UT),
   avgiftspliktigperioder: array().when(["endeligAvgiftValg"], {
-    is: (endeligAvgiftValg) => endeligAvgiftValg === OPPLYSNINGER_ENDRET,
+    is: (endeligAvgiftValg) =>
+      endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
+      endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET,
     then: (schema) => schema.min(1, "Minst en medlemskapsperiode").of(medlemskapsperiodeSchema),
     otherwise: (schema) => schema,
   }),
@@ -213,13 +236,19 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
     otherwise: (schema) => schema.nullable(),
   }),
   skatteforholdsperioder: array().when(["endeligAvgiftValg"], {
-    is: (endeligAvgiftValg) => endeligAvgiftValg === OPPLYSNINGER_ENDRET,
+    is: (endeligAvgiftValg) =>
+      endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
+      endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET,
     then: (schema) => schema.min(1, "Minst en skatteforholdsperiode").of(skatteforholdsperiodeSchema),
     otherwise: (schema) => schema,
   }),
   inntektskilder: array().when(["avgiftspliktigperioder", "skatteforholdsperioder", "endeligAvgiftValg"], {
     is: (avgiftspliktigperioder, skatteforholdsperioder, endeligAvgiftValg) => {
-      if (endeligAvgiftValg !== OPPLYSNINGER_ENDRET) return false;
+      if (
+        endeligAvgiftValg !== OPPLYSNINGER_ENDRET &&
+        endeligAvgiftValg !== OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET
+      )
+        return false;
       const medlemskapsTypeErPliktig = erMedlemskapsTypePliktig(avgiftspliktigperioder);
 
       return !(medlemskapsTypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder));

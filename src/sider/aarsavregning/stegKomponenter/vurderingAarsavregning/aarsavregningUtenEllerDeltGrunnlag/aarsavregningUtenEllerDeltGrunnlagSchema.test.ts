@@ -376,7 +376,7 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - bostedLandkode validering",
       endeligAvgiftValg: OPPLYSNINGER_ENDRET,
       avgiftspliktigperioder: [
         {
-          id: 1,
+          id: -2,
           fomDato: "01.01.2024",
           tomDato: "31.12.2024",
           type: "HELSEUTGIFTDEKKESPERIODE",
@@ -392,6 +392,36 @@ describe("aarsavregningUtenEllerDeltGrunnlagSchema - bostedLandkode validering",
     const err = await validate(values, { aar: 2024 });
     expect(err).toBeTruthy();
     expect(hasError(err, "avgiftspliktigperioder[0].bostedLandkode", "Må fylles ut")).toBe(true);
+  });
+
+  it("skal kreve bostedLandkode for alle HELSEUTGIFTDEKKESPERIODE-perioder", async () => {
+    const values = {
+      endeligAvgiftValg: OPPLYSNINGER_ENDRET,
+      avgiftspliktigperioder: [
+        {
+          id: 1,
+          fomDato: "01.01.2024",
+          tomDato: "30.06.2024",
+          type: "HELSEUTGIFTDEKKESPERIODE",
+          bostedLandkode: "SE",
+        },
+        {
+          id: -2,
+          fomDato: "01.07.2024",
+          tomDato: "31.12.2024",
+          type: "HELSEUTGIFTDEKKESPERIODE",
+          bostedLandkode: "",
+        },
+      ],
+      skatteforholdsperioder: [
+        { id: 1, fomDato: "01.01.2024", tomDato: "31.12.2024", skatteplikttype: "SKATTEPLIKTIG" },
+      ],
+      inntektskilder: [],
+    };
+
+    const err = await validate(values, { aar: 2024 });
+    expect(err).toBeTruthy();
+    expect(hasError(err, "avgiftspliktigperioder[1].bostedLandkode", "Må fylles ut")).toBe(true);
   });
 
   it("skal godta utfylt bostedLandkode for HELSEUTGIFTDEKKESPERIODE", async () => {

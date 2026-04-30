@@ -26,3 +26,6 @@ export const hentHelseutgiftDekkesPerioder = (behandlingID: number): Promise<Hel
 
 export const slettHelseutgiftDekkesPeriode = (behandlingID: number, periodeId: number): Promise<void> =>
   deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${HELSEUTGIFTDEKKESPERIODE}/${periodeId}`);
+
+export const slettHelseutgiftDekkesPeriodeMedKilde = (behandlingID: number, kilde: string): Promise<void> =>
+  deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${HELSEUTGIFTDEKKESPERIODE}?kilde=${kilde}`);

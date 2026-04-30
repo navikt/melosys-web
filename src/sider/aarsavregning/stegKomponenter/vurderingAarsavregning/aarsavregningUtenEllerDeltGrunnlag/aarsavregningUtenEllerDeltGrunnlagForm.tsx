@@ -20,6 +20,7 @@ import type {
   BasePeriode,
   AarsavregningsPeriodeType,
   Avgiftspliktigperiode,
+  HelseutgiftdekkesperiodeForAvgift,
 } from "../../../../../services/modules/types/periodeTyper";
 import {
   erMedlemskapsperiodeEllerLovvalgsperiode,
@@ -46,6 +47,7 @@ import {
   AarsavregningFormValuesProps,
   DEFAULT_MEDLEMSKAPSPERIODE,
   lagDefaultPeriode,
+  mapPerioder,
   MedlemskapsperiodeFieldProps,
   erUlagretPeriode,
 } from "./aarsavregningUtenEllerDeltGrunnlag";
@@ -54,7 +56,8 @@ import { Feilmelding, finnAktivFeilmelding, finnAktivFeilmeldingForMedlemskapspe
 import { ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../../featuretoggle/toggleNavn";
 import useFeatureToggle from "../../../../../featuretoggle/useFeatureToggle";
 
-const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
+const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT, OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET } =
+  MKV.Koder.endeligAvgiftValg;
 
 const getChangedDependencies = (
   currentDeps: Record<string, unknown>,
@@ -168,6 +171,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const inntektskilder = useWatch({ control, name: "inntektskilder" });
   const endeligAvgiftValg = useWatch({ control, name: "endeligAvgiftValg" });
   const manueltAvgiftBeloep = useWatch({ control, name: "manueltAvgiftBeloep" });
+  const erEøsPensjonistToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
 
   const debouncedBeregningRef = useRef<ReturnType<typeof Utils._debounce> | null>(null);
   const forrigeInnbetaltTrygdeavgift = useRef(innbetaltTrygdeavgift);
@@ -264,8 +268,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     }
 
     const lagretMedlemskapsperiode = lagredePerioder[index];
-    const trygdedekningNå = erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.trygdedekning : "";
-    const trygdedekningLagret =
+    const nyTrygdedekning = erMedlemskapsperiodeEllerLovvalgsperiode(periode) ? periode.trygdedekning : "";
+    const lagredeTrygdedekning =
       lagretMedlemskapsperiode && erMedlemskapsperiodeEllerLovvalgsperiode(lagretMedlemskapsperiode)
         ? lagretMedlemskapsperiode.trygdedekning
         : "";
@@ -279,13 +283,13 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       erUlagretPeriode(periode.id) ||
       periode.fomDato !== lagretMedlemskapsperiode.fomDato ||
       periode.tomDato !== lagretMedlemskapsperiode.tomDato ||
-      trygdedekningNå !== trygdedekningLagret ||
+      nyTrygdedekning !== lagredeTrygdedekning ||
       bostedLandkodeNå !== bostedLandkodeLagret;
 
     if (harEndringer) {
       try {
         const bestemmelse = getValues("bestemmelse") ?? "";
-        const skalOpprette = erHelseutgift || erUlagretPeriode(periode.id);
+        const skalOpprette = erUlagretPeriode(periode.id);
         return await (skalOpprette
           ? PeriodeAdapter.opprettPeriode(behandlingID, periodeMedIsoDatoer, bestemmelse)
           : PeriodeAdapter.oppdaterPeriode(behandlingID, periodeMedIsoDatoer, bestemmelse));
@@ -322,7 +326,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
       endrerBestemmelse ||
       beregningPaagar ||
       lagreMedlemskapsperioderPaagar ||
-      endeligAvgiftValg !== OPPLYSNINGER_ENDRET
+      endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT
     ) {
       return;
     }
@@ -462,8 +466,38 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     const lagreMedlemskapsperioderEffect = async () => {
       if (redigerbart && !endrerBestemmelse && !lagreMedlemskapsperioderPaagar) {
         if (medlemskapsperioder.length !== medlemskapsperioderForrigeAntall.current) {
-          // Når vi kommer inn her, betyr det at bruker har trykket på "Legg til"-knappen, som automtisk gjør skjema invalid.
           medlemskapsperioderForrigeAntall.current = medlemskapsperioder.length;
+
+          // Ved sletting/legg til: valider at perioder og skatt/inntekt fortsatt er gyldige
+          if (medlemskapsperioder.length > 0) {
+            const aktivFeilmeldingForPerioder = finnAktivFeilmeldingForMedlemskapsperioder(medlemskapsperioder);
+            if (aktivFeilmeldingForPerioder) {
+              setArrayValideringsfeil(aktivFeilmeldingForPerioder);
+              return;
+            }
+            const oppdatertAvgiftspliktigperiode = finnMedlemskapsperiode(medlemskapsperioder);
+            if (oppdatertAvgiftspliktigperiode) {
+              const formState = mapFormState(
+                getValues("skatteforholdsperioder"),
+                getValues("inntektskilder"),
+                medlemskapsperioder,
+                getValues("trygdeavgiftFraAvgiftssystemet"),
+                getValues("endeligAvgiftValg"),
+                getValues("bestemmelse"),
+              );
+              const aktivFeilmelding = finnAktivFeilmelding({
+                skatteforholdsperioder: formState.skatteforholdsperioder,
+                inntektskilder: formState.inntektskilder,
+                medlemskapsperiodeFomTom: oppdatertAvgiftspliktigperiode,
+                medlemskapstypeErPliktig,
+                avgiftspliktigperioder: medlemskapsperioder,
+              });
+              if (aktivFeilmelding) {
+                setArrayValideringsfeil(aktivFeilmelding);
+                return;
+              }
+            }
+          }
           setArrayValideringsfeil(undefined);
           return;
         }
@@ -494,6 +528,29 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         const medlemskapsperioderTilLagring = [...medlemskapsperioder];
         debouncedLagreMedlemskapsperioder(medlemskapsperioderTilLagring, () => {
           setLagreMedlemskapsperioderPaagar(false);
+
+          // Re-valider at skatt/inntekt dekker den (mulig utvidede) samlede perioden
+          const oppdatertAvgiftspliktigperiode = finnMedlemskapsperiode(medlemskapsperioderTilLagring);
+          if (oppdatertAvgiftspliktigperiode) {
+            const formStateEtterLagring = mapFormState(
+              getValues("skatteforholdsperioder"),
+              getValues("inntektskilder"),
+              medlemskapsperioderTilLagring,
+              getValues("trygdeavgiftFraAvgiftssystemet"),
+              getValues("endeligAvgiftValg"),
+              getValues("bestemmelse"),
+            );
+            const aktivFeilmelding = finnAktivFeilmelding({
+              skatteforholdsperioder: formStateEtterLagring.skatteforholdsperioder,
+              inntektskilder: formStateEtterLagring.inntektskilder,
+              medlemskapsperiodeFomTom: oppdatertAvgiftspliktigperiode,
+              medlemskapstypeErPliktig,
+              avgiftspliktigperioder: medlemskapsperioderTilLagring,
+            });
+            if (aktivFeilmelding) {
+              setArrayValideringsfeil(aktivFeilmelding);
+            }
+          }
         });
       }
     };
@@ -525,7 +582,19 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   );
 
   const leggTilDefaultMedlemskapsperiode = () => {
-    medlemskapsperioderAppend(lagDefaultPeriode(periodeType));
+    const defaultPeriode = lagDefaultPeriode(periodeType);
+    if (periodeType === "HELSEUTGIFTDEKKESPERIODE") {
+      const eksisterendeLandkode = medlemskapsperioder.find(
+        (
+          p: MedlemskapsperiodeFieldProps,
+        ): p is HelseutgiftdekkesperiodeForAvgift & { redigerbar: boolean; feil?: string } =>
+          p.type === "HELSEUTGIFTDEKKESPERIODE" && !!p.bostedLandkode,
+      )?.bostedLandkode;
+      if (eksisterendeLandkode && defaultPeriode.type === "HELSEUTGIFTDEKKESPERIODE") {
+        defaultPeriode.bostedLandkode = eksisterendeLandkode;
+      }
+    }
+    medlemskapsperioderAppend(defaultPeriode);
   };
 
   const slettMedlemskapsperiode = async (index: number) => {
@@ -609,7 +678,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   // Håndterer kjøring av beregninger når skjemaverdier endres
   useEffect(() => {
-    if (endeligAvgiftValg !== OPPLYSNINGER_ENDRET) {
+    if (
+      endeligAvgiftValg !== OPPLYSNINGER_ENDRET &&
+      endeligAvgiftValg !== OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET
+    ) {
       setDebouncedBeregningPagaar(false);
       setArrayValideringsfeil(undefined);
       if (debouncedBeregningRef.current?.cancel) {
@@ -666,7 +738,17 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         };
         validateAarsavregningUtenEllerDeltGrunnlag(currentFormState, context).then(({ isValid }) => {
           if (!isValid) {
-            setArrayValideringsfeil(undefined);
+            // Schema-validering feilet, men sjekk om det er skatt/inntekt-feilmeldinger som bør vises
+            const medlemskapsperioderFormState = getValues("avgiftspliktigperioder");
+            const medlemskapsperiodeFomTom = finnMedlemskapsperiode(medlemskapsperioderFormState);
+            const aktivFeilmelding = finnAktivFeilmelding({
+              skatteforholdsperioder: currentFormState.skatteforholdsperioder,
+              inntektskilder: currentFormState.inntektskilder,
+              medlemskapsperiodeFomTom,
+              avgiftspliktigperioder: medlemskapsperioderFormState,
+              medlemskapstypeErPliktig,
+            });
+            setArrayValideringsfeil(aktivFeilmelding ?? undefined);
             return;
           }
           setDebouncedBeregningPagaar(true);
@@ -695,7 +777,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   ]);
 
   const stegErGyldig = useMemo(() => {
-    if (endeligAvgiftValg === OPPLYSNINGER_ENDRET) {
+    if (
+      endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
+      endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET
+    ) {
       return Boolean(
         formIsValid &&
           aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag &&
@@ -738,8 +823,24 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   }, [medlemskapsperiode]);
 
   const handleEndeligAvgiftValgChange = useCallback(
-    (value: string) => {
+    async (value: string) => {
       setFeilmelding(undefined);
+
+      if (erEøsPensjonistToggleEnabled && periodeType) {
+        try {
+          await PeriodeAdapter.slettPerioderFraAvgiftssystemet(periodeType, behandlingID);
+          const gjenværendePerioder = await PeriodeAdapter.hentPerioder(periodeType, behandlingID);
+          const sisteGjeldende = initiellData.aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder;
+          const perioderSomFormValues = mapPerioder(gjenværendePerioder, sisteGjeldende);
+          const oppdatertePerioder =
+            perioderSomFormValues.length > 0 ? perioderSomFormValues : [lagDefaultPeriode(periodeType)];
+          setValue("avgiftspliktigperioder", oppdatertePerioder, { shouldValidate: false });
+          setLagredeMedlemskapsperioder(oppdatertePerioder);
+        } catch (error) {
+          setFeilmelding("Feil ved sletting av perioder fra avgiftssystemet");
+        }
+      }
+
       Api.Aarsavregning.oppdaterEndeligAvgiftValg(behandlingID, value, aarsavregningID).then((res) => {
         if (res) {
           setAarsavregningResponse(res);
@@ -750,7 +851,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         }
       });
     },
-    [aarsavregningID, behandlingID, setValue],
+    [aarsavregningID, behandlingID, setValue, erEøsPensjonistToggleEnabled, periodeType, setLagredeMedlemskapsperioder],
   );
 
   const debouncedOppdaterManueltAvgiftBeloep = useCallback(
@@ -797,6 +898,18 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const maxDate =
     initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 11, 31, 23, 59, 59, 999) : undefined;
 
+  const skalViseLeggTilForFtrl =
+    erEøsPensjonistToggleEnabled === true
+      ? endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET && !erHelseutgift
+      : !erHelseutgift;
+
+  const skalViseLeggTilForEøsPensjonister =
+    erEøsPensjonistToggleEnabled === true
+      ? endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET
+      : !erHelseutgift;
+
+  const skalViseLeggTil = erHelseutgift ? skalViseLeggTilForEøsPensjonister : skalViseLeggTilForFtrl;
+
   return (
     <div className="vurderingAarsavregning">
       {harInnbetaltTrygdeavgift && (
@@ -812,9 +925,12 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         redigerbart={skjemaErRedigerbart}
         handleEndeligAvgiftValgChange={handleEndeligAvgiftValgChange}
         endeligAvgiftValg={endeligAvgiftValg}
+        endretPeriodeFraAvgiftssystemetValg={erDeltGrunnlag}
+        harInnbetaltTrygdeavgift={harInnbetaltTrygdeavgift}
       />
 
-      {endeligAvgiftValg === OPPLYSNINGER_ENDRET && (
+      {(endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
+        endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) && (
         <BorderedFormContainer>
           <Nav.Heading className="endelige_opplysninger_heading" level="2">
             Inntekts- og skatteopplysninger for endelig trygdeavgift
@@ -846,7 +962,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                 remove={slettMedlemskapsperiode}
                 formValues={formValues}
                 handleLeggTil={leggTilDefaultMedlemskapsperiode}
-                visLeggTil={!erHelseutgift}
+                visLeggTil={skalViseLeggTil}
                 maxDate={maxDate}
                 minDate={minDate}
                 trygdedekninger={erHelseutgift ? [] : trygdedekninger}
@@ -926,7 +1042,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         !debouncedBeregningPagaar &&
         !arrayValideringsfeil &&
         !feilmelding &&
-        endeligAvgiftValg === OPPLYSNINGER_ENDRET &&
+        (endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
+          endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) &&
         aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag && (
           <SumArsavregningTabell
             harGrunnlagIMelosys={harTidligereTrygdeavgiftsgrunnlag}
