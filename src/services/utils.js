@@ -261,12 +261,11 @@ export const postAsJsonReceiveAsPDF = (url, data = {}, extendResponse = false) =
 export const fetchAsPDFBlob = (url) =>
   fetch(url, { credentials: "include" })
     .then(sjekkStatuskode)
-    .then((response) => response.blob())
-    .then((blob) => new Blob([blob], { type: "application/pdf" }));
+    .then((response) => response.blob());
 
 export const apnePdfINyFane = async (url) => {
-  fetchAsPDFBlob(url).then((pdfBlob) => {
-    const _url = window.URL.createObjectURL(pdfBlob);
+  fetchAsPDFBlob(url).then((blob) => {
+    const _url = window.URL.createObjectURL(blob);
     window.open(_url, "_blank")?.focus();
   });
 };
