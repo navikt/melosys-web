@@ -28,17 +28,17 @@ function Redigerer({
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          <Skjema.Select
-            label="Type innretning"
-            feltNavn={`${overordnetFeltNavn}.innretningstype`}
-            disabled={!redigerbart}
+          <Skjema.RadioGroup
+            legend="Type innretning"
+            name={`${overordnetFeltNavn}.innretningstype`}
+            readOnly={!redigerbart}
           >
             {MKV.KTObjects.innretningstyper.map((type: KTObject) => (
-              <option key={type.kode} value={type.kode}>
+              <Nav.Radio key={type.kode} value={type.kode}>
                 {type.term}
-              </option>
+              </Nav.Radio>
             ))}
-          </Skjema.Select>
+          </Skjema.RadioGroup>
         </Nav.Column>
         <Nav.Column xs="5">
           <Skjema.LandVelger

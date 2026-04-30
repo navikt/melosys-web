@@ -63,7 +63,7 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
             for="333"
             class="navds-form-field__label navds-label navds-label--small"
           >
-            Adressetilleggsnavn
+            Bygning
           </label>
           <input
             meta="[object Object]"
@@ -90,7 +90,7 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
             for="333"
             class="navds-form-field__label navds-label navds-label--small"
           >
-            Adresse til arbeidsgiver
+            Gate/veg
           </label>
           <input
             meta="[object Object]"
@@ -189,7 +189,7 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
     </div>
     <div class="row">
       <div class="col col-xs-12">
-        <div class="melosys-textfield  navds-form-field navds-form-field--small">
+        <div class="melosys-textfield  navds-form-field navds-form-field--small navds-text-field--disabled navds-form-field--disabled">
           <label
             for="333"
             class="navds-form-field__label navds-label navds-label--small"
@@ -198,6 +198,7 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
           </label>
           <input
             meta="[object Object]"
+            disabled
             id="333"
             class="navds-text-field__input navds-body-short navds-body-short--small"
             type="text"
@@ -216,7 +217,7 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
     </div>
     <div class="row">
       <div class="col col-xs-6">
-        <div class="melosys-textfield  navds-form-field navds-form-field--small">
+        <div class="melosys-textfield  navds-form-field navds-form-field--small navds-text-field--disabled navds-form-field--disabled">
           <label
             for="333"
             class="navds-form-field__label navds-label navds-label--small"
@@ -225,6 +226,7 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
           </label>
           <input
             meta="[object Object]"
+            disabled
             id="333"
             class="navds-text-field__input navds-body-short navds-body-short--small"
             type="text"
@@ -378,6 +380,54 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
               </option>
             </datalist>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-xs-12">
+        <div class="navds-checkbox navds-checkbox--small">
+          <input
+            class="navds-checkbox__input"
+            id="333"
+            aria-labelledby="333"
+            type="checkbox"
+            value
+            name="333"
+          >
+          <label
+            for="333"
+            class="navds-checkbox__label"
+          >
+            <span class="navds-checkbox__icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="0.8125rem"
+                height="0.625rem"
+                viewbox="0 0 13 10"
+                fill="none"
+                focusable="false"
+                role="img"
+                aria-hidden="true"
+              >
+                <path
+                  d="M4.03524 6.41478L10.4752 0.404669C11.0792 -0.160351 12.029 -0.130672 12.5955 0.47478C13.162 1.08027 13.1296 2.03007 12.5245 2.59621L5.02111 9.59934C4.74099 9.85904 4.37559 10 4.00025 10C3.60651 10 3.22717 9.84621 2.93914 9.56111L0.439143 7.06111C-0.146381 6.47558 -0.146381 5.52542 0.439143 4.93989C1.02467 4.35437 1.97483 4.35437 2.56036 4.93989L4.03524 6.41478Z"
+                  fill="currentColor"
+                >
+                </path>
+              </svg>
+            </span>
+            <span class="navds-checkbox__icon-indeterminate">
+            </span>
+            <span class="navds-checkbox__content">
+              <span
+                id="333"
+                aria-hidden="true"
+                class="navds-checkbox__label-text navds-body-short navds-body-short--small"
+              >
+                Tilhører virksomheten samme konsern som den norske arbeidsgiveren?
+              </span>
+            </span>
+          </label>
         </div>
       </div>
     </div>

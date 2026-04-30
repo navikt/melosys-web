@@ -17,7 +17,7 @@ export function EnkeltArbeidsforholdUtland({ redigerbart, overordnetFeltNavn, cl
       <Nav.Row>
         <Nav.Column xs="12">
           <Skjema.Input
-            label="Adressetilleggsnavn"
+            label="Bygning"
             feltNavn={`${overordnetFeltNavn}.adresse.tilleggsnavn`}
             disabled={!redigerbart}
           />
@@ -25,11 +25,7 @@ export function EnkeltArbeidsforholdUtland({ redigerbart, overordnetFeltNavn, cl
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="6">
-          <Skjema.Input
-            label="Adresse til arbeidsgiver"
-            feltNavn={`${overordnetFeltNavn}.adresse.gatenavn`}
-            disabled={!redigerbart}
-          />
+          <Skjema.Input label="Gate/veg" feltNavn={`${overordnetFeltNavn}.adresse.gatenavn`} disabled={!redigerbart} />
         </Nav.Column>
         <Nav.Column xs="6">
           <Skjema.Input
@@ -53,12 +49,12 @@ export function EnkeltArbeidsforholdUtland({ redigerbart, overordnetFeltNavn, cl
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="12">
-          <Skjema.Input label="Postboks" feltNavn={`${overordnetFeltNavn}.adresse.postboks`} disabled={!redigerbart} />
+          <Skjema.Input label="Postboks" feltNavn={`${overordnetFeltNavn}.adresse.postboks`} disabled />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="6">
-          <Skjema.Input label="Region" feltNavn={`${overordnetFeltNavn}.adresse.region`} disabled={!redigerbart} />
+          <Skjema.Input label="Region" feltNavn={`${overordnetFeltNavn}.adresse.region`} disabled />
         </Nav.Column>
         <Nav.Column xs="6">
           <Skjema.LandVelger
@@ -66,6 +62,15 @@ export function EnkeltArbeidsforholdUtland({ redigerbart, overordnetFeltNavn, cl
             feltNavn={`${overordnetFeltNavn}.adresse.landkode`}
             disabled={!redigerbart}
             bredde="fullbredde"
+          />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="12">
+          <Skjema.Checkbox
+            label="Tilhører virksomheten samme konsern som den norske arbeidsgiveren?"
+            feltNavn={`${overordnetFeltNavn}.tilhorerSammeKonsern`}
+            disabled={!redigerbart}
           />
         </Nav.Column>
       </Nav.Row>
