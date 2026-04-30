@@ -33,6 +33,9 @@ export const slettMedlemskapsperiode = (behandlingID: number, medlemskapsID: num
 export const slettMedlemskapsperioder = (behandlingID: number): Promise<void> =>
   deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}`);
 
+export const slettMedlemskapsperioderMedKilde = (behandlingID: number, kilde: string): Promise<void> =>
+  deleteAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingID}/${MEDLEMSKAPSPERIODER}?kilde=${kilde}`);
+
 export const opprettForeslåtteMedlemskapsperioder = (
   behandlingID: number,
   bestemmelse: string,

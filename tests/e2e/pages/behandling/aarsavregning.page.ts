@@ -114,11 +114,11 @@ export class AarsavregningPage extends BehandlingPage {
       // Vi fortsetter likevel og lar neste sjekk fange eventuelle feil
     }
 
-    // Vent på at data for året har lastet ved å sjekke at spørsmålet om trygdeavgift fra Avgiftssystemet vises
-    // Bestemmelse-dropdown vises ikke før etter at brukeren har svart på dette spørsmålet og valgt "endeligAvgiftValg"
-    const trygdeavgiftSpørsmålTekst = this.page.getByText(
-      "Avviker innbetalt trygdeavgift fra tidligere beregnet avgift?",
-    );
+    // Vent på at data for året har lastet ved å sjekke at spørsmålet om trygdeavgift vises
+    // Teksten varierer avhengig av om EØS pensjonist-toggle er på eller av
+    const trygdeavgiftSpørsmålTekst = this.page
+      .getByText("Avviker innbetalt trygdeavgift fra tidligere beregnet avgift?")
+      .or(this.page.getByText("Skal du legge til trygdeavgift fra Avgiftssystemet til denne årsavregningen?"));
     await expect(
       trygdeavgiftSpørsmålTekst,
       `${this.ctx}: Spørsmål om innbetalt trygdeavgift skal være synlig etter årsskifte`,

@@ -13,11 +13,11 @@ import { change } from "redux-form";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { doThenDispatch } from "../../services/utils";
 import * as Api from "../../services/api";
+import type { FeltNavn, Sak } from "./types";
 import * as Types from "./types";
 import * as Actions from "./actions";
 import { MKVUtils } from "../../melosyskodeverk";
 import MKV from "../../melosyskodeverk/index.js";
-import type { Sak, FeltNavn } from "./types";
 import type { RootState } from "AppTypes";
 import type { Anmodningsperiode } from "../../services/modules/anmodningsperioder";
 
@@ -83,7 +83,9 @@ export function prepareKnyttTilSakForm(
     const sisteBehandlingErInaktiv = MKVUtils.erAvsluttetEllerMidlertidigBeslutning(
       sisteBehandling.behandlingsstatus.kode,
     );
-    const sakKanIkkeViderebehandles = MKVUtils.erOpphørtEllerHenlagtEllerBortfaltEllerAnnullert(saksstatus.kode);
+    const sakKanIkkeViderebehandles = MKVUtils.erOpphørtEllerHenlagtEllerBortfaltEllerAnnullertEllerVideresendt(
+      saksstatus.kode,
+    );
 
     // Hent alle async data parallelt
     const [anmodningsperioderResponse, trygdeavgiftResponse, muligeBehandlingstemaer] = await Promise.all([

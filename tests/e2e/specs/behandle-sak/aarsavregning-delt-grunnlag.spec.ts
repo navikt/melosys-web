@@ -34,6 +34,11 @@ async function setupAarsavregningTest(page: Page, saksnummer: PrepopulertSaksnum
   const behandlingPage = new BehandlingPage(page, saksnummer);
   const aarsavregningPage = new AarsavregningPage(page, saksnummer);
 
+  // Skru av EØS pensjonist-toggle for disse testene, da de tester delt grunnlag uten EØS pensjonist-logikk
+  await aarsavregningPage.overstyrFeatureToggles({
+    "melosys.arsavregning.eos_pensjonist": false,
+  });
+
   // Hent URL til prepopulert FTRL-sak med årsavregning og naviger direkte dit
   const url = hentPrepopulertSakUrl(saksnummer);
   await behandlingPage.goto(url);

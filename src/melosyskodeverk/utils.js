@@ -55,10 +55,11 @@ export const harFlerePågåendeBehandlinger = (behandlingsstatuser) => {
   return pågåendeBehandlingsstatuser.length > 1;
 };
 
-export const erOpphørtEllerHenlagtEllerBortfaltEllerAnnullert = (saksstatus) =>
+export const erOpphørtEllerHenlagtEllerBortfaltEllerAnnullertEllerVideresendt = (saksstatus) =>
   [
     MKV.Koder.saksstatuser.OPPHØRT,
     MKV.Koder.saksstatuser.HENLAGT,
     MKV.Koder.saksstatuser.HENLAGT_BORTFALT,
     MKV.Koder.saksstatuser.ANNULLERT,
+    MKV.Koder.saksstatuser.VIDERESENDT,
   ].includes(saksstatus);

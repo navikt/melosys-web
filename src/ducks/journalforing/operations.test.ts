@@ -336,7 +336,10 @@ describe("journalforing operations", () => {
       );
     });
 
-    it("håndterer sak som ikke kan viderebehandles (opphørt/henlagt/bortfalt/annullert)", async () => {
+    it.each([
+      { kode: MKV.Koder.saksstatuser.HENLAGT, term: "Henlagt" },
+      { kode: MKV.Koder.saksstatuser.VIDERESENDT, term: "Videresendt" },
+    ])("håndterer sak som ikke kan viderebehandles når saksstatus er $term", async (saksstatus) => {
       // Mock API responses
       mswServer.use(
         http.get("/api/anmodningsperioder/:behandlingId", () => HttpResponse.json({ anmodningsperioder: [] })),
@@ -351,9 +354,9 @@ describe("journalforing operations", () => {
         ),
       );
 
-      const henlagtSak: Sak = {
+      const sakSomIkkeKanViderebehandles: Sak = {
         ...baseSak,
-        saksstatus: { kode: MKV.Koder.saksstatuser.HENLAGT, term: "Henlagt" },
+        saksstatus,
       };
 
       const initialState: Partial<RootState> = {
@@ -367,7 +370,7 @@ describe("journalforing operations", () => {
       const store = createTestStore(initialState);
 
       const result = await store.dispatch(
-        operations.prepareKnyttTilSakForm(henlagtSak, false, "BRUKER", feltNavn) as any,
+        operations.prepareKnyttTilSakForm(sakSomIkkeKanViderebehandles, false, "BRUKER", feltNavn) as any,
       );
 
       expect(result.sakKanIkkeViderebehandles).toBe(true);
