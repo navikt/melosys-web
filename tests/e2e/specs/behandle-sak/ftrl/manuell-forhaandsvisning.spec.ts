@@ -11,16 +11,15 @@ import { TIMEOUT_FOR_COMPLEX_TESTS } from "../../../utils/testUtils";
  * men er dedikert til å sette opp en sak du deretter kan ta over og manuelt
  * forhåndsvise brev fra Send brev-panelet.
  *
- * Bruk:
- *   pnpm exec playwright test --headed manuell-forhaandsvisning -g "minstebelop"
+ * Bruk (krever PW_INCLUDE_MANUELL=1 for å overstyre default testIgnore):
+ *   PW_INCLUDE_MANUELL=1 pnpm exec playwright test --headed manuell-forhaandsvisning -g "minstebelop"
  *
- * Etter at testen er ferdig, åpne saken i din egen browser-fane:
- *   http://localhost:3333/behandle/<saksnummer>
- * og bruk Send brev-panelet til å forhåndsvise brevmalene
- * (Innvilgelse FTRL, Pliktig medlem FTRL, Trygdeavgift informasjonsbrev).
+ * Etter at testen er ferdig, åpne saken i din egen browser-fane (URL logges av testen)
+ * og bruk Send brev-panelet til å forhåndsvise brevmalene (Innvilgelse FTRL,
+ * Pliktig medlem FTRL, Trygdeavgift informasjonsbrev).
  *
- * Saksnumre er felles med AC-testene i trygdeavgift-beregningsresultat.spec.ts —
- * IKKE kjør begge spec-filer samtidig.
+ * Saksnumre er felles med AC-testene i trygdeavgift-beregningsresultat.spec.ts.
+ * Filen er derfor ekskludert fra default test:e2e via testIgnore i playwright.config.ts.
  */
 
 async function navigerFtrlTilTrygdeavgift(

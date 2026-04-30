@@ -13,11 +13,14 @@ import { Page } from "@playwright/test";
  * som dekker scenarioene MINSTEBELØP, 25%-regel pliktig, 25%-regel frivillig
  * og misjonær.
  *
- * Bruk:
- *   pnpm exec playwright test --headed manuell-forhaandsvisning-25prosent
+ * Bruk (krever PW_INCLUDE_MANUELL=1 for å overstyre default testIgnore):
+ *   PW_INCLUDE_MANUELL=1 pnpm exec playwright test --headed manuell-forhaandsvisning-25prosent
  *
  * Etter testen, åpne saken i din egen browser og naviger til Send brev-panelet
  * for å forhåndsvise 7975 aarsavregning_vedtaksbrev.
+ *
+ * Filen er ekskludert fra default test:e2e via testIgnore i playwright.config.ts
+ * for å unngå konflikt med eksisterende AC-tester som bruker samme saksnumre.
  */
 
 interface SetupResult {
