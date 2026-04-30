@@ -26,12 +26,12 @@ describe("fly RedigeringUtfort", () => {
   it("rendrer tabellheadere", () => {
     render(<RedigeringUtfort verdier={[]} />);
     expect(screen.getByText("Navn på hjemmebase")).toBeDefined();
-    expect(screen.getByText("Type flyvninger")).toBeDefined();
     expect(screen.getByText("Hjemmebasens land")).toBeDefined();
+    expect(screen.getByText("Vanlig hjemmebase")).toBeDefined();
   });
 
   it("rendrer rad med data", () => {
-    const verdier = [{ hjemmebaseNavn: "Flesland", typeFlyvninger: "INNENRIKS", hjemmebaseLand: "NO" }] as any;
+    const verdier = [{ hjemmebaseNavn: "Flesland", hjemmebaseLand: "NO", erVanligHjemmebase: true }] as any;
     render(<RedigeringUtfort verdier={verdier} />);
     expect(screen.getByText("Flesland")).toBeDefined();
   });

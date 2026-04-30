@@ -45,6 +45,7 @@ interface Foretakutland {
   navn: Navn;
   orgnr: string | null;
   selvstendigNaeringsvirksomhet: boolean;
+  tilhorerSammeKonsern: boolean | null;
   adresse: {
     tilleggsnavn: string | null;
     gatenavn: string | null;
@@ -289,6 +290,7 @@ interface Maritimtarbeid {
   innretningLandkode: string | null;
   territorialfarvann: Territorialfarvann;
   innretningstype: Innretningstype;
+  yrke: string | null;
 }
 interface RepresentantIUtlandet {
   representantNavn: string;
@@ -299,6 +301,9 @@ interface LuftfartBase {
   hjemmebaseNavn: HjemmebaseNavn;
   hjemmebaseLand: HjemmebaseLand;
   typeFlyvninger: TypeFlyvninger;
+  erVanligHjemmebase: boolean | null;
+  vanligHjemmebaseLand: string | null;
+  vanligHjemmebaseNavn: string | null;
 }
 export interface Soeknadsland {
   landkoder: string[];

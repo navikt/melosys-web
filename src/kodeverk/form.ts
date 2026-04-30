@@ -30,6 +30,7 @@ export interface ArbeidsforholdUtland {
   navn?: string;
   orgnr?: string;
   selvstendigNaeringsvirksomhet: boolean;
+  tilhorerSammeKonsern?: boolean | null;
   adresse?: Partial<StrukturertAdresse>;
 }
 
@@ -46,6 +47,9 @@ export interface ArbeidsstedFly {
   hjemmebaseNavn?: string;
   hjemmebaseLand?: string;
   typeFlyvninger?: string;
+  erVanligHjemmebase?: boolean | null;
+  vanligHjemmebaseLand?: string;
+  vanligHjemmebaseNavn?: string;
 }
 interface MaritimtArbeid {
   enhetNavn?: string;
@@ -58,6 +62,7 @@ export interface ArbeidsstedSkip extends MaritimtArbeid {
   fartsomradeKode?: string;
   flaggLandkode?: string;
   territorialfarvann?: string;
+  yrke?: string;
 }
 export interface RepresentantIUtlandet {
   representantNavn?: string;
