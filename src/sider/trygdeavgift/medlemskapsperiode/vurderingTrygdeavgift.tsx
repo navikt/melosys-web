@@ -125,10 +125,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     replace: resetInntektskilder,
   } = useFieldArray({ control: control as any, name: "inntektskilder" }) as any;
   const formValues = watch();
-  const formVerdierNøkkel = JSON.stringify({
-    skatteforholdsperioder: formValues?.skatteforholdsperioder,
-    inntektskilder: formValues?.inntektskilder,
-  });
 
   const aktivFeilmeldingType = finnAktivFeilmelding(
     formValues?.inntektskilder,
@@ -307,21 +303,14 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     if (redigerbart && aktivtSteg && !isValidating && !erÅpenSluttDato) {
       debounceBeregnTrygdeavgiftsperioder(formValues, beregningErGyldig);
     }
-  }, [
-    aktivtSteg,
-    beregningErGyldig,
-    debounceBeregnTrygdeavgiftsperioder,
-    erÅpenSluttDato,
-    isValidating,
-    formVerdierNøkkel,
-    redigerbart,
-  ]);
+  }, [aktivtSteg, beregningErGyldig, debounceBeregnTrygdeavgiftsperioder, erÅpenSluttDato, isValidating, redigerbart]);
 
   useEffect(() => {
     if (redigerbart && aktivtSteg) {
       formValues?.skatteforholdsperioder?.forEach((_periode: any, index: number) => {
         trigger(`skatteforholdsperioder[${index}].fomDato`);
         trigger(`skatteforholdsperioder[${index}].tomDato`);
+        trigger(`skatteforholdsperioder[${index}].skatteplikttype`);
       });
       formValues?.inntektskilder?.forEach((_periode: any, index: number) => {
         trigger(`inntektskilder[${index}].fomDato`);
