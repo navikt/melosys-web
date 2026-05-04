@@ -21,6 +21,14 @@ export function VirksomhetMelding() {
   );
 }
 
+export function IngenFlytÅrsavregningMelding() {
+  return (
+    <Nav.Alert variant="warning" className="ingenFlytMelding">
+      <b>Du kan ikke årsavregne disse type saker i Melosys enda, vi jobber med å få det på plass</b>
+    </Nav.Alert>
+  );
+}
+
 export function IngenFlytMelding() {
   return (
     <Nav.Alert variant="warning" className="ingenFlytMelding">
