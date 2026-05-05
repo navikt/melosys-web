@@ -21,6 +21,14 @@ function EnkeltArbeidsforholdUtlandRedigeringUtfort({ verdier }: EnkeltArbeidsfo
           </>
         )}
       </Nav.Column>
+      {verdier.tilhorerSammeKonsern != null && (
+        <Nav.Column xs="12">
+          <Nav.BodyLong size="small">Tilhører samme konsern som norsk arbeidsgiver</Nav.BodyLong>
+          <Nav.BodyLong weight="semibold" size="small">
+            {verdier.tilhorerSammeKonsern ? "Ja" : "Nei"}
+          </Nav.BodyLong>
+        </Nav.Column>
+      )}
     </Nav.Row>
   );
 }

@@ -12,6 +12,7 @@ function RedigeringUtfort({ verdier }: EnRedigeringsknappListeRedigeringUtfort<K
         <Nav.Table.Header>
           <Nav.Table.Row>
             <Nav.Table.HeaderCell>Navn på skip</Nav.Table.HeaderCell>
+            <Nav.Table.HeaderCell>Yrke</Nav.Table.HeaderCell>
             <Nav.Table.HeaderCell>Fartsområde</Nav.Table.HeaderCell>
             <Nav.Table.HeaderCell>Flaggstat/lands territorialfarvann</Nav.Table.HeaderCell>
           </Nav.Table.Row>
@@ -20,6 +21,7 @@ function RedigeringUtfort({ verdier }: EnRedigeringsknappListeRedigeringUtfort<K
           {verdier.map((arbeidsstedSkip) => (
             <Nav.Table.Row key={arbeidsstedSkip.enhetNavn}>
               <Nav.Table.DataCell>{arbeidsstedSkip.enhetNavn}</Nav.Table.DataCell>
+              <Nav.Table.DataCell>{arbeidsstedSkip.yrke}</Nav.Table.DataCell>
               <Nav.Table.DataCell>
                 {KV.kodeTilTerm(arbeidsstedSkip.fartsomradeKode, MKV.KTObjects.begrunnelser.fartsomrader)}
               </Nav.Table.DataCell>

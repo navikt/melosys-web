@@ -5,13 +5,14 @@ import MKV from "../../../../../melosyskodeverk";
 vi.mock("../../../../../navFrontend", () => ({
   Row: ({ children }: any) => <div>{children}</div>,
   Column: ({ children }: any) => <div>{children}</div>,
+  Radio: ({ children, value }: any) => <option value={value}>{children}</option>,
 }));
 
 vi.mock("../../../../skjema", () => ({
   Input: ({ label }: any) => <div>{label}</div>,
-  Select: ({ children, label }: any) => (
+  RadioGroup: ({ legend, children }: any) => (
     <div>
-      <label>{label}</label>
+      <label>{legend}</label>
       <select>{children}</select>
     </div>
   ),

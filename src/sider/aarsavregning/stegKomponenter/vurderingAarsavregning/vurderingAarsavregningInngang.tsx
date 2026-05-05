@@ -39,6 +39,16 @@ const DELT_GRUNNLAG_HJELPETEKST = (
   </>
 );
 
+const DELT_GRUNNLAG_INNBETALT_TRYGDEAVGIFT_HJELPETEKST = (
+  <>
+    <p>
+      Oppgi innbetalt avgift hvis innbetalt beløp ikke samsvarer med tidligere beregnet trygdeavgift. Dette kan for
+      eksempel skyldes at det ikke har vært mulig å trekke fullt beløp fra pensjon, eller at det også er innbetalt
+      avgift i samme sak i Avgiftssystemet.
+    </p>
+  </>
+);
+
 const behandlingHarÅrsavregning = (behandlingID: number, årsavregningList: AarsavregningListResponse[]) => {
   return årsavregningList.find((aarsavregning) => aarsavregning.behandlingID === behandlingID);
 };
@@ -229,7 +239,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const trygdeavgiftAvvikLabelHjelpetekst = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST) ? (
     <LabelMedHjelpetekst
       label="Avviker innbetalt trygdeavgift fra tidligere beregnet avgift?"
-      hjelpetekst={harTidligereTrygdeavgiftsgrunnlag ? DELT_GRUNNLAG_HJELPETEKST : ""}
+      hjelpetekst={harTidligereTrygdeavgiftsgrunnlag ? DELT_GRUNNLAG_INNBETALT_TRYGDEAVGIFT_HJELPETEKST : ""}
     />
   ) : (
     <LabelMedHjelpetekst
