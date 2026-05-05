@@ -46,10 +46,6 @@ const DELT_GRUNNLAG_INNBETALT_TRYGDEAVGIFT_HJELPETEKST = (
       eksempel skyldes at det ikke har vært mulig å trekke fullt beløp fra pensjon, eller at det også er innbetalt
       avgift i samme sak i Avgiftssystemet.
     </p>
-    <ul>
-      <li>Hvis ja må saksbehandler oppgi innbetalt trygdeavgift i et eget felt.</li>
-      <li>Hvis nei må kan saksbehandler gå videre.</li>
-    </ul>
   </>
 );
 
