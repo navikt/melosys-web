@@ -257,7 +257,7 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
     otherwise: (schema) => schema,
   }),
   manueltAvgiftBeloep: string().when(["endeligAvgiftValg"], {
-    is: (endeligAvgiftValg) => endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT,
+    is: (endeligAvgiftValg) => endeligAvgiftValg === OPPLYSNINGER_ENDRET,
     then: (schema) => schema.required(MAA_FYLLES_UT),
     otherwise: (schema) => schema.nullable(),
   }),

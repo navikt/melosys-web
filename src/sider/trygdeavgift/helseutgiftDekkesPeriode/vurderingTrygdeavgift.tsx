@@ -254,7 +254,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const eøsPensjonistBeregnTrygdeavgiftsperioder = (formVerdier: FieldValue<FormValuesProps>) => {
     setFeil(undefined);
     setLagrePending(true);
-
     if (skalIkkeBeregneForelopigTrygdeavgift && skalIkkeViseTidligerePerioderToggle) {
       setTrygdeavgift(undefined);
       setLagrePending(false);
