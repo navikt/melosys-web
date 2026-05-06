@@ -224,14 +224,8 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
     then: (schema) => schema.min(1, "Minst en medlemskapsperiode").of(medlemskapsperiodeSchema),
     otherwise: (schema) => schema,
   }),
-  innbetaltTrygdeavgift: string().when(["$harInnbetaltTrygdeavgift", "avgiftspliktigperioder"], {
-    is: (harInnbetaltTrygdeavgift, avgiftspliktigperioder) => {
-      if (!harInnbetaltTrygdeavgift) return false;
-      const erHelseutgift =
-        avgiftspliktigperioder?.length > 0 &&
-        avgiftspliktigperioder.every((p) => p.type === "HELSEUTGIFTDEKKESPERIODE");
-      return !erHelseutgift;
-    },
+  innbetaltTrygdeavgift: string().when(["$harInnbetaltTrygdeavgift"], {
+    is: (harInnbetaltTrygdeavgift) => harInnbetaltTrygdeavgift,
     then: (schema) => schema.required(MAA_FYLLES_UT),
     otherwise: (schema) => schema.nullable(),
   }),
@@ -257,7 +251,7 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
     otherwise: (schema) => schema,
   }),
   manueltAvgiftBeloep: string().when(["endeligAvgiftValg"], {
-    is: (endeligAvgiftValg) => endeligAvgiftValg === OPPLYSNINGER_ENDRET,
+    is: (endeligAvgiftValg) => endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT,
     then: (schema) => schema.required(MAA_FYLLES_UT),
     otherwise: (schema) => schema.nullable(),
   }),
