@@ -20,8 +20,13 @@ import {
   erMedlemskapsperiode,
   erMedlemskapsperiodeEllerLovvalgsperiode,
   MedlemskapsperiodeForAvgift,
+  AarsavregningsPeriodeType,
 } from "../../../../../services/modules/types/periodeTyper";
 import { sorterEtterISOFomDato } from "../../../../../utils/dato";
+import {
+  mapPerioder,
+  AvgiftspliktigperiodeFieldProps,
+} from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 
 const mapMedlemskapsperioder = (medlemskapsperioder: MedlemskapsperiodeForAvgift[]) => {
   const innvilgedePerioder = medlemskapsperioder.filter(
@@ -38,6 +43,7 @@ const mapMedlemskapsperioder = (medlemskapsperioder: MedlemskapsperiodeForAvgift
 export interface AarsavregningMedGrunnlagFormValues extends FormValuesProps {
   endeligAvgiftValg: string;
   manueltAvgiftBeloep?: number;
+  avgiftspliktigperioder?: AvgiftspliktigperiodeFieldProps[];
 }
 
 export interface InitiellData {
@@ -47,6 +53,8 @@ export interface InitiellData {
   medlemskapstypeErPliktig: boolean;
   forrigeÅrsavregningErManueltBeregnet: boolean;
   valgtÅr?: number;
+  trygdedekninger?: string[];
+  periodeType?: AarsavregningsPeriodeType;
 }
 
 interface Props {
@@ -136,7 +144,7 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
   useEffect(() => {
     if (behandlingID) {
       Api.Aarsavregning.hentAarsavregning(behandlingID)
-        .then((res) => {
+        .then(async (res) => {
           if (!res.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag) {
             setInnlastingFeilmelding("Årsavregning med grunnlag må ha grunnlag");
             setIsLoading(false);
@@ -162,18 +170,46 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
               res.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !== undefined,
           );
 
+          // Map avgiftspliktigperioder for editable display
+          const sisteGjeldende = res.sisteGjeldendeAvgiftspliktigperioder || [];
+          const mappedAvgiftspliktigperioder = sisteGjeldende.length > 0 ? mapPerioder(sisteGjeldende) : [];
+
           const valgtÅr =
             innvilgetMedlemskapsperioder.length > 0
               ? Utils.dato.norskStringTilDate(innvilgetMedlemskapsperioder[0].fomDato)?.getFullYear()
-              : undefined;
+              : sisteGjeldende.length > 0
+                ? new Date(sisteGjeldende[0].fomDato).getFullYear()
+                : undefined;
+
+          // Determine periodeType
+          const periodeType: AarsavregningsPeriodeType | undefined =
+            sisteGjeldende.length > 0 ? sisteGjeldende[0].type : undefined;
+
+          // Fetch trygdedekninger if applicable
+          let trygdedekninger: string[] = [];
+          if (periodeType !== "HELSEUTGIFTDEKKESPERIODE" && innvilgetMedlemskapsperioder.length > 0) {
+            const bestemmelse = innvilgetMedlemskapsperioder[0].bestemmelse;
+            if (bestemmelse) {
+              try {
+                trygdedekninger = await Api.LovligeKombinasjoner.hentTrygdedekninger(bestemmelse);
+              } catch {
+                // Fortsett uten trygdedekninger
+              }
+            }
+          }
 
           setInitiellData({
             aarsavregningResponse: res,
-            formDefaultValues: defaultFormValues,
+            formDefaultValues: {
+              ...defaultFormValues,
+              avgiftspliktigperioder: mappedAvgiftspliktigperioder,
+            },
             innvilgetMedlemskapsperioder,
             medlemskapstypeErPliktig,
             forrigeÅrsavregningErManueltBeregnet,
             valgtÅr,
+            trygdedekninger,
+            periodeType,
           });
           setIsLoading(false);
         })

@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "recordedAt": "2025-01-01T00:00:00.000Z",
-  "testFile": "/Users/ragnarwestad/develop/nav/melosys-web-2/tests/e2e/specs/behandle-sak/send-brev-validering.spec.ts",
+  "testFile": "/Users/Chak.Kwan.Hui/Documents/Melosys/Projects/melosys-web/tests/e2e/specs/behandle-sak/send-brev-validering.spec.ts",
   "testName": "Korrekt validering for brevmal 'Innhenting av inntektsopplysninger for årsavregning'",
   "exchanges": [
     {
@@ -48,18 +48,18 @@
           "content-type": "application/json"
         },
         "body": {
-          "behandlingsresultatTypeKode": "IKKE_FASTSATT",
-          "begrunnelseKoder": [],
+          "aarsavregningID": null,
           "begrunnelseFritekst": null,
+          "begrunnelseKoder": [],
+          "behandlingsresultatTypeKode": "IKKE_FASTSATT",
+          "fakturaserieReferanse": null,
           "innledningFritekst": null,
-          "trygdeavgiftFritekst": null,
+          "kontrollresultatBegrunnelseKoder": [],
           "nyVurderingBakgrunn": null,
+          "trygdeavgiftFritekst": null,
           "utfallRegistreringUnntak": null,
           "utfallUtpeking": null,
-          "vedtakstype": null,
-          "kontrollresultatBegrunnelseKoder": [],
-          "fakturaserieReferanse": null,
-          "aarsavregningID": null
+          "vedtakstype": null
         }
       }
     },
@@ -85,28 +85,28 @@
         "body": {
           "behandlingID": 23,
           "oppsummering": {
+            "behandlingsfrist": "2025-01-01",
+            "behandlingsresultattype": {
+              "kode": "IKKE_FASTSATT",
+              "term": "Ikke fastsatt"
+            },
             "behandlingsstatus": {
               "kode": "UNDER_BEHANDLING",
               "term": "Behandlingen pågår"
-            },
-            "behandlingstype": {
-              "kode": "ÅRSAVREGNING",
-              "term": "Årsavregning"
             },
             "behandlingstema": {
               "kode": "YRKESAKTIV",
               "term": "Yrkesaktiv"
             },
-            "registrertDato": "2025-01-01T00:00:00.000Z",
-            "endretDato": "2025-01-01T00:00:00.000Z",
+            "behandlingstype": {
+              "kode": "ÅRSAVREGNING",
+              "term": "Årsavregning"
+            },
             "endretAvNavn": "Lokal Testbruker",
+            "endretDato": "2025-01-01T00:00:00.000Z",
+            "registrertDato": "2025-01-01T00:00:00.000Z",
             "sisteOpplysningerHentetDato": null,
-            "svarFrist": null,
-            "behandlingsfrist": "2025-01-01",
-            "behandlingsresultattype": {
-              "kode": "IKKE_FASTSATT",
-              "term": "Ikke fastsatt"
-            }
+            "svarFrist": null
           },
           "saksopplysninger": {
             "arbeidsforhold": [],
@@ -119,15 +119,15 @@
               "frilansInntektMaanedListe": []
             },
             "sed": {
-              "rinaSaksnummer": null,
-              "rinaDokumentID": null,
+              "bucType": null,
+              "erEndring": false,
               "fnr": null,
-              "lovvalgsperiode": null,
               "lovvalgsbestemmelse": null,
               "lovvalgslandKode": null,
-              "erEndring": false,
-              "sedType": null,
-              "bucType": null
+              "lovvalgsperiode": null,
+              "rinaDokumentID": null,
+              "rinaSaksnummer": null,
+              "sedType": null
             }
           },
           "redigerbart": true
@@ -233,314 +233,6 @@
         "body": [
           {
             "mottaker": {
-              "type": "Annen organisasjon",
-              "rolle": "ANNEN_ORGANISASJON",
-              "orgnrSettesAvSaksbehandler": false,
-              "adresser": null,
-              "feilmelding": null
-            },
-            "brevTyper": [
-              {
-                "type": {
-                  "kode": "GENERELT_FRITEKSTBREV_ARBEIDSGIVER",
-                  "term": "Fritekstbrev til virksomhet"
-                },
-                "felter": [
-                  {
-                    "kode": "BREV_TITTEL",
-                    "beskrivelse": "Overskrift i brev",
-                    "feltType": "TEKST",
-                    "hjelpetekst": null,
-                    "paakrevd": true,
-                    "valg": {
-                      "valgAlternativer": [
-                        {
-                          "kode": "BEKREFTELSE_PÅ_MEDLEMSKAP",
-                          "beskrivelse": "Bekreftelse på medlemskap i folketrygden",
-                          "visFelt": false
-                        },
-                        {
-                          "kode": "CONFIRMATION_OF_MEMBERSHIP",
-                          "beskrivelse": "Confirmation of membership in the National Insurance Scheme",
-                          "visFelt": false
-                        },
-                        {
-                          "kode": "FRITEKST_BRUKER_OG_VIRKSOMHET",
-                          "beskrivelse": "Fritekst (maks 60 tegn)",
-                          "visFelt": true
-                        },
-                        {
-                          "kode": "HENVENDELSE_OM_MEDLEMSKAP",
-                          "beskrivelse": "Svar på henvendelse om medlemskap i folketrygden",
-                          "visFelt": false
-                        }
-                      ],
-                      "valgType": "SELECT"
-                    },
-                    "tegnBegrensning": 60
-                  },
-                  {
-                    "kode": "DISTRIBUSJONSTYPE",
-                    "beskrivelse": "Type brev",
-                    "feltType": null,
-                    "hjelpetekst": "Type brev må angis slik at bruker får riktig varseltekst om brevet som sendes. Gjelder det et vedtak eller en forespørsel, vil bruker få en påminnelse hvis brevet ikke har blitt lest innen 7 dager.",
-                    "paakrevd": true,
-                    "valg": {
-                      "valgAlternativer": [
-                        {
-                          "kode": "ANNET",
-                          "beskrivelse": "Annet",
-                          "visFelt": false
-                        },
-                        {
-                          "kode": "VEDTAK",
-                          "beskrivelse": "Vedtak",
-                          "visFelt": false
-                        },
-                        {
-                          "kode": "VIKTIG",
-                          "beskrivelse": "Viktig",
-                          "visFelt": false
-                        }
-                      ],
-                      "valgType": "RADIO"
-                    },
-                    "tegnBegrensning": null
-                  },
-                  {
-                    "kode": "DOKUMENT_TITTEL",
-                    "beskrivelse": "Dokumenttittel (valgfri, maks 60 tegn)",
-                    "feltType": "TEKST",
-                    "hjelpetekst": "Dette blir teksten som vises i dokumentoversikten.\nHvis feltet står tomt brukes navnet på brevmalen som dokumenttittel.",
-                    "paakrevd": false,
-                    "valg": null,
-                    "tegnBegrensning": 60
-                  },
-                  {
-                    "kode": "FRITEKST",
-                    "beskrivelse": "Hovedtekst til brev",
-                    "feltType": "FRITEKST",
-                    "hjelpetekst": null,
-                    "paakrevd": true,
-                    "valg": null,
-                    "tegnBegrensning": null
-                  },
-                  {
-                    "kode": "FRITEKSTVEDLEGG",
-                    "beskrivelse": "Legg til fritekstvedlegg",
-                    "feltType": "FRITEKSTVEDLEGG",
-                    "hjelpetekst": null,
-                    "paakrevd": false,
-                    "valg": null,
-                    "tegnBegrensning": null
-                  },
-                  {
-                    "kode": "STANDARDTEKST_KONTAKTINFORMASJON",
-                    "beskrivelse": "Legg til standardtekst med kontaktinformasjon nederst i brevet",
-                    "feltType": "SJEKKBOKS",
-                    "hjelpetekst": null,
-                    "paakrevd": false,
-                    "valg": null,
-                    "tegnBegrensning": null
-                  },
-                  {
-                    "kode": "VEDLEGG",
-                    "beskrivelse": "Vedlegg",
-                    "feltType": "VEDLEGG",
-                    "hjelpetekst": null,
-                    "paakrevd": false,
-                    "valg": null,
-                    "tegnBegrensning": null
-                  }
-                ]
-              },
-              {
-                "type": {
-                  "kode": "MANGELBREV_ARBEIDSGIVER",
-                  "term": "Melding om manglende opplysninger til virksomhet"
-                },
-                "felter": [
-                  {
-                    "kode": "INNLEDNING_FRITEKST",
-                    "beskrivelse": "Innledningstekst",
-                    "feltType": "FRITEKST",
-                    "hjelpetekst": null,
-                    "paakrevd": true,
-                    "valg": null,
-                    "tegnBegrensning": null
-                  },
-                  {
-                    "kode": "MANGLER_FRITEKST",
-                    "beskrivelse": "Hva skal mottakeren sende inn?",
-                    "feltType": "FRITEKST",
-                    "hjelpetekst": null,
-                    "paakrevd": true,
-                    "valg": null,
-                    "tegnBegrensning": null
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "mottaker": {
-              "type": "Arbeidsgiver eller arbeidsgivers fullmektig",
-              "rolle": "ARBEIDSGIVER",
-              "orgnrSettesAvSaksbehandler": false,
-              "adresser": null,
-              "feilmelding": {
-                "tittel": "Finner ikke gyldig adresse til arbeidsgiver(e). Kontroller at arbeidsgiver(e) er lagt inn korrekt i sidemenyen",
-                "underpunkter": []
-              }
-            },
-            "brevTyper": [
-              {
-                "type": {
-                  "kode": "GENERELT_FRITEKSTBREV_ARBEIDSGIVER",
-                  "term": "Fritekstbrev til virksomhet"
-                },
-                "felter": [
-                  {
-                    "kode": "BREV_TITTEL",
-                    "beskrivelse": "Overskrift i brev",
-                    "feltType": "TEKST",
-                    "hjelpetekst": null,
-                    "paakrevd": true,
-                    "valg": {
-                      "valgAlternativer": [
-                        {
-                          "kode": "BEKREFTELSE_PÅ_MEDLEMSKAP",
-                          "beskrivelse": "Bekreftelse på medlemskap i folketrygden",
-                          "visFelt": false
-                        },
-                        {
-                          "kode": "CONFIRMATION_OF_MEMBERSHIP",
-                          "beskrivelse": "Confirmation of membership in the National Insurance Scheme",
-                          "visFelt": false
-                        },
-                        {
-                          "kode": "FRITEKST_BRUKER_OG_VIRKSOMHET",
-                          "beskrivelse": "Fritekst (maks 60 tegn)",
-                          "visFelt": true
-                        },
-                        {
-                          "kode": "HENVENDELSE_OM_MEDLEMSKAP",
-                          "beskrivelse": "Svar på henvendelse om medlemskap i folketrygden",
-                          "visFelt": false
-                        }
-                      ],
-                      "valgType": "SELECT"
-                    },
-                    "tegnBegrensning": 60
-                  },
-                  {
-                    "kode": "DISTRIBUSJONSTYPE",
-                    "beskrivelse": "Type brev",
-                    "feltType": null,
-                    "hjelpetekst": "Type brev må angis slik at bruker får riktig varseltekst om brevet som sendes. Gjelder det et vedtak eller en forespørsel, vil bruker få en påminnelse hvis brevet ikke har blitt lest innen 7 dager.",
-                    "paakrevd": true,
-                    "valg": {
-                      "valgAlternativer": [
-                        {
-                          "kode": "ANNET",
-                          "beskrivelse": "Annet",
-                          "visFelt": false
-                        },
-                        {
-                          "kode": "VEDTAK",
-                          "beskrivelse": "Vedtak",
-                          "visFelt": false
-                        },
-                        {
-                          "kode": "VIKTIG",
-                          "beskrivelse": "Viktig",
-                          "visFelt": false
-                        }
-                      ],
-                      "valgType": "RADIO"
-                    },
-                    "tegnBegrensning": null
-                  },
-                  {
-                    "kode": "DOKUMENT_TITTEL",
-                    "beskrivelse": "Dokumenttittel (valgfri, maks 60 tegn)",
-                    "feltType": "TEKST",
-                    "hjelpetekst": "Dette blir teksten som vises i dokumentoversikten.\nHvis feltet står tomt brukes navnet på brevmalen som dokumenttittel.",
-                    "paakrevd": false,
-                    "valg": null,
-                    "tegnBegrensning": 60
-                  },
-                  {
-                    "kode": "FRITEKST",
-                    "beskrivelse": "Hovedtekst til brev",
-                    "feltType": "FRITEKST",
-                    "hjelpetekst": null,
-                    "paakrevd": true,
-                    "valg": null,
-                    "tegnBegrensning": null
-                  },
-                  {
-                    "kode": "FRITEKSTVEDLEGG",
-                    "beskrivelse": "Legg til fritekstvedlegg",
-                    "feltType": "FRITEKSTVEDLEGG",
-                    "hjelpetekst": null,
-                    "paakrevd": false,
-                    "valg": null,
-                    "tegnBegrensning": null
-                  },
-                  {
-                    "kode": "STANDARDTEKST_KONTAKTINFORMASJON",
-                    "beskrivelse": "Legg til standardtekst med kontaktinformasjon nederst i brevet",
-                    "feltType": "SJEKKBOKS",
-                    "hjelpetekst": null,
-                    "paakrevd": false,
-                    "valg": null,
-                    "tegnBegrensning": null
-                  },
-                  {
-                    "kode": "VEDLEGG",
-                    "beskrivelse": "Vedlegg",
-                    "feltType": "VEDLEGG",
-                    "hjelpetekst": null,
-                    "paakrevd": false,
-                    "valg": null,
-                    "tegnBegrensning": null
-                  }
-                ]
-              },
-              {
-                "type": {
-                  "kode": "MANGELBREV_ARBEIDSGIVER",
-                  "term": "Melding om manglende opplysninger til virksomhet"
-                },
-                "felter": [
-                  {
-                    "kode": "INNLEDNING_FRITEKST",
-                    "beskrivelse": "Innledningstekst",
-                    "feltType": "FRITEKST",
-                    "hjelpetekst": null,
-                    "paakrevd": true,
-                    "valg": null,
-                    "tegnBegrensning": null
-                  },
-                  {
-                    "kode": "MANGLER_FRITEKST",
-                    "beskrivelse": "Hva skal mottakeren sende inn?",
-                    "feltType": "FRITEKST",
-                    "hjelpetekst": null,
-                    "paakrevd": true,
-                    "valg": null,
-                    "tegnBegrensning": null
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "mottaker": {
-              "type": "Bruker eller brukers fullmektig",
-              "rolle": "BRUKER",
-              "orgnrSettesAvSaksbehandler": false,
               "adresser": [
                 {
                   "mottakerNavn": "TRIVIELL KARAFFEL",
@@ -553,298 +245,606 @@
                   "ugyldig": false
                 }
               ],
-              "feilmelding": null
+              "feilmelding": null,
+              "orgnrSettesAvSaksbehandler": false,
+              "rolle": "BRUKER",
+              "type": "Bruker eller brukers fullmektig"
             },
             "brevTyper": [
               {
-                "type": {
-                  "kode": "GENERELT_FRITEKSTBREV_BRUKER",
-                  "term": "Fritekstbrev til bruker"
-                },
                 "felter": [
                   {
-                    "kode": "BREV_TITTEL",
+                    "beskrivelse": "Innledningstekst",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "kode": "INNLEDNING_FRITEKST",
+                    "paakrevd": true,
+                    "tegnBegrensning": null,
+                    "valg": null
+                  },
+                  {
+                    "beskrivelse": "Hva skal mottakeren sende inn?",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "kode": "MANGLER_FRITEKST",
+                    "paakrevd": true,
+                    "tegnBegrensning": null,
+                    "valg": null
+                  }
+                ],
+                "type": {
+                  "kode": "MANGELBREV_BRUKER",
+                  "term": "Melding om manglende opplysninger til bruker"
+                }
+              },
+              {
+                "felter": [
+                  {
                     "beskrivelse": "Overskrift i brev",
                     "feltType": "TEKST",
                     "hjelpetekst": null,
+                    "kode": "BREV_TITTEL",
                     "paakrevd": true,
+                    "tegnBegrensning": 60,
                     "valg": {
                       "valgAlternativer": [
                         {
-                          "kode": "BEKREFTELSE_PÅ_MEDLEMSKAP",
                           "beskrivelse": "Bekreftelse på medlemskap i folketrygden",
+                          "kode": "BEKREFTELSE_PÅ_MEDLEMSKAP",
                           "visFelt": false
                         },
                         {
-                          "kode": "CONFIRMATION_OF_MEMBERSHIP",
                           "beskrivelse": "Confirmation of membership in the National Insurance Scheme",
+                          "kode": "CONFIRMATION_OF_MEMBERSHIP",
                           "visFelt": false
                         },
                         {
-                          "kode": "FRITEKST_BRUKER_OG_VIRKSOMHET",
                           "beskrivelse": "Fritekst (maks 60 tegn)",
+                          "kode": "FRITEKST_BRUKER_OG_VIRKSOMHET",
                           "visFelt": true
                         },
                         {
-                          "kode": "HENVENDELSE_OM_MEDLEMSKAP",
                           "beskrivelse": "Svar på henvendelse om medlemskap i folketrygden",
+                          "kode": "HENVENDELSE_OM_MEDLEMSKAP",
                           "visFelt": false
                         }
                       ],
                       "valgType": "SELECT"
-                    },
-                    "tegnBegrensning": 60
+                    }
                   },
                   {
-                    "kode": "DISTRIBUSJONSTYPE",
                     "beskrivelse": "Type brev",
                     "feltType": null,
                     "hjelpetekst": "Type brev må angis slik at bruker får riktig varseltekst om brevet som sendes. Gjelder det et vedtak eller en forespørsel, vil bruker få en påminnelse hvis brevet ikke har blitt lest innen 7 dager.",
+                    "kode": "DISTRIBUSJONSTYPE",
                     "paakrevd": true,
+                    "tegnBegrensning": null,
                     "valg": {
                       "valgAlternativer": [
                         {
-                          "kode": "ANNET",
                           "beskrivelse": "Annet",
+                          "kode": "ANNET",
                           "visFelt": false
                         },
                         {
-                          "kode": "VEDTAK",
                           "beskrivelse": "Vedtak",
+                          "kode": "VEDTAK",
                           "visFelt": false
                         },
                         {
-                          "kode": "VIKTIG",
                           "beskrivelse": "Viktig",
+                          "kode": "VIKTIG",
                           "visFelt": false
                         }
                       ],
                       "valgType": "RADIO"
-                    },
-                    "tegnBegrensning": null
+                    }
                   },
                   {
-                    "kode": "DOKUMENT_TITTEL",
                     "beskrivelse": "Dokumenttittel (valgfri, maks 60 tegn)",
                     "feltType": "TEKST",
                     "hjelpetekst": "Dette blir teksten som vises i dokumentoversikten.\nHvis feltet står tomt brukes navnet på brevmalen som dokumenttittel.",
+                    "kode": "DOKUMENT_TITTEL",
                     "paakrevd": false,
-                    "valg": null,
-                    "tegnBegrensning": 60
+                    "tegnBegrensning": 60,
+                    "valg": null
                   },
                   {
-                    "kode": "FRITEKST",
                     "beskrivelse": "Hovedtekst til brev",
                     "feltType": "FRITEKST",
                     "hjelpetekst": null,
+                    "kode": "FRITEKST",
                     "paakrevd": true,
-                    "valg": null,
-                    "tegnBegrensning": null
+                    "tegnBegrensning": null,
+                    "valg": null
                   },
                   {
-                    "kode": "FRITEKSTVEDLEGG",
                     "beskrivelse": "Legg til fritekstvedlegg",
                     "feltType": "FRITEKSTVEDLEGG",
                     "hjelpetekst": null,
+                    "kode": "FRITEKSTVEDLEGG",
                     "paakrevd": false,
-                    "valg": null,
-                    "tegnBegrensning": null
+                    "tegnBegrensning": null,
+                    "valg": null
                   },
                   {
-                    "kode": "STANDARDTEKST_KONTAKTINFORMASJON",
                     "beskrivelse": "Legg til standardtekst med kontaktinformasjon nederst i brevet",
                     "feltType": "SJEKKBOKS",
                     "hjelpetekst": null,
+                    "kode": "STANDARDTEKST_KONTAKTINFORMASJON",
                     "paakrevd": false,
-                    "valg": null,
-                    "tegnBegrensning": null
+                    "tegnBegrensning": null,
+                    "valg": null
                   },
                   {
-                    "kode": "VEDLEGG",
                     "beskrivelse": "Vedlegg",
                     "feltType": "VEDLEGG",
                     "hjelpetekst": null,
+                    "kode": "VEDLEGG",
                     "paakrevd": false,
-                    "valg": null,
-                    "tegnBegrensning": null
+                    "tegnBegrensning": null,
+                    "valg": null
                   }
-                ]
+                ],
+                "type": {
+                  "kode": "GENERELT_FRITEKSTBREV_BRUKER",
+                  "term": "Fritekstbrev til bruker"
+                }
               },
               {
-                "type": {
-                  "kode": "INNHENTING_AV_INNTEKTSOPPLYSNINGER",
-                  "term": "Innhenting av inntektsopplysninger for årsavregning"
-                },
                 "felter": [
                   {
-                    "kode": "FRITEKST",
                     "beskrivelse": null,
                     "feltType": "FRITEKST",
                     "hjelpetekst": null,
+                    "kode": "FRITEKST",
                     "paakrevd": false,
+                    "tegnBegrensning": null,
                     "valg": {
                       "valgAlternativer": [
                         {
-                          "kode": "FRITEKST",
                           "beskrivelse": "Fritekst",
+                          "kode": "FRITEKST",
                           "visFelt": true
                         }
                       ],
                       "valgType": "CHECKBOX"
-                    },
-                    "tegnBegrensning": null
+                    }
                   },
                   {
-                    "kode": "STANDARDTEKST_INNHENTINGBREVFORMTITTEL",
                     "beskrivelse": "Hva skal mottakeren sende inn?",
                     "feltType": "FORMTITTEL",
                     "hjelpetekst": null,
+                    "kode": "STANDARDTEKST_INNHENTINGBREVFORMTITTEL",
                     "paakrevd": false,
-                    "valg": null,
-                    "tegnBegrensning": null
+                    "tegnBegrensning": null,
+                    "valg": null
                   },
                   {
-                    "kode": "STANDARDTEKST_INNTEKTSOPPLYSNINGER",
                     "beskrivelse": "Standardtekst for opplysninger om inntekt",
                     "feltType": "SJEKKBOKS",
                     "hjelpetekst": null,
+                    "kode": "STANDARDTEKST_INNTEKTSOPPLYSNINGER",
                     "paakrevd": false,
-                    "valg": null,
-                    "tegnBegrensning": null
+                    "tegnBegrensning": null,
+                    "valg": null
                   }
-                ]
-              },
-              {
+                ],
                 "type": {
-                  "kode": "MANGELBREV_BRUKER",
-                  "term": "Melding om manglende opplysninger til bruker"
-                },
-                "felter": [
-                  {
-                    "kode": "INNLEDNING_FRITEKST",
-                    "beskrivelse": "Innledningstekst",
-                    "feltType": "FRITEKST",
-                    "hjelpetekst": null,
-                    "paakrevd": true,
-                    "valg": null,
-                    "tegnBegrensning": null
-                  },
-                  {
-                    "kode": "MANGLER_FRITEKST",
-                    "beskrivelse": "Hva skal mottakeren sende inn?",
-                    "feltType": "FRITEKST",
-                    "hjelpetekst": null,
-                    "paakrevd": true,
-                    "valg": null,
-                    "tegnBegrensning": null
-                  }
-                ]
+                  "kode": "INNHENTING_AV_INNTEKTSOPPLYSNINGER",
+                  "term": "Innhenting av inntektsopplysninger for årsavregning"
+                }
               }
             ]
           },
           {
             "mottaker": {
-              "type": "Norske myndigheter",
-              "rolle": "NORSK_MYNDIGHET",
-              "orgnrSettesAvSaksbehandler": false,
               "adresser": null,
-              "feilmelding": null
+              "feilmelding": {
+                "tittel": "Finner ikke gyldig adresse til arbeidsgiver(e). Kontroller at arbeidsgiver(e) er lagt inn korrekt i sidemenyen",
+                "underpunkter": []
+              },
+              "orgnrSettesAvSaksbehandler": false,
+              "rolle": "ARBEIDSGIVER",
+              "type": "Arbeidsgiver eller arbeidsgivers fullmektig"
             },
             "brevTyper": [
               {
-                "type": {
-                  "kode": "FRITEKSTBREV",
-                  "term": "Fritekstbrev"
-                },
                 "felter": [
                   {
-                    "kode": "BREV_TITTEL",
+                    "beskrivelse": "Innledningstekst",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "kode": "INNLEDNING_FRITEKST",
+                    "paakrevd": true,
+                    "tegnBegrensning": null,
+                    "valg": null
+                  },
+                  {
+                    "beskrivelse": "Hva skal mottakeren sende inn?",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "kode": "MANGLER_FRITEKST",
+                    "paakrevd": true,
+                    "tegnBegrensning": null,
+                    "valg": null
+                  }
+                ],
+                "type": {
+                  "kode": "MANGELBREV_ARBEIDSGIVER",
+                  "term": "Melding om manglende opplysninger til virksomhet"
+                }
+              },
+              {
+                "felter": [
+                  {
                     "beskrivelse": "Overskrift i brev",
                     "feltType": "TEKST",
                     "hjelpetekst": null,
+                    "kode": "BREV_TITTEL",
                     "paakrevd": true,
+                    "tegnBegrensning": 60,
                     "valg": {
                       "valgAlternativer": [
                         {
-                          "kode": "FRITEKST",
-                          "beskrivelse": "Fritekst",
+                          "beskrivelse": "Bekreftelse på medlemskap i folketrygden",
+                          "kode": "BEKREFTELSE_PÅ_MEDLEMSKAP",
+                          "visFelt": false
+                        },
+                        {
+                          "beskrivelse": "Confirmation of membership in the National Insurance Scheme",
+                          "kode": "CONFIRMATION_OF_MEMBERSHIP",
+                          "visFelt": false
+                        },
+                        {
+                          "beskrivelse": "Fritekst (maks 60 tegn)",
+                          "kode": "FRITEKST_BRUKER_OG_VIRKSOMHET",
                           "visFelt": true
                         },
                         {
-                          "kode": "ORIENTERING_BESLUTNING",
-                          "beskrivelse": "Orientering om vår beslutning",
+                          "beskrivelse": "Svar på henvendelse om medlemskap i folketrygden",
+                          "kode": "HENVENDELSE_OM_MEDLEMSKAP",
                           "visFelt": false
                         }
                       ],
                       "valgType": "SELECT"
-                    },
-                    "tegnBegrensning": 60
+                    }
                   },
                   {
-                    "kode": "DISTRIBUSJONSTYPE",
                     "beskrivelse": "Type brev",
                     "feltType": null,
                     "hjelpetekst": "Type brev må angis slik at bruker får riktig varseltekst om brevet som sendes. Gjelder det et vedtak eller en forespørsel, vil bruker få en påminnelse hvis brevet ikke har blitt lest innen 7 dager.",
+                    "kode": "DISTRIBUSJONSTYPE",
                     "paakrevd": true,
+                    "tegnBegrensning": null,
                     "valg": {
                       "valgAlternativer": [
                         {
-                          "kode": "ANNET",
                           "beskrivelse": "Annet",
+                          "kode": "ANNET",
                           "visFelt": false
                         },
                         {
-                          "kode": "VEDTAK",
                           "beskrivelse": "Vedtak",
+                          "kode": "VEDTAK",
                           "visFelt": false
                         },
                         {
-                          "kode": "VIKTIG",
                           "beskrivelse": "Viktig",
+                          "kode": "VIKTIG",
                           "visFelt": false
                         }
                       ],
                       "valgType": "RADIO"
-                    },
-                    "tegnBegrensning": null
+                    }
                   },
                   {
-                    "kode": "DOKUMENT_TITTEL",
                     "beskrivelse": "Dokumenttittel (valgfri, maks 60 tegn)",
                     "feltType": "TEKST",
                     "hjelpetekst": "Dette blir teksten som vises i dokumentoversikten.\nHvis feltet står tomt brukes navnet på brevmalen som dokumenttittel.",
+                    "kode": "DOKUMENT_TITTEL",
                     "paakrevd": false,
-                    "valg": null,
-                    "tegnBegrensning": 60
+                    "tegnBegrensning": 60,
+                    "valg": null
                   },
                   {
-                    "kode": "FRITEKST",
                     "beskrivelse": "Hovedtekst til brev",
                     "feltType": "FRITEKST",
                     "hjelpetekst": null,
+                    "kode": "FRITEKST",
                     "paakrevd": true,
-                    "valg": null,
-                    "tegnBegrensning": null
+                    "tegnBegrensning": null,
+                    "valg": null
                   },
                   {
-                    "kode": "FRITEKSTVEDLEGG",
                     "beskrivelse": "Legg til fritekstvedlegg",
                     "feltType": "FRITEKSTVEDLEGG",
                     "hjelpetekst": null,
+                    "kode": "FRITEKSTVEDLEGG",
                     "paakrevd": false,
-                    "valg": null,
-                    "tegnBegrensning": null
+                    "tegnBegrensning": null,
+                    "valg": null
                   },
                   {
-                    "kode": "VEDLEGG",
+                    "beskrivelse": "Legg til standardtekst med kontaktinformasjon nederst i brevet",
+                    "feltType": "SJEKKBOKS",
+                    "hjelpetekst": null,
+                    "kode": "STANDARDTEKST_KONTAKTINFORMASJON",
+                    "paakrevd": false,
+                    "tegnBegrensning": null,
+                    "valg": null
+                  },
+                  {
                     "beskrivelse": "Vedlegg",
                     "feltType": "VEDLEGG",
                     "hjelpetekst": null,
+                    "kode": "VEDLEGG",
                     "paakrevd": false,
-                    "valg": null,
-                    "tegnBegrensning": null
+                    "tegnBegrensning": null,
+                    "valg": null
                   }
-                ]
+                ],
+                "type": {
+                  "kode": "GENERELT_FRITEKSTBREV_ARBEIDSGIVER",
+                  "term": "Fritekstbrev til virksomhet"
+                }
+              }
+            ]
+          },
+          {
+            "mottaker": {
+              "adresser": null,
+              "feilmelding": null,
+              "orgnrSettesAvSaksbehandler": false,
+              "rolle": "ANNEN_ORGANISASJON",
+              "type": "Annen organisasjon"
+            },
+            "brevTyper": [
+              {
+                "felter": [
+                  {
+                    "beskrivelse": "Innledningstekst",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "kode": "INNLEDNING_FRITEKST",
+                    "paakrevd": true,
+                    "tegnBegrensning": null,
+                    "valg": null
+                  },
+                  {
+                    "beskrivelse": "Hva skal mottakeren sende inn?",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "kode": "MANGLER_FRITEKST",
+                    "paakrevd": true,
+                    "tegnBegrensning": null,
+                    "valg": null
+                  }
+                ],
+                "type": {
+                  "kode": "MANGELBREV_ARBEIDSGIVER",
+                  "term": "Melding om manglende opplysninger til virksomhet"
+                }
+              },
+              {
+                "felter": [
+                  {
+                    "beskrivelse": "Overskrift i brev",
+                    "feltType": "TEKST",
+                    "hjelpetekst": null,
+                    "kode": "BREV_TITTEL",
+                    "paakrevd": true,
+                    "tegnBegrensning": 60,
+                    "valg": {
+                      "valgAlternativer": [
+                        {
+                          "beskrivelse": "Bekreftelse på medlemskap i folketrygden",
+                          "kode": "BEKREFTELSE_PÅ_MEDLEMSKAP",
+                          "visFelt": false
+                        },
+                        {
+                          "beskrivelse": "Confirmation of membership in the National Insurance Scheme",
+                          "kode": "CONFIRMATION_OF_MEMBERSHIP",
+                          "visFelt": false
+                        },
+                        {
+                          "beskrivelse": "Fritekst (maks 60 tegn)",
+                          "kode": "FRITEKST_BRUKER_OG_VIRKSOMHET",
+                          "visFelt": true
+                        },
+                        {
+                          "beskrivelse": "Svar på henvendelse om medlemskap i folketrygden",
+                          "kode": "HENVENDELSE_OM_MEDLEMSKAP",
+                          "visFelt": false
+                        }
+                      ],
+                      "valgType": "SELECT"
+                    }
+                  },
+                  {
+                    "beskrivelse": "Type brev",
+                    "feltType": null,
+                    "hjelpetekst": "Type brev må angis slik at bruker får riktig varseltekst om brevet som sendes. Gjelder det et vedtak eller en forespørsel, vil bruker få en påminnelse hvis brevet ikke har blitt lest innen 7 dager.",
+                    "kode": "DISTRIBUSJONSTYPE",
+                    "paakrevd": true,
+                    "tegnBegrensning": null,
+                    "valg": {
+                      "valgAlternativer": [
+                        {
+                          "beskrivelse": "Annet",
+                          "kode": "ANNET",
+                          "visFelt": false
+                        },
+                        {
+                          "beskrivelse": "Vedtak",
+                          "kode": "VEDTAK",
+                          "visFelt": false
+                        },
+                        {
+                          "beskrivelse": "Viktig",
+                          "kode": "VIKTIG",
+                          "visFelt": false
+                        }
+                      ],
+                      "valgType": "RADIO"
+                    }
+                  },
+                  {
+                    "beskrivelse": "Dokumenttittel (valgfri, maks 60 tegn)",
+                    "feltType": "TEKST",
+                    "hjelpetekst": "Dette blir teksten som vises i dokumentoversikten.\nHvis feltet står tomt brukes navnet på brevmalen som dokumenttittel.",
+                    "kode": "DOKUMENT_TITTEL",
+                    "paakrevd": false,
+                    "tegnBegrensning": 60,
+                    "valg": null
+                  },
+                  {
+                    "beskrivelse": "Hovedtekst til brev",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "kode": "FRITEKST",
+                    "paakrevd": true,
+                    "tegnBegrensning": null,
+                    "valg": null
+                  },
+                  {
+                    "beskrivelse": "Legg til fritekstvedlegg",
+                    "feltType": "FRITEKSTVEDLEGG",
+                    "hjelpetekst": null,
+                    "kode": "FRITEKSTVEDLEGG",
+                    "paakrevd": false,
+                    "tegnBegrensning": null,
+                    "valg": null
+                  },
+                  {
+                    "beskrivelse": "Legg til standardtekst med kontaktinformasjon nederst i brevet",
+                    "feltType": "SJEKKBOKS",
+                    "hjelpetekst": null,
+                    "kode": "STANDARDTEKST_KONTAKTINFORMASJON",
+                    "paakrevd": false,
+                    "tegnBegrensning": null,
+                    "valg": null
+                  },
+                  {
+                    "beskrivelse": "Vedlegg",
+                    "feltType": "VEDLEGG",
+                    "hjelpetekst": null,
+                    "kode": "VEDLEGG",
+                    "paakrevd": false,
+                    "tegnBegrensning": null,
+                    "valg": null
+                  }
+                ],
+                "type": {
+                  "kode": "GENERELT_FRITEKSTBREV_ARBEIDSGIVER",
+                  "term": "Fritekstbrev til virksomhet"
+                }
+              }
+            ]
+          },
+          {
+            "mottaker": {
+              "adresser": null,
+              "feilmelding": null,
+              "orgnrSettesAvSaksbehandler": false,
+              "rolle": "NORSK_MYNDIGHET",
+              "type": "Norske myndigheter"
+            },
+            "brevTyper": [
+              {
+                "felter": [
+                  {
+                    "beskrivelse": "Overskrift i brev",
+                    "feltType": "TEKST",
+                    "hjelpetekst": null,
+                    "kode": "BREV_TITTEL",
+                    "paakrevd": true,
+                    "tegnBegrensning": 60,
+                    "valg": {
+                      "valgAlternativer": [
+                        {
+                          "beskrivelse": "Fritekst",
+                          "kode": "FRITEKST",
+                          "visFelt": true
+                        },
+                        {
+                          "beskrivelse": "Orientering om vår beslutning",
+                          "kode": "ORIENTERING_BESLUTNING",
+                          "visFelt": false
+                        }
+                      ],
+                      "valgType": "SELECT"
+                    }
+                  },
+                  {
+                    "beskrivelse": "Type brev",
+                    "feltType": null,
+                    "hjelpetekst": "Type brev må angis slik at bruker får riktig varseltekst om brevet som sendes. Gjelder det et vedtak eller en forespørsel, vil bruker få en påminnelse hvis brevet ikke har blitt lest innen 7 dager.",
+                    "kode": "DISTRIBUSJONSTYPE",
+                    "paakrevd": true,
+                    "tegnBegrensning": null,
+                    "valg": {
+                      "valgAlternativer": [
+                        {
+                          "beskrivelse": "Annet",
+                          "kode": "ANNET",
+                          "visFelt": false
+                        },
+                        {
+                          "beskrivelse": "Vedtak",
+                          "kode": "VEDTAK",
+                          "visFelt": false
+                        },
+                        {
+                          "beskrivelse": "Viktig",
+                          "kode": "VIKTIG",
+                          "visFelt": false
+                        }
+                      ],
+                      "valgType": "RADIO"
+                    }
+                  },
+                  {
+                    "beskrivelse": "Dokumenttittel (valgfri, maks 60 tegn)",
+                    "feltType": "TEKST",
+                    "hjelpetekst": "Dette blir teksten som vises i dokumentoversikten.\nHvis feltet står tomt brukes navnet på brevmalen som dokumenttittel.",
+                    "kode": "DOKUMENT_TITTEL",
+                    "paakrevd": false,
+                    "tegnBegrensning": 60,
+                    "valg": null
+                  },
+                  {
+                    "beskrivelse": "Hovedtekst til brev",
+                    "feltType": "FRITEKST",
+                    "hjelpetekst": null,
+                    "kode": "FRITEKST",
+                    "paakrevd": true,
+                    "tegnBegrensning": null,
+                    "valg": null
+                  },
+                  {
+                    "beskrivelse": "Legg til fritekstvedlegg",
+                    "feltType": "FRITEKSTVEDLEGG",
+                    "hjelpetekst": null,
+                    "kode": "FRITEKSTVEDLEGG",
+                    "paakrevd": false,
+                    "tegnBegrensning": null,
+                    "valg": null
+                  },
+                  {
+                    "beskrivelse": "Vedlegg",
+                    "feltType": "VEDLEGG",
+                    "hjelpetekst": null,
+                    "kode": "VEDLEGG",
+                    "paakrevd": false,
+                    "tegnBegrensning": null,
+                    "valg": null
+                  }
+                ],
+                "type": {
+                  "kode": "FRITEKSTBREV",
+                  "term": "Fritekstbrev"
+                }
               }
             ]
           }
@@ -939,8 +939,16 @@
           "content-type": "application/json"
         },
         "body": {
-          "saksnummer": "MEL-1023",
+          "betalingsvalg": null,
+          "endretDato": "2025-01-01T00:00:00.000Z",
           "gsakSaksnummer": null,
+          "hovedpartRolle": "BRUKER",
+          "registrertDato": "2025-01-01T00:00:00.000Z",
+          "saksnummer": "MEL-1023",
+          "saksstatus": {
+            "kode": "OPPRETTET",
+            "term": "Saken er opprettet"
+          },
           "sakstema": {
             "kode": "MEDLEMSKAP_LOVVALG",
             "term": "Medlemskap og lovvalg"
@@ -948,22 +956,14 @@
           "sakstype": {
             "kode": "FTRL",
             "term": "Utenfor avtaleland"
-          },
-          "saksstatus": {
-            "kode": "OPPRETTET",
-            "term": "Saken er opprettet"
-          },
-          "betalingsvalg": null,
-          "registrertDato": "2025-01-01T00:00:00.000Z",
-          "endretDato": "2025-01-01T00:00:00.000Z",
-          "hovedpartRolle": "BRUKER"
+          }
         }
       }
     },
     {
       "request": {
         "method": "GET",
-        "url": "http://localhost:3333/api/featuretoggle?features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift&features=melosys.faktureringskomponent.vis_referanse&features=melosys.cdm-4-4",
+        "url": "http://localhost:3333/api/featuretoggle?features=melosys.ftrl.begrense_periode_vedtak&features=melosys.11_3_a_Norge_er_utpekt&features=melosys.pensjonist&features=melosys.pensjonist_eos&features=standardvedlegg_eget_vedlegg_avtaleland&features=melosys.arsavregning&features=melosys.arsavregning.uten.flyt&features=melosys.arsavregning.eos_pensjonist&features=melosys.faktureringskomponenten.ikke-tidligere-perioder&features=melosys.eos_fakturering_av_trygdeavgift&features=melosys.faktureringskomponent.vis_referanse&features=melosys.cdm-4-4",
         "pathname": "/api/featuretoggle",
         "normalizedPath": "/api/featuretoggle",
         "query": {
@@ -991,6 +991,7 @@
           "melosys.faktureringskomponenten.ikke-tidligere-perioder": true,
           "melosys.11_3_a_Norge_er_utpekt": true,
           "melosys.eos_fakturering_av_trygdeavgift": true,
+          "melosys.arsavregning.eos_pensjonist": true,
           "melosys.arsavregning.uten.flyt": false,
           "melosys.cdm-4-4": true
         }
@@ -1017,55 +1018,14 @@
         },
         "body": {
           "data": {
-            "soeknadsland": {
-              "landkoder": [],
-              "flereLandUkjentHvilke": false
-            },
-            "periode": {
-              "fom": null,
-              "tom": null
-            },
-            "personOpplysninger": {
-              "utenlandskIdent": [],
-              "medfolgendeFamilie": [],
-              "foedestedOgLand": null
-            },
             "arbeidPaaLand": {
-              "fysiskeArbeidssteder": [],
+              "erFastArbeidssted": null,
               "erHjemmekontor": null,
-              "erFastArbeidssted": null
+              "fysiskeArbeidssteder": []
             },
-            "foretakUtland": [],
-            "oppholdUtland": {
-              "oppholdslandkoder": [],
-              "oppholdsPeriode": {
-                "fom": null,
-                "tom": null
-              },
-              "studentFinansieringKode": null,
-              "studentSemester": null,
-              "ektefelleEllerBarnINorge": null
-            },
-            "selvstendigArbeid": {
-              "erSelvstendig": null,
-              "selvstendigForetak": []
-            },
-            "juridiskArbeidsgiverNorge": {
-              "antallAdmAnsatte": null,
-              "antallAnsatte": null,
-              "antallUtsendte": null,
-              "andelOmsetningINorge": null,
-              "andelOppdragINorge": null,
-              "andelKontrakterINorge": null,
-              "andelRekruttertINorge": null,
-              "ekstraArbeidsgivere": [],
-              "erOffentligVirksomhet": null
-            },
-            "maritimtArbeid": [],
-            "luftfartBaser": [],
             "bosted": {
-              "intensjonOmRetur": null,
               "antallMaanederINorge": 0,
+              "intensjonOmRetur": null,
               "oppgittAdresse": {
                 "tilleggsnavn": null,
                 "gatenavn": null,
@@ -1077,11 +1037,52 @@
                 "landkode": null
               }
             },
-            "trygdedekning": null,
-            "representantIUtlandet": null
+            "foretakUtland": [],
+            "juridiskArbeidsgiverNorge": {
+              "andelKontrakterINorge": null,
+              "andelOmsetningINorge": null,
+              "andelOppdragINorge": null,
+              "andelRekruttertINorge": null,
+              "antallAdmAnsatte": null,
+              "antallAnsatte": null,
+              "antallUtsendte": null,
+              "ekstraArbeidsgivere": [],
+              "erOffentligVirksomhet": null
+            },
+            "luftfartBaser": [],
+            "maritimtArbeid": [],
+            "oppholdUtland": {
+              "ektefelleEllerBarnINorge": null,
+              "oppholdsPeriode": {
+                "fom": null,
+                "tom": null
+              },
+              "oppholdslandkoder": [],
+              "studentFinansieringKode": null,
+              "studentSemester": null
+            },
+            "periode": {
+              "fom": null,
+              "tom": null
+            },
+            "personOpplysninger": {
+              "foedestedOgLand": null,
+              "medfolgendeFamilie": [],
+              "utenlandskIdent": []
+            },
+            "representantIUtlandet": null,
+            "selvstendigArbeid": {
+              "erSelvstendig": null,
+              "selvstendigForetak": []
+            },
+            "soeknadsland": {
+              "landkoder": [],
+              "flereLandUkjentHvilke": false
+            },
+            "trygdedekning": null
           },
-          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS",
-          "mottaksdato": "2025-01-01"
+          "mottaksdato": "2025-01-01",
+          "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS"
         }
       }
     },
@@ -1385,7 +1386,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-02-17",
+                    "gyldigFraOgMed": "2016-04-22",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -1408,7 +1409,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-02-17",
+                    "gyldigFraOgMed": "2016-04-22",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
@@ -1530,7 +1531,7 @@
                       "land": "NORGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-02-17",
+                    "gyldigFraOgMed": "2016-04-22",
                     "gyldigTilOgMed": null,
                     "kilde": "Folkeregisteret",
                     "master": "FREG",
@@ -1553,7 +1554,7 @@
                       "land": "SVERIGE",
                       "__typename": "StrukturertAdresseformat"
                     },
-                    "gyldigFraOgMed": "2016-02-17",
+                    "gyldigFraOgMed": "2016-04-22",
                     "gyldigTilOgMed": null,
                     "master": "FREG",
                     "kilde": "Folkeregisteret",
@@ -1834,6 +1835,122 @@
           "authorization": "[REDACTED]"
         },
         "body": {
+          "operationName": "hentPersoninfo",
+          "variables": {
+            "behandlingID": 23
+          },
+          "query": "query hentPersoninfo($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      folkeregisterpersonstatuser {\n        kode\n        tekst\n        master\n        kilde\n        fregGyldighetstidspunkt\n        erHistorisk\n        __typename\n      }\n      foedsel {\n        foedeland\n        foedested\n        foedselsaar\n        foedselsdato\n        __typename\n      }\n      sivilstand {\n        type\n        relatertVedSivilstand\n        gyldigFraOgMed\n        bekreftelsesdato\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
+        }
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "data": {
+            "hentSaksopplysninger": {
+              "persondata": {
+                "folkeregisterpersonstatuser": [
+                  {
+                    "kode": "BOSATT",
+                    "tekst": "Bosatt etter folkeregisterloven",
+                    "master": "FREG",
+                    "kilde": "Folkeregisteret",
+                    "fregGyldighetstidspunkt": "1990-01-01",
+                    "erHistorisk": false,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
+                    "kode": "MIDLERTIDIG",
+                    "tekst": "Midlertidig (D-nummer)",
+                    "master": "FREG",
+                    "kilde": "Folkeregisteret",
+                    "fregGyldighetstidspunkt": "2020-10-22",
+                    "erHistorisk": true,
+                    "__typename": "Folkeregisterpersonstatus"
+                  },
+                  {
+                    "kode": "UTFLYTTET",
+                    "tekst": "Utflyttet",
+                    "master": "FREG",
+                    "kilde": "Folkeregisteret",
+                    "fregGyldighetstidspunkt": "2012-03-15",
+                    "erHistorisk": true,
+                    "__typename": "Folkeregisterpersonstatus"
+                  }
+                ],
+                "foedsel": {
+                  "foedeland": "NO",
+                  "foedested": "OSLO",
+                  "foedselsaar": 1969,
+                  "foedselsdato": "1969-05-30",
+                  "__typename": "Foedsel"
+                },
+                "sivilstand": [
+                  {
+                    "type": "Gift",
+                    "relatertVedSivilstand": "12028536819",
+                    "gyldigFraOgMed": "2011-02-02",
+                    "bekreftelsesdato": null,
+                    "master": "Freg",
+                    "kilde": "KILDE_DSF",
+                    "erHistorisk": false,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Gift",
+                    "relatertVedSivilstand": "21075114491",
+                    "gyldigFraOgMed": "2019-08-03",
+                    "bekreftelsesdato": null,
+                    "master": "Freg",
+                    "kilde": "FREG",
+                    "erHistorisk": false,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Separert",
+                    "relatertVedSivilstand": "12028536819",
+                    "gyldigFraOgMed": "2013-01-03",
+                    "bekreftelsesdato": null,
+                    "master": "NAV (PDL)",
+                    "kilde": "Tyske trygdemyndigheter, TYSKLAND",
+                    "erHistorisk": true,
+                    "__typename": "Sivilstand"
+                  },
+                  {
+                    "type": "Skilt",
+                    "relatertVedSivilstand": null,
+                    "gyldigFraOgMed": "2014-04-09",
+                    "bekreftelsesdato": null,
+                    "master": "NAV (PDL)",
+                    "kilde": "Tyske trygdemyndigheter, TYSKLAND",
+                    "erHistorisk": true,
+                    "__typename": "Sivilstand"
+                  }
+                ],
+                "__typename": "Personopplysninger"
+              },
+              "__typename": "Saksopplysninger"
+            }
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3333/graphql/",
+        "pathname": "/graphql/",
+        "normalizedPath": "/graphql/",
+        "query": {},
+        "headers": {
+          "content-type": "application/json",
+          "accept": "*/*",
+          "authorization": "[REDACTED]"
+        },
+        "body": {
           "operationName": "hentPersonopplysninger",
           "variables": {
             "behandlingID": 23
@@ -1995,6 +2112,56 @@
                     "type": "Skilt",
                     "erHistorisk": true,
                     "__typename": "Sivilstand"
+                  }
+                ],
+                "__typename": "Personopplysninger"
+              },
+              "__typename": "Saksopplysninger"
+            }
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3333/graphql/",
+        "pathname": "/graphql/",
+        "normalizedPath": "/graphql/",
+        "query": {},
+        "headers": {
+          "content-type": "application/json",
+          "accept": "*/*",
+          "authorization": "[REDACTED]"
+        },
+        "body": {
+          "operationName": "hentStatsborgerskap",
+          "variables": {
+            "behandlingID": 23
+          },
+          "query": "query hentStatsborgerskap($behandlingID: Long!) {\n  hentSaksopplysninger(behandlingID: $behandlingID) {\n    persondata {\n      statsborgerskap {\n        land\n        bekreftelsesdato\n        gyldigFraOgMed\n        gyldigTilOgMed\n        master\n        kilde\n        erHistorisk\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
+        }
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "data": {
+            "hentSaksopplysninger": {
+              "persondata": {
+                "statsborgerskap": [
+                  {
+                    "land": "NORGE",
+                    "bekreftelsesdato": null,
+                    "gyldigFraOgMed": "1990-01-01",
+                    "gyldigTilOgMed": null,
+                    "master": "FREG",
+                    "kilde": "Folkeregisteret",
+                    "erHistorisk": false,
+                    "__typename": "Statsborgerskap"
                   }
                 ],
                 "__typename": "Personopplysninger"

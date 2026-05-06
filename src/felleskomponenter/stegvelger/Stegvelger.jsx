@@ -65,6 +65,10 @@ class Stegvelger extends Component {
 
   aktiv = true;
 
+  bytterSteg = false;
+
+  stegovergangId = 0;
+
   async componentDidMount() {
     this.aktiv = true;
     const { behandlingID, sakstype } = this.props;
@@ -104,6 +108,9 @@ class Stegvelger extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
+    if (this.bytterSteg) {
+      return;
+    }
     const { aktivtStegNummer, aktuelleSteg } = this.state;
     const oppfriskStartet = !prevProps.behandlingOppfriskes && this.props.behandlingOppfriskes;
     const oppfriskFerdig = prevProps.behandlingOppfriskes && !this.props.behandlingOppfriskes;
@@ -113,13 +120,21 @@ class Stegvelger extends Component {
     const behandlingsstatusErMottattSvarAnmodning =
       prevProps.oppsummering.behandlingsstatus.kode === MKV.Koder.behandlinger.behandlingsstatus.SVAR_ANMODNING_MOTTATT;
 
-    if (oppfriskStartet || (this.props.behandlingOppfriskes && aktivtStegNummer !== 0)) {
-      this.resetTilForsteSteg(false);
+    const haandterOppfrisk = (endreFokus) => {
+      if (aktivtStegNummer === 0) {
+        this.resetTilForsteSteg(endreFokus);
+      } else {
+        this.oppdaterAktuelleSteg(aktivtStegNummer, endreFokus);
+      }
+    };
+
+    if (oppfriskStartet) {
+      haandterOppfrisk(false);
       return;
     }
 
     if (oppfriskFerdig) {
-      this.resetTilForsteSteg(true);
+      haandterOppfrisk(true);
       return;
     }
 
@@ -550,6 +565,10 @@ class Stegvelger extends Component {
 
     const flytHarIkkeVurderingPeriode = !(eøsFaktureringAvTrygdeavgiftToggleEnabled && erArbeidTjenestepersonEllerFly);
 
+    this.bytterSteg = true;
+    this.stegovergangId += 1;
+    const minStegovergangId = this.stegovergangId;
+    this.debouncedOppdaterAktuelleSteg.cancel?.();
     this.setState({ aktivtStegNummer: nyttStegNummer });
 
     try {
@@ -576,9 +595,15 @@ class Stegvelger extends Component {
     } catch (error) {
       /* eslint-disable-next-line no-console */
       console.error("Feil ved lagring under stegovergang:", error);
+    } finally {
+      if (this.stegovergangId === minStegovergangId) {
+        this.bytterSteg = false;
+      }
     }
 
-    this.oppdaterAktuelleSteg(nyttStegNummer, true);
+    if (this.stegovergangId === minStegovergangId) {
+      this.oppdaterAktuelleSteg(nyttStegNummer, true);
+    }
   };
 
   /** Beregn neste steg i rekken, men ikke lenger enn

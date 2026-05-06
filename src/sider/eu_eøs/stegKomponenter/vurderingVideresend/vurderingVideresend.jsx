@@ -21,6 +21,7 @@ import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 import { dokumenterSelectors } from "../../../../ducks/dokumenter";
 import { feiletResponsOperations } from "../../../../ducks/feiletRespons";
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_CDM_4_4 } from "../../../../featuretoggle/toggleNavn";
 
@@ -32,6 +33,7 @@ export function VurderingVideresend({
   redigerbart,
   behandlingID,
   bostedsland = { kode: "", term: "" },
+  flereLandUkjentHvilke,
   fysiskeDokument,
   handleSubmit,
   form,
@@ -102,6 +104,23 @@ export function VurderingVideresend({
         <Nav.Heading level="1" className="stegvelgertittel">
           Videresending av søknad
         </Nav.Heading>
+        {isA008Cdm44Enabled && redigerbart && flereLandUkjentHvilke && (
+          <Nav.Row>
+            <Nav.Column xs="8">
+              <Nav.Alert variant="warning" className="videresendSoknad__warning">
+                <span>
+                  Land er satt til{" "}
+                  <em>
+                    <strong>Flere land. Ikke kjent hvilke.</strong>
+                  </em>{" "}
+                  Arbeidsland vil derfor ikke bli oppgitt i SED A008. Du kan endre dette under sidemenypunkt "Periode og
+                  land".
+                </span>
+              </Nav.Alert>
+            </Nav.Column>
+          </Nav.Row>
+        )}
+
         <Nav.Row>
           <Nav.Column xs="8">
             <Skjema.Textarea
@@ -190,6 +209,7 @@ VurderingVideresend.propTypes = {
   videresendSoknad: PT.func.isRequired,
   tilbake: PT.func.isRequired,
   bostedsland: MPT.Kodeverk,
+  flereLandUkjentHvilke: PT.bool,
   handleSubmit: PT.func.isRequired,
   form: PT.string.isRequired,
   formValues: PT.object,
@@ -208,6 +228,7 @@ const VurderingVideresendForm = reduxForm({
 const mapStateToProps = (state) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
+  flereLandUkjentHvilke: mottatteOpplysningerSelectors.SoknadslandFlereLandUkjentHvilkeSelector(state),
   fysiskeDokument: dokumenterSelectors.AlleFysiskeDokumentSelector(state),
   formValues: getFormValues(KV.Form.VURDERING_VIDERESEND)(state),
   initialValues: {

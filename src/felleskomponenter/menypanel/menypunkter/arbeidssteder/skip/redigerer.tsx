@@ -1,4 +1,3 @@
-import { ChangeEventHandler } from "react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as KV from "../../../../../kodeverk";
@@ -18,9 +17,7 @@ function Redigerer({
   settVerdi,
   verdier,
 }: EnRedigeringsknappListeRedigerer<KV.Form.ArbeidsstedSkip>) {
-  const fartsomradeChangeHandler: ChangeEventHandler<HTMLSelectElement> = (event) => {
-    const fartsomrade = event.target.value;
-
+  const fartsomradeChangeHandler = (fartsomrade: unknown) => {
     if (fartsomrade === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS) {
       settVerdi("flaggLandkode", null);
     } else if (fartsomrade === MKV.Koder.begrunnelser.fartsomrader.UTENRIKS) {
@@ -34,21 +31,24 @@ function Redigerer({
         <Nav.Column xs="6">
           <Skjema.Input label="Navn på skip" feltNavn={`${overordnetFeltNavn}.enhetNavn`} disabled={!redigerbart} />
         </Nav.Column>
+        <Nav.Column xs="6">
+          <Skjema.Input label="Yrke" feltNavn={`${overordnetFeltNavn}.yrke`} disabled={!redigerbart} />
+        </Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="6">
-          <Skjema.Select
-            feltNavn={`${overordnetFeltNavn}.fartsomradeKode`}
-            label="Fartsområde"
-            disabled={!redigerbart}
+          <Skjema.RadioGroup
+            legend="Fartsområde"
+            name={`${overordnetFeltNavn}.fartsomradeKode`}
+            readOnly={!redigerbart}
             onChange={fartsomradeChangeHandler}
           >
             {MKV.KTObjects.begrunnelser.fartsomrader.map((omrade: KTObject) => (
-              <option key={omrade.kode} value={omrade.kode}>
+              <Nav.Radio key={omrade.kode} value={omrade.kode}>
                 {omrade.term}
-              </option>
+              </Nav.Radio>
             ))}
-          </Skjema.Select>
+          </Skjema.RadioGroup>
         </Nav.Column>
         <Nav.Column xs="6">
           {verdier && verdier.fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS && (

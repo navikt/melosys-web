@@ -2,14 +2,19 @@ import { Control } from "react-hook-form";
 import * as Forms from "../../../../../felleskomponenter/forms";
 import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
+import { useFeatureToggle } from "../../../../../featuretoggle";
+import { ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../../featuretoggle/toggleNavn";
 
-const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT } = MKV.Koder.endeligAvgiftValg;
+const { OPPLYSNINGER_ENDRET, MANUELL_ENDELIG_AVGIFT, OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET } =
+  MKV.Koder.endeligAvgiftValg;
 
 interface EndeligAvgiftValgRadioGroupProps {
   control: Control<any>;
   redigerbart: boolean;
   handleEndeligAvgiftValgChange: (value: string) => void;
   endeligAvgiftValg?: string;
+  endretPeriodeFraAvgiftssystemetValg?: boolean;
+  harInnbetaltTrygdeavgift?: boolean;
 }
 
 export function EndeligAvgiftValgRadioGroup({
@@ -17,7 +22,10 @@ export function EndeligAvgiftValgRadioGroup({
   redigerbart,
   handleEndeligAvgiftValgChange,
   endeligAvgiftValg,
+  endretPeriodeFraAvgiftssystemetValg,
+  harInnbetaltTrygdeavgift,
 }: EndeligAvgiftValgRadioGroupProps) {
+  const erPensjonistEØSToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
   return (
     <div className="endeligAvgiftValg_radio_group">
       <Forms.RadioGroup
@@ -34,6 +42,14 @@ export function EndeligAvgiftValgRadioGroup({
           <Nav.Radio value={OPPLYSNINGER_ENDRET} className={endeligAvgiftValg === OPPLYSNINGER_ENDRET ? "checked" : ""}>
             Beregn endelig trygdeavgift
           </Nav.Radio>
+          {erPensjonistEØSToggleEnabled && endretPeriodeFraAvgiftssystemetValg && harInnbetaltTrygdeavgift && (
+            <Nav.Radio
+              value={OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET}
+              className={endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET ? "checked" : ""}
+            >
+              Beregn trygdeavgift med periode fra avgiftssystemet
+            </Nav.Radio>
+          )}
           <Nav.Radio
             value={MANUELL_ENDELIG_AVGIFT}
             className={endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT ? "checked" : ""}

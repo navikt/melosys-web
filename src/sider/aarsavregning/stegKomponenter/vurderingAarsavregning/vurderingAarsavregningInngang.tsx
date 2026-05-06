@@ -20,7 +20,9 @@ import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetek
 import { AarsavregningMedGrunnlag } from "./aarsavregningMedGrunnlag/aarsavregningMedGrunnlag";
 import { AarsavregningUtenEllerDeltGrunnlag } from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import { TidligereGrunnlag } from "./komponenter/tidligereGrunnlag";
+import { ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../featuretoggle/toggleNavn";
 import * as Utils from "../../../../utils";
+import { useFeatureToggle } from "../../../../featuretoggle";
 
 const { FASTSATT_TRYGDEAVGIFT, IKKE_FASTSATT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
@@ -77,11 +79,8 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const [harTidligereTrygdeavgiftsgrunnlag, setHarTidligereTrygdeavgiftsgrunnlag] = useState<boolean | undefined>(
     undefined,
   );
-  const [harTrygdeavgiftFraAvgiftssystemet, setHarTrygdeavgiftFraAvgiftssystemet] = useState<boolean | undefined>(
-    undefined,
-  );
-  const [harTrygdeavgiftFraAvgiftssystemetIsPending, setHarTrygdeavgiftFraAvgiftssystemetIsPending] =
-    useState<boolean>(false);
+  const [harInnbetaltTrygdeavgift, setHarInnbetaltTrygdeavgift] = useState<boolean | undefined>(undefined);
+  const [harInnbetaltTrygdeavgiftIsPending, setHarInnbetaltTrygdeavgiftIsPending] = useState<boolean>(false);
   const [erNyVurdering, setErNyVurdering] = useState<boolean>(false);
   const [harAktivÅrsavregning, setHarAktivÅrsavregning] = useState<boolean>(false);
   const [harManglendeInnbetalingBehandling, setHarManglendeInnbetalingBehandling] = useState<boolean>(false);
@@ -94,21 +93,20 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const dispatch = useDispatch();
 
   /**
-   * Utleder harTrygdeavgiftFraAvgiftssystemet når verdien er null (bakoverkompatibilitet).
+   * Utleder harInnbetaltTrygdeavgift når verdien er null (bakoverkompatibilitet).
    *
    * Eldre behandlinger kan ha null pga. bug der verdien ikke ble lagret.
    * Vi infererer verdien basert på om brukeren har fylt ut avhengige felter:
-   * - Hvis trygdeavgiftFraAvgiftssystemet har verdi → brukeren valgte "Ja" → returnerer true
+   * - Hvis innbetaltTrygdeavgift har verdi → brukeren valgte "Ja" → returnerer true
    * - Hvis andre felter (manueltAvgiftBeloep, nyttTrygdeavgiftsGrunnlag) er fylt ut → brukeren valgte "Nei" → returnerer false
    * - Ellers → ny årsavregning hvor brukeren ikke har svart ennå → returnerer undefined
    */
-  const utledHarTrygdeavgiftFraAvgiftssystemetNårNull = (res: AarsavregningResponse): boolean | undefined => {
-    // Sjekk om brukeren har lagt til trygdeavgift fra avgiftssystemet (valgte "Ja")
-    const harTrygdeavgiftFraAvgiftssystemet =
-      res.avregning?.trygdeavgiftFraAvgiftssystemet !== null &&
-      res.avregning?.trygdeavgiftFraAvgiftssystemet !== undefined;
+  const utledHarInnbetaltTrygdeavgiftNårNull = (res: AarsavregningResponse): boolean | undefined => {
+    // Sjekk om brukeren har lagt til innbetalt trygdeavgift (valgte "Ja")
+    const harInnbetaltTrygdeavgift =
+      res.avregning?.innbetaltTrygdeavgift !== null && res.avregning?.innbetaltTrygdeavgift !== undefined;
 
-    if (harTrygdeavgiftFraAvgiftssystemet) {
+    if (harInnbetaltTrygdeavgift) {
       return true;
     }
 
@@ -125,12 +123,12 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   };
 
   const utledGrunnlagstypeForÅrsavregning = (res: AarsavregningResponse) => {
-    if (res.harTrygdeavgiftFraAvgiftssystemet !== null) {
-      setHarTrygdeavgiftFraAvgiftssystemet(res.harTrygdeavgiftFraAvgiftssystemet);
+    if (res.harInnbetaltTrygdeavgift != null) {
+      setHarInnbetaltTrygdeavgift(res.harInnbetaltTrygdeavgift);
     } else {
       // Bakoverkompatibilitet: utled verdi fra eksisterende data
-      const utledetVerdi = utledHarTrygdeavgiftFraAvgiftssystemetNårNull(res);
-      setHarTrygdeavgiftFraAvgiftssystemet(utledetVerdi);
+      const utledetVerdi = utledHarInnbetaltTrygdeavgiftNårNull(res);
+      setHarInnbetaltTrygdeavgift(utledetVerdi ?? false);
     }
 
     setHarTidligereTrygdeavgiftsgrunnlag(
@@ -165,7 +163,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     setErNyVurdering(false);
     setHarAktivÅrsavregning(false);
     setHarTidligereTrygdeavgiftsgrunnlag(undefined);
-    setHarTrygdeavgiftFraAvgiftssystemet(undefined);
+    setHarInnbetaltTrygdeavgift(undefined);
     setAarsavregningResponse(undefined);
 
     const år = Number(event.target.value);
@@ -197,19 +195,19 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
     });
   };
 
-  const håndterHarTrygdeavgiftFraAvgiftssystemet = async (value: boolean) => {
-    setHarTrygdeavgiftFraAvgiftssystemetIsPending(true);
-    Api.Aarsavregning.oppdaterHarTrygdeavgiftFraAvgiftssystemet(behandlingID, {
-      harTrygdeavgiftFraAvgiftssystemet: value,
+  const håndterHarInnbetaltTrygdeavgift = async (value: boolean) => {
+    setHarInnbetaltTrygdeavgiftIsPending(true);
+    Api.Aarsavregning.oppdaterHarInnbetaltTrygdeavgift(behandlingID, {
+      harInnbetaltTrygdeavgift: value,
     })
       .then((res) => {
-        setHarTrygdeavgiftFraAvgiftssystemet(res.harTrygdeavgiftFraAvgiftssystemet);
-        setHarTrygdeavgiftFraAvgiftssystemetIsPending(false);
+        setHarInnbetaltTrygdeavgift(res.harInnbetaltTrygdeavgift);
+        setHarInnbetaltTrygdeavgiftIsPending(false);
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
-        console.error("Feil ved oppdatering av harTrygdeavgiftFraAvgiftssystemet:", error);
-        setHarTrygdeavgiftFraAvgiftssystemetIsPending(false);
+        console.error("Feil ved oppdatering av harInnbetaltTrygdeavgift:", error);
+        setHarInnbetaltTrygdeavgiftIsPending(false);
       });
   };
 
@@ -219,16 +217,26 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
         undefined,
   );
-  const forrigeÅrsavregningHarInnbetaltFraAvgiftssystem = Boolean(
-    aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet !==
-      null &&
-      aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereTrygdeavgiftFraAvgiftssystemet !==
-        undefined,
+  const forrigeÅrsavregningHarInnbetaltTrygdeavgift = Boolean(
+    aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereInnbetaltTrygdeavgift !== null &&
+      aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereInnbetaltTrygdeavgift !== undefined,
   );
 
   const sisteMuligeÅr = new Date().getFullYear() - 1;
   const antallÅrTilbakeITid = 6;
   const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
+
+  const trygdeavgiftAvvikLabelHjelpetekst = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST) ? (
+    <LabelMedHjelpetekst
+      label="Avviker innbetalt trygdeavgift fra tidligere beregnet avgift?"
+      hjelpetekst={harTidligereTrygdeavgiftsgrunnlag ? DELT_GRUNNLAG_HJELPETEKST : ""}
+    />
+  ) : (
+    <LabelMedHjelpetekst
+      label="Skal du legge til trygdeavgift fra Avgiftssystemet til denne årsavregningen?"
+      hjelpetekst={harTidligereTrygdeavgiftsgrunnlag ? DELT_GRUNNLAG_HJELPETEKST : ""}
+    />
+  );
 
   return (
     <div className="vurderingAarsavregning">
@@ -307,42 +315,37 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           )}
 
           {(valgtÅr || initieltÅr) && (
-            <Nav.Row>
-              <Nav.Column xs="12">
+            <Nav.HStack>
+              <Nav.VStack>
                 <Nav.RadioGroup
-                  key={`trygdeavgiftFraAvgiftssystemetRadioGroup ${valgtÅr || initieltÅr || ""}`}
-                  onChange={håndterHarTrygdeavgiftFraAvgiftssystemet}
-                  legend={
-                    <LabelMedHjelpetekst
-                      label="Skal du legge til trygdeavgift fra Avgiftssystemet til denne årsavregningen?"
-                      hjelpetekst={harTidligereTrygdeavgiftsgrunnlag ? DELT_GRUNNLAG_HJELPETEKST : ""}
-                    />
-                  }
-                  value={harTrygdeavgiftFraAvgiftssystemet}
-                  readOnly={!redigerbart || harAktivÅrsavregning || forrigeÅrsavregningHarInnbetaltFraAvgiftssystem}
+                  key={`innbetaltTrygdeavgiftRadioGroup ${valgtÅr || initieltÅr || ""}`}
+                  onChange={håndterHarInnbetaltTrygdeavgift}
+                  legend={trygdeavgiftAvvikLabelHjelpetekst}
+                  value={harInnbetaltTrygdeavgift}
+                  readOnly={!redigerbart || harAktivÅrsavregning || forrigeÅrsavregningHarInnbetaltTrygdeavgift}
                 >
                   <Nav.HStack gap="6">
                     <Nav.Radio value>Ja</Nav.Radio>
                     <Nav.Radio value={false}>Nei</Nav.Radio>
                   </Nav.HStack>
                 </Nav.RadioGroup>
-              </Nav.Column>
-            </Nav.Row>
+              </Nav.VStack>
+            </Nav.HStack>
           )}
 
-          {!harTrygdeavgiftFraAvgiftssystemetIsPending &&
+          {!harInnbetaltTrygdeavgiftIsPending &&
             harTidligereTrygdeavgiftsgrunnlag === true &&
-            harTrygdeavgiftFraAvgiftssystemet === false && (
+            harInnbetaltTrygdeavgift === false && (
               <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
             )}
-          {!harTrygdeavgiftFraAvgiftssystemetIsPending &&
-            (harTidligereTrygdeavgiftsgrunnlag === false || harTrygdeavgiftFraAvgiftssystemet) &&
-            (harTrygdeavgiftFraAvgiftssystemet === true || harTrygdeavgiftFraAvgiftssystemet === false) && (
+          {!harInnbetaltTrygdeavgiftIsPending &&
+            (harTidligereTrygdeavgiftsgrunnlag === false || harInnbetaltTrygdeavgift) &&
+            (harInnbetaltTrygdeavgift === true || harInnbetaltTrygdeavgift === false) && (
               <AarsavregningUtenEllerDeltGrunnlag
                 bekreft={bekreft}
                 aktivtSteg={aktivtSteg}
                 oppdaterStatus={oppdaterStatus}
-                harTrygdeavgiftFraAvgiftssystemet={Boolean(harTrygdeavgiftFraAvgiftssystemet)}
+                harInnbetaltTrygdeavgift={Boolean(harInnbetaltTrygdeavgift)}
                 harTidligereTrygdeavgiftsgrunnlag={Boolean(harTidligereTrygdeavgiftsgrunnlag)}
               />
             )}

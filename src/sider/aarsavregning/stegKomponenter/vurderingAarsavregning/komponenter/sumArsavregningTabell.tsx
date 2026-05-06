@@ -3,26 +3,55 @@ import * as Utils from "../../../../../utils";
 import "./sumArsavregningTabell.less";
 import { formaterTilNorskBelop } from "../../../../../utils";
 import { beregnSumTilFakturaEllerRefusjon } from "../utils";
+import { ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../../featuretoggle/toggleNavn";
+import useFeatureToggle from "../../../../../featuretoggle/useFeatureToggle";
 
 export function SumArsavregningTabell({
   nyTrygdeavgift,
   tidligereTrygdeavgift,
-  tidligereTrygdeavgiftAvgiftssystem,
-  tidligereAarsavregningTrygdeavgiftFraAvgiftssystem,
+  tidligereInnbetaltTrygdeavgift,
+  tidligereAarsavregningInnbetaltTrygdeavgift,
   harGrunnlagIMelosys,
 }: {
   nyTrygdeavgift?: number;
   tidligereTrygdeavgift?: number;
-  tidligereTrygdeavgiftAvgiftssystem?: number;
-  tidligereAarsavregningTrygdeavgiftFraAvgiftssystem?: number;
+  tidligereInnbetaltTrygdeavgift?: number;
+  tidligereAarsavregningInnbetaltTrygdeavgift?: number;
   harGrunnlagIMelosys: boolean;
 }) {
-  const sumTilFakturaEllerRefusjon = beregnSumTilFakturaEllerRefusjon(
-    nyTrygdeavgift,
-    tidligereTrygdeavgift,
-    tidligereTrygdeavgiftAvgiftssystem,
-    tidligereAarsavregningTrygdeavgiftFraAvgiftssystem,
-  );
+  const erÅrsavregningEøsPensjonistToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
+
+  const skalViseInnbetaltTrygdeavgift = erÅrsavregningEøsPensjonistToggleEnabled
+    ? tidligereInnbetaltTrygdeavgift !== undefined &&
+      tidligereInnbetaltTrygdeavgift !== null &&
+      tidligereInnbetaltTrygdeavgift !== 0
+    : tidligereInnbetaltTrygdeavgift !== undefined && tidligereInnbetaltTrygdeavgift !== null;
+
+  const skalViseTidligereBeregnetTrygdeavgift = erÅrsavregningEøsPensjonistToggleEnabled
+    ? !skalViseInnbetaltTrygdeavgift && (harGrunnlagIMelosys || tidligereTrygdeavgift) !== undefined
+    : harGrunnlagIMelosys || tidligereTrygdeavgift !== undefined;
+
+  const sumTilFakturaEllerRefusjon = erÅrsavregningEøsPensjonistToggleEnabled
+    ? beregnSumTilFakturaEllerRefusjon(
+        nyTrygdeavgift,
+        skalViseTidligereBeregnetTrygdeavgift ? tidligereTrygdeavgift : 0,
+        skalViseInnbetaltTrygdeavgift ? tidligereInnbetaltTrygdeavgift : 0,
+        tidligereAarsavregningInnbetaltTrygdeavgift,
+      )
+    : beregnSumTilFakturaEllerRefusjon(
+        nyTrygdeavgift,
+        tidligereTrygdeavgift,
+        tidligereInnbetaltTrygdeavgift,
+        tidligereAarsavregningInnbetaltTrygdeavgift,
+      );
+
+  const innbetaltTrygdeavgiftLabel = erÅrsavregningEøsPensjonistToggleEnabled
+    ? "Innbetalt trygdeavgift"
+    : "Trygdeavgift fra Avgiftssystemet";
+
+  const tidligereAarsavregningInnbetaltTrygdeavgiftLabel = erÅrsavregningEøsPensjonistToggleEnabled
+    ? "Tidligere innbetalt trygdeavgift"
+    : "Tidligere trygdeavgift fra Avgiftssystemet";
 
   return (
     <Nav.Box className="sumArsavregningTabell" background="surface-subtle">
@@ -37,7 +66,7 @@ export function SumArsavregningTabell({
               {formaterTilNorskBelop(nyTrygdeavgift || 0)} kr
             </Nav.Table.DataCell>
           </Nav.Table.Row>
-          {(harGrunnlagIMelosys || tidligereTrygdeavgift !== undefined) && (
+          {skalViseTidligereBeregnetTrygdeavgift && (
             <Nav.Table.Row>
               <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>
               <Nav.Table.DataCell scope="col">Tidligere beregnet trygdeavgift</Nav.Table.DataCell>
@@ -46,25 +75,26 @@ export function SumArsavregningTabell({
               </Nav.Table.DataCell>
             </Nav.Table.Row>
           )}
-          {tidligereAarsavregningTrygdeavgiftFraAvgiftssystem !== undefined &&
-            tidligereAarsavregningTrygdeavgiftFraAvgiftssystem !== null && (
+          {tidligereAarsavregningInnbetaltTrygdeavgift !== undefined &&
+            tidligereAarsavregningInnbetaltTrygdeavgift !== null && (
               <Nav.Table.Row>
                 <Nav.Table.DataCell scope="col">+</Nav.Table.DataCell>
-                <Nav.Table.DataCell scope="col">Tidligere trygdeavgift fra Avgiftssystemet</Nav.Table.DataCell>
+                <Nav.Table.DataCell scope="col">{tidligereAarsavregningInnbetaltTrygdeavgiftLabel}</Nav.Table.DataCell>
                 <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-                  {formaterTilNorskBelop(tidligereAarsavregningTrygdeavgiftFraAvgiftssystem || 0)} kr
+                  {formaterTilNorskBelop(tidligereAarsavregningInnbetaltTrygdeavgift || 0)} kr
                 </Nav.Table.DataCell>
               </Nav.Table.Row>
             )}
-          {tidligereTrygdeavgiftAvgiftssystem !== undefined && tidligereTrygdeavgiftAvgiftssystem !== null && (
+          {skalViseInnbetaltTrygdeavgift && (
             <Nav.Table.Row>
               <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>
-              <Nav.Table.DataCell scope="col">Trygdeavgift fra Avgiftssystemet</Nav.Table.DataCell>
+              <Nav.Table.DataCell scope="col">{innbetaltTrygdeavgiftLabel}</Nav.Table.DataCell>
               <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-                {formaterTilNorskBelop(tidligereTrygdeavgiftAvgiftssystem || 0)} kr
+                {formaterTilNorskBelop(tidligereInnbetaltTrygdeavgift || 0)} kr
               </Nav.Table.DataCell>
             </Nav.Table.Row>
           )}
+
           <Nav.Table.Row>
             <Nav.Table.DataCell scope="col">=</Nav.Table.DataCell>
             <Nav.Table.DataCell scope="col">Differanse</Nav.Table.DataCell>

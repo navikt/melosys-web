@@ -21,7 +21,7 @@
     "@navikt/aksel-icons": "^7.6.0",
     "@navikt/ds-css": "^7.5.3",
     "@navikt/ds-react": "^7.5.3",
-    "@navikt/melosys-kodeverk": "5.15.324",
+    "@navikt/melosys-kodeverk": "5.15.329",
     "classnames": "^2.2.6",
     "eessi-kodeverk": "1.4.3",
     "graphql": "^16.8.1",

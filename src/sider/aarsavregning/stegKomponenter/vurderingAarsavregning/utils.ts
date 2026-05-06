@@ -11,6 +11,7 @@ import type { BasePeriode } from "../../../../services/modules/types/periodeType
 import { InntektskildeDto, SkatteforholdDto } from "../../../../services/modules/trygdeavgift";
 import MKV from "../../../../melosyskodeverk";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlagSchema";
+
 import { ValidationError } from "yup";
 
 const { IKKE_SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
@@ -239,7 +240,7 @@ export const erGyldigeMedlemskapsperiodeDatoerForAutoUtfylling = (
  */
 export const validateAarsavregningUtenEllerDeltGrunnlag = async (
   values: unknown,
-  context: { aar?: number; harTrygdeavgiftFraAvgiftssystemet?: boolean },
+  context: { aar?: number; harInnbetaltTrygdeavgift?: boolean },
   path: string | null = null,
 ): Promise<{ isValid: boolean; errors: Record<string, string> }> => {
   try {
