@@ -224,8 +224,9 @@ const aarsavregningUtenEllerDeltGrunnlagSchema = object().shape({
     then: (schema) => schema.min(1, "Minst en medlemskapsperiode").of(medlemskapsperiodeSchema),
     otherwise: (schema) => schema,
   }),
-  innbetaltTrygdeavgift: string().when(["$harInnbetaltTrygdeavgift"], {
-    is: (harInnbetaltTrygdeavgift) => harInnbetaltTrygdeavgift,
+  innbetaltTrygdeavgift: string().when(["$harInnbetaltTrygdeavgift", "endeligAvgiftValg"], {
+    is: (harInnbetaltTrygdeavgift, endeligAvgiftValg) =>
+      harInnbetaltTrygdeavgift && endeligAvgiftValg !== OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET,
     then: (schema) => schema.required(MAA_FYLLES_UT),
     otherwise: (schema) => schema.nullable(),
   }),
