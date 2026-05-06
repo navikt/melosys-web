@@ -126,8 +126,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   }, [innvilgetMedlemskapsperioder, sisteGjeldendeAvgiftspliktigperioder]);
 
   const nyVurderingHarFjernetAvgiftspliktigperiode =
-    initialAvgiftspliktigperiode !== undefined &&
-    Utils._isEmpty(initialAvgiftspliktigperiode) &&
+    sisteGjeldendeAvgiftspliktigperioder !== undefined &&
+    Utils._isEmpty(sisteGjeldendeAvgiftspliktigperioder) &&
     initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger !== undefined;
   const {
     control,
@@ -546,10 +546,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const stegErGyldig = useMemo(
     () =>
       Boolean(
-        formIsValid &&
+        (formIsValid || nyVurderingHarFjernetAvgiftspliktigperiode) &&
           (endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
             endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) &&
-          aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag &&
+          (aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag || nyVurderingHarFjernetAvgiftspliktigperiode) &&
           !feilmelding &&
           !arrayValideringsfeil &&
           !lagreMedlemskapsperioderPaagar,
@@ -794,7 +794,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           </BorderedFormContainer>
         )}
 
-      {formIsValid &&
+      {(formIsValid || nyVurderingHarFjernetAvgiftspliktigperiode) &&
         !debouncedBeregningPagaar &&
         !beregningPaagar &&
         !feilmelding &&
