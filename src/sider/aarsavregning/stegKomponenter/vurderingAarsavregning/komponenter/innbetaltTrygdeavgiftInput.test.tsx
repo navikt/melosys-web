@@ -22,7 +22,6 @@ describe("InnbetaltTrygdeavgiftInput", () => {
     control: {} as any,
     redigerbart: true,
     erNyAarsavregning: false,
-    harInnbetaltTrygdeavgift: true,
     harTidligereTrygdeavgiftsgrunnlag: true,
   };
 
@@ -30,6 +29,18 @@ describe("InnbetaltTrygdeavgiftInput", () => {
     vi.mocked(useFeatureToggle).mockReturnValue(true);
     render(<InnbetaltTrygdeavgiftInput {...defaultProps} />);
     expect(screen.getByText("Innbetalt trygdeavgift")).toBeDefined();
+  });
+
+  it("viser hjelpetekst når toggle er aktiv og tidligere grunnlag mangler", () => {
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+    render(<InnbetaltTrygdeavgiftInput {...defaultProps} harTidligereTrygdeavgiftsgrunnlag={false} />);
+
+    expect(screen.getByText("Innbetalt trygdeavgift")).toBeDefined();
+    expect(
+      screen.getByText(
+        "Oppgi innbetalt avgift. Dette kan f.eks. være avgift fakturert fra Avgiftssystemet eller avgift som har blitt manuelt fakturert. Hvis personen ikke har innbetalt noe, skriv 0,-",
+      ),
+    ).toBeDefined();
   });
 
   it("rendrer label", () => {
