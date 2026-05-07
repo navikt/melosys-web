@@ -95,10 +95,6 @@ export const lagUrl = (
   erPensjonistToggleEnabled?: boolean,
   erPensjonistEØSToggleEnabled?: boolean,
 ) => {
-  if (behandlingstypeKode === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING) {
-    return lagÅrsavregningFlytUrl(sakstypeKode, saksnummer, behandlingID);
-  }
-
   if (
     skalViseIngenFlyt(
       sakstypeKode,
@@ -110,6 +106,10 @@ export const lagUrl = (
     )
   ) {
     return lagIngenFlytUrl(sakstypeKode, saksnummer, behandlingID);
+  }
+
+  if (behandlingstypeKode === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING) {
+    return lagÅrsavregningFlytUrl(sakstypeKode, saksnummer, behandlingID);
   }
 
   return lagUrlFraSakstypeOgBehandlingstema(saksnummer, behandlingID, sakstypeKode, behandlingstemaKode);
@@ -160,6 +160,14 @@ export const skalViseIngenFlyt = (
   erPensjonsistToggleEnabled?: boolean,
   erPensjonistToggleEnabled_EØS?: boolean,
 ) => {
+  // Årsavregning EØS offentlig tjenesteperson
+  if (
+    behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY &&
+    behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING
+  ) {
+    return true;
+  }
+
   if (
     sakstype === EU_EOS &&
     sakstema === TRYGDEAVGIFT &&
