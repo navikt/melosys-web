@@ -151,17 +151,19 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       if (!harGrunnlag) {
         // Når det ikke finnes grunnlag skal harInnbetaltTrygdeavgift alltid være true
         setHarInnbetaltTrygdeavgift(true);
-        håndterHarInnbetaltTrygdeavgift(true);
+        if (res.harInnbetaltTrygdeavgift !== true) {
+          håndterHarInnbetaltTrygdeavgift(true);
+        }
         return;
       }
+    } else {
+      setHarTidligereTrygdeavgiftsgrunnlag(
+        !(
+          res.tidligereTrygdeavgiftsGrunnlagsopplysninger === null ||
+          Utils._isEmpty(res.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.avgiftspliktigperioder)
+        ),
+      );
     }
-
-    setHarTidligereTrygdeavgiftsgrunnlag(
-      !(
-        res.tidligereTrygdeavgiftsGrunnlagsopplysninger === null ||
-        Utils._isEmpty(res.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.avgiftspliktigperioder)
-      ),
-    );
   };
 
   useEffect(() => {
