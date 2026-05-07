@@ -18,30 +18,39 @@ vi.mock("../../../../../featuretoggle/useFeatureToggle", () => ({
 }));
 
 describe("InnbetaltTrygdeavgiftInput", () => {
+  const defaultProps = {
+    control: {} as any,
+    redigerbart: true,
+    erNyAarsavregning: false,
+    harInnbetaltTrygdeavgift: true,
+    harTidligereTrygdeavgiftsgrunnlag: true,
+  };
+
   it("rendrer label", () => {
     vi.mocked(useFeatureToggle).mockReturnValue(true);
-    render(<InnbetaltTrygdeavgiftInput control={{} as any} redigerbart={true} erNyAarsavregning={false} />);
+    render(<InnbetaltTrygdeavgiftInput {...defaultProps} />);
     expect(screen.getByText("Innbetalt trygdeavgift")).toBeDefined();
   });
 
   it("rendrer label", () => {
     vi.mocked(useFeatureToggle).mockReturnValue(false);
-    render(<InnbetaltTrygdeavgiftInput control={{} as any} redigerbart={true} erNyAarsavregning={false} />);
+    render(<InnbetaltTrygdeavgiftInput {...defaultProps} />);
     expect(screen.getByText("Trygdeavgift fra Avgiftssystemet")).toBeDefined();
   });
 
   it("viser beskrivelse for ny årsavregning", () => {
-    render(<InnbetaltTrygdeavgiftInput control={{} as any} redigerbart={true} erNyAarsavregning={true} />);
+    render(<InnbetaltTrygdeavgiftInput {...defaultProps} erNyAarsavregning={true} />);
     expect(screen.getByText("Du skal kun endre hvis tidligere oppgitte beløp er feil")).toBeDefined();
   });
 
   it("viser ingen beskrivelse for eksisterende årsavregning", () => {
-    render(<InnbetaltTrygdeavgiftInput control={{} as any} redigerbart={true} erNyAarsavregning={false} />);
+    render(<InnbetaltTrygdeavgiftInput {...defaultProps} erNyAarsavregning={false} />);
     expect(screen.queryByText("Du skal kun endre hvis tidligere oppgitte beløp er feil")).toBeNull();
   });
 
   it("er readOnly når ikke redigerbart", () => {
-    render(<InnbetaltTrygdeavgiftInput control={{} as any} redigerbart={false} erNyAarsavregning={false} />);
+    render(<InnbetaltTrygdeavgiftInput {...defaultProps} redigerbart={false} />);
+
     expect(screen.getByRole("textbox").getAttribute("readonly")).not.toBeNull();
   });
 });
