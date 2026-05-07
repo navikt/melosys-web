@@ -917,6 +917,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           control={control}
           redigerbart={skjemaErRedigerbart}
           erNyAarsavregning={Boolean(tidligereAarsavregningInnbetaltTrygdeavgift)}
+          harTidligereTrygdeavgiftsgrunnlag={harTidligereTrygdeavgiftsgrunnlag}
         />
       )}
 
