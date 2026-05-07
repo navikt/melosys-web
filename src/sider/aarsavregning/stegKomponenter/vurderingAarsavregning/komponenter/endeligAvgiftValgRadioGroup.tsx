@@ -47,7 +47,7 @@ export function EndeligAvgiftValgRadioGroup({
           {erPensjonistEØSToggleEnabled &&
             endretPeriodeFraAvgiftssystemetValg &&
             harInnbetaltTrygdeavgift &&
-            harTidligereTrygdeavgiftsgrunnlag && (
+            harTidligereTrygdeavgiftsgrunnlag !== false && (
               <Nav.Radio
                 value={OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET}
                 className={endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET ? "checked" : ""}
