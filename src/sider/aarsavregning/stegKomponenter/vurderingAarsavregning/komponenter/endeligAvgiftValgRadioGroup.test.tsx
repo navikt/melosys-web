@@ -25,12 +25,20 @@ describe("EndeligAvgiftValgRadioGroup", () => {
     endeligAvgiftValg: undefined as string | undefined,
     endretPeriodeFraAvgiftssystemetValg: true,
     harInnbetaltTrygdeavgift: true,
+    harTidligereTrygdeavgiftsgrunnlag: true,
   };
 
   it("rendrer alle radioknapper", () => {
     render(<EndeligAvgiftValgRadioGroup {...defaultProps} />);
     expect(screen.getByText("Beregn endelig trygdeavgift")).toBeDefined();
     expect(screen.getByText("Beregn trygdeavgift med periode fra avgiftssystemet")).toBeDefined();
+    expect(screen.getByText("Oppgi endelig beregnet trygdeavgift")).toBeDefined();
+  });
+
+  it("rendrer ikke radioknappen for periode fra avgiftssystemet når det ikke finnes tidligere trygdeavgiftsgrunnlag", () => {
+    render(<EndeligAvgiftValgRadioGroup {...defaultProps} harTidligereTrygdeavgiftsgrunnlag={false} />);
+    expect(screen.getByText("Beregn endelig trygdeavgift")).toBeDefined();
+    expect(screen.queryByText("Beregn trygdeavgift med periode fra avgiftssystemet")).toBeNull();
     expect(screen.getByText("Oppgi endelig beregnet trygdeavgift")).toBeDefined();
   });
 

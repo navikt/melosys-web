@@ -928,6 +928,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         endeligAvgiftValg={endeligAvgiftValg}
         endretPeriodeFraAvgiftssystemetValg={erDeltGrunnlag}
         harInnbetaltTrygdeavgift={harInnbetaltTrygdeavgift}
+        harTidligereTrygdeavgiftsgrunnlag={harTidligereTrygdeavgiftsgrunnlag}
       />
 
       {(endeligAvgiftValg === OPPLYSNINGER_ENDRET ||

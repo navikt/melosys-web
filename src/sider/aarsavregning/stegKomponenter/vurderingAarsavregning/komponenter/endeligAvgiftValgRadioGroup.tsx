@@ -15,6 +15,7 @@ interface EndeligAvgiftValgRadioGroupProps {
   endeligAvgiftValg?: string;
   endretPeriodeFraAvgiftssystemetValg?: boolean;
   harInnbetaltTrygdeavgift?: boolean;
+  harTidligereTrygdeavgiftsgrunnlag?: boolean;
 }
 
 export function EndeligAvgiftValgRadioGroup({
@@ -24,6 +25,7 @@ export function EndeligAvgiftValgRadioGroup({
   endeligAvgiftValg,
   endretPeriodeFraAvgiftssystemetValg,
   harInnbetaltTrygdeavgift,
+  harTidligereTrygdeavgiftsgrunnlag,
 }: EndeligAvgiftValgRadioGroupProps) {
   const erPensjonistEØSToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
   return (
@@ -42,14 +44,17 @@ export function EndeligAvgiftValgRadioGroup({
           <Nav.Radio value={OPPLYSNINGER_ENDRET} className={endeligAvgiftValg === OPPLYSNINGER_ENDRET ? "checked" : ""}>
             Beregn endelig trygdeavgift
           </Nav.Radio>
-          {erPensjonistEØSToggleEnabled && endretPeriodeFraAvgiftssystemetValg && harInnbetaltTrygdeavgift && (
-            <Nav.Radio
-              value={OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET}
-              className={endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET ? "checked" : ""}
-            >
-              Beregn trygdeavgift med periode fra avgiftssystemet
-            </Nav.Radio>
-          )}
+          {erPensjonistEØSToggleEnabled &&
+            endretPeriodeFraAvgiftssystemetValg &&
+            harInnbetaltTrygdeavgift &&
+            harTidligereTrygdeavgiftsgrunnlag && (
+              <Nav.Radio
+                value={OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET}
+                className={endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET ? "checked" : ""}
+              >
+                Beregn trygdeavgift med periode fra avgiftssystemet
+              </Nav.Radio>
+            )}
           <Nav.Radio
             value={MANUELL_ENDELIG_AVGIFT}
             className={endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT ? "checked" : ""}
