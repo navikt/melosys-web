@@ -536,6 +536,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     isValidating,
     endrerEndeligAvgiftValg,
     lagreMedlemskapsperioderPaagar,
+    aarsavregningID,
   ]);
 
   const stegErGyldig = useMemo(

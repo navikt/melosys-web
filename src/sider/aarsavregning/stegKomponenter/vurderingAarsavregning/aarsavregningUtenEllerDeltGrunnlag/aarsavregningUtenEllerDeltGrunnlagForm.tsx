@@ -654,7 +654,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     ) {
       debouncedOppdaterInnbetaltTrygdeavgift({
         avregning: {
-          innbetaltTrygdeavgift,
+          innbetaltTrygdeavgift: innbetaltTrygdeavgift || "0",
         },
       });
     }
