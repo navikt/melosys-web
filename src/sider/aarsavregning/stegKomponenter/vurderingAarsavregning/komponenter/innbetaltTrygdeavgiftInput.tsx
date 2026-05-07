@@ -22,7 +22,7 @@ export function InnbetaltTrygdeavgiftInput({
   const UTEN_GRUNNLAG_HJELPETEKST = (
     <p>
       Oppgi innbetalt avgift. Dette kan f.eks. være avgift fakturert fra Avgiftssystemet eller avgift som har blitt
-      manuelt fakturert. Hvis personen ikke har innbetalt noe, skrive 0,-
+      manuelt fakturert. Hvis personen ikke har innbetalt noe, skriv 0,-
     </p>
   );
 
