@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { getFormValues, isValid, reduxForm } from "redux-form";
 import PT from "prop-types";
@@ -8,6 +8,7 @@ import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../../felleskomponenter/skjema";
 import * as Mui from "../../../felleskomponenter/ui";
+import * as Utils from "../../../utils";
 
 import { vilkarSelectors } from "../../../ducks/vilkar";
 import { behandlingerSelectors } from "../../../ducks/behandlinger";
@@ -98,20 +99,25 @@ function VurderingAvslag12_x_og_16({
     ...MKV.KTObjects.begrunnelser.bosted,
   ];
 
-  useEffect(() => {
-    if (redigerbart && aktivtSteg && mottatteOpplysningerStatus === "OK") {
+  const kontrollerBehandling = (data) => {
+    if (redigerbart && data.aktivtSteg && data.mottatteOpplysningerStatus === "OK") {
       dispatch(
         kontrollerFerdigbehandling({
           behandlingID,
-          vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+          vedtakstype: data.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
           behandlingsresultattype: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-          kontrollerSomSkalIgnoreres: kopiTilArbeidsgiver
+          kontrollerSomSkalIgnoreres: data.kopiTilArbeidsgiver
             ? []
             : [MKV.Koder.begrunnelser.kontroll_begrunnelser.OPPHØRT_ARBEIDSGIVER],
           skalRegisteropplysningerOppdateres: false,
         }),
       );
     }
+  };
+  const debouncedKontrollerBehandling = useCallback(Utils._debounce(kontrollerBehandling, 500), []);
+
+  useEffect(() => {
+    debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus, kopiTilArbeidsgiver, vedtakstype });
   }, [kopiTilArbeidsgiver, mottatteOpplysningerStatus, aktivtSteg]);
 
   const validerForm = () => {
@@ -121,6 +127,8 @@ function VurderingAvslag12_x_og_16({
   };
 
   const avslaa = async () => {
+    debouncedKontrollerBehandling.cancel?.();
+
     const { UTSENDT_ARBEIDSTAKER, UTSENDT_SELVSTENDIG } = MKV.Koder.behandlinger.behandlingstema;
 
     const { FASTSATT_LOVVALGSLAND, AVSLAG_SØKNAD } = MKV.Koder.behandlinger.behandlingsresultattyper;
