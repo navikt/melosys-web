@@ -114,7 +114,10 @@ export function AarsavregningMedGrunnlag({ bekreft, oppdaterStatus }: Props) {
     }
 
     const endeligAvgiftValg = aarsavregningResponse?.endeligAvgiftValg;
-    const manueltAvgiftBeloep = aarsavregningResponse?.avregning?.manueltAvgiftBeloep;
+    const manueltAvgiftBeloep =
+      aarsavregningResponse?.avregning?.manueltAvgiftBeloep == null
+        ? ""
+        : String(aarsavregningResponse.avregning.manueltAvgiftBeloep);
 
     if (!trygdeavgiftsgrunnlag) {
       return {
