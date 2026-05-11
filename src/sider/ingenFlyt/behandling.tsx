@@ -20,7 +20,12 @@ import Informasjonlinje from "../../felleskomponenter/informasjonlinje";
 import { SoknadMenypanelForm } from "../../felleskomponenter/menypanelForm";
 import Oppsummering from "../../felleskomponenter/oppsummering";
 import SaksoversiktLenke from "../../felleskomponenter/saksoversiktLenke";
-import { Innsynsmelding, IngenFlytMelding, VirksomhetMelding } from "../../felleskomponenter/alertmeldinger";
+import {
+  Innsynsmelding,
+  IngenFlytMelding,
+  VirksomhetMelding,
+  IngenFlytÅrsavregningMelding,
+} from "../../felleskomponenter/alertmeldinger";
 import SideDialog, { defaultTabs, tabsUtenBucOgSed } from "../../felleskomponenter/sideDialog";
 
 import "./behandling.less";
@@ -30,6 +35,7 @@ import { behandlingsresultatSelectors } from "../../ducks/behandlingsresultat";
 const mapStateToProps = (state: RootState) => ({
   arbeidsland: mottatteOpplysningerSelectors.SoknadslandKTSelector(state),
   behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   behandlingsresultatType: behandlingsresultatSelectors.BehandlingsresultatTypeSelector(state),
   fagsakStatus: fagsakSelectors.FagsakStatusSelector(state),
   hovedpartRolle: fagsakSelectors.HovedpartRolleSelector(state),
@@ -57,6 +63,7 @@ interface Props extends RouteComponentProps<MatchParams> {}
 function Behandling({
   arbeidsland,
   behandlingstema,
+  behandlingstype,
   behandlingsresultatType,
   fagsakStatus,
   hovedpartRolle,
@@ -92,7 +99,12 @@ function Behandling({
   const erAvslåttPgaManglendeOpplysninger =
     behandlingsresultatType === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
   const visAvslåttPgaManglendeOpplysninger = erAvslåttPgaManglendeOpplysninger && !erHenlagtSak;
-  const visTomFlytMelding = !erAvslåttPgaManglendeOpplysninger && !erHenlagtSak;
+
+  const visTomFlytMeldingForÅrsavregning =
+    [MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY].includes(behandlingstema) &&
+    [MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING].includes(behandlingstype);
+
+  const visTomFlytMelding = !erAvslåttPgaManglendeOpplysninger && !erHenlagtSak && !visTomFlytMeldingForÅrsavregning;
 
   return (
     <>
@@ -111,6 +123,7 @@ function Behandling({
                   <main id="main-container">
                     {erHenlagtSak && <HenlagtSak />}
                     {visAvslåttPgaManglendeOpplysninger && <AvslaattPgaManglendeOpplysninger />}
+                    {visTomFlytMeldingForÅrsavregning && <IngenFlytÅrsavregningMelding />}
                     {visTomFlytMelding && <IngenFlytMelding />}
                   </main>
                   <SoknadMenypanelForm startOgVisOppfriskModal={() => null} visOppdaterRegisteropplysninger={false} />

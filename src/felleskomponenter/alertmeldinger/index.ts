@@ -2,6 +2,7 @@ import {
   StandardMeldingOverst,
   IngenFlytMelding,
   VirksomhetMelding,
+  IngenFlytÅrsavregningMelding,
   Innsynsmelding,
   NyVurderingMelding,
 } from "./alertmeldinger";
@@ -11,6 +12,7 @@ import StatsborgerskapFeil from "./statsborgerskapFeil";
 export {
   VirksomhetMelding,
   IngenFlytMelding,
+  IngenFlytÅrsavregningMelding,
   StandardMeldingOverst,
   UnntakHjelpetekst,
   Innsynsmelding,

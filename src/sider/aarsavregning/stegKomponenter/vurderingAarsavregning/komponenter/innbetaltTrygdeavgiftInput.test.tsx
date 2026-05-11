@@ -1,5 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { InnbetaltTrygdeavgiftInput } from "./innbetaltTrygdeavgiftInput";
+import { useFeatureToggle } from "../../../../../featuretoggle";
 
 vi.mock("../../../../../felleskomponenter/forms", () => ({
   Input: ({ label, description, readOnly, numeric }: any) => (
@@ -11,12 +13,21 @@ vi.mock("../../../../../felleskomponenter/forms", () => ({
   ),
 }));
 
-import { InnbetaltTrygdeavgiftInput } from "./innbetaltTrygdeavgiftInput";
+vi.mock("../../../../../featuretoggle/useFeatureToggle", () => ({
+  default: vi.fn(),
+}));
 
 describe("InnbetaltTrygdeavgiftInput", () => {
   it("rendrer label", () => {
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
     render(<InnbetaltTrygdeavgiftInput control={{} as any} redigerbart={true} erNyAarsavregning={false} />);
     expect(screen.getByText("Innbetalt trygdeavgift")).toBeDefined();
+  });
+
+  it("rendrer label", () => {
+    vi.mocked(useFeatureToggle).mockReturnValue(false);
+    render(<InnbetaltTrygdeavgiftInput control={{} as any} redigerbart={true} erNyAarsavregning={false} />);
+    expect(screen.getByText("Trygdeavgift fra Avgiftssystemet")).toBeDefined();
   });
 
   it("viser beskrivelse for ny årsavregning", () => {
