@@ -351,7 +351,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         </Nav.BodyLong>
       )}
 
-      {skalIkkeViseTidligerePerioderToggle && harHelseutgiftDekkesPeriodeFraTidligereÅr && redigerbart && (
+      {skalIkkeViseTidligerePerioderToggle && harHelseutgiftDekkesPeriodeFraTidligereÅr && (
         <Nav.Alert variant="warning" size="small" className="alert--spacing-bottom">
           Trygdeavgift for tidligere år skal fastsettes på årsavregning. Du skal derfor ikke oppgi skatte- og
           inntektsperioder for tidligere år i denne behandlingen.
