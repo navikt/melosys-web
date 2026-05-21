@@ -1,6 +1,9 @@
+import { Loader } from "@navikt/ds-react";
 import { PencilIcon, TrashIcon } from "@navikt/aksel-icons";
+import { useState } from "react";
 
 import * as Nav from "../../../navFrontend";
+import { useTekstblokk } from "../../../services/api/tekstblokker";
 import { TekstblokkOversikt } from "../../../services/modules/tekstblokker";
 import { formatterDatoTilNorsk } from "../../../utils/dato";
 
@@ -23,6 +26,7 @@ function TekstblokkerListe({ blokker, onRediger, onSlett }: Props) {
     <Nav.Table className="tekstblokker__tabell">
       <Nav.Table.Header>
         <Nav.Table.Row>
+          <Nav.Table.HeaderCell scope="col" aria-label="Utvid" />
           <Nav.Table.HeaderCell scope="col">Tittel</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Tags</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Sist endret</Nav.Table.HeaderCell>
@@ -32,47 +36,72 @@ function TekstblokkerListe({ blokker, onRediger, onSlett }: Props) {
       </Nav.Table.Header>
       <Nav.Table.Body>
         {blokker.map((blokk) => (
-          <Nav.Table.Row key={blokk.id}>
-            <Nav.Table.DataCell>
-              <button type="button" className="tekstblokker__rad-tittel" onClick={() => onRediger(blokk.id)}>
-                {blokk.tittel}
-              </button>
-            </Nav.Table.DataCell>
-            <Nav.Table.DataCell>
-              <div className="tekstblokker__rad-tags">
-                {blokk.tags.map((tag) => (
-                  <Nav.Tag key={tag} size="xsmall" variant="neutral">
-                    {tag}
-                  </Nav.Tag>
-                ))}
-              </div>
-            </Nav.Table.DataCell>
-            <Nav.Table.DataCell>{formatterDatoTilNorsk(blokk.endretDato, true)}</Nav.Table.DataCell>
-            <Nav.Table.DataCell>{blokk.endretAv}</Nav.Table.DataCell>
-            <Nav.Table.DataCell>
-              <div className="tekstblokker__rad-handlinger">
-                <Nav.Button
-                  size="xsmall"
-                  variant="tertiary"
-                  icon={<PencilIcon aria-hidden />}
-                  onClick={() => onRediger(blokk.id)}
-                >
-                  Rediger
-                </Nav.Button>
-                <Nav.Button
-                  size="xsmall"
-                  variant="tertiary-neutral"
-                  icon={<TrashIcon aria-hidden />}
-                  onClick={() => onSlett(blokk)}
-                >
-                  Slett
-                </Nav.Button>
-              </div>
-            </Nav.Table.DataCell>
-          </Nav.Table.Row>
+          <TekstblokkerListeRad key={blokk.id} blokk={blokk} onRediger={onRediger} onSlett={onSlett} />
         ))}
       </Nav.Table.Body>
     </Nav.Table>
+  );
+}
+
+interface RadProps {
+  blokk: TekstblokkOversikt;
+  onRediger: (id: number) => void;
+  onSlett: (blokk: TekstblokkOversikt) => void;
+}
+
+function TekstblokkerListeRad({ blokk, onRediger, onSlett }: RadProps) {
+  const [utvidet, setUtvidet] = useState(false);
+  const detalj = useTekstblokk(utvidet ? blokk.id : null);
+
+  return (
+    <Nav.Table.ExpandableRow
+      open={utvidet}
+      onOpenChange={setUtvidet}
+      togglePlacement="left"
+      content={
+        <div className="tekstblokker__rad-forhandsvisning">
+          {detalj.isLoading && <Loader size="small" />}
+          {detalj.data && <div dangerouslySetInnerHTML={{ __html: detalj.data.innhold }} />}
+        </div>
+      }
+    >
+      <Nav.Table.DataCell>
+        <button type="button" className="tekstblokker__rad-tittel" onClick={() => onRediger(blokk.id)}>
+          {blokk.tittel}
+        </button>
+      </Nav.Table.DataCell>
+      <Nav.Table.DataCell>
+        <div className="tekstblokker__rad-tags">
+          {blokk.tags.map((tag) => (
+            <Nav.Tag key={tag} size="xsmall" variant="neutral">
+              {tag}
+            </Nav.Tag>
+          ))}
+        </div>
+      </Nav.Table.DataCell>
+      <Nav.Table.DataCell>{formatterDatoTilNorsk(blokk.endretDato, true)}</Nav.Table.DataCell>
+      <Nav.Table.DataCell>{blokk.endretAv}</Nav.Table.DataCell>
+      <Nav.Table.DataCell>
+        <div className="tekstblokker__rad-handlinger">
+          <Nav.Button
+            size="xsmall"
+            variant="tertiary"
+            icon={<PencilIcon aria-hidden />}
+            onClick={() => onRediger(blokk.id)}
+          >
+            Rediger
+          </Nav.Button>
+          <Nav.Button
+            size="xsmall"
+            variant="tertiary-neutral"
+            icon={<TrashIcon aria-hidden />}
+            onClick={() => onSlett(blokk)}
+          >
+            Slett
+          </Nav.Button>
+        </div>
+      </Nav.Table.DataCell>
+    </Nav.Table.ExpandableRow>
   );
 }
 

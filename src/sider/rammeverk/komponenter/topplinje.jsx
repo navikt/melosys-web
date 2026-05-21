@@ -1,5 +1,6 @@
 import { withRouter } from "react-router-dom";
 import { withMsal } from "@azure/msal-react";
+import { Dropdown } from "@navikt/ds-react";
 import PT from "prop-types";
 
 import NavLogo from "../../../resources/images/nav.svg?react";
@@ -20,16 +21,12 @@ function Topplinje(props) {
     history.push("/");
   };
 
-  const tilTekstblokker = (event) => {
-    event.preventDefault();
-    props.history.push("/administrasjon/tekstblokker");
-  };
-
   const loggUt = () => {
     props.msalContext.instance.logoutRedirect();
   };
 
   const erProduksjonsmiljo = `${window.env.CLUSTER}`.startsWith("prod");
+  const harAdminMeny = visTekstblokker;
 
   return (
     <header className="topplinje">
@@ -47,12 +44,23 @@ function Topplinje(props) {
         <HolidayDecor slot="brand" />
       </div>
       <HolidayDecor slot="center" />
-      {visTekstblokker && (
-        <nav className="topplinje__meny">
-          <a href="/administrasjon/tekstblokker" onClick={tilTekstblokker} className="topplinje__menylenke">
-            Tekstblokker
-          </a>
-        </nav>
+      {harAdminMeny && (
+        <div className="topplinje__meny">
+          <Dropdown>
+            <Nav.Button as={Dropdown.Toggle} variant="tertiary-neutral" size="small" className="topplinje__menyknapp">
+              Admin
+            </Nav.Button>
+            <Dropdown.Menu>
+              <Dropdown.Menu.List>
+                {visTekstblokker && (
+                  <Dropdown.Menu.List.Item onClick={() => props.history.push("/administrasjon/tekstblokker")}>
+                    Tekstblokker
+                  </Dropdown.Menu.List.Item>
+                )}
+              </Dropdown.Menu.List>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
       )}
       <div className="topplinje__saksbehandler">
         <div className="dropdown">
