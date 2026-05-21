@@ -4,17 +4,25 @@ import PT from "prop-types";
 
 import NavLogo from "../../../resources/images/nav.svg?react";
 import * as Nav from "../../../navFrontend";
+import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
+import { MELOSYS_TEKSTBLOKKER } from "../../../featuretoggle/toggleNavn";
 
 import "./topplinje.less";
 import { HolidayDecor } from "../../../felleskomponenter/høytidOgMorro/holidayDecor";
 
 function Topplinje(props) {
   const { saksbehandler = "" } = props;
+  const visTekstblokker = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
 
   const tilForsidenHandler = (event) => {
     event.preventDefault();
     const { history } = props;
     history.push("/");
+  };
+
+  const tilTekstblokker = (event) => {
+    event.preventDefault();
+    props.history.push("/administrasjon/tekstblokker");
   };
 
   const loggUt = () => {
@@ -39,6 +47,13 @@ function Topplinje(props) {
         <HolidayDecor slot="brand" />
       </div>
       <HolidayDecor slot="center" />
+      {visTekstblokker && (
+        <nav className="topplinje__meny">
+          <a href="/administrasjon/tekstblokker" onClick={tilTekstblokker} className="topplinje__menylenke">
+            Tekstblokker
+          </a>
+        </nav>
+      )}
       <div className="topplinje__saksbehandler">
         <div className="dropdown">
           <HolidayDecor slot="user" />

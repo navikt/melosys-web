@@ -17,9 +17,19 @@ import Årsavregning from "./sider/aarsavregning/saksbehandling";
 import Unntaksregistrering from "./sider/unntaksregistrering";
 import UkjentSide from "./sider/ukjentSide";
 import EøsPensjonist from "./sider/eu_eøs/pensjonist/saksbehandling";
+import TekstblokkerSide from "./sider/administrasjon/tekstblokker";
+import useFeatureToggle from "./featuretoggle/useFeatureToggle";
+import { MELOSYS_TEKSTBLOKKER } from "./featuretoggle/toggleNavn";
 
 import { FellesHandlersContext } from "./contexts";
 import ErrorBoundary from "./felleskomponenter/errorBoundary";
+
+function TekstblokkerRute(props) {
+  const togglePaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
+  if (togglePaa === false) return <UkjentSide />;
+  if (togglePaa === undefined) return null;
+  return <TekstblokkerSide {...props} />;
+}
 
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 
@@ -106,6 +116,7 @@ function Routing() {
             render={(props) => <VurderUtpeking {...props} {...fellesHandlers} />}
           />
           <Route path="/sendbrev/:behandlingID/:snr" render={(props) => <Sendbrev {...props} {...fellesHandlers} />} />
+          <Route path="/administrasjon/tekstblokker" render={(props) => <TekstblokkerRute {...props} />} />
           <Route
             path="/:sakstype/unntaksregistrering/:saksnr"
             render={(props) => <Unntaksregistrering {...props} {...fellesHandlers} />}

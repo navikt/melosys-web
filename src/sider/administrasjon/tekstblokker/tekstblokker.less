@@ -1,0 +1,102 @@
+.tekstblokker {
+  max-width: 80rem;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  &__filter {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__laster {
+    display: flex;
+    justify-content: center;
+    padding: 3rem;
+  }
+
+  &__tom {
+    padding: 2rem;
+    text-align: center;
+    color: var(--a-text-subtle);
+    border: 1px dashed var(--a-border-subtle);
+    border-radius: var(--a-border-radius-medium, 4px);
+  }
+
+  &__tabell {
+    background-color: var(--a-surface-default, #fff);
+  }
+
+  &__rad-tittel {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    color: var(--a-text-action);
+    text-decoration: underline;
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  &__rad-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    max-width: 16rem;
+  }
+
+  &__rad-handlinger {
+    display: flex;
+    gap: 0.25rem;
+    justify-content: flex-end;
+  }
+
+  &__modal-skjema {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__modal-editor {
+    min-height: 16rem;
+  }
+
+  &__modal-laster {
+    display: flex;
+    justify-content: center;
+    padding: 3rem;
+  }
+
+  &__tagInput {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    &-chips {
+      min-height: 2rem;
+      display: flex;
+      align-items: center;
+    }
+
+    &-tom {
+      color: var(--a-text-subtle);
+      font-style: italic;
+      font-size: 0.85rem;
+    }
+  }
+}
