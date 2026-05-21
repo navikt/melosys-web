@@ -40,13 +40,11 @@ const DELT_GRUNNLAG_HJELPETEKST = (
 );
 
 const DELT_GRUNNLAG_INNBETALT_TRYGDEAVGIFT_HJELPETEKST = (
-  <>
-    <p>
-      Oppgi innbetalt avgift hvis innbetalt beløp ikke samsvarer med tidligere beregnet trygdeavgift. Dette kan for
-      eksempel skyldes at det ikke har vært mulig å trekke fullt beløp fra pensjon, eller at det også er innbetalt
-      avgift i samme sak i Avgiftssystemet.
-    </p>
-  </>
+  <p>
+    Oppgi innbetalt avgift hvis innbetalt beløp ikke samsvarer med tidligere beregnet trygdeavgift. Dette kan for
+    eksempel skyldes at det ikke har vært mulig å trekke fullt beløp fra pensjon, eller at det også er innbetalt avgift
+    i samme sak i Avgiftssystemet.
+  </p>
 );
 
 const behandlingHarÅrsavregning = (behandlingID: number, årsavregningList: AarsavregningListResponse[]) => {
@@ -101,6 +99,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector) as any;
   const { oppfriskOgLastInnSaksopplysningerForAarsavregning } = useContext(FellesHandlersContext) as any;
   const dispatch = useDispatch();
+  const erÅrsavregningEøsPensjonistToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
 
   /**
    * Utleder harInnbetaltTrygdeavgift når verdien er null (bakoverkompatibilitet).
@@ -141,12 +140,30 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       setHarInnbetaltTrygdeavgift(utledetVerdi ?? false);
     }
 
-    setHarTidligereTrygdeavgiftsgrunnlag(
-      !(
+    if (erÅrsavregningEøsPensjonistToggleEnabled) {
+      const harGrunnlag = !(
         res.tidligereTrygdeavgiftsGrunnlagsopplysninger === null ||
         Utils._isEmpty(res.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.avgiftspliktigperioder)
-      ),
-    );
+      );
+
+      setHarTidligereTrygdeavgiftsgrunnlag(harGrunnlag);
+
+      if (!harGrunnlag) {
+        // Når det ikke finnes grunnlag skal harInnbetaltTrygdeavgift alltid være true
+        setHarInnbetaltTrygdeavgift(true);
+        if (res.harInnbetaltTrygdeavgift !== true) {
+          håndterHarInnbetaltTrygdeavgift(true);
+        }
+        return;
+      }
+    } else {
+      setHarTidligereTrygdeavgiftsgrunnlag(
+        !(
+          res.tidligereTrygdeavgiftsGrunnlagsopplysninger === null ||
+          Utils._isEmpty(res.tidligereTrygdeavgiftsGrunnlagsopplysninger?.trygdeavgiftsgrunnlag.avgiftspliktigperioder)
+        ),
+      );
+    }
   };
 
   useEffect(() => {
@@ -207,7 +224,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
   const håndterHarInnbetaltTrygdeavgift = async (value: boolean) => {
     setHarInnbetaltTrygdeavgiftIsPending(true);
-    Api.Aarsavregning.oppdaterHarInnbetaltTrygdeavgift(behandlingID, {
+    await Api.Aarsavregning.oppdaterHarInnbetaltTrygdeavgift(behandlingID, {
       harInnbetaltTrygdeavgift: value,
     })
       .then((res) => {
@@ -236,7 +253,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const antallÅrTilbakeITid = 6;
   const muligeAar = Array.from({ length: antallÅrTilbakeITid }, (_, i) => sisteMuligeÅr - i);
 
-  const trygdeavgiftAvvikLabelHjelpetekst = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST) ? (
+  const trygdeavgiftAvvikLabelHjelpetekst = erÅrsavregningEøsPensjonistToggleEnabled ? (
     <LabelMedHjelpetekst
       label="Avviker innbetalt trygdeavgift fra tidligere beregnet avgift?"
       hjelpetekst={harTidligereTrygdeavgiftsgrunnlag ? DELT_GRUNNLAG_INNBETALT_TRYGDEAVGIFT_HJELPETEKST : ""}
@@ -324,24 +341,25 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             </Nav.Alert>
           )}
 
-          {(valgtÅr || initieltÅr) && (
-            <Nav.HStack>
-              <Nav.VStack>
-                <Nav.RadioGroup
-                  key={`innbetaltTrygdeavgiftRadioGroup ${valgtÅr || initieltÅr || ""}`}
-                  onChange={håndterHarInnbetaltTrygdeavgift}
-                  legend={trygdeavgiftAvvikLabelHjelpetekst}
-                  value={harInnbetaltTrygdeavgift}
-                  readOnly={!redigerbart || harAktivÅrsavregning || forrigeÅrsavregningHarInnbetaltTrygdeavgift}
-                >
-                  <Nav.HStack gap="6">
-                    <Nav.Radio value>Ja</Nav.Radio>
-                    <Nav.Radio value={false}>Nei</Nav.Radio>
-                  </Nav.HStack>
-                </Nav.RadioGroup>
-              </Nav.VStack>
-            </Nav.HStack>
-          )}
+          {(valgtÅr || initieltÅr) &&
+            (!erÅrsavregningEøsPensjonistToggleEnabled || harTidligereTrygdeavgiftsgrunnlag) && (
+              <Nav.HStack>
+                <Nav.VStack>
+                  <Nav.RadioGroup
+                    key={`innbetaltTrygdeavgiftRadioGroup ${valgtÅr || initieltÅr || ""}`}
+                    onChange={håndterHarInnbetaltTrygdeavgift}
+                    legend={trygdeavgiftAvvikLabelHjelpetekst}
+                    value={harInnbetaltTrygdeavgift}
+                    readOnly={!redigerbart || harAktivÅrsavregning || forrigeÅrsavregningHarInnbetaltTrygdeavgift}
+                  >
+                    <Nav.HStack gap="6">
+                      <Nav.Radio value>Ja</Nav.Radio>
+                      <Nav.Radio value={false}>Nei</Nav.Radio>
+                    </Nav.HStack>
+                  </Nav.RadioGroup>
+                </Nav.VStack>
+              </Nav.HStack>
+            )}
 
           {!harInnbetaltTrygdeavgiftIsPending &&
             harTidligereTrygdeavgiftsgrunnlag === true &&
@@ -350,7 +368,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             )}
           {!harInnbetaltTrygdeavgiftIsPending &&
             (harTidligereTrygdeavgiftsgrunnlag === false || harInnbetaltTrygdeavgift) &&
-            (harInnbetaltTrygdeavgift === true || harInnbetaltTrygdeavgift === false) && (
+            harInnbetaltTrygdeavgift != null && (
               <AarsavregningUtenEllerDeltGrunnlag
                 bekreft={bekreft}
                 aktivtSteg={aktivtSteg}

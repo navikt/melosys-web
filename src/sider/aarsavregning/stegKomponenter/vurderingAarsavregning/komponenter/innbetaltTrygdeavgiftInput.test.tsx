@@ -18,30 +18,50 @@ vi.mock("../../../../../featuretoggle/useFeatureToggle", () => ({
 }));
 
 describe("InnbetaltTrygdeavgiftInput", () => {
+  const defaultProps = {
+    control: {} as any,
+    redigerbart: true,
+    erNyAarsavregning: false,
+    harTidligereTrygdeavgiftsgrunnlag: true,
+  };
+
   it("rendrer label", () => {
     vi.mocked(useFeatureToggle).mockReturnValue(true);
-    render(<InnbetaltTrygdeavgiftInput control={{} as any} redigerbart={true} erNyAarsavregning={false} />);
+    render(<InnbetaltTrygdeavgiftInput {...defaultProps} />);
     expect(screen.getByText("Innbetalt trygdeavgift")).toBeDefined();
+  });
+
+  it("viser hjelpetekst når toggle er aktiv og tidligere grunnlag mangler", () => {
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+    render(<InnbetaltTrygdeavgiftInput {...defaultProps} harTidligereTrygdeavgiftsgrunnlag={false} />);
+
+    expect(screen.getByText("Innbetalt trygdeavgift")).toBeDefined();
+    expect(
+      screen.getByText(
+        "Oppgi innbetalt avgift. Dette kan f.eks. være avgift fakturert fra Avgiftssystemet eller avgift som har blitt manuelt fakturert. Hvis personen ikke har innbetalt noe, skriv 0,-",
+      ),
+    ).toBeDefined();
   });
 
   it("rendrer label", () => {
     vi.mocked(useFeatureToggle).mockReturnValue(false);
-    render(<InnbetaltTrygdeavgiftInput control={{} as any} redigerbart={true} erNyAarsavregning={false} />);
+    render(<InnbetaltTrygdeavgiftInput {...defaultProps} />);
     expect(screen.getByText("Trygdeavgift fra Avgiftssystemet")).toBeDefined();
   });
 
   it("viser beskrivelse for ny årsavregning", () => {
-    render(<InnbetaltTrygdeavgiftInput control={{} as any} redigerbart={true} erNyAarsavregning={true} />);
+    render(<InnbetaltTrygdeavgiftInput {...defaultProps} erNyAarsavregning={true} />);
     expect(screen.getByText("Du skal kun endre hvis tidligere oppgitte beløp er feil")).toBeDefined();
   });
 
   it("viser ingen beskrivelse for eksisterende årsavregning", () => {
-    render(<InnbetaltTrygdeavgiftInput control={{} as any} redigerbart={true} erNyAarsavregning={false} />);
+    render(<InnbetaltTrygdeavgiftInput {...defaultProps} erNyAarsavregning={false} />);
     expect(screen.queryByText("Du skal kun endre hvis tidligere oppgitte beløp er feil")).toBeNull();
   });
 
   it("er readOnly når ikke redigerbart", () => {
-    render(<InnbetaltTrygdeavgiftInput control={{} as any} redigerbart={false} erNyAarsavregning={false} />);
+    render(<InnbetaltTrygdeavgiftInput {...defaultProps} redigerbart={false} />);
+
     expect(screen.getByRole("textbox").getAttribute("readonly")).not.toBeNull();
   });
 });
