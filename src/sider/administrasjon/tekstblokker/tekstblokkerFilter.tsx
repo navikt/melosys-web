@@ -1,6 +1,7 @@
 import { Chips, Search, Tabs } from "@navikt/ds-react";
 
 import { TekstblokkType } from "../../../services/modules/tekstblokker";
+import { toggleITegnliste } from "./tekstblokkerUtils";
 
 interface Props {
   type: TekstblokkType;
@@ -13,14 +14,6 @@ interface Props {
 }
 
 function TekstblokkerFilter({ type, setType, soek, setSoek, valgteTags, setValgteTags, tilgjengeligeTags }: Props) {
-  const toggleTag = (tag: string) => {
-    if (valgteTags.includes(tag)) {
-      setValgteTags(valgteTags.filter((t) => t !== tag));
-    } else {
-      setValgteTags([...valgteTags, tag]);
-    }
-  };
-
   return (
     <div className="tekstblokker__filter">
       <Tabs value={type} onChange={(v) => setType(v as TekstblokkType)} size="small">
@@ -43,7 +36,11 @@ function TekstblokkerFilter({ type, setType, soek, setSoek, valgteTags, setValgt
       {tilgjengeligeTags.length > 0 && (
         <Chips size="small">
           {tilgjengeligeTags.map(([tag, antall]) => (
-            <Chips.Toggle key={tag} selected={valgteTags.includes(tag)} onClick={() => toggleTag(tag)}>
+            <Chips.Toggle
+              key={tag}
+              selected={valgteTags.includes(tag)}
+              onClick={() => setValgteTags(toggleITegnliste(valgteTags, tag))}
+            >
               {`${tag} (${antall})`}
             </Chips.Toggle>
           ))}

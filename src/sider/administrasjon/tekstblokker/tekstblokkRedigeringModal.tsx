@@ -1,10 +1,12 @@
-import { Alert, BodyShort, Button, Loader, Modal, TextField } from "@navikt/ds-react";
+import { BodyShort } from "@navikt/ds-react";
 import { useEffect, useState } from "react";
 
+import * as Nav from "../../../navFrontend";
 import HtmlEditor from "../../../felleskomponenter/htmlEditor/htmlEditor";
 import { useOppdaterTekstblokk, useOpprettTekstblokk, useTekstblokk } from "../../../services/api/tekstblokker";
 import { TekstblokkRequest, TekstblokkType } from "../../../services/modules/tekstblokker";
 import TagInput from "./tagInput";
+import { labelForType } from "./labels";
 
 interface Props {
   aapen: boolean;
@@ -12,10 +14,9 @@ interface Props {
   type: TekstblokkType;
   forslagTags: string[];
   onLukk: () => void;
-  onLagret: () => void;
 }
 
-function TekstblokkRedigeringModal({ aapen, redigerId, type, forslagTags, onLukk, onLagret }: Props) {
+function TekstblokkRedigeringModal({ aapen, redigerId, type, forslagTags, onLukk }: Props) {
   const erRedigering = redigerId !== null;
   const eksisterende = useTekstblokk(aapen ? redigerId : null);
   const opprett = useOpprettTekstblokk();
@@ -25,16 +26,20 @@ function TekstblokkRedigeringModal({ aapen, redigerId, type, forslagTags, onLukk
   const [innhold, setInnhold] = useState("");
   const [tags, setTags] = useState<string[]>([]);
 
+  // Reset på åpning av "Ny", populer fra cached data ved redigering. Vi nullstiller
+  // bevisst ved hver åpning slik at en avbrutt redigering ikke lekker tilbake neste gang.
   useEffect(() => {
     if (!aapen) return;
-    if (erRedigering && eksisterende.data) {
-      setTittel(eksisterende.data.tittel);
-      setInnhold(eksisterende.data.innhold);
-      setTags(eksisterende.data.tags);
-    } else if (!erRedigering) {
+    if (!erRedigering) {
       setTittel("");
       setInnhold("");
       setTags([]);
+      return;
+    }
+    if (eksisterende.data) {
+      setTittel(eksisterende.data.tittel);
+      setInnhold(eksisterende.data.innhold);
+      setTags(eksisterende.data.tags);
     }
   }, [aapen, erRedigering, eksisterende.data]);
 
@@ -45,44 +50,32 @@ function TekstblokkRedigeringModal({ aapen, redigerId, type, forslagTags, onLukk
 
   const handleLagre = () => {
     if (!kanLagre) return;
-    const request: TekstblokkRequest = {
-      tittel: tittel.trim(),
-      innhold,
-      type,
-      tags,
-    };
-
-    const onSuccess = () => {
-      onLagret();
-      onLukk();
-    };
+    const request: TekstblokkRequest = { tittel: tittel.trim(), innhold, type, tags };
 
     if (erRedigering && redigerId !== null) {
-      oppdater.mutate({ id: redigerId, body: request }, { onSuccess });
+      oppdater.mutate({ id: redigerId, body: request }, { onSuccess: onLukk });
     } else {
-      opprett.mutate(request, { onSuccess });
+      opprett.mutate(request, { onSuccess: onLukk });
     }
   };
 
-  const overskrift = erRedigering
-    ? `Rediger ${type === "BREVMAL" ? "brevmal" : "tekstblokk"}`
-    : `Ny ${type === "BREVMAL" ? "brevmal" : "tekstblokk"}`;
+  const overskrift = `${erRedigering ? "Rediger" : "Ny"} ${labelForType(type)}`;
 
   return (
-    <Modal open={aapen} onClose={onLukk} aria-label={overskrift} width="medium">
-      <Modal.Header>
+    <Nav.Modal open={aapen} onClose={onLukk} aria-label={overskrift} width="medium">
+      <Nav.Modal.Header>
         <BodyShort weight="semibold" size="medium">
           {overskrift}
         </BodyShort>
-      </Modal.Header>
-      <Modal.Body>
+      </Nav.Modal.Header>
+      <Nav.Modal.Body>
         {erRedigering && eksisterende.isLoading ? (
           <div className="tekstblokker__modal-laster">
-            <Loader />
+            <Nav.Loader />
           </div>
         ) : (
           <div className="tekstblokker__modal-skjema">
-            <TextField
+            <Nav.TextField
               label="Tittel"
               size="small"
               value={tittel}
@@ -97,22 +90,22 @@ function TekstblokkRedigeringModal({ aapen, redigerId, type, forslagTags, onLukk
             </div>
 
             {feil && (
-              <Alert variant="error" size="small">
+              <Nav.Alert variant="error" size="small">
                 {feil}
-              </Alert>
+              </Nav.Alert>
             )}
           </div>
         )}
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="primary" onClick={handleLagre} disabled={!kanLagre} loading={lagrer}>
+      </Nav.Modal.Body>
+      <Nav.Modal.Footer>
+        <Nav.Button variant="primary" onClick={handleLagre} disabled={!kanLagre} loading={lagrer}>
           {erRedigering ? "Lagre endringer" : "Opprett"}
-        </Button>
-        <Button variant="tertiary" onClick={onLukk} disabled={lagrer}>
+        </Nav.Button>
+        <Nav.Button variant="tertiary" onClick={onLukk} disabled={lagrer}>
           Avbryt
-        </Button>
-      </Modal.Footer>
-    </Modal>
+        </Nav.Button>
+      </Nav.Modal.Footer>
+    </Nav.Modal>
   );
 }
 

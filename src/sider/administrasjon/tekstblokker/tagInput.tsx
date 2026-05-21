@@ -1,5 +1,7 @@
-import { Chips, Label, TextField } from "@navikt/ds-react";
+import { Chips, Label } from "@navikt/ds-react";
 import { useState } from "react";
+
+import * as Nav from "../../../navFrontend";
 
 interface Props {
   verdier: string[];
@@ -49,7 +51,7 @@ function TagInput({ verdier, setVerdier, forslag = [] }: Props) {
           ))}
         </Chips>
       </div>
-      <TextField
+      <Nav.TextField
         label="Legg til tag"
         hideLabel
         size="small"

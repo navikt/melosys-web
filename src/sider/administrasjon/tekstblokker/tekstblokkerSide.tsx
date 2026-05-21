@@ -1,6 +1,7 @@
-import { Alert, Button, Heading, Loader } from "@navikt/ds-react";
 import { PlusIcon } from "@navikt/aksel-icons";
 import { useMemo, useState } from "react";
+
+import * as Nav from "../../../navFrontend";
 
 import { useTekstblokker } from "../../../services/api/tekstblokker";
 import { TekstblokkOversikt, TekstblokkType } from "../../../services/modules/tekstblokker";
@@ -8,33 +9,29 @@ import TekstblokkRedigeringModal from "./tekstblokkRedigeringModal";
 import TekstblokkSlettBekreftelse from "./tekstblokkSlettBekreftelse";
 import TekstblokkerFilter from "./tekstblokkerFilter";
 import TekstblokkerListe from "./tekstblokkerListe";
-import { filtrer, tellTags } from "./tekstblokkerUtils";
+import { labelForType } from "./labels";
+import { matcherSoek, tellTags } from "./tekstblokkerUtils";
 
 import "./tekstblokker.less";
+
+type ModalTilstand = { type: "lukket" } | { type: "ny" } | { type: "rediger"; id: number };
 
 function TekstblokkerSide() {
   const [type, setType] = useState<TekstblokkType>("TEKSTBLOKK");
   const [soek, setSoek] = useState("");
   const [valgteTags, setValgteTags] = useState<string[]>([]);
-  const [redigerId, setRedigerId] = useState<number | null>(null);
-  const [redigerAapen, setRedigerAapen] = useState(false);
+  const [modal, setModal] = useState<ModalTilstand>({ type: "lukket" });
   const [slettBlokk, setSlettBlokk] = useState<TekstblokkOversikt | null>(null);
 
   const { data: blokker = [], isLoading, error } = useTekstblokker(type);
 
-  const tagAntall = useMemo(() => tellTags(filtrerBareSoek(blokker, soek)), [blokker, soek]);
-  const synlige = useMemo(() => filtrer(blokker, soek, valgteTags), [blokker, soek, valgteTags]);
+  const etterSoek = useMemo(() => blokker.filter((b) => matcherSoek(b, soek)), [blokker, soek]);
+  const tagAntall = useMemo(() => tellTags(etterSoek), [etterSoek]);
+  const synlige = useMemo(
+    () => (valgteTags.length === 0 ? etterSoek : etterSoek.filter((b) => valgteTags.some((t) => b.tags.includes(t)))),
+    [etterSoek, valgteTags],
+  );
   const forslagTags = useMemo(() => tagAntall.map(([t]) => t), [tagAntall]);
-
-  const aapneNy = () => {
-    setRedigerId(null);
-    setRedigerAapen(true);
-  };
-
-  const aapneRediger = (id: number) => {
-    setRedigerId(id);
-    setRedigerAapen(true);
-  };
 
   const byttType = (nyType: TekstblokkType) => {
     setType(nyType);
@@ -44,12 +41,12 @@ function TekstblokkerSide() {
   return (
     <div className="tekstblokker">
       <div className="tekstblokker__header">
-        <Heading size="large" level="1">
+        <Nav.Heading size="large" level="1">
           Tekstblokker og brevmaler
-        </Heading>
-        <Button variant="primary" icon={<PlusIcon aria-hidden />} onClick={aapneNy}>
-          Ny {type === "BREVMAL" ? "brevmal" : "tekstblokk"}
-        </Button>
+        </Nav.Heading>
+        <Nav.Button variant="primary" icon={<PlusIcon aria-hidden />} onClick={() => setModal({ type: "ny" })}>
+          Ny {labelForType(type)}
+        </Nav.Button>
       </div>
 
       <TekstblokkerFilter
@@ -64,32 +61,31 @@ function TekstblokkerSide() {
 
       {isLoading && (
         <div className="tekstblokker__laster">
-          <Loader size="large" />
+          <Nav.Loader size="large" />
         </div>
       )}
 
-      {error && <Alert variant="error">Kunne ikke hente tekstblokker: {error.message}</Alert>}
+      {error && <Nav.Alert variant="error">Kunne ikke hente tekstblokker: {error.message}</Nav.Alert>}
 
-      {!isLoading && !error && <TekstblokkerListe blokker={synlige} onRediger={aapneRediger} onSlett={setSlettBlokk} />}
+      {!isLoading && !error && (
+        <TekstblokkerListe
+          blokker={synlige}
+          onRediger={(id) => setModal({ type: "rediger", id })}
+          onSlett={setSlettBlokk}
+        />
+      )}
 
       <TekstblokkRedigeringModal
-        aapen={redigerAapen}
-        redigerId={redigerId}
+        aapen={modal.type !== "lukket"}
+        redigerId={modal.type === "rediger" ? modal.id : null}
         type={type}
         forslagTags={forslagTags}
-        onLukk={() => setRedigerAapen(false)}
-        onLagret={() => undefined}
+        onLukk={() => setModal({ type: "lukket" })}
       />
 
-      <TekstblokkSlettBekreftelse blokk={slettBlokk} onLukk={() => setSlettBlokk(null)} onSlettet={() => undefined} />
+      <TekstblokkSlettBekreftelse blokk={slettBlokk} onLukk={() => setSlettBlokk(null)} />
     </div>
   );
 }
-
-const filtrerBareSoek = (blokker: TekstblokkOversikt[], soek: string): TekstblokkOversikt[] => {
-  if (!soek) return blokker;
-  const norm = soek.toLowerCase().trim();
-  return blokker.filter((b) => b.tittel.toLowerCase().includes(norm) || b.tags.some((t) => t.includes(norm)));
-};
 
 export default TekstblokkerSide;

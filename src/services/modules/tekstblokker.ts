@@ -46,3 +46,23 @@ export const oppdater = (id: number, body: TekstblokkRequest): Promise<Tekstblok
   putAsJson(`${baseUrl}/${id}`, body);
 
 export const slett = (id: number): Promise<unknown> => deleteAsJson(`${baseUrl}/${id}`);
+
+export const matcherSoek = (blokk: TekstblokkOversikt, soek: string): boolean => {
+  if (!soek) return true;
+  const norm = soek.toLowerCase().trim();
+  if (blokk.tittel.toLowerCase().includes(norm)) return true;
+  return blokk.tags.some((tag) => tag.toLowerCase().includes(norm));
+};
+
+export const tellTags = (blokker: TekstblokkOversikt[]): Array<[string, number]> => {
+  const teller = new Map<string, number>();
+  blokker.forEach((blokk) => {
+    blokk.tags.forEach((tag) => {
+      teller.set(tag, (teller.get(tag) ?? 0) + 1);
+    });
+  });
+  return Array.from(teller.entries()).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "nb"));
+};
+
+export const toggleITegnliste = (liste: string[], element: string): string[] =>
+  liste.includes(element) ? liste.filter((e) => e !== element) : [...liste, element];

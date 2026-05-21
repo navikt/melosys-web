@@ -1,55 +1,49 @@
-import { Alert, BodyLong, BodyShort, Button, Modal } from "@navikt/ds-react";
+import { BodyShort } from "@navikt/ds-react";
 
+import * as Nav from "../../../navFrontend";
 import { useSlettTekstblokk } from "../../../services/api/tekstblokker";
 import { TekstblokkOversikt } from "../../../services/modules/tekstblokker";
+import { labelForType } from "./labels";
 
 interface Props {
   blokk: TekstblokkOversikt | null;
   onLukk: () => void;
-  onSlettet: () => void;
 }
 
-function TekstblokkSlettBekreftelse({ blokk, onLukk, onSlettet }: Props) {
+function TekstblokkSlettBekreftelse({ blokk, onLukk }: Props) {
   const slett = useSlettTekstblokk();
 
   if (!blokk) return null;
 
-  const handleSlett = () => {
-    slett.mutate(blokk.id, {
-      onSuccess: () => {
-        onSlettet();
-        onLukk();
-      },
-    });
-  };
+  const handleSlett = () => slett.mutate(blokk.id, { onSuccess: onLukk });
 
   return (
-    <Modal open onClose={onLukk} aria-label="Bekreft sletting" width="small">
-      <Modal.Header>
+    <Nav.Modal open onClose={onLukk} aria-label="Bekreft sletting" width="small">
+      <Nav.Modal.Header>
         <BodyShort weight="semibold" size="medium">
-          Slette tekstblokken?
+          Slette {labelForType(blokk.type)}?
         </BodyShort>
-      </Modal.Header>
-      <Modal.Body>
-        <BodyLong>
+      </Nav.Modal.Header>
+      <Nav.Modal.Body>
+        <Nav.BodyLong>
           Du er i ferd med å slette <strong>{blokk.tittel}</strong>. Dette kan ikke angres, og blokken vil ikke lenger
           være tilgjengelig i Send brev.
-        </BodyLong>
+        </Nav.BodyLong>
         {slett.error && (
-          <Alert variant="error" size="small" style={{ marginTop: "0.75rem" }}>
+          <Nav.Alert variant="error" size="small" style={{ marginTop: "0.75rem" }}>
             Kunne ikke slette: {slett.error.message}
-          </Alert>
+          </Nav.Alert>
         )}
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="danger" onClick={handleSlett} loading={slett.isPending}>
+      </Nav.Modal.Body>
+      <Nav.Modal.Footer>
+        <Nav.Button variant="danger" onClick={handleSlett} loading={slett.isPending}>
           Slett
-        </Button>
-        <Button variant="tertiary" onClick={onLukk} disabled={slett.isPending}>
+        </Nav.Button>
+        <Nav.Button variant="tertiary" onClick={onLukk} disabled={slett.isPending}>
           Avbryt
-        </Button>
-      </Modal.Footer>
-    </Modal>
+        </Nav.Button>
+      </Nav.Modal.Footer>
+    </Nav.Modal>
   );
 }
 

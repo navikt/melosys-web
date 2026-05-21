@@ -9,10 +9,11 @@ const tekstblokkerKeys = {
   detalj: (id: number) => ["tekstblokker", "detalj", id] as const,
 };
 
-export const useTekstblokker = (type?: TekstblokkType) =>
+export const useTekstblokker = (type: TekstblokkType | undefined, enabled = true) =>
   useQuery<TekstblokkOversikt[]>({
     queryKey: tekstblokkerKeys.liste(type),
     queryFn: () => Tekstblokker.hentAlle(type),
+    enabled,
   });
 
 export const useTekstblokk = (id: number | null) =>
