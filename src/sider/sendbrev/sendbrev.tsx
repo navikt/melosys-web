@@ -86,13 +86,11 @@ function Sendbrev({
             <SendBrev
               behandlingID={behandlingID}
               redigerbart={redigerbart}
-              visApneINyttVindu={false}
               brevTypeSelectWidth="12"
               mottakerSelectWidth="12"
               mottakerTabellWidth="12"
               felterWidth="12"
               dokumenter={dokumenter}
-              saksnummer={saksnummer}
             />
           </div>
         </Nav.Container>

@@ -91,9 +91,7 @@ describe("SendBrev", () => {
 
   const defaultProps = {
     behandlingID: 123,
-    saksnummer: "12345678",
     redigerbart: true,
-    visApneINyttVindu: false,
     dokumenter: [],
   };
 

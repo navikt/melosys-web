@@ -51,15 +51,7 @@ export function FaneViser({
         />
       );
     case "brevbestilling":
-      return (
-        <SideDialogSendBrev
-          behandlingID={behandlingID}
-          saksnummer={saksnummer}
-          redigerbart={redigerbart}
-          visApneINyttVindu={redigerbart}
-          dokumenter={dokumenter}
-        />
-      );
+      return <SideDialogSendBrev behandlingID={behandlingID} redigerbart={redigerbart} dokumenter={dokumenter} />;
     case "sedbestilling":
       return (
         <SideDialogOpprettNyBuc
