@@ -5,6 +5,18 @@ import { hentPrepopulertSakUrl, PrepopulertSaksnummer } from "../../utils/testda
 import { Page } from "@playwright/test";
 
 /**
+ * MELOSYS-7525: org.nr som brukes i «Annen organisasjon»-testene må gi forventet
+ * resultat i test-/dev-backend ved opptak:
+ *   - ORGNR_GYLDIG_FUNNET: gyldig org.nr (mod11) som resolver til en organisasjon (navn hentes)
+ *   - ORGNR_GYLDIG_IKKE_FUNNET: gyldig org.nr (mod11) som IKKE finnes (gir HTTP 404)
+ * Juster verdiene ved behov før `pnpm test:e2e:record`.
+ */
+const ORGNR_GYLDIG_FUNNET = "999999999"; // syntetisk test-org «Ståles Stål AS» i test-/dev-backend
+const ORGNR_GYLDIG_IKKE_FUNNET = "123456785"; // gyldig kontrollsiffer, men finnes ikke
+const ORGNR_FOR_FA_SIFFER = "123";
+const MOTTAKER_ANNEN_ORGANISASJON = "Annen organisasjon";
+
+/**
  * Gjenbrukbar setup-funksjon som oppretter egen testdata
  * Returnerer sendBrevPage for å unngå race conditions ved parallell kjøring
  */
@@ -104,5 +116,47 @@ test.describe("Validering av årsavregning brevmaler", () => {
     await sendBrevPage.clickSendBrev();
 
     await assertErrors(page, ["Du må velge minst én av standardtekst eller fritekst"]);
+  });
+});
+
+test.describe("Annen organisasjon: brevmal vises først når org.nr er korrekt (MELOSYS-7525)", () => {
+  test("Ved valg av «Annen organisasjon» vises Kontaktperson (valgfritt) og brevmal er skjult", async ({
+    page,
+    apiRecorder,
+  }) => {
+    const sendBrevPage = await setupSendBrevTest(page, "MEL-1008");
+    await sendBrevPage.velgMottaker(MOTTAKER_ANNEN_ORGANISASJON);
+
+    await sendBrevPage.verifiserKontaktpersonValgfri();
+    await sendBrevPage.verifiserBrevmalSkjult();
+  });
+
+  test("For få siffer i org.nr gir feilmelding og holder brevmal skjult", async ({ page, apiRecorder }) => {
+    const sendBrevPage = await setupSendBrevTest(page, "MEL-1009");
+    await sendBrevPage.velgMottaker(MOTTAKER_ANNEN_ORGANISASJON);
+    await sendBrevPage.inputOrganisasjonsnummer(ORGNR_FOR_FA_SIFFER);
+
+    await sendBrevPage.verifiserOrgnrFeilmelding("Ugyldig organisasjonsnummer");
+    await sendBrevPage.verifiserBrevmalSkjult();
+  });
+
+  test("Gyldig org.nr som ikke finnes gir «Kunne ikke finne organisasjon» og holder brevmal skjult", async ({
+    page,
+    apiRecorder,
+  }) => {
+    const sendBrevPage = await setupSendBrevTest(page, "MEL-1010");
+    await sendBrevPage.velgMottaker(MOTTAKER_ANNEN_ORGANISASJON);
+    await sendBrevPage.inputOrganisasjonsnummer(ORGNR_GYLDIG_IKKE_FUNNET);
+
+    await sendBrevPage.verifiserOrgnrFeilmelding("Kunne ikke finne organisasjon");
+    await sendBrevPage.verifiserBrevmalSkjult();
+  });
+
+  test("Når org.nr er korrekt og organisasjon funnet, blir «Velg brevmal» synlig", async ({ page, apiRecorder }) => {
+    const sendBrevPage = await setupSendBrevTest(page, "MEL-1011");
+    await sendBrevPage.velgMottaker(MOTTAKER_ANNEN_ORGANISASJON);
+    await sendBrevPage.inputOrganisasjonsnummer(ORGNR_GYLDIG_FUNNET);
+
+    await sendBrevPage.verifiserBrevmalSynlig();
   });
 });

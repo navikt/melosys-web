@@ -1,7 +1,7 @@
 import { Page, Locator, expect } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
-import { finnCombobox } from "../../utils/testUtils";
+import { assertFieldError, finnCombobox } from "../../utils/testUtils";
 
 export class SendBrevPage extends BehandlingPage {
   constructor(page: Page, saksnummer: PrepopulertSaksnummer) {
@@ -121,7 +121,8 @@ export class SendBrevPage extends BehandlingPage {
     await expect(this.sendButton, `${this.ctx}: Send-knappen er uventet deaktivert`).toBeEnabled();
   }
 
-  async selectMottakerByLabel(label: string | RegExp) {
+  // Velg mottaker via synlig tekst, uten å vente på at brevmal dukker opp
+  private async velgMottakerOption(label: string | RegExp): Promise<void> {
     const sel = this.mottakerNativeSelect;
     await expect(sel, `${this.ctx}: Fant ikke mottaker-feltet`).toBeVisible();
 
@@ -137,8 +138,74 @@ export class SendBrevPage extends BehandlingPage {
 
     expect(value, `${this.ctx}: Fant ikke mottakeren "${label}"`).toBeTruthy();
     await sel.selectOption(value);
+  }
 
+  async selectMottakerByLabel(label: string | RegExp) {
+    await this.velgMottakerOption(label);
     await this.waitForBrevmalSelect();
+  }
+
+  /**
+   * Velg mottaker uten å vente på at «Velg brevmal» dukker opp.
+   * Brukes for «Annen organisasjon», der brevmal først vises når org.nr er korrekt utfylt. (MELOSYS-7525)
+   */
+  async velgMottaker(label: string | RegExp): Promise<void> {
+    await this.velgMottakerOption(label);
+  }
+
+  // Tekstfelt for «Annen organisasjon»
+  private get organisasjonsnummerInput(): Locator {
+    const scope = this.sendBrevPanel ?? this.page;
+    return scope.getByRole("textbox", { name: "Org.nr." });
+  }
+
+  private get kontaktpersonInput(): Locator {
+    const scope = this.sendBrevPanel ?? this.page;
+    return scope.getByRole("textbox", { name: "Kontaktperson (valgfritt)" });
+  }
+
+  private get brevmalCombobox(): Locator {
+    const scope = this.sendBrevPanel ?? this.page;
+    return scope.getByRole("combobox", { name: this.labels.brevmal });
+  }
+
+  /** Fyll ut org.nr og blur slik at validering trigges (validering skjer når man går ut av feltet). */
+  async inputOrganisasjonsnummer(orgnr: string, saksnummer?: string): Promise<void> {
+    const sakId = saksnummer ?? this.ctx;
+    const input = this.organisasjonsnummerInput;
+    await expect(input, `${sakId}: Fant ikke Org.nr-feltet`).toBeVisible();
+    await input.fill(orgnr);
+    await input.blur();
+  }
+
+  async verifiserBrevmalSkjult(saksnummer?: string): Promise<void> {
+    const sakId = saksnummer ?? this.ctx;
+    await expect(
+      this.brevmalCombobox,
+      `${sakId}: «Velg brevmal» skal være skjult før org.nr er korrekt utfylt`,
+    ).toBeHidden();
+  }
+
+  async verifiserBrevmalSynlig(saksnummer?: string): Promise<void> {
+    const sakId = saksnummer ?? this.ctx;
+    await expect(
+      this.brevmalCombobox,
+      `${sakId}: «Velg brevmal» skal være synlig når organisasjonen er funnet`,
+    ).toBeVisible();
+  }
+
+  async verifiserOrgnrFeilmelding(tekst: string | RegExp): Promise<void> {
+    const scope = this.sendBrevPanel ?? this.page;
+    await assertFieldError(scope, tekst);
+  }
+
+  /** Verifiser at Kontaktperson-feltet vises med «(valgfritt)» i label. (MELOSYS-7525, oppgave 2) */
+  async verifiserKontaktpersonValgfri(saksnummer?: string): Promise<void> {
+    const sakId = saksnummer ?? this.ctx;
+    await expect(
+      this.kontaktpersonInput,
+      `${sakId}: Kontaktperson-feltet skal vises med «(valgfritt)» i label`,
+    ).toBeVisible();
   }
 
   async clickSendBrev() {
