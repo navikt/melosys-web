@@ -1,9 +1,10 @@
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from "@navikt/aksel-icons";
+import { useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
 import * as Nav from "../../../navFrontend";
 
-import { useTekstblokker } from "../../../services/api/tekstblokker";
+import { prefetchTekstblokkerIBatches, useTekstblokker } from "../../../services/api/tekstblokker";
 import { TekstblokkOversikt, TekstblokkType } from "../../../services/modules/tekstblokker";
 import TekstblokkRedigeringModal from "./tekstblokkRedigeringModal";
 import TekstblokkSlettBekreftelse from "./tekstblokkSlettBekreftelse";
@@ -23,7 +24,9 @@ function TekstblokkerSide() {
   const [modal, setModal] = useState<ModalTilstand>({ type: "lukket" });
   const [slettBlokk, setSlettBlokk] = useState<TekstblokkOversikt | null>(null);
   const [utvidedeIder, setUtvidedeIder] = useState<Set<number>>(new Set());
+  const [henterAlle, setHenterAlle] = useState(false);
 
+  const queryClient = useQueryClient();
   const { data: blokker = [], isLoading, error } = useTekstblokker(type);
 
   const etterSoek = useMemo(() => blokker.filter((b) => matcherSoek(b, soek)), [blokker, soek]);
@@ -36,8 +39,20 @@ function TekstblokkerSide() {
 
   const alleErUtvidet = synlige.length > 0 && synlige.every((b) => utvidedeIder.has(b.id));
 
-  const toggleAlle = () => {
-    setUtvidedeIder(alleErUtvidet ? new Set() : new Set(synlige.map((b) => b.id)));
+  const toggleAlle = async () => {
+    if (henterAlle) return;
+    if (alleErUtvidet) {
+      setUtvidedeIder(new Set());
+      return;
+    }
+    const ids = synlige.map((b) => b.id);
+    setHenterAlle(true);
+    try {
+      await prefetchTekstblokkerIBatches(queryClient, ids);
+      setUtvidedeIder(new Set(ids));
+    } finally {
+      setHenterAlle(false);
+    }
   };
 
   const toggleRad = (id: number) => {
@@ -90,6 +105,7 @@ function TekstblokkerSide() {
             size="small"
             variant="tertiary"
             onClick={toggleAlle}
+            loading={henterAlle}
             icon={alleErUtvidet ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}
           >
             {alleErUtvidet ? "Skjul alle" : "Vis innhold for alle"}

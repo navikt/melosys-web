@@ -1,10 +1,10 @@
 import { BodyShort, Chips, Popover, Search, Tabs } from "@navikt/ds-react";
-import { useQueryClient } from "@tanstack/react-query";
-import { useMemo, useRef, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import * as Nav from "../../navFrontend";
 import * as Tekstblokker from "../../services/modules/tekstblokker";
-import { useTekstblokk, useTekstblokker } from "../../services/api/tekstblokker";
+import { prefetchTekstblokkerIBatches, tekstblokkerKeys, useTekstblokker } from "../../services/api/tekstblokker";
 import {
   matcherSoek,
   tellTags,
@@ -32,6 +32,7 @@ function TekstblokkSoek({ onVelg, disabled }: Props) {
 
 function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
   const ankerRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
   const [aapen, setAapen] = useState(false);
   const [aktivType, setAktivType] = useState<TekstblokkType>("TEKSTBLOKK");
   const [soek, setSoek] = useState("");
@@ -49,6 +50,15 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
 
   const synlige = filtrerte.slice(0, MAKS_SYNLIG);
   const skjult = Math.max(0, filtrerte.length - synlige.length);
+
+  const synligeIdsKey = synlige.map((b) => b.id).join(",");
+  useEffect(() => {
+    if (!aapen || synlige.length === 0) return;
+    void prefetchTekstblokkerIBatches(
+      queryClient,
+      synlige.map((b) => b.id),
+    );
+  }, [aapen, synligeIdsKey, queryClient]);
 
   const lukk = () => {
     setAapen(false);
@@ -165,7 +175,13 @@ function TekstblokkRad({ blokk, onVelg }: RadProps) {
   const [erUtvidet, setErUtvidet] = useState(false);
   const [henter, setHenter] = useState(false);
   const queryClient = useQueryClient();
-  const innhold = useTekstblokk(blokk.id);
+  // enabled: false – innholdet hentes av parent sin chunked prefetch.
+  // Hooken subscriber kun til cachen så raden re-rendrer når data lander.
+  const innhold = useQuery<Tekstblokker.Tekstblokk>({
+    queryKey: tekstblokkerKeys.detalj(blokk.id),
+    queryFn: () => Tekstblokker.hent(blokk.id),
+    enabled: false,
+  });
 
   const settInn = async () => {
     if (innhold.data) {
@@ -175,7 +191,7 @@ function TekstblokkRad({ blokk, onVelg }: RadProps) {
     setHenter(true);
     try {
       const full = await queryClient.fetchQuery({
-        queryKey: ["tekstblokker", "detalj", blokk.id],
+        queryKey: tekstblokkerKeys.detalj(blokk.id),
         queryFn: () => Tekstblokker.hent(blokk.id),
       });
       onVelg(full.innhold);
@@ -209,7 +225,7 @@ function TekstblokkRad({ blokk, onVelg }: RadProps) {
         </div>
       </div>
       <div className={`tekstblokkSoek__forhandsvisning${erUtvidet ? " tekstblokkSoek__forhandsvisning--full" : ""}`}>
-        {innhold.isLoading && <Nav.Loader size="xsmall" />}
+        {!innhold.data && <Nav.Loader size="xsmall" />}
         {innhold.data && <TekstblokkForhandsvisning html={innhold.data.innhold} />}
       </div>
     </div>
