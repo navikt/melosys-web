@@ -194,7 +194,10 @@ function SendBrev({
       case ARBEIDSGIVER:
         return Boolean(values.arbeidsgiver);
       case ANNEN_ORGANISASJON:
-        return Boolean(values.organisasjonsnummer);
+        // Krev at organisasjonen er funnet (navn hentet), ikke bare at feltet er utfylt,
+        // slik at vi ikke henter mulige mottakere / auto-velger brevmal for et ugyldig
+        // eller ikke-eksisterende org.nr. (MELOSYS-7525)
+        return Boolean(values.organisasjonFunnet);
       case NORSK_MYNDIGHET:
         return !Utils._isEmpty(values.norskeMyndigheter);
       case UTENLANDSK_TRYGDEMYNDIGHET:
@@ -308,6 +311,7 @@ function SendBrev({
     tilgjengeligeBrevtyper,
     formValues?.valgtMottaker,
     formValues?.organisasjonsnummer,
+    formValues?.organisasjonFunnet,
     formValues?.arbeidsgiver,
     formValues?.norskeMyndigheter,
   ]);
@@ -349,6 +353,7 @@ function SendBrev({
   }, [
     formValues?.valgtBrev,
     formValues?.organisasjonsnummer,
+    formValues?.organisasjonFunnet,
     formValues?.arbeidsgiver,
     formValues?.norskeMyndigheter,
     formValues?.felt?.UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER,
