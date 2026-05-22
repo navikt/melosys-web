@@ -130,6 +130,7 @@ function TekstblokkerSide() {
       )}
 
       <TekstblokkRedigeringModal
+        key={modal.type === "rediger" ? `rediger-${modal.id}` : "ny"}
         aapen={modal.type !== "lukket"}
         redigerId={modal.type === "rediger" ? modal.id : null}
         type={type}

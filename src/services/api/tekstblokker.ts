@@ -89,7 +89,6 @@ export const useSlettTekstblokk = () => {
 };
 
 interface FiltrerteTekstblokker {
-  etterSoek: TekstblokkOversikt[];
   tagAntall: Array<[string, number]>;
   synlige: TekstblokkOversikt[];
 }
@@ -105,5 +104,5 @@ export const useFiltrerteTekstblokker = (
     () => (valgteTags.length === 0 ? etterSoek : etterSoek.filter((b) => valgteTags.some((t) => b.tags.includes(t)))),
     [etterSoek, valgteTags],
   );
-  return { etterSoek, tagAntall, synlige };
+  return { tagAntall, synlige };
 };

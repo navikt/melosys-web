@@ -26,21 +26,14 @@ function TekstblokkRedigeringModal({ aapen, redigerId, type, forslagTags, onLukk
   const [innhold, setInnhold] = useState("");
   const [tags, setTags] = useState<string[]>([]);
 
-  // Nullstiller bevisst ved hver åpning slik at en avbrutt redigering ikke lekker til neste gang.
+  // Modalen remountes med ny key per redigerId/ny, så useEffect kjører bare når data lastes.
   useEffect(() => {
-    if (!aapen) return;
-    if (!erRedigering) {
-      setTittel("");
-      setInnhold("");
-      setTags([]);
-      return;
-    }
     if (eksisterende.data) {
       setTittel(eksisterende.data.tittel);
       setInnhold(eksisterende.data.innhold);
       setTags(eksisterende.data.tags);
     }
-  }, [aapen, erRedigering, eksisterende.data]);
+  }, [eksisterende.data]);
 
   const lagrer = opprett.isPending || oppdater.isPending;
   const feil = opprett.error?.message ?? oppdater.error?.message ?? null;
