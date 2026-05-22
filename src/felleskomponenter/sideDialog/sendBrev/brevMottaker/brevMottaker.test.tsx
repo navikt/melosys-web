@@ -7,7 +7,9 @@ import {
   erAnnenOrganisasjon,
   erNorskMyndighet,
   erUtenlandskTrygdemyndighet,
+  skalViseBrevmalvalg,
 } from "./brevMottaker";
+import { SendBrevFormValues } from "../types";
 
 const { BRUKER, ARBEIDSGIVER, VIRKSOMHET, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
   MKV.Koder.mottakerroller;
@@ -42,5 +44,34 @@ describe("brevMottaker utility functions", () => {
   it("erUtenlandskTrygdemyndighet returnerer true for UTENLANDSK_TRYGDEMYNDIGHET", () => {
     expect(erUtenlandskTrygdemyndighet(UTENLANDSK_TRYGDEMYNDIGHET)).toBe(true);
     expect(erUtenlandskTrygdemyndighet(BRUKER)).toBe(false);
+  });
+});
+
+describe("skalViseBrevmalvalg (MELOSYS-7525)", () => {
+  const medMottaker = (rolle: string, ekstra: Partial<SendBrevFormValues> = {}): SendBrevFormValues =>
+    ({ valgtMottaker: { rolle }, ...ekstra }) as SendBrevFormValues;
+
+  it("returnerer false når ingen mottaker er valgt", () => {
+    expect(skalViseBrevmalvalg(undefined)).toBe(false);
+    expect(skalViseBrevmalvalg({} as SendBrevFormValues)).toBe(false);
+  });
+
+  it("returnerer false når valgt mottaker har en feilmelding", () => {
+    const formValues = { valgtMottaker: { rolle: BRUKER, feilmelding: { tittel: "Feil" } } } as SendBrevFormValues;
+    expect(skalViseBrevmalvalg(formValues)).toBe(false);
+  });
+
+  it("returnerer true for vanlig mottaker uten feilmelding", () => {
+    expect(skalViseBrevmalvalg(medMottaker(BRUKER))).toBe(true);
+    expect(skalViseBrevmalvalg(medMottaker(VIRKSOMHET))).toBe(true);
+  });
+
+  it("returnerer false for Annen organisasjon når organisasjon ikke er funnet", () => {
+    expect(skalViseBrevmalvalg(medMottaker(ANNEN_ORGANISASJON))).toBe(false);
+    expect(skalViseBrevmalvalg(medMottaker(ANNEN_ORGANISASJON, { organisasjonFunnet: false }))).toBe(false);
+  });
+
+  it("returnerer true for Annen organisasjon først når organisasjon er funnet", () => {
+    expect(skalViseBrevmalvalg(medMottaker(ANNEN_ORGANISASJON, { organisasjonFunnet: true }))).toBe(true);
   });
 });

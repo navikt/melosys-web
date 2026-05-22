@@ -34,6 +34,20 @@ export const erAnnenOrganisasjon = (rolle: string | undefined) => rolle === ANNE
 export const erNorskMyndighet = (rolle: string | undefined) => rolle === NORSK_MYNDIGHET;
 export const erUtenlandskTrygdemyndighet = (rolle: string | undefined) => rolle === UTENLANDSK_TRYGDEMYNDIGHET;
 
+/**
+ * Avgjør om «Velg brevmal» skal vises. For «Annen organisasjon» skal brevmal
+ * først vises når organisasjonen er funnet (navn hentet), slik at man ikke kan
+ * velge brevmal mens org.nr har en feilmelding. (MELOSYS-7525)
+ */
+export const skalViseBrevmalvalg = (formValues?: SendBrevFormValues): boolean => {
+  const valgtMottaker = formValues?.valgtMottaker;
+  if (!valgtMottaker || valgtMottaker.feilmelding) return false;
+  if (erAnnenOrganisasjon(valgtMottaker.rolle)) {
+    return Boolean(formValues?.organisasjonFunnet);
+  }
+  return true;
+};
+
 const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues,
   orgnrValid: formSelectors.SendBrevOrgnummerValidSelector(state),
@@ -89,8 +103,10 @@ function BrevMottaker({
         tittel:
           response.data.response.status === 404 ? "Kunne ikke finne organisasjon" : "Feil ved henting av organisasjon",
       });
+      changeField("organisasjonFunnet", false);
     } else {
       setAdresse({ organisasjonsAdresse: response.data });
+      changeField("organisasjonFunnet", true);
     }
   };
 
@@ -133,6 +149,8 @@ function BrevMottaker({
     }
 
     if (erAnnenOrganisasjon(valgtMottaker.rolle)) {
+      // Skjul brevmal til organisasjonen er bekreftet funnet (settes true i debouncedHentOrganisasjon)
+      changeField("organisasjonFunnet", false);
       debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid });
     }
   }, [formValues?.mottaker, formValues?.organisasjonsnummer, orgnrValid, formValues?.arbeidsgiver]);
@@ -236,7 +254,7 @@ function BrevMottaker({
             <Skjema.Input
               className="kontaktperson"
               feltNavn="kontaktperson"
-              label="Kontaktperson"
+              label="Kontaktperson (valgfritt)"
               disabled={!redigerbart}
             />
           </Nav.Column>

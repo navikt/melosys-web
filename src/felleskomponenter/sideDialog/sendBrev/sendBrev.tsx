@@ -28,7 +28,7 @@ import { behandlingerOperations } from "../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { formSelectors } from "../../../ducks/form";
 
-import BrevMottaker, { erAnnenOrganisasjon, erNorskMyndighet } from "./brevMottaker/brevMottaker";
+import BrevMottaker, { erAnnenOrganisasjon, erNorskMyndighet, skalViseBrevmalvalg } from "./brevMottaker/brevMottaker";
 import BrevMottakereTabell from "./brevMottaker/brevMottakereTabell";
 import Brevutkast from "./brevutkast/brevutkast";
 import BrevValg from "./brevValg";
@@ -259,6 +259,7 @@ function SendBrev({
     changeField("fritekstTittel", undefined);
     changeField("erFeltGyldig", undefined);
     changeField("organisasjonsnummer", undefined);
+    changeField("organisasjonFunnet", undefined);
     changeField("kontaktperson", undefined);
     changeField("norskeMyndigheter", undefined);
     changeField("kopiTilBruker", undefined);
@@ -627,7 +628,7 @@ function SendBrev({
         </Nav.Column>
       </Nav.Row>
 
-      {mottakerErValgt && !valgtMottakerHarFeilmelding && (
+      {skalViseBrevmalvalg(formValues) && (
         <Nav.Row>
           <Nav.Column xs={brevTypeSelectWidth}>
             <Skjema.Select
