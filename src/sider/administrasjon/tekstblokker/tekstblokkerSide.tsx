@@ -1,4 +1,4 @@
-import { PlusIcon } from "@navikt/aksel-icons";
+import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from "@navikt/aksel-icons";
 import { useMemo, useState } from "react";
 
 import * as Nav from "../../../navFrontend";
@@ -22,6 +22,7 @@ function TekstblokkerSide() {
   const [valgteTags, setValgteTags] = useState<string[]>([]);
   const [modal, setModal] = useState<ModalTilstand>({ type: "lukket" });
   const [slettBlokk, setSlettBlokk] = useState<TekstblokkOversikt | null>(null);
+  const [utvidedeIder, setUtvidedeIder] = useState<Set<number>>(new Set());
 
   const { data: blokker = [], isLoading, error } = useTekstblokker(type);
 
@@ -33,9 +34,25 @@ function TekstblokkerSide() {
   );
   const forslagTags = useMemo(() => tagAntall.map(([t]) => t), [tagAntall]);
 
+  const alleErUtvidet = synlige.length > 0 && synlige.every((b) => utvidedeIder.has(b.id));
+
+  const toggleAlle = () => {
+    setUtvidedeIder(alleErUtvidet ? new Set() : new Set(synlige.map((b) => b.id)));
+  };
+
+  const toggleRad = (id: number) => {
+    setUtvidedeIder((prev) => {
+      const ny = new Set(prev);
+      if (ny.has(id)) ny.delete(id);
+      else ny.add(id);
+      return ny;
+    });
+  };
+
   const byttType = (nyType: TekstblokkType) => {
     setType(nyType);
     setValgteTags([]);
+    setUtvidedeIder(new Set());
   };
 
   return (
@@ -67,9 +84,24 @@ function TekstblokkerSide() {
 
       {error && <Nav.Alert variant="error">Kunne ikke hente tekstblokker: {error.message}</Nav.Alert>}
 
+      {!isLoading && !error && synlige.length > 0 && (
+        <div className="tekstblokker__tabell-verktoy">
+          <Nav.Button
+            size="small"
+            variant="tertiary"
+            onClick={toggleAlle}
+            icon={alleErUtvidet ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}
+          >
+            {alleErUtvidet ? "Skjul alle" : "Vis innhold for alle"}
+          </Nav.Button>
+        </div>
+      )}
+
       {!isLoading && !error && (
         <TekstblokkerListe
           blokker={synlige}
+          utvidedeIder={utvidedeIder}
+          onToggleUtvidet={toggleRad}
           onRediger={(id) => setModal({ type: "rediger", id })}
           onSlett={setSlettBlokk}
         />

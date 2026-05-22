@@ -1,19 +1,21 @@
 import { Loader } from "@navikt/ds-react";
 import { PencilIcon, TrashIcon } from "@navikt/aksel-icons";
-import { useState } from "react";
 
 import * as Nav from "../../../navFrontend";
+import "../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning.less";
 import { useTekstblokk } from "../../../services/api/tekstblokker";
 import { TekstblokkOversikt } from "../../../services/modules/tekstblokker";
 import { formatterDatoTilNorsk } from "../../../utils/dato";
 
 interface Props {
   blokker: TekstblokkOversikt[];
+  utvidedeIder: Set<number>;
+  onToggleUtvidet: (id: number) => void;
   onRediger: (id: number) => void;
   onSlett: (blokk: TekstblokkOversikt) => void;
 }
 
-function TekstblokkerListe({ blokker, onRediger, onSlett }: Props) {
+function TekstblokkerListe({ blokker, utvidedeIder, onToggleUtvidet, onRediger, onSlett }: Props) {
   if (blokker.length === 0) {
     return (
       <div className="tekstblokker__tom">
@@ -36,7 +38,14 @@ function TekstblokkerListe({ blokker, onRediger, onSlett }: Props) {
       </Nav.Table.Header>
       <Nav.Table.Body>
         {blokker.map((blokk) => (
-          <TekstblokkerListeRad key={blokk.id} blokk={blokk} onRediger={onRediger} onSlett={onSlett} />
+          <TekstblokkerListeRad
+            key={blokk.id}
+            blokk={blokk}
+            utvidet={utvidedeIder.has(blokk.id)}
+            onToggleUtvidet={onToggleUtvidet}
+            onRediger={onRediger}
+            onSlett={onSlett}
+          />
         ))}
       </Nav.Table.Body>
     </Nav.Table>
@@ -45,23 +54,26 @@ function TekstblokkerListe({ blokker, onRediger, onSlett }: Props) {
 
 interface RadProps {
   blokk: TekstblokkOversikt;
+  utvidet: boolean;
+  onToggleUtvidet: (id: number) => void;
   onRediger: (id: number) => void;
   onSlett: (blokk: TekstblokkOversikt) => void;
 }
 
-function TekstblokkerListeRad({ blokk, onRediger, onSlett }: RadProps) {
-  const [utvidet, setUtvidet] = useState(false);
+function TekstblokkerListeRad({ blokk, utvidet, onToggleUtvidet, onRediger, onSlett }: RadProps) {
   const detalj = useTekstblokk(utvidet ? blokk.id : null);
 
   return (
     <Nav.Table.ExpandableRow
       open={utvidet}
-      onOpenChange={setUtvidet}
+      onOpenChange={() => onToggleUtvidet(blokk.id)}
       togglePlacement="left"
       content={
         <div className="tekstblokker__rad-forhandsvisning">
           {detalj.isLoading && <Loader size="small" />}
-          {detalj.data && <div dangerouslySetInnerHTML={{ __html: detalj.data.innhold }} />}
+          {detalj.data && (
+            <div className="tekstblokk-forhandsvisning" dangerouslySetInnerHTML={{ __html: detalj.data.innhold }} />
+          )}
         </div>
       }
     >

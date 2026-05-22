@@ -14,6 +14,7 @@ import {
 } from "../../services/modules/tekstblokker";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER } from "../../featuretoggle/toggleNavn";
+import "./tekstblokkForhandsvisning.less";
 import "./tekstblokkSoek.less";
 
 interface Props {
@@ -209,7 +210,9 @@ function TekstblokkRad({ blokk, onVelg }: RadProps) {
       </div>
       <div className={`tekstblokkSoek__forhandsvisning${erUtvidet ? " tekstblokkSoek__forhandsvisning--full" : ""}`}>
         {innhold.isLoading && <Nav.Loader size="xsmall" />}
-        {innhold.data && <div dangerouslySetInnerHTML={{ __html: innhold.data.innhold }} />}
+        {innhold.data && (
+          <div className="tekstblokk-forhandsvisning" dangerouslySetInnerHTML={{ __html: innhold.data.innhold }} />
+        )}
       </div>
     </div>
   );
