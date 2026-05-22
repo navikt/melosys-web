@@ -129,14 +129,14 @@ function TekstblokkerSide() {
         />
       )}
 
-      <TekstblokkRedigeringModal
-        key={modal.type === "rediger" ? `rediger-${modal.id}` : "ny"}
-        aapen={modal.type !== "lukket"}
-        redigerId={modal.type === "rediger" ? modal.id : null}
-        type={type}
-        forslagTags={forslagTags}
-        onLukk={() => setModal({ type: "lukket" })}
-      />
+      {modal.type !== "lukket" && (
+        <TekstblokkRedigeringModal
+          redigerId={modal.type === "rediger" ? modal.id : null}
+          type={type}
+          forslagTags={forslagTags}
+          onLukk={() => setModal({ type: "lukket" })}
+        />
+      )}
 
       <TekstblokkSlettBekreftelse blokk={slettBlokk} onLukk={() => setSlettBlokk(null)} />
     </div>

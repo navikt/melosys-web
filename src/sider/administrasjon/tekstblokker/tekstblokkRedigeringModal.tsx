@@ -9,16 +9,15 @@ import TagInput from "./tagInput";
 import { labelForType } from "./labels";
 
 interface Props {
-  aapen: boolean;
   redigerId: number | null;
   type: TekstblokkType;
   forslagTags: string[];
   onLukk: () => void;
 }
 
-function TekstblokkRedigeringModal({ aapen, redigerId, type, forslagTags, onLukk }: Props) {
+function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Props) {
   const erRedigering = redigerId !== null;
-  const eksisterende = useTekstblokk(aapen ? redigerId : null);
+  const eksisterende = useTekstblokk(redigerId);
   const opprett = useOpprettTekstblokk();
   const oppdater = useOppdaterTekstblokk();
 
@@ -26,7 +25,6 @@ function TekstblokkRedigeringModal({ aapen, redigerId, type, forslagTags, onLukk
   const [innhold, setInnhold] = useState("");
   const [tags, setTags] = useState<string[]>([]);
 
-  // Modalen remountes med ny key per redigerId/ny, så useEffect kjører bare når data lastes.
   useEffect(() => {
     if (eksisterende.data) {
       setTittel(eksisterende.data.tittel);
@@ -54,7 +52,7 @@ function TekstblokkRedigeringModal({ aapen, redigerId, type, forslagTags, onLukk
   const overskrift = `${erRedigering ? "Rediger" : "Ny"} ${labelForType(type)}`;
 
   return (
-    <Nav.Modal open={aapen} onClose={onLukk} aria-label={overskrift} width="medium">
+    <Nav.Modal open onClose={onLukk} aria-label={overskrift} width="medium">
       <Nav.Modal.Header>
         <BodyShort weight="semibold" size="medium">
           {overskrift}
