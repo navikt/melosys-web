@@ -49,7 +49,15 @@ function TekstblokkerSide() {
     setHenterAlle(true);
     try {
       await prefetchTekstblokkerIBatches(queryClient, ids);
-      setUtvidedeIder(new Set(ids));
+      // Filter kan ha endret seg under prefetch – kun åpne IDs som fortsatt er synlige.
+      setUtvidedeIder((prev) => {
+        const fortsatt = new Set(prev);
+        const synligeIder = new Set(synlige.map((b) => b.id));
+        ids.forEach((id) => {
+          if (synligeIder.has(id)) fortsatt.add(id);
+        });
+        return fortsatt;
+      });
     } finally {
       setHenterAlle(false);
     }

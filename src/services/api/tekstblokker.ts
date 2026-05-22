@@ -3,33 +3,29 @@ import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/re
 import * as Tekstblokker from "../modules/tekstblokker";
 import { Tekstblokk, TekstblokkOversikt, TekstblokkRequest, TekstblokkType } from "../modules/tekstblokker";
 
-const tekstblokkerKeys = {
+export const tekstblokkerKeys = {
   all: ["tekstblokker"] as const,
   liste: (type?: TekstblokkType) => ["tekstblokker", "liste", type ?? "alle"] as const,
   detalj: (id: number) => ["tekstblokker", "detalj", id] as const,
 };
 
-export { tekstblokkerKeys };
-
+const DETALJ_STALE_TIME = 5 * 60_000;
 const PREFETCH_BATCH_SIZE = 6;
 
 /**
  * Prefetcher tekstblokk-detaljer i batches for å unngå at en handling
  * (åpne popover, "vis alle"-knapp) fyrer N parallelle requests samtidig.
- * Cache treff hopper man over implicit via TanStacks dedupering.
+ * Cache-treff hopper man over implisitt via TanStacks dedupering.
  */
-export const prefetchTekstblokkerIBatches = async (
-  queryClient: QueryClient,
-  ids: number[],
-  batchSize: number = PREFETCH_BATCH_SIZE,
-): Promise<void> => {
-  for (let i = 0; i < ids.length; i += batchSize) {
-    const batch = ids.slice(i, i + batchSize);
+export const prefetchTekstblokkerIBatches = async (queryClient: QueryClient, ids: number[]): Promise<void> => {
+  for (let i = 0; i < ids.length; i += PREFETCH_BATCH_SIZE) {
+    const batch = ids.slice(i, i + PREFETCH_BATCH_SIZE);
     await Promise.all(
       batch.map((id) =>
         queryClient.prefetchQuery({
           queryKey: tekstblokkerKeys.detalj(id),
           queryFn: () => Tekstblokker.hent(id),
+          staleTime: DETALJ_STALE_TIME,
         }),
       ),
     );
@@ -48,6 +44,7 @@ export const useTekstblokk = (id: number | null) =>
     queryKey: tekstblokkerKeys.detalj(id ?? 0),
     queryFn: () => Tekstblokker.hent(id as number),
     enabled: id !== null,
+    staleTime: DETALJ_STALE_TIME,
   });
 
 export const useOpprettTekstblokk = () => {

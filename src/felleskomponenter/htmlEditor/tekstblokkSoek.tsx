@@ -81,14 +81,14 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
           disabled={disabled}
           type="button"
         >
-          Sett inn tekstblokk/brevmal
+          Sett inn tekstblokk
         </Nav.Button>
       </div>
       <Popover
         open={aapen}
         onClose={lukk}
         anchorEl={ankerRef.current}
-        placement="bottom-end"
+        placement="top-end"
         arrow={false}
         className="tekstblokkSoek__popover"
       >
@@ -181,6 +181,7 @@ function TekstblokkRad({ blokk, onVelg }: RadProps) {
     queryKey: tekstblokkerKeys.detalj(blokk.id),
     queryFn: () => Tekstblokker.hent(blokk.id),
     enabled: false,
+    staleTime: 5 * 60_000,
   });
 
   const settInn = async () => {
@@ -225,7 +226,12 @@ function TekstblokkRad({ blokk, onVelg }: RadProps) {
         </div>
       </div>
       <div className={`tekstblokkSoek__forhandsvisning${erUtvidet ? " tekstblokkSoek__forhandsvisning--full" : ""}`}>
-        {!innhold.data && <Nav.Loader size="xsmall" />}
+        {innhold.isFetching && !innhold.data && <Nav.Loader size="xsmall" />}
+        {innhold.isError && !innhold.data && (
+          <BodyShort size="small" className="tekstblokkSoek__tom">
+            Kunne ikke laste forhåndsvisning
+          </BodyShort>
+        )}
         {innhold.data && <TekstblokkForhandsvisning html={innhold.data.innhold} />}
       </div>
     </div>

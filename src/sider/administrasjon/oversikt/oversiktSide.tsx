@@ -1,13 +1,10 @@
 import { BodyShort, Heading } from "@navikt/ds-react";
 import { useHistory } from "react-router-dom";
 import { useMemo } from "react";
-import { useSelector } from "react-redux";
 
 import * as Nav from "../../../navFrontend";
-import { featureToggleSelectors } from "../../../ducks/featuretoggle";
-import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
+import useFeatureToggle, { useAktiveToggles } from "../../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER } from "../../../featuretoggle/toggleNavn";
-import { STATUS } from "../../../services";
 import { useTekstblokker } from "../../../services/api/tekstblokker";
 import { tellTags } from "../../../services/modules/tekstblokker";
 import { formatterDatoTilNorsk } from "../../../utils/dato";
@@ -18,7 +15,7 @@ import "./oversikt.less";
 function OversiktSide() {
   const history = useHistory();
   const visTekstblokker = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
-  const toggleState = useSelector(featureToggleSelectors.FeatureToggleSelector);
+  const aktiveToggles = useAktiveToggles();
 
   const tekstblokker = useTekstblokker(undefined, Boolean(visTekstblokker));
 
@@ -31,14 +28,6 @@ function OversiktSide() {
       sistEndret: alle.length === 0 ? null : alle.reduce((a, b) => (a.endretDato > b.endretDato ? a : b)),
     };
   }, [tekstblokker.data]);
-
-  const aktiveToggles = useMemo(() => {
-    if (!toggleState || toggleState.status !== STATUS.OK || !toggleState.data) return [];
-    return Object.entries(toggleState.data)
-      .filter(([, paa]) => paa === true)
-      .map(([navn]) => navn)
-      .sort();
-  }, [toggleState]);
 
   const sistEndret = stats.sistEndret;
 

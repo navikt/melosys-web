@@ -1,8 +1,6 @@
 .tekstblokkSoek {
   &__verktoylinje {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 0.25rem;
+    display: inline-flex;
   }
 
   &__popover {
@@ -10,26 +8,28 @@
   }
 
   &__innhold {
-    width: min(34rem, 94vw);
-    padding: 0.75rem;
+    width: min(48rem, 94vw);
+    max-height: min(48rem, 90vh);
+    padding: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.6rem;
   }
 
   &__tags {
-    max-height: 6rem;
+    max-height: 7rem;
     overflow-y: auto;
     border-bottom: 1px solid var(--a-border-subtle);
-    padding-bottom: 0.4rem;
+    padding-bottom: 0.5rem;
   }
 
   &__liste {
-    max-height: 26rem;
+    flex: 1 1 auto;
+    min-height: 0;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.5rem;
     padding-right: 0.25rem;
   }
 
