@@ -1,7 +1,15 @@
 import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
 
 import * as Tekstblokker from "../modules/tekstblokker";
-import { Tekstblokk, TekstblokkOversikt, TekstblokkRequest, TekstblokkType } from "../modules/tekstblokker";
+import {
+  matcherSoek,
+  tellTags,
+  Tekstblokk,
+  TekstblokkOversikt,
+  TekstblokkRequest,
+  TekstblokkType,
+} from "../modules/tekstblokker";
 
 export const tekstblokkerKeys = {
   all: ["tekstblokker"] as const,
@@ -9,6 +17,7 @@ export const tekstblokkerKeys = {
   detalj: (id: number) => ["tekstblokker", "detalj", id] as const,
 };
 
+const LISTE_STALE_TIME = 5 * 60_000;
 const DETALJ_STALE_TIME = 5 * 60_000;
 const PREFETCH_BATCH_SIZE = 6;
 
@@ -37,6 +46,7 @@ export const useTekstblokker = (type: TekstblokkType | undefined, enabled = true
     queryKey: tekstblokkerKeys.liste(type),
     queryFn: () => Tekstblokker.hentAlle(type),
     enabled,
+    staleTime: LISTE_STALE_TIME,
   });
 
 export const useTekstblokk = (id: number | null) =>
@@ -76,4 +86,24 @@ export const useSlettTekstblokk = () => {
       queryClient.invalidateQueries({ queryKey: tekstblokkerKeys.all });
     },
   });
+};
+
+interface FiltrerteTekstblokker {
+  etterSoek: TekstblokkOversikt[];
+  tagAntall: Array<[string, number]>;
+  synlige: TekstblokkOversikt[];
+}
+
+export const useFiltrerteTekstblokker = (
+  blokker: TekstblokkOversikt[],
+  soek: string,
+  valgteTags: string[],
+): FiltrerteTekstblokker => {
+  const etterSoek = useMemo(() => blokker.filter((b) => matcherSoek(b, soek)), [blokker, soek]);
+  const tagAntall = useMemo(() => tellTags(etterSoek), [etterSoek]);
+  const synlige = useMemo(
+    () => (valgteTags.length === 0 ? etterSoek : etterSoek.filter((b) => valgteTags.some((t) => b.tags.includes(t)))),
+    [etterSoek, valgteTags],
+  );
+  return { etterSoek, tagAntall, synlige };
 };

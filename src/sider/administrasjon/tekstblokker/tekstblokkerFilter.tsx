@@ -1,7 +1,7 @@
 import { Chips, Search, Tabs } from "@navikt/ds-react";
 
 import { TekstblokkType } from "../../../services/modules/tekstblokker";
-import { toggleITegnliste } from "./tekstblokkerUtils";
+import { toggleITegnliste } from "../../../services/modules/tekstblokker";
 
 interface Props {
   type: TekstblokkType;

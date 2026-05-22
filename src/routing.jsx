@@ -18,6 +18,7 @@ import Unntaksregistrering from "./sider/unntaksregistrering";
 import UkjentSide from "./sider/ukjentSide";
 import EøsPensjonist from "./sider/eu_eøs/pensjonist/saksbehandling";
 import AdministrasjonSide from "./sider/administrasjon/administrasjonSide";
+import { ADMIN_BASE } from "./sider/administrasjon/ruter";
 import useFeatureToggle from "./featuretoggle/useFeatureToggle";
 import { MELOSYS_ADMINISTRASJON } from "./featuretoggle/toggleNavn";
 
@@ -116,7 +117,7 @@ function Routing() {
             render={(props) => <VurderUtpeking {...props} {...fellesHandlers} />}
           />
           <Route path="/sendbrev/:behandlingID/:snr" render={(props) => <Sendbrev {...props} {...fellesHandlers} />} />
-          <Route path="/administrasjon" render={(props) => <AdministrasjonRute {...props} />} />
+          <Route path={ADMIN_BASE} render={(props) => <AdministrasjonRute {...props} />} />
           <Route
             path="/:sakstype/unntaksregistrering/:saksnr"
             render={(props) => <Unntaksregistrering {...props} {...fellesHandlers} />}

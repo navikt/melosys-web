@@ -1,17 +1,16 @@
 import { BodyShort, Chips, Popover, Search, Tabs } from "@navikt/ds-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import * as Nav from "../../navFrontend";
 import * as Tekstblokker from "../../services/modules/tekstblokker";
-import { prefetchTekstblokkerIBatches, tekstblokkerKeys, useTekstblokker } from "../../services/api/tekstblokker";
 import {
-  matcherSoek,
-  tellTags,
-  TekstblokkOversikt,
-  TekstblokkType,
-  toggleITegnliste,
-} from "../../services/modules/tekstblokker";
+  prefetchTekstblokkerIBatches,
+  tekstblokkerKeys,
+  useFiltrerteTekstblokker,
+  useTekstblokker,
+} from "../../services/api/tekstblokker";
+import { TekstblokkOversikt, TekstblokkType, toggleITegnliste } from "../../services/modules/tekstblokker";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER } from "../../featuretoggle/toggleNavn";
 import TekstblokkForhandsvisning from "./tekstblokkForhandsvisning";
@@ -40,13 +39,7 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
 
   const { data: blokker = [], isLoading } = useTekstblokker(aktivType, aapen);
 
-  const etterSoek = useMemo(() => blokker.filter((b) => matcherSoek(b, soek)), [blokker, soek]);
-  const tagAntall = useMemo(() => tellTags(etterSoek), [etterSoek]);
-  const filtrerte = useMemo(
-    () =>
-      valgteTags.length === 0 ? etterSoek : etterSoek.filter((b) => valgteTags.some((tag) => b.tags.includes(tag))),
-    [etterSoek, valgteTags],
-  );
+  const { tagAntall, synlige: filtrerte } = useFiltrerteTekstblokker(blokker, soek, valgteTags);
 
   const synlige = filtrerte.slice(0, MAKS_SYNLIG);
   const skjult = Math.max(0, filtrerte.length - synlige.length);

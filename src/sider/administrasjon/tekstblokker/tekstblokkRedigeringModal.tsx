@@ -26,8 +26,7 @@ function TekstblokkRedigeringModal({ aapen, redigerId, type, forslagTags, onLukk
   const [innhold, setInnhold] = useState("");
   const [tags, setTags] = useState<string[]>([]);
 
-  // Reset på åpning av "Ny", populer fra cached data ved redigering. Vi nullstiller
-  // bevisst ved hver åpning slik at en avbrutt redigering ikke lekker tilbake neste gang.
+  // Nullstiller bevisst ved hver åpning slik at en avbrutt redigering ikke lekker til neste gang.
   useEffect(() => {
     if (!aapen) return;
     if (!erRedigering) {
@@ -52,7 +51,7 @@ function TekstblokkRedigeringModal({ aapen, redigerId, type, forslagTags, onLukk
     if (!kanLagre) return;
     const request: TekstblokkRequest = { tittel: tittel.trim(), innhold, type, tags };
 
-    if (erRedigering && redigerId !== null) {
+    if (redigerId !== null) {
       oppdater.mutate({ id: redigerId, body: request }, { onSuccess: onLukk });
     } else {
       opprett.mutate(request, { onSuccess: onLukk });

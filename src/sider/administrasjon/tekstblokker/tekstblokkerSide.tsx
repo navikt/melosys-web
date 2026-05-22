@@ -4,14 +4,17 @@ import { useMemo, useState } from "react";
 
 import * as Nav from "../../../navFrontend";
 
-import { prefetchTekstblokkerIBatches, useTekstblokker } from "../../../services/api/tekstblokker";
+import {
+  prefetchTekstblokkerIBatches,
+  useFiltrerteTekstblokker,
+  useTekstblokker,
+} from "../../../services/api/tekstblokker";
 import { TekstblokkOversikt, TekstblokkType } from "../../../services/modules/tekstblokker";
 import TekstblokkRedigeringModal from "./tekstblokkRedigeringModal";
 import TekstblokkSlettBekreftelse from "./tekstblokkSlettBekreftelse";
 import TekstblokkerFilter from "./tekstblokkerFilter";
 import TekstblokkerListe from "./tekstblokkerListe";
 import { labelForType } from "./labels";
-import { matcherSoek, tellTags } from "./tekstblokkerUtils";
 
 import "./tekstblokker.less";
 
@@ -29,12 +32,7 @@ function TekstblokkerSide() {
   const queryClient = useQueryClient();
   const { data: blokker = [], isLoading, error } = useTekstblokker(type);
 
-  const etterSoek = useMemo(() => blokker.filter((b) => matcherSoek(b, soek)), [blokker, soek]);
-  const tagAntall = useMemo(() => tellTags(etterSoek), [etterSoek]);
-  const synlige = useMemo(
-    () => (valgteTags.length === 0 ? etterSoek : etterSoek.filter((b) => valgteTags.some((t) => b.tags.includes(t)))),
-    [etterSoek, valgteTags],
-  );
+  const { tagAntall, synlige } = useFiltrerteTekstblokker(blokker, soek, valgteTags);
   const forslagTags = useMemo(() => tagAntall.map(([t]) => t), [tagAntall]);
 
   const alleErUtvidet = synlige.length > 0 && synlige.every((b) => utvidedeIder.has(b.id));

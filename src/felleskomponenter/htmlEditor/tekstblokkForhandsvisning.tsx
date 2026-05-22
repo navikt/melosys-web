@@ -1,3 +1,5 @@
+import classNames from "classnames";
+
 import "./tekstblokkForhandsvisning.less";
 
 interface Props {
@@ -6,8 +8,9 @@ interface Props {
 }
 
 function TekstblokkForhandsvisning({ html, className }: Props) {
-  const klasser = ["tekstblokk-forhandsvisning", className].filter(Boolean).join(" ");
-  return <div className={klasser} dangerouslySetInnerHTML={{ __html: html }} />;
+  return (
+    <div className={classNames("tekstblokk-forhandsvisning", className)} dangerouslySetInnerHTML={{ __html: html }} />
+  );
 }
 
 export default TekstblokkForhandsvisning;

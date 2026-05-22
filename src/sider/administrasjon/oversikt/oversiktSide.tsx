@@ -17,19 +17,20 @@ function OversiktSide() {
   const visTekstblokker = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
   const aktiveToggles = useAktiveToggles();
 
-  const tekstblokker = useTekstblokker(undefined, Boolean(visTekstblokker));
+  const aktiv = Boolean(visTekstblokker);
+  const tekstblokkerQuery = useTekstblokker("TEKSTBLOKK", aktiv);
+  const brevmalerQuery = useTekstblokker("BREVMAL", aktiv);
+  const lasterTekstblokker = tekstblokkerQuery.isLoading || brevmalerQuery.isLoading;
 
   const stats = useMemo(() => {
-    const alle = tekstblokker.data ?? [];
+    const alle = [...(tekstblokkerQuery.data ?? []), ...(brevmalerQuery.data ?? [])];
     return {
-      tekstblokker: alle.filter((b) => b.type === "TEKSTBLOKK").length,
-      brevmaler: alle.filter((b) => b.type === "BREVMAL").length,
+      tekstblokker: tekstblokkerQuery.data?.length ?? 0,
+      brevmaler: brevmalerQuery.data?.length ?? 0,
       unikeTags: tellTags(alle).length,
       sistEndret: alle.length === 0 ? null : alle.reduce((a, b) => (a.endretDato > b.endretDato ? a : b)),
     };
-  }, [tekstblokker.data]);
-
-  const sistEndret = stats.sistEndret;
+  }, [tekstblokkerQuery.data, brevmalerQuery.data]);
 
   return (
     <div className="oversikt">
@@ -49,23 +50,23 @@ function OversiktSide() {
             </Nav.Button>
           </div>
 
-          {tekstblokker.isLoading && (
+          {lasterTekstblokker && (
             <div className="oversikt__laster">
               <Nav.Loader size="small" />
             </div>
           )}
 
-          {!tekstblokker.isLoading && (
+          {!lasterTekstblokker && (
             <div className="oversikt__kort-rad">
               <StatistikkKort label="Tekstblokker" verdi={stats.tekstblokker} />
               <StatistikkKort label="Brevmaler" verdi={stats.brevmaler} />
               <StatistikkKort label="Unike tags" verdi={stats.unikeTags} />
               <StatistikkKort
                 label="Sist endret"
-                verdi={sistEndret?.tittel ?? "—"}
+                verdi={stats.sistEndret?.tittel ?? "—"}
                 undertekst={
-                  sistEndret
-                    ? `${formatterDatoTilNorsk(sistEndret.endretDato, true)} av ${sistEndret.endretAv}`
+                  stats.sistEndret
+                    ? `${formatterDatoTilNorsk(stats.sistEndret.endretDato, true)} av ${stats.sistEndret.endretAv}`
                     : undefined
                 }
               />

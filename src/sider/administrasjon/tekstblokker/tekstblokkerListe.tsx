@@ -1,4 +1,3 @@
-import { Loader } from "@navikt/ds-react";
 import { PencilIcon, TrashIcon } from "@navikt/aksel-icons";
 
 import * as Nav from "../../../navFrontend";
@@ -70,7 +69,7 @@ function TekstblokkerListeRad({ blokk, utvidet, onToggleUtvidet, onRediger, onSl
       togglePlacement="left"
       content={
         <div className="tekstblokker__rad-forhandsvisning">
-          {detalj.isLoading && <Loader size="small" />}
+          {detalj.isLoading && <Nav.Loader size="small" />}
           {detalj.data && <TekstblokkForhandsvisning html={detalj.data.innhold} />}
         </div>
       }
