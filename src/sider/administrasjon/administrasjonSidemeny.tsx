@@ -1,7 +1,8 @@
-import { useHistory, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER } from "../../featuretoggle/toggleNavn";
+import { ADMIN_BASE, ADMIN_TEKSTBLOKKER } from "./ruter";
 
 interface MenyValg {
   tittel: string;
@@ -10,17 +11,16 @@ interface MenyValg {
 }
 
 function AdministrasjonSidemeny() {
-  const history = useHistory();
   const { pathname } = useLocation();
   const visTekstblokker = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
 
   const valg: MenyValg[] = [
-    { tittel: "Oversikt", sti: "/administrasjon", synlig: true },
-    { tittel: "Tekstblokker", sti: "/administrasjon/tekstblokker", synlig: Boolean(visTekstblokker) },
+    { tittel: "Oversikt", sti: ADMIN_BASE, synlig: true },
+    { tittel: "Tekstblokker", sti: ADMIN_TEKSTBLOKKER, synlig: Boolean(visTekstblokker) },
   ];
 
   const erAktiv = (sti: string) => {
-    if (sti === "/administrasjon") return pathname === sti;
+    if (sti === ADMIN_BASE) return pathname === sti;
     return pathname.startsWith(sti);
   };
 
@@ -33,17 +33,14 @@ function AdministrasjonSidemeny() {
             const aktiv = erAktiv(v.sti);
             return (
               <li key={v.sti}>
-                <a
-                  href={v.sti}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    history.push(v.sti);
-                  }}
+                <NavLink
+                  to={v.sti}
+                  exact={v.sti === ADMIN_BASE}
                   aria-current={aktiv ? "page" : undefined}
                   className={`administrasjon__sidemeny-lenke${aktiv ? " administrasjon__sidemeny-lenke--aktiv" : ""}`}
                 >
                   {v.tittel}
-                </a>
+                </NavLink>
               </li>
             );
           })}

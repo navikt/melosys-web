@@ -1,4 +1,4 @@
-import { withRouter } from "react-router-dom";
+import { NavLink, withRouter } from "react-router-dom";
 import { withMsal } from "@azure/msal-react";
 import PT from "prop-types";
 
@@ -6,6 +6,7 @@ import NavLogo from "../../../resources/images/nav.svg?react";
 import * as Nav from "../../../navFrontend";
 import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
 import { MELOSYS_ADMINISTRASJON } from "../../../featuretoggle/toggleNavn";
+import { ADMIN_BASE } from "../../administrasjon/ruter";
 
 import "./topplinje.less";
 import { HolidayDecor } from "../../../felleskomponenter/høytidOgMorro/holidayDecor";
@@ -20,17 +21,11 @@ function Topplinje(props) {
     history.push("/");
   };
 
-  const tilAdministrasjon = (event) => {
-    event.preventDefault();
-    props.history.push("/administrasjon");
-  };
-
   const loggUt = () => {
     props.msalContext.instance.logoutRedirect();
   };
 
   const erProduksjonsmiljo = `${window.env.CLUSTER}`.startsWith("prod");
-  const visAdminLenke = visAdmin;
 
   return (
     <header className="topplinje">
@@ -48,11 +43,11 @@ function Topplinje(props) {
         <HolidayDecor slot="brand" />
       </div>
       <HolidayDecor slot="center" />
-      {visAdminLenke && (
+      {visAdmin && (
         <nav className="topplinje__meny" aria-label="Administrasjon">
-          <a href="/administrasjon" onClick={tilAdministrasjon} className="topplinje__menylenke">
+          <NavLink to={ADMIN_BASE} className="topplinje__menylenke">
             Admin
-          </a>
+          </NavLink>
         </nav>
       )}
       <div className="topplinje__saksbehandler">

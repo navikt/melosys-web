@@ -6,6 +6,7 @@ import UkjentSide from "../ukjentSide";
 import AdministrasjonSidemeny from "./administrasjonSidemeny";
 import OversiktSide from "./oversikt/oversiktSide";
 import TekstblokkerSide from "./tekstblokker/tekstblokkerSide";
+import { ADMIN_BASE, ADMIN_TEKSTBLOKKER } from "./ruter";
 
 import "./administrasjon.less";
 
@@ -17,8 +18,8 @@ function AdministrasjonSide() {
       <AdministrasjonSidemeny />
       <main className="administrasjon__innhold">
         <Switch>
-          <Route exact path="/administrasjon" component={OversiktSide} />
-          {visTekstblokker && <Route exact path="/administrasjon/tekstblokker" component={TekstblokkerSide} />}
+          <Route exact path={ADMIN_BASE} component={OversiktSide} />
+          {visTekstblokker && <Route exact path={ADMIN_TEKSTBLOKKER} component={TekstblokkerSide} />}
           <Route component={UkjentSide} />
         </Switch>
       </main>

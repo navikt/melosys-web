@@ -7,9 +7,11 @@ import * as Nav from "../../../navFrontend";
 import { featureToggleSelectors } from "../../../ducks/featuretoggle";
 import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER } from "../../../featuretoggle/toggleNavn";
+import { STATUS } from "../../../services";
 import { useTekstblokker } from "../../../services/api/tekstblokker";
 import { tellTags } from "../../../services/modules/tekstblokker";
 import { formatterDatoTilNorsk } from "../../../utils/dato";
+import { ADMIN_TEKSTBLOKKER } from "../ruter";
 
 import "./oversikt.less";
 
@@ -31,12 +33,14 @@ function OversiktSide() {
   }, [tekstblokker.data]);
 
   const aktiveToggles = useMemo(() => {
-    if (!toggleState || !toggleState.data) return [];
+    if (!toggleState || toggleState.status !== STATUS.OK || !toggleState.data) return [];
     return Object.entries(toggleState.data)
       .filter(([, paa]) => paa === true)
       .map(([navn]) => navn)
       .sort();
   }, [toggleState]);
+
+  const sistEndret = stats.sistEndret;
 
   return (
     <div className="oversikt">
@@ -51,7 +55,7 @@ function OversiktSide() {
             <Heading size="small" level="2">
               Tekstblokker og brevmaler
             </Heading>
-            <Nav.Button size="small" variant="tertiary" onClick={() => history.push("/administrasjon/tekstblokker")}>
+            <Nav.Button size="small" variant="tertiary" onClick={() => history.push(ADMIN_TEKSTBLOKKER)}>
               Gå til Tekstblokker →
             </Nav.Button>
           </div>
@@ -69,10 +73,10 @@ function OversiktSide() {
               <StatistikkKort label="Unike tags" verdi={stats.unikeTags} />
               <StatistikkKort
                 label="Sist endret"
-                verdi={stats.sistEndret ? stats.sistEndret.tittel : "—"}
+                verdi={sistEndret?.tittel ?? "—"}
                 undertekst={
-                  stats.sistEndret
-                    ? `${formatterDatoTilNorsk(stats.sistEndret.endretDato, true)} av ${stats.sistEndret.endretAv}`
+                  sistEndret
+                    ? `${formatterDatoTilNorsk(sistEndret.endretDato, true)} av ${sistEndret.endretAv}`
                     : undefined
                 }
               />

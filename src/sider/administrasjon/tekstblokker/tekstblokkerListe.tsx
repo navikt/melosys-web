@@ -2,7 +2,7 @@ import { Loader } from "@navikt/ds-react";
 import { PencilIcon, TrashIcon } from "@navikt/aksel-icons";
 
 import * as Nav from "../../../navFrontend";
-import "../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning.less";
+import TekstblokkForhandsvisning from "../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning";
 import { useTekstblokk } from "../../../services/api/tekstblokker";
 import { TekstblokkOversikt } from "../../../services/modules/tekstblokker";
 import { formatterDatoTilNorsk } from "../../../utils/dato";
@@ -71,9 +71,7 @@ function TekstblokkerListeRad({ blokk, utvidet, onToggleUtvidet, onRediger, onSl
       content={
         <div className="tekstblokker__rad-forhandsvisning">
           {detalj.isLoading && <Loader size="small" />}
-          {detalj.data && (
-            <div className="tekstblokk-forhandsvisning" dangerouslySetInnerHTML={{ __html: detalj.data.innhold }} />
-          )}
+          {detalj.data && <TekstblokkForhandsvisning html={detalj.data.innhold} />}
         </div>
       }
     >
