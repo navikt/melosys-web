@@ -6,6 +6,7 @@ export type TekstblokkType = "TEKSTBLOKK" | "BREVMAL";
 export interface TekstblokkOversikt {
   id: number;
   tittel: string;
+  innhold: string;
   type: TekstblokkType;
   tags: string[];
   endretDato: string;
@@ -47,6 +48,8 @@ export const oppdater = (id: number, body: TekstblokkRequest): Promise<Tekstblok
 
 export const slett = (id: number): Promise<unknown> => deleteAsJson(`${baseUrl}/${id}`);
 
+const stripHtml = (html: string): string => html.replace(/<[^>]*>/g, " ");
+
 export const matcherSoek = (blokk: TekstblokkOversikt, soek: string): boolean => {
   const ord = soek
     .toLowerCase()
@@ -54,9 +57,13 @@ export const matcherSoek = (blokk: TekstblokkOversikt, soek: string): boolean =>
     .filter(Boolean);
   if (ord.length === 0) return true;
 
-  const soekbareFelt = [blokk.tittel.toLowerCase(), ...blokk.tags.map((tag) => tag.toLowerCase())];
-  // Hvert søkeord må matche minst ett felt (tittel eller en tag). Slik gir "USA avslag"
-  // treff på blokker som har både "usa" og "avslag" et sted.
+  const soekbareFelt = [
+    blokk.tittel.toLowerCase(),
+    stripHtml(blokk.innhold).toLowerCase(),
+    ...blokk.tags.map((tag) => tag.toLowerCase()),
+  ];
+  // Hvert søkeord må matche minst ett felt (tittel, innhold eller en tag). Slik gir
+  // "USA avslag" treff på blokker som har både "usa" og "avslag" et sted.
   return ord.every((o) => soekbareFelt.some((felt) => felt.includes(o)));
 };
 

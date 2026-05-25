@@ -2,7 +2,6 @@ import { PencilIcon, TrashIcon } from "@navikt/aksel-icons";
 
 import * as Nav from "../../../navFrontend";
 import TekstblokkForhandsvisning from "../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning";
-import { useTekstblokk } from "../../../services/api/tekstblokker";
 import { TekstblokkOversikt } from "../../../services/modules/tekstblokker";
 import { formatterDatoTilNorsk } from "../../../utils/dato";
 
@@ -60,8 +59,6 @@ interface RadProps {
 }
 
 function TekstblokkerListeRad({ blokk, utvidet, onToggleUtvidet, onRediger, onSlett }: RadProps) {
-  const detalj = useTekstblokk(utvidet ? blokk.id : null);
-
   return (
     <Nav.Table.ExpandableRow
       open={utvidet}
@@ -69,8 +66,7 @@ function TekstblokkerListeRad({ blokk, utvidet, onToggleUtvidet, onRediger, onSl
       togglePlacement="left"
       content={
         <div className="tekstblokker__rad-forhandsvisning">
-          {detalj.isLoading && <Nav.Loader size="small" />}
-          {detalj.data && <TekstblokkForhandsvisning html={detalj.data.innhold} />}
+          <TekstblokkForhandsvisning html={blokk.innhold} />
         </div>
       }
     >

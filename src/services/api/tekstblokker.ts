@@ -1,4 +1,4 @@
-import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 
 import * as Tekstblokker from "../modules/tekstblokker";
@@ -19,27 +19,6 @@ export const tekstblokkerKeys = {
 
 const LISTE_STALE_TIME = 5 * 60_000;
 const DETALJ_STALE_TIME = 5 * 60_000;
-const PREFETCH_BATCH_SIZE = 6;
-
-/**
- * Prefetcher tekstblokk-detaljer i batches for å unngå at en handling
- * (åpne popover, "vis alle"-knapp) fyrer N parallelle requests samtidig.
- * Cache-treff hopper man over implisitt via TanStacks dedupering.
- */
-export const prefetchTekstblokkerIBatches = async (queryClient: QueryClient, ids: number[]): Promise<void> => {
-  for (let i = 0; i < ids.length; i += PREFETCH_BATCH_SIZE) {
-    const batch = ids.slice(i, i + PREFETCH_BATCH_SIZE);
-    await Promise.all(
-      batch.map((id) =>
-        queryClient.prefetchQuery({
-          queryKey: tekstblokkerKeys.detalj(id),
-          queryFn: () => Tekstblokker.hent(id),
-          staleTime: DETALJ_STALE_TIME,
-        }),
-      ),
-    );
-  }
-};
 
 export const useTekstblokker = (type: TekstblokkType | undefined, enabled = true) =>
   useQuery<TekstblokkOversikt[]>({

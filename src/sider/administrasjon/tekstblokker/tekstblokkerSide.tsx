@@ -1,14 +1,9 @@
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from "@navikt/aksel-icons";
-import { useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
 import * as Nav from "../../../navFrontend";
 
-import {
-  prefetchTekstblokkerIBatches,
-  useFiltrerteTekstblokker,
-  useTekstblokker,
-} from "../../../services/api/tekstblokker";
+import { useFiltrerteTekstblokker, useTekstblokker } from "../../../services/api/tekstblokker";
 import { TekstblokkOversikt, TekstblokkType } from "../../../services/modules/tekstblokker";
 import TekstblokkRedigeringModal from "./tekstblokkRedigeringModal";
 import TekstblokkSlettBekreftelse from "./tekstblokkSlettBekreftelse";
@@ -27,9 +22,7 @@ function TekstblokkerSide() {
   const [modal, setModal] = useState<ModalTilstand>({ type: "lukket" });
   const [slettBlokk, setSlettBlokk] = useState<TekstblokkOversikt | null>(null);
   const [utvidedeIder, setUtvidedeIder] = useState<Set<number>>(new Set());
-  const [henterAlle, setHenterAlle] = useState(false);
 
-  const queryClient = useQueryClient();
   const { data: blokker = [], isLoading, error } = useTekstblokker(type);
 
   const { tagAntall, synlige } = useFiltrerteTekstblokker(blokker, soek, valgteTags);
@@ -37,28 +30,8 @@ function TekstblokkerSide() {
 
   const alleErUtvidet = synlige.length > 0 && synlige.every((b) => utvidedeIder.has(b.id));
 
-  const toggleAlle = async () => {
-    if (henterAlle) return;
-    if (alleErUtvidet) {
-      setUtvidedeIder(new Set());
-      return;
-    }
-    const ids = synlige.map((b) => b.id);
-    setHenterAlle(true);
-    try {
-      await prefetchTekstblokkerIBatches(queryClient, ids);
-      // Filter kan ha endret seg under prefetch – kun åpne IDs som fortsatt er synlige.
-      setUtvidedeIder((prev) => {
-        const fortsatt = new Set(prev);
-        const synligeIder = new Set(synlige.map((b) => b.id));
-        ids.forEach((id) => {
-          if (synligeIder.has(id)) fortsatt.add(id);
-        });
-        return fortsatt;
-      });
-    } finally {
-      setHenterAlle(false);
-    }
+  const toggleAlle = () => {
+    setUtvidedeIder(alleErUtvidet ? new Set() : new Set(synlige.map((b) => b.id)));
   };
 
   const toggleRad = (id: number) => {
@@ -111,7 +84,6 @@ function TekstblokkerSide() {
             size="small"
             variant="tertiary"
             onClick={toggleAlle}
-            loading={henterAlle}
             icon={alleErUtvidet ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}
           >
             {alleErUtvidet ? "Skjul alle" : "Vis innhold for alle"}
