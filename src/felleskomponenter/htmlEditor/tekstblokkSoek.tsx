@@ -1,9 +1,9 @@
-import { BodyShort, Chips, Popover, Search, Tabs } from "@navikt/ds-react";
+import { BodyShort, Popover, Search, Tabs, UNSAFE_Combobox as Combobox } from "@navikt/ds-react";
 import { useMemo, useRef, useState } from "react";
 
 import * as Nav from "../../navFrontend";
 import { useFiltrerteTekstblokker, useTekstblokker } from "../../services/api/tekstblokker";
-import { TekstblokkOversikt, TekstblokkType, toggleITegnliste } from "../../services/modules/tekstblokker";
+import { TekstblokkOversikt, TekstblokkType } from "../../services/modules/tekstblokker";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER } from "../../featuretoggle/toggleNavn";
 import TekstblokkForhandsvisning from "./tekstblokkForhandsvisning";
@@ -15,7 +15,6 @@ interface Props {
 }
 
 const MAKS_SYNLIG = 8;
-const MAKS_TAGS_KOMPAKT = 10;
 
 function TekstblokkSoek({ onVelg, disabled }: Props) {
   const togglePaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
@@ -29,20 +28,15 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
   const [aktivType, setAktivType] = useState<TekstblokkType>("TEKSTBLOKK");
   const [soek, setSoek] = useState("");
   const [valgteTags, setValgteTags] = useState<string[]>([]);
-  const [visAlleTags, setVisAlleTags] = useState(false);
 
   const { data: blokker = [], isLoading } = useTekstblokker(aktivType, aapen);
 
   const { tagAntall, synlige: filtrerte } = useFiltrerteTekstblokker(blokker, soek, valgteTags);
 
-  // Vis kun de mest brukte tagene i kompakt modus, men la valgte tags alltid være synlige.
-  const synligeTags = useMemo(() => {
-    if (visAlleTags) return tagAntall;
-    const topp = tagAntall.slice(0, MAKS_TAGS_KOMPAKT);
-    const valgteUtenfor = tagAntall.filter(([tag]) => valgteTags.includes(tag) && !topp.some(([t]) => t === tag));
-    return [...topp, ...valgteUtenfor];
-  }, [tagAntall, visAlleTags, valgteTags]);
-  const skjulteTags = tagAntall.length - synligeTags.length;
+  const tagValg = useMemo(
+    () => tagAntall.map(([tag, antall]) => ({ label: `${tag} (${antall})`, value: tag })),
+    [tagAntall],
+  );
 
   const synlige = filtrerte.slice(0, MAKS_SYNLIG);
   const skjult = Math.max(0, filtrerte.length - synlige.length);
@@ -56,8 +50,10 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
   const byttType = (verdi: string) => {
     setAktivType(verdi as TekstblokkType);
     setValgteTags([]);
-    setVisAlleTags(false);
   };
+
+  const toggleTag = (tag: string, valgt: boolean) =>
+    setValgteTags((forrige) => (valgt ? [...forrige, tag] : forrige.filter((t) => t !== tag)));
 
   return (
     <>
@@ -81,54 +77,38 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
         className="tekstblokkSoek__popover"
       >
         <Popover.Content className="tekstblokkSoek__innhold">
-          <Tabs value={aktivType} onChange={byttType} size="small">
-            <Tabs.List>
-              <Tabs.Tab value="TEKSTBLOKK" label="Tekstblokker" />
-              <Tabs.Tab value="BREVMAL" label="Brevmaler" />
-            </Tabs.List>
-          </Tabs>
+          <div className="tekstblokkSoek__topp">
+            <Tabs value={aktivType} onChange={byttType} size="small">
+              <Tabs.List>
+                <Tabs.Tab value="TEKSTBLOKK" label="Tekstblokker" />
+                <Tabs.Tab value="BREVMAL" label="Brevmaler" />
+              </Tabs.List>
+            </Tabs>
 
-          <Search
-            label="Søk"
-            hideLabel
-            size="small"
-            placeholder="Søk på tittel, innhold eller tag…"
-            value={soek}
-            onChange={setSoek}
-            variant="simple"
-            autoFocus
-          />
+            <Search
+              label="Søk"
+              hideLabel
+              size="small"
+              placeholder="Søk på tittel, innhold eller tag…"
+              value={soek}
+              onChange={setSoek}
+              variant="simple"
+              autoFocus
+            />
 
-          {tagAntall.length > 0 && (
-            <div className="tekstblokkSoek__tags">
-              <Chips size="small">
-                {synligeTags.map(([tag, antall]) => (
-                  <Chips.Toggle
-                    key={tag}
-                    selected={valgteTags.includes(tag)}
-                    onClick={() => setValgteTags(toggleITegnliste(valgteTags, tag))}
-                  >
-                    {`${tag} (${antall})`}
-                  </Chips.Toggle>
-                ))}
-                {!visAlleTags && skjulteTags > 0 && (
-                  <Chips.Toggle selected={false} onClick={() => setVisAlleTags(true)}>
-                    {`+${skjulteTags} flere`}
-                  </Chips.Toggle>
-                )}
-                {visAlleTags && (
-                  <Chips.Toggle selected={false} onClick={() => setVisAlleTags(false)}>
-                    Vis færre
-                  </Chips.Toggle>
-                )}
-                {valgteTags.length > 0 && (
-                  <Chips.Removable variant="neutral" onClick={() => setValgteTags([])}>
-                    Nullstill
-                  </Chips.Removable>
-                )}
-              </Chips>
-            </div>
-          )}
+            {tagValg.length > 0 && (
+              <Combobox
+                label="Filtrer på tags"
+                hideLabel
+                size="small"
+                isMultiSelect
+                options={tagValg}
+                selectedOptions={valgteTags}
+                onToggleSelected={toggleTag}
+                placeholder="Filtrer på tags…"
+              />
+            )}
+          </div>
 
           <div className="tekstblokkSoek__liste">
             {isLoading && (
