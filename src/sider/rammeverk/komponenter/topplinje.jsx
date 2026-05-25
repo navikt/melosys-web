@@ -1,15 +1,19 @@
-import { withRouter } from "react-router-dom";
+import { NavLink, withRouter } from "react-router-dom";
 import { withMsal } from "@azure/msal-react";
 import PT from "prop-types";
 
 import NavLogo from "../../../resources/images/nav.svg?react";
 import * as Nav from "../../../navFrontend";
+import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
+import { MELOSYS_ADMINISTRASJON } from "../../../featuretoggle/toggleNavn";
+import { ADMIN_BASE } from "../../administrasjon/ruter";
 
 import "./topplinje.less";
 import { HolidayDecor } from "../../../felleskomponenter/høytidOgMorro/holidayDecor";
 
 function Topplinje(props) {
   const { saksbehandler = "" } = props;
+  const visAdmin = useFeatureToggle(MELOSYS_ADMINISTRASJON);
 
   const tilForsidenHandler = (event) => {
     event.preventDefault();
@@ -39,6 +43,13 @@ function Topplinje(props) {
         <HolidayDecor slot="brand" />
       </div>
       <HolidayDecor slot="center" />
+      {visAdmin && (
+        <nav className="topplinje__meny" aria-label="Administrasjon">
+          <NavLink to={ADMIN_BASE} className="topplinje__menylenke">
+            Admin
+          </NavLink>
+        </nav>
+      )}
       <div className="topplinje__saksbehandler">
         <div className="dropdown">
           <HolidayDecor slot="user" />

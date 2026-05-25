@@ -12,6 +12,8 @@ const MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER =
   "melosys.faktureringskomponenten.ikke-tidligere-perioder";
 const MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT = "melosys.eos_fakturering_av_trygdeavgift";
 const MELOSYS_CDM_4_4 = "melosys.cdm-4-4";
+const MELOSYS_TEKSTBLOKKER = "melosys.tekstblokker";
+const MELOSYS_ADMINISTRASJON = "melosys.administrasjon";
 
 const alleToggleNavn = [
   MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
@@ -26,6 +28,8 @@ const alleToggleNavn = [
   MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
   MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE,
   MELOSYS_CDM_4_4,
+  MELOSYS_TEKSTBLOKKER,
+  MELOSYS_ADMINISTRASJON,
 ];
 
 export {
@@ -42,5 +46,7 @@ export {
   MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
   MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE,
   MELOSYS_CDM_4_4,
+  MELOSYS_TEKSTBLOKKER,
+  MELOSYS_ADMINISTRASJON,
   alleToggleNavn,
 };

@@ -37,6 +37,12 @@ importers:
       "@navikt/melosys-kodeverk":
         specifier: 5.15.329
         version: 5.15.329
+      "@tanstack/react-query":
+        specifier: ^5.100.10
+        version: 5.100.10(react@19.1.0)
+      "@tanstack/react-query-devtools":
+        specifier: ^5.100.10
+        version: 5.100.10(@tanstack/react-query@5.100.10(react@19.1.0))(react@19.1.0)
       classnames:
         specifier: ^2.2.6
         version: 2.5.1
@@ -1519,6 +1525,7 @@ packages:
     engines: { node: ">= 10.0.0" }
     cpu: [arm]
     os: [linux]
+    libc: [glibc]
 
   "@parcel/watcher-linux-arm-musl@2.5.1":
     resolution:
@@ -1526,6 +1533,7 @@ packages:
     engines: { node: ">= 10.0.0" }
     cpu: [arm]
     os: [linux]
+    libc: [musl]
 
   "@parcel/watcher-linux-arm64-glibc@2.5.1":
     resolution:
@@ -1533,6 +1541,7 @@ packages:
     engines: { node: ">= 10.0.0" }
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   "@parcel/watcher-linux-arm64-musl@2.5.1":
     resolution:
@@ -1540,6 +1549,7 @@ packages:
     engines: { node: ">= 10.0.0" }
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   "@parcel/watcher-linux-x64-glibc@2.5.1":
     resolution:
@@ -1547,6 +1557,7 @@ packages:
     engines: { node: ">= 10.0.0" }
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   "@parcel/watcher-linux-x64-musl@2.5.1":
     resolution:
@@ -1554,6 +1565,7 @@ packages:
     engines: { node: ">= 10.0.0" }
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   "@parcel/watcher-win32-arm64@2.5.1":
     resolution:
@@ -1686,66 +1698,77 @@ packages:
       { integrity: sha512-9VlPY/BN3AgbukfVHAB8zNFWB/lKEuvzRo1NKev0Po8sYFKx0i+AQlCYftgEjcL43F2h9Ui1ZSdVBc4En/sP2w== }
     cpu: [arm]
     os: [linux]
+    libc: [glibc]
 
   "@rollup/rollup-linux-arm-musleabihf@4.50.2":
     resolution:
       { integrity: sha512-+GdKWOvsifaYNlIVf07QYan1J5F141+vGm5/Y8b9uCZnG/nxoGqgCmR24mv0koIWWuqvFYnbURRqw1lv7IBINw== }
     cpu: [arm]
     os: [linux]
+    libc: [musl]
 
   "@rollup/rollup-linux-arm64-gnu@4.50.2":
     resolution:
       { integrity: sha512-df0Eou14ojtUdLQdPFnymEQteENwSJAdLf5KCDrmZNsy1c3YaCNaJvYsEUHnrg+/DLBH612/R0xd3dD03uz2dg== }
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   "@rollup/rollup-linux-arm64-musl@4.50.2":
     resolution:
       { integrity: sha512-iPeouV0UIDtz8j1YFR4OJ/zf7evjauqv7jQ/EFs0ClIyL+by++hiaDAfFipjOgyz6y6xbDvJuiU4HwpVMpRFDQ== }
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   "@rollup/rollup-linux-loong64-gnu@4.50.2":
     resolution:
       { integrity: sha512-OL6KaNvBopLlj5fTa5D5bau4W82f+1TyTZRr2BdnfsrnQnmdxh4okMxR2DcDkJuh4KeoQZVuvHvzuD/lyLn2Kw== }
     cpu: [loong64]
     os: [linux]
+    libc: [glibc]
 
   "@rollup/rollup-linux-ppc64-gnu@4.50.2":
     resolution:
       { integrity: sha512-I21VJl1w6z/K5OTRl6aS9DDsqezEZ/yKpbqlvfHbW0CEF5IL8ATBMuUx6/mp683rKTK8thjs/0BaNrZLXetLag== }
     cpu: [ppc64]
     os: [linux]
+    libc: [glibc]
 
   "@rollup/rollup-linux-riscv64-gnu@4.50.2":
     resolution:
       { integrity: sha512-Hq6aQJT/qFFHrYMjS20nV+9SKrXL2lvFBENZoKfoTH2kKDOJqff5OSJr4x72ZaG/uUn+XmBnGhfr4lwMRrmqCQ== }
     cpu: [riscv64]
     os: [linux]
+    libc: [glibc]
 
   "@rollup/rollup-linux-riscv64-musl@4.50.2":
     resolution:
       { integrity: sha512-82rBSEXRv5qtKyr0xZ/YMF531oj2AIpLZkeNYxmKNN6I2sVE9PGegN99tYDLK2fYHJITL1P2Lgb4ZXnv0PjQvw== }
     cpu: [riscv64]
     os: [linux]
+    libc: [musl]
 
   "@rollup/rollup-linux-s390x-gnu@4.50.2":
     resolution:
       { integrity: sha512-4Q3S3Hy7pC6uaRo9gtXUTJ+EKo9AKs3BXKc2jYypEcMQ49gDPFU2P1ariX9SEtBzE5egIX6fSUmbmGazwBVF9w== }
     cpu: [s390x]
     os: [linux]
+    libc: [glibc]
 
   "@rollup/rollup-linux-x64-gnu@4.50.2":
     resolution:
       { integrity: sha512-9Jie/At6qk70dNIcopcL4p+1UirusEtznpNtcq/u/C5cC4HBX7qSGsYIcG6bdxj15EYWhHiu02YvmdPzylIZlA== }
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   "@rollup/rollup-linux-x64-musl@4.50.2":
     resolution:
       { integrity: sha512-HPNJwxPL3EmhzeAnsWQCM3DcoqOz3/IC6de9rWfGR8ZCuEHETi9km66bH/wG3YH0V3nyzyFEGUZeL5PKyy4xvw== }
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   "@rollup/rollup-openharmony-arm64@4.50.2":
     resolution:
@@ -1862,6 +1885,27 @@ packages:
     engines: { node: ">=14" }
     peerDependencies:
       "@svgr/core": "*"
+
+  "@tanstack/query-core@5.100.10":
+    resolution:
+      { integrity: sha512-8UR0yJR+GiQ40m3lPhUr0xbfAupe6GSQiksSBSa9SM2NjezFyxXCIA69/lz8cSoNKZLrw1/PktIyQBJcVeMi3w== }
+
+  "@tanstack/query-devtools@5.100.10":
+    resolution:
+      { integrity: sha512-3DmJf25hDPus5IpVvp6ujXv6bKV2zPzI9vpbAmpJigsL/H6DPvPjmf7/Q9yVKEke//8fgeQ45abjgnLuyYxAiw== }
+
+  "@tanstack/react-query-devtools@5.100.10":
+    resolution:
+      { integrity: sha512-zes0+o9ef5rAZXJ9f/SeaLs2nufJaeVkZkl/Or9NGrWVF41kL9Od9ED9nCwtQlgiF2VGtrzhEw5AU/igAO+aAg== }
+    peerDependencies:
+      "@tanstack/react-query": ^5.100.10
+      react: ^18 || ^19
+
+  "@tanstack/react-query@5.100.10":
+    resolution:
+      { integrity: sha512-FLaZf2RCrA/Zgp4aiu5tG3TyasTRO7aZ99skxQpr3Hg/zXOhu6yq5FZCYQ/tRaJtM9ylnoK8tFK7PolXQadv6Q== }
+    peerDependencies:
+      react: ^18 || ^19
 
   "@testing-library/dom@10.4.1":
     resolution:
@@ -2142,48 +2186,56 @@ packages:
       { integrity: sha512-jon9M7DKRLGZ9VYSkFMflvNqu9hDtOCEnO2QAryFWgT6o6AXU8du56V7YqnaLKr6rAbZBWYsYpikF226v423QA== }
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   "@unrs/resolver-binding-linux-arm64-musl@1.7.2":
     resolution:
       { integrity: sha512-c8Cg4/h+kQ63pL43wBNaVMmOjXI/X62wQmru51qjfTvI7kmCy5uHTJvK/9LrF0G8Jdx8r34d019P1DVJmhXQpA== }
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   "@unrs/resolver-binding-linux-ppc64-gnu@1.7.2":
     resolution:
       { integrity: sha512-A+lcwRFyrjeJmv3JJvhz5NbcCkLQL6Mk16kHTNm6/aGNc4FwPHPE4DR9DwuCvCnVHvF5IAd9U4VIs/VvVir5lg== }
     cpu: [ppc64]
     os: [linux]
+    libc: [glibc]
 
   "@unrs/resolver-binding-linux-riscv64-gnu@1.7.2":
     resolution:
       { integrity: sha512-hQQ4TJQrSQW8JlPm7tRpXN8OCNP9ez7PajJNjRD1ZTHQAy685OYqPrKjfaMw/8LiHCt8AZ74rfUVHP9vn0N69Q== }
     cpu: [riscv64]
     os: [linux]
+    libc: [glibc]
 
   "@unrs/resolver-binding-linux-riscv64-musl@1.7.2":
     resolution:
       { integrity: sha512-NoAGbiqrxtY8kVooZ24i70CjLDlUFI7nDj3I9y54U94p+3kPxwd2L692YsdLa+cqQ0VoqMWoehDFp21PKRUoIQ== }
     cpu: [riscv64]
     os: [linux]
+    libc: [musl]
 
   "@unrs/resolver-binding-linux-s390x-gnu@1.7.2":
     resolution:
       { integrity: sha512-KaZByo8xuQZbUhhreBTW+yUnOIHUsv04P8lKjQ5otiGoSJ17ISGYArc+4vKdLEpGaLbemGzr4ZeUbYQQsLWFjA== }
     cpu: [s390x]
     os: [linux]
+    libc: [glibc]
 
   "@unrs/resolver-binding-linux-x64-gnu@1.7.2":
     resolution:
       { integrity: sha512-dEidzJDubxxhUCBJ/SHSMJD/9q7JkyfBMT77Px1npl4xpg9t0POLvnWywSk66BgZS/b2Hy9Y1yFaoMTFJUe9yg== }
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   "@unrs/resolver-binding-linux-x64-musl@1.7.2":
     resolution:
       { integrity: sha512-RvP+Ux3wDjmnZDT4XWFfNBRVG0fMsc+yVzNFUqOflnDfZ9OYujv6nkh+GOr+watwrW4wdp6ASfG/e7bkDradsw== }
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   "@unrs/resolver-binding-wasm32-wasi@1.7.2":
     resolution:
@@ -7688,6 +7740,21 @@ snapshots:
       svg-parser: 2.0.4
     transitivePeerDependencies:
       - supports-color
+
+  "@tanstack/query-core@5.100.10": {}
+
+  "@tanstack/query-devtools@5.100.10": {}
+
+  "@tanstack/react-query-devtools@5.100.10(@tanstack/react-query@5.100.10(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@tanstack/query-devtools": 5.100.10
+      "@tanstack/react-query": 5.100.10(react@19.1.0)
+      react: 19.1.0
+
+  "@tanstack/react-query@5.100.10(react@19.1.0)":
+    dependencies:
+      "@tanstack/query-core": 5.100.10
+      react: 19.1.0
 
   "@testing-library/dom@10.4.1":
     dependencies:
