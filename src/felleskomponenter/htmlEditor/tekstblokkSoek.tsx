@@ -26,34 +26,30 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
   const ankerRef = useRef<HTMLDivElement>(null);
   const [aapen, setAapen] = useState(false);
   const [aktivType, setAktivType] = useState<TekstblokkType>("TEKSTBLOKK");
-  const [soek, setSoek] = useState("");
-  const [valgteTags, setValgteTags] = useState<string[]>([]);
+  // Hvert filter er enten et fritt søkeord eller en valgt tag – alle behandles likt (AND).
+  const [filtre, setFiltre] = useState<string[]>([]);
 
   const { data: blokker = [], isLoading } = useTekstblokker(aktivType, aapen);
 
-  const { tagAntall, synlige: filtrerte } = useFiltrerteTekstblokker(blokker, soek, valgteTags);
+  const { tagAntall, synlige: filtrerte } = useFiltrerteTekstblokker(blokker, filtre.join(" "), []);
 
-  const tagValg = useMemo(
-    () => tagAntall.map(([tag, antall]) => ({ label: `${tag} (${antall})`, value: tag })),
-    [tagAntall],
-  );
+  const tagValg = useMemo(() => tagAntall.map(([tag]) => tag), [tagAntall]);
 
   const synlige = filtrerte.slice(0, MAKS_SYNLIG);
   const skjult = Math.max(0, filtrerte.length - synlige.length);
 
   const lukk = () => {
     setAapen(false);
-    setSoek("");
-    setValgteTags([]);
+    setFiltre([]);
   };
 
   const byttType = (verdi: string) => {
     setAktivType(verdi as TekstblokkType);
-    setValgteTags([]);
+    setFiltre([]);
   };
 
-  const toggleTag = (tag: string, valgt: boolean) =>
-    setValgteTags((forrige) => (valgt ? [...forrige, tag] : forrige.filter((t) => t !== tag)));
+  const toggleFilter = (verdi: string, valgt: boolean) =>
+    setFiltre((forrige) => (valgt ? [...forrige, verdi] : forrige.filter((f) => f !== verdi)));
 
   return (
     <>
@@ -90,12 +86,11 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
               hideLabel
               size="small"
               isMultiSelect
+              allowNewValues
               options={tagValg}
-              selectedOptions={valgteTags}
-              onToggleSelected={toggleTag}
-              value={soek}
-              onChange={setSoek}
-              placeholder="Søk på tittel, innhold eller velg tag…"
+              selectedOptions={filtre}
+              onToggleSelected={toggleFilter}
+              placeholder="Søk på tittel/innhold, eller velg tag…"
             />
           </div>
 
