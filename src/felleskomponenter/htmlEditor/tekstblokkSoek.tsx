@@ -1,6 +1,6 @@
 import { BodyShort, Chips, Popover, Search, Tabs } from "@navikt/ds-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import * as Nav from "../../navFrontend";
 import * as Tekstblokker from "../../services/modules/tekstblokker";
@@ -22,6 +22,7 @@ interface Props {
 }
 
 const MAKS_SYNLIG = 8;
+const MAKS_TAGS_KOMPAKT = 10;
 
 function TekstblokkSoek({ onVelg, disabled }: Props) {
   const togglePaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
@@ -36,10 +37,20 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
   const [aktivType, setAktivType] = useState<TekstblokkType>("TEKSTBLOKK");
   const [soek, setSoek] = useState("");
   const [valgteTags, setValgteTags] = useState<string[]>([]);
+  const [visAlleTags, setVisAlleTags] = useState(false);
 
   const { data: blokker = [], isLoading } = useTekstblokker(aktivType, aapen);
 
   const { tagAntall, synlige: filtrerte } = useFiltrerteTekstblokker(blokker, soek, valgteTags);
+
+  // Vis kun de mest brukte tagene i kompakt modus, men la valgte tags alltid være synlige.
+  const synligeTags = useMemo(() => {
+    if (visAlleTags) return tagAntall;
+    const topp = tagAntall.slice(0, MAKS_TAGS_KOMPAKT);
+    const valgteUtenfor = tagAntall.filter(([tag]) => valgteTags.includes(tag) && !topp.some(([t]) => t === tag));
+    return [...topp, ...valgteUtenfor];
+  }, [tagAntall, visAlleTags, valgteTags]);
+  const skjulteTags = tagAntall.length - synligeTags.length;
 
   const synlige = filtrerte.slice(0, MAKS_SYNLIG);
   const skjult = Math.max(0, filtrerte.length - synlige.length);
@@ -62,6 +73,7 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
   const byttType = (verdi: string) => {
     setAktivType(verdi as TekstblokkType);
     setValgteTags([]);
+    setVisAlleTags(false);
   };
 
   return (
@@ -107,7 +119,7 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
           {tagAntall.length > 0 && (
             <div className="tekstblokkSoek__tags">
               <Chips size="small">
-                {tagAntall.map(([tag, antall]) => (
+                {synligeTags.map(([tag, antall]) => (
                   <Chips.Toggle
                     key={tag}
                     selected={valgteTags.includes(tag)}
@@ -116,6 +128,16 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
                     {`${tag} (${antall})`}
                   </Chips.Toggle>
                 ))}
+                {!visAlleTags && skjulteTags > 0 && (
+                  <Chips.Toggle selected={false} onClick={() => setVisAlleTags(true)}>
+                    {`+${skjulteTags} flere`}
+                  </Chips.Toggle>
+                )}
+                {visAlleTags && (
+                  <Chips.Toggle selected={false} onClick={() => setVisAlleTags(false)}>
+                    Vis færre
+                  </Chips.Toggle>
+                )}
                 {valgteTags.length > 0 && (
                   <Chips.Removable variant="neutral" onClick={() => setValgteTags([])}>
                     Nullstill

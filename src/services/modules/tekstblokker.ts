@@ -48,10 +48,16 @@ export const oppdater = (id: number, body: TekstblokkRequest): Promise<Tekstblok
 export const slett = (id: number): Promise<unknown> => deleteAsJson(`${baseUrl}/${id}`);
 
 export const matcherSoek = (blokk: TekstblokkOversikt, soek: string): boolean => {
-  if (!soek) return true;
-  const norm = soek.toLowerCase().trim();
-  if (blokk.tittel.toLowerCase().includes(norm)) return true;
-  return blokk.tags.some((tag) => tag.toLowerCase().includes(norm));
+  const ord = soek
+    .toLowerCase()
+    .split(/[\s,]+/)
+    .filter(Boolean);
+  if (ord.length === 0) return true;
+
+  const soekbareFelt = [blokk.tittel.toLowerCase(), ...blokk.tags.map((tag) => tag.toLowerCase())];
+  // Hvert søkeord må matche minst ett felt (tittel eller en tag). Slik gir "USA avslag"
+  // treff på blokker som har både "usa" og "avslag" et sted.
+  return ord.every((o) => soekbareFelt.some((felt) => felt.includes(o)));
 };
 
 export const tellTags = (blokker: TekstblokkOversikt[]): Array<[string, number]> => {
