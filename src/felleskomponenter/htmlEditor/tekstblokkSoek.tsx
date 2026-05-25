@@ -74,7 +74,7 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
           disabled={disabled}
           type="button"
         >
-          Sett inn tekstblokk
+          Sett inn tekstblokk/brevmal
         </Nav.Button>
       </div>
       <Popover
