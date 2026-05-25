@@ -102,6 +102,7 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
                 selectedOptions={filtre}
                 onToggleSelected={toggleFilter}
                 placeholder="Søk på tittel, innhold eller tag…"
+                autoFocus
               />
             </Provider>
           </div>
