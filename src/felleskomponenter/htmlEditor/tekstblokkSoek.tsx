@@ -1,5 +1,6 @@
-import { BodyShort, Popover, Tabs, UNSAFE_Combobox as Combobox } from "@navikt/ds-react";
-import { useMemo, useRef, useState } from "react";
+import { BodyShort, Popover, Provider, Tabs, UNSAFE_Combobox as Combobox } from "@navikt/ds-react";
+import { nb } from "@navikt/ds-react/locales";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import * as Nav from "../../navFrontend";
 import { useFiltrerteTekstblokker, useTekstblokker } from "../../services/api/tekstblokker";
@@ -14,7 +15,7 @@ interface Props {
   disabled?: boolean;
 }
 
-const MAKS_SYNLIG = 8;
+const SIDE_STORRELSE = 10;
 
 function TekstblokkSoek({ onVelg, disabled }: Props) {
   const togglePaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
@@ -28,6 +29,7 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
   const [aktivType, setAktivType] = useState<TekstblokkType>("TEKSTBLOKK");
   // Hvert filter er enten et fritt søkeord eller en valgt tag – alle behandles likt (AND).
   const [filtre, setFiltre] = useState<string[]>([]);
+  const [antallVist, setAntallVist] = useState(SIDE_STORRELSE);
 
   const { data: blokker = [], isLoading } = useTekstblokker(aktivType, aapen);
 
@@ -35,8 +37,11 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
 
   const tagValg = useMemo(() => tagAntall.map(([tag]) => tag), [tagAntall]);
 
-  const synlige = filtrerte.slice(0, MAKS_SYNLIG);
-  const skjult = Math.max(0, filtrerte.length - synlige.length);
+  // Vis et begrenset antall om gangen; nullstill når søk/filter/type endres.
+  useEffect(() => setAntallVist(SIDE_STORRELSE), [filtre, aktivType]);
+
+  const synlige = filtrerte.slice(0, antallVist);
+  const gjenstaaende = filtrerte.length - synlige.length;
 
   const lukk = () => {
     setAapen(false);
@@ -81,17 +86,21 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
               </Tabs.List>
             </Tabs>
 
-            <Combobox
-              label="Søk og filtrer"
-              hideLabel
-              size="small"
-              isMultiSelect
-              allowNewValues
-              options={tagValg}
-              selectedOptions={filtre}
-              onToggleSelected={toggleFilter}
-              placeholder="Søk på tittel/innhold, eller velg tag…"
-            />
+            {/* Overstyrer "Legg til"-teksten i dropdownen til søk-formulering, slik at
+                frie søkeord ikke forveksles med å opprette en ny tag. */}
+            <Provider locale={nb} translations={{ Combobox: { addOption: "Søk på" } }}>
+              <Combobox
+                label="Søk og filtrer"
+                description="Skriv søkeord, eller velg en tag fra listen"
+                size="medium"
+                isMultiSelect
+                allowNewValues
+                options={tagValg}
+                selectedOptions={filtre}
+                onToggleSelected={toggleFilter}
+                placeholder="Søk på tittel eller innhold…"
+              />
+            </Provider>
           </div>
 
           <div className="tekstblokkSoek__liste">
@@ -115,13 +124,19 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
                 }}
               />
             ))}
-          </div>
 
-          {skjult > 0 && (
-            <BodyShort size="small" className="tekstblokkSoek__antall">
-              {skjult} flere treff – avgrens søket
-            </BodyShort>
-          )}
+            {gjenstaaende > 0 && (
+              <Nav.Button
+                variant="tertiary"
+                size="small"
+                type="button"
+                className="tekstblokkSoek__visFlere"
+                onClick={() => setAntallVist((n) => n + SIDE_STORRELSE)}
+              >
+                Vis {Math.min(gjenstaaende, SIDE_STORRELSE)} flere ({gjenstaaende} igjen)
+              </Nav.Button>
+            )}
+          </div>
         </Popover.Content>
       </Popover>
     </>
