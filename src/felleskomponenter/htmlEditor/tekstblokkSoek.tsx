@@ -92,7 +92,7 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
             label="Søk"
             hideLabel
             size="small"
-            placeholder="Søk på tittel eller tag…"
+            placeholder="Søk på tittel, innhold eller tag…"
             value={soek}
             onChange={setSoek}
             variant="simple"

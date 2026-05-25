@@ -48,7 +48,9 @@ export const oppdater = (id: number, body: TekstblokkRequest): Promise<Tekstblok
 
 export const slett = (id: number): Promise<unknown> => deleteAsJson(`${baseUrl}/${id}`);
 
-const stripHtml = (html: string): string => html.replace(/<[^>]*>/g, " ");
+// Gjør HTML om til ren søkbar tekst: fjern tagger og HTML-entiteter (&nbsp;, &amp; ...)
+// slik at entitetsrester ikke gir falske treff i søk.
+const stripHtml = (html: string): string => (html ?? "").replace(/<[^>]*>/g, " ").replace(/&[a-z]+;|&#\d+;/gi, " ");
 
 export const matcherSoek = (blokk: TekstblokkOversikt, soek: string): boolean => {
   const ord = soek

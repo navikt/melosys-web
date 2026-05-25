@@ -50,4 +50,11 @@ describe("matcherSoek", () => {
     expect(matcherSoek(medInnhold, "tittel territorialfarvann")).toBe(true);
     expect(matcherSoek(medInnhold, "strong")).toBe(false);
   });
+
+  it("gir ikke falske treff på HTML-entiteter", () => {
+    const medEntitet = blokk("Tittel", ["tag"], "<p>Du&nbsp;er omfattet&amp;sikret.</p>");
+    expect(matcherSoek(medEntitet, "nbsp")).toBe(false);
+    expect(matcherSoek(medEntitet, "amp")).toBe(false);
+    expect(matcherSoek(medEntitet, "omfattet")).toBe(true);
+  });
 });
