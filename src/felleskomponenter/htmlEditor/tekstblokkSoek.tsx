@@ -1,4 +1,4 @@
-import { BodyShort, Popover, Search, Tabs, UNSAFE_Combobox as Combobox } from "@navikt/ds-react";
+import { BodyShort, Popover, Tabs, UNSAFE_Combobox as Combobox } from "@navikt/ds-react";
 import { useMemo, useRef, useState } from "react";
 
 import * as Nav from "../../navFrontend";
@@ -85,29 +85,18 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
               </Tabs.List>
             </Tabs>
 
-            <Search
-              label="Søk"
+            <Combobox
+              label="Søk og filtrer"
               hideLabel
               size="small"
-              placeholder="Søk på tittel, innhold eller tag…"
+              isMultiSelect
+              options={tagValg}
+              selectedOptions={valgteTags}
+              onToggleSelected={toggleTag}
               value={soek}
               onChange={setSoek}
-              variant="simple"
-              autoFocus
+              placeholder="Søk på tittel, innhold eller velg tag…"
             />
-
-            {tagValg.length > 0 && (
-              <Combobox
-                label="Filtrer på tags"
-                hideLabel
-                size="small"
-                isMultiSelect
-                options={tagValg}
-                selectedOptions={valgteTags}
-                onToggleSelected={toggleTag}
-                placeholder="Filtrer på tags…"
-              />
-            )}
           </div>
 
           <div className="tekstblokkSoek__liste">
