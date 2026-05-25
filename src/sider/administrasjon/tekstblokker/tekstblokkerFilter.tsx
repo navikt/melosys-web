@@ -1,7 +1,9 @@
 import { Chips, Search, Tabs } from "@navikt/ds-react";
+import { useMemo, useState } from "react";
 
-import { TekstblokkType } from "../../../services/modules/tekstblokker";
-import { toggleITegnliste } from "../../../services/modules/tekstblokker";
+import { TekstblokkType, toggleITegnliste } from "../../../services/modules/tekstblokker";
+
+const MAKS_TAGS_KOMPAKT = 15;
 
 interface Props {
   type: TekstblokkType;
@@ -14,6 +16,19 @@ interface Props {
 }
 
 function TekstblokkerFilter({ type, setType, soek, setSoek, valgteTags, setValgteTags, tilgjengeligeTags }: Props) {
+  const [visAlleTags, setVisAlleTags] = useState(false);
+
+  // Vis de mest brukte tagene i kompakt modus, men hold valgte tags alltid synlige.
+  const synligeTags = useMemo(() => {
+    if (visAlleTags) return tilgjengeligeTags;
+    const topp = tilgjengeligeTags.slice(0, MAKS_TAGS_KOMPAKT);
+    const valgteUtenfor = tilgjengeligeTags.filter(
+      ([tag]) => valgteTags.includes(tag) && !topp.some(([t]) => t === tag),
+    );
+    return [...topp, ...valgteUtenfor];
+  }, [tilgjengeligeTags, visAlleTags, valgteTags]);
+  const skjulteTags = tilgjengeligeTags.length - synligeTags.length;
+
   return (
     <div className="tekstblokker__filter">
       <Tabs value={type} onChange={(v) => setType(v as TekstblokkType)} size="small">
@@ -26,7 +41,7 @@ function TekstblokkerFilter({ type, setType, soek, setSoek, valgteTags, setValgt
       <Search
         label="Søk i tekstblokker"
         hideLabel
-        placeholder="Søk på tittel eller tag…"
+        placeholder="Søk på tittel, innhold eller tag…"
         size="small"
         value={soek}
         onChange={setSoek}
@@ -35,7 +50,7 @@ function TekstblokkerFilter({ type, setType, soek, setSoek, valgteTags, setValgt
 
       {tilgjengeligeTags.length > 0 && (
         <Chips size="small">
-          {tilgjengeligeTags.map(([tag, antall]) => (
+          {synligeTags.map(([tag, antall]) => (
             <Chips.Toggle
               key={tag}
               selected={valgteTags.includes(tag)}
@@ -44,6 +59,16 @@ function TekstblokkerFilter({ type, setType, soek, setSoek, valgteTags, setValgt
               {`${tag} (${antall})`}
             </Chips.Toggle>
           ))}
+          {!visAlleTags && skjulteTags > 0 && (
+            <Chips.Toggle selected={false} onClick={() => setVisAlleTags(true)}>
+              {`+${skjulteTags} flere`}
+            </Chips.Toggle>
+          )}
+          {visAlleTags && (
+            <Chips.Toggle selected={false} onClick={() => setVisAlleTags(false)}>
+              Vis færre
+            </Chips.Toggle>
+          )}
           {valgteTags.length > 0 && (
             <Chips.Removable variant="neutral" onClick={() => setValgteTags([])}>
               Nullstill
