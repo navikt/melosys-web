@@ -89,7 +89,10 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
             {/* Overstyrer "Legg til"-teksten i dropdownen til søk-formulering, slik at
                 frie søkeord ikke forveksles med å opprette en ny tag. */}
             <Provider locale={nb} translations={{ Combobox: { addOption: "Søk på" } }}>
+              {/* key remounter Combobox ved gjenåpning så uncommittet input-tekst ikke
+                  henger igjen (Popover skjuler med CSS, unmounter ikke innholdet). */}
               <Combobox
+                key={aapen ? "apen" : "lukket"}
                 label="Søk og filtrer"
                 description="Skriv søkeord, eller velg en tag fra listen"
                 size="medium"
@@ -98,7 +101,7 @@ function TekstblokkSoekIntern({ onVelg, disabled }: Props) {
                 options={tagValg}
                 selectedOptions={filtre}
                 onToggleSelected={toggleFilter}
-                placeholder="Søk på tittel eller innhold…"
+                placeholder="Søk på tittel, innhold eller tag…"
               />
             </Provider>
           </div>
