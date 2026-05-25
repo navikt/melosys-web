@@ -30,6 +30,12 @@
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
+
+    // Vis flere tag-forslag i Combobox-dropdownen (Aksel default er 290px).
+    // Dropdownen scroller, så det er god plass til mange tags samtidig.
+    .navds-combobox__list {
+      max-height: min(32rem, 60vh);
+    }
   }
 
   // Eneste scroll-området – hovring her scroller popoveren, ikke siden
