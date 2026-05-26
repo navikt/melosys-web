@@ -29,6 +29,7 @@ import * as Vilkar from "./modules/vilkar";
 import * as LovligeKombinasjoner from "./modules/lovligekombinasjoner";
 import * as Aarsavregning from "./modules/aarsavregning/aarsavregning";
 import * as HelseutgiftDekningPeriode from "./modules/helseutgiftDekkesPeriode/helseutgiftDekkesPeriode";
+import * as Pensjonsopptjening from "./modules/pensjonsopptjening/pensjonsopptjening";
 
 import {
   Fagsak,
@@ -72,6 +73,7 @@ export {
   Vilkar,
   Aarsavregning,
   HelseutgiftDekningPeriode,
+  Pensjonsopptjening,
 };
 
 export type {

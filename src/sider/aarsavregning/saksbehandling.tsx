@@ -28,9 +28,15 @@ import Oppsummering from "../../felleskomponenter/oppsummering";
 import { aarsavregningOperations } from "../../ducks/aarsavregning";
 import { medlemskapsperioderSelectors } from "../../ducks/medlemskapsperioder";
 import { useFeatureToggle } from "../../featuretoggle";
-import { ÅRSAVREGNING, ÅRSAVREGNING_UTEN_FLYT } from "../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_VIS_PENSJONSOPPTJENING_POPP,
+  ÅRSAVREGNING,
+  ÅRSAVREGNING_UTEN_FLYT,
+} from "../../featuretoggle/toggleNavn";
 import "./saksbehandling.less";
 import { fakturaserierOperations } from "../../ducks/fakturaserier";
+import { pensjonsopptjeningOperations } from "../../ducks/pensjonsopptjening";
+import Pensjonsopptjening from "../../felleskomponenter/pensjonsopptjening/pensjonsopptjening";
 
 interface Props extends RouteComponentProps<MatchParams> {
   behandlingOppfriskes: boolean;
@@ -56,6 +62,7 @@ function Saksbehandling({ match, location }: Props) {
 
   const erÅrsavregningToggleEnabled = useFeatureToggle(ÅRSAVREGNING);
   const erÅrsavregningUtenFlytToggleEnabled = useFeatureToggle(ÅRSAVREGNING_UTEN_FLYT);
+  const erPensjonsopptjeningToggleEnabled = useFeatureToggle(MELOSYS_VIS_PENSJONSOPPTJENING_POPP);
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -106,6 +113,7 @@ function Saksbehandling({ match, location }: Props) {
       dispatch(dokumenterOperations.resetDokument());
       dispatch(aarsavregningOperations.resetAarsavregning());
       dispatch(fakturaserierOperations.resetFakturaserier());
+      dispatch(pensjonsopptjeningOperations.resetPensjonsopptjening());
     };
   }, []);
 
@@ -143,6 +151,7 @@ function Saksbehandling({ match, location }: Props) {
                   </Nav.Alert>
                 )}
                 {erÅrsavregningToggleEnabled && <EnkelStegvelger alleSteg={alleSteg} />}
+                {erPensjonsopptjeningToggleEnabled && <Pensjonsopptjening />}
               </main>
               <SoknadMenypanelForm startOgVisOppfriskModal={startOgVisOppfriskModal} />
             </div>
