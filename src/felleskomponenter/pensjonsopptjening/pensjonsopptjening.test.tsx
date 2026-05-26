@@ -10,6 +10,7 @@ const { useSelectorMock, dispatchMock } = vi.hoisted(() => ({
 
 vi.mock("../../utils", () => ({
   formaterTilNorskBelop: (val: number) => `${val} kr`,
+  formaterTilNorskBelopUtenDesimaler: (val: number) => `${val}`,
 }));
 
 vi.mock("../../hooks", () => ({
@@ -45,9 +46,7 @@ vi.mock("../../services", () => ({
 }));
 
 vi.mock("../../navFrontend", () => ({
-  Container: ({ children }: any) => <div>{children}</div>,
-  Row: ({ children }: any) => <div>{children}</div>,
-  Column: ({ children }: any) => <div>{children}</div>,
+  VStack: ({ children }: any) => <div>{children}</div>,
   Heading: ({ children }: any) => <h2>{children}</h2>,
   Alert: ({ children, variant }: any) => <div data-variant={variant}>{children}</div>,
   Loader: () => <div>laster…</div>,
