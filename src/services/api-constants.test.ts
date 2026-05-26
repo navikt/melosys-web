@@ -200,6 +200,10 @@ describe("api-constants", () => {
     it("skal ha EØS_PENSJONIST konstant", () => {
       expect(apiConstants.EØS_PENSJONIST).toBe("eos-pensjonist");
     });
+
+    it("skal ha PENSJONSOPPTJENING konstant", () => {
+      expect(apiConstants.PENSJONSOPPTJENING).toBe("pensjonsopptjening");
+    });
   });
 
   describe("Konstant sammenheng", () => {

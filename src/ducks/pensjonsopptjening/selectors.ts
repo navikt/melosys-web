@@ -1,16 +1,14 @@
 import { createSelector, Selector } from "reselect";
-import { RootState, StateSection } from "AppTypes";
+import { RootState } from "AppTypes";
+import { STATUS } from "../../services";
 import * as Types from "./types";
 
-type PensjonsopptjeningState = StateSection<Types.PensjonsopptjeningRespons | Record<string, never>>;
-
-export const PensjonsopptjeningSelector: Selector<RootState, PensjonsopptjeningState> = createSelector(
-  (state: RootState) => state.pensjonsopptjening as PensjonsopptjeningState,
-  (pensjonsopptjening) => pensjonsopptjening,
-);
+export const PensjonsopptjeningSelector: Selector<RootState, RootState["pensjonsopptjening"]> = (state) =>
+  state.pensjonsopptjening;
 
 export const PensjonsopptjeningPerioderSelector: Selector<RootState, Types.PensjonsopptjeningPeriode[]> =
   createSelector(PensjonsopptjeningSelector, (state) => {
+    if (state.status !== STATUS.OK) return [];
     const data = state.data as Types.PensjonsopptjeningRespons;
-    return data && Array.isArray(data.perioder) ? data.perioder : [];
+    return Array.isArray(data?.perioder) ? data.perioder : [];
   });

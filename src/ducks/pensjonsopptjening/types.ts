@@ -13,7 +13,7 @@ export type {
 
 interface FeiletAction {
   type: typeof FEILET;
-  data: any;
+  data: unknown;
 }
 
 interface PendingAction {

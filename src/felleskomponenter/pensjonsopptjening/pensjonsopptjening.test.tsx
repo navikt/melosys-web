@@ -1,16 +1,20 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 
+const behandlingID = 4711;
+
+const { useSelectorMock, dispatchMock } = vi.hoisted(() => ({
+  useSelectorMock: vi.fn(),
+  dispatchMock: vi.fn(),
+}));
+
 vi.mock("../../utils", () => ({
   formaterTilNorskBelop: (val: number) => `${val} kr`,
 }));
 
 vi.mock("../../hooks", () => ({
-  useDispatch: () => vi.fn(),
+  useDispatch: () => dispatchMock,
 }));
-
-const behandlingID = 4711;
-const useSelectorMock = vi.fn();
 
 vi.mock("react-redux", () => ({
   useSelector: (selector: any) => useSelectorMock(selector),
@@ -72,6 +76,19 @@ const mockState = ({ status, perioder }: { status: string; perioder: any[] }) =>
 describe("Pensjonsopptjening", () => {
   beforeEach(() => {
     useSelectorMock.mockReset();
+    dispatchMock.mockReset();
+  });
+
+  it("rendrer ingenting før første henting (status NOT_STARTED)", () => {
+    mockState({ status: "NOT_STARTED", perioder: [] });
+    const { container } = render(<Pensjonsopptjening />);
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it("viser loader under PENDING", () => {
+    mockState({ status: "PENDING", perioder: [] });
+    render(<Pensjonsopptjening />);
+    expect(screen.getByText(/laster/)).toBeDefined();
   });
 
   it("viser tabell med rader sortert nyeste år først", () => {
@@ -107,12 +124,27 @@ describe("Pensjonsopptjening", () => {
     expect(screen.getByText(/Kunne ikke hente pensjonsopptjening/)).toBeDefined();
   });
 
-  it("mapper ukjent kilde til rå-verdi", () => {
+  it("mapper ukjent kilde-streng til rå-verdi", () => {
     mockState({
       status: "OK",
       perioder: [{ aar: 2024, pgi: 500000, kilde: "ANNEN_KILDE" }],
     });
     render(<Pensjonsopptjening />);
     expect(screen.getByText("ANNEN_KILDE")).toBeDefined();
+  });
+
+  it("viser «Ukjent kilde» når kilde er null", () => {
+    mockState({
+      status: "OK",
+      perioder: [{ aar: 2024, pgi: 500000, kilde: null }],
+    });
+    render(<Pensjonsopptjening />);
+    expect(screen.getByText("Ukjent kilde")).toBeDefined();
+  });
+
+  it("dispatcher hentPensjonsopptjening på mount når behandlingID > 0", () => {
+    mockState({ status: "OK", perioder: [] });
+    render(<Pensjonsopptjening />);
+    expect(dispatchMock).toHaveBeenCalled();
   });
 });

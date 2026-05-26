@@ -12,7 +12,7 @@ import {
   pensjonsopptjeningTypes,
 } from "../../ducks/pensjonsopptjening";
 
-const kildeLabel = (kilde: pensjonsopptjeningTypes.PensjonsopptjeningKilde): string => {
+const kildeLabel = (kilde: pensjonsopptjeningTypes.PensjonsopptjeningKilde | string | null | undefined): string => {
   switch (kilde) {
     case "SKATT":
       return "Skatt";
@@ -21,7 +21,7 @@ const kildeLabel = (kilde: pensjonsopptjeningTypes.PensjonsopptjeningKilde): str
     case "MELOSYS":
       return "Melosys";
     default:
-      return kilde;
+      return kilde ?? "Ukjent kilde";
   }
 };
 
@@ -32,10 +32,12 @@ function Pensjonsopptjening() {
   const perioder = useSelector(pensjonsopptjeningSelectors.PensjonsopptjeningPerioderSelector);
 
   useEffect(() => {
-    if (behandlingID && behandlingID > 0) {
+    if (behandlingID > 0) {
       dispatch(pensjonsopptjeningOperations.hentPensjonsopptjening(behandlingID));
     }
-  }, [behandlingID]);
+  }, [behandlingID, dispatch]);
+
+  if (pensjonsopptjening.status === STATUS.NOT_STARTED) return null;
 
   const sortertePerioder = [...perioder].sort((a, b) => b.aar - a.aar);
 

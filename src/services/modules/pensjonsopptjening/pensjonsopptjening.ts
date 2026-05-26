@@ -1,7 +1,7 @@
 import { getAsJson } from "../../utils";
 import { API_BASE_URL, BEHANDLINGER, PENSJONSOPPTJENING } from "../../api-constants";
 
-export type PensjonsopptjeningKilde = "SKATT" | "AVGIFTSSYSTEMET" | "MELOSYS" | string;
+export type PensjonsopptjeningKilde = "SKATT" | "AVGIFTSSYSTEMET" | "MELOSYS";
 
 export interface PensjonsopptjeningPeriode {
   aar: number;

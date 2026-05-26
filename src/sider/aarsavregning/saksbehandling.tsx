@@ -36,7 +36,7 @@ import {
 import "./saksbehandling.less";
 import { fakturaserierOperations } from "../../ducks/fakturaserier";
 import { pensjonsopptjeningOperations } from "../../ducks/pensjonsopptjening";
-import Pensjonsopptjening from "../../felleskomponenter/pensjonsopptjening/pensjonsopptjening";
+import Pensjonsopptjening from "../../felleskomponenter/pensjonsopptjening";
 
 interface Props extends RouteComponentProps<MatchParams> {
   behandlingOppfriskes: boolean;
