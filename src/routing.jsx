@@ -11,7 +11,6 @@ import IngenFlytBehandling from "./sider/ingenFlyt/behandling";
 import Journalforing from "./sider/journalforing";
 import OpprettNySak from "./sider/opprettnysak";
 import VurderUtpeking from "./sider/eu_eøs/vurderutpeking";
-import Sendbrev from "./sider/sendbrev";
 import IkkeYrkesaktiv from "./sider/ikkeYrkesaktiv/saksbehandling";
 import Årsavregning from "./sider/aarsavregning/saksbehandling";
 import Unntaksregistrering from "./sider/unntaksregistrering";
@@ -105,7 +104,6 @@ function Routing() {
             path={`/${EU_EOS}/vurderutpeking/:saksnr`}
             render={(props) => <VurderUtpeking {...props} {...fellesHandlers} />}
           />
-          <Route path="/sendbrev/:behandlingID/:snr" render={(props) => <Sendbrev {...props} {...fellesHandlers} />} />
           <Route
             path="/:sakstype/unntaksregistrering/:saksnr"
             render={(props) => <Unntaksregistrering {...props} {...fellesHandlers} />}
