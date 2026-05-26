@@ -29,7 +29,7 @@ describe("hentPensjonsopptjening", () => {
     const dispatch = vi.fn();
     const getState = vi.fn(() => ({}) as any);
 
-    await hentPensjonsopptjening(42)(dispatch, getState, undefined);
+    await hentPensjonsopptjening(42)(dispatch, getState);
 
     expect(dispatch).toHaveBeenNthCalledWith(1, { type: Types.PENDING });
     expect(dispatch).toHaveBeenNthCalledWith(2, { type: Types.OK, data: respons });
@@ -42,7 +42,7 @@ describe("hentPensjonsopptjening", () => {
     const dispatch = vi.fn();
     const getState = vi.fn(() => ({}) as any);
 
-    await hentPensjonsopptjening(42)(dispatch, getState, undefined);
+    await hentPensjonsopptjening(42)(dispatch, getState);
 
     expect(dispatch).toHaveBeenCalledTimes(1);
     expect(dispatch).toHaveBeenCalledWith({ type: Types.PENDING });
@@ -55,7 +55,7 @@ describe("hentPensjonsopptjening", () => {
     const dispatch = vi.fn();
     const getState = vi.fn(() => ({}) as any);
 
-    await hentPensjonsopptjening(42)(dispatch, getState, undefined);
+    await hentPensjonsopptjening(42)(dispatch, getState);
 
     expect(dispatch).toHaveBeenNthCalledWith(2, { type: Types.FEILET, data: err });
   });
@@ -66,7 +66,7 @@ describe("hentPensjonsopptjening", () => {
     const dispatch = vi.fn();
     const getState = vi.fn(() => ({}) as any);
 
-    await hentPensjonsopptjening(42)(dispatch, getState, undefined);
+    await hentPensjonsopptjening(42)(dispatch, getState);
 
     expect(dispatch).toHaveBeenCalledTimes(1);
     expect(dispatch).toHaveBeenCalledWith({ type: Types.PENDING });
