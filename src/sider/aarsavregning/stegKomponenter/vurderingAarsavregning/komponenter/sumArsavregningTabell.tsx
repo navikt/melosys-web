@@ -22,9 +22,7 @@ export function SumArsavregningTabell({
   const erÅrsavregningEøsPensjonistToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
 
   const skalViseInnbetaltTrygdeavgift =
-    erÅrsavregningEøsPensjonistToggleEnabled &&
-    tidligereInnbetaltTrygdeavgift !== undefined &&
-    tidligereInnbetaltTrygdeavgift !== null;
+    tidligereInnbetaltTrygdeavgift !== undefined && tidligereInnbetaltTrygdeavgift !== null;
 
   const skalViseTidligereBeregnetTrygdeavgift = erÅrsavregningEøsPensjonistToggleEnabled
     ? !skalViseInnbetaltTrygdeavgift && (harGrunnlagIMelosys || tidligereTrygdeavgift) !== undefined
@@ -52,7 +50,7 @@ export function SumArsavregningTabell({
     ? "Tidligere innbetalt trygdeavgift"
     : "Tidligere trygdeavgift fra Avgiftssystemet";
 
-  const tigligereBeregnetTrygdeavgiftLabel = erÅrsavregningEøsPensjonistToggleEnabled
+  const tidligereBeregnetTrygdeavgiftLabel = erÅrsavregningEøsPensjonistToggleEnabled
     ? "Innbetalt trygdeavgift"
     : "Tidligere beregnet trygdeavgift";
 
@@ -72,7 +70,7 @@ export function SumArsavregningTabell({
           {skalViseTidligereBeregnetTrygdeavgift && (
             <Nav.Table.Row>
               <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>
-              <Nav.Table.DataCell scope="col">{tigligereBeregnetTrygdeavgiftLabel}</Nav.Table.DataCell>
+              <Nav.Table.DataCell scope="col">{tidligereBeregnetTrygdeavgiftLabel}</Nav.Table.DataCell>
               <Nav.Table.DataCell align="right" key={Utils._uuid()}>
                 {formaterTilNorskBelop(tidligereTrygdeavgift || 0)} kr
               </Nav.Table.DataCell>
