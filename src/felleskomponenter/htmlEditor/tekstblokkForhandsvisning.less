@@ -1,0 +1,58 @@
+// Felles stil for HTML-forhåndsvisning av tekstblokker. Speiler den synlige
+// stilen i Quill-editoren (.ql-editor + .bracketed-text), slik at en bruker
+// ser samme rendring i Send brev-popoveren, admin-listen og editoren selv.
+
+.tekstblokk-forhandsvisning {
+  font-family: Arial, sans-serif;
+  font-size: 12pt;
+  line-height: 1.15;
+  color: var(--a-text-default);
+  word-wrap: break-word;
+
+  p {
+    margin: 4px 0;
+    font-size: 12pt;
+  }
+
+  h1 {
+    font-size: 16pt;
+    margin-bottom: 12pt;
+  }
+
+  h2 {
+    font-size: 14pt;
+    margin-bottom: 12pt;
+  }
+
+  ul,
+  ol {
+    margin: 4px 0 4px 1.5rem;
+    padding: 0;
+  }
+
+  .bracketed-text {
+    font-weight: bold;
+    color: var(--a-text-danger);
+  }
+
+  table {
+    width: auto !important;
+    max-width: 100% !important;
+    margin: 10px 0;
+    border-collapse: collapse;
+    table-layout: auto !important;
+
+    td,
+    th {
+      border: 1px solid #ccc !important;
+      padding: 4px 8px !important;
+      min-width: 30px;
+    }
+  }
+
+  // Begrenset modus: bruk på en wrapper for å vise scrollable trunkering
+  &--begrenset {
+    max-height: 7.5rem;
+    overflow-y: auto;
+  }
+}

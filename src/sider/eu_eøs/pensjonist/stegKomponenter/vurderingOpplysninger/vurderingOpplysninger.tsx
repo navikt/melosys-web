@@ -75,12 +75,11 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
   const {
     control,
     watch,
-    trigger,
     reset,
     formState: { isValid: formIsValid },
   } = useForm({
     resolver: yupResolver(vurdering_opplysninger),
-    mode: "all",
+    mode: "onTouched",
     values: initialValues,
   });
   const formValues = watch();
@@ -95,7 +94,9 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
     () =>
       Utils._debounce(async (ukjentSluttdato?: boolean) => {
         const latestValues = watch() as { fomDato: string; tomDato: string; bostedLandkode: string };
-        const isValid = await trigger();
+        // Validerer stille mot schemaet i stedet for trigger(), slik at autolagringen
+        // ikke tvinger frem feilmeldinger på felt brukeren ennå ikke har rørt.
+        const isValid = await vurdering_opplysninger.isValid(latestValues);
         if (isValid) {
           const currentUkjentSluttdato = ukjentSluttdato ?? ukjentSluttdatoMedlemskapsperiode;
           await oppdaterEllerOpprettHelseutgiftDekkesPeriode(latestValues);
@@ -104,7 +105,7 @@ export function VurderingOpplysninger({ bekreft, oppdaterStatus, aktivtSteg }: P
           );
         }
       }, 500),
-    [watch, trigger, ukjentSluttdatoMedlemskapsperiode, behandlingID, dispatch],
+    [watch, ukjentSluttdatoMedlemskapsperiode, behandlingID, dispatch],
   );
 
   const oppdaterSluttdato = async (ukjentSluttdato: boolean) => {

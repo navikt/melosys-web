@@ -16,9 +16,20 @@ import Årsavregning from "./sider/aarsavregning/saksbehandling";
 import Unntaksregistrering from "./sider/unntaksregistrering";
 import UkjentSide from "./sider/ukjentSide";
 import EøsPensjonist from "./sider/eu_eøs/pensjonist/saksbehandling";
+import AdministrasjonSide from "./sider/administrasjon/administrasjonSide";
+import { ADMIN_BASE } from "./sider/administrasjon/ruter";
+import useFeatureToggle from "./featuretoggle/useFeatureToggle";
+import { MELOSYS_ADMINISTRASJON } from "./featuretoggle/toggleNavn";
 
 import { FellesHandlersContext } from "./contexts";
 import ErrorBoundary from "./felleskomponenter/errorBoundary";
+
+function AdministrasjonRute(props) {
+  const togglePaa = useFeatureToggle(MELOSYS_ADMINISTRASJON);
+  if (togglePaa === false) return <UkjentSide />;
+  if (togglePaa === undefined) return null;
+  return <AdministrasjonSide {...props} />;
+}
 
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
 
@@ -104,6 +115,7 @@ function Routing() {
             path={`/${EU_EOS}/vurderutpeking/:saksnr`}
             render={(props) => <VurderUtpeking {...props} {...fellesHandlers} />}
           />
+          <Route path={ADMIN_BASE} render={(props) => <AdministrasjonRute {...props} />} />
           <Route
             path="/:sakstype/unntaksregistrering/:saksnr"
             render={(props) => <Unntaksregistrering {...props} {...fellesHandlers} />}

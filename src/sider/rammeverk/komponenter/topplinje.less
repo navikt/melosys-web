@@ -92,18 +92,41 @@
 }
 
 .topplinje__saksbehandler {
-  align-items: flex-end;
+  align-items: center;
   display: flex;
-  flex-grow: 1;
-  flex-direction: column;
+  flex-direction: row;
+  padding-right: 1rem;
 
   .saksbehandler__navn {
     color: #ffffff;
     display: flex;
-    margin: auto 0;
+    align-items: center;
     padding: 0.3em;
   }
 }
+
+.topplinje__meny {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  padding-right: 0.5rem;
+}
+
+.topplinje__menylenke {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 4px;
+
+  &:hover,
+  &:focus-visible {
+    background-color: rgba(255, 255, 255, 0.1);
+    text-decoration: underline;
+    outline: none;
+  }
+}
+
 .dropdown {
   position: relative;
   display: inline-block;
