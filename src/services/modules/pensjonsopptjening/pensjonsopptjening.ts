@@ -7,6 +7,8 @@ export interface PensjonsopptjeningPeriode {
   aar: number;
   pgi: number;
   kilde: PensjonsopptjeningKilde;
+  registrert?: string;
+  oppdatert?: string;
 }
 
 export interface PensjonsopptjeningRespons {

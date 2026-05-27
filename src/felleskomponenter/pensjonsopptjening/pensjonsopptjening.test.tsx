@@ -11,6 +11,13 @@ const { useSelectorMock, dispatchMock } = vi.hoisted(() => ({
 vi.mock("../../utils", () => ({
   formaterTilNorskBelop: (val: number) => `${val} kr`,
   formaterTilNorskBelopUtenDesimaler: (val: number) => `${val}`,
+  dato: {
+    formatterDatoTilNorsk: (dato: string | null | undefined, _visTidspunkt?: boolean, defaultValue = "") => {
+      if (!dato) return defaultValue;
+      const [yyyy, mm, dd] = dato.split("-");
+      return `${dd}.${mm}.${yyyy}`;
+    },
+  },
 }));
 
 vi.mock("../../hooks", () => ({
@@ -109,6 +116,28 @@ describe("Pensjonsopptjening", () => {
     expect(rows[2].textContent).toContain("2024");
     expect(rows[2].textContent).toContain("Avgiftssystemet");
     expect(rows[3].textContent).toContain("2023");
+  });
+
+  it("viser «Registrert» og «Oppdatert»-kolonner formatert som dd.MM.yyyy", () => {
+    mockState({
+      status: "OK",
+      perioder: [{ aar: 2025, pgi: 540000, kilde: "SKATT", registrert: "2026-05-01", oppdatert: "2026-05-12" }],
+    });
+    render(<Pensjonsopptjening />);
+    expect(screen.getByRole("columnheader", { name: "Registrert" })).toBeDefined();
+    expect(screen.getByRole("columnheader", { name: "Oppdatert" })).toBeDefined();
+    expect(screen.getByText("01.05.2026")).toBeDefined();
+    expect(screen.getByText("12.05.2026")).toBeDefined();
+  });
+
+  it("viser «—» når registrert/oppdatert er null eller undefined", () => {
+    mockState({
+      status: "OK",
+      perioder: [{ aar: 2025, pgi: 540000, kilde: "SKATT", registrert: null, oppdatert: undefined }],
+    });
+    render(<Pensjonsopptjening />);
+    const emDashCells = screen.getAllByText("—");
+    expect(emDashCells.length).toBe(2);
   });
 
   it("viser info-alert når perioder er tom", () => {

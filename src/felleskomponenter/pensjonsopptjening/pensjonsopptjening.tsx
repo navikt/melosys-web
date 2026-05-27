@@ -12,6 +12,8 @@ import {
   pensjonsopptjeningTypes,
 } from "../../ducks/pensjonsopptjening";
 
+const formaterDato = (dato: string | null | undefined): string => Utils.dato.formatterDatoTilNorsk(dato, false, "—");
+
 const kildeLabel = (kilde: pensjonsopptjeningTypes.PensjonsopptjeningKilde | string | null | undefined): string => {
   switch (kilde) {
     case "SKATT":
@@ -69,6 +71,8 @@ function Pensjonsopptjening() {
                   PGI
                 </Nav.Table.HeaderCell>
                 <Nav.Table.HeaderCell scope="col">Kilde</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Registrert</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Oppdatert</Nav.Table.HeaderCell>
               </Nav.Table.Row>
             </Nav.Table.Header>
             <Nav.Table.Body>
@@ -79,6 +83,8 @@ function Pensjonsopptjening() {
                     {Utils.formaterTilNorskBelopUtenDesimaler(periode.pgi)}
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell>{kildeLabel(periode.kilde)}</Nav.Table.DataCell>
+                  <Nav.Table.DataCell>{formaterDato(periode.registrert)}</Nav.Table.DataCell>
+                  <Nav.Table.DataCell>{formaterDato(periode.oppdatert)}</Nav.Table.DataCell>
                 </Nav.Table.Row>
               ))}
             </Nav.Table.Body>
