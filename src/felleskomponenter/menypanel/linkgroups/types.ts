@@ -7,6 +7,7 @@ export type Menypunkt =
   | "Medlemskap"
   | "EU/EØS-barnetrygd"
   | "Arbeidsforhold og inntekt"
+  | "Pensjonsopptjening"
   | "Arbeidsgiver/virksomhet"
   | "Fullmektig"
   | "Periode og land"

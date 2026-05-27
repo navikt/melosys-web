@@ -15,12 +15,14 @@ import {
   VirksomhetenINorge,
 } from "../menypunkter";
 import Fakturainformasjon from "../menypunkter/fakturainformasjon";
+import Pensjonsopptjening from "../../pensjonsopptjening";
 
 interface ILinksBuilder {
   addPerson: () => ILinksBuilder;
   addFamilieForhold: () => ILinksBuilder;
   addMedlemskap: () => ILinksBuilder;
   addArbeidsforholdOgInntekt: () => ILinksBuilder;
+  addPensjonsopptjening: () => ILinksBuilder;
   addArbeidsgiverEllerVirksomhet: () => ILinksBuilder;
   addFullmektig: () => ILinksBuilder;
   addPeriode: () => ILinksBuilder;
@@ -86,6 +88,15 @@ class LinksBuilder implements ILinksBuilder {
       label: "Arbeidsforhold og inntekt",
       active: false,
       content: <ArbeidsforholdOgInntekt />,
+    });
+    return this;
+  }
+
+  public addPensjonsopptjening() {
+    this.links.push({
+      label: "Pensjonsopptjening",
+      active: false,
+      content: <Pensjonsopptjening />,
     });
     return this;
   }

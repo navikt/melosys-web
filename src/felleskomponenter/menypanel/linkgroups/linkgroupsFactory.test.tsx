@@ -1,7 +1,8 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import MKV from "../../../melosyskodeverk";
 import LinkGroupsFactory from "./linkgroupsFactory";
 import { ContentProps } from "./types";
+import { MELOSYS_VIS_PENSJONSOPPTJENING_POPP } from "../../../featuretoggle/toggleNavn";
 
 // Mock React components to avoid rendering issues
 vi.mock("../menypunkter", () => ({
@@ -23,8 +24,16 @@ vi.mock("../menypunkter/fakturainformasjon", () => ({
   default: () => null,
 }));
 
+vi.mock("../../pensjonsopptjening", () => ({
+  default: () => null,
+}));
+
+const { useFeatureToggleMock } = vi.hoisted(() => ({
+  useFeatureToggleMock: vi.fn<(name: string) => boolean>(() => false),
+}));
+
 vi.mock("../../../featuretoggle", () => ({
-  useFeatureToggle: () => false,
+  useFeatureToggle: (name: string) => useFeatureToggleMock(name),
 }));
 
 vi.mock("../../../url", () => ({
@@ -32,7 +41,8 @@ vi.mock("../../../url", () => ({
   skalViseIngenFlyt: () => false,
 }));
 
-const { UTSENDT_ARBEIDSTAKER, BESLUTNING_LOVVALG_NORGE, YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
+const { UTSENDT_ARBEIDSTAKER, BESLUTNING_LOVVALG_NORGE, YRKESAKTIV, PENSJONIST, IKKE_YRKESAKTIV } =
+  MKV.Koder.behandlinger.behandlingstema;
 
 const { ÅRSAVREGNING, SØKNAD } = MKV.Koder.behandlinger.behandlingstyper;
 
@@ -79,6 +89,11 @@ const getAllLabels = (linkGroups: ReturnType<typeof LinkGroupsFactory.createLink
   linkGroups.flatMap((g) => g.links).map((l) => l.label);
 
 describe("LinkGroupsFactory", () => {
+  beforeEach(() => {
+    useFeatureToggleMock.mockReset();
+    useFeatureToggleMock.mockReturnValue(false);
+  });
+
   describe("ved årsavregning", () => {
     it("skal IKKE inkludere Arbeidsgiver/virksomhet for UTSENDT_ARBEIDSTAKER", () => {
       const config = createConfig({
@@ -176,6 +191,57 @@ describe("LinkGroupsFactory", () => {
       const allLabels = getAllLabels(linkGroups);
 
       expect(allLabels).toContain("Arbeidssted(er)");
+    });
+  });
+
+  describe("Pensjonsopptjening-menypunkt", () => {
+    const enablePensjonsopptjening = () => {
+      useFeatureToggleMock.mockImplementation((name) => name === MELOSYS_VIS_PENSJONSOPPTJENING_POPP);
+    };
+
+    it("inkluderes for UTSENDT_ARBEIDSTAKER ved årsavregning når toggle er på", () => {
+      enablePensjonsopptjening();
+      const config = createConfig({ behandlingstype: ÅRSAVREGNING, behandlingstema: UTSENDT_ARBEIDSTAKER });
+      const linkGroups = LinkGroupsFactory.createLinkGroups(config);
+      const fraRegister = linkGroups.find((g) => g.label === "FRA REGISTER");
+      expect(fraRegister?.links.map((l) => l.label)).toContain("Pensjonsopptjening");
+    });
+
+    it("inkluderes for YRKESAKTIV ved årsavregning når toggle er på", () => {
+      enablePensjonsopptjening();
+      const config = createConfig({ behandlingstype: ÅRSAVREGNING, behandlingstema: YRKESAKTIV });
+      const linkGroups = LinkGroupsFactory.createLinkGroups(config);
+      const fraRegister = linkGroups.find((g) => g.label === "FRA REGISTER");
+      expect(fraRegister?.links.map((l) => l.label)).toContain("Pensjonsopptjening");
+    });
+
+    it("inkluderes for PENSJONIST ved årsavregning når toggle er på", () => {
+      enablePensjonsopptjening();
+      const config = createConfig({ behandlingstype: ÅRSAVREGNING, behandlingstema: PENSJONIST });
+      const linkGroups = LinkGroupsFactory.createLinkGroups(config);
+      const fraRegister = linkGroups.find((g) => g.label === "FRA REGISTER");
+      expect(fraRegister?.links.map((l) => l.label)).toContain("Pensjonsopptjening");
+    });
+
+    it("inkluderes for IKKE_YRKESAKTIV ved årsavregning når toggle er på", () => {
+      enablePensjonsopptjening();
+      const config = createConfig({ behandlingstype: ÅRSAVREGNING, behandlingstema: IKKE_YRKESAKTIV });
+      const linkGroups = LinkGroupsFactory.createLinkGroups(config);
+      const fraRegister = linkGroups.find((g) => g.label === "FRA REGISTER");
+      expect(fraRegister?.links.map((l) => l.label)).toContain("Pensjonsopptjening");
+    });
+
+    it("inkluderes IKKE når toggle er av", () => {
+      const config = createConfig({ behandlingstype: ÅRSAVREGNING, behandlingstema: UTSENDT_ARBEIDSTAKER });
+      const linkGroups = LinkGroupsFactory.createLinkGroups(config);
+      expect(getAllLabels(linkGroups)).not.toContain("Pensjonsopptjening");
+    });
+
+    it("inkluderes IKKE for vanlig SØKNAD selv om toggle er på", () => {
+      enablePensjonsopptjening();
+      const config = createConfig({ behandlingstype: SØKNAD, behandlingstema: UTSENDT_ARBEIDSTAKER });
+      const linkGroups = LinkGroupsFactory.createLinkGroups(config);
+      expect(getAllLabels(linkGroups)).not.toContain("Pensjonsopptjening");
     });
   });
 
