@@ -57,6 +57,7 @@ vi.mock("../../navFrontend", () => ({
   Heading: ({ children }: any) => <h2>{children}</h2>,
   Alert: ({ children, variant }: any) => <div data-variant={variant}>{children}</div>,
   Loader: () => <div>laster…</div>,
+  Tooltip: ({ children, content }: any) => <span data-tooltip={content}>{children}</span>,
   Table: Object.assign(({ children }: any) => <table>{children}</table>, {
     Header: ({ children }: any) => <thead>{children}</thead>,
     Body: ({ children }: any) => <tbody>{children}</tbody>,
@@ -174,5 +175,44 @@ describe("Pensjonsopptjening", () => {
     mockState({ status: "OK", perioder: [] });
     render(<Pensjonsopptjening />);
     expect(dispatchMock).toHaveBeenCalled();
+  });
+
+  it("viser Type-kolonne med kode og tooltip-beskrivelse for kjent inntektType", () => {
+    mockState({
+      status: "OK",
+      perioder: [{ aar: 2025, pgi: 540000, kilde: "SKATT", inntektType: "SUM_PI" }],
+    });
+    render(<Pensjonsopptjening />);
+    expect(screen.getByRole("columnheader", { name: "Type" })).toBeDefined();
+    const kode = screen.getByText("SUM_PI");
+    expect(kode.parentElement?.getAttribute("data-tooltip")).toBe("Sum pensjonsgivende inntekt");
+  });
+
+  it("tooltip faller tilbake til API-dekode for ukjent kode", () => {
+    mockState({
+      status: "OK",
+      perioder: [
+        {
+          aar: 2025,
+          pgi: 540000,
+          kilde: "SKATT",
+          inntektType: "NY_KODE_FRA_POPP",
+          inntektTypeDekode: "Ny kode introdusert i POPP",
+        },
+      ],
+    });
+    render(<Pensjonsopptjening />);
+    const kode = screen.getByText("NY_KODE_FRA_POPP");
+    expect(kode.parentElement?.getAttribute("data-tooltip")).toBe("Ny kode introdusert i POPP");
+  });
+
+  it("tooltip viser «Ukjent inntektstype» når både kode og dekode mangler", () => {
+    mockState({
+      status: "OK",
+      perioder: [{ aar: 2025, pgi: 540000, kilde: "SKATT", inntektType: "UKJENT" }],
+    });
+    render(<Pensjonsopptjening />);
+    const kode = screen.getByText("UKJENT");
+    expect(kode.parentElement?.getAttribute("data-tooltip")).toBe("Ukjent inntektstype");
   });
 });

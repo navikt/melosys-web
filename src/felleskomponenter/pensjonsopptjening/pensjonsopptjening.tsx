@@ -11,6 +11,7 @@ import {
   pensjonsopptjeningSelectors,
   pensjonsopptjeningTypes,
 } from "../../ducks/pensjonsopptjening";
+import { beskrivelseForInntektType } from "./inntektTypeBeskrivelser";
 
 const formaterDato = (dato: string | null | undefined): string => Utils.dato.formatterDatoTilNorsk(dato, false, "—");
 
@@ -71,6 +72,7 @@ function Pensjonsopptjening() {
                   PGI
                 </Nav.Table.HeaderCell>
                 <Nav.Table.HeaderCell scope="col">Kilde</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Type</Nav.Table.HeaderCell>
                 <Nav.Table.HeaderCell scope="col">Registrert</Nav.Table.HeaderCell>
                 <Nav.Table.HeaderCell scope="col">Oppdatert</Nav.Table.HeaderCell>
               </Nav.Table.Row>
@@ -83,6 +85,14 @@ function Pensjonsopptjening() {
                     {Utils.formaterTilNorskBelopUtenDesimaler(periode.pgi)}
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell>{kildeLabel(periode.kilde)}</Nav.Table.DataCell>
+                  <Nav.Table.DataCell>
+                    <Nav.Tooltip
+                      content={beskrivelseForInntektType(periode.inntektType, periode.inntektTypeDekode)}
+                      maxChar={120}
+                    >
+                      <span>{periode.inntektType}</span>
+                    </Nav.Tooltip>
+                  </Nav.Table.DataCell>
                   <Nav.Table.DataCell>{formaterDato(periode.registrert)}</Nav.Table.DataCell>
                   <Nav.Table.DataCell>{formaterDato(periode.oppdatert)}</Nav.Table.DataCell>
                 </Nav.Table.Row>

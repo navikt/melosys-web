@@ -7,6 +7,8 @@ export interface PensjonsopptjeningPeriode {
   aar: number;
   pgi: number;
   kilde: PensjonsopptjeningKilde;
+  inntektType: string;
+  inntektTypeDekode?: string;
   registrert?: string;
   oppdatert?: string;
 }
