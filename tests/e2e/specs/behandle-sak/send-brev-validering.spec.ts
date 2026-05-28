@@ -4,8 +4,8 @@ import { assertErrors, TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
 import { hentPrepopulertSakUrl, PrepopulertSaksnummer } from "../../utils/testdataUtils";
 import { Page } from "@playwright/test";
 
-const ORGNR_GYLDIG_FUNNET = "999999999"; // syntetisk test-org «Ståles Stål AS» i test-/dev-backend
-const ORGNR_GYLDIG_IKKE_FUNNET = "123456785"; // gyldig kontrollsiffer, men finnes ikke
+const ORGNR_GYLDIG_FUNNET = "999999999";
+const ORGNR_GYLDIG_IKKE_FUNNET = "123456785";
 const ORGNR_FOR_FA_SIFFER = "123";
 const MOTTAKER_ANNEN_ORGANISASJON = "Annen organisasjon";
 
