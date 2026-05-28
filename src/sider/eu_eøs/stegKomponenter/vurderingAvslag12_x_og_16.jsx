@@ -118,6 +118,7 @@ function VurderingAvslag12_x_og_16({
 
   useEffect(() => {
     debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus, kopiTilArbeidsgiver, vedtakstype });
+    return () => debouncedKontrollerBehandling.cancel?.();
   }, [kopiTilArbeidsgiver, mottatteOpplysningerStatus, aktivtSteg]);
 
   const validerForm = () => {
