@@ -274,8 +274,6 @@ function VurderingVedtak({
   useEffect(() => {
     if (steg.status === StegStatus.FERDIG) {
       debouncedHentMuligeMottakereOgStandardvedlegg();
-    } else {
-      debouncedHentMuligeMottakereOgStandardvedlegg.cancel();
     }
     return () => debouncedHentMuligeMottakereOgStandardvedlegg.cancel();
   }, [steg.status, resultat.bestemmelse, resultat.virksomhet]);
@@ -288,8 +286,6 @@ function VurderingVedtak({
         begrunnelseFritekst: formValues.begrunnelseFritekst,
         nyVurderingBakgrunn: getNyVurderingBakgrunn(),
       });
-    } else {
-      debouncedOppdaterFlyten.cancel();
     }
     return () => debouncedOppdaterFlyten.cancel();
   }, [
