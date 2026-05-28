@@ -57,7 +57,6 @@ vi.mock("../../navFrontend", () => ({
   Heading: ({ children }: any) => <h2>{children}</h2>,
   Alert: ({ children, variant }: any) => <div data-variant={variant}>{children}</div>,
   Loader: () => <div>laster…</div>,
-  Detail: ({ children }: any) => <p>{children}</p>,
   Table: Object.assign(({ children }: any) => <table>{children}</table>, {
     Header: ({ children }: any) => <thead>{children}</thead>,
     Body: ({ children }: any) => <tbody>{children}</tbody>,
@@ -193,24 +192,5 @@ describe("Pensjonsopptjening", () => {
     });
     render(<Pensjonsopptjening />);
     expect(screen.getByText("SUM_PI")).toBeDefined();
-  });
-
-  it("viser footer-legend med forkortelser når det finnes perioder", () => {
-    mockState({
-      status: "OK",
-      perioder: [
-        {
-          aar: 2025,
-          pgi: 540000,
-          kilde: "SKATT",
-          inntektType: "SUM_PI",
-          inntektTypeDekode: "Sum pensjonsgivende inntekt",
-        },
-      ],
-    });
-    render(<Pensjonsopptjening />);
-    expect(screen.getByText(/FFF = Fiske, fangst eller familiebarnehage/)).toBeDefined();
-    expect(screen.getByText(/JSF = Jord-, skog- eller fiskeriinntekt/)).toBeDefined();
-    expect(screen.getByText(/KSL = Kildeskatt på lønn/)).toBeDefined();
   });
 });

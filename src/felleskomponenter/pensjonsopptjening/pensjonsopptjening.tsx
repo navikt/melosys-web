@@ -63,43 +63,34 @@ function Pensjonsopptjening() {
         )}
 
         {pensjonsopptjening.status === STATUS.OK && sortertePerioder.length > 0 && (
-          <>
-            <Nav.Table>
-              <Nav.Table.Header>
-                <Nav.Table.Row shadeOnHover={false}>
-                  <Nav.Table.HeaderCell scope="col">År</Nav.Table.HeaderCell>
-                  <Nav.Table.HeaderCell scope="col" align="right">
-                    PGI
-                  </Nav.Table.HeaderCell>
-                  <Nav.Table.HeaderCell scope="col">Kilde</Nav.Table.HeaderCell>
-                  <Nav.Table.HeaderCell scope="col">Pensjonsgivende inntektstype</Nav.Table.HeaderCell>
-                  <Nav.Table.HeaderCell scope="col">Registrert</Nav.Table.HeaderCell>
-                  <Nav.Table.HeaderCell scope="col">Oppdatert</Nav.Table.HeaderCell>
+          <Nav.Table>
+            <Nav.Table.Header>
+              <Nav.Table.Row shadeOnHover={false}>
+                <Nav.Table.HeaderCell scope="col">År</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col" align="right">
+                  PGI
+                </Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Kilde</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Pensjonsgivende inntektstype</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Registrert</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Oppdatert</Nav.Table.HeaderCell>
+              </Nav.Table.Row>
+            </Nav.Table.Header>
+            <Nav.Table.Body>
+              {sortertePerioder.map((periode, idx) => (
+                <Nav.Table.Row key={`${periode.aar}-${periode.kilde}-${idx}`} shadeOnHover={false}>
+                  <Nav.Table.DataCell>{periode.aar}</Nav.Table.DataCell>
+                  <Nav.Table.DataCell align="right">
+                    {Utils.formaterTilNorskBelopUtenDesimaler(periode.pgi)}
+                  </Nav.Table.DataCell>
+                  <Nav.Table.DataCell>{kildeLabel(periode.kilde)}</Nav.Table.DataCell>
+                  <Nav.Table.DataCell>{periode.inntektTypeDekode || periode.inntektType}</Nav.Table.DataCell>
+                  <Nav.Table.DataCell>{formaterDato(periode.registrert)}</Nav.Table.DataCell>
+                  <Nav.Table.DataCell>{formaterDato(periode.oppdatert)}</Nav.Table.DataCell>
                 </Nav.Table.Row>
-              </Nav.Table.Header>
-              <Nav.Table.Body>
-                {sortertePerioder.map((periode, idx) => (
-                  <Nav.Table.Row key={`${periode.aar}-${periode.kilde}-${idx}`} shadeOnHover={false}>
-                    <Nav.Table.DataCell>{periode.aar}</Nav.Table.DataCell>
-                    <Nav.Table.DataCell align="right">
-                      {Utils.formaterTilNorskBelopUtenDesimaler(periode.pgi)}
-                    </Nav.Table.DataCell>
-                    <Nav.Table.DataCell>{kildeLabel(periode.kilde)}</Nav.Table.DataCell>
-                    <Nav.Table.DataCell>{periode.inntektTypeDekode || periode.inntektType}</Nav.Table.DataCell>
-                    <Nav.Table.DataCell>{formaterDato(periode.registrert)}</Nav.Table.DataCell>
-                    <Nav.Table.DataCell>{formaterDato(periode.oppdatert)}</Nav.Table.DataCell>
-                  </Nav.Table.Row>
-                ))}
-              </Nav.Table.Body>
-            </Nav.Table>
-            <Nav.Detail textColor="subtle">
-              *FFF = Fiske, fangst eller familiebarnehage
-              <br />
-              *JSF = Jord-, skog- eller fiskeriinntekt
-              <br />
-              *KSL = Kildeskatt på lønn
-            </Nav.Detail>
-          </>
+              ))}
+            </Nav.Table.Body>
+          </Nav.Table>
         )}
       </Nav.VStack>
     </div>
