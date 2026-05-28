@@ -172,6 +172,7 @@ export function VurderingArtikkel16Anmodning({
 
   useEffect(() => {
     debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus });
+    return () => debouncedKontrollerBehandling.cancel();
   }, [aktivtSteg, mottatteOpplysningerStatus]);
 
   const handleEndretUnntakFraBestemmelse = async (event: ChangeEvent<HTMLSelectElement>) => {

@@ -146,6 +146,7 @@ export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
     ) {
       debouncedOppdaterFritekster(formValues);
     }
+    return () => debouncedOppdaterFritekster.cancel();
   }, [formValues?.innledningFritekst, formValues?.begrunnelseFritekst]);
 
   const oppdaterNyVurderingBakgrunn = (nyVurderingBakgrunn?: string) => {

@@ -302,6 +302,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         debouncedOppdaterFritekster(currentValues);
       }
     }
+    return () => debouncedOppdaterFritekster.cancel();
   }, [
     aktivtSteg,
     formValues,

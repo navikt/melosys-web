@@ -84,6 +84,7 @@ export function VurderingArtikkel13_x_vedtak({
 
   useEffect(() => {
     debouncedKontrollerBehandling({ aktivtSteg, formIsValid, formValues, mottatteOpplysningerStatus });
+    return () => debouncedKontrollerBehandling.cancel();
   }, [aktivtSteg, formIsValid, mottatteOpplysningerStatus]);
 
   const oppdaterLovvalgsperiode = async (fomdato, tomdato) => {
