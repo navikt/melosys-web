@@ -168,17 +168,7 @@ describe("Pensjonsopptjening", () => {
     expect(dispatchMock).toHaveBeenCalled();
   });
 
-  it("viser «Pensjonsgivende inntektstype»-kolonnen med beskrivelse for kjent kode", () => {
-    mockState({
-      status: "OK",
-      perioder: [{ aar: 2025, pgi: 540000, kilde: "SKATT", inntektType: "SUM_PI" }],
-    });
-    render(<Pensjonsopptjening />);
-    expect(screen.getByRole("columnheader", { name: "Pensjonsgivende inntektstype" })).toBeDefined();
-    expect(screen.getByText("Sum pensjonsgivende inntekt")).toBeDefined();
-  });
-
-  it("faller tilbake til API-dekode for ukjent kode", () => {
+  it("viser «Pensjonsgivende inntektstype»-kolonnen med inntektTypeDekode fra API", () => {
     mockState({
       status: "OK",
       perioder: [
@@ -186,28 +176,37 @@ describe("Pensjonsopptjening", () => {
           aar: 2025,
           pgi: 540000,
           kilde: "SKATT",
-          inntektType: "NY_KODE_FRA_POPP",
-          inntektTypeDekode: "Ny kode introdusert i POPP",
+          inntektType: "SUM_PI",
+          inntektTypeDekode: "Sum pensjonsgivende inntekt",
         },
       ],
     });
     render(<Pensjonsopptjening />);
-    expect(screen.getByText("Ny kode introdusert i POPP")).toBeDefined();
+    expect(screen.getByRole("columnheader", { name: "Pensjonsgivende inntektstype" })).toBeDefined();
+    expect(screen.getByText("Sum pensjonsgivende inntekt")).toBeDefined();
   });
 
-  it("viser «Ukjent inntektstype» når både kode og dekode mangler", () => {
+  it("faller tilbake til inntektType-koden når dekode mangler", () => {
     mockState({
       status: "OK",
-      perioder: [{ aar: 2025, pgi: 540000, kilde: "SKATT", inntektType: "UKJENT" }],
+      perioder: [{ aar: 2025, pgi: 540000, kilde: "SKATT", inntektType: "SUM_PI" }],
     });
     render(<Pensjonsopptjening />);
-    expect(screen.getByText("Ukjent inntektstype")).toBeDefined();
+    expect(screen.getByText("SUM_PI")).toBeDefined();
   });
 
   it("viser footer-legend med forkortelser når det finnes perioder", () => {
     mockState({
       status: "OK",
-      perioder: [{ aar: 2025, pgi: 540000, kilde: "SKATT", inntektType: "SUM_PI" }],
+      perioder: [
+        {
+          aar: 2025,
+          pgi: 540000,
+          kilde: "SKATT",
+          inntektType: "SUM_PI",
+          inntektTypeDekode: "Sum pensjonsgivende inntekt",
+        },
+      ],
     });
     render(<Pensjonsopptjening />);
     expect(screen.getByText(/FFF = Fiske, fangst eller familiebarnehage/)).toBeDefined();

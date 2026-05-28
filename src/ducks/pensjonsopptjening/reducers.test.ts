@@ -25,7 +25,15 @@ describe("pensjonsopptjening reducer", () => {
     const respons = {
       inntektsAr: 2024,
       behandletAr: 2024,
-      perioder: [{ aar: 2024, pgi: 100, kilde: "SKATT" as const, inntektType: "SUM_PI" }],
+      perioder: [
+        {
+          aar: 2024,
+          pgi: 100,
+          kilde: "SKATT" as const,
+          inntektType: "SUM_PI",
+          inntektTypeDekode: "Sum pensjonsgivende inntekt",
+        },
+      ],
     };
     const state = reducer({ status: STATUS.PENDING, data: {}, feil: "noe" }, { type: Types.OK, data: respons });
     expect(state.status).toBe(STATUS.OK);
