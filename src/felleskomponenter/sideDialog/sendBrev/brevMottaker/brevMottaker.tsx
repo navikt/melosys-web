@@ -98,7 +98,6 @@ function BrevMottaker({
   const hentOrganisasjonIfValid = async (data: { orgnr?: string; valid: boolean }) => {
     if (!data.valid || !data.orgnr) return;
     const response = await hentOrganisasjon(data.orgnr);
-    // Forkast svar som kom ut av rekkefølge: org.nr er ikke lenger det aktuelle.
     if (data.orgnr !== sisteForespurteOrgnrRef.current) return;
     if (response.data.response) {
       setFeil({
