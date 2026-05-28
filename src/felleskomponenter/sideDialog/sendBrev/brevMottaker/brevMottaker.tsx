@@ -37,13 +37,17 @@ export const erUtenlandskTrygdemyndighet = (rolle: string | undefined) => rolle 
 /**
  * Avgjør om «Velg brevmal» skal vises. For «Annen organisasjon» skal brevmal
  * først vises når organisasjonen er funnet (navn hentet), slik at man ikke kan
- * velge brevmal mens org.nr har en feilmelding. (MELOSYS-7525)
+ * velge brevmal mens org.nr har en feilmelding. Den funne org.nr-en sammenliknes
+ * med gjeldende felt, slik at brevmal skjules straks org.nr endres. (MELOSYS-7525)
  */
 export const skalViseBrevmalvalg = (formValues?: SendBrevFormValues): boolean => {
   const valgtMottaker = formValues?.valgtMottaker;
   if (!valgtMottaker || valgtMottaker.feilmelding) return false;
   if (erAnnenOrganisasjon(valgtMottaker.rolle)) {
-    return Boolean(formValues?.organisasjonFunnet);
+    return (
+      Boolean(formValues?.organisasjonsnummer) &&
+      formValues?.organisasjonFunnetForOrgnr === formValues?.organisasjonsnummer
+    );
   }
   return true;
 };
@@ -103,10 +107,10 @@ function BrevMottaker({
         tittel:
           response.data.response.status === 404 ? "Kunne ikke finne organisasjon" : "Feil ved henting av organisasjon",
       });
-      changeField("organisasjonFunnet", false);
+      changeField("organisasjonFunnetForOrgnr", undefined);
     } else {
       setAdresse({ organisasjonsAdresse: response.data });
-      changeField("organisasjonFunnet", true);
+      changeField("organisasjonFunnetForOrgnr", data.orgnr);
     }
   };
 
@@ -149,8 +153,8 @@ function BrevMottaker({
     }
 
     if (erAnnenOrganisasjon(valgtMottaker.rolle)) {
-      // Skjul brevmal til organisasjonen er bekreftet funnet (settes true i debouncedHentOrganisasjon)
-      changeField("organisasjonFunnet", false);
+      // Skjul brevmal til organisasjonen er bekreftet funnet (settes til org.nr i debouncedHentOrganisasjon)
+      changeField("organisasjonFunnetForOrgnr", undefined);
       debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid });
     }
   }, [formValues?.mottaker, formValues?.organisasjonsnummer, orgnrValid, formValues?.arbeidsgiver]);

@@ -68,10 +68,28 @@ describe("skalViseBrevmalvalg (MELOSYS-7525)", () => {
 
   it("returnerer false for Annen organisasjon når organisasjon ikke er funnet", () => {
     expect(skalViseBrevmalvalg(medMottaker(ANNEN_ORGANISASJON))).toBe(false);
-    expect(skalViseBrevmalvalg(medMottaker(ANNEN_ORGANISASJON, { organisasjonFunnet: false }))).toBe(false);
+    expect(skalViseBrevmalvalg(medMottaker(ANNEN_ORGANISASJON, { organisasjonsnummer: "123456789" }))).toBe(false);
   });
 
-  it("returnerer true for Annen organisasjon først når organisasjon er funnet", () => {
-    expect(skalViseBrevmalvalg(medMottaker(ANNEN_ORGANISASJON, { organisasjonFunnet: true }))).toBe(true);
+  it("returnerer true for Annen organisasjon først når funnet org.nr matcher feltet", () => {
+    expect(
+      skalViseBrevmalvalg(
+        medMottaker(ANNEN_ORGANISASJON, {
+          organisasjonsnummer: "123456789",
+          organisasjonFunnetForOrgnr: "123456789",
+        }),
+      ),
+    ).toBe(true);
+  });
+
+  it("returnerer false når funnet org.nr ikke matcher gjeldende felt (org.nr nettopp endret)", () => {
+    expect(
+      skalViseBrevmalvalg(
+        medMottaker(ANNEN_ORGANISASJON, {
+          organisasjonsnummer: "987654321",
+          organisasjonFunnetForOrgnr: "123456789",
+        }),
+      ),
+    ).toBe(false);
   });
 });

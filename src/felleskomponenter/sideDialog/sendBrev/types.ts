@@ -28,7 +28,7 @@ export interface SendBrevFormValues {
   valgtMottaker?: Api.DokumenterV2.TilgjengeligMottaker;
   valgtBrev?: Api.DokumenterV2.TilgjengeligBrev;
   organisasjonsnummer?: string;
-  organisasjonFunnet?: boolean;
+  organisasjonFunnetForOrgnr?: string;
   norskeMyndigheter?: string[];
   kontaktperson?: string;
   arbeidsgiver?: string;
