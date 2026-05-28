@@ -168,6 +168,7 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
 
   useEffect(() => {
     debouncedOppdaterFritekster(formValues);
+    return () => debouncedOppdaterFritekster.cancel();
   }, [formValues?.begrunnelseFritekst]);
 
   const hentTrygdeavgiftMottaker = () => {
@@ -233,6 +234,7 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
     debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus, formValues });
 
     return () => {
+      debouncedKontrollerBehandling.cancel();
       dispatch(kontrollOperations.resetKontrollFeil());
     };
   }, [aktivtSteg, redigerbart, mottatteOpplysningerStatus]);

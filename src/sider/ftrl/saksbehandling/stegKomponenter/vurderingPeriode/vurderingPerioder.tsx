@@ -235,6 +235,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     if (redigerbart && aktivtSteg) {
       debouncedLagreMedlemskapsperioder(formValues.medlemskapsperioder, stegErGyldig, undefined);
     }
+    return () => debouncedLagreMedlemskapsperioder.cancel();
   }, [stegErGyldig]);
 
   if (!aktivtSteg || !formValues) return null;
