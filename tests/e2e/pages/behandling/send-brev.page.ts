@@ -121,7 +121,6 @@ export class SendBrevPage extends BehandlingPage {
     await expect(this.sendButton, `${this.ctx}: Send-knappen er uventet deaktivert`).toBeEnabled();
   }
 
-  // Velg mottaker via synlig tekst, uten å vente på at brevmal dukker opp
   private async velgMottakerOption(label: string | RegExp): Promise<void> {
     const sel = this.mottakerNativeSelect;
     await expect(sel, `${this.ctx}: Fant ikke mottaker-feltet`).toBeVisible();
@@ -145,15 +144,10 @@ export class SendBrevPage extends BehandlingPage {
     await this.waitForBrevmalSelect();
   }
 
-  /**
-   * Velg mottaker uten å vente på at «Velg brevmal» dukker opp.
-   * Brukes for «Annen organisasjon», der brevmal først vises når org.nr er korrekt utfylt.
-   */
   async velgMottaker(label: string | RegExp): Promise<void> {
     await this.velgMottakerOption(label);
   }
 
-  // Tekstfelt for «Annen organisasjon»
   private get organisasjonsnummerInput(): Locator {
     const scope = this.sendBrevPanel ?? this.page;
     return scope.getByRole("textbox", { name: "Org.nr." });
@@ -169,7 +163,6 @@ export class SendBrevPage extends BehandlingPage {
     return scope.getByRole("combobox", { name: this.labels.brevmal });
   }
 
-  /** Fyll ut org.nr og blur slik at validering trigges (validering skjer når man går ut av feltet). */
   async inputOrganisasjonsnummer(orgnr: string, saksnummer?: string): Promise<void> {
     const sakId = saksnummer ?? this.ctx;
     const input = this.organisasjonsnummerInput;
@@ -199,7 +192,6 @@ export class SendBrevPage extends BehandlingPage {
     await assertFieldError(scope, tekst);
   }
 
-  /** Verifiser at Kontaktperson-feltet vises med «(valgfritt)» i label. */
   async verifiserKontaktpersonValgfri(saksnummer?: string): Promise<void> {
     const sakId = saksnummer ?? this.ctx;
     await expect(

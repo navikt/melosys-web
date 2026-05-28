@@ -4,13 +4,6 @@ import { assertErrors, TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
 import { hentPrepopulertSakUrl, PrepopulertSaksnummer } from "../../utils/testdataUtils";
 import { Page } from "@playwright/test";
 
-/**
- * Org.nr som brukes i «Annen organisasjon»-testene må gi forventet
- * resultat i test-/dev-backend ved opptak:
- *   - ORGNR_GYLDIG_FUNNET: gyldig org.nr (mod11) som resolver til en organisasjon (navn hentes)
- *   - ORGNR_GYLDIG_IKKE_FUNNET: gyldig org.nr (mod11) som IKKE finnes (gir HTTP 404)
- * Juster verdiene ved behov før `pnpm test:e2e:record`.
- */
 const ORGNR_GYLDIG_FUNNET = "999999999"; // syntetisk test-org «Ståles Stål AS» i test-/dev-backend
 const ORGNR_GYLDIG_IKKE_FUNNET = "123456785"; // gyldig kontrollsiffer, men finnes ikke
 const ORGNR_FOR_FA_SIFFER = "123";
