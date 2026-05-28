@@ -194,7 +194,7 @@ function SendBrev({
       case ARBEIDSGIVER:
         return Boolean(values.arbeidsgiver);
       case ANNEN_ORGANISASJON:
-        return Boolean(values.organisasjonsnummer) && values.organisasjonFunnetForOrgnr === values.organisasjonsnummer;
+        return skalViseBrevmalvalg(values);
       case NORSK_MYNDIGHET:
         return !Utils._isEmpty(values.norskeMyndigheter);
       case UTENLANDSK_TRYGDEMYNDIGHET:
