@@ -60,6 +60,7 @@ interface OpprettSakProps {
     journalforingSoknadsland?: string;
     opprettnysak_behandlingstema?: string;
     opprettnysak_behandlingstype?: string;
+    utenlandskTrygdemyndighetLandkode?: string;
   };
   feltNavn: {
     sakstype: string;
@@ -187,6 +188,29 @@ describe("OpprettSak - journalføring", () => {
     expect(getByLabelText("Til")).toBeInTheDocument();
     expect(getByRole("combobox", { name: "I hvilke land skal arbeidet/næringen utføres i?" })).toBeInTheDocument(); // MultiSelect har tom label
     expect(getAllByRole("radio")).toHaveLength(2);
+  });
+
+  it("Sakstype-dropdown er readOnly når utenlandsk trygdemyndighet er utenfor tillatte landkombinasjoner", () => {
+    // "AF" er ikke trygdeavtaleland/EU-EØS-land, så sakstype låses (settes automatisk i avsenderflyten)
+    props.formValues.sakstype = MKV.Koder.sakstyper.EU_EOS;
+    props.formValues.utenlandskTrygdemyndighetLandkode = "AF";
+
+    const { getByLabelText } = renderWithProviders(<WrappedOpprettSak {...props} />);
+
+    // Låseikonet legger "Skrivebeskyttet" i label-teksten, derfor regex
+    const sakstypeSelect = getByLabelText(/Sakstype/);
+    expect(sakstypeSelect).not.toBeDisabled();
+    expect(sakstypeSelect.closest(".navds-form-field")).toHaveClass("navds-form-field--readonly");
+  });
+
+  it("Sakstype-dropdown er IKKE readOnly uten utenlandsk trygdemyndighet", () => {
+    props.formValues.sakstype = MKV.Koder.sakstyper.EU_EOS;
+
+    const { getByLabelText } = renderWithProviders(<WrappedOpprettSak {...props} />);
+
+    const sakstypeSelect = getByLabelText("Sakstype");
+    expect(sakstypeSelect).not.toBeDisabled();
+    expect(sakstypeSelect.closest(".navds-form-field")).not.toHaveClass("navds-form-field--readonly");
   });
 });
 

@@ -549,6 +549,21 @@ export class OpprettNySakPage {
   }
 
   /**
+   * Verifiser at Behandlingstema-feltet er read-only (låst), ikke disabled.
+   * Aksel read-only gjør feltet ikke-`disabled`, men gir wrapperen klassen
+   * `navds-form-field--readonly` og viser et låseikon. (MELOSYS-8098)
+   */
+  async verifiserBehandlingstemaReadOnly(): Promise<void> {
+    // Låseikonet legger "Skrivebeskyttet" i label-teksten, derfor regex på navnet
+    const behandlingstema = this.page.getByRole("combobox", { name: /Behandlingstema/ });
+    await expect(behandlingstema, "Behandlingstema-feltet skal være synlig").toBeVisible();
+    await expect(behandlingstema, "Behandlingstema skal være read-only, ikke disabled").not.toBeDisabled();
+
+    const readOnlyFelt = this.page.locator(".navds-form-field--readonly", { has: behandlingstema });
+    await expect(readOnlyFelt, "Behandlingstema skal rendres som read-only").toBeVisible();
+  }
+
+  /**
    * Verifiser feilmelding for EØS-sak med aktiv behandling
    */
   async verifiserEosFeilmelding(): Promise<void> {

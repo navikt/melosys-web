@@ -150,7 +150,7 @@ export function OpprettSak(props) {
         feltNavn={feltNavn.sakstype}
         label="Sakstype"
         onChange={() => nullstillVerdier(feltNavn.sakstype, settFeltInnhold, feltNavn)}
-        disabled={disableSakstype}
+        readonly={disableSakstype}
       >
         {sakstyper.map((elem) => (
           <option key={elem.kode} value={elem.kode}>
