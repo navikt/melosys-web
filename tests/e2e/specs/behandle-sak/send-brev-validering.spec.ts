@@ -5,7 +5,7 @@ import { hentPrepopulertSakUrl, PrepopulertSaksnummer } from "../../utils/testda
 import { Page } from "@playwright/test";
 
 /**
- * MELOSYS-7525: org.nr som brukes i «Annen organisasjon»-testene må gi forventet
+ * Org.nr som brukes i «Annen organisasjon»-testene må gi forventet
  * resultat i test-/dev-backend ved opptak:
  *   - ORGNR_GYLDIG_FUNNET: gyldig org.nr (mod11) som resolver til en organisasjon (navn hentes)
  *   - ORGNR_GYLDIG_IKKE_FUNNET: gyldig org.nr (mod11) som IKKE finnes (gir HTTP 404)
@@ -119,7 +119,7 @@ test.describe("Validering av årsavregning brevmaler", () => {
   });
 });
 
-test.describe("Annen organisasjon: brevmal vises først når org.nr er korrekt (MELOSYS-7525)", () => {
+test.describe("Annen organisasjon: brevmal vises først når org.nr er korrekt", () => {
   test("Ved valg av «Annen organisasjon» vises Kontaktperson (valgfritt) og brevmal er skjult", async ({
     page,
     apiRecorder,

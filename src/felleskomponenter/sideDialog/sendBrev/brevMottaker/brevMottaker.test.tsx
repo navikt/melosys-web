@@ -47,7 +47,7 @@ describe("brevMottaker utility functions", () => {
   });
 });
 
-describe("skalViseBrevmalvalg (MELOSYS-7525)", () => {
+describe("skalViseBrevmalvalg", () => {
   const medMottaker = (rolle: string, ekstra: Partial<SendBrevFormValues> = {}): SendBrevFormValues =>
     ({ valgtMottaker: { rolle }, ...ekstra }) as SendBrevFormValues;
 

@@ -147,7 +147,7 @@ export class SendBrevPage extends BehandlingPage {
 
   /**
    * Velg mottaker uten å vente på at «Velg brevmal» dukker opp.
-   * Brukes for «Annen organisasjon», der brevmal først vises når org.nr er korrekt utfylt. (MELOSYS-7525)
+   * Brukes for «Annen organisasjon», der brevmal først vises når org.nr er korrekt utfylt.
    */
   async velgMottaker(label: string | RegExp): Promise<void> {
     await this.velgMottakerOption(label);
@@ -199,7 +199,7 @@ export class SendBrevPage extends BehandlingPage {
     await assertFieldError(scope, tekst);
   }
 
-  /** Verifiser at Kontaktperson-feltet vises med «(valgfritt)» i label. (MELOSYS-7525, oppgave 2) */
+  /** Verifiser at Kontaktperson-feltet vises med «(valgfritt)» i label. */
   async verifiserKontaktpersonValgfri(saksnummer?: string): Promise<void> {
     const sakId = saksnummer ?? this.ctx;
     await expect(
