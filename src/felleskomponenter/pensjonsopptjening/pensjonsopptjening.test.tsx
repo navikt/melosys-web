@@ -57,7 +57,7 @@ vi.mock("../../navFrontend", () => ({
   Heading: ({ children }: any) => <h2>{children}</h2>,
   Alert: ({ children, variant }: any) => <div data-variant={variant}>{children}</div>,
   Loader: () => <div>laster…</div>,
-  Tooltip: ({ children, content }: any) => <span data-tooltip={content}>{children}</span>,
+  Detail: ({ children }: any) => <p>{children}</p>,
   Table: Object.assign(({ children }: any) => <table>{children}</table>, {
     Header: ({ children }: any) => <thead>{children}</thead>,
     Body: ({ children }: any) => <tbody>{children}</tbody>,
@@ -177,18 +177,17 @@ describe("Pensjonsopptjening", () => {
     expect(dispatchMock).toHaveBeenCalled();
   });
 
-  it("viser Type-kolonne med kode og tooltip-beskrivelse for kjent inntektType", () => {
+  it("viser «Pensjonsgivende inntektstype»-kolonnen med beskrivelse for kjent kode", () => {
     mockState({
       status: "OK",
       perioder: [{ aar: 2025, pgi: 540000, kilde: "SKATT", inntektType: "SUM_PI" }],
     });
     render(<Pensjonsopptjening />);
-    expect(screen.getByRole("columnheader", { name: "Type" })).toBeDefined();
-    const kode = screen.getByText("SUM_PI");
-    expect(kode.parentElement?.getAttribute("data-tooltip")).toBe("Sum pensjonsgivende inntekt");
+    expect(screen.getByRole("columnheader", { name: "Pensjonsgivende inntektstype" })).toBeDefined();
+    expect(screen.getByText("Sum pensjonsgivende inntekt")).toBeDefined();
   });
 
-  it("tooltip faller tilbake til API-dekode for ukjent kode", () => {
+  it("faller tilbake til API-dekode for ukjent kode", () => {
     mockState({
       status: "OK",
       perioder: [
@@ -202,17 +201,26 @@ describe("Pensjonsopptjening", () => {
       ],
     });
     render(<Pensjonsopptjening />);
-    const kode = screen.getByText("NY_KODE_FRA_POPP");
-    expect(kode.parentElement?.getAttribute("data-tooltip")).toBe("Ny kode introdusert i POPP");
+    expect(screen.getByText("Ny kode introdusert i POPP")).toBeDefined();
   });
 
-  it("tooltip viser «Ukjent inntektstype» når både kode og dekode mangler", () => {
+  it("viser «Ukjent inntektstype» når både kode og dekode mangler", () => {
     mockState({
       status: "OK",
       perioder: [{ aar: 2025, pgi: 540000, kilde: "SKATT", inntektType: "UKJENT" }],
     });
     render(<Pensjonsopptjening />);
-    const kode = screen.getByText("UKJENT");
-    expect(kode.parentElement?.getAttribute("data-tooltip")).toBe("Ukjent inntektstype");
+    expect(screen.getByText("Ukjent inntektstype")).toBeDefined();
+  });
+
+  it("viser footer-legend med forkortelser når det finnes perioder", () => {
+    mockState({
+      status: "OK",
+      perioder: [{ aar: 2025, pgi: 540000, kilde: "SKATT", inntektType: "SUM_PI" }],
+    });
+    render(<Pensjonsopptjening />);
+    expect(screen.getByText(/FFF = Fiske, fangst eller familiebarnehage/)).toBeDefined();
+    expect(screen.getByText(/JSF = Jord-, skog- eller fiskeriinntekt/)).toBeDefined();
+    expect(screen.getByText(/KSL = Kildeskatt på lønn/)).toBeDefined();
   });
 });

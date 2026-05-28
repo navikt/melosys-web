@@ -13,7 +13,6 @@ import {
   BodyLong,
   Detail,
   ErrorMessage,
-  Tooltip,
 } from "@navikt/ds-react";
 import Alert from "./alert";
 import Button from "./button";
@@ -56,5 +55,4 @@ export {
   BodyLong,
   Detail,
   ErrorMessage,
-  Tooltip,
 };
