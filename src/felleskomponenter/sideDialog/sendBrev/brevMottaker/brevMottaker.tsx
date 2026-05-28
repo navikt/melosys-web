@@ -1,4 +1,4 @@
-import { FocusEvent, Fragment, useCallback, useEffect, useState } from "react";
+import { FocusEvent, Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -34,12 +34,6 @@ export const erAnnenOrganisasjon = (rolle: string | undefined) => rolle === ANNE
 export const erNorskMyndighet = (rolle: string | undefined) => rolle === NORSK_MYNDIGHET;
 export const erUtenlandskTrygdemyndighet = (rolle: string | undefined) => rolle === UTENLANDSK_TRYGDEMYNDIGHET;
 
-/**
- * Avgjør om «Velg brevmal» skal vises. For «Annen organisasjon» skal brevmal
- * først vises når organisasjonen er funnet (navn hentet), slik at man ikke kan
- * velge brevmal mens org.nr har en feilmelding. Den funne org.nr-en sammenliknes
- * med gjeldende felt, slik at brevmal skjules straks org.nr endres. (MELOSYS-7525)
- */
 export const skalViseBrevmalvalg = (formValues?: SendBrevFormValues): boolean => {
   const valgtMottaker = formValues?.valgtMottaker;
   if (!valgtMottaker || valgtMottaker.feilmelding) return false;
@@ -99,9 +93,13 @@ function BrevMottaker({
     "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger.\n" +
     "Hvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
 
+  const sisteForespurteOrgnrRef = useRef<string | undefined>(undefined);
+
   const hentOrganisasjonIfValid = async (data: { orgnr?: string; valid: boolean }) => {
     if (!data.valid || !data.orgnr) return;
     const response = await hentOrganisasjon(data.orgnr);
+    // Forkast svar som kom ut av rekkefølge: org.nr er ikke lenger det aktuelle.
+    if (data.orgnr !== sisteForespurteOrgnrRef.current) return;
     if (response.data.response) {
       setFeil({
         tittel:
@@ -153,8 +151,8 @@ function BrevMottaker({
     }
 
     if (erAnnenOrganisasjon(valgtMottaker.rolle)) {
-      // Skjul brevmal til organisasjonen er bekreftet funnet (settes til org.nr i debouncedHentOrganisasjon)
       changeField("organisasjonFunnetForOrgnr", undefined);
+      sisteForespurteOrgnrRef.current = formValues.organisasjonsnummer;
       debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid });
     }
   }, [formValues?.mottaker, formValues?.organisasjonsnummer, orgnrValid, formValues?.arbeidsgiver]);

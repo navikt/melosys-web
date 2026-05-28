@@ -194,10 +194,6 @@ function SendBrev({
       case ARBEIDSGIVER:
         return Boolean(values.arbeidsgiver);
       case ANNEN_ORGANISASJON:
-        // Krev at organisasjonen er funnet (navn hentet) for nettopp det org.nr-et som står i
-        // feltet nå, ikke bare at feltet er utfylt. Sammenlikningen hindrer at vi henter mulige
-        // mottakere / auto-velger brevmal for et nytt, ennå ubekreftet org.nr i renderet før
-        // BrevMottaker rekker å nullstille flagget. (MELOSYS-7525)
         return Boolean(values.organisasjonsnummer) && values.organisasjonFunnetForOrgnr === values.organisasjonsnummer;
       case NORSK_MYNDIGHET:
         return !Utils._isEmpty(values.norskeMyndigheter);
