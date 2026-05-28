@@ -41,8 +41,8 @@ export const INNTEKT_TYPE_BESKRIVELSE: Record<string, string> = {
   // er ikke i Figma — faller tilbake til API-dekode.
 };
 
-export function beskrivelseForInntektType(kode: string | null | undefined, dekodeFraApi?: string | null): string {
-  if (kode && INNTEKT_TYPE_BESKRIVELSE[kode]) return INNTEKT_TYPE_BESKRIVELSE[kode];
+export function beskrivelseForInntektType(kode: string, dekodeFraApi?: string | null): string {
+  if (INNTEKT_TYPE_BESKRIVELSE[kode]) return INNTEKT_TYPE_BESKRIVELSE[kode];
   if (dekodeFraApi) return dekodeFraApi;
   return "Ukjent inntektstype";
 }

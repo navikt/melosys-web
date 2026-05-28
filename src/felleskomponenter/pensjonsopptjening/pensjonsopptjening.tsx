@@ -15,7 +15,7 @@ import { beskrivelseForInntektType } from "./inntektTypeBeskrivelser";
 
 const formaterDato = (dato: string | null | undefined): string => Utils.dato.formatterDatoTilNorsk(dato, false, "—");
 
-const kildeLabel = (kilde: pensjonsopptjeningTypes.PensjonsopptjeningKilde | string | null | undefined): string => {
+const kildeLabel = (kilde: pensjonsopptjeningTypes.PensjonsopptjeningKilde | string): string => {
   switch (kilde) {
     case "SKATT":
       return "Skatt";
@@ -24,7 +24,7 @@ const kildeLabel = (kilde: pensjonsopptjeningTypes.PensjonsopptjeningKilde | str
     case "MELOSYS":
       return "Melosys";
     default:
-      return kilde ?? "Ukjent kilde";
+      return kilde;
   }
 };
 

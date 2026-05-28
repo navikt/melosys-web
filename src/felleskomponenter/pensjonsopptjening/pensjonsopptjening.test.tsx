@@ -162,15 +162,6 @@ describe("Pensjonsopptjening", () => {
     expect(screen.getByText("ANNEN_KILDE")).toBeDefined();
   });
 
-  it("viser «Ukjent kilde» når kilde er null", () => {
-    mockState({
-      status: "OK",
-      perioder: [{ aar: 2024, pgi: 500000, kilde: null }],
-    });
-    render(<Pensjonsopptjening />);
-    expect(screen.getByText("Ukjent kilde")).toBeDefined();
-  });
-
   it("dispatcher hentPensjonsopptjening på mount når behandlingID > 0", () => {
     mockState({ status: "OK", perioder: [] });
     render(<Pensjonsopptjening />);
