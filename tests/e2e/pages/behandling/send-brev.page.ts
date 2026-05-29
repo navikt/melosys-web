@@ -1,7 +1,7 @@
 import { Page, Locator, expect } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
-import { finnCombobox } from "../../utils/testUtils";
+import { assertFieldError, finnCombobox } from "../../utils/testUtils";
 
 export class SendBrevPage extends BehandlingPage {
   constructor(page: Page, saksnummer: PrepopulertSaksnummer) {
@@ -121,7 +121,7 @@ export class SendBrevPage extends BehandlingPage {
     await expect(this.sendButton, `${this.ctx}: Send-knappen er uventet deaktivert`).toBeEnabled();
   }
 
-  async selectMottakerByLabel(label: string | RegExp) {
+  private async velgMottakerOption(label: string | RegExp): Promise<void> {
     const sel = this.mottakerNativeSelect;
     await expect(sel, `${this.ctx}: Fant ikke mottaker-feltet`).toBeVisible();
 
@@ -137,8 +137,67 @@ export class SendBrevPage extends BehandlingPage {
 
     expect(value, `${this.ctx}: Fant ikke mottakeren "${label}"`).toBeTruthy();
     await sel.selectOption(value);
+  }
 
+  async selectMottakerByLabel(label: string | RegExp) {
+    await this.velgMottakerOption(label);
     await this.waitForBrevmalSelect();
+  }
+
+  async velgMottaker(label: string | RegExp): Promise<void> {
+    await this.velgMottakerOption(label);
+  }
+
+  private get organisasjonsnummerInput(): Locator {
+    const scope = this.sendBrevPanel ?? this.page;
+    return scope.getByRole("textbox", { name: "Org.nr." });
+  }
+
+  private get kontaktpersonInput(): Locator {
+    const scope = this.sendBrevPanel ?? this.page;
+    return scope.getByRole("textbox", { name: "Kontaktperson (valgfritt)" });
+  }
+
+  private get brevmalCombobox(): Locator {
+    const scope = this.sendBrevPanel ?? this.page;
+    return scope.getByRole("combobox", { name: this.labels.brevmal });
+  }
+
+  async inputOrganisasjonsnummer(orgnr: string, saksnummer?: string): Promise<void> {
+    const sakId = saksnummer ?? this.ctx;
+    const input = this.organisasjonsnummerInput;
+    await expect(input, `${sakId}: Fant ikke Org.nr-feltet`).toBeVisible();
+    await input.fill(orgnr);
+    await input.blur();
+  }
+
+  async verifiserBrevmalSkjult(saksnummer?: string): Promise<void> {
+    const sakId = saksnummer ?? this.ctx;
+    await expect(
+      this.brevmalCombobox,
+      `${sakId}: «Velg brevmal» skal være skjult før org.nr er korrekt utfylt`,
+    ).toBeHidden();
+  }
+
+  async verifiserBrevmalSynlig(saksnummer?: string): Promise<void> {
+    const sakId = saksnummer ?? this.ctx;
+    await expect(
+      this.brevmalCombobox,
+      `${sakId}: «Velg brevmal» skal være synlig når organisasjonen er funnet`,
+    ).toBeVisible();
+  }
+
+  async verifiserOrgnrFeilmelding(tekst: string | RegExp): Promise<void> {
+    const scope = this.sendBrevPanel ?? this.page;
+    await assertFieldError(scope, tekst);
+  }
+
+  async verifiserKontaktpersonValgfri(saksnummer?: string): Promise<void> {
+    const sakId = saksnummer ?? this.ctx;
+    await expect(
+      this.kontaktpersonInput,
+      `${sakId}: Kontaktperson-feltet skal vises med «(valgfritt)» i label`,
+    ).toBeVisible();
   }
 
   async clickSendBrev() {
