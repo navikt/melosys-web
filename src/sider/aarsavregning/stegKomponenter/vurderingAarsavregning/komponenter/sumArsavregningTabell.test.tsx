@@ -22,14 +22,14 @@ describe("SumArsavregningTabell - Toggle Disabled", () => {
     vi.mocked(useFeatureToggle).mockReturnValue(false);
   });
 
-  it("renders table with required headers", () => {
+  it("viser tabellen med påkrevde overskrifter", () => {
     render(<SumArsavregningTabell harGrunnlagIMelosys={true} />);
 
     expect(screen.getByText("Endelig beregnet trygdeavgift")).toBeInTheDocument();
     expect(screen.getByText("Differanse")).toBeInTheDocument();
   });
 
-  it("shows Melosys row when harGrunnlagIMelosys is true or tidligereTrygdeavgift is defined", () => {
+  it("viser Melosys-raden når harGrunnlagIMelosys er true eller tidligereTrygdeavgift er definert", () => {
     const { rerender } = render(<SumArsavregningTabell harGrunnlagIMelosys={true} />);
 
     expect(screen.getByText("Tidligere beregnet trygdeavgift")).toBeInTheDocument();
@@ -41,7 +41,7 @@ describe("SumArsavregningTabell - Toggle Disabled", () => {
     expect(screen.getByText("Tidligere beregnet trygdeavgift")).toBeInTheDocument();
   });
 
-  it("shows current year Avgiftssystem row with correct label when value is provided", () => {
+  it("viser raden for inneværende års Avgiftssystem med riktig ledetekst når verdi er oppgitt", () => {
     const { rerender } = render(
       <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereInnbetaltTrygdeavgift={8000} />,
     );
@@ -54,7 +54,7 @@ describe("SumArsavregningTabell - Toggle Disabled", () => {
     expect(screen.queryByText("Trygdeavgift fra Avgiftssystemet")).not.toBeInTheDocument();
   });
 
-  it("shows previous year Avgiftssystem row with correct label when value is provided", () => {
+  it("viser raden for forrige års Avgiftssystem med riktig ledetekst når verdi er oppgitt", () => {
     const { rerender } = render(
       <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereAarsavregningInnbetaltTrygdeavgift={5000} />,
     );
@@ -67,7 +67,7 @@ describe("SumArsavregningTabell - Toggle Disabled", () => {
     expect(screen.queryByText("Tidligere trygdeavgift fra Avgiftssystemet")).not.toBeInTheDocument();
   });
 
-  it("calculates and displays difference correctly without previous year avgiftssystem", () => {
+  it("beregner og viser differansen riktig uten forrige års avgiftssystem", () => {
     render(
       <SumArsavregningTabell
         nyTrygdeavgift={50000}
@@ -92,7 +92,7 @@ describe("SumArsavregningTabell - Toggle Disabled", () => {
     expect(within(differanseRow!).getByText("20 000 kr")).toBeInTheDocument();
   });
 
-  it("calculates and displays difference correctly WITH previous year avgiftssystem", () => {
+  it("beregner og viser differansen riktig med forrige års avgiftssystem", () => {
     render(
       <SumArsavregningTabell
         nyTrygdeavgift={50000}
@@ -107,14 +107,14 @@ describe("SumArsavregningTabell - Toggle Disabled", () => {
     expect(within(differanseRow!).getByText("25 000 kr")).toBeInTheDocument();
   });
 
-  it("handles negative difference with unicode minus", () => {
+  it("håndterer negativ differanse med unicode-minus", () => {
     render(<SumArsavregningTabell nyTrygdeavgift={10000} tidligereTrygdeavgift={15000} harGrunnlagIMelosys={true} />);
     // 10000 - 15000 - 0 + 0 = -5000
     const differanseRow = screen.getByText("Differanse").closest("tr");
     expect(within(differanseRow!).getByText("−5 000 kr")).toBeInTheDocument();
   });
 
-  it("renders correctly with all possible data", () => {
+  it("rendrer riktig med alle mulige data", () => {
     const { container } = render(
       <SumArsavregningTabell
         nyTrygdeavgift={50000}
@@ -135,14 +135,14 @@ describe("SumArsavregningTabell - Toggle Enabled", () => {
     vi.mocked(useFeatureToggle).mockReturnValue(true);
   });
 
-  it("shows Melosys row with unchanged label when toggle is enabled", () => {
+  it("viser Melosys-raden med uendret ledetekst når toggle er aktivert", () => {
     render(<SumArsavregningTabell harGrunnlagIMelosys={true} />);
 
     expect(screen.getByText("Tidligere beregnet trygdeavgift")).toBeInTheDocument();
     expect(screen.queryByText("Innbetalt trygdeavgift")).not.toBeInTheDocument();
   });
 
-  it("shows current year Avgiftssystem row with correct label when value is provided", () => {
+  it("viser raden for inneværende års Avgiftssystem med riktig ledetekst når verdi er oppgitt", () => {
     const { rerender } = render(
       <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereInnbetaltTrygdeavgift={8000} />,
     );
@@ -155,7 +155,7 @@ describe("SumArsavregningTabell - Toggle Enabled", () => {
     expect(screen.queryByText("Innbetalt trygdeavgift")).not.toBeInTheDocument();
   });
 
-  it("shows previous year Avgiftssystem row with correct label when value is provided", () => {
+  it("viser raden for forrige års Avgiftssystem med riktig ledetekst når verdi er oppgitt", () => {
     const { rerender } = render(
       <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereAarsavregningInnbetaltTrygdeavgift={5000} />,
     );
@@ -168,7 +168,7 @@ describe("SumArsavregningTabell - Toggle Enabled", () => {
     expect(screen.queryByText("Tidligere innbetalt trygdeavgift")).not.toBeInTheDocument();
   });
 
-  it("calculates and displays difference correctly without previous year avgiftssystem", () => {
+  it("beregner og viser differansen riktig uten forrige års avgiftssystem", () => {
     vi.mocked(useFeatureToggle).mockReturnValue(false);
     render(
       <SumArsavregningTabell
