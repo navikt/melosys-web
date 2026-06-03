@@ -135,6 +135,13 @@ describe("SumArsavregningTabell - Toggle Enabled", () => {
     vi.mocked(useFeatureToggle).mockReturnValue(true);
   });
 
+  it("shows Melosys row with unchanged label when toggle is enabled", () => {
+    render(<SumArsavregningTabell harGrunnlagIMelosys={true} />);
+
+    expect(screen.getByText("Tidligere beregnet trygdeavgift")).toBeInTheDocument();
+    expect(screen.queryByText("Innbetalt trygdeavgift")).not.toBeInTheDocument();
+  });
+
   it("shows current year Avgiftssystem row with correct label when value is provided", () => {
     const { rerender } = render(
       <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereInnbetaltTrygdeavgift={8000} />,
