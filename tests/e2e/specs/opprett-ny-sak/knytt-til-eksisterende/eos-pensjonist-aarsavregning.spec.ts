@@ -32,6 +32,10 @@ test.describe("EØS pensjonist med trygdeavgift - årsavregning", () => {
     // Verifiser at årsavregning er tilgjengelig (unntak fra vanlig EØS-regel)
     await opprettNySakPage.verifiserTilgjengeligeBehandlingstyper(valgtSak, ["Årsavregning"]);
 
+    // Når kun årsavregning er tilgjengelig på en sak med eksisterende behandling,
+    // skal Behandlingstema være read-only (låst med låseikon), ikke disabled (MELOSYS-8098)
+    await opprettNySakPage.verifiserBehandlingstemaReadOnly();
+
     // Verifiser at ingen feilmelding vises
     const harFeilmelding = await opprettNySakPage.harFeilmelding();
     expect(harFeilmelding, `Ingen feilmelding skal vises for EØS pensjonist-sak ${sakId}`).toBe(false);

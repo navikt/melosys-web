@@ -284,6 +284,7 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
 
   useEffect(() => {
     debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus, formValues });
+    return () => debouncedKontrollerBehandling.cancel();
   }, [aktivtSteg, formIsValid, formValues?.kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
 
   const onSubmit = async (values, dispatch, props) => {

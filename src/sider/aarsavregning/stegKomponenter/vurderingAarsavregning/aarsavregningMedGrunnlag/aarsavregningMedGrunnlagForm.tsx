@@ -20,14 +20,14 @@ import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import * as PeriodeAdapter from "../../../../../services/modules/aarsavregning/periodeApiAdapter";
-import {
-  erMedlemskapsperiodeEllerLovvalgsperiode,
-  erHelseutgiftdekkesperiode as erHelseutgiftdekkesperiodeTypeGuard,
-  erPeriodeListeHelseutgiftdekkesperiode,
-} from "../../../../../services/modules/types/periodeTyper";
 import type {
   Avgiftspliktigperiode,
   HelseutgiftdekkesperiodeForAvgift,
+} from "../../../../../services/modules/types/periodeTyper";
+import {
+  erHelseutgiftdekkesperiode as erHelseutgiftdekkesperiodeTypeGuard,
+  erMedlemskapsperiodeEllerLovvalgsperiode,
+  erPeriodeListeHelseutgiftdekkesperiode,
 } from "../../../../../services/modules/types/periodeTyper";
 import * as Utils from "../../../../../utils";
 import { Aarsavregningsmeldinger } from "../komponenter/aarsavregningsmeldinger";
@@ -41,13 +41,13 @@ import { SumArsavregningTabell } from "../komponenter/sumArsavregningTabell";
 import { beregnTrygdeavgiftsperioder, erBrukerSkattepliktigIHelePerioden, finnMedlemskapsperiode } from "../utils";
 import "../vurderingAarsavregningInngang.less";
 import {
+  AvgiftspliktigperiodeFieldProps,
   erUlagretPeriode,
   lagDefaultPeriode,
   mapPerioder,
   MedlemskapsperiodeFieldProps,
 } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import { InitiellData } from "./aarsavregningMedGrunnlag";
-import { AvgiftspliktigperiodeFieldProps } from "../aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlag";
 import aarsavregningMedGrunnlagSchema from "./aarsavregningMedGrunnlagSchema";
 import { Feilmelding, finnAktivFeilmelding } from "./valideringsfeil";
 import { useFeatureToggle } from "../../../../../featuretoggle";
@@ -125,6 +125,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     return undefined;
   }, [innvilgetMedlemskapsperioder, sisteGjeldendeAvgiftspliktigperioder]);
 
+  const nyVurderingHarFjernetAvgiftspliktigperiode =
+    sisteGjeldendeAvgiftspliktigperioder !== undefined &&
+    Utils._isEmpty(sisteGjeldendeAvgiftspliktigperioder) &&
+    initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger !== undefined;
   const {
     control,
     watch,
@@ -515,7 +519,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         (endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
           endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) &&
         !endrerEndeligAvgiftValg &&
-        !lagreMedlemskapsperioderPaagar
+        !lagreMedlemskapsperioderPaagar &&
+        !nyVurderingHarFjernetAvgiftspliktigperiode
       ) {
         const currentFormState = mapFormState(getValues("skatteforholdsperioder"), getValues("inntektskilder"));
 
@@ -536,15 +541,16 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     isValidating,
     endrerEndeligAvgiftValg,
     lagreMedlemskapsperioderPaagar,
+    aarsavregningID,
   ]);
 
   const stegErGyldig = useMemo(
     () =>
       Boolean(
-        formIsValid &&
+        (formIsValid || nyVurderingHarFjernetAvgiftspliktigperiode) &&
           (endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
             endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) &&
-          aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag &&
+          (aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag || nyVurderingHarFjernetAvgiftspliktigperiode) &&
           !feilmelding &&
           !arrayValideringsfeil &&
           !lagreMedlemskapsperioderPaagar,
@@ -563,6 +569,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
       feilmelding,
       arrayValideringsfeil,
       lagreMedlemskapsperioderPaagar,
+      nyVurderingHarFjernetAvgiftspliktigperiode,
     ],
   );
 
@@ -682,7 +689,8 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
       {(endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
         endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) &&
-        !endrerEndeligAvgiftValg && (
+        !endrerEndeligAvgiftValg &&
+        !nyVurderingHarFjernetAvgiftspliktigperiode && (
           <BorderedFormContainer>
             <Nav.Heading className="endelige_opplysninger_heading" level="2">
               Inntekts- og skatteopplysninger for endelig trygdeavgift
@@ -787,13 +795,13 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           </BorderedFormContainer>
         )}
 
-      {formIsValid &&
+      {(formIsValid || nyVurderingHarFjernetAvgiftspliktigperiode) &&
         !debouncedBeregningPagaar &&
         !beregningPaagar &&
         !feilmelding &&
         !arrayValideringsfeil &&
         aarsavregningResponse?.avregning &&
-        aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag &&
+        (aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag || nyVurderingHarFjernetAvgiftspliktigperiode) &&
         (endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
           endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) && (
           <SumArsavregningTabell

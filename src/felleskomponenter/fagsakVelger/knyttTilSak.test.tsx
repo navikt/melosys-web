@@ -378,8 +378,8 @@ describe("KnyttTilSak", () => {
     });
   });
 
-  describe("Behandlingstema disabled ved årsavregning", () => {
-    it("behandlingstema-dropdown er disabled når behandlingstype er årsavregning og saken har eksisterende behandlinger", async () => {
+  describe("Behandlingstema readOnly ved årsavregning", () => {
+    it("behandlingstema-dropdown er readOnly når behandlingstype er årsavregning og saken har eksisterende behandlinger", async () => {
       props.formValues.opprettBehandling = true;
       props.formValues.behandlingstema = "YRKESAKTIV";
       props.formValues.behandlingstype = MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING;
@@ -391,12 +391,14 @@ describe("KnyttTilSak", () => {
       await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
 
       await waitFor(() => {
-        const behandlingstemaSelect = screen.getByLabelText("Behandlingstema");
-        expect(behandlingstemaSelect).toBeDisabled();
+        // Låseikonet legger "Skrivebeskyttet" i label-teksten, derfor regex
+        const behandlingstemaSelect = screen.getByLabelText(/Behandlingstema/);
+        expect(behandlingstemaSelect).not.toBeDisabled();
+        expect(behandlingstemaSelect.closest(".navds-form-field")).toHaveClass("navds-form-field--readonly");
       });
     });
 
-    it("behandlingstema-dropdown er IKKE disabled når behandlingstype ikke er årsavregning", async () => {
+    it("behandlingstema-dropdown er IKKE readOnly når behandlingstype ikke er årsavregning", async () => {
       props.formValues.opprettBehandling = true;
       props.formValues.behandlingstema = "YRKESAKTIV";
       props.formValues.behandlingstype = MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
@@ -410,6 +412,7 @@ describe("KnyttTilSak", () => {
       await waitFor(() => {
         const behandlingstemaSelect = screen.getByLabelText("Behandlingstema");
         expect(behandlingstemaSelect).not.toBeDisabled();
+        expect(behandlingstemaSelect.closest(".navds-form-field")).not.toHaveClass("navds-form-field--readonly");
       });
     });
 
@@ -444,8 +447,10 @@ describe("KnyttTilSak", () => {
       await renderWithProvidersAsync(<WrappedKnyttTilSak {...(props as any)} />);
 
       await waitFor(() => {
-        const behandlingstemaSelect = screen.getByLabelText("Behandlingstema");
-        expect(behandlingstemaSelect).toBeDisabled();
+        // Låseikonet legger "Skrivebeskyttet" i label-teksten, derfor regex
+        const behandlingstemaSelect = screen.getByLabelText(/Behandlingstema/);
+        expect(behandlingstemaSelect).not.toBeDisabled();
+        expect(behandlingstemaSelect.closest(".navds-form-field")).toHaveClass("navds-form-field--readonly");
         expect(
           screen.getByText(/Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie eller/),
         ).toBeInTheDocument();

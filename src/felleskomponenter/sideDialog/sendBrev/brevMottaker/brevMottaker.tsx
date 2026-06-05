@@ -1,4 +1,4 @@
-import { FocusEvent, Fragment, useCallback, useEffect, useState } from "react";
+import { FocusEvent, Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -33,6 +33,18 @@ export const erArbeidsgiver = (rolle: string | undefined) => rolle === ARBEIDSGI
 export const erAnnenOrganisasjon = (rolle: string | undefined) => rolle === ANNEN_ORGANISASJON;
 export const erNorskMyndighet = (rolle: string | undefined) => rolle === NORSK_MYNDIGHET;
 export const erUtenlandskTrygdemyndighet = (rolle: string | undefined) => rolle === UTENLANDSK_TRYGDEMYNDIGHET;
+
+export const skalViseBrevmalvalg = (formValues?: SendBrevFormValues): boolean => {
+  const valgtMottaker = formValues?.valgtMottaker;
+  if (!valgtMottaker || valgtMottaker.feilmelding) return false;
+  if (erAnnenOrganisasjon(valgtMottaker.rolle)) {
+    return (
+      Boolean(formValues?.organisasjonsnummer) &&
+      formValues?.organisasjonFunnetForOrgnr === formValues?.organisasjonsnummer
+    );
+  }
+  return true;
+};
 
 const mapStateToProps = (state: RootState) => ({
   formValues: getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues,
@@ -81,16 +93,21 @@ function BrevMottaker({
     "Hvis arbeidsgiveren du ønsker å sende brev til ikke vises her, må du legge til denne i sidemenyen under «Arbeidsgiver/virksomhet». Det samme gjelder hvis du skal legge til kontaktopplysninger.\n" +
     "Hvis arbeidsgiveren ikke er en nåværende arbeidsgiver, kan du velge «Annen organisasjon» som mottaker og legge den til manuelt.";
 
+  const sisteForespurteOrgnrRef = useRef<string | undefined>(undefined);
+
   const hentOrganisasjonIfValid = async (data: { orgnr?: string; valid: boolean }) => {
     if (!data.valid || !data.orgnr) return;
     const response = await hentOrganisasjon(data.orgnr);
+    if (data.orgnr !== sisteForespurteOrgnrRef.current) return;
     if (response.data.response) {
       setFeil({
         tittel:
           response.data.response.status === 404 ? "Kunne ikke finne organisasjon" : "Feil ved henting av organisasjon",
       });
+      changeField("organisasjonFunnetForOrgnr", undefined);
     } else {
       setAdresse({ organisasjonsAdresse: response.data });
+      changeField("organisasjonFunnetForOrgnr", data.orgnr);
     }
   };
 
@@ -133,6 +150,8 @@ function BrevMottaker({
     }
 
     if (erAnnenOrganisasjon(valgtMottaker.rolle)) {
+      changeField("organisasjonFunnetForOrgnr", undefined);
+      sisteForespurteOrgnrRef.current = formValues.organisasjonsnummer;
       debouncedHentOrganisasjon({ orgnr: formValues.organisasjonsnummer, valid: orgnrValid });
     }
   }, [formValues?.mottaker, formValues?.organisasjonsnummer, orgnrValid, formValues?.arbeidsgiver]);
@@ -236,7 +255,7 @@ function BrevMottaker({
             <Skjema.Input
               className="kontaktperson"
               feltNavn="kontaktperson"
-              label="Kontaktperson"
+              label="Kontaktperson (valgfritt)"
               disabled={!redigerbart}
             />
           </Nav.Column>

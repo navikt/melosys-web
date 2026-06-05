@@ -105,6 +105,7 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     if (aktivtSteg && redigerbart) {
       debouncedLagreLovvalgsperiodeOgKontroller(formValues, formState?.isValid, []);
     }
+    return () => debouncedLagreLovvalgsperiodeOgKontroller.cancel();
   }, [formState?.isValid]);
 
   const lagreUtfallRegistreringUnntak = (utfall: string) => {

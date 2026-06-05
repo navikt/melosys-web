@@ -29,6 +29,8 @@ import { SumArsavregningTabell } from "../vurderingAarsavregning/komponenter/sum
 import { beregnSumTilFakturaEllerRefusjon } from "../vurderingAarsavregning/utils";
 import "./vurderingVedtak.less";
 import vurdering_vedtak from "./vurderingVedtakSchema";
+import { useFeatureToggle } from "../../../../featuretoggle";
+import { ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../featuretoggle/toggleNavn";
 
 const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
@@ -89,6 +91,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
   const erFullmektigEndret = useSelector(menypanelSelectors.MenypanelErFullmektigEndretSelector) as boolean;
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
+  const erÅrsavregningEøsPensjonistToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
 
   const { fattVedtak } = komponentDispatch(dispatch);
 
@@ -299,6 +302,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         debouncedOppdaterFritekster(currentValues);
       }
     }
+    return () => debouncedOppdaterFritekster.cancel();
   }, [
     aktivtSteg,
     formValues,
@@ -372,7 +376,11 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     return rader;
   };
 
-  const tidligereTrygdeavgift = lagretAarsavregning?.avregning?.tidligereFakturertBeloep;
+  const tidligereTrygdeavgift =
+    lagretAarsavregning?.harInnbetaltTrygdeavgift && erÅrsavregningEøsPensjonistToggleEnabled
+      ? 0
+      : lagretAarsavregning?.avregning?.tidligereFakturertBeloep;
+
   const innbetaltTrygdeavgift = lagretAarsavregning?.avregning?.innbetaltTrygdeavgift;
   const nyTrygdeavgift =
     lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT

@@ -224,6 +224,7 @@ function VurderingVedtak({
 
   useEffect(() => {
     debouncedKontrollerBehandling({ aktivtSteg, formValues, mottatteOpplysningerStatus });
+    return () => debouncedKontrollerBehandling.cancel();
   }, [redigerbart, formIsValid, aktivtSteg, formValues?.kopiTilArbeidsgiver, mottatteOpplysningerStatus]);
 
   const validerForm = () => {

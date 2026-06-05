@@ -224,6 +224,7 @@ function VurderingVedtak({
 
   useEffect(() => {
     debouncedKontrollerBehandling({ aktivtSteg, mottatteOpplysningerStatus });
+    return () => debouncedKontrollerBehandling.cancel();
   }, [aktivtSteg, resultat.lovvalgsperiodeTom, mottatteOpplysningerStatus]);
 
   const hentProduserbartDokument = (): string => {
@@ -273,9 +274,8 @@ function VurderingVedtak({
   useEffect(() => {
     if (steg.status === StegStatus.FERDIG) {
       debouncedHentMuligeMottakereOgStandardvedlegg();
-    } else {
-      debouncedHentMuligeMottakereOgStandardvedlegg.cancel();
     }
+    return () => debouncedHentMuligeMottakereOgStandardvedlegg.cancel();
   }, [steg.status, resultat.bestemmelse, resultat.virksomhet]);
 
   useEffect(() => {
@@ -286,9 +286,8 @@ function VurderingVedtak({
         begrunnelseFritekst: formValues.begrunnelseFritekst,
         nyVurderingBakgrunn: getNyVurderingBakgrunn(),
       });
-    } else {
-      debouncedOppdaterFlyten.cancel();
     }
+    return () => debouncedOppdaterFlyten.cancel();
   }, [
     formValues?.innledningFritekst,
     formValues?.begrunnelseFritekst,

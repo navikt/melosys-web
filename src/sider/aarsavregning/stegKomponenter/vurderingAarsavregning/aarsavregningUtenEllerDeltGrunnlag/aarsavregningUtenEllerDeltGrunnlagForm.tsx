@@ -654,7 +654,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     ) {
       debouncedOppdaterInnbetaltTrygdeavgift({
         avregning: {
-          innbetaltTrygdeavgift,
+          innbetaltTrygdeavgift: innbetaltTrygdeavgift || "0",
         },
       });
     }
@@ -917,6 +917,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
           control={control}
           redigerbart={skjemaErRedigerbart}
           erNyAarsavregning={Boolean(tidligereAarsavregningInnbetaltTrygdeavgift)}
+          harTidligereTrygdeavgiftsgrunnlag={harTidligereTrygdeavgiftsgrunnlag}
         />
       )}
 
@@ -927,6 +928,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         endeligAvgiftValg={endeligAvgiftValg}
         endretPeriodeFraAvgiftssystemetValg={erDeltGrunnlag}
         harInnbetaltTrygdeavgift={harInnbetaltTrygdeavgift}
+        harTidligereTrygdeavgiftsgrunnlag={harTidligereTrygdeavgiftsgrunnlag}
       />
 
       {(endeligAvgiftValg === OPPLYSNINGER_ENDRET ||

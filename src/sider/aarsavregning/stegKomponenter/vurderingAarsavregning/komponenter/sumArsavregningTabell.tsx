@@ -21,11 +21,8 @@ export function SumArsavregningTabell({
 }) {
   const erÅrsavregningEøsPensjonistToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
 
-  const skalViseInnbetaltTrygdeavgift = erÅrsavregningEøsPensjonistToggleEnabled
-    ? tidligereInnbetaltTrygdeavgift !== undefined &&
-      tidligereInnbetaltTrygdeavgift !== null &&
-      tidligereInnbetaltTrygdeavgift !== 0
-    : tidligereInnbetaltTrygdeavgift !== undefined && tidligereInnbetaltTrygdeavgift !== null;
+  const skalViseInnbetaltTrygdeavgift =
+    tidligereInnbetaltTrygdeavgift !== undefined && tidligereInnbetaltTrygdeavgift !== null;
 
   const skalViseTidligereBeregnetTrygdeavgift = erÅrsavregningEøsPensjonistToggleEnabled
     ? !skalViseInnbetaltTrygdeavgift && (harGrunnlagIMelosys || tidligereTrygdeavgift) !== undefined

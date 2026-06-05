@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import ReactQuill, { Quill } from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import "./htmlEditor.less";
+import TekstblokkSoek from "./tekstblokkSoek";
 
 // Registrerer egendefinert blot for tekst i klammer
 const Inline = Quill.import("blots/inline") as any;
@@ -68,6 +69,8 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
   const [internalValue, setInternalValue] = useState<string>(() => unwrapHtmlEditorDiv(value));
   // Holder styr på om oppdateringen kommer fra foreldrekomponenten
   const isExternalUpdateRef = useRef(false);
+  // Siste kjente cursor-posisjon – brukes ved innsetting fra TekstblokkSoek
+  const lastSelectionRef = useRef<{ index: number; length: number } | null>(null);
 
   // Synkroniserer med ekstern verdi når den endres, men bare hvis det ikke er forårsaket av vår egen onChange
   useEffect(() => {
@@ -220,18 +223,75 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
 
     quill.on("text-change", textChangeHandler);
 
+    // Lagre siste cursor-posisjon og marker hele [PLACEHOLDER] når cursor plasseres inni
+    const selectionChangeHandler = (range: any, _oldRange: any, source: string) => {
+      if (!range) return;
+
+      lastSelectionRef.current = { index: range.index, length: range.length };
+
+      if (range.length !== 0 || source !== "user") return;
+
+      const text = quill.getText();
+      const bracketRegex = /\[(.*?)\]/g;
+
+      let matchResult: RegExpExecArray | null = bracketRegex.exec(text);
+      while (matchResult !== null) {
+        const { index: start } = matchResult;
+        const { length } = matchResult[0];
+
+        if (range.index > start && range.index < start + length) {
+          quill.setSelection(start, length, "silent");
+          return;
+        }
+
+        matchResult = bracketRegex.exec(text);
+      }
+    };
+
+    quill.on("selection-change", selectionChangeHandler);
+
     // Initialiserer formatering for eksisterende innhold
     textChangeHandler();
 
     // Rydder opp ved avmontering
     return () => {
       quill.off("text-change", textChangeHandler);
+      quill.off("selection-change", selectionChangeHandler);
     };
   }, []);
+
+  const handleSettInnTekstblokk = (html: string) => {
+    const quill = quillRef.current?.editor;
+    if (!quill) return;
+
+    const fallbackIndeks = Math.max(0, quill.getLength() - 1);
+    const range = lastSelectionRef.current ?? { index: fallbackIndeks, length: 0 };
+    let innsettingsindeks = Math.min(range.index, fallbackIndeks);
+
+    if (range.length > 0) {
+      quill.deleteText(innsettingsindeks, range.length, "user");
+    }
+
+    // Sørg for at innsettingen havner i en ny blokk
+    const tegnFoer = innsettingsindeks > 0 ? quill.getText(innsettingsindeks - 1, 1) : "\n";
+    if (tegnFoer !== "\n") {
+      quill.insertText(innsettingsindeks, "\n", "user");
+      innsettingsindeks += 1;
+    }
+
+    const lengdeFor = quill.getLength();
+    quill.clipboard.dangerouslyPasteHTML(innsettingsindeks, html, "user");
+    const innsatt = quill.getLength() - lengdeFor;
+
+    const nyIndeks = Math.max(0, Math.min(innsettingsindeks + innsatt, quill.getLength() - 1));
+    quill.setSelection(nyIndeks, 0, "silent");
+    quill.focus();
+  };
 
   return (
     <div className={classNames("htmlEditor", className)}>
       {label && <div className="editor_label">{label}</div>}
+      <TekstblokkSoek onVelg={handleSettInnTekstblokk} disabled={disabled} />
       <div
         className={classNames("editor-wrapper", {
           "editor-wrapper--disabled": disabled,

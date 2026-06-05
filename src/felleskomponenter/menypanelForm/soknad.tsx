@@ -199,7 +199,7 @@ function Soknad({
 
   useEffect(() => {
     if (redigerbart && validertOk) debouncedLagreMottatteOpplysninger();
-    else debouncedLagreMottatteOpplysninger.cancel();
+    return () => debouncedLagreMottatteOpplysninger.cancel();
   }, [formValues, redigerbart, validertOk]);
 
   const submitHandler: FormEventHandler<HTMLFormElement> = (event) => {

@@ -28,7 +28,7 @@ import { behandlingerOperations } from "../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { formSelectors } from "../../../ducks/form";
 
-import BrevMottaker, { erAnnenOrganisasjon, erNorskMyndighet } from "./brevMottaker/brevMottaker";
+import BrevMottaker, { erAnnenOrganisasjon, erNorskMyndighet, skalViseBrevmalvalg } from "./brevMottaker/brevMottaker";
 import BrevMottakereTabell from "./brevMottaker/brevMottakereTabell";
 import Brevutkast from "./brevutkast/brevutkast";
 import BrevValg from "./brevValg";
@@ -194,7 +194,7 @@ function SendBrev({
       case ARBEIDSGIVER:
         return Boolean(values.arbeidsgiver);
       case ANNEN_ORGANISASJON:
-        return Boolean(values.organisasjonsnummer);
+        return skalViseBrevmalvalg(values);
       case NORSK_MYNDIGHET:
         return !Utils._isEmpty(values.norskeMyndigheter);
       case UTENLANDSK_TRYGDEMYNDIGHET:
@@ -259,6 +259,7 @@ function SendBrev({
     changeField("fritekstTittel", undefined);
     changeField("erFeltGyldig", undefined);
     changeField("organisasjonsnummer", undefined);
+    changeField("organisasjonFunnetForOrgnr", undefined);
     changeField("kontaktperson", undefined);
     changeField("norskeMyndigheter", undefined);
     changeField("kopiTilBruker", undefined);
@@ -307,6 +308,7 @@ function SendBrev({
     tilgjengeligeBrevtyper,
     formValues?.valgtMottaker,
     formValues?.organisasjonsnummer,
+    formValues?.organisasjonFunnetForOrgnr,
     formValues?.arbeidsgiver,
     formValues?.norskeMyndigheter,
   ]);
@@ -348,6 +350,7 @@ function SendBrev({
   }, [
     formValues?.valgtBrev,
     formValues?.organisasjonsnummer,
+    formValues?.organisasjonFunnetForOrgnr,
     formValues?.arbeidsgiver,
     formValues?.norskeMyndigheter,
     formValues?.felt?.UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER,
@@ -627,7 +630,7 @@ function SendBrev({
         </Nav.Column>
       </Nav.Row>
 
-      {mottakerErValgt && !valgtMottakerHarFeilmelding && (
+      {skalViseBrevmalvalg(formValues) && (
         <Nav.Row>
           <Nav.Column xs={brevTypeSelectWidth}>
             <Skjema.Select

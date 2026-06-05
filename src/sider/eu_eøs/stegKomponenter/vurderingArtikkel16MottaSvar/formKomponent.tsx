@@ -83,6 +83,7 @@ function FormKomponent({ redigerbart, formValues, oppdaterData, formIsValid }: F
     if (redigerbart) {
       debouncedLagreSvar({ ...formValues, formIsValid });
     }
+    return () => debouncedLagreSvar.cancel();
   }, [formValues, formIsValid]);
 
   if (!formValues) return null;
