@@ -28,6 +28,9 @@ const FLYT_PRODUKSJON_DATO_EØS_11_3_B = moment("2026-03-10T14:19:00Z");
 const vaskInputDato = (dato: string | null | undefined): string | false => {
   if (dato === null || dato === undefined) return false;
 
+  // Godta type number, men gjør den om til string først.
+  const stringDato = Number.isInteger(dato) ? String(dato) : dato;
+
   // Fjern alle skille-tegn med mål om en ren tallrekke i datoen.
   const newDate = dato.replace(/[-./]/g, "");
 
