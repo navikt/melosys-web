@@ -1,6 +1,8 @@
 import moment from "moment";
 import momentTZ from "moment-timezone";
 
+type Inclusivity = "()" | "[]" | "[)" | "(]";
+
 /**
  * Saksbehandlere har forskjellig måte å taste inn datoer på. Denne funksjonen forsøker å
  * vaske / tolke datoene og returnere en korrekt formattert dato.
@@ -23,11 +25,11 @@ const FLYT_PRODUKSJON_DATO_EØS_11_3_B = moment("2026-03-10T14:19:00Z");
  * @param dato
  * @returns {String | Boolean } Datoen
  */
-const vaskInputDato = (dato) => {
+const vaskInputDato = (dato: string | null | undefined): string | false => {
   if (dato === null || dato === undefined) return false;
 
   // Godta type number, men gjør den om til string først.
-  const stringDato = Number.isInteger(dato) ? String.toString(dato) : dato;
+  const stringDato = Number.isInteger(dato) ? String(dato) : dato;
 
   // Fjern alle skille-tegn med mål om en ren tallrekke i datoen.
   const newDate = stringDato.replace(/[-./]/g, "");
@@ -39,7 +41,11 @@ const vaskInputDato = (dato) => {
   }
 
   // const dateArray = newDate.match(/(..?)/g);
-  const dateArray = [newDate.substr(0, 2), parseInt(newDate.substr(2, 2), 10), parseInt(newDate.substr(4), 10)];
+  const dateArray: [string, number, number] = [
+    newDate.substr(0, 2),
+    parseInt(newDate.substr(2, 2), 10),
+    parseInt(newDate.substr(4), 10),
+  ];
 
   // Hvis kun de to siste årstallene er tastet inn, må vi gjøre en gjetning på hvilket århundre det
   // dreier seg om. Det er ikke sannsynlig at datoen gjelder for mer enn 10 år frem tid, så gjett da
@@ -69,8 +75,8 @@ const vaskInputDato = (dato) => {
  * @param forrigeVerdi Totalverdien av feltet FØR siste tastetrykk
  * @returns {String}
  */
-const normaliserInputDato = (verdi, forrigeVerdi) => {
-  const vasketDato = vaskInputDato(verdi) ? vaskInputDato(verdi) : verdi;
+const normaliserInputDato = (verdi: string, forrigeVerdi: string): string => {
+  const vasketDato = vaskInputDato(verdi) || verdi;
   return verdi === forrigeVerdi ? vasketDato : verdi;
 };
 
@@ -79,20 +85,20 @@ const normaliserInputDato = (verdi, forrigeVerdi) => {
  * til å enklere åpne opp for dato med eller uten tidspunkt.
  *
  */
-function formatterDatoTilNorsk(dato, visTidspunkt = false, defaultValue = "") {
+function formatterDatoTilNorsk(dato: moment.MomentInput, visTidspunkt = false, defaultValue = ""): string {
   const inputFormat = ["YYYY-MM-DD", "YYYY-MM-DDTHH:mm:ss", "DD-MM-YYYY", "DD-MM-YYYY HH:mm"];
   const momentFormat = visTidspunkt ? "DD.MM.YYYY HH:mm" : "DD.MM.YYYY";
   const momentDato = moment.utc(dato, inputFormat);
   return momentDato.isValid() ? momentTZ(momentDato).tz("Europe/Oslo").format(momentFormat) : defaultValue;
 }
 
-function vaskOgFormatterDatoTilNorsk(dato, defaultValue = "") {
+function vaskOgFormatterDatoTilNorsk(dato: string | null | undefined, defaultValue = ""): string {
   if (dato?.length === 6 || dato?.length === 8) {
     const vasketDato = vaskInputDato(dato);
     if (!vasketDato) return defaultValue;
-    return formatterDatoTilNorsk(vasketDato, defaultValue);
+    return formatterDatoTilNorsk(vasketDato, false, defaultValue);
   }
-  return formatterDatoTilNorsk(dato, defaultValue);
+  return formatterDatoTilNorsk(dato, false, defaultValue);
 }
 
 /**
@@ -102,15 +108,21 @@ function vaskOgFormatterDatoTilNorsk(dato, defaultValue = "") {
  * @param {string} [defaultValue] - Standardverdi hvis dato er ugyldig.
  * @returns {Array}
  */
-const vaskOgFormaterDatoerTilIso = (perioder, defaultValue = undefined) => {
+const vaskOgFormaterDatoerTilIso = <T extends { fomDato?: string | null; tomDato?: string | null }>(
+  perioder: T[],
+  defaultValue: string | undefined = undefined,
+): T[] => {
   if (!Array.isArray(perioder)) {
     return [];
   }
-  return perioder.map((periode) => ({
-    ...periode,
-    fomDato: periode.fomDato ? vaskOgFormatterTilISO(periode.fomDato, defaultValue) : defaultValue,
-    tomDato: periode.tomDato ? vaskOgFormatterTilISO(periode.tomDato, defaultValue) : defaultValue,
-  }));
+  return perioder.map(
+    (periode) =>
+      ({
+        ...periode,
+        fomDato: periode.fomDato ? vaskOgFormatterTilISO(periode.fomDato, defaultValue) : defaultValue,
+        tomDato: periode.tomDato ? vaskOgFormatterTilISO(periode.tomDato, defaultValue) : defaultValue,
+      }) as T,
+  );
 };
 
 /** Forutsatt at datoen er validert korrekt norsk (DD.MM.YYYY HH:mm), formatter den til det maskinlesbare
@@ -120,7 +132,7 @@ const vaskOgFormaterDatoerTilIso = (perioder, defaultValue = undefined) => {
  * @param {string|null} [defaultValue]
  * @returns {string|null}
  */
-function formatterDatoTilISO(dato, defaultValue = "Invalid date") {
+function formatterDatoTilISO(dato: moment.MomentInput, defaultValue: string | null = "Invalid date"): string | null {
   const inputFormat = ["DD.MM.YYYY HH:mm", "DD.MM.YYYY"];
   const isoDato = moment(dato, inputFormat).format("YYYY-MM-DD");
   return isoDato === "Invalid date" ? defaultValue : isoDato;
@@ -134,7 +146,7 @@ function formatterDatoTilISO(dato, defaultValue = "Invalid date") {
  * @param {string} [defaultValue=null] Verdien som returneres hvis datoen er ugyldig
  * @returns {string|null} ISO-formatert dato eller defaultValue hvis ugyldig
  */
-function vaskOgFormatterTilISO(dato, defaultValue = null) {
+function vaskOgFormatterTilISO(dato: string | null | undefined, defaultValue: string | null = null): string | null {
   if (dato?.length === 6 || dato?.length === 8) {
     const vasketDato = vaskInputDato(dato);
     if (!vasketDato) return defaultValue;
@@ -146,46 +158,66 @@ function vaskOgFormatterTilISO(dato, defaultValue = null) {
 /** Enkelte data kommer fra backend i form av en "kortdato", feks 2017-01. Denne funksjonen
  * formatterer om datoen til "jan - 2017" for bedre lesbarhet.
  */
-function formatterKortDatoTilNorsk(kortDato) {
+function formatterKortDatoTilNorsk(kortDato: string): string {
   const dato = moment(kortDato, "YYYY-MM");
   return `${dato.format("MMM")} - ${dato.format("YYYY")}`;
 }
 
-function erGyldigPeriode(fom, tom) {
+function erGyldigPeriode(fom: moment.MomentInput, tom: moment.MomentInput): boolean {
   const inputFormats = ["DD.MM.YYYY", "YYYY-MM-DD"];
   return moment(fom, inputFormats).isSameOrBefore(moment(tom, inputFormats));
 }
 
-function erIPeriode(fom, tom, dato, inclusivity) {
+function erIPeriode(
+  fom: moment.MomentInput,
+  tom: moment.MomentInput,
+  dato: moment.MomentInput,
+  inclusivity?: Inclusivity,
+): boolean {
   return moment(dato).isBetween(fom, tom, undefined, inclusivity);
 }
 
-function datoDiff(fom, tom, enhet = "months", presis = true) {
+function datoDiff(
+  fom: moment.MomentInput,
+  tom: moment.MomentInput,
+  enhet: moment.unitOfTime.Diff = "months",
+  presis = true,
+): number | false {
   if (!moment(fom, "YYYY-MM-DD").isValid() || !moment(tom, "YYYY-MM-DD").isValid()) return false;
   const momentTom = moment(tom).add(1, "day");
   return moment(momentTom).diff(fom, enhet, presis);
 }
 
-function datoDiffNorskFormat(fom, tom, enhet = "months", presis = true) {
+function datoDiffNorskFormat(
+  fom: moment.MomentInput,
+  tom: moment.MomentInput,
+  enhet: moment.unitOfTime.Diff = "months",
+  presis = true,
+): number | false {
   if (!moment(fom, "DD.MM.YYYY").isValid() || !moment(tom, "DD.MM.YYYY").isValid()) return false;
   const momentFom = moment(fom, "DD.MM.YYYY");
   const momentTom = moment(tom, "DD.MM.YYYY").add(1, "day");
   return moment(momentTom).diff(momentFom, enhet, presis);
 }
 
-function datoDiffPure(fom, tom, enhet = "months", presis = true) {
+function datoDiffPure(
+  fom: moment.MomentInput,
+  tom: moment.MomentInput,
+  enhet: moment.unitOfTime.Diff = "months",
+  presis = true,
+): number | false {
   if (!moment(fom, "YYYY-MM-DD").isValid() || !moment(tom, "YYYY-MM-DD").isValid()) return false;
   return moment(fom).diff(tom, enhet, presis);
 }
 
-function datoDiffMenneskelig(fom, tom) {
+function datoDiffMenneskelig(fom: moment.MomentInput, tom: moment.MomentInput): string | false {
   if (!moment(fom, "YYYY-MM-DD").isValid() || !moment(tom, "YYYY-MM-DD").isValid()) return false;
 
-  const forskjellManeder = Math.floor(datoDiff(fom, tom, "months"));
+  const forskjellManeder = Math.floor(Number(datoDiff(fom, tom, "months")));
 
   const resterendeFOM = moment(fom).add(forskjellManeder, "months");
 
-  const forskjellDager = datoDiff(resterendeFOM, tom, "days");
+  const forskjellDager = Number(datoDiff(resterendeFOM, tom, "days"));
 
   const manedBenevnelse = forskjellManeder === 1 ? "måned" : "måneder";
   const dagBenevnelse = forskjellDager === 1 ? "dag" : "dager";
@@ -195,39 +227,43 @@ function datoDiffMenneskelig(fom, tom) {
     : `${forskjellManeder} ${manedBenevnelse}`;
 }
 
-function beregnAlder(foedselsdato) {
+function beregnAlder(foedselsdato: moment.MomentInput): number {
   return moment().diff(foedselsdato, "years");
 }
 
-function erLike(datoEn, datoTo) {
+function erLike(datoEn: moment.MomentInput, datoTo: moment.MomentInput): boolean {
   return moment(datoEn).isSame(datoTo);
 }
 
-function erLikeDatoer(datoEn, datoTo) {
+function erLikeDatoer(datoEn: string | undefined, datoTo: string | undefined): boolean {
   if (datoEn === datoTo) return true;
   return erLike(formatterDatoTilISO(datoEn, datoEn), formatterDatoTilISO(datoTo, datoTo));
 }
 
-function plussEnDag(dato) {
+function plussEnDag(dato: string): string {
   return moment(dato, "DD.MM.YYYY").add(1, "days").format("DD.MM.YYYY");
 }
 
 // Oversetter en string på norsk datoformat til et date-objekt
-function norskStringTilDate(datostring) {
+function norskStringTilDate(datostring: string | null | undefined): Date | undefined {
   const vasketDato = vaskInputDato(datostring);
   if (!vasketDato) return undefined;
   const date = vasketDato.split(".");
   const now = new Date();
-  return new Date(date[2] || now.getFullYear(), date[1] ? date[1] - 1 : now.getMonth(), date[0] || now.getDate());
+  return new Date(
+    Number(date[2]) || now.getFullYear(),
+    date[1] ? Number(date[1]) - 1 : now.getMonth(),
+    Number(date[0]) || now.getDate(),
+  );
 }
 
 // Oversetter en string på iso datoformat (YYYY-MM-DD) til et date-objekt
-function isoStringTilDate(datoString) {
+function isoStringTilDate(datoString: string | undefined): Date | undefined {
   return norskStringTilDate(formatterDatoTilNorsk(datoString));
 }
 
 // Oversetter et date-objekt til en string på norsk datoformat
-function dateTilNorskString(dato) {
+function dateTilNorskString(dato: Date | string | null | undefined): string | undefined {
   if (!dato || !(dato instanceof Date)) return undefined;
   const dag = `0${dato.getDate()}`.slice(-2);
   const maned = `0${dato.getMonth() + 1}`.slice(-2);
@@ -235,14 +271,19 @@ function dateTilNorskString(dato) {
 }
 
 // Oversetter et date-objekt til en string på iso datoformat
-function dateTilIsoString(dato) {
+function dateTilIsoString(dato: Date | string | null | undefined): string | undefined {
   if (!dato || !(dato instanceof Date)) return undefined;
   const dag = `0${dato.getDate()}`.slice(-2);
   const maned = `0${dato.getMonth() + 1}`.slice(-2);
   return `${dato.getFullYear()}-${maned}-${dag}`;
 }
 
-function perioderOverlapper(periode1Fom, periode1Tom, periode2Fom, periode2Tom) {
+function perioderOverlapper(
+  periode1Fom: string | undefined,
+  periode1Tom: string | undefined,
+  periode2Fom: string | undefined,
+  periode2Tom: string | undefined,
+): boolean {
   if (!erGyldigPeriode(periode1Fom, periode1Tom)) return false;
   if (!erGyldigPeriode(periode2Fom, periode2Tom)) return false;
 
@@ -256,29 +297,36 @@ function perioderOverlapper(periode1Fom, periode1Tom, periode2Fom, periode2Tom) 
   return periode1FomDate <= periode2TomDate && periode1TomDate >= periode2FomDate;
 }
 
-function erFør(dato1, dato2) {
+function erFør(dato1: moment.MomentInput, dato2: moment.MomentInput): boolean {
   const inputFormat = ["YYYY-MM-DD"];
   return moment(dato1, inputFormat).isBefore(moment(dato2, inputFormat));
 }
 
-function erEtter(dato1, dato2) {
+function erEtter(dato1: moment.MomentInput, dato2: moment.MomentInput): boolean {
   const inputFormat = ["YYYY-MM-DD"];
   return moment(dato1, inputFormat).isAfter(moment(dato2, inputFormat));
 }
 
-function sorterEtterNorskFomDato(periode1, periode2) {
+function sorterEtterNorskFomDato(periode1: { fomDato?: string | null }, periode2: { fomDato?: string | null }): number {
   return (
     (norskStringTilDate(periode1.fomDato)?.getTime() ?? 0) - (norskStringTilDate(periode2.fomDato)?.getTime() ?? 0)
   );
 }
 
-function sorterEtterISOFomDato(periode1, periode2) {
+type ISOSorterbarPeriode = {
+  fomDato?: string | null;
+  tomDato?: string | null;
+  fom?: string | null;
+  tom?: string | null;
+};
+
+function sorterEtterISOFomDato(periode1: ISOSorterbarPeriode, periode2: ISOSorterbarPeriode): number {
   const fom1 = periode1.fomDato ?? periode1.fom;
   const fom2 = periode2.fomDato ?? periode2.fom;
   const tom1 = periode1.tomDato ?? periode1.tom;
   const tom2 = periode2.tomDato ?? periode2.tom;
 
-  const fomDiff = (new Date(fom1)?.getTime() ?? 0) - (new Date(fom2)?.getTime() ?? 0);
+  const fomDiff = (new Date(fom1 ?? 0)?.getTime() ?? 0) - (new Date(fom2 ?? 0)?.getTime() ?? 0);
   if (fomDiff !== 0) return fomDiff;
 
   const tom1Time = tom1 ? new Date(tom1).getTime() : null;
@@ -289,7 +337,7 @@ function sorterEtterISOFomDato(periode1, periode2) {
   return tom1Time - tom2Time;
 }
 
-function justerDatoHvisTidligereÅr(dato) {
+function justerDatoHvisTidligereÅr(dato: string | null | undefined): string | null | undefined {
   if (!dato) return dato;
 
   return moment(dato).year() < moment().year() ? `${moment().year()}-01-01` : dato;
