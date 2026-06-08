@@ -32,7 +32,7 @@ const vaskInputDato = (dato: string | null | undefined): string | false => {
   const stringDato = Number.isInteger(dato) ? String(dato) : dato;
 
   // Fjern alle skille-tegn med mål om en ren tallrekke i datoen.
-  const newDate = dato.replace(/[-./]/g, "");
+  const newDate = stringDato.replace(/[-./]/g, "");
 
   // Hvis datoen er noe annet enn 6 eller 8 tegn, returner ''.
   // Formatene vi støtter er 2 siffer for dag og måned, og 2 eller 4 siffer for år.
