@@ -566,5 +566,29 @@
     "behandlingstema": "IKKE_YRKESAKTIV",
     "behandlingstype": "FØRSTEGANG",
     "behandlingsstatus": "UNDER_BEHANDLING"
+  },
+  "MEL-1072": {
+    "behandlingID": 72,
+    "sakstype": "EU_EOS",
+    "sakstema": "TRYGDEAVGIFT",
+    "behandlingstema": "PENSJONIST",
+    "behandlingstype": "FØRSTEGANG",
+    "behandlingsstatus": "UNDER_BEHANDLING"
+  },
+  "MEL-1073": {
+    "behandlingID": 73,
+    "sakstype": "EU_EOS",
+    "sakstema": "TRYGDEAVGIFT",
+    "behandlingstema": "PENSJONIST",
+    "behandlingstype": "FØRSTEGANG",
+    "behandlingsstatus": "UNDER_BEHANDLING"
+  },
+  "MEL-1074": {
+    "behandlingID": 74,
+    "sakstype": "FTRL",
+    "sakstema": "TRYGDEAVGIFT",
+    "behandlingstema": "PENSJONIST",
+    "behandlingstype": "FØRSTEGANG",
+    "behandlingsstatus": "UNDER_BEHANDLING"
   }
 }

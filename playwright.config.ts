@@ -106,6 +106,11 @@ logConfiguration();
 export default defineConfig({
   globalSetup: PATHS.GLOBAL_SETUP,
   testDir: PATHS.TEST_DIR,
+  // manuell-forhaandsvisning-filene deler saksnumre med AC-tester og kan IKKE kjøres
+  // parallelt med dem. Som default ekskluderes de fra test:e2e. For å sette opp
+  // saker for manuell brev-forhåndsvisning, sett PW_INCLUDE_MANUELL=1:
+  //   PW_INCLUDE_MANUELL=1 pnpm exec playwright test --headed manuell-forhaandsvisning -g "25%-regel"
+  testIgnore: process.env.PW_INCLUDE_MANUELL ? [] : ["**/manuell-forhaandsvisning*.spec.ts"],
   outputDir: PATHS.OUTPUT_DIR,
   reporter: getReporters(),
 

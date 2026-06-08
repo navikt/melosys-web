@@ -184,4 +184,65 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     expect(rows[2]).toHaveTextContent("01.01.2022");
     expect(rows[3]).toHaveTextContent("01.01.2023");
   });
+
+  it("viser '*' i Sats-kolonne og fotnote ved 25 %-regelen", () => {
+    const grunnlag = createMockData();
+    grunnlag.avgift.trygdeavgiftsperioder[0].beregningsregel = "TJUEFEM_PROSENT_REGEL";
+    grunnlag.avgift.trygdeavgiftsperioder[0].avgiftssats = null;
+
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+
+    const rows = screen.getAllByRole("row");
+    expect(rows[1]).toHaveTextContent("*");
+    expect(screen.getByText(/Beregnet etter 25 %-regelen/)).toBeInTheDocument();
+  });
+
+  it("viser '**' i Sats-kolonne og fotnote ved inntekt under minstebeløpet", () => {
+    const grunnlag = createMockData();
+    grunnlag.avgift.trygdeavgiftsperioder[0].beregningsregel = "MINSTEBELØP";
+    grunnlag.avgift.trygdeavgiftsperioder[0].avgiftssats = null;
+
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+
+    const rows = screen.getAllByRole("row");
+    expect(rows[1]).toHaveTextContent("**");
+    expect(screen.getByText(/Inntekten er under minstebeløpet/)).toBeInTheDocument();
+  });
+
+  it("viser '***' i Inntektskilde-kolonne og fotnote ved sammenslåtte inntektskilder", () => {
+    const grunnlag = createMockData();
+    grunnlag.avgift.trygdeavgiftsperioder[0].harSammenslåtteInntektskilder = true;
+
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+
+    const rows = screen.getAllByRole("row");
+    expect(rows[1]).toHaveTextContent("***");
+    expect(screen.getByText(/Mer enn en inntekt/)).toBeInTheDocument();
+  });
+
+  it("viser 'Helsedel' i Dekning-kolonne for avgiftsdel HELSE", () => {
+    const grunnlag = createMockData();
+    grunnlag.avgift.trygdeavgiftsperioder[0].avgiftsdel = "HELSE";
+
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={false} />);
+
+    expect(screen.getByText("Helsedel")).toBeInTheDocument();
+  });
+
+  it("viser 'Pensjonsdel' i Dekning-kolonne for avgiftsdel PENSJON", () => {
+    const grunnlag = createMockData();
+    grunnlag.avgift.trygdeavgiftsperioder[0].avgiftsdel = "PENSJON";
+
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={false} />);
+
+    expect(screen.getByText("Pensjonsdel")).toBeInTheDocument();
+  });
+
+  it("viser ikke fotnote-seksjon ved ordinær beregning", () => {
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={createMockData()} medlemskapsTypeErPliktig={true} />);
+
+    expect(screen.queryByText(/Beregnet etter 25 %-regelen/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Inntekten er under minstebeløpet/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Mer enn en inntekt/)).not.toBeInTheDocument();
+  });
 });

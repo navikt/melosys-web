@@ -13,7 +13,7 @@ export class SokPage {
   /**
    * Verifiser at vi er på søkesiden
    */
-  async verifySearchResultsPage(): Promise<void> {
+  async verifiserSøkeresultatSide(): Promise<void> {
     await expect(this.page).toHaveURL("/melosys/sok");
     await expect(this.page.locator("h1:has-text('Saksoversikt')")).toBeVisible();
   }
@@ -22,8 +22,8 @@ export class SokPage {
    * Verifiser at siden viser korrekt info for en gyldig id
    * @param id - en gyldig id
    */
-  async verifyValidSearchResults(id: string): Promise<void> {
-    await this.verifySearchResultsPage();
+  async verifiserGyldigeSøkeresultater(id: string): Promise<void> {
+    await this.verifiserSøkeresultatSide();
 
     await expect(this.page.locator(`h2:has-text('Resultater for f.nr./d-nr. ${id}')`)).toBeVisible();
     await expect(this.page.locator(`text=Fant ingen saker knyttet til f.nr./d-nr. ${id}.`)).not.toBeVisible();
@@ -37,8 +37,8 @@ export class SokPage {
    * Verifiser at siden viser korrekt info for en ugyldig id
    * @param id - en ugyldig id
    */
-  async verifyInvalidSearchResults(id: string): Promise<void> {
-    await this.verifySearchResultsPage();
+  async verifiserUgyldigeSøkeresultater(id: string): Promise<void> {
+    await this.verifiserSøkeresultatSide();
 
     await expect(this.page.locator(`h2:has-text('Resultater for saksnummer ${id}')`)).toBeVisible();
     await expect(this.page.locator(`text=Fant ingen saker knyttet til saksnummer ${id}.`)).toBeVisible();

@@ -8,13 +8,29 @@ interface MedBeregningsregel {
   harSammenslåtteInntektskilder?: boolean;
 }
 
-const BEREGNINGSREGEL_FORKLARINGER: Partial<Record<Beregningsregel, { symbol: string; tekst: string }>> = {
+interface Beregningsregelforklaring {
+  symbol: string;
+  tekst: string;
+  alertTekst?: string;
+}
+
+const BEREGNINGSREGEL_FORKLARINGER: Partial<Record<Beregningsregel, Beregningsregelforklaring>> = {
   TJUEFEM_PROSENT_REGEL: {
     symbol: "*",
-    tekst: "Beregnet etter 25 %-regelen: Trygdeavgift skal ikke utgjøre mer enn 25 % av inntekt over minstebeløpet.",
+    tekst: "Beregnet etter 25 %-regelen",
   },
-  MINSTEBELØP: { symbol: "**", tekst: "Inntekten er under minstebeløpet." },
+  MINSTEBELØP: {
+    symbol: "**",
+    tekst: "Inntekten er under minstebeløpet",
+    alertTekst: "Trygdeavgift skal ikke betales da inntekten er under minstebeløpet.",
+  },
 };
+
+export function erUnderMinstebeløp(periode: { beregningsregel?: Beregningsregel | null }): boolean {
+  return periode.beregningsregel === "MINSTEBELØP";
+}
+
+export const MINSTEBELØP_ALERT_TEKST = BEREGNINGSREGEL_FORKLARINGER.MINSTEBELØP!.alertTekst!;
 
 export function formaterSats(periode: MedBeregningsregel): string {
   const forklaring = periode.beregningsregel ? BEREGNINGSREGEL_FORKLARINGER[periode.beregningsregel] : undefined;
@@ -66,7 +82,7 @@ export function Beregningsforklaringer({ perioder }: { perioder: MedBeregningsre
           {symbol} {tekst}
         </p>
       ))}
-      {harSammenslåtte && <p key="sammenslatt">*** Mer enn en inntektskilde</p>}
+      {harSammenslåtte && <p key="sammenslatt">*** Mer enn en inntekt</p>}
     </div>
   );
 }
