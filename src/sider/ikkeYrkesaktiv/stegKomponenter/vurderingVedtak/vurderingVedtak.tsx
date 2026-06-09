@@ -247,7 +247,7 @@ export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
       )}
 
       <Nav.Row>
-        <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
+        <Nav.BodyLong as="div" weight="semibold" size="small" className="fritekst_overskrift">
           <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst={INNLEDNING_FRITEKST_HJELPETEKST} />
         </Nav.BodyLong>
         <Forms.HtmlEditor
@@ -260,7 +260,7 @@ export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
       </Nav.Row>
 
       <Nav.Row>
-        <Nav.BodyLong weight="semibold" size="small" className="fritekst_overskrift">
+        <Nav.BodyLong as="div" weight="semibold" size="small" className="fritekst_overskrift">
           <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst={BEGRUNNELSE_FRITEKST_HJELPETEKST} />
         </Nav.BodyLong>
         <Forms.HtmlEditor

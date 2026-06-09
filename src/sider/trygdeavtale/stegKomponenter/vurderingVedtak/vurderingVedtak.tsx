@@ -387,7 +387,7 @@ function VurderingVedtak({
         </Nav.Column>
 
         <Nav.Column xs="5">
-          <Nav.BodyLong weight="semibold" size="small" className={vurderingVedtakCls.element("info")}>
+          <Nav.BodyLong as="div" weight="semibold" size="small" className={vurderingVedtakCls.element("info")}>
             <LabelMedHjelpetekst label="Periode" hjelpetekst={PERIODE_HJELPETEKST} />
           </Nav.BodyLong>
           <Nav.BodyLong size="small" className={vurderingVedtakCls.element("datofelt_wrapper")}>
@@ -463,7 +463,12 @@ function VurderingVedtak({
         </>
       )}
 
-      <Nav.BodyLong weight="semibold" size="small" className={vurderingVedtakCls.element("fritekst_overskrift")}>
+      <Nav.BodyLong
+        as="div"
+        weight="semibold"
+        size="small"
+        className={vurderingVedtakCls.element("fritekst_overskrift")}
+      >
         <LabelMedHjelpetekst label="Fritekst til innledning" hjelpetekst={INNLEDNING_FRITEKST} />
       </Nav.BodyLong>
       <Skjema.HTMLEditor
@@ -472,7 +477,7 @@ function VurderingVedtak({
         disabled={!redigerbart}
       />
 
-      <Nav.BodyLong size="small" className={vurderingVedtakCls.element("fritekst_overskrift")}>
+      <Nav.BodyLong as="div" size="small" className={vurderingVedtakCls.element("fritekst_overskrift")}>
         <LabelMedHjelpetekst label="Fritekst til begrunnelse" hjelpetekst={BEGRUNNELSE_FRITEKST_HJELPETEKST} />
       </Nav.BodyLong>
       <Skjema.HTMLEditor
