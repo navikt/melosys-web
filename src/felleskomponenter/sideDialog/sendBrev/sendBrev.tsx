@@ -8,12 +8,10 @@ import { touchAll as touchAllFieldsOp } from "../../../ducks/form/operations";
 import { ColumnWidth } from "nav-frontend-grid";
 
 import { useMsal } from "@azure/msal-react";
-import { URL_BASENAME } from "../../../constants";
 
 import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
-import * as Ikoner from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
@@ -68,7 +66,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
   redigerbart: boolean;
-  visApneINyttVindu: boolean;
   behandlingID: number;
   brevTypeSelectWidth?: ColumnWidth;
   mottakerSelectWidth?: ColumnWidth;
@@ -76,7 +73,6 @@ interface Props {
   felterWidth?: ColumnWidth;
   formValues: SendBrevFormValues;
   dokumenter: FysiskDokument[];
-  saksnummer: string;
   syncErrors?: { [key: string]: string };
 }
 
@@ -88,14 +84,12 @@ function SendBrev({
   oppdaterBehandling,
   redigerbart,
   resetForm,
-  visApneINyttVindu,
   dokumenter,
   touchAllFields,
   brevTypeSelectWidth = "12",
   mottakerSelectWidth = "12",
   mottakerTabellWidth = "12",
   felterWidth = "12",
-  saksnummer,
   soknadsland,
   sakstype,
   untouchFields,
@@ -583,8 +577,6 @@ function SendBrev({
   const mottakerErValgt = formValues.valgtMottaker;
   const brevtypeErValgt = formValues.valgtBrev;
 
-  const nyttvinduHref = `${URL_BASENAME}/sendbrev/${behandlingID}/${saksnummer}`;
-
   const spinnerAktiv = sendBrevSpinner || lagreUtkastSpinner || forkastBrevSpinner;
 
   const sendBrevAktiveringskravOppfylt = Boolean(mottakerErValgt && brevtypeErValgt);
@@ -609,15 +601,6 @@ function SendBrev({
         setFritekstvedlegg={setFritekstvedlegg}
         setValgteVedlegg={setValgteVedlegg}
       />
-
-      {visApneINyttVindu && (
-        <div className="send_brev__apne-nytt-vindu-container">
-          <Nav.Link target="_blank" href={nyttvinduHref}>
-            Åpne i nytt vindu
-            <Ikoner.ExternalLink />
-          </Nav.Link>
-        </div>
-      )}
 
       <Nav.Row className="brevmottaker__wrapper">
         <Nav.Column xs={mottakerSelectWidth}>
