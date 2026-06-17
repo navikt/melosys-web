@@ -80,6 +80,7 @@ export function VurderingVedtakOpphoer({ tilbake, aktivtSteg }: Props) {
   const oppdaterFritekster = (values: FormValuesProps) => {
     if (values && redigerbart && !vedtakPending) {
       Api.Behandlinger.resultat.oppdaterFritekster(behandlingID, {
+        innledningFritekst: "",
         begrunnelseFritekst: values.begrunnelseFritekst,
       });
     }

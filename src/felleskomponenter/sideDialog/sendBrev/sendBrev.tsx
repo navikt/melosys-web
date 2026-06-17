@@ -8,12 +8,10 @@ import { touchAll as touchAllFieldsOp } from "../../../ducks/form/operations";
 import { ColumnWidth } from "nav-frontend-grid";
 
 import { useMsal } from "@azure/msal-react";
-import { URL_BASENAME } from "../../../constants";
 
 import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
 import * as KV from "../../../kodeverk";
-import * as Ikoner from "../../../resources/images";
 import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
@@ -28,7 +26,7 @@ import { behandlingerOperations } from "../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { formSelectors } from "../../../ducks/form";
 
-import BrevMottaker, { erAnnenOrganisasjon, erNorskMyndighet } from "./brevMottaker/brevMottaker";
+import BrevMottaker, { erAnnenOrganisasjon, erNorskMyndighet, skalViseBrevmalvalg } from "./brevMottaker/brevMottaker";
 import BrevMottakereTabell from "./brevMottaker/brevMottakereTabell";
 import Brevutkast from "./brevutkast/brevutkast";
 import BrevValg from "./brevValg";
@@ -68,7 +66,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
   redigerbart: boolean;
-  visApneINyttVindu: boolean;
   behandlingID: number;
   brevTypeSelectWidth?: ColumnWidth;
   mottakerSelectWidth?: ColumnWidth;
@@ -76,7 +73,6 @@ interface Props {
   felterWidth?: ColumnWidth;
   formValues: SendBrevFormValues;
   dokumenter: FysiskDokument[];
-  saksnummer: string;
   syncErrors?: { [key: string]: string };
 }
 
@@ -88,14 +84,12 @@ function SendBrev({
   oppdaterBehandling,
   redigerbart,
   resetForm,
-  visApneINyttVindu,
   dokumenter,
   touchAllFields,
   brevTypeSelectWidth = "12",
   mottakerSelectWidth = "12",
   mottakerTabellWidth = "12",
   felterWidth = "12",
-  saksnummer,
   soknadsland,
   sakstype,
   untouchFields,
@@ -194,7 +188,7 @@ function SendBrev({
       case ARBEIDSGIVER:
         return Boolean(values.arbeidsgiver);
       case ANNEN_ORGANISASJON:
-        return Boolean(values.organisasjonsnummer);
+        return skalViseBrevmalvalg(values);
       case NORSK_MYNDIGHET:
         return !Utils._isEmpty(values.norskeMyndigheter);
       case UTENLANDSK_TRYGDEMYNDIGHET:
@@ -259,6 +253,7 @@ function SendBrev({
     changeField("fritekstTittel", undefined);
     changeField("erFeltGyldig", undefined);
     changeField("organisasjonsnummer", undefined);
+    changeField("organisasjonFunnetForOrgnr", undefined);
     changeField("kontaktperson", undefined);
     changeField("norskeMyndigheter", undefined);
     changeField("kopiTilBruker", undefined);
@@ -307,6 +302,7 @@ function SendBrev({
     tilgjengeligeBrevtyper,
     formValues?.valgtMottaker,
     formValues?.organisasjonsnummer,
+    formValues?.organisasjonFunnetForOrgnr,
     formValues?.arbeidsgiver,
     formValues?.norskeMyndigheter,
   ]);
@@ -348,6 +344,7 @@ function SendBrev({
   }, [
     formValues?.valgtBrev,
     formValues?.organisasjonsnummer,
+    formValues?.organisasjonFunnetForOrgnr,
     formValues?.arbeidsgiver,
     formValues?.norskeMyndigheter,
     formValues?.felt?.UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER,
@@ -580,8 +577,6 @@ function SendBrev({
   const mottakerErValgt = formValues.valgtMottaker;
   const brevtypeErValgt = formValues.valgtBrev;
 
-  const nyttvinduHref = `${URL_BASENAME}/sendbrev/${behandlingID}/${saksnummer}`;
-
   const spinnerAktiv = sendBrevSpinner || lagreUtkastSpinner || forkastBrevSpinner;
 
   const sendBrevAktiveringskravOppfylt = Boolean(mottakerErValgt && brevtypeErValgt);
@@ -607,15 +602,6 @@ function SendBrev({
         setValgteVedlegg={setValgteVedlegg}
       />
 
-      {visApneINyttVindu && (
-        <div className="send_brev__apne-nytt-vindu-container">
-          <Nav.Link target="_blank" href={nyttvinduHref}>
-            Åpne i nytt vindu
-            <Ikoner.ExternalLink />
-          </Nav.Link>
-        </div>
-      )}
-
       <Nav.Row className="brevmottaker__wrapper">
         <Nav.Column xs={mottakerSelectWidth}>
           <BrevMottaker
@@ -627,7 +613,7 @@ function SendBrev({
         </Nav.Column>
       </Nav.Row>
 
-      {mottakerErValgt && !valgtMottakerHarFeilmelding && (
+      {skalViseBrevmalvalg(formValues) && (
         <Nav.Row>
           <Nav.Column xs={brevTypeSelectWidth}>
             <Skjema.Select

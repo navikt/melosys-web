@@ -88,7 +88,7 @@ export function Lovvalgsperiode({ kontrollerFerdigbehandling, onRedigeringErAkti
 
   return (
     <Nav.Column>
-      <Nav.BodyLong weight="semibold" size="small" className="info">
+      <Nav.BodyLong as="div" weight="semibold" size="small" className="info">
         <LabelMedHjelpetekst label="Periode" hjelpetekst={PERIODE_HJELPETEKST} />
       </Nav.BodyLong>
 

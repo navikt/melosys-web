@@ -1,7 +1,7 @@
 import { Page, Locator, expect } from "@playwright/test";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
-import { finnCombobox } from "../../utils/testUtils";
+import { assertFieldError, finnCombobox } from "../../utils/testUtils";
 
 export class SendBrevPage extends BehandlingPage {
   constructor(page: Page, saksnummer: PrepopulertSaksnummer) {
@@ -34,7 +34,7 @@ export class SendBrevPage extends BehandlingPage {
     return scope.locator('select[name="mottaker"]');
   }
 
-  async clickSendBrevTab(): Promise<void> {
+  async klikkSendBrevFane(): Promise<void> {
     const tab = this.sendBrevTab;
 
     await expect(tab, `${this.ctx}: Fant ikke "Send brev"-fanen`).toBeVisible();
@@ -54,7 +54,7 @@ export class SendBrevPage extends BehandlingPage {
   }
 
   // Velg første tilgjengelige option i en select/combobox (ikke placeholder)
-  private async selectFirstOption(select: Locator) {
+  private async velgFørsteAlternativ(select: Locator): Promise<void> {
     await select.click();
     await this.page.keyboard.press("ArrowDown");
     await this.page.keyboard.press("Enter");
@@ -65,7 +65,7 @@ export class SendBrevPage extends BehandlingPage {
     return await finnCombobox(this.labels.brevmal, scope, timeoutMs);
   }
 
-  async selectFirstMottaker() {
+  async velgFørsteMottaker(): Promise<void> {
     // Bruk native select[name="mottaker"] direkte
     const sel = this.mottakerNativeSelect;
     await expect(sel, `${this.ctx}: Fant ikke mottaker-feltet`).toBeVisible();
@@ -77,19 +77,19 @@ export class SendBrevPage extends BehandlingPage {
     await this.waitForBrevmalSelect();
   }
 
-  async selectFirstBrevmal() {
+  async velgFørsteBrevmal(): Promise<void> {
     const ctl = await this.waitForBrevmalSelect();
     // Native select bruker selectOption, ARIA combobox bruker tastaturnavigasjon
     const tag = await ctl.evaluate((el) => el.tagName.toLowerCase());
     if (tag === "select") {
       await ctl.selectOption({ index: 1 });
     } else {
-      await this.selectFirstOption(ctl);
+      await this.velgFørsteAlternativ(ctl);
     }
   }
 
   // Velg brevmal via synlig tekst (f.eks. "Innhenting av inntektsopplysninger for årsavregning")
-  async selectBrevmalByLabel(label: string | RegExp) {
+  async velgBrevmalVedLabel(label: string | RegExp): Promise<void> {
     const ctl = await this.waitForBrevmalSelect();
     const tag = await ctl.evaluate((el) => el.tagName.toLowerCase());
     if (tag === "select") {
@@ -113,15 +113,15 @@ export class SendBrevPage extends BehandlingPage {
     }
   }
 
-  async verifiserSendKnappDeaktivert() {
+  async verifiserSendKnappDeaktivert(): Promise<void> {
     await expect(this.sendButton, `${this.ctx}: Send-knappen er uventet aktiv`).toBeDisabled();
   }
 
-  async verifiserSendKnappAktivert() {
+  async verifiserSendKnappAktivert(): Promise<void> {
     await expect(this.sendButton, `${this.ctx}: Send-knappen er uventet deaktivert`).toBeEnabled();
   }
 
-  async selectMottakerByLabel(label: string | RegExp) {
+  private async velgMottakerOption(label: string | RegExp): Promise<void> {
     const sel = this.mottakerNativeSelect;
     await expect(sel, `${this.ctx}: Fant ikke mottaker-feltet`).toBeVisible();
 
@@ -137,11 +137,78 @@ export class SendBrevPage extends BehandlingPage {
 
     expect(value, `${this.ctx}: Fant ikke mottakeren "${label}"`).toBeTruthy();
     await sel.selectOption(value);
+  }
 
+  async selectMottakerByLabel(label: string | RegExp) {
+    await this.velgMottakerOption(label);
     await this.waitForBrevmalSelect();
   }
 
+  async velgMottakerVedLabel(label: string | RegExp): Promise<void> {
+    await this.velgMottakerOption(label);
+  }
+
+  async velgMottaker(label: string | RegExp): Promise<void> {
+    await this.velgMottakerOption(label);
+  }
+
+  private get organisasjonsnummerInput(): Locator {
+    const scope = this.sendBrevPanel ?? this.page;
+    return scope.getByRole("textbox", { name: "Org.nr." });
+  }
+
+  private get kontaktpersonInput(): Locator {
+    const scope = this.sendBrevPanel ?? this.page;
+    return scope.getByRole("textbox", { name: "Kontaktperson (valgfritt)" });
+  }
+
+  private get brevmalCombobox(): Locator {
+    const scope = this.sendBrevPanel ?? this.page;
+    return scope.getByRole("combobox", { name: this.labels.brevmal });
+  }
+
+  async inputOrganisasjonsnummer(orgnr: string, saksnummer?: string): Promise<void> {
+    const sakId = saksnummer ?? this.ctx;
+    const input = this.organisasjonsnummerInput;
+    await expect(input, `${sakId}: Fant ikke Org.nr-feltet`).toBeVisible();
+    await input.fill(orgnr);
+    await input.blur();
+  }
+
+  async verifiserBrevmalSkjult(saksnummer?: string): Promise<void> {
+    const sakId = saksnummer ?? this.ctx;
+    await expect(
+      this.brevmalCombobox,
+      `${sakId}: «Velg brevmal» skal være skjult før org.nr er korrekt utfylt`,
+    ).toBeHidden();
+  }
+
+  async verifiserBrevmalSynlig(saksnummer?: string): Promise<void> {
+    const sakId = saksnummer ?? this.ctx;
+    await expect(
+      this.brevmalCombobox,
+      `${sakId}: «Velg brevmal» skal være synlig når organisasjonen er funnet`,
+    ).toBeVisible();
+  }
+
+  async verifiserOrgnrFeilmelding(tekst: string | RegExp): Promise<void> {
+    const scope = this.sendBrevPanel ?? this.page;
+    await assertFieldError(scope, tekst);
+  }
+
+  async verifiserKontaktpersonValgfri(saksnummer?: string): Promise<void> {
+    const sakId = saksnummer ?? this.ctx;
+    await expect(
+      this.kontaktpersonInput,
+      `${sakId}: Kontaktperson-feltet skal vises med «(valgfritt)» i label`,
+    ).toBeVisible();
+  }
+
   async clickSendBrev() {
+    await this.sendButton.click();
+  }
+
+  async klikkSendBrev(): Promise<void> {
     await this.sendButton.click();
   }
 }

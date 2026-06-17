@@ -681,6 +681,11 @@ describe("dato.js:", () => {
     test("returnerer tom streng som default for ugyldig dato", () => {
       expect(vaskOgFormatterDatoTilNorsk("ugyldig")).toBe("");
     });
+
+    test("viser ikke tidspunkt for gyldig dato selv med ikke-tom defaultValue", () => {
+      expect(vaskOgFormatterDatoTilNorsk("150624", "fallback")).toBe("15.06.2024");
+      expect(vaskOgFormatterDatoTilNorsk("2024-06-15", "fallback")).toBe("15.06.2024");
+    });
   });
 
   describe("vaskOgFormaterDatoerTilIso", () => {

@@ -141,6 +141,7 @@ export function VurderingArtikkel16Vedtak({
 
   useEffect(() => {
     debouncedKontrollerBehandling({ aktivtSteg, formValues, mottatteOpplysningerStatus, formIsValid });
+    return () => debouncedKontrollerBehandling.cancel();
   }, [aktivtSteg, formIsValid, mottatteOpplysningerStatus]);
 
   const validerForm = () => {

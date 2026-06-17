@@ -10,7 +10,7 @@ test("Søk etter gyldig ID og verifiser resultater", async ({ page, apiRecorder 
 
   await mainPage.søk(USER_ID_VALID);
 
-  await searchResultsPage.verifyValidSearchResults(USER_ID_VALID);
+  await searchResultsPage.verifiserGyldigeSøkeresultater(USER_ID_VALID);
 });
 
 test("Søk etter ugyldig ID og verifiser feilmelding", async ({ page, apiRecorder }, testInfo) => {
@@ -21,5 +21,5 @@ test("Søk etter ugyldig ID og verifiser feilmelding", async ({ page, apiRecorde
 
   await mainPage.søk(USER_ID_INVALID);
 
-  await searchResultsPage.verifyInvalidSearchResults(USER_ID_INVALID);
+  await searchResultsPage.verifiserUgyldigeSøkeresultater(USER_ID_INVALID);
 });

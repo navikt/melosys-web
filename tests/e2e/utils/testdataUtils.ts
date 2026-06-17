@@ -16,6 +16,8 @@
  * MEL-1069: Avtaleland for varselmelding-test (1 sak)
  * MEL-1070: Utenfor avtaleland AVSLUTTET (1 sak)
  * MEL-1071: EU/EØS IKKE_YRKESAKTIV for regresjon-test (1 sak)
+ * MEL-1072 til MEL-1073: EU/EØS Pensjonist med trygdeavgift - ekstra for parallelle E2E-tester (2 saker)
+ * MEL-1074: FTRL Pensjonist med trygdeavgift (AC3: helse/pensjonsdel-splitting)
  */
 
 import { existsSync, readFileSync } from "fs";
@@ -152,10 +154,14 @@ const ALL_SAKSNUMMER = [
   "MEL-1066",
   "MEL-1067",
   "MEL-1068",
-  // MEL-1069 til MEL-1071: Diverse
+  // MEL-1069 til MEL-1073: Diverse
   "MEL-1069",
   "MEL-1070",
   "MEL-1071",
+  "MEL-1072",
+  "MEL-1073",
+  // MEL-1074: FTRL Pensjonist med trygdeavgift (AC3)
+  "MEL-1074",
 ] as const;
 
 export type PrepopulertSaksnummer = (typeof ALL_SAKSNUMMER)[number];

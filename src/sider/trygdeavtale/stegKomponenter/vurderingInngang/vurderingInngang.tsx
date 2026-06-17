@@ -145,6 +145,7 @@ function VurderingInngang({
       oppdaterSoeknadsland(formValues?.arbeidsland ? [formValues.arbeidsland] : []);
       debouncedLagremottatteOpplysningerOgOppdaterFlyt();
     }
+    return () => debouncedLagremottatteOpplysningerOgOppdaterFlyt.cancel();
   }, [formValues?.fom, formValues?.tom, formValues?.arbeidsland, formIsValid]);
 
   useEffect(() => {

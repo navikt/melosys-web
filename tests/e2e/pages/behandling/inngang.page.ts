@@ -2,11 +2,12 @@ import { Page } from "@playwright/test";
 import { setDatoFelt } from "../../utils/testUtils";
 import { BehandlingPage } from "./behandling.page";
 import { PrepopulertSaksnummer } from "../../utils/testdataUtils";
+import { StegvelgerPage } from "./stegvelger.page";
 
 /**
  * Page Object Model for Inngang-steget
  */
-export class InngangPage extends BehandlingPage {
+export class InngangPage extends StegvelgerPage {
   constructor(page: Page, saksnummer: PrepopulertSaksnummer) {
     super(page, saksnummer);
   }
@@ -23,6 +24,14 @@ export class InngangPage extends BehandlingPage {
    */
   async setTilOgMedDato(dato: string): Promise<void> {
     return setDatoFelt("Til og med", dato, this.page);
+  }
+
+  /**
+   * Velg trygdedekning fra dropdown på Inngang-steget
+   * @param label - Synlig tekst i dropdown (f.eks. "Helsedel (§ 2-9)")
+   */
+  async velgTrygdedekning(label: string): Promise<void> {
+    await this.page.getByRole("combobox", { name: "Trygdedekning" }).selectOption({ label });
   }
 
   /**

@@ -204,7 +204,7 @@ export function KnyttTilSak(props: KnyttTilSakProps) {
               feltNavn={feltNavn.behandlingstema}
               label="Behandlingstema"
               emptyFieldDisabled={!!(behandlingstema as { kode?: string })?.kode}
-              disabled={state.harBehandlingMedTrygdeavgift || erAndregangsÅrsavregning}
+              readonly={state.harBehandlingMedTrygdeavgift || erAndregangsÅrsavregning}
               className={state.harBehandlingMedTrygdeavgift || erAndregangsÅrsavregning ? "select__slim" : undefined}
             >
               {state.muligeBehandlingstemaer?.map((elem) => (
