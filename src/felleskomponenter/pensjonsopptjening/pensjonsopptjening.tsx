@@ -77,8 +77,8 @@ function Pensjonsopptjening() {
               </Nav.Table.Row>
             </Nav.Table.Header>
             <Nav.Table.Body>
-              {sortertePerioder.map((periode, idx) => (
-                <Nav.Table.Row key={`${periode.aar}-${periode.kilde}-${idx}`} shadeOnHover={false}>
+              {sortertePerioder.map((periode) => (
+                <Nav.Table.Row key={`${periode.aar}-${periode.kilde}-${periode.inntektType}`} shadeOnHover={false}>
                   <Nav.Table.DataCell>{periode.aar}</Nav.Table.DataCell>
                   <Nav.Table.DataCell align="right">
                     {Utils.formaterTilNorskBelopUtenDesimaler(periode.pgi)}
