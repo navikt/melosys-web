@@ -12,18 +12,17 @@ describe("pensjonsopptjening reducer", () => {
 
   it("PENDING setter status til PENDING uten å røre data", () => {
     const state = reducer(
-      { status: STATUS.OK, data: { inntektsAr: 2024, perioder: [] } },
+      { status: STATUS.OK, data: { perioder: [] } },
       {
         type: Types.PENDING,
       },
     );
     expect(state.status).toBe(STATUS.PENDING);
-    expect(state.data).toEqual({ inntektsAr: 2024, perioder: [] });
+    expect(state.data).toEqual({ perioder: [] });
   });
 
   it("OK lagrer data og fjerner tidligere feil", () => {
     const respons = {
-      inntektsAr: 2024,
       perioder: [
         {
           aar: 2024,
@@ -57,7 +56,7 @@ describe("pensjonsopptjening reducer", () => {
 
   it("RESET returnerer til initial state", () => {
     const state = reducer(
-      { status: STATUS.OK, data: { inntektsAr: 2024, perioder: [] } },
+      { status: STATUS.OK, data: { perioder: [] } },
       {
         type: Types.RESET,
       },
