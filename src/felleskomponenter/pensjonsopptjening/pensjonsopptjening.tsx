@@ -12,8 +12,6 @@ import {
   pensjonsopptjeningTypes,
 } from "../../ducks/pensjonsopptjening";
 
-const formaterDato = (dato: string | null | undefined): string => Utils.dato.formatterDatoTilNorsk(dato, false, "—");
-
 const kildeLabel = (kilde: pensjonsopptjeningTypes.PensjonsopptjeningKilde | string): string => {
   switch (kilde) {
     case "SKATT":
@@ -22,6 +20,8 @@ const kildeLabel = (kilde: pensjonsopptjeningTypes.PensjonsopptjeningKilde | str
       return "Avgiftssystemet";
     case "MELOSYS":
       return "Melosys";
+    case "UKJENT":
+      return "Ukjent";
     default:
       return kilde;
   }
@@ -34,7 +34,7 @@ function Pensjonsopptjening() {
   const perioder = useSelector(pensjonsopptjeningSelectors.PensjonsopptjeningPerioderSelector);
 
   useEffect(() => {
-    if (behandlingID > 0) {
+    if (behandlingID !== -1) {
       dispatch(pensjonsopptjeningOperations.hentPensjonsopptjening(behandlingID));
     }
   }, [behandlingID, dispatch]);
@@ -77,16 +77,23 @@ function Pensjonsopptjening() {
               </Nav.Table.Row>
             </Nav.Table.Header>
             <Nav.Table.Body>
-              {sortertePerioder.map((periode) => (
-                <Nav.Table.Row key={`${periode.aar}-${periode.kilde}-${periode.inntektType}`} shadeOnHover={false}>
+              {sortertePerioder.map((periode, idx) => (
+                <Nav.Table.Row
+                  key={`${periode.aar}-${periode.kilde}-${periode.inntektType}-${periode.pgi}-${idx}`}
+                  shadeOnHover={false}
+                >
                   <Nav.Table.DataCell>{periode.aar}</Nav.Table.DataCell>
                   <Nav.Table.DataCell align="right">
                     {Utils.formaterTilNorskBelopUtenDesimaler(periode.pgi)}
                   </Nav.Table.DataCell>
                   <Nav.Table.DataCell>{kildeLabel(periode.kilde)}</Nav.Table.DataCell>
                   <Nav.Table.DataCell>{periode.inntektTypeDekode || periode.inntektType}</Nav.Table.DataCell>
-                  <Nav.Table.DataCell>{formaterDato(periode.registrert)}</Nav.Table.DataCell>
-                  <Nav.Table.DataCell>{formaterDato(periode.oppdatert)}</Nav.Table.DataCell>
+                  <Nav.Table.DataCell>
+                    {Utils.dato.formatterDatoTilNorsk(periode.registrert, false, "—")}
+                  </Nav.Table.DataCell>
+                  <Nav.Table.DataCell>
+                    {Utils.dato.formatterDatoTilNorsk(periode.oppdatert, false, "—")}
+                  </Nav.Table.DataCell>
                 </Nav.Table.Row>
               ))}
             </Nav.Table.Body>

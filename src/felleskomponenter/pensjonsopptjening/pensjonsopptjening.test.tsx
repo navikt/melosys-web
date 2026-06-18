@@ -161,10 +161,31 @@ describe("Pensjonsopptjening", () => {
     expect(screen.getByText("ANNEN_KILDE")).toBeDefined();
   });
 
-  it("dispatcher hentPensjonsopptjening på mount når behandlingID > 0", () => {
+  it("mapper UKJENT-fallback fra backend til «Ukjent»", () => {
+    mockState({
+      status: "OK",
+      perioder: [{ aar: 2024, pgi: 500000, kilde: "UKJENT" }],
+    });
+    render(<Pensjonsopptjening />);
+    expect(screen.getByText("Ukjent")).toBeDefined();
+  });
+
+  it("dispatcher hentPensjonsopptjening på mount når behandlingID finnes", () => {
     mockState({ status: "OK", perioder: [] });
     render(<Pensjonsopptjening />);
     expect(dispatchMock).toHaveBeenCalled();
+  });
+
+  it("dispatcher ikke når behandlingID er -1 (ingen behandling)", () => {
+    useSelectorMock.mockImplementation((selector: any) => {
+      if (selector === behandlingerSelectors.BehandlingIDSelector) return -1;
+      if (selector === pensjonsopptjeningSelectors.PensjonsopptjeningSelector)
+        return { status: "OK", data: { perioder: [] } };
+      if (selector === pensjonsopptjeningSelectors.PensjonsopptjeningPerioderSelector) return [];
+      return undefined;
+    });
+    render(<Pensjonsopptjening />);
+    expect(dispatchMock).not.toHaveBeenCalled();
   });
 
   it("viser «Pensjonsgivende inntektstype»-kolonnen med inntektTypeDekode fra API", () => {

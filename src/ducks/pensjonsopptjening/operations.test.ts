@@ -23,7 +23,7 @@ describe("hentPensjonsopptjening", () => {
   });
 
   it("dispatcher PENDING, så OK når behandlingID fortsatt matcher", async () => {
-    const respons = { inntektsAr: 2024, behandletAr: 2024, perioder: [] };
+    const respons = { inntektsAr: 2024, perioder: [] };
     hentMock.mockResolvedValueOnce(respons);
     behandlingIDSelectorMock.mockReturnValue(42);
     const dispatch = vi.fn();
@@ -36,7 +36,7 @@ describe("hentPensjonsopptjening", () => {
   });
 
   it("dropper OK når behandlingID har endret seg mens kallet løper (race-guard)", async () => {
-    const respons = { inntektsAr: 2024, behandletAr: 2024, perioder: [] };
+    const respons = { inntektsAr: 2024, perioder: [] };
     hentMock.mockResolvedValueOnce(respons);
     behandlingIDSelectorMock.mockReturnValue(99);
     const dispatch = vi.fn();
