@@ -14,6 +14,7 @@ const MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT = "melosys.eos_fakturering_av_try
 const MELOSYS_CDM_4_4 = "melosys.cdm-4-4";
 const MELOSYS_TEKSTBLOKKER = "melosys.tekstblokker";
 const MELOSYS_ADMINISTRASJON = "melosys.administrasjon";
+const MELOSYS_VIS_PENSJONSOPPTJENING_POPP = "melosys.vis-pensjonsopptjening-popp";
 
 const alleToggleNavn = [
   MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
@@ -30,6 +31,7 @@ const alleToggleNavn = [
   MELOSYS_CDM_4_4,
   MELOSYS_TEKSTBLOKKER,
   MELOSYS_ADMINISTRASJON,
+  MELOSYS_VIS_PENSJONSOPPTJENING_POPP,
 ];
 
 export {
@@ -48,5 +50,6 @@ export {
   MELOSYS_CDM_4_4,
   MELOSYS_TEKSTBLOKKER,
   MELOSYS_ADMINISTRASJON,
+  MELOSYS_VIS_PENSJONSOPPTJENING_POPP,
   alleToggleNavn,
 };

@@ -31,6 +31,7 @@ import { useFeatureToggle } from "../../featuretoggle";
 import { ÅRSAVREGNING, ÅRSAVREGNING_UTEN_FLYT } from "../../featuretoggle/toggleNavn";
 import "./saksbehandling.less";
 import { fakturaserierOperations } from "../../ducks/fakturaserier";
+import { pensjonsopptjeningOperations } from "../../ducks/pensjonsopptjening";
 
 interface Props extends RouteComponentProps<MatchParams> {
   behandlingOppfriskes: boolean;
@@ -106,6 +107,7 @@ function Saksbehandling({ match, location }: Props) {
       dispatch(dokumenterOperations.resetDokument());
       dispatch(aarsavregningOperations.resetAarsavregning());
       dispatch(fakturaserierOperations.resetFakturaserier());
+      dispatch(pensjonsopptjeningOperations.resetPensjonsopptjening());
     };
   }, []);
 

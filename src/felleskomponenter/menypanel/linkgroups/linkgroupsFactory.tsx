@@ -4,7 +4,10 @@ import { harUnntaksregistreringFlyt, skalViseIngenFlyt } from "../../../url";
 import { ContentProps, LinkGroup } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
-import { MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT } from "../../../featuretoggle/toggleNavn";
+import {
+  MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
+  MELOSYS_VIS_PENSJONSOPPTJENING_POPP,
+} from "../../../featuretoggle/toggleNavn";
 import { useFeatureToggle } from "../../../featuretoggle";
 
 const {
@@ -79,30 +82,32 @@ class LinkGroupsFactory {
     }
 
     if (behandlingstema === PENSJONIST) {
+      const fraRegister = new LinksBuilder(contentProps)
+        .addPerson()
+        .addFamilieForhold()
+        .addMedlemskap()
+        .addArbeidsforholdOgInntekt()
+        .addFaktureringskomponenten();
+      if (behandlingstype === ÅRSAVREGNING && useFeatureToggle(MELOSYS_VIS_PENSJONSOPPTJENING_POPP)) {
+        fraRegister.addPensjonsopptjening();
+      }
       return new LinkgroupsBuilder()
-        .addFraRegister(
-          new LinksBuilder(contentProps)
-            .addPerson()
-            .addFamilieForhold()
-            .addMedlemskap()
-            .addArbeidsforholdOgInntekt()
-            .addFaktureringskomponenten()
-            .build(),
-        )
+        .addFraRegister(fraRegister.build())
         .addFraBruker(new LinksBuilder(contentProps).addFullmektig().build())
         .build();
     }
 
     if (behandlingstema === IKKE_YRKESAKTIV) {
+      const fraRegister = new LinksBuilder(contentProps)
+        .addPerson()
+        .addFamilieForhold()
+        .addMedlemskap()
+        .addArbeidsforholdOgInntekt();
+      if (behandlingstype === ÅRSAVREGNING && useFeatureToggle(MELOSYS_VIS_PENSJONSOPPTJENING_POPP)) {
+        fraRegister.addPensjonsopptjening();
+      }
       return new LinkgroupsBuilder()
-        .addFraRegister(
-          new LinksBuilder(contentProps)
-            .addPerson()
-            .addFamilieForhold()
-            .addMedlemskap()
-            .addArbeidsforholdOgInntekt()
-            .build(),
-        )
+        .addFraRegister(fraRegister.build())
         .addFraBruker(new LinksBuilder(contentProps).addFullmektig().build())
         .build();
     }
@@ -131,6 +136,9 @@ class LinkGroupsFactory {
           useFeatureToggle(MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT)
         ) {
           fraRegister.addFaktureringskomponenten();
+        }
+        if (behandlingstype === ÅRSAVREGNING && useFeatureToggle(MELOSYS_VIS_PENSJONSOPPTJENING_POPP)) {
+          fraRegister.addPensjonsopptjening();
         }
 
         return new LinkgroupsBuilder()
@@ -177,15 +185,16 @@ class LinkGroupsFactory {
         if (behandlingstype !== ÅRSAVREGNING) fraBrukerBuilder.addArbeidsgiverEllerVirksomhet();
         fraBrukerBuilder.addFullmektig();
         if (behandlingstype !== ÅRSAVREGNING) fraBrukerBuilder.addArbeidssteder();
+        const fraRegisterBuilder = new LinksBuilder(contentProps)
+          .addMedlemskap()
+          .addArbeidsforholdOgInntekt()
+          .addFaktureringskomponenten();
+        if (behandlingstype === ÅRSAVREGNING && useFeatureToggle(MELOSYS_VIS_PENSJONSOPPTJENING_POPP)) {
+          fraRegisterBuilder.addPensjonsopptjening();
+        }
         return new LinkgroupsBuilder()
           .addFraRegisterOgBruker(new LinksBuilder(contentProps).addPerson().addFamilieForhold().build())
-          .addFraRegister(
-            new LinksBuilder(contentProps)
-              .addMedlemskap()
-              .addArbeidsforholdOgInntekt()
-              .addFaktureringskomponenten()
-              .build(),
-          )
+          .addFraRegister(fraRegisterBuilder.build())
           .addFraBruker(fraBrukerBuilder.build())
           .build();
       }
