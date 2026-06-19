@@ -152,7 +152,11 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   }, [stegErGyldig]);
 
   useEffect(() => {
-    Api.LovligeKombinasjoner.hentTrygdedekninger(lagretBestemmelse).then(setLovligeDekninger);
+    if (lagretBestemmelse) {
+      Api.LovligeKombinasjoner.hentTrygdedekninger(lagretBestemmelse).then(setLovligeDekninger);
+    } else {
+      setLovligeDekninger([]);
+    }
     Api.Ftrl.hentGyldigeInnvilgelsesresultat(behandlingstype).then(setLovligeInnvilgelsesresultat);
   }, [lagretBestemmelse]);
 
