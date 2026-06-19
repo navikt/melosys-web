@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { matcherSoek, TekstblokkOversikt } from "./tekstblokker";
+import { matcherSoek, tellTags, TekstblokkOversikt } from "./tekstblokker";
 
 const blokk = (tittel: string, tags: string[], innhold = ""): TekstblokkOversikt => ({
   id: 1,
@@ -49,5 +49,16 @@ describe("matcherSoek", () => {
     expect(matcherSoek(medInnhold, "trygdelovgivning")).toBe(false);
     expect(matcherSoek(medInnhold, "tittel")).toBe(true);
     expect(matcherSoek(medInnhold, "tag")).toBe(true);
+  });
+});
+
+describe("tellTags", () => {
+  it("grupperer tags case-insensitivt og beholder første skrivemåte", () => {
+    const blokker = [blokk("A", ["USA-avtale"]), blokk("B", ["usa-avtale"]), blokk("C", ["Norge"])];
+    const resultat = tellTags(blokker);
+
+    expect(resultat).toContainEqual(["USA-avtale", 2]);
+    expect(resultat).toContainEqual(["Norge", 1]);
+    expect(resultat).toHaveLength(2);
   });
 });

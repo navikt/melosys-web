@@ -63,13 +63,20 @@ export const matcherSoek = (blokk: TekstblokkOversikt, soek: string): boolean =>
 };
 
 export const tellTags = (blokker: TekstblokkOversikt[]): Array<[string, number]> => {
-  const teller = new Map<string, number>();
+  // Grupper case-insensitivt, men behold første skrivemåte vi ser, slik at
+  // "USA-avtale" og "usa-avtale" telles som samme tag i filteret.
+  const teller = new Map<string, { visning: string; antall: number }>();
   blokker.forEach((blokk) => {
     blokk.tags.forEach((tag) => {
-      teller.set(tag, (teller.get(tag) ?? 0) + 1);
+      const noekkel = tag.toLowerCase();
+      const eksisterende = teller.get(noekkel);
+      if (eksisterende) eksisterende.antall += 1;
+      else teller.set(noekkel, { visning: tag, antall: 1 });
     });
   });
-  return Array.from(teller.entries()).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "nb"));
+  return Array.from(teller.values())
+    .map(({ visning, antall }): [string, number] => [visning, antall])
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "nb"));
 };
 
 export const toggleITegnliste = (liste: string[], element: string): string[] =>

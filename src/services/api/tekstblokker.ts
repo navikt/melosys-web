@@ -79,9 +79,15 @@ export const useFiltrerteTekstblokker = (
 ): FiltrerteTekstblokker => {
   const etterSoek = useMemo(() => blokker.filter((b) => matcherSoek(b, soek)), [blokker, soek]);
   const tagAntall = useMemo(() => tellTags(etterSoek), [etterSoek]);
-  const synlige = useMemo(
-    () => (valgteTags.length === 0 ? etterSoek : etterSoek.filter((b) => valgteTags.some((t) => b.tags.includes(t)))),
-    [etterSoek, valgteTags],
-  );
+  // Tag-filteret matcher case-insensitivt, i tråd med at tellTags grupperer
+  // case-insensitivt – ellers ville en valgt tag ikke treffe andre skrivemåter.
+  const synlige = useMemo(() => {
+    if (valgteTags.length === 0) return etterSoek;
+    const valgteLowercase = valgteTags.map((t) => t.toLowerCase());
+    return etterSoek.filter((b) => {
+      const blokkTagsLowercase = b.tags.map((t) => t.toLowerCase());
+      return valgteLowercase.some((t) => blokkTagsLowercase.includes(t));
+    });
+  }, [etterSoek, valgteTags]);
   return { tagAntall, synlige };
 };
