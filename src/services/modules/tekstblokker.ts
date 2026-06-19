@@ -48,10 +48,6 @@ export const oppdater = (id: number, body: TekstblokkRequest): Promise<Tekstblok
 
 export const slett = (id: number): Promise<unknown> => deleteAsJson(`${baseUrl}/${id}`);
 
-// Gjør HTML om til ren søkbar tekst: fjern tagger og HTML-entiteter (&nbsp;, &amp; ...)
-// slik at entitetsrester ikke gir falske treff i søk.
-const stripHtml = (html: string): string => (html ?? "").replace(/<[^>]*>/g, " ").replace(/&[a-z]+;|&#\d+;/gi, " ");
-
 export const matcherSoek = (blokk: TekstblokkOversikt, soek: string): boolean => {
   const ord = soek
     .toLowerCase()
@@ -59,13 +55,10 @@ export const matcherSoek = (blokk: TekstblokkOversikt, soek: string): boolean =>
     .filter(Boolean);
   if (ord.length === 0) return true;
 
-  const soekbareFelt = [
-    blokk.tittel.toLowerCase(),
-    stripHtml(blokk.innhold).toLowerCase(),
-    ...blokk.tags.map((tag) => tag.toLowerCase()),
-  ];
-  // Hvert søkeord må matche minst ett felt (tittel, innhold eller en tag). Slik gir
-  // "USA avslag" treff på blokker som har både "usa" og "avslag" et sted.
+  // Vi søker bevisst kun i tittel og tags – ikke i innhold (fagønske).
+  const soekbareFelt = [blokk.tittel.toLowerCase(), ...blokk.tags.map((tag) => tag.toLowerCase())];
+  // Hvert søkeord må matche minst ett felt (tittel eller en tag). Slik gir "USA avslag"
+  // treff på blokker som har både "usa" og "avslag" i tittel/tags.
   return ord.every((o) => soekbareFelt.some((felt) => felt.includes(o)));
 };
 

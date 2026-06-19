@@ -41,6 +41,9 @@ interface TekstEditorProps {
   feil?: string | { melding: string } | null;
   className?: string;
   placeholder?: string;
+  // Vis brevmaler i tekstblokk-søket. Settes kun fra Send brev (sidemenyen);
+  // i saksflytene viser vi kun tekstblokker.
+  visBrevmaler?: boolean;
 }
 
 // Hjelpefunksjoner for å pakke inn/ut innhold med ql-fritekst div
@@ -61,7 +64,16 @@ const unwrapHtmlEditorDiv = (content: string): string => {
   return match ? match[1] : content;
 };
 
-function HtmlEditor({ value, onChange, disabled, label, feil, className, placeholder }: TekstEditorProps) {
+function HtmlEditor({
+  value,
+  onChange,
+  disabled,
+  label,
+  feil,
+  className,
+  placeholder,
+  visBrevmaler,
+}: TekstEditorProps) {
   const quillRef = useRef<ReactQuill>(null);
   // Referanse for å spore om formatering pågår, for å unngå uendelig rekursjon
   const isFormattingRef = useRef(false);
@@ -291,7 +303,7 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
   return (
     <div className={classNames("htmlEditor", className)}>
       {label && <div className="editor_label">{label}</div>}
-      <TekstblokkSoek onVelg={handleSettInnTekstblokk} disabled={disabled} />
+      <TekstblokkSoek onVelg={handleSettInnTekstblokk} disabled={disabled} visBrevmaler={visBrevmaler} />
       <div
         className={classNames("editor-wrapper", {
           "editor-wrapper--disabled": disabled,

@@ -39,22 +39,15 @@ describe("matcherSoek", () => {
     expect(matcherSoek(usaAvslag, "canada")).toBe(false);
   });
 
-  it("matcher i innhold (HTML strippes)", () => {
+  it("søker ikke i innhold (kun tittel og tags)", () => {
     const medInnhold = blokk(
       "Tittel",
       ["tag"],
       "<p>Du er omfattet av norsk <strong>trygdelovgivning</strong> i territorialfarvann.</p>",
     );
-    expect(matcherSoek(medInnhold, "territorialfarvann")).toBe(true);
-    expect(matcherSoek(medInnhold, "trygdelovgivning")).toBe(true);
-    expect(matcherSoek(medInnhold, "tittel territorialfarvann")).toBe(true);
-    expect(matcherSoek(medInnhold, "strong")).toBe(false);
-  });
-
-  it("gir ikke falske treff på HTML-entiteter", () => {
-    const medEntitet = blokk("Tittel", ["tag"], "<p>Du&nbsp;er omfattet&amp;sikret.</p>");
-    expect(matcherSoek(medEntitet, "nbsp")).toBe(false);
-    expect(matcherSoek(medEntitet, "amp")).toBe(false);
-    expect(matcherSoek(medEntitet, "omfattet")).toBe(true);
+    expect(matcherSoek(medInnhold, "territorialfarvann")).toBe(false);
+    expect(matcherSoek(medInnhold, "trygdelovgivning")).toBe(false);
+    expect(matcherSoek(medInnhold, "tittel")).toBe(true);
+    expect(matcherSoek(medInnhold, "tag")).toBe(true);
   });
 });

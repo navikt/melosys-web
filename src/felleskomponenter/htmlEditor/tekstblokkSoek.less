@@ -32,10 +32,11 @@
     gap: 0.6rem;
   }
 
-  // Eneste scroll-området – hovring her scroller popoveren, ikke siden
+  // Eneste scroll-området – hovring her scroller popoveren, ikke siden.
+  // Fast min-høyde hindrer at popoveren hopper når antall treff endres.
   &__liste {
     flex: 1 1 auto;
-    min-height: 0;
+    min-height: 16rem;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -50,7 +51,13 @@
   }
 
   &__tom {
-    padding: 1rem 0.25rem;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
     color: var(--a-text-subtle);
     text-align: center;
   }

@@ -26,8 +26,43 @@
 
   ul,
   ol {
-    margin: 4px 0 4px 1.5rem;
-    padding: 0;
+    margin: 4px 0;
+    padding-left: 1.5em;
+    counter-reset: ql-list;
+  }
+
+  // Quill 2 lagrer både punkt- og nummerliste som <ol> og skiller dem med
+  // <li data-list="bullet|ordered">. Vi rendrer markøren selv (speiler Quill)
+  // slik at forhåndsvisningen viser riktig punkt vs. nummer. Tom .ql-ui-span
+  // fra editoren skjules.
+  .ql-ui {
+    display: none;
+  }
+
+  li[data-list] {
+    list-style-type: none;
+    position: relative;
+  }
+
+  li[data-list]::before {
+    display: inline-block;
+    width: 1.2em;
+    margin-left: -1.5em;
+    margin-right: 0.3em;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  li[data-list="bullet"]::before {
+    content: "\2022";
+  }
+
+  li[data-list="ordered"] {
+    counter-increment: ql-list;
+  }
+
+  li[data-list="ordered"]::before {
+    content: counter(ql-list, decimal) ". ";
   }
 
   .bracketed-text {

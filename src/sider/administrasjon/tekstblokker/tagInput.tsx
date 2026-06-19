@@ -12,9 +12,11 @@ interface Props {
 function TagInput({ verdier, setVerdier, forslag = [] }: Props) {
   const [utkast, setUtkast] = useState("");
 
+  // Bevar bokstavstørrelse (f.eks. "USA-avtale") og tillat mellomrom i tags.
   const leggTil = (raa: string) => {
-    const ny = raa.trim().toLowerCase();
-    if (!ny || verdier.includes(ny)) {
+    const ny = raa.trim().replace(/\s+/g, " ");
+    const finnesAllerede = verdier.some((t) => t.toLowerCase() === ny.toLowerCase());
+    if (!ny || finnesAllerede) {
       setUtkast("");
       return;
     }
@@ -25,17 +27,20 @@ function TagInput({ verdier, setVerdier, forslag = [] }: Props) {
   const fjern = (tag: string) => setVerdier(verdier.filter((t) => t !== tag));
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Kun komma/Enter legger til. Mellomrom skal kunne være del av en tag.
+    // Backspace med tomt felt gjør bevisst ingenting – tidligere slettet det tags utilsiktet.
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
       leggTil(utkast);
-    } else if (e.key === "Backspace" && utkast === "" && verdier.length > 0) {
-      fjern(verdier[verdier.length - 1]);
     }
   };
 
   const utkastNormalisert = utkast.trim().toLowerCase();
   const matchendeForslag = forslag
-    .filter((tag) => !verdier.includes(tag) && tag.includes(utkastNormalisert))
+    .filter(
+      (tag) =>
+        !verdier.some((v) => v.toLowerCase() === tag.toLowerCase()) && tag.toLowerCase().includes(utkastNormalisert),
+    )
     .slice(0, 6);
 
   return (

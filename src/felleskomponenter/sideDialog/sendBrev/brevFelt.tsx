@@ -65,6 +65,8 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
             className="brevfelt__fritekst"
             disabled={!redigerbart}
             error={feilmelding}
+            // Send brev (sidemenyen): her kan brukeren også sette inn hele brevmaler.
+            visBrevmaler
             // Skjul meta.error før innsending (vis først når showFieldErrors er true)
             suppressMetaError={!formValues?.showFieldErrors}
           />

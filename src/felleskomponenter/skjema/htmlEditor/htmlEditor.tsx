@@ -10,6 +10,8 @@ interface SkjemaHtmlEditorProps {
   error?: string | undefined;
   // Når true: skjul meta.error (f.eks. før innsending når vi "gater" feil)
   suppressMetaError?: boolean;
+  // Vis brevmaler i tekstblokk-søket (kun fra Send brev).
+  visBrevmaler?: boolean;
 }
 
 function SkjemaHtmlEditorComponent({

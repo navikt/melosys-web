@@ -47,7 +47,7 @@ function FritekstvedleggSkjema({
             />
           </Nav.Column>
         </Nav.Row>
-        <Skjema.HTMLEditor feltNavn={`felt.${felt.kode}_FRITEKST.feltVerdi`} key={index} />
+        <Skjema.HTMLEditor feltNavn={`felt.${felt.kode}_FRITEKST.feltVerdi`} key={index} visBrevmaler />
         <Nav.Row>
           <Knapperad
             bekreft={leggTilFritekstvedlegg}

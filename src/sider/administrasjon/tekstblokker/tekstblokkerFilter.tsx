@@ -41,7 +41,7 @@ function TekstblokkerFilter({ type, setType, soek, setSoek, valgteTags, setValgt
       <Search
         label="Søk i tekstblokker"
         hideLabel
-        placeholder="Søk på tittel, innhold eller tag…"
+        placeholder="Søk på tittel eller tag…"
         size="small"
         value={soek}
         onChange={setSoek}
