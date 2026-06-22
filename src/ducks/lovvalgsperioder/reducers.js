@@ -12,6 +12,7 @@ import * as Types from "./types";
 export const initialState = {
   data: [],
   status: STATUS.NOT_STARTED,
+  error: undefined,
 };
 
 const finnIndexTilPeriode = (perioder, action) =>
@@ -22,7 +23,7 @@ export default function reducer(state = initialState, action = {}) {
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };
     case Types.FEILET:
-      return { ...state, status: STATUS.ERROR, data: action.data };
+      return { ...state, status: STATUS.ERROR, error: action.data };
     case Types.OK:
       return {
         ...state,
