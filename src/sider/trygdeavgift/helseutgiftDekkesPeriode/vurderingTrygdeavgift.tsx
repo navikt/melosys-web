@@ -404,6 +404,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
             lagrePending={lagrePending}
             perioder={lagretTrygdeavgift?.trygdeavgiftsperioder}
             erEøsPensjonist={erEøsPensjonist}
+            beregningsforklaringer={lagretTrygdeavgift?.beregningsforklaringer}
           />
         </>
       )}

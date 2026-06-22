@@ -1,0 +1,143 @@
+.beregningsgrunnlag-kort {
+  margin-top: 1rem;
+}
+
+.beregningsgrunnlag-felt {
+  border: 1px solid var(--a-border-subtle, #cfd3d8);
+  border-radius: var(--a-border-radius-medium, 8px);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.beregningsgrunnlag-felt--blink {
+  animation: beregningsgrunnlag-blink 1.8s ease;
+}
+
+@keyframes beregningsgrunnlag-blink {
+  0% {
+    box-shadow: 0 0 0 3px var(--a-surface-info-subtle, #e0f1ff);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.beregningsgrunnlag-felt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.beregningsgrunnlag-felt-tittel {
+  font-weight: 600;
+}
+
+.beregningsgrunnlag-steg {
+  padding: 0.75rem 0;
+  border-bottom: 1px dashed var(--a-border-subtle, #e3e5e8);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.beregningsgrunnlag-steg-tittel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.beregningsgrunnlag-steg-nr {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.375rem;
+  height: 1.375rem;
+  border-radius: 50%;
+  background: var(--a-surface-info, #0067c5);
+  color: var(--a-text-on-info, #fff);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.beregningsgrunnlag-kalkyle {
+  font-size: 0.875rem;
+}
+
+.beregningsgrunnlag-rad {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.25rem 0;
+}
+
+.beregningsgrunnlag-rad-verdi {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.beregningsgrunnlag-rad--ekskludert {
+  color: var(--a-text-subtle, #919699);
+  font-style: italic;
+
+  .beregningsgrunnlag-rad-verdi {
+    text-decoration: line-through;
+  }
+}
+
+.beregningsgrunnlag-rad--sum {
+  border-top: 1px solid var(--a-border-subtle, #e3e5e8);
+  margin-top: 0.25rem;
+  padding-top: 0.5rem;
+  font-weight: 700;
+}
+
+.beregningsgrunnlag-formel {
+  font-family: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+  background: var(--a-surface-subtle, #f7f8fa);
+  border: 1px solid var(--a-border-subtle, #e3e5e8);
+  border-radius: var(--a-border-radius-medium, 6px);
+  padding: 0.5rem 0.625rem;
+  margin: 0.375rem 0;
+}
+
+.beregningsgrunnlag-merknad {
+  margin-top: 0.5rem;
+}
+
+.beregningsgrunnlag-merknad-tekst {
+  margin-top: 0.5rem;
+}
+
+.beregningsgrunnlag-resultat {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--a-surface-subtle, #f7f8fa);
+  border: 1px solid var(--a-border-subtle, #e3e5e8);
+  border-radius: var(--a-border-radius-medium, 6px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.beregningsgrunnlag-resultat-beloep {
+  font-size: 1.25rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
