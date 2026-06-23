@@ -1,9 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import MKV from "../../../../../melosyskodeverk";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
 import { TidligereGrunnlag } from "./tidligereGrunnlag";
+
+vi.mock("../../../../../featuretoggle", () => ({
+  useFeatureToggle: () => false,
+}));
 
 describe("TidligereGrunnlag", () => {
   const createMockResponse = (overrides: Partial<AarsavregningResponse> = {}): AarsavregningResponse => ({

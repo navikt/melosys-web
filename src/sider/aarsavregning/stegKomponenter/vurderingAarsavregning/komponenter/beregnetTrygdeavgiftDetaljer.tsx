@@ -1,11 +1,15 @@
+import { useState } from "react";
 import { Grunnlagsopplysninger } from "../../../../../services/modules/aarsavregning/aarsavregning";
-import { Beregningsregel } from "../../../../../services/modules/trygdeavgift";
+import { Beregningsforklaring, Beregningsregel } from "../../../../../services/modules/trygdeavgift";
 import {
   formaterSats,
   formaterDekning,
   formaterInntektskilde,
   Beregningsforklaringer,
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/beregningsforklaring";
+import { Beregningsgrunnlag } from "../../../../../felleskomponenter/trygdeavgift/komponenter/beregningsgrunnlag";
+import { useFeatureToggle } from "../../../../../featuretoggle";
+import { VIS_TRYGDEAVGIFT_BEREGNINGSGRUNNLAG } from "../../../../../featuretoggle/toggleNavn";
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 import MKV from "../../../../../melosyskodeverk";
@@ -34,10 +38,15 @@ interface DetaljerInterface {
 export function BeregnetTrygdeavgiftDetaljer({
   grunnlag,
   medlemskapsTypeErPliktig,
+  beregningsforklaringer,
 }: {
   grunnlag: Grunnlagsopplysninger | undefined;
   medlemskapsTypeErPliktig: boolean;
+  beregningsforklaringer?: Beregningsforklaring[];
 }) {
+  const visBeregningsgrunnlag = useFeatureToggle(VIS_TRYGDEAVGIFT_BEREGNINGSGRUNNLAG) === true;
+  const [grunnlagÅpent, setGrunnlagÅpent] = useState(false);
+
   if (!grunnlag || !grunnlag.avgift) return null;
   const erHelseutgiftDekkesPeriode = erPeriodeListeHelseutgiftdekkesperiode(
     grunnlag.trygdeavgiftsgrunnlag.avgiftspliktigperioder,
@@ -139,6 +148,14 @@ export function BeregnetTrygdeavgiftDetaljer({
         </Nav.Table.Body>
       </Nav.Table>
       <Beregningsforklaringer perioder={detaljerListe} />
+      {visBeregningsgrunnlag && (beregningsforklaringer?.length ?? 0) > 0 && (
+        <Beregningsgrunnlag
+          forklaringer={beregningsforklaringer!}
+          open={grunnlagÅpent}
+          onToggle={setGrunnlagÅpent}
+          scrollTilFelt={null}
+        />
+      )}
     </div>
   );
 }

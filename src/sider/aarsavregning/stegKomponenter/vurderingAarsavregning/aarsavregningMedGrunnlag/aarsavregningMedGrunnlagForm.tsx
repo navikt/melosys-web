@@ -19,6 +19,7 @@ import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { Beregningsforklaring } from "../../../../../services/modules/trygdeavgift";
 import * as PeriodeAdapter from "../../../../../services/modules/aarsavregning/periodeApiAdapter";
 import type {
   Avgiftspliktigperiode,
@@ -83,6 +84,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(
     initiellData.aarsavregningResponse,
   );
+  const [beregningsforklaringer, setBeregningsforklaringer] = useState<Beregningsforklaring[]>([]);
   const [beregningPaagar, setBeregningPaagar] = useState(false);
   const [previousFormValues, setPreviousFormValues] = useState<MappedFormState | null>(null);
   const [endrerEndeligAvgiftValg, setEndrerEndeligAvgiftValg] = useState(false);
@@ -434,9 +436,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         medlemskapstypeErPliktig,
         setFeilmelding,
         setAarsavregningResponse,
+        setBeregningsforklaringer,
       });
     },
-    [medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse],
+    [medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse, setBeregningsforklaringer],
   );
 
   const debouncedBeregning = useCallback(() => {
@@ -784,6 +787,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
                     <BeregnetTrygdeavgiftDetaljer
                       grunnlag={aarsavregningResponse.nyttTrygdeavgiftsGrunnlag}
                       medlemskapsTypeErPliktig={medlemskapstypeErPliktig!}
+                      beregningsforklaringer={beregningsforklaringer}
                     />
                   </Nav.ExpansionCard.Content>
                 </Nav.ExpansionCard>
