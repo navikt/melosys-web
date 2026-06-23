@@ -28,7 +28,7 @@ vi.mock("../../../utils", () => ({
   formaterTilNorskBelopUtenDesimaler: (n: number) => String(n),
 }));
 
-import { Beregningsgrunnlag } from "./beregningsgrunnlag";
+import { BeregningsforklaringKort } from "./beregningsforklaringKort";
 import { Beregningsforklaring } from "../../../services/modules/trygdeavgift";
 
 const lag25ProsentForklaring = (): Beregningsforklaring => ({
@@ -94,17 +94,19 @@ const lagForklaringMedEkskludert = (): Beregningsforklaring => ({
 
 const noop = () => undefined;
 
-describe("Beregningsgrunnlag", () => {
+describe("BeregningsforklaringKort", () => {
   it("returnerer null når det ikke finnes forklaringer", () => {
     const { container } = render(
-      <Beregningsgrunnlag forklaringer={[]} open={false} onToggle={noop} scrollTilFelt={null} />,
+      <BeregningsforklaringKort forklaringer={[]} open={false} onToggle={noop} scrollTilFelt={null} />,
     );
     expect(container.innerHTML).toBe("");
   });
 
   it("rendrer alle tre steg for 25 %-regel-scenario", () => {
-    render(<Beregningsgrunnlag forklaringer={[lag25ProsentForklaring()]} open onToggle={noop} scrollTilFelt={null} />);
-    expect(screen.getByText("Beregningsgrunnlag")).toBeDefined();
+    render(
+      <BeregningsforklaringKort forklaringer={[lag25ProsentForklaring()]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    expect(screen.getByText("Beregningsforklaring")).toBeDefined();
     expect(screen.getByText(/Inntekt som inngår i vurderingen/)).toBeDefined();
     expect(screen.getByText(/Sjekk mot minstebeløpet/)).toBeDefined();
     expect(screen.getByText(/25 %-regelen \(maksgrense\)/)).toBeDefined();
@@ -118,7 +120,12 @@ describe("Beregningsgrunnlag", () => {
 
   it("viser ikke steg 3 og merker under minstebeløp for minstebeløp-scenario", () => {
     render(
-      <Beregningsgrunnlag forklaringer={[lagMinstebeloepForklaring()]} open onToggle={noop} scrollTilFelt={null} />,
+      <BeregningsforklaringKort
+        forklaringer={[lagMinstebeloepForklaring()]}
+        open
+        onToggle={noop}
+        scrollTilFelt={null}
+      />,
     );
     expect(screen.getByText(/Sjekk mot minstebeløpet/)).toBeDefined();
     // Steg 3 skal ikke vises når maksimalAvgift25Prosent er null
@@ -128,14 +135,21 @@ describe("Beregningsgrunnlag", () => {
 
   it("viser info om ekskludert inntekt når ekskluderteInntekter finnes", () => {
     render(
-      <Beregningsgrunnlag forklaringer={[lagForklaringMedEkskludert()]} open onToggle={noop} scrollTilFelt={null} />,
+      <BeregningsforklaringKort
+        forklaringer={[lagForklaringMedEkskludert()]}
+        open
+        onToggle={noop}
+        scrollTilFelt={null}
+      />,
     );
     expect(screen.getByText(/Skatteetaten fastsetter avgiften holdes utenfor/)).toBeDefined();
     expect(screen.getByText("ARBEIDSINNTEKT_FRA_NORGE")).toBeDefined();
   });
 
   it("merker minstebeløpet avkortes ikke", () => {
-    render(<Beregningsgrunnlag forklaringer={[lag25ProsentForklaring()]} open onToggle={noop} scrollTilFelt={null} />);
+    render(
+      <BeregningsforklaringKort forklaringer={[lag25ProsentForklaring()]} open onToggle={noop} scrollTilFelt={null} />,
+    );
     expect(screen.getByText(/Minstebeløpet avkortes ikke/)).toBeDefined();
   });
 });

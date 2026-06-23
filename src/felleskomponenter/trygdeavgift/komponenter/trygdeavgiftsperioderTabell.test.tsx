@@ -263,14 +263,14 @@ const lagForklaring = (): Beregningsforklaring => ({
   fastsattAvgift: 2587,
 });
 
-describe("TrygdeavgiftsperioderTabell · beregningsgrunnlag", () => {
+describe("TrygdeavgiftsperioderTabell · beregningsforklaring", () => {
   const periode25 = lagPeriode("2025-01-01", "2025-12-31", {
     avgiftssats: null,
     avgiftPerMd: 215,
     beregningsregel: "TJUEFEM_PROSENT_REGEL",
   });
 
-  it("viser ikke beregningsgrunnlag-kortet når toggle er av", () => {
+  it("viser ikke beregningsforklaring-kortet når toggle er av", () => {
     mockUseFeatureToggle.mockReturnValue(false);
     render(
       <TrygdeavgiftsperioderTabell
@@ -279,22 +279,22 @@ describe("TrygdeavgiftsperioderTabell · beregningsgrunnlag", () => {
         beregningsforklaringer={[lagForklaring()]}
       />,
     );
-    expect(screen.queryByText("Beregningsgrunnlag")).toBeNull();
+    expect(screen.queryByText("Beregningsforklaring")).toBeNull();
     // Tabellen er uendret: `*`-symbolet vises som ren tekst (ingen knapp)
     expect(screen.getByText("*")).toBeDefined();
     expect(screen.queryByRole("button", { name: "*" })).toBeNull();
   });
 
-  it("viser ikke beregningsgrunnlag-kortet når forklaringer er tom", () => {
+  it("viser ikke beregningsforklaring-kortet når forklaringer er tom", () => {
     mockUseFeatureToggle.mockReturnValue(true);
     render(<TrygdeavgiftsperioderTabell perioder={[periode25]} lagrePending={false} beregningsforklaringer={[]} />);
-    expect(screen.queryByText("Beregningsgrunnlag")).toBeNull();
+    expect(screen.queryByText("Beregningsforklaring")).toBeNull();
   });
 
-  it("viser ikke beregningsgrunnlag-kortet når forklaringer er undefined", () => {
+  it("viser ikke beregningsforklaring-kortet når forklaringer er undefined", () => {
     mockUseFeatureToggle.mockReturnValue(true);
     render(<TrygdeavgiftsperioderTabell perioder={[periode25]} lagrePending={false} />);
-    expect(screen.queryByText("Beregningsgrunnlag")).toBeNull();
+    expect(screen.queryByText("Beregningsforklaring")).toBeNull();
   });
 
   it("viser kortet og klikkbart `*` når toggle er på og forklaringer finnes", () => {
@@ -306,7 +306,7 @@ describe("TrygdeavgiftsperioderTabell · beregningsgrunnlag", () => {
         beregningsforklaringer={[lagForklaring()]}
       />,
     );
-    expect(screen.getByText("Beregningsgrunnlag")).toBeDefined();
+    expect(screen.getByText("Beregningsforklaring")).toBeDefined();
     // `*` er nå en knapp med Hvorfor-tooltip
     const symbol = screen.getByRole("button", { name: "*" });
     expect(symbol).toBeDefined();

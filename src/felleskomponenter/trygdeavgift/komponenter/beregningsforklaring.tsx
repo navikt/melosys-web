@@ -1,5 +1,5 @@
 import { Beregningsforklaring, Beregningsregel, Beregningsregelgruppe } from "../../../services/modules/trygdeavgift";
-import { feltId, useÅpneGrunnlag, ÅpneGrunnlagFn } from "./beregningsgrunnlagContext";
+import { feltId, useÅpneGrunnlag, ÅpneGrunnlagFn } from "./beregningsforklaringKortContext";
 
 import "./beregningsforklaring.less";
 
@@ -73,7 +73,7 @@ function SatsSymbol({
     <button
       type="button"
       className="beregningsforklaring-symbol"
-      title="Hvorfor? Klikk for beregningsgrunnlag"
+      title="Hvorfor? Klikk for beregningsforklaring"
       onClick={() => åpneGrunnlag(forklaring.aar, forklaring.regelgruppe)}
     >
       {symbol}
@@ -88,7 +88,7 @@ export function formaterSats(periode: MedBeregningsregel): string {
 }
 
 /**
- * Som `formaterSats`, men returnerer en klikkbar `*`/`**` når et beregningsgrunnlag
+ * Som `formaterSats`, men returnerer en klikkbar `*`/`**` når en beregningsforklaring
  * finnes (toggle på). Faller tilbake til ren tekst ellers.
  */
 export function FormaterSats({

@@ -11,9 +11,9 @@ import {
   Inntektslinje,
   EkskludertInntektslinje,
 } from "../../../services/modules/trygdeavgift";
-import { feltId } from "./beregningsgrunnlagContext";
+import { feltId } from "./beregningsforklaringKortContext";
 
-import "./beregningsgrunnlag.less";
+import "./beregningsforklaringKort.less";
 
 const REGELGRUPPE_TEKST: Record<Beregningsregelgruppe, string> = {
   SAMLET: "Samlet inntekt",
@@ -71,47 +71,47 @@ function Inntektslinjer({
   sumAarligInntekt: number;
 }) {
   return (
-    <div className="beregningsgrunnlag-steg">
-      <div className="beregningsgrunnlag-steg-tittel">
-        <span className="beregningsgrunnlag-steg-nr">1</span>
+    <div className="beregningsforklaring-kort-steg">
+      <div className="beregningsforklaring-kort-steg-tittel">
+        <span className="beregningsforklaring-kort-steg-nr">1</span>
         Inntekt som inngår i vurderingen
       </div>
-      <div className="beregningsgrunnlag-kalkyle">
+      <div className="beregningsforklaring-kort-kalkyle">
         {inntektsgrunnlag.map((linje, idx) => (
-          <div className="beregningsgrunnlag-rad" key={`inntekt-${idx}`}>
-            <div className="beregningsgrunnlag-rad-tekst">
+          <div className="beregningsforklaring-kort-rad" key={`inntekt-${idx}`}>
+            <div className="beregningsforklaring-kort-rad-tekst">
               <Nav.BodyShort size="small">{visInntektskilde(linje.inntektskilde)}</Nav.BodyShort>
               <Nav.Detail textColor="subtle">
                 {linje.fom} – {linje.tom}
               </Nav.Detail>
             </div>
-            <Nav.BodyShort size="small" className="beregningsgrunnlag-rad-verdi">
+            <Nav.BodyShort size="small" className="beregningsforklaring-kort-rad-verdi">
               {kr(linje.maanedsbeloep)} × {linje.antallMaaneder} mnd = <strong>{kr(linje.sumBeloep)}</strong>
             </Nav.BodyShort>
           </div>
         ))}
         {ekskluderteInntekter.map((linje, idx) => (
-          <div className="beregningsgrunnlag-rad beregningsgrunnlag-rad--ekskludert" key={`ekskl-${idx}`}>
-            <div className="beregningsgrunnlag-rad-tekst">
+          <div className="beregningsforklaring-kort-rad beregningsforklaring-kort-rad--ekskludert" key={`ekskl-${idx}`}>
+            <div className="beregningsforklaring-kort-rad-tekst">
               <Nav.BodyShort size="small">{visInntektskilde(linje.inntektskilde)}</Nav.BodyShort>
               <Nav.Detail textColor="subtle">
                 {linje.fom} – {linje.tom}
               </Nav.Detail>
             </div>
-            <Nav.BodyShort size="small" className="beregningsgrunnlag-rad-verdi">
+            <Nav.BodyShort size="small" className="beregningsforklaring-kort-rad-verdi">
               {kr(linje.sumBeloep)}
             </Nav.BodyShort>
           </div>
         ))}
-        <div className="beregningsgrunnlag-rad beregningsgrunnlag-rad--sum">
+        <div className="beregningsforklaring-kort-rad beregningsforklaring-kort-rad--sum">
           <Nav.BodyShort size="small">Sum inntekt i vurderingen</Nav.BodyShort>
-          <Nav.BodyShort size="small" className="beregningsgrunnlag-rad-verdi">
+          <Nav.BodyShort size="small" className="beregningsforklaring-kort-rad-verdi">
             {kr(sumAarligInntekt)}
           </Nav.BodyShort>
         </div>
       </div>
       {ekskluderteInntekter.length > 0 && (
-        <Nav.Alert variant="info" size="small" className="beregningsgrunnlag-merknad">
+        <Nav.Alert variant="info" size="small" className="beregningsforklaring-kort-merknad">
           Inntekt der Skatteetaten fastsetter avgiften holdes utenfor minstebeløp- og 25 %-vurderingen.
         </Nav.Alert>
       )}
@@ -122,35 +122,35 @@ function Inntektslinjer({
 function MinstebeloepSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
   const over = forklaring.sumAarligInntekt >= forklaring.minstebeloep;
   return (
-    <div className="beregningsgrunnlag-steg">
-      <div className="beregningsgrunnlag-steg-tittel">
-        <span className="beregningsgrunnlag-steg-nr">2</span>
+    <div className="beregningsforklaring-kort-steg">
+      <div className="beregningsforklaring-kort-steg-tittel">
+        <span className="beregningsforklaring-kort-steg-nr">2</span>
         Sjekk mot minstebeløpet
       </div>
-      <div className="beregningsgrunnlag-kalkyle">
-        <div className="beregningsgrunnlag-rad">
+      <div className="beregningsforklaring-kort-kalkyle">
+        <div className="beregningsforklaring-kort-rad">
           <Nav.BodyShort size="small">Minstebeløp {forklaring.aar}</Nav.BodyShort>
-          <Nav.BodyShort size="small" className="beregningsgrunnlag-rad-verdi">
+          <Nav.BodyShort size="small" className="beregningsforklaring-kort-rad-verdi">
             {kr(forklaring.minstebeloep)}
           </Nav.BodyShort>
         </div>
-        <div className="beregningsgrunnlag-rad">
+        <div className="beregningsforklaring-kort-rad">
           <Nav.BodyShort size="small">Sum inntekt i vurderingen</Nav.BodyShort>
-          <Nav.BodyShort size="small" className="beregningsgrunnlag-rad-verdi">
+          <Nav.BodyShort size="small" className="beregningsforklaring-kort-rad-verdi">
             {kr(forklaring.sumAarligInntekt)}
           </Nav.BodyShort>
         </div>
       </div>
-      <Nav.Detail textColor="subtle" className="beregningsgrunnlag-merknad-tekst">
+      <Nav.Detail textColor="subtle" className="beregningsforklaring-kort-merknad-tekst">
         Minstebeløpet avkortes ikke selv om personen bare skal betale avgift deler av året – hele årets beløp gjelder.
       </Nav.Detail>
       {over ? (
-        <Nav.Alert variant="success" size="small" className="beregningsgrunnlag-merknad">
+        <Nav.Alert variant="success" size="small" className="beregningsforklaring-kort-merknad">
           {kr(forklaring.sumAarligInntekt)} ≥ {kr(forklaring.minstebeloep)} → inntekten er over minstebeløpet. Avgift
           skal beregnes.
         </Nav.Alert>
       ) : (
-        <Nav.Alert variant="warning" size="small" className="beregningsgrunnlag-merknad">
+        <Nav.Alert variant="warning" size="small" className="beregningsforklaring-kort-merknad">
           {kr(forklaring.sumAarligInntekt)} &lt; {kr(forklaring.minstebeloep)} → inntekten er under minstebeløpet. Det
           skal ikke betales avgift.
         </Nav.Alert>
@@ -164,41 +164,41 @@ function MaksgrenseSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
 
   const begrenset = forklaring.valgtRegel === "TJUEFEM_PROSENT_REGEL";
   return (
-    <div className="beregningsgrunnlag-steg">
-      <div className="beregningsgrunnlag-steg-tittel">
-        <span className="beregningsgrunnlag-steg-nr">3</span>
+    <div className="beregningsforklaring-kort-steg">
+      <div className="beregningsforklaring-kort-steg-tittel">
+        <span className="beregningsforklaring-kort-steg-nr">3</span>
         25 %-regelen (maksgrense)
       </div>
-      <div className="beregningsgrunnlag-kalkyle">
-        <div className="beregningsgrunnlag-rad">
-          <div className="beregningsgrunnlag-rad-tekst">
+      <div className="beregningsforklaring-kort-kalkyle">
+        <div className="beregningsforklaring-kort-rad">
+          <div className="beregningsforklaring-kort-rad-tekst">
             <Nav.BodyShort size="small">Inntekt over minstebeløpet</Nav.BodyShort>
             <Nav.Detail textColor="subtle">
               {kr(forklaring.sumAarligInntekt)} − {kr(forklaring.minstebeloep)}
             </Nav.Detail>
           </div>
-          <Nav.BodyShort size="small" className="beregningsgrunnlag-rad-verdi">
+          <Nav.BodyShort size="small" className="beregningsforklaring-kort-rad-verdi">
             {kr(forklaring.inntektOverMinstebeloep)}
           </Nav.BodyShort>
         </div>
-        <div className="beregningsgrunnlag-formel">
+        <div className="beregningsforklaring-kort-formel">
           Maks avgift = 25 % × {kr(forklaring.inntektOverMinstebeloep)} ={" "}
           <strong>{kr(forklaring.maksimalAvgift25Prosent)}</strong>
         </div>
-        <div className="beregningsgrunnlag-rad">
+        <div className="beregningsforklaring-kort-rad">
           <Nav.BodyShort size="small">Ordinær avgift</Nav.BodyShort>
-          <Nav.BodyShort size="small" className="beregningsgrunnlag-rad-verdi">
+          <Nav.BodyShort size="small" className="beregningsforklaring-kort-rad-verdi">
             {kr(forklaring.ordinaerAvgift)}
           </Nav.BodyShort>
         </div>
       </div>
       {begrenset ? (
-        <Nav.Alert variant="success" size="small" className="beregningsgrunnlag-merknad">
+        <Nav.Alert variant="success" size="small" className="beregningsforklaring-kort-merknad">
           Ordinær avgift {kr(forklaring.ordinaerAvgift)} &gt; 25 %-tak {kr(forklaring.maksimalAvgift25Prosent)} → 25
           %-regelen brukes. Avgiften begrenses til {kr(forklaring.maksimalAvgift25Prosent)}.
         </Nav.Alert>
       ) : (
-        <Nav.Alert variant="info" size="small" className="beregningsgrunnlag-merknad">
+        <Nav.Alert variant="info" size="small" className="beregningsforklaring-kort-merknad">
           Ordinær avgift {kr(forklaring.ordinaerAvgift)} ≤ 25 %-tak {kr(forklaring.maksimalAvgift25Prosent)} → ordinær
           beregning brukes.
         </Nav.Alert>
@@ -210,9 +210,9 @@ function MaksgrenseSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
 function Forklaringsfelt({ forklaring }: { forklaring: Beregningsforklaring }) {
   const id = feltId(forklaring.aar, forklaring.regelgruppe);
   return (
-    <div className="beregningsgrunnlag-felt" id={id} tabIndex={-1}>
-      <div className="beregningsgrunnlag-felt-header">
-        <Nav.BodyShort size="small" className="beregningsgrunnlag-felt-tittel">
+    <div className="beregningsforklaring-kort-felt" id={id} tabIndex={-1}>
+      <div className="beregningsforklaring-kort-felt-header">
+        <Nav.BodyShort size="small" className="beregningsforklaring-kort-felt-tittel">
           {forklaring.aar} · {visRegelgruppe(forklaring.regelgruppe)}
         </Nav.BodyShort>
         <Nav.Tag variant={REGEL_TAG_VARIANT[forklaring.valgtRegel] ?? "neutral"} size="xsmall">
@@ -226,15 +226,15 @@ function Forklaringsfelt({ forklaring }: { forklaring: Beregningsforklaring }) {
       />
       <MinstebeloepSjekk forklaring={forklaring} />
       <MaksgrenseSjekk forklaring={forklaring} />
-      <div className="beregningsgrunnlag-resultat">
+      <div className="beregningsforklaring-kort-resultat">
         <Nav.BodyShort size="small">Fastsatt avgift ({visAarsak(forklaring.aarsak)})</Nav.BodyShort>
-        <span className="beregningsgrunnlag-resultat-beloep">{kr(forklaring.fastsattAvgift)}</span>
+        <span className="beregningsforklaring-kort-resultat-beloep">{kr(forklaring.fastsattAvgift)}</span>
       </div>
     </div>
   );
 }
 
-export function Beregningsgrunnlag({
+export function BeregningsforklaringKort({
   forklaringer,
   open,
   onToggle,
@@ -255,24 +255,24 @@ export function Beregningsgrunnlag({
     const el = innholdRef.current?.querySelector<HTMLElement>(`#${CSS.escape(scrollTilFelt)}`);
     if (!el) return;
     el.scrollIntoView({ behavior: "smooth", block: "center" });
-    el.classList.remove("beregningsgrunnlag-felt--blink");
+    el.classList.remove("beregningsforklaring-kort-felt--blink");
     // Trigger reflow slik at animasjonen kjøres på nytt ved gjentatte klikk.
     void el.offsetWidth;
-    el.classList.add("beregningsgrunnlag-felt--blink");
+    el.classList.add("beregningsforklaring-kort-felt--blink");
   }, [open, scrollTilFelt]);
 
   if (forklaringer.length === 0) return null;
 
   return (
     <Nav.ExpansionCard
-      className="beregningsgrunnlag-kort"
-      aria-label="Beregningsgrunnlag for trygdeavgift"
+      className="beregningsforklaring-kort-kort"
+      aria-label="Beregningsforklaring for trygdeavgift"
       size="small"
       open={open}
       onToggle={onToggle}
     >
       <Nav.ExpansionCard.Header>
-        <Nav.ExpansionCard.Title size="small">Beregningsgrunnlag</Nav.ExpansionCard.Title>
+        <Nav.ExpansionCard.Title size="small">Beregningsforklaring</Nav.ExpansionCard.Title>
         <Nav.ExpansionCard.Description>Inntektsgrunnlag, minstebeløp og 25 %-vurdering</Nav.ExpansionCard.Description>
       </Nav.ExpansionCard.Header>
       <Nav.ExpansionCard.Content>

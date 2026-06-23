@@ -1,8 +1,8 @@
-.beregningsgrunnlag-kort {
+.beregningsforklaring-kort-kort {
   margin-top: 1rem;
 }
 
-.beregningsgrunnlag-felt {
+.beregningsforklaring-kort-felt {
   border: 1px solid var(--a-border-subtle, #cfd3d8);
   border-radius: var(--a-border-radius-medium, 8px);
   padding: 0.75rem 1rem;
@@ -17,11 +17,11 @@
   }
 }
 
-.beregningsgrunnlag-felt--blink {
-  animation: beregningsgrunnlag-blink 1.8s ease;
+.beregningsforklaring-kort-felt--blink {
+  animation: beregningsforklaring-kort-blink 1.8s ease;
 }
 
-@keyframes beregningsgrunnlag-blink {
+@keyframes beregningsforklaring-kort-blink {
   0% {
     box-shadow: 0 0 0 3px var(--a-surface-info-subtle, #e0f1ff);
   }
@@ -31,7 +31,7 @@
   }
 }
 
-.beregningsgrunnlag-felt-header {
+.beregningsforklaring-kort-felt-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -39,11 +39,11 @@
   margin-bottom: 0.5rem;
 }
 
-.beregningsgrunnlag-felt-tittel {
+.beregningsforklaring-kort-felt-tittel {
   font-weight: 600;
 }
 
-.beregningsgrunnlag-steg {
+.beregningsforklaring-kort-steg {
   padding: 0.75rem 0;
   border-bottom: 1px dashed var(--a-border-subtle, #e3e5e8);
 
@@ -52,7 +52,7 @@
   }
 }
 
-.beregningsgrunnlag-steg-tittel {
+.beregningsforklaring-kort-steg-tittel {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -61,7 +61,7 @@
   margin-bottom: 0.5rem;
 }
 
-.beregningsgrunnlag-steg-nr {
+.beregningsforklaring-kort-steg-nr {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -74,39 +74,39 @@
   font-weight: 700;
 }
 
-.beregningsgrunnlag-kalkyle {
+.beregningsforklaring-kort-kalkyle {
   font-size: 0.875rem;
 }
 
-.beregningsgrunnlag-rad {
+.beregningsforklaring-kort-rad {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
   padding: 0.25rem 0;
 }
 
-.beregningsgrunnlag-rad-verdi {
+.beregningsforklaring-kort-rad-verdi {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
-.beregningsgrunnlag-rad--ekskludert {
+.beregningsforklaring-kort-rad--ekskludert {
   color: var(--a-text-subtle, #919699);
   font-style: italic;
 
-  .beregningsgrunnlag-rad-verdi {
+  .beregningsforklaring-kort-rad-verdi {
     text-decoration: line-through;
   }
 }
 
-.beregningsgrunnlag-rad--sum {
+.beregningsforklaring-kort-rad--sum {
   border-top: 1px solid var(--a-border-subtle, #e3e5e8);
   margin-top: 0.25rem;
   padding-top: 0.5rem;
   font-weight: 700;
 }
 
-.beregningsgrunnlag-formel {
+.beregningsforklaring-kort-formel {
   font-family: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
   font-size: 0.8125rem;
   background: var(--a-surface-subtle, #f7f8fa);
@@ -116,15 +116,15 @@
   margin: 0.375rem 0;
 }
 
-.beregningsgrunnlag-merknad {
+.beregningsforklaring-kort-merknad {
   margin-top: 0.5rem;
 }
 
-.beregningsgrunnlag-merknad-tekst {
+.beregningsforklaring-kort-merknad-tekst {
   margin-top: 0.5rem;
 }
 
-.beregningsgrunnlag-resultat {
+.beregningsforklaring-kort-resultat {
   margin-top: 0.75rem;
   padding: 0.75rem 1rem;
   background: var(--a-surface-subtle, #f7f8fa);
@@ -136,7 +136,7 @@
   gap: 0.75rem;
 }
 
-.beregningsgrunnlag-resultat-beloep {
+.beregningsforklaring-kort-resultat-beloep {
   font-size: 1.25rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;

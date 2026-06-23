@@ -268,7 +268,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     expect(screen.queryByText(/Mer enn en inntekt/)).not.toBeInTheDocument();
   });
 
-  describe("Beregningsgrunnlag-kort", () => {
+  describe("Beregningsforklaring-kort", () => {
     it("rendrer kortet når toggelen er på og beregningsforklaringer er ikke-tom", () => {
       useFeatureToggleMock.mockReturnValue(true);
 
@@ -280,7 +280,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
         />,
       );
 
-      expect(screen.getByRole("region", { name: "Beregningsgrunnlag for trygdeavgift" })).toBeInTheDocument();
+      expect(screen.getByRole("region", { name: "Beregningsforklaring for trygdeavgift" })).toBeInTheDocument();
     });
 
     it("rendrer ikke kortet når toggelen er av selv om beregningsforklaringer er ikke-tom", () => {
@@ -294,7 +294,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
         />,
       );
 
-      expect(screen.queryByRole("region", { name: "Beregningsgrunnlag for trygdeavgift" })).not.toBeInTheDocument();
+      expect(screen.queryByRole("region", { name: "Beregningsforklaring for trygdeavgift" })).not.toBeInTheDocument();
     });
 
     it("rendrer ikke kortet når toggelen er på men beregningsforklaringer er tom", () => {
@@ -308,7 +308,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
         />,
       );
 
-      expect(screen.queryByRole("region", { name: "Beregningsgrunnlag for trygdeavgift" })).not.toBeInTheDocument();
+      expect(screen.queryByRole("region", { name: "Beregningsforklaring for trygdeavgift" })).not.toBeInTheDocument();
     });
 
     it("rendrer ikke kortet når beregningsforklaringer ikke er gitt", () => {
@@ -316,7 +316,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
 
       render(<BeregnetTrygdeavgiftDetaljer grunnlag={createMockData()} medlemskapsTypeErPliktig={true} />);
 
-      expect(screen.queryByRole("region", { name: "Beregningsgrunnlag for trygdeavgift" })).not.toBeInTheDocument();
+      expect(screen.queryByRole("region", { name: "Beregningsforklaring for trygdeavgift" })).not.toBeInTheDocument();
     });
   });
 });

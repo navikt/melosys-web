@@ -6,7 +6,7 @@ import * as Nav from "../../../navFrontend";
 import { Beregningsforklaring, Trygdeavgiftsperiode } from "../../../services/modules/trygdeavgift";
 import { Spinner } from "../../spinner";
 import { useFeatureToggle } from "../../../featuretoggle";
-import { VIS_TRYGDEAVGIFT_BEREGNINGSGRUNNLAG } from "../../../featuretoggle/toggleNavn";
+import { VIS_TRYGDEAVGIFT_BEREGNINGSFORKLARING } from "../../../featuretoggle/toggleNavn";
 import {
   formaterDekning,
   formaterInntektskilde,
@@ -15,8 +15,8 @@ import {
   erUnderMinstebeløp,
   MINSTEBELØP_ALERT_TEKST,
 } from "./beregningsforklaring";
-import { Beregningsgrunnlag } from "./beregningsgrunnlag";
-import { BeregningsgrunnlagProvider, ÅpneGrunnlagFn, feltId } from "./beregningsgrunnlagContext";
+import { BeregningsforklaringKort } from "./beregningsforklaringKort";
+import { BeregningsforklaringKortProvider, ÅpneGrunnlagFn, feltId } from "./beregningsforklaringKortContext";
 
 import "./trygdeavgiftsperioderTabell.less";
 
@@ -31,9 +31,9 @@ function TrygdeavgiftsperioderTabell({
   erEøsPensjonist?: boolean;
   beregningsforklaringer?: Beregningsforklaring[];
 }) {
-  const visBeregningsgrunnlag = useFeatureToggle(VIS_TRYGDEAVGIFT_BEREGNINGSGRUNNLAG) === true;
+  const visBeregningsforklaring = useFeatureToggle(VIS_TRYGDEAVGIFT_BEREGNINGSFORKLARING) === true;
   const harForklaringer = Boolean(beregningsforklaringer && beregningsforklaringer.length > 0);
-  const skalViseBeregningsgrunnlag = visBeregningsgrunnlag && harForklaringer;
+  const skalViseBeregningsforklaring = visBeregningsforklaring && harForklaringer;
 
   const [grunnlagÅpent, setGrunnlagÅpent] = useState(false);
   const [scrollTilFelt, setScrollTilFelt] = useState<string | null>(null);
@@ -47,10 +47,10 @@ function TrygdeavgiftsperioderTabell({
 
   const sortertePerioder = [...perioder].sort(Utils.dato.sorterEtterISOFomDato);
   const alleUnderMinstebeløp = sortertePerioder.length > 0 && sortertePerioder.every(erUnderMinstebeløp);
-  const forklaringerForKoblinger = skalViseBeregningsgrunnlag ? beregningsforklaringer : undefined;
+  const forklaringerForKoblinger = skalViseBeregningsforklaring ? beregningsforklaringer : undefined;
 
   return (
-    <BeregningsgrunnlagProvider value={skalViseBeregningsgrunnlag ? åpneGrunnlag : undefined}>
+    <BeregningsforklaringKortProvider value={skalViseBeregningsforklaring ? åpneGrunnlag : undefined}>
       <div className="tabell-container">
         {lagrePending && (
           <div className="loader-container">
@@ -102,8 +102,8 @@ function TrygdeavgiftsperioderTabell({
               </Nav.Table.Body>
             </Nav.Table>
             <Beregningsforklaringer perioder={sortertePerioder} forklaringer={forklaringerForKoblinger} />
-            {skalViseBeregningsgrunnlag && (
-              <Beregningsgrunnlag
+            {skalViseBeregningsforklaring && (
+              <BeregningsforklaringKort
                 forklaringer={beregningsforklaringer!}
                 open={grunnlagÅpent}
                 onToggle={setGrunnlagÅpent}
@@ -113,7 +113,7 @@ function TrygdeavgiftsperioderTabell({
           </>
         )}
       </div>
-    </BeregningsgrunnlagProvider>
+    </BeregningsforklaringKortProvider>
   );
 }
 
