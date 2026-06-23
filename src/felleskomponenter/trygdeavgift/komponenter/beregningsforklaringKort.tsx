@@ -10,6 +10,7 @@ import {
   BeregningsforklaringAarsak,
   Inntektslinje,
   EkskludertInntektslinje,
+  OrdinaerAvgiftslinje,
 } from "../../../services/modules/trygdeavgift";
 import { feltId } from "./beregningsforklaringKortContext";
 
@@ -43,6 +44,10 @@ const REGEL_TAG_VARIANT: Record<Beregningsregel, "neutral" | "info" | "warning">
 function kr(beloep: number | null | undefined): string {
   if (beloep === null || beloep === undefined) return "–";
   return `${formaterTilNorskBelopUtenDesimaler(beloep)} kr`;
+}
+
+function visProsent(sats: number): string {
+  return `${String(sats).replace(".", ",")} %`;
 }
 
 function visInntektskilde(inntektskilde: string): string {
@@ -159,6 +164,47 @@ function MinstebeloepSjekk({ forklaring }: { forklaring: Beregningsforklaring })
   );
 }
 
+function OrdinaerAvgiftUtregning({
+  linjer,
+  ordinaerAvgift,
+}: {
+  linjer: OrdinaerAvgiftslinje[];
+  ordinaerAvgift: number;
+}) {
+  // Uten linjer (eldre svar/ingen utregning) faller vi tilbake til kun totalen.
+  if (linjer.length === 0) {
+    return (
+      <div className="beregningsforklaring-kort-rad">
+        <Nav.BodyShort size="small">Ordinær avgift</Nav.BodyShort>
+        <Nav.BodyShort size="small" className="beregningsforklaring-kort-rad-verdi">
+          {kr(ordinaerAvgift)}
+        </Nav.BodyShort>
+      </div>
+    );
+  }
+  return (
+    <div className="beregningsforklaring-kort-underseksjon">
+      <Nav.BodyShort size="small" className="beregningsforklaring-kort-underseksjon-tittel">
+        Ordinær avgift
+      </Nav.BodyShort>
+      {linjer.map((linje, idx) => (
+        <div className="beregningsforklaring-kort-rad" key={`ordinaer-${idx}`}>
+          <Nav.BodyShort size="small">{visInntektskilde(linje.inntektskilde)}</Nav.BodyShort>
+          <Nav.BodyShort size="small" className="beregningsforklaring-kort-rad-verdi">
+            {kr(linje.grunnlag)} × {visProsent(linje.sats)} = <strong>{kr(linje.beloep)}</strong>
+          </Nav.BodyShort>
+        </div>
+      ))}
+      <div className="beregningsforklaring-kort-rad beregningsforklaring-kort-rad--sum">
+        <Nav.BodyShort size="small">Sum ordinær avgift</Nav.BodyShort>
+        <Nav.BodyShort size="small" className="beregningsforklaring-kort-rad-verdi">
+          {kr(ordinaerAvgift)}
+        </Nav.BodyShort>
+      </div>
+    </div>
+  );
+}
+
 function MaksgrenseSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
   if (forklaring.inntektOverMinstebeloep === null || forklaring.maksimalAvgift25Prosent === null) return null;
 
@@ -185,12 +231,7 @@ function MaksgrenseSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
           Maks avgift = 25 % × {kr(forklaring.inntektOverMinstebeloep)} ={" "}
           <strong>{kr(forklaring.maksimalAvgift25Prosent)}</strong>
         </div>
-        <div className="beregningsforklaring-kort-rad">
-          <Nav.BodyShort size="small">Ordinær avgift</Nav.BodyShort>
-          <Nav.BodyShort size="small" className="beregningsforklaring-kort-rad-verdi">
-            {kr(forklaring.ordinaerAvgift)}
-          </Nav.BodyShort>
-        </div>
+        <OrdinaerAvgiftUtregning linjer={forklaring.ordinaerAvgiftLinjer} ordinaerAvgift={forklaring.ordinaerAvgift} />
       </div>
       {begrenset ? (
         <Nav.Alert variant="success" size="small" className="beregningsforklaring-kort-merknad">
@@ -224,10 +265,17 @@ function Forklaringsfelt({ forklaring }: { forklaring: Beregningsforklaring }) {
         ekskluderteInntekter={forklaring.ekskluderteInntekter}
         sumAarligInntekt={forklaring.sumAarligInntekt}
       />
-      <MinstebeloepSjekk forklaring={forklaring} />
+      {/* Når all inntekt er skattepliktig (ekskludert) er det ingen inntekt i vurderingen,
+          og minstebeløpssjekken er meningsløs (0 kr mot minstebeløpet). Da hopper vi over den. */}
+      {forklaring.inntektsgrunnlag.length > 0 && <MinstebeloepSjekk forklaring={forklaring} />}
       <MaksgrenseSjekk forklaring={forklaring} />
       <div className="beregningsforklaring-kort-resultat">
-        <Nav.BodyShort size="small">Fastsatt avgift ({visAarsak(forklaring.aarsak)})</Nav.BodyShort>
+        <div className="beregningsforklaring-kort-resultat-tekst">
+          <Nav.BodyShort size="small">Fastsatt avgift ({visAarsak(forklaring.aarsak)})</Nav.BodyShort>
+          {forklaring.fastsattAvgiftPerMaaned > 0 && (
+            <Nav.Detail textColor="subtle">{kr(forklaring.fastsattAvgiftPerMaaned)} per måned</Nav.Detail>
+          )}
+        </div>
         <span className="beregningsforklaring-kort-resultat-beloep">{kr(forklaring.fastsattAvgift)}</span>
       </div>
     </div>

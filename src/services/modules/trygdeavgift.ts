@@ -46,6 +46,14 @@ export interface EkskludertInntektslinje {
   aarsak: string;
 }
 
+export interface OrdinaerAvgiftslinje {
+  inntektskilde: string;
+  grunnlag: number;
+  /** Prosentsats, f.eks. 7.7 for 7,7 %. */
+  sats: number;
+  beloep: number;
+}
+
 export interface Beregningsforklaring {
   aar: number;
   regelgruppe: Beregningsregelgruppe;
@@ -58,7 +66,9 @@ export interface Beregningsforklaring {
   inntektOverMinstebeloep: number | null;
   maksimalAvgift25Prosent: number | null;
   ordinaerAvgift: number;
+  ordinaerAvgiftLinjer: OrdinaerAvgiftslinje[];
   fastsattAvgift: number;
+  fastsattAvgiftPerMaaned: number;
 }
 
 export interface Trygdeavgiftsperiode {

@@ -52,7 +52,16 @@ const lag25ProsentForklaring = (): Beregningsforklaring => ({
   inntektOverMinstebeloep: 10350,
   maksimalAvgift25Prosent: 2587,
   ordinaerAvgift: 8470,
+  ordinaerAvgiftLinjer: [
+    {
+      inntektskilde: "INNTEKT_FRA_UTLANDET",
+      grunnlag: 110000,
+      sats: 7.7,
+      beloep: 8470,
+    },
+  ],
   fastsattAvgift: 2587,
+  fastsattAvgiftPerMaaned: 215,
 });
 
 const lagMinstebeloepForklaring = (): Beregningsforklaring => ({
@@ -75,8 +84,17 @@ const lagMinstebeloepForklaring = (): Beregningsforklaring => ({
   minstebeloep: 99650,
   inntektOverMinstebeloep: null,
   maksimalAvgift25Prosent: null,
-  ordinaerAvgift: 0,
+  ordinaerAvgift: 3080,
+  ordinaerAvgiftLinjer: [
+    {
+      inntektskilde: "INNTEKT_FRA_UTLANDET",
+      grunnlag: 40000,
+      sats: 7.7,
+      beloep: 3080,
+    },
+  ],
   fastsattAvgift: 0,
+  fastsattAvgiftPerMaaned: 0,
 });
 
 const lagForklaringMedEkskludert = (): Beregningsforklaring => ({
@@ -90,6 +108,31 @@ const lagForklaringMedEkskludert = (): Beregningsforklaring => ({
       aarsak: "SKATTEETATEN_FASTSETTER",
     },
   ],
+});
+
+const lagForklaringAllInntektSkattepliktig = (): Beregningsforklaring => ({
+  aar: 2024,
+  regelgruppe: "SAMLET",
+  valgtRegel: "ORDINÆR",
+  aarsak: "INGEN_INNTEKT",
+  inntektsgrunnlag: [],
+  ekskluderteInntekter: [
+    {
+      inntektskilde: "NÆRINGSINNTEKT_FRA_NORGE",
+      fom: "2024-01-01",
+      tom: "2024-12-31",
+      sumBeloep: 240000,
+      aarsak: "SKATTEETATEN_FASTSETTER",
+    },
+  ],
+  sumAarligInntekt: 0,
+  minstebeloep: 69650,
+  inntektOverMinstebeloep: null,
+  maksimalAvgift25Prosent: null,
+  ordinaerAvgift: 0,
+  ordinaerAvgiftLinjer: [],
+  fastsattAvgift: 0,
+  fastsattAvgiftPerMaaned: 0,
 });
 
 const noop = () => undefined;
@@ -118,6 +161,36 @@ describe("BeregningsforklaringKort", () => {
     expect(screen.getByText(/inntekten er over minstebeløpet/)).toBeDefined();
   });
 
+  it("viser utregningen av ordinær avgift (ikke bare summen) i steg 3", () => {
+    render(
+      <BeregningsforklaringKort forklaringer={[lag25ProsentForklaring()]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    // Utregningslinjen: grunnlag × sats med prosent formatert norsk
+    expect(screen.getByText(/7,7 %/)).toBeDefined();
+    // Eksplisitt "Ordinær avgift"-underseksjon + sumrad
+    expect(screen.getByText("Ordinær avgift")).toBeDefined();
+    expect(screen.getByText(/Sum ordinær avgift/)).toBeDefined();
+  });
+
+  it("viser månedlig fastsatt avgift på resultatlinjen", () => {
+    render(
+      <BeregningsforklaringKort forklaringer={[lag25ProsentForklaring()]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    expect(screen.getByText(/215 kr per måned/)).toBeDefined();
+  });
+
+  it("viser ikke månedlig avgift når fastsatt avgift er 0", () => {
+    render(
+      <BeregningsforklaringKort
+        forklaringer={[lagForklaringAllInntektSkattepliktig()]}
+        open
+        onToggle={noop}
+        scrollTilFelt={null}
+      />,
+    );
+    expect(screen.queryByText(/per måned/)).toBeNull();
+  });
+
   it("viser ikke steg 3 og merker under minstebeløp for minstebeløp-scenario", () => {
     render(
       <BeregningsforklaringKort
@@ -144,6 +217,22 @@ describe("BeregningsforklaringKort", () => {
     );
     expect(screen.getByText(/Skatteetaten fastsetter avgiften holdes utenfor/)).toBeDefined();
     expect(screen.getByText("ARBEIDSINNTEKT_FRA_NORGE")).toBeDefined();
+  });
+
+  it("skjuler minstebeløp-sjekken når all inntekt er skattepliktig (ingen inntekt i vurderingen)", () => {
+    render(
+      <BeregningsforklaringKort
+        forklaringer={[lagForklaringAllInntektSkattepliktig()]}
+        open
+        onToggle={noop}
+        scrollTilFelt={null}
+      />,
+    );
+    // Inntektslinjen vises fortsatt (ekskludert), men minstebeløp-sjekken er utelatt
+    expect(screen.getByText("NÆRINGSINNTEKT_FRA_NORGE")).toBeDefined();
+    expect(screen.queryByText(/Sjekk mot minstebeløpet/)).toBeNull();
+    expect(screen.queryByText(/Minstebeløpet avkortes ikke/)).toBeNull();
+    expect(screen.getByText(/Skatteetaten fastsetter avgiften holdes utenfor/)).toBeDefined();
   });
 
   it("merker minstebeløpet avkortes ikke", () => {
