@@ -12,10 +12,13 @@ describe("lovvalgsperioder reducer", () => {
     expect(reducer(initialState, { type: Types.PENDING }).status).toBe(STATUS.PENDING);
   });
 
-  it("setter FEILET med data", () => {
-    const next = reducer(initialState, { type: Types.FEILET, data: "error" });
+  it("setter FEILET uten å overskrive periode-arrayet", () => {
+    const state = { data: [{ periodeID: 1, fomDato: "2024-01-01" }], status: STATUS.OK } as any;
+    const next = reducer(state, { type: Types.FEILET, data: { response: {}, data: "error" } }) as any;
     expect(next.status).toBe(STATUS.ERROR);
-    expect(next.data).toBe("error");
+    // data (periode-arrayet) skal bevares slik at en påfølgende lagre() ikke POSTer et objekt
+    expect(next.data).toEqual(state.data);
+    expect(next.error).toEqual({ response: {}, data: "error" });
   });
 
   it("setter OK med data", () => {
