@@ -26,7 +26,7 @@ export const hent = (behandlingID: number): Promise<Lovvalgsperiode[]> =>
   getAsJson(`${API_BASE_URL}${LOVVALGSPERIODER}/${behandlingID}`);
 
 export const send = (behandlingID: number, data: Lovvalgsperiode[]): Promise<Lovvalgsperiode[]> => {
-  if (!Array.isArray(data) || data.length === 0) {
+  if (data.length === 0) {
     return Promise.resolve([]);
   }
   return postAsJson(`${API_BASE_URL}${LOVVALGSPERIODER}/${behandlingID}`, data);
