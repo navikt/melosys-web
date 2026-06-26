@@ -268,7 +268,7 @@ export const apnePdfINyFane = async (url, title) => {
   const pdfBlob = await fetchAsPDFBlob(url);
   const blobUrl = URL.createObjectURL(pdfBlob);
 
-  const win = window.open("", "_blank");
+  const win = window.open("", "_blank")?.focus();
 
   if (!win) return;
 
