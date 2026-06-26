@@ -264,11 +264,23 @@ export const fetchAsPDFBlob = (url) =>
     .then((response) => response.blob())
     .then((blob) => new Blob([blob], { type: "application/pdf" }));
 
-export const apnePdfINyFane = async (url) => {
-  fetchAsPDFBlob(url).then((pdfBlob) => {
-    const _url = window.URL.createObjectURL(pdfBlob);
-    window.open(_url, "_blank")?.focus();
-  });
+export const apnePdfINyFane = async (url, title) => {
+  const pdfBlob = await fetchAsPDFBlob(url);
+  const blobUrl = URL.createObjectURL(pdfBlob);
+
+  const win = window.open("", "_blank");
+
+  if (!win) return;
+
+  win.document.title = title;
+
+  win.document.body.style.margin = "0";
+  win.document.body.innerHTML = `
+    <iframe
+      src="${blobUrl}"
+      style="width:100vw;height:100vh;border:none;"
+    ></iframe>
+  `;
 };
 
 export function doThenDispatch(api, { OK, FEILET, PENDING }, callbacks = {}) {
