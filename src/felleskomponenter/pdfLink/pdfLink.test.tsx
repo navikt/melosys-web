@@ -57,7 +57,7 @@ describe("PdfLink", () => {
     const link = screen.getByRole("link");
     fireEvent.click(link);
 
-    expect(serviceUtils.apnePdfINyFane).toHaveBeenCalledWith("/api/dokumenter/123/456");
+    expect(serviceUtils.apnePdfINyFane).toHaveBeenCalledWith("/api/dokumenter/123/456", "Test dokument");
   });
 
   it("skal forhindre default link handling", () => {
@@ -78,7 +78,7 @@ describe("PdfLink", () => {
     const link = screen.getByRole("link");
     fireEvent.click(link);
 
-    expect(serviceUtils.apnePdfINyFane).toHaveBeenCalledWith("/api/dokumenter/999/456");
+    expect(serviceUtils.apnePdfINyFane).toHaveBeenCalledWith("/api/dokumenter/999/456", "Test dokument");
   });
 
   it("skal håndtere ulike dokumentID", () => {
@@ -87,7 +87,7 @@ describe("PdfLink", () => {
     const link = screen.getByRole("link");
     fireEvent.click(link);
 
-    expect(serviceUtils.apnePdfINyFane).toHaveBeenCalledWith("/api/dokumenter/123/789");
+    expect(serviceUtils.apnePdfINyFane).toHaveBeenCalledWith("/api/dokumenter/123/789", "Test dokument");
   });
 
   it("skal håndtere ulike titler", () => {
