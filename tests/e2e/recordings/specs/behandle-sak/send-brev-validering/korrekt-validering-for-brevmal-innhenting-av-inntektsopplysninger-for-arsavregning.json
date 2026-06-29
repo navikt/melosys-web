@@ -419,15 +419,6 @@
                     "paakrevd": false,
                     "tegnBegrensning": null,
                     "valg": null
-                  },
-                  {
-                    "beskrivelse": "Standardtekst for opplysninger om inntekt",
-                    "feltType": "SJEKKBOKS",
-                    "hjelpetekst": null,
-                    "kode": "STANDARDTEKST_INNTEKTSOPPLYSNINGER",
-                    "paakrevd": false,
-                    "tegnBegrensning": null,
-                    "valg": null
                   }
                 ],
                 "type": {

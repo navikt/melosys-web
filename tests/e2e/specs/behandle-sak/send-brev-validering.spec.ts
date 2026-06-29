@@ -86,10 +86,12 @@ test.describe("Validering av brevmaler for mottaker 'Bruker eller brukers fullme
 });
 
 test.describe("Validering av årsavregning brevmaler", () => {
-  // Skip: Pre-existing test failure - årsavregning brevmal validation issue
-  // Fails in both record and playback modes (not mock server related)
-  // TODO: Create JIRA ticket and fix the underlying issue
-  test("Korrekt validering for brevmal 'Innhenting av inntektsopplysninger for årsavregning'", async ({
+  // Skip: MELOSYS-8162 fjernet «minst én av standardtekst eller fritekst»-regelen for
+  // innhentingsbrevet (etter MELOSYS-8158 vises periode-avsnittet alltid, og standardtekst-
+  // sjekkboksen er fjernet). Denne assertionen gjelder derfor ikke lenger, og en ny happy-path
+  // (fritekst valgfri) må spilles inn på nytt med recorderen.
+  // TODO: Re-record og assert ny innhentingsbrev-flyt (fritekst som valgfritt tillegg).
+  test.skip("Korrekt validering for brevmal 'Innhenting av inntektsopplysninger for årsavregning'", async ({
     page,
     apiRecorder,
   }, testInfo) => {
