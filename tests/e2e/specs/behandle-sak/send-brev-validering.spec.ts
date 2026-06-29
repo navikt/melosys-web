@@ -1,4 +1,4 @@
-import { test } from "../../recording/fixtures";
+import { test, expect } from "../../recording/fixtures";
 import { SendBrevPage } from "../../pages/behandling/send-brev.page";
 import { assertErrors, TIMEOUT_FOR_COMPLEX_TESTS } from "../../utils/testUtils";
 import { hentPrepopulertSakUrl, PrepopulertSaksnummer } from "../../utils/testdataUtils";
@@ -86,12 +86,13 @@ test.describe("Validering av brevmaler for mottaker 'Bruker eller brukers fullme
 });
 
 test.describe("Validering av årsavregning brevmaler", () => {
-  // Skip: MELOSYS-8162 fjernet «minst én av standardtekst eller fritekst»-regelen for
-  // innhentingsbrevet (etter MELOSYS-8158 vises periode-avsnittet alltid, og standardtekst-
-  // sjekkboksen er fjernet). Denne assertionen gjelder derfor ikke lenger, og en ny happy-path
-  // (fritekst valgfri) må spilles inn på nytt med recorderen.
-  // TODO: Re-record og assert ny innhentingsbrev-flyt (fritekst som valgfritt tillegg).
-  test.skip("Korrekt validering for brevmal 'Innhenting av inntektsopplysninger for årsavregning'", async ({
+  // MELOSYS-8162 fjernet den døde standardtekst-sjekkboksen for innhentingsbrevet. Etter
+  // MELOSYS-8158 vises periode-avsnittet alltid, så «minst én av standardtekst eller fritekst»-
+  // regelen er droppet. Fritekst er nå et valgfritt tillegg: hvis bruker huker av «Fritekst»
+  // men ikke fyller inn noe, skal valideringen fortsatt kreve innhold. Denne testen verifiserer
+  // den nye atferden – og at den gamle «minst én av»-feilen ikke lenger vises.
+  // Merk: Vi blir stående på en klientvalidert feil, så ingen brevbestilling (POST) sendes.
+  test("Korrekt validering for brevmal 'Innhenting av inntektsopplysninger for årsavregning'", async ({
     page,
     apiRecorder,
   }, testInfo) => {
@@ -108,9 +109,16 @@ test.describe("Validering av årsavregning brevmaler", () => {
 
     await sendBrevPage.velgMottakerVedLabel("Bruker eller brukers fullmektig");
     await sendBrevPage.velgBrevmalVedLabel("Innhenting av inntektsopplysninger for årsavregning");
+
+    // Velg «Fritekst», men la fritekstfeltet stå tomt → ny validering skal slå inn
+    await sendBrevPage.velgFritekstUtenInnhold();
     await sendBrevPage.klikkSendBrev();
 
-    await assertErrors(page, ["Du må velge minst én av standardtekst eller fritekst"]);
+    // Ny atferd (MELOSYS-8162): tom fritekst gir feil om manglende innhold ...
+    await assertErrors(page, ["Du må skrive inn hva mottaker skal sende inn"]);
+
+    // ... mens den gamle «minst én av standardtekst eller fritekst»-regelen er borte
+    await expect(page.getByText("Du må velge minst én av standardtekst eller fritekst")).toHaveCount(0);
   });
 });
 
