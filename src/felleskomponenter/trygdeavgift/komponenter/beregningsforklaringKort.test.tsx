@@ -52,7 +52,7 @@ const lag25ProsentForklaring = (): Beregningsforklaring => ({
   inntektOverMinstebeloep: 10350,
   maksimalAvgift25Prosent: 2587,
   ordinaerAvgift: 8470,
-  ordinaerAvgiftLinjer: [
+  ordinaerAvgiftPoster: [
     {
       inntektskilde: "INNTEKT_FRA_UTLANDET",
       grunnlag: 110000,
@@ -85,7 +85,7 @@ const lagMinstebeloepForklaring = (): Beregningsforklaring => ({
   inntektOverMinstebeloep: null,
   maksimalAvgift25Prosent: null,
   ordinaerAvgift: 3080,
-  ordinaerAvgiftLinjer: [
+  ordinaerAvgiftPoster: [
     {
       inntektskilde: "INNTEKT_FRA_UTLANDET",
       grunnlag: 40000,
@@ -130,7 +130,7 @@ const lagForklaringAllInntektSkattepliktig = (): Beregningsforklaring => ({
   inntektOverMinstebeloep: null,
   maksimalAvgift25Prosent: null,
   ordinaerAvgift: 0,
-  ordinaerAvgiftLinjer: [],
+  ordinaerAvgiftPoster: [],
   fastsattAvgift: 0,
   fastsattAvgiftPerMaaned: 0,
 });
@@ -228,7 +228,7 @@ describe("BeregningsforklaringKort", () => {
         scrollTilFelt={null}
       />,
     );
-    // Inntektslinjen vises fortsatt (ekskludert), men minstebeløp-sjekken er utelatt
+    // Inntektsposten vises fortsatt (ekskludert), men minstebeløp-sjekken er utelatt
     expect(screen.getByText("NÆRINGSINNTEKT_FRA_NORGE")).toBeDefined();
     expect(screen.queryByText(/Sjekk mot minstebeløpet/)).toBeNull();
     expect(screen.queryByText(/Minstebeløpet avkortes ikke/)).toBeNull();
@@ -240,5 +240,24 @@ describe("BeregningsforklaringKort", () => {
       <BeregningsforklaringKort forklaringer={[lag25ProsentForklaring()]} open onToggle={noop} scrollTilFelt={null} />,
     );
     expect(screen.getByText(/Minstebeløpet avkortes ikke/)).toBeDefined();
+  });
+
+  it("viser desimalt antall måneder på norsk format (f.eks. 50000 × 1,97 mnd = 98500)", () => {
+    const forklaring: Beregningsforklaring = {
+      ...lag25ProsentForklaring(),
+      inntektsgrunnlag: [
+        {
+          inntektskilde: "INNTEKT_FRA_UTLANDET",
+          fom: "2025-01-01",
+          tom: "2025-02-28",
+          maanedsbeloep: 50000,
+          antallMaaneder: 1.97,
+          sumBeloep: 98500,
+        },
+      ],
+    };
+    render(<BeregningsforklaringKort forklaringer={[forklaring]} open onToggle={noop} scrollTilFelt={null} />);
+    // Desimalen rundes ikke til heltall, og vises med norsk desimalkomma.
+    expect(screen.getByText(/50000 kr × 1,97 mnd =/)).toBeDefined();
   });
 });

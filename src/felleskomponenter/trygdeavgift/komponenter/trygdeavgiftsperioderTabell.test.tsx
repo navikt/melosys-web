@@ -260,7 +260,7 @@ const lagForklaring = (): Beregningsforklaring => ({
   inntektOverMinstebeloep: 10350,
   maksimalAvgift25Prosent: 2587,
   ordinaerAvgift: 8470,
-  ordinaerAvgiftLinjer: [{ inntektskilde: "INNTEKT_FRA_UTLANDET", grunnlag: 110000, sats: 7.7, beloep: 8470 }],
+  ordinaerAvgiftPoster: [{ inntektskilde: "INNTEKT_FRA_UTLANDET", grunnlag: 110000, sats: 7.7, beloep: 8470 }],
   fastsattAvgift: 2587,
   fastsattAvgiftPerMaaned: 215,
 });

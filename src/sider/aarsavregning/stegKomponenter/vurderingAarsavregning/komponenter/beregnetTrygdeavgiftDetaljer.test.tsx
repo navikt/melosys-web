@@ -68,7 +68,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     inntektOverMinstebeloep: 446000,
     maksimalAvgift25Prosent: 111500,
     ordinaerAvgift: 41000,
-    ordinaerAvgiftLinjer: [{ inntektskilde: "INNTEKT_FRA_UTLANDET", grunnlag: 500000, sats: 8.2, beloep: 41000 }],
+    ordinaerAvgiftPoster: [{ inntektskilde: "INNTEKT_FRA_UTLANDET", grunnlag: 500000, sats: 8.2, beloep: 41000 }],
     fastsattAvgift: 41000,
     fastsattAvgiftPerMaaned: 3416,
   });

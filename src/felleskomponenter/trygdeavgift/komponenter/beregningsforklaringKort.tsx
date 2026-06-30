@@ -8,9 +8,9 @@ import {
   Beregningsregel,
   Beregningsregelgruppe,
   BeregningsforklaringAarsak,
-  Inntektslinje,
-  EkskludertInntektslinje,
-  OrdinaerAvgiftslinje,
+  Inntektspost,
+  EkskludertInntektspost,
+  OrdinaerAvgiftspost,
 } from "../../../services/modules/trygdeavgift";
 import { feltId } from "./beregningsforklaringKortContext";
 
@@ -50,6 +50,14 @@ function visProsent(sats: number): string {
   return `${String(sats).replace(".", ",")} %`;
 }
 
+/**
+ * Antall måneder kan være desimal (f.eks. 1,97 når en periode ikke dekker hele måneder).
+ * Vises på norsk format med inntil 2 desimaler – heltall vises uten desimaler (12 → «12»).
+ */
+function visAntallMaaneder(antallMaaneder: number): string {
+  return antallMaaneder.toLocaleString("nb-NO", { maximumFractionDigits: 2 });
+}
+
 function visInntektskilde(inntektskilde: string): string {
   return KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, inntektskilde) ?? inntektskilde;
 }
@@ -66,13 +74,13 @@ function visAarsak(aarsak: BeregningsforklaringAarsak): string {
   return AARSAK_TEKST[aarsak] ?? aarsak;
 }
 
-function Inntektslinjer({
+function Inntektsposter({
   inntektsgrunnlag,
   ekskluderteInntekter,
   sumAarligInntekt,
 }: {
-  inntektsgrunnlag: Inntektslinje[];
-  ekskluderteInntekter: EkskludertInntektslinje[];
+  inntektsgrunnlag: Inntektspost[];
+  ekskluderteInntekter: EkskludertInntektspost[];
   sumAarligInntekt: number;
 }) {
   return (
@@ -91,7 +99,8 @@ function Inntektslinjer({
               </Nav.Detail>
             </div>
             <Nav.BodyShort size="small" className="beregningsforklaring-kort-rad-verdi">
-              {kr(linje.maanedsbeloep)} × {linje.antallMaaneder} mnd = <strong>{kr(linje.sumBeloep)}</strong>
+              {kr(linje.maanedsbeloep)} × {visAntallMaaneder(linje.antallMaaneder)} mnd ={" "}
+              <strong>{kr(linje.sumBeloep)}</strong>
             </Nav.BodyShort>
           </div>
         ))}
@@ -168,7 +177,7 @@ function OrdinaerAvgiftUtregning({
   linjer,
   ordinaerAvgift,
 }: {
-  linjer: OrdinaerAvgiftslinje[];
+  linjer: OrdinaerAvgiftspost[];
   ordinaerAvgift: number;
 }) {
   // Uten linjer (eldre svar/ingen utregning) faller vi tilbake til kun totalen.
@@ -231,7 +240,7 @@ function MaksgrenseSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
           Maks avgift = 25 % × {kr(forklaring.inntektOverMinstebeloep)} ={" "}
           <strong>{kr(forklaring.maksimalAvgift25Prosent)}</strong>
         </div>
-        <OrdinaerAvgiftUtregning linjer={forklaring.ordinaerAvgiftLinjer} ordinaerAvgift={forklaring.ordinaerAvgift} />
+        <OrdinaerAvgiftUtregning linjer={forklaring.ordinaerAvgiftPoster} ordinaerAvgift={forklaring.ordinaerAvgift} />
       </div>
       {begrenset ? (
         <Nav.Alert variant="success" size="small" className="beregningsforklaring-kort-merknad">
@@ -260,7 +269,7 @@ function Forklaringsfelt({ forklaring }: { forklaring: Beregningsforklaring }) {
           {visValgtRegel(forklaring.valgtRegel)}
         </Nav.Tag>
       </div>
-      <Inntektslinjer
+      <Inntektsposter
         inntektsgrunnlag={forklaring.inntektsgrunnlag}
         ekskluderteInntekter={forklaring.ekskluderteInntekter}
         sumAarligInntekt={forklaring.sumAarligInntekt}

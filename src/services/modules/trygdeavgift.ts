@@ -29,7 +29,7 @@ export type Beregningsregelgruppe = "SAMLET" | "HELSEDEL" | "PENSJONSDEL" | "MIS
 
 export type BeregningsforklaringAarsak = "BEREGNET" | "INNTEKT_UNDER_MINSTEBELØP" | "INGEN_INNTEKT";
 
-export interface Inntektslinje {
+export interface Inntektspost {
   inntektskilde: string;
   fom: string;
   tom: string;
@@ -38,7 +38,7 @@ export interface Inntektslinje {
   sumBeloep: number;
 }
 
-export interface EkskludertInntektslinje {
+export interface EkskludertInntektspost {
   inntektskilde: string;
   fom: string;
   tom: string;
@@ -46,7 +46,7 @@ export interface EkskludertInntektslinje {
   aarsak: string;
 }
 
-export interface OrdinaerAvgiftslinje {
+export interface OrdinaerAvgiftspost {
   inntektskilde: string;
   grunnlag: number;
   /** Prosentsats, f.eks. 7.7 for 7,7 %. */
@@ -59,14 +59,14 @@ export interface Beregningsforklaring {
   regelgruppe: Beregningsregelgruppe;
   valgtRegel: Beregningsregel;
   aarsak: BeregningsforklaringAarsak;
-  inntektsgrunnlag: Inntektslinje[];
-  ekskluderteInntekter: EkskludertInntektslinje[];
+  inntektsgrunnlag: Inntektspost[];
+  ekskluderteInntekter: EkskludertInntektspost[];
   sumAarligInntekt: number;
   minstebeloep: number;
   inntektOverMinstebeloep: number | null;
   maksimalAvgift25Prosent: number | null;
   ordinaerAvgift: number;
-  ordinaerAvgiftLinjer: OrdinaerAvgiftslinje[];
+  ordinaerAvgiftPoster: OrdinaerAvgiftspost[];
   fastsattAvgift: number;
   fastsattAvgiftPerMaaned: number;
 }
