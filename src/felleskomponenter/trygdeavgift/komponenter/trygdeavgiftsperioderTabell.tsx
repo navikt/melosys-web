@@ -43,6 +43,13 @@ function TrygdeavgiftsperioderTabell({
     setGrunnlagÅpent(true);
   }, []);
 
+  // Nullstill valgt felt når kortet lukkes, slik at en senere manuell åpning
+  // (ikke via `*`/«Hvorfor?») ikke scroller/markerer forrige valgte felt.
+  const håndterGrunnlagToggle = useCallback((åpen: boolean) => {
+    setGrunnlagÅpent(åpen);
+    if (!åpen) setScrollTilFelt(null);
+  }, []);
+
   if (!perioder) return null;
 
   const sortertePerioder = [...perioder].sort(Utils.dato.sorterEtterISOFomDato);
@@ -106,7 +113,7 @@ function TrygdeavgiftsperioderTabell({
               <BeregningsforklaringKort
                 forklaringer={beregningsforklaringer!}
                 open={grunnlagÅpent}
-                onToggle={setGrunnlagÅpent}
+                onToggle={håndterGrunnlagToggle}
                 scrollTilFelt={scrollTilFelt}
               />
             )}

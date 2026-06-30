@@ -134,7 +134,9 @@ function Inntektsposter({
 }
 
 function MinstebeloepSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
-  const over = forklaring.sumAarligInntekt >= forklaring.minstebeloep;
+  // Bruk backendens avgjørelse i stedet for å re-utlede: backend behandler
+  // inntekt == minstebeløp som UNDER (avgift beregnes kun når inntekt > minstebeløp).
+  const over = forklaring.aarsak !== "INNTEKT_UNDER_MINSTEBELØP";
   return (
     <div className="beregningsforklaring-kort-steg">
       <div className="beregningsforklaring-kort-steg-tittel">
@@ -160,13 +162,13 @@ function MinstebeloepSjekk({ forklaring }: { forklaring: Beregningsforklaring })
       </Nav.Detail>
       {over ? (
         <Nav.Alert variant="success" size="small" className="beregningsforklaring-kort-merknad">
-          {kr(forklaring.sumAarligInntekt)} ≥ {kr(forklaring.minstebeloep)} → inntekten er over minstebeløpet. Avgift
+          {kr(forklaring.sumAarligInntekt)} &gt; {kr(forklaring.minstebeloep)} → inntekten er over minstebeløpet. Avgift
           skal beregnes.
         </Nav.Alert>
       ) : (
         <Nav.Alert variant="warning" size="small" className="beregningsforklaring-kort-merknad">
-          {kr(forklaring.sumAarligInntekt)} &lt; {kr(forklaring.minstebeloep)} → inntekten er under minstebeløpet. Det
-          skal ikke betales avgift.
+          {kr(forklaring.sumAarligInntekt)} ≤ {kr(forklaring.minstebeloep)} → inntekten er under minstebeløpet. Det skal
+          ikke betales avgift.
         </Nav.Alert>
       )}
     </div>
@@ -309,8 +311,10 @@ export function BeregningsforklaringKort({
   // Scroll til riktig felt når kortet er åpent og et felt er valgt.
   useEffect(() => {
     if (!open || !scrollTilFelt) return;
-    const el = innholdRef.current?.querySelector<HTMLElement>(`#${CSS.escape(scrollTilFelt)}`);
-    if (!el) return;
+    // getElementById unngår avhengighet av CSS.escape (kan mangle i enkelte test-/runtime-miljø);
+    // containment-sjekken sikrer at vi kun reagerer på felt inni dette kortet.
+    const el = document.getElementById(scrollTilFelt);
+    if (!el || !innholdRef.current?.contains(el)) return;
     el.scrollIntoView({ behavior: "smooth", block: "center" });
     el.classList.remove("beregningsforklaring-kort-felt--blink");
     // Trigger reflow slik at animasjonen kjøres på nytt ved gjentatte klikk.

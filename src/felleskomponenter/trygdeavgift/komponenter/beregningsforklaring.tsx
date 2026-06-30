@@ -8,6 +8,7 @@ interface MedBeregningsregel {
   avgiftssats: number | null;
   harSammenslåtteInntektskilder?: boolean;
   avgiftsdel?: string | null;
+  fom?: string;
 }
 
 interface Beregningsregelforklaring {
@@ -40,8 +41,10 @@ export function erUnderMinstebeløp(periode: { beregningsregel?: Beregningsregel
 export const MINSTEBELØP_ALERT_TEKST = BEREGNINGSREGEL_FORKLARINGER.MINSTEBELØP!.alertTekst!;
 
 /**
- * Finner forklaringsfeltet som hører til en tabellperiode. Matcher først på
- * regelgruppe utledet fra `avgiftsdel`, ellers på valgt regel (`*`=25 %, `**`=minstebeløp).
+ * Finner forklaringsfeltet som hører til en tabellperiode. Matcher på året (utledet fra
+ * `fom`) når det er tilgjengelig, deretter regelgruppe utledet fra `avgiftsdel`, ellers på
+ * valgt regel (`*`=25 %, `**`=minstebeløp). Året skiller forklaringer når API-et returnerer
+ * flere år, slik at `*`/`**` åpner riktig felt (felt-id bygges på år+regelgruppe).
  */
 export function finnForklaringForPeriode(
   forklaringer: Beregningsforklaring[] | undefined,
@@ -50,13 +53,17 @@ export function finnForklaringForPeriode(
   if (!forklaringer || forklaringer.length === 0 || !periode.beregningsregel) return undefined;
 
   const ønsketGruppe = periode.avgiftsdel ? AVGIFTSDEL_TIL_REGELGRUPPE[periode.avgiftsdel] : undefined;
+  const periodeAar = periode.fom ? Number(periode.fom.slice(0, 4)) : undefined;
+  const harÅr = periodeAar !== undefined && !Number.isNaN(periodeAar);
+
+  const matcherRegelOgÅr = (f: Beregningsforklaring) =>
+    f.valgtRegel === periode.beregningsregel && (!harÅr || f.aar === periodeAar);
+
   if (ønsketGruppe) {
-    const påGruppe = forklaringer.find(
-      (f) => f.regelgruppe === ønsketGruppe && f.valgtRegel === periode.beregningsregel,
-    );
+    const påGruppe = forklaringer.find((f) => f.regelgruppe === ønsketGruppe && matcherRegelOgÅr(f));
     if (påGruppe) return påGruppe;
   }
-  return forklaringer.find((f) => f.valgtRegel === periode.beregningsregel);
+  return forklaringer.find(matcherRegelOgÅr);
 }
 
 function SatsSymbol({
