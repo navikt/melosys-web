@@ -113,6 +113,20 @@ export class SendBrevPage extends BehandlingPage {
     }
   }
 
+  // Checkbox/valg for «Fritekst» på dynamiske brevfelt (f.eks. innhentingsbrevet).
+  // Når den hukes av settes felt.<kode>.valg = "FRITEKST" og fritekst-editoren vises.
+  private get fritekstCheckbox(): Locator {
+    const scope = this.sendBrevPanel ?? this.page;
+    return scope.getByRole("checkbox", { name: "Fritekst", exact: true });
+  }
+
+  // Velg «Fritekst»-alternativet uten å fylle inn fritekst (brukes til valideringstester).
+  async velgFritekstUtenInnhold(): Promise<void> {
+    const checkbox = this.fritekstCheckbox;
+    await expect(checkbox, `${this.ctx}: Fant ikke «Fritekst»-valget`).toBeVisible();
+    await checkbox.check();
+  }
+
   async verifiserSendKnappDeaktivert(): Promise<void> {
     await expect(this.sendButton, `${this.ctx}: Send-knappen er uventet aktiv`).toBeDisabled();
   }

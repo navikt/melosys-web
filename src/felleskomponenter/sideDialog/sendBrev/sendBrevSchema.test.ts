@@ -58,19 +58,6 @@ const extractFeltErrors = (e: ValidationError | null): ErrorsMap | undefined => 
 const unwrapMelding = (v: string | { melding: string } | undefined): string | undefined =>
   typeof v === "string" ? v : typeof v === "object" && v ? v.melding : undefined;
 
-function expectInntektsopplysningerErrors(err: ValidationError | null) {
-  expect(err).toBeTruthy();
-  const feltErrors = extractFeltErrors(err);
-  expect(feltErrors).toMatchObject({
-    FRITEKST: { valg: { melding: "Du må velge minst én av standardtekst eller fritekst" } },
-  });
-
-  const forventedeMeldinger = ["Du må velge minst én av standardtekst eller fritekst"];
-  const summary = buildValidationSummary(feltErrors);
-  forventedeMeldinger.forEach((m) => expect(summary).toContain(m));
-  expect(summary.length).toBe(forventedeMeldinger.length);
-}
-
 function expectMangelbrevBrukerErrors(err: ValidationError | null) {
   expect(err).toBeTruthy();
   const feltErrors = extractFeltErrors(err);
@@ -241,14 +228,11 @@ describe("kombinasjoner av mottaker og brevmal – korrekte feltfeil og de match
   }
 
   async function runInntektsOpplysningerFlow(initialValues: Partial<SendBrevFormValues>) {
-    // 0) Forvent samlet feil: "Du må velge minst én av standardtekst eller fritekst"
+    // 0) Etter MELOSYS-8162/8158 er fritekst kun et valgfritt tillegg. Uten valg er skjemaet gyldig.
     let err = await validate(initialValues);
-    // Aksepter begge implementasjoner: enten feiler schema her, eller først etter at valg gjøres
-    if (err) {
-      expectInntektsopplysningerErrors(err);
-    }
+    expect(err).toBeNull();
 
-    // 1) Velg FRITEKST -> noen schema krever også feltVerdi, andre ikke før tekst fylles
+    // 1) Velg FRITEKST uten å fylle ut tekst -> krever feltVerdi
     let values: Partial<SendBrevFormValues> = {
       ...initialValues,
       felt: {
@@ -257,10 +241,9 @@ describe("kombinasjoner av mottaker og brevmal – korrekte feltfeil og de match
       } as NonNullable<SendBrevFormValues["felt"]>,
     };
     err = await validate(values);
-    if (err) {
-      const feltErrors = extractFeltErrors(err);
-      expect(unwrapMelding(feltErrors?.FRITEKST?.feltVerdi)).toBe("Du må skrive inn hva mottaker skal sende inn");
-    }
+    expect(err).toBeTruthy();
+    const feltErrors = extractFeltErrors(err);
+    expect(unwrapMelding(feltErrors?.FRITEKST?.feltVerdi)).toBe("Du må skrive inn hva mottaker skal sende inn");
 
     // 2) Fyll fritekst -> success
     values = {
@@ -306,7 +289,6 @@ describe("kombinasjoner av mottaker og brevmal – korrekte feltfeil og de match
         paakrevd: false,
         valg: { valgAlternativer: [{ kode: "FRITEKST", beskrivelse: "Fritekst", visFelt: true }] },
       },
-      { kode: "STANDARDTEKST_INNTEKTSOPPLYSNINGER", paakrevd: false },
     ],
   } as any;
 
@@ -562,24 +544,6 @@ describe("kombinasjoner av mottaker og brevmal – korrekte feltfeil og de match
     };
     err = await validate(values);
     expect(err).toBeNull();
-  });
-
-  it("INNHENTING_AV_INNTEKTSOPPLYSNINGER -> minst én av standardtekst eller fritekst", async () => {
-    const values: Partial<SendBrevFormValues> = {
-      type: "INNHENTING_AV_INNTEKTSOPPLYSNINGER",
-      valgtMottaker: makeMottaker("BRUKER"),
-      valgtBrev: makeBrev("INNHENTING_AV_INNTEKTSOPPLYSNINGER", [
-        {
-          kode: "FRITEKST",
-          paakrevd: false,
-          valg: { valgAlternativer: [{ kode: "FRITEKST", beskrivelse: "", visFelt: true }] },
-        } as Api.DokumenterV2.Felt,
-        { kode: "STANDARDTEKST_INNTEKTSOPPLYSNINGER", paakrevd: false } as Api.DokumenterV2.Felt,
-      ]),
-      felt: {} as NonNullable<SendBrevFormValues["felt"]>,
-    };
-
-    await runInntektsOpplysningerFlow(values);
   });
 
   it("BRUKER + INNHENTING_AV_INNTEKTSOPPLYSNINGER -> riktige feltfeil og oppsummering", async () => {

@@ -21,7 +21,7 @@
     "@navikt/aksel-icons": "^7.6.0",
     "@navikt/ds-css": "^7.5.3",
     "@navikt/ds-react": "^7.5.3",
-    "@navikt/melosys-kodeverk": "5.15.329",
+    "@navikt/melosys-kodeverk": "5.15.334",
     "@tanstack/react-query": "^5.100.10",
     "@tanstack/react-query-devtools": "^5.100.10",
     "classnames": "^2.2.6",
