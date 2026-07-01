@@ -30,6 +30,9 @@ export function EndeligAvgiftValgRadioGroup({
   const erPensjonistEØSToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
   return (
     <div className="endeligAvgiftValg_radio_group">
+      <Nav.Heading level="2" className="aarsavregning_seksjon_heading">
+        Endelig beregnet trygdeavgift
+      </Nav.Heading>
       <Forms.RadioGroup
         name="endeligAvgiftValg"
         control={control}

@@ -913,12 +913,14 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   return (
     <div className="vurderingAarsavregning">
       {harInnbetaltTrygdeavgift && (
-        <InnbetaltTrygdeavgiftInput
-          control={control}
-          redigerbart={skjemaErRedigerbart}
-          erNyAarsavregning={Boolean(tidligereAarsavregningInnbetaltTrygdeavgift)}
-          harTidligereTrygdeavgiftsgrunnlag={harTidligereTrygdeavgiftsgrunnlag}
-        />
+        <Nav.Box className="innbetaltTrygdeavgiftInputPanel" background="surface-subtle">
+          <InnbetaltTrygdeavgiftInput
+            control={control}
+            redigerbart={skjemaErRedigerbart}
+            erNyAarsavregning={Boolean(tidligereAarsavregningInnbetaltTrygdeavgift)}
+            harTidligereTrygdeavgiftsgrunnlag={harTidligereTrygdeavgiftsgrunnlag}
+          />
+        </Nav.Box>
       )}
 
       <EndeligAvgiftValgRadioGroup
