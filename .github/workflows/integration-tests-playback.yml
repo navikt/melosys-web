@@ -88,12 +88,13 @@ jobs:
           path: tests/e2e/artifacts/
           retention-days: 7
 
-  # Instrumentert dekningskjøring. Kjører KUN på push til master + manuell dispatch,
-  # ikke på PR-er, så PR-gaten forblir rask og uinstrumentert. E2E_COVERAGE=true slår
-  # på vite-plugin-istanbul; fixturen skriver window.__coverage__ til .nyc_output, og
-  # nyc lager rapporten. Testfeil blokkerer ikke (informativ jobb).
-  integration-tests-coverage:
-    name: E2E coverage (playback, instrumented)
+  # Instrumentert dekningskjøring (enhet + e2e). Kjører KUN på push til master + manuell
+  # dispatch, ikke på PR-er, så PR-gaten forblir rask og uinstrumentert. Enhetstestene gir
+  # coverage/; E2E_COVERAGE=true instrumenterer dev-serveren og fixturen skriver
+  # window.__coverage__ til .nyc_output. Begge er istanbul-format, så nyc slår dem sammen
+  # til én kombinert rapport (union). Testfeil blokkerer ikke (informativ jobb).
+  coverage:
+    name: Coverage (unit + e2e, playback)
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest-8-cores
     timeout-minutes: 45
@@ -137,6 +138,12 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: npx playwright install-deps chromium
 
+      - name: Run unit tests with coverage
+        continue-on-error: true
+        run: pnpm test:coverage
+        env:
+          CI: true
+
       - name: Run E2E with coverage (playback)
         continue-on-error: true
         run: pnpm test:e2e:coverage
@@ -147,29 +154,36 @@ jobs:
         if: always()
         run: pnpm coverage:e2e:report
 
-      - name: E2E coverage summary
+      - name: Generate combined coverage report (unit + e2e)
+        if: always()
+        run: pnpm coverage:combined:report
+
+      - name: Coverage summary (combined + e2e)
         if: always()
         run: |
-          if [ -f coverage-e2e/coverage-summary.json ]; then
-            node -e '
-              const t = require("./coverage-e2e/coverage-summary.json").total;
-              const row = (n, m) => `| ${n} | ${m.pct}% | ${m.covered}/${m.total} |`;
-              const md = [
-                "## 🎭 E2E-kodedekning (melosys-web)", "",
-                "| Metrikk | Dekning | Dekket/Total |", "|---|---|---|",
-                row("Lines", t.lines), row("Statements", t.statements),
-                row("Functions", t.functions), row("Branches", t.branches),
-              ].join("\n");
-              require("fs").appendFileSync(process.env.GITHUB_STEP_SUMMARY, md + "\n");
-            '
-          else
-            echo "⚠️ Ingen coverage-e2e/coverage-summary.json funnet" >> $GITHUB_STEP_SUMMARY
-          fi
+          node -e '
+            const fs = require("fs");
+            const read = (p) => { try { return require(p).total; } catch { return null; } };
+            const rows = (t) => ["Lines","Statements","Functions","Branches"]
+              .map((k) => { const m = t[k.toLowerCase()]; return `| ${k} | ${m.pct}% | ${m.covered}/${m.total} |`; });
+            const section = (title, t) => t
+              ? [title, "", "| Metrikk | Dekning | Dekket/Total |", "|---|---|---|", ...rows(t), ""].join("\n")
+              : `${title}\n\n_Ingen data funnet._\n`;
+            const combined = read("./coverage-combined/coverage-summary.json");
+            const e2e = read("./coverage-e2e/coverage-summary.json");
+            const md = [
+              section("## 🧩 Kombinert kodedekning (enhet + e2e)", combined),
+              section("## 🎭 E2E-kodedekning (kun playback)", e2e),
+            ].join("\n");
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, md + "\n");
+          '
 
-      - name: Upload E2E coverage report
+      - name: Upload coverage reports
         uses: actions/upload-artifact@v7
         if: always()
         with:
-          name: e2e-coverage-report
-          path: coverage-e2e/
+          name: coverage-report
+          path: |
+            coverage-combined/
+            coverage-e2e/
           retention-days: 14

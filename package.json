@@ -63,6 +63,7 @@
     "test:e2e:playback": "pnpm e2e:mock:install && pnpm e2e:mock:build && E2E_MODE=playback npx playwright test",
     "test:e2e:coverage": "rm -rf .nyc_output && E2E_COVERAGE=true pnpm test:e2e:playback",
     "coverage:e2e:report": "nyc report --reporter=html --reporter=text-summary --reporter=json-summary --report-dir=coverage-e2e --temp-dir=.nyc_output",
+    "coverage:combined:report": "rm -rf .nyc_combined && mkdir -p .nyc_combined && (cp .nyc_output/*.json .nyc_combined/ 2>/dev/null || true) && (cp coverage/coverage-final.json .nyc_combined/unit.json 2>/dev/null || true) && nyc report --reporter=html --reporter=text-summary --reporter=json-summary --report-dir=coverage-combined --temp-dir=.nyc_combined",
     "test:e2e:ui": "npx playwright test --ui",
     "test:axe": "ENABLE_AXE_TESTS=true npx playwright test",
     "e2e:mock:install": "cd tests/e2e/mock-server && npm install",
