@@ -305,6 +305,11 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     [],
   );
 
+  // Avbryt en eventuell ventende debounce ved unmount. Ellers kan trailing-edge fyre
+  // et API-kall + setState etter at komponenten er borte (uncaught error i test, og
+  // unødvendig kall/oppdatering på avmontert komponent i prod).
+  useEffect(() => () => debounceBeregnTrygdeavgiftsperioder.cancel(), [debounceBeregnTrygdeavgiftsperioder]);
+
   useEffect(() => {
     if (redigerbart && aktivtSteg && !isValidating) {
       debounceBeregnTrygdeavgiftsperioder(formValues, formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType));
