@@ -45,8 +45,12 @@ jobs:
       # Poster en dekningstabell (totalt + endrede filer) som PR-kommentar,
       # og skriver den til job-sammendraget. Leser coverage/coverage-summary.json
       # + coverage-final.json (vitest json/json-summary-reporterne).
+      # continue-on-error: på fork- og Dependabot-PR-er er GITHUB_TOKEN read-only, så
+      # kommentar-postingen får 403. Da skal ikke hele bygget bli rødt — kommentaren
+      # er best-effort (testfeil i steget over gjør fortsatt bygget rødt).
       - name: Report coverage
         if: always()
+        continue-on-error: true
         uses: davelosert/vitest-coverage-report-action@v2
 
       # HTML-rapporten lastes opp som artefakt for detaljert gjennomgang.
