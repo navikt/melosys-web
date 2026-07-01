@@ -384,7 +384,7 @@ export class AarsavregningPage extends BehandlingPage {
     const inputElement = allInputs[inputIndex];
     const container = inputElement.locator("..");
     const datepickerButton = await finnKnapp(UI_TEXTS.BUTTONS.ÅPNE_DATOVELGER, container);
-    await datepickerButton.evaluate((element) => element.scrollIntoView({ block: "center", inline: "nearest" }));
+    await datepickerButton.evaluate((element) => element.scrollIntoView({ block: "start", inline: "nearest" }));
     await datepickerButton.click();
   }
 
@@ -410,7 +410,15 @@ export class AarsavregningPage extends BehandlingPage {
     // Finn button inne i dialog som har tekst som matcher dagen
     // Buttonene har format som "mandag 3", "tirsdag 4" osv., så vi må finne button som slutter med dagen
     const datoKnapp = dialog.getByRole("button", { name: new RegExp(`\\b${dag}$`) });
-    await datoKnapp.click();
+    try {
+      await datoKnapp.click();
+    } catch (error) {
+      if (error instanceof Error && error.message.includes("outside of the viewport")) {
+        await datoKnapp.evaluate((element) => (element as HTMLElement).click());
+        return;
+      }
+      throw error;
+    }
   }
 
   async verifiserIngenFeilmelding(tekst: string): Promise<void> {
