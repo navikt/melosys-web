@@ -8,6 +8,8 @@
 
 # testing
 /coverage
+/coverage-e2e
+/.nyc_output
 
 # production
 /build

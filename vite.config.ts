@@ -2,7 +2,13 @@ import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import viteTsconfigPaths from "vite-tsconfig-paths";
 import svgrPlugin from "vite-plugin-svgr";
+import istanbul from "vite-plugin-istanbul";
 import * as path from "path";
+
+// Instrumenter kildekoden for E2E-dekning kun når E2E_COVERAGE=true (settes av
+// coverage-jobben som starter dev-serveren via Playwright). Normal dev/build og
+// enhetstester berøres ikke — pluginen er da helt fraværende.
+const E2E_COVERAGE = process.env.E2E_COVERAGE === "true";
 
 // API port can be overridden via VITE_API_PORT env var (e.g., for E2E playback mode)
 const LOCAL_API_PORT = parseInt(process.env.VITE_API_PORT || "8080", 10);
@@ -53,6 +59,16 @@ export default defineConfig({
     }),
     viteTsconfigPaths(),
     svgrPlugin(),
+    ...(E2E_COVERAGE
+      ? [
+          istanbul({
+            include: "src/**/*",
+            extension: [".js", ".jsx", ".ts", ".tsx"],
+            exclude: ["node_modules", "**/*.test.*", "**/*.spec.*", "**/__tests__/**"],
+            requireEnv: false,
+          }),
+        ]
+      : []),
   ],
   server: {
     port: 3000,
