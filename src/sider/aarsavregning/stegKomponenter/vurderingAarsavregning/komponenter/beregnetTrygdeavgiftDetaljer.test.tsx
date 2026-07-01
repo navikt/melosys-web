@@ -91,6 +91,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
           inntektPerMd: 41667,
           avgiftssats: 8.2,
           avgiftPerMd: 3417,
+          trygdedekning: "FULL",
         },
       ],
       totalInntekt: 500000,
@@ -152,6 +153,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
             inntektPerMd: 41667,
             avgiftssats: 8.2,
             avgiftPerMd: 3417,
+            trygdedekning: "FULL",
           },
           {
             fom: "2021-01-01",
@@ -161,6 +163,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
             inntektPerMd: 41667,
             avgiftssats: 8.2,
             avgiftPerMd: 3417,
+            trygdedekning: "FULL",
           },
           {
             fom: "2022-01-01",
@@ -170,6 +173,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
             inntektPerMd: 41667,
             avgiftssats: 8.2,
             avgiftPerMd: 3417,
+            trygdedekning: "FULL",
           },
         ],
         totalInntekt: 1500000,
@@ -197,15 +201,34 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     expect(screen.getByText(/Beregnet etter 25 %-regelen/)).toBeInTheDocument();
   });
 
-  it("viser '**' i Sats-kolonne og fotnote ved inntekt under minstebeløpet", () => {
+  it("viser '**' i Sats-kolonne og fotnote ved inntekt under minstebeløpet (når ikke alle perioder er minstebeløp)", () => {
     const grunnlag = createMockData();
-    grunnlag.avgift.trygdeavgiftsperioder[0].beregningsregel = "MINSTEBELØP";
-    grunnlag.avgift.trygdeavgiftsperioder[0].avgiftssats = null;
+    grunnlag.avgift.trygdeavgiftsperioder = [
+      {
+        fom: "2023-01-01",
+        tom: "2023-06-30",
+        inntektskildetype: "ARBEID",
+        arbeidsgiversavgiftBetales: true,
+        inntektPerMd: 41667,
+        avgiftssats: 8.2,
+        avgiftPerMd: 3417,
+      },
+      {
+        fom: "2023-07-01",
+        tom: "2023-12-31",
+        inntektskildetype: "ARBEID",
+        arbeidsgiversavgiftBetales: true,
+        inntektPerMd: 5000,
+        avgiftssats: null,
+        avgiftPerMd: 0,
+        beregningsregel: "MINSTEBELØP",
+      },
+    ];
 
     render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
 
     const rows = screen.getAllByRole("row");
-    expect(rows[1]).toHaveTextContent("**");
+    expect(rows[2]).toHaveTextContent("**");
     expect(screen.getByText(/Inntekten er under minstebeløpet/)).toBeInTheDocument();
   });
 
@@ -244,5 +267,51 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     expect(screen.queryByText(/Beregnet etter 25 %-regelen/)).not.toBeInTheDocument();
     expect(screen.queryByText(/Inntekten er under minstebeløpet/)).not.toBeInTheDocument();
     expect(screen.queryByText(/Mer enn en inntekt/)).not.toBeInTheDocument();
+  });
+
+  it("viser Alert i stedet for tabell når alle perioder er under minstebeløpet", () => {
+    const grunnlag = createMockData();
+    grunnlag.avgift.trygdeavgiftsperioder[0].beregningsregel = "MINSTEBELØP";
+    grunnlag.avgift.trygdeavgiftsperioder[0].avgiftssats = null;
+    grunnlag.avgift.trygdeavgiftsperioder[0].avgiftPerMd = 0;
+
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+
+    expect(screen.getByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet.")).toBeInTheDocument();
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
+  });
+
+  it("viser tabell med '**' når noen men ikke alle perioder er under minstebeløpet", () => {
+    const grunnlag = createMockData();
+    grunnlag.avgift.trygdeavgiftsperioder = [
+      {
+        fom: "2023-01-01",
+        tom: "2023-06-30",
+        inntektskildetype: "ARBEID",
+        arbeidsgiversavgiftBetales: true,
+        inntektPerMd: 41667,
+        avgiftssats: 8.2,
+        avgiftPerMd: 3417,
+        beregningsregel: undefined,
+      },
+      {
+        fom: "2023-07-01",
+        tom: "2023-12-31",
+        inntektskildetype: "ARBEID",
+        arbeidsgiversavgiftBetales: true,
+        inntektPerMd: 5000,
+        avgiftssats: null,
+        avgiftPerMd: 0,
+        beregningsregel: "MINSTEBELØP",
+      },
+    ];
+
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+
+    expect(
+      screen.queryByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet."),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("table")).toBeInTheDocument();
+    expect(screen.getByText(/Inntekten er under minstebeløpet/)).toBeInTheDocument();
   });
 });
