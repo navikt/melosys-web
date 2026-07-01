@@ -384,6 +384,7 @@ export class AarsavregningPage extends BehandlingPage {
     const inputElement = allInputs[inputIndex];
     const container = inputElement.locator("..");
     const datepickerButton = await finnKnapp(UI_TEXTS.BUTTONS.ÅPNE_DATOVELGER, container);
+    await datepickerButton.evaluate((element) => element.scrollIntoView({ block: "center", inline: "nearest" }));
     await datepickerButton.click();
   }
 
