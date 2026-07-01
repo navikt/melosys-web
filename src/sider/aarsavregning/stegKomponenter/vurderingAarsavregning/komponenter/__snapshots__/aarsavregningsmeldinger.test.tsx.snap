@@ -67,8 +67,7 @@ exports[`Aarsavregningsmeldinger > TrygdeavgiftSkalIkkeBetalesTilNav > matcher s
 exports[`Aarsavregningsmeldinger > ÅrsavregningIkkeStøttetSakstypeMelding > matcher snapshot 1`] = `
 
 <div
-  data-test
-  id="333"
+  data-testid="aarsavregning-ikke-stottet-sakstype"
   class="alertstripe_feilmelding navds-alert navds-alert--warning navds-alert--small"
 >
   <svg
