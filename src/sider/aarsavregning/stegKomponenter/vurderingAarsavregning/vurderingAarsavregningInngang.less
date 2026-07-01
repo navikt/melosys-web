@@ -1,5 +1,9 @@
 @import "../../../../constants.less";
 
+#Årsavregning {
+  container-type: inline-size;
+}
+
 .vurderingAarsavregning {
   .navds-table {
     margin-bottom: 1.5rem;
@@ -75,6 +79,23 @@
     width: fit-content;
   }
 
+  .aarVelger {
+    align-items: center;
+    column-gap: 0.5rem;
+    display: grid;
+    grid-template-columns: auto 6rem;
+    width: fit-content;
+
+    > .navds-form-field__label,
+    > .navds-select__container {
+      margin: 0;
+    }
+
+    > .navds-form-field__error {
+      grid-column: 1 / -1;
+    }
+  }
+
   .avgift_input {
     .navds-text-field__input {
       width: 7.5rem;
@@ -97,6 +118,19 @@
         margin: 0;
         padding: 0.75rem;
 
+        &.endeligAvgiftValg_radio_lang {
+          flex: 0 1 auto;
+
+          .navds-radio__content,
+          .navds-radio__label {
+            min-width: 0;
+          }
+
+          .navds-radio__label {
+            align-items: center;
+          }
+        }
+
         &.checked {
           border-color: @blue-nav;
           background-color: @blue-subtle;
@@ -108,6 +142,18 @@
 
         &.navds-radio--readonly {
           border-color: @gray-dark !important;
+        }
+      }
+    }
+  }
+
+  @container (max-width: 1000px) {
+    .endeligAvgiftValg_radio_group {
+      .navds-radio-buttons {
+        .navds-radio.endeligAvgiftValg_radio_lang {
+          flex: 1 1 12rem;
+          max-width: max-content;
+          min-width: 12rem;
         }
       }
     }

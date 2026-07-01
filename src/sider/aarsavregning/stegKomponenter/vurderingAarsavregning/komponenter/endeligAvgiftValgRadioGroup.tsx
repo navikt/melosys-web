@@ -40,9 +40,15 @@ export function EndeligAvgiftValgRadioGroup({
           handleEndeligAvgiftValgChange(value);
         }}
       >
-        <Nav.HStack gap="4">
+        <Nav.HStack gap="4" align="center">
           <Nav.Radio value={OPPLYSNINGER_ENDRET} className={endeligAvgiftValg === OPPLYSNINGER_ENDRET ? "checked" : ""}>
             Beregn endelig trygdeavgift
+          </Nav.Radio>
+          <Nav.Radio
+            value={MANUELL_ENDELIG_AVGIFT}
+            className={endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT ? "checked" : ""}
+          >
+            Oppgi endelig beregnet trygdeavgift
           </Nav.Radio>
           {erPensjonistEØSToggleEnabled &&
             endretPeriodeFraAvgiftssystemetValg &&
@@ -50,17 +56,13 @@ export function EndeligAvgiftValgRadioGroup({
             harTidligereTrygdeavgiftsgrunnlag !== false && (
               <Nav.Radio
                 value={OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET}
-                className={endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET ? "checked" : ""}
+                className={`endeligAvgiftValg_radio_lang ${
+                  endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET ? "checked" : ""
+                }`}
               >
                 Beregn trygdeavgift med periode fra avgiftssystemet
               </Nav.Radio>
             )}
-          <Nav.Radio
-            value={MANUELL_ENDELIG_AVGIFT}
-            className={endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT ? "checked" : ""}
-          >
-            Oppgi endelig beregnet trygdeavgift
-          </Nav.Radio>
         </Nav.HStack>
       </Forms.RadioGroup>
     </div>

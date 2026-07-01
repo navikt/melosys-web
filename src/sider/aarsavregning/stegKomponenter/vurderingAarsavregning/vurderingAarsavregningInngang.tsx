@@ -273,6 +273,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       <Nav.Row>
         <Nav.Column xs="4">
           <Nav.Select
+            className="aarVelger"
             label="År"
             id="aarVelger"
             value={valgtÅr || initieltÅr || ""}
