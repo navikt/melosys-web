@@ -16,4 +16,19 @@ describe("Aarsavregningsmeldinger", () => {
       expect(container.firstChild).toMatchSnapshot();
     });
   });
+
+  describe("ÅrsavregningIkkeStøttetSakstypeMelding", () => {
+    it("matcher snapshot", () => {
+      const { container } = render(<Aarsavregningsmeldinger.ÅrsavregningIkkeStøttetSakstypeMelding />);
+      expect(container.firstChild).toMatchSnapshot();
+    });
+
+    it("viser meldingsteksten fra MELOSYS-8163 og en stabil data-testid", () => {
+      const { getByTestId } = render(<Aarsavregningsmeldinger.ÅrsavregningIkkeStøttetSakstypeMelding />);
+      const alert = getByTestId("aarsavregning-ikke-stottet-sakstype");
+      expect(alert).toHaveTextContent(
+        "Melosys støtter ikke årsavregning for denne kombinasjonen av sakstype/-tema. Støtte vil bli gjort tilgjengelig senere.",
+      );
+    });
+  });
 });

@@ -23,6 +23,8 @@ import { TidligereGrunnlag } from "./komponenter/tidligereGrunnlag";
 import { ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../featuretoggle/toggleNavn";
 import * as Utils from "../../../../utils";
 import { useFeatureToggle } from "../../../../featuretoggle";
+import { useErÅrsavregningIkkeStøttetSakstype } from "../../hooks/useErÅrsavregningIkkeStøttetSakstype";
+import { Aarsavregningsmeldinger } from "./komponenter/aarsavregningsmeldinger";
 
 const { FASTSATT_TRYGDEAVGIFT, IKKE_FASTSATT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
@@ -100,6 +102,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const { oppfriskOgLastInnSaksopplysningerForAarsavregning } = useContext(FellesHandlersContext) as any;
   const dispatch = useDispatch();
   const erÅrsavregningEøsPensjonistToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
+  const erÅrsavregningIkkeStøttetSakstype = useErÅrsavregningIkkeStøttetSakstype();
 
   /**
    * Utleder harInnbetaltTrygdeavgift når verdien er null (bakoverkompatibilitet).
@@ -291,6 +294,8 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
         </Nav.Column>
       </Nav.Row>
 
+      {erÅrsavregningIkkeStøttetSakstype && <Aarsavregningsmeldinger.ÅrsavregningIkkeStøttetSakstypeMelding />}
+
       {redigerbart && harAktivÅrsavregning && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
           <Nav.BodyLong size="small">Året {valgtÅr} har allerede en aktiv årsavregning.</Nav.BodyLong>
@@ -361,12 +366,14 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
               </Nav.HStack>
             )}
 
-          {!harInnbetaltTrygdeavgiftIsPending &&
+          {!erÅrsavregningIkkeStøttetSakstype &&
+            !harInnbetaltTrygdeavgiftIsPending &&
             harTidligereTrygdeavgiftsgrunnlag === true &&
             harInnbetaltTrygdeavgift === false && (
               <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
             )}
-          {!harInnbetaltTrygdeavgiftIsPending &&
+          {!erÅrsavregningIkkeStøttetSakstype &&
+            !harInnbetaltTrygdeavgiftIsPending &&
             (harTidligereTrygdeavgiftsgrunnlag === false || harInnbetaltTrygdeavgift) &&
             harInnbetaltTrygdeavgift != null && (
               <AarsavregningUtenEllerDeltGrunnlag
