@@ -88,14 +88,16 @@ jobs:
           path: tests/e2e/artifacts/
           retention-days: 7
 
-  # Instrumentert dekningskjøring (enhet + e2e). Kjører KUN på push til master + manuell
-  # dispatch, ikke på PR-er, så PR-gaten forblir rask og uinstrumentert. Enhetstestene gir
-  # coverage/; E2E_COVERAGE=true instrumenterer dev-serveren og fixturen skriver
-  # window.__coverage__ til .nyc_output. Begge er istanbul-format, så nyc slår dem sammen
-  # til én kombinert rapport (union). Testfeil blokkerer ikke (informativ jobb).
+  # Instrumentert dekningskjøring (enhet + e2e). Kjører KUN på manuell dispatch
+  # (workflow_dispatch) — ikke på PR-er (holder PR-gaten rask) og ikke på hver master-merge
+  # (unngår ~45 min instrumentert kjøring for en rapport ingen leser). Kjør den når du vil
+  # vite hvor dekningen står. Enhetstestene gir coverage/; E2E_COVERAGE=true instrumenterer
+  # dev-serveren og fixturen skriver window.__coverage__ til .nyc_output. Begge er
+  # istanbul-format, så nyc slår dem sammen til én kombinert rapport (union). Testfeil
+  # blokkerer ikke (informativ jobb).
   coverage:
     name: Coverage (unit + e2e, playback)
-    if: github.event_name != 'pull_request'
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest-8-cores
     timeout-minutes: 45
 
