@@ -280,7 +280,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             id="aarVelger"
             value={valgtÅr || initieltÅr || ""}
             onChange={håndterEndringAvÅr}
-            readOnly={!redigerbart}
+            readOnly={!redigerbart || erÅrsavregningIkkeStøttetSakstype}
           >
             <option value="" disabled>
               Velg...
@@ -355,7 +355,12 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                     onChange={håndterHarInnbetaltTrygdeavgift}
                     legend={trygdeavgiftAvvikLabelHjelpetekst}
                     value={harInnbetaltTrygdeavgift}
-                    readOnly={!redigerbart || harAktivÅrsavregning || forrigeÅrsavregningHarInnbetaltTrygdeavgift}
+                    readOnly={
+                      !redigerbart ||
+                      harAktivÅrsavregning ||
+                      forrigeÅrsavregningHarInnbetaltTrygdeavgift ||
+                      erÅrsavregningIkkeStøttetSakstype
+                    }
                   >
                     <Nav.HStack gap="6">
                       <Nav.Radio value>Ja</Nav.Radio>

@@ -6,7 +6,7 @@ import { ÅRSAVREGNING_EØS_PENSJONIST, ÅRSAVREGNING_EØS_TJENESTEPERSON } from
 import MKV from "../../../melosyskodeverk";
 
 const { EU_EOS } = MKV.Koder.sakstyper;
-const { TRYGDEAVGIFT, MEDLEMSKAP_LOVVALG } = MKV.Koder.sakstemaer;
+const { TRYGDEAVGIFT } = MKV.Koder.sakstemaer;
 const { PENSJONIST, ARBEID_TJENESTEPERSON_ELLER_FLY } = MKV.Koder.behandlinger.behandlingstema;
 
 /**
@@ -24,8 +24,9 @@ export function useErÅrsavregningIkkeStøttetSakstype(): boolean {
 
   const erEøsTrygdeavgiftPensjonist =
     sakstype === EU_EOS && sakstema === TRYGDEAVGIFT && behandlingstema === PENSJONIST;
-  const erEøsTjenesteperson =
-    sakstype === EU_EOS && sakstema === MEDLEMSKAP_LOVVALG && behandlingstema === ARBEID_TJENESTEPERSON_ELLER_FLY;
+  // Sakstema sjekkes bevisst ikke her, i tråd med OppretteÅrsavregningVedEndring.kt sin
+  // harTemaOgTypeSomSkalBehandles (kun sakstype + behandlingstema + artikkel 11.3b avgjør tjenesteperson-status).
+  const erEøsTjenesteperson = sakstype === EU_EOS && behandlingstema === ARBEID_TJENESTEPERSON_ELLER_FLY;
 
   return (
     (erEøsTrygdeavgiftPensjonist && !erÅrsavregningEøsPensjonistToggleEnabled) ||

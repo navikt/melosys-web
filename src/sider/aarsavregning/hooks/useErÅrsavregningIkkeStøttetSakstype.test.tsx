@@ -91,4 +91,26 @@ describe("useErÅrsavregningIkkeStøttetSakstype", () => {
     );
     expect(result.current).toBe(false);
   });
+
+  it("blokkerer EØS tjenesteperson uansett sakstema (matcher OppretteÅrsavregningVedEndring.kt, som ikke sjekker sakstema)", () => {
+    const { result } = renderMedState(
+      lagState({
+        sakstype: "EU_EOS",
+        sakstema: "TRYGDEAVGIFT",
+        behandlingstema: "ARBEID_TJENESTEPERSON_ELLER_FLY",
+      }),
+    );
+    expect(result.current).toBe(true);
+  });
+
+  it("blokkerer ikke FTRL selv med behandlingstema ARBEID_TJENESTEPERSON_ELLER_FLY (sakstype-sjekk beholdes)", () => {
+    const { result } = renderMedState(
+      lagState({
+        sakstype: "FTRL",
+        sakstema: "MEDLEMSKAP_LOVVALG",
+        behandlingstema: "ARBEID_TJENESTEPERSON_ELLER_FLY",
+      }),
+    );
+    expect(result.current).toBe(false);
+  });
 });

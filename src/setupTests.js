@@ -16,7 +16,10 @@ expect.addSnapshotSerializer({
   test: (val) => typeof val === "string" || (val && typeof val.outerHTML === "string"),
   serialize: (val) => {
     const html = typeof val === "string" ? val : val.outerHTML;
-    const cleanedHtml = html.replace(/\b(list|id|name|for|aria-labelledby|aria-describedby)="[^"]*"/g, ' $1="333"');
+    const cleanedHtml = html.replace(
+      /(?<=\s)(list|id|name|for|aria-labelledby|aria-describedby)="[^"]*"/g,
+      ' $1="333"',
+    );
     return toDiffableHtml(cleanedHtml);
   },
 });
