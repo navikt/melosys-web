@@ -44,6 +44,26 @@ export function BeregnetTrygdeavgiftDetaljer({
   const erHelseutgiftDekkesPeriode = erPeriodeListeHelseutgiftdekkesperiode(
     grunnlag.trygdeavgiftsgrunnlag.avgiftspliktigperioder,
   );
+  // Midlertidig fallback for bakoverkompatibilitet: finn dekning ved å overlappe
+  // trygdeavgiftsperiodens datoer mot avgiftspliktigperioder. Brukes kun dersom
+  // API-et ikke (ennå) sender trygdedekning direkte på trygdeavgiftsperioden
+  // (MELOSYS-7988, melosys-api). Kan fjernes når backend-feltet er bekreftet
+  // tilgjengelig i alle miljøer.
+  const hentDekningFraOverlappendeAvgiftspliktigperiode = (
+    data: Grunnlagsopplysninger,
+    period: { fom: string; tom: string },
+  ): string => {
+    const overlappingAvgiftspliktigperiode = data.trygdeavgiftsgrunnlag.avgiftspliktigperioder.find(
+      (m) => new Date(m.fomDato) <= new Date(period.tom) && new Date(m.tomDato) >= new Date(period.fom),
+    );
+
+    return overlappingAvgiftspliktigperiode &&
+      (overlappingAvgiftspliktigperiode.type === "MEDLEMSKAPSPERIODE" ||
+        overlappingAvgiftspliktigperiode.type === "LOVVALGSPERIODE")
+      ? (overlappingAvgiftspliktigperiode.trygdedekning ?? "")
+      : "";
+  };
+
   const hentDetaljer = (data: Grunnlagsopplysninger): DetaljerInterface[] => {
     return data.avgift.trygdeavgiftsperioder
       .map((period) => {
@@ -61,7 +81,7 @@ export function BeregnetTrygdeavgiftDetaljer({
           avgiftPerMd: period.avgiftPerMd,
           skattepliktig:
             overlappingSkatteforhold && overlappingSkatteforhold.skatteplikttype === SKATTEPLIKTIG ? "Ja" : "Nei",
-          dekning: period.trygdedekning ?? "",
+          dekning: period.trygdedekning ?? hentDekningFraOverlappendeAvgiftspliktigperiode(data, period),
           beregningsregel: period.beregningsregel,
           harSammenslåtteInntektskilder: period.harSammenslåtteInntektskilder,
           avgiftsdel: period.avgiftsdel,

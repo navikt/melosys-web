@@ -1,7 +1,18 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Grunnlagsopplysninger } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { MedlemskapsperiodeForAvgift } from "../../../../../services/modules/types/periodeTyper";
 import { BeregnetTrygdeavgiftDetaljer } from "./beregnetTrygdeavgiftDetaljer";
+
+// Testdata bruker alltid MEDLEMSKAPSPERIODE for avgiftspliktigperioder[0] (se createMockData),
+// men Avgiftspliktigperiode er en diskriminert union der trygdedekning ikke finnes på
+// HelseutgiftdekkesperiodeForAvgift. Denne hjelperen lar oss sette feltet uten å måtte
+// gjøre en runtime type-sjekk i hver test. Brukes kun av bakoverkompatibilitetstestene
+// under — se kommentar der for opprydding.
+function settTrygdedekningPaaMedlemskapsperiode(grunnlag: Grunnlagsopplysninger, trygdedekning: string): void {
+  (grunnlag.trygdeavgiftsgrunnlag.avgiftspliktigperioder[0] as MedlemskapsperiodeForAvgift).trygdedekning =
+    trygdedekning;
+}
 
 vi.mock("../../../../../utils", () => {
   let uuidCounter = 0;
@@ -259,6 +270,32 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={false} />);
 
     expect(screen.getByText("Pensjonsdel")).toBeInTheDocument();
+  });
+
+  // Testene under dekker den midlertidige overlapp-fallbacken i komponenten
+  // (hentDekningFraOverlappendeAvgiftspliktigperiode, MELOSYS-7988). Fjern disse to
+  // testene og settTrygdedekningPaaMedlemskapsperiode-hjelperen over sammen med
+  // fallbacken når backend-feltet er bekreftet tilgjengelig i alle miljøer.
+  it("faller tilbake til overlappende avgiftspliktigperiode når API-et ikke sender trygdedekning på trygdeavgiftsperioden (bakoverkompatibilitet)", () => {
+    const grunnlag = createMockData();
+    // Simulerer en eldre backend som ennå ikke sender trygdedekning direkte på trygdeavgiftsperioden.
+    delete grunnlag.avgift.trygdeavgiftsperioder[0].trygdedekning;
+    settTrygdedekningPaaMedlemskapsperiode(grunnlag, "FULL");
+
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+
+    expect(screen.getByText("FULL")).toBeInTheDocument();
+  });
+
+  it("bruker trygdedekning direkte fra API-et fremfor overlapp-fallback når begge finnes", () => {
+    const grunnlag = createMockData();
+    grunnlag.avgift.trygdeavgiftsperioder[0].trygdedekning = "DIREKTE_FRA_API";
+    settTrygdedekningPaaMedlemskapsperiode(grunnlag, "FRA_OVERLAPP_FALLBACK");
+
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+
+    expect(screen.getByText("DIREKTE_FRA_API")).toBeInTheDocument();
+    expect(screen.queryByText("FRA_OVERLAPP_FALLBACK")).not.toBeInTheDocument();
   });
 
   it("viser ikke fotnote-seksjon ved ordinær beregning", () => {
