@@ -93,7 +93,12 @@ exports[`Aarsavregningsmeldinger > ÅrsavregningIkkeStøttetSakstypeMelding > ma
     </path>
   </svg>
   <div class="navds-alert__wrapper navds-alert__wrapper--maxwidth navds-body-long navds-body-long--small">
-    Melosys støtter ikke årsavregning for denne kombinasjonen av sakstype/-tema. Støtte vil bli gjort tilgjengelig senere.
+    <p class="navds-body-long navds-body-long--small navds-typo--semibold">
+      Melosys støtter ikke årsavregning for denne kombinasjonen av sakstype/-tema
+    </p>
+    <p class="navds-body-long navds-body-long--small">
+      Støtte vil bli gjort tilgjengelig senere.
+    </p>
   </div>
 </div>
 

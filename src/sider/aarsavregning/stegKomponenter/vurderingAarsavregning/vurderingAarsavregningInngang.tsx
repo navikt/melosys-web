@@ -294,8 +294,6 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
         </Nav.Column>
       </Nav.Row>
 
-      {erÅrsavregningIkkeStøttetSakstype && <Aarsavregningsmeldinger.ÅrsavregningIkkeStøttetSakstypeMelding />}
-
       {redigerbart && harAktivÅrsavregning && (
         <Nav.Alert variant="error" className="alertstripe_feilmelding">
           <Nav.BodyLong size="small">Året {valgtÅr} har allerede en aktiv årsavregning.</Nav.BodyLong>
@@ -346,7 +344,19 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             </Nav.Alert>
           )}
 
-          {(valgtÅr || initieltÅr) &&
+          {erÅrsavregningIkkeStøttetSakstype && (
+            <>
+              <Aarsavregningsmeldinger.ÅrsavregningIkkeStøttetSakstypeMelding />
+              <div>
+                <Nav.Button variant="primary" disabled>
+                  Bekreft og fortsett
+                </Nav.Button>
+              </div>
+            </>
+          )}
+
+          {!erÅrsavregningIkkeStøttetSakstype &&
+            (valgtÅr || initieltÅr) &&
             (!erÅrsavregningEøsPensjonistToggleEnabled || harTidligereTrygdeavgiftsgrunnlag) && (
               <Nav.HStack>
                 <Nav.VStack>
@@ -355,12 +365,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                     onChange={håndterHarInnbetaltTrygdeavgift}
                     legend={trygdeavgiftAvvikLabelHjelpetekst}
                     value={harInnbetaltTrygdeavgift}
-                    readOnly={
-                      !redigerbart ||
-                      harAktivÅrsavregning ||
-                      forrigeÅrsavregningHarInnbetaltTrygdeavgift ||
-                      erÅrsavregningIkkeStøttetSakstype
-                    }
+                    readOnly={!redigerbart || harAktivÅrsavregning || forrigeÅrsavregningHarInnbetaltTrygdeavgift}
                   >
                     <Nav.HStack gap="6">
                       <Nav.Radio value>Ja</Nav.Radio>
