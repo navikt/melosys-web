@@ -5,6 +5,8 @@ import {
   formaterDekning,
   formaterInntektskilde,
   Beregningsforklaringer,
+  erUnderMinstebeløp,
+  MINSTEBELØP_ALERT_TEKST,
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/beregningsforklaring";
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
@@ -42,24 +44,32 @@ export function BeregnetTrygdeavgiftDetaljer({
   const erHelseutgiftDekkesPeriode = erPeriodeListeHelseutgiftdekkesperiode(
     grunnlag.trygdeavgiftsgrunnlag.avgiftspliktigperioder,
   );
+  // Midlertidig fallback for bakoverkompatibilitet: finn dekning ved å overlappe
+  // trygdeavgiftsperiodens datoer mot avgiftspliktigperioder. Brukes kun dersom
+  // API-et ikke (ennå) sender trygdedekning direkte på trygdeavgiftsperioden
+  // (MELOSYS-7988, melosys-api). Kan fjernes når backend-feltet er bekreftet
+  // tilgjengelig i alle miljøer.
+  const hentDekningFraOverlappendeAvgiftspliktigperiode = (
+    data: Grunnlagsopplysninger,
+    period: { fom: string; tom: string },
+  ): string => {
+    const overlappingAvgiftspliktigperiode = data.trygdeavgiftsgrunnlag.avgiftspliktigperioder.find(
+      (m) => new Date(m.fomDato) <= new Date(period.tom) && new Date(m.tomDato) >= new Date(period.fom),
+    );
+
+    return overlappingAvgiftspliktigperiode &&
+      (overlappingAvgiftspliktigperiode.type === "MEDLEMSKAPSPERIODE" ||
+        overlappingAvgiftspliktigperiode.type === "LOVVALGSPERIODE")
+      ? (overlappingAvgiftspliktigperiode.trygdedekning ?? "")
+      : "";
+  };
+
   const hentDetaljer = (data: Grunnlagsopplysninger): DetaljerInterface[] => {
     return data.avgift.trygdeavgiftsperioder
       .map((period) => {
-        const overlappingAvgiftspliktigperiode = data.trygdeavgiftsgrunnlag.avgiftspliktigperioder.find(
-          (m) => new Date(m.fomDato) <= new Date(period.tom) && new Date(m.tomDato) >= new Date(period.fom),
-        );
-
         const overlappingSkatteforhold = data.trygdeavgiftsgrunnlag.skatteforholdsperioder.find(
           (s) => new Date(s.fomDato) <= new Date(period.tom) && new Date(s.tomDato) >= new Date(period.fom),
         );
-
-        // Get trygdedekning - only exists on Medlemskapsperiode and Lovvalgsperiode
-        const dekning =
-          overlappingAvgiftspliktigperiode &&
-          (overlappingAvgiftspliktigperiode.type === "MEDLEMSKAPSPERIODE" ||
-            overlappingAvgiftspliktigperiode.type === "LOVVALGSPERIODE")
-            ? overlappingAvgiftspliktigperiode.trygdedekning
-            : "Unknown";
 
         return {
           fom: period.fom,
@@ -71,7 +81,7 @@ export function BeregnetTrygdeavgiftDetaljer({
           avgiftPerMd: period.avgiftPerMd,
           skattepliktig:
             overlappingSkatteforhold && overlappingSkatteforhold.skatteplikttype === SKATTEPLIKTIG ? "Ja" : "Nei",
-          dekning,
+          dekning: period.trygdedekning ?? hentDekningFraOverlappendeAvgiftspliktigperiode(data, period),
           beregningsregel: period.beregningsregel,
           harSammenslåtteInntektskilder: period.harSammenslåtteInntektskilder,
           avgiftsdel: period.avgiftsdel,
@@ -83,62 +93,71 @@ export function BeregnetTrygdeavgiftDetaljer({
   const arbAvgBetalesKreves = (kildetype: string) => !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
 
   const detaljerListe = hentDetaljer(grunnlag);
+  const alleUnderMinstebeløp = detaljerListe.length > 0 && detaljerListe.every(erUnderMinstebeløp);
 
   return (
     <div className="tidligereGrunnlagPanel">
-      <Nav.Table size="small" className="periode_tabell">
-        <Nav.Table.Header className="header_row">
-          <Nav.Table.Row>
-            <Nav.Table.HeaderCell scope="col">Trygdeperiode</Nav.Table.HeaderCell>
-            <Nav.Table.HeaderCell scope="col">Sats</Nav.Table.HeaderCell>
-            <Nav.Table.HeaderCell scope="col">Avgift md.</Nav.Table.HeaderCell>
-            <Nav.Table.HeaderCell scope="col">Inntektskilde</Nav.Table.HeaderCell>
-            <Nav.Table.HeaderCell scope="col">Bruttoinntekt md.</Nav.Table.HeaderCell>
-            {!erHelseutgiftDekkesPeriode && <Nav.Table.HeaderCell scope="col">Betalt aga.?</Nav.Table.HeaderCell>}
-            <Nav.Table.HeaderCell scope="col">Skattepliktig</Nav.Table.HeaderCell>
-            {!erHelseutgiftDekkesPeriode && <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>}
-          </Nav.Table.Row>
-        </Nav.Table.Header>
-        <Nav.Table.Body>
-          {detaljerListe.map((detaljer) => (
-            <Nav.Table.Row className="border_top" key={Utils._uuid()}>
-              <Nav.Table.DataCell key={Utils._uuid()}>
-                {`${Utils.dato.formatterDatoTilNorsk(detaljer.fom)} - ${Utils.dato.formatterDatoTilNorsk(
-                  detaljer.tom,
-                )}`}
-              </Nav.Table.DataCell>
-              <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
-                {formaterSats(detaljer)}
-              </Nav.Table.DataCell>
-              <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
-                {formaterTilNorskBelopUtenDesimaler(detaljer.avgiftPerMd)} kr
-              </Nav.Table.DataCell>
-              <Nav.Table.DataCell key={Utils._uuid()}>
-                {formaterInntektskilde(detaljer, (kode) => KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, kode))}
-              </Nav.Table.DataCell>
-              <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
-                {formaterTilNorskBelopUtenDesimaler(detaljer.inntektPerMd)} kr
-              </Nav.Table.DataCell>
-              {!erHelseutgiftDekkesPeriode && (
-                <Nav.Table.DataCell key={Utils._uuid()}>
-                  {arbAvgBetalesKreves(detaljer.inntektskildetype)
-                    ? detaljer.arbeidsgiversavgiftBetales
-                    : "Ikke relevant"}
-                </Nav.Table.DataCell>
-              )}
-              <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.skattepliktig}</Nav.Table.DataCell>
-              {!erHelseutgiftDekkesPeriode && (
-                <Nav.Table.DataCell key={Utils._uuid()}>
-                  {formaterDekning({ avgiftsdel: detaljer.avgiftsdel, trygdedekning: detaljer.dekning }, (kode) =>
-                    KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, kode),
+      {alleUnderMinstebeløp ? (
+        <Nav.Alert variant="info">{MINSTEBELØP_ALERT_TEKST}</Nav.Alert>
+      ) : (
+        <>
+          <Nav.Table size="small" className="periode_tabell">
+            <Nav.Table.Header className="header_row">
+              <Nav.Table.Row>
+                <Nav.Table.HeaderCell scope="col">Trygdeperiode</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Sats</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Avgift md.</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Inntektskilde</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col">Bruttoinntekt md.</Nav.Table.HeaderCell>
+                {!erHelseutgiftDekkesPeriode && <Nav.Table.HeaderCell scope="col">Betalt aga.?</Nav.Table.HeaderCell>}
+                <Nav.Table.HeaderCell scope="col">Skattepliktig</Nav.Table.HeaderCell>
+                {!erHelseutgiftDekkesPeriode && <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>}
+              </Nav.Table.Row>
+            </Nav.Table.Header>
+            <Nav.Table.Body>
+              {detaljerListe.map((detaljer) => (
+                <Nav.Table.Row className="border_top" key={Utils._uuid()}>
+                  <Nav.Table.DataCell key={Utils._uuid()}>
+                    {`${Utils.dato.formatterDatoTilNorsk(detaljer.fom)} - ${Utils.dato.formatterDatoTilNorsk(
+                      detaljer.tom,
+                    )}`}
+                  </Nav.Table.DataCell>
+                  <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
+                    {formaterSats(detaljer)}
+                  </Nav.Table.DataCell>
+                  <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
+                    {formaterTilNorskBelopUtenDesimaler(detaljer.avgiftPerMd)} kr
+                  </Nav.Table.DataCell>
+                  <Nav.Table.DataCell key={Utils._uuid()}>
+                    {formaterInntektskilde(detaljer, (kode) =>
+                      KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, kode),
+                    )}
+                  </Nav.Table.DataCell>
+                  <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
+                    {formaterTilNorskBelopUtenDesimaler(detaljer.inntektPerMd)} kr
+                  </Nav.Table.DataCell>
+                  {!erHelseutgiftDekkesPeriode && (
+                    <Nav.Table.DataCell key={Utils._uuid()}>
+                      {arbAvgBetalesKreves(detaljer.inntektskildetype)
+                        ? detaljer.arbeidsgiversavgiftBetales
+                        : "Ikke relevant"}
+                    </Nav.Table.DataCell>
                   )}
-                </Nav.Table.DataCell>
-              )}
-            </Nav.Table.Row>
-          ))}
-        </Nav.Table.Body>
-      </Nav.Table>
-      <Beregningsforklaringer perioder={detaljerListe} />
+                  <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.skattepliktig}</Nav.Table.DataCell>
+                  {!erHelseutgiftDekkesPeriode && (
+                    <Nav.Table.DataCell key={Utils._uuid()}>
+                      {formaterDekning({ avgiftsdel: detaljer.avgiftsdel, trygdedekning: detaljer.dekning }, (kode) =>
+                        KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, kode),
+                      )}
+                    </Nav.Table.DataCell>
+                  )}
+                </Nav.Table.Row>
+              ))}
+            </Nav.Table.Body>
+          </Nav.Table>
+          <Beregningsforklaringer perioder={detaljerListe} />
+        </>
+      )}
     </div>
   );
 }

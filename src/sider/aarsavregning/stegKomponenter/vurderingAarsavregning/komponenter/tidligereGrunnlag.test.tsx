@@ -52,6 +52,7 @@ describe("TidligereGrunnlag", () => {
             inntektPerMd: 41667,
             avgiftssats: 5.1,
             avgiftPerMd: 2125,
+            trygdedekning: "FULL_DEKNING_FTRL",
           },
         ],
         totalInntekt: 500000,
