@@ -31,9 +31,9 @@ function TrygdeavgiftsperioderTabell({
   erEøsPensjonist?: boolean;
   beregningsforklaringer?: Beregningsforklaring[];
 }) {
-  const visBeregningsforklaring = useFeatureToggle(VIS_TRYGDEAVGIFT_BEREGNINGSFORKLARING) === true;
+  const erBeregningsforklaringEnabled = useFeatureToggle(VIS_TRYGDEAVGIFT_BEREGNINGSFORKLARING) === true;
   const harForklaringer = Boolean(beregningsforklaringer && beregningsforklaringer.length > 0);
-  const skalViseBeregningsforklaring = visBeregningsforklaring && harForklaringer;
+  const skalViseBeregningsforklaring = erBeregningsforklaringEnabled && harForklaringer;
 
   const [grunnlagÅpent, setGrunnlagÅpent] = useState(false);
   const [scrollTilFelt, setScrollTilFelt] = useState<string | null>(null);
