@@ -25,7 +25,7 @@ export interface TrygdeavgiftMottakerDto {
 
 export type Beregningsregel = "ORDINÆR" | "TJUEFEM_PROSENT_REGEL" | "MINSTEBELØP";
 
-export type Beregningsregelgruppe = "SAMLET" | "HELSEDEL" | "PENSJONSDEL" | "MISJONAER";
+export type Beregningsinntektsgruppe = "SAMLET" | "HELSEDEL" | "PENSJONSDEL" | "MISJONAER";
 
 export type BeregningsforklaringAarsak = "BEREGNET" | "INNTEKT_UNDER_MINSTEBELØP" | "INGEN_INNTEKT";
 
@@ -56,7 +56,7 @@ export interface OrdinaerAvgiftspost {
 
 export interface Beregningsforklaring {
   aar: number;
-  regelgruppe: Beregningsregelgruppe;
+  inntektsgruppe: Beregningsinntektsgruppe;
   valgtRegel: Beregningsregel;
   aarsak: BeregningsforklaringAarsak;
   inntektsgrunnlag: Inntektspost[];

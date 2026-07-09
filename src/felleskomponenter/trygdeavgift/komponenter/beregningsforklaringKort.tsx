@@ -6,7 +6,7 @@ import { formaterTilNorskBelopUtenDesimaler } from "../../../utils";
 import {
   Beregningsforklaring,
   Beregningsregel,
-  Beregningsregelgruppe,
+  Beregningsinntektsgruppe,
   BeregningsforklaringAarsak,
   Inntektspost,
   EkskludertInntektspost,
@@ -16,7 +16,7 @@ import { feltId } from "./beregningsforklaringKortContext";
 
 import "./beregningsforklaringKort.less";
 
-const REGELGRUPPE_TEKST: Record<Beregningsregelgruppe, string> = {
+const INNTEKTSGRUPPE_TEKST: Record<Beregningsinntektsgruppe, string> = {
   SAMLET: "Samlet inntekt",
   HELSEDEL: "Helsedel",
   PENSJONSDEL: "Pensjonsdel",
@@ -62,8 +62,8 @@ function visInntektskilde(inntektskilde: string): string {
   return KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, inntektskilde) ?? inntektskilde;
 }
 
-function visRegelgruppe(regelgruppe: Beregningsregelgruppe): string {
-  return REGELGRUPPE_TEKST[regelgruppe] ?? regelgruppe;
+function visInntektsgruppe(inntektsgruppe: Beregningsinntektsgruppe): string {
+  return INNTEKTSGRUPPE_TEKST[inntektsgruppe] ?? inntektsgruppe;
 }
 
 function visValgtRegel(valgtRegel: Beregningsregel): string {
@@ -260,12 +260,12 @@ function MaksgrenseSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
 }
 
 function Forklaringsfelt({ forklaring }: { forklaring: Beregningsforklaring }) {
-  const id = feltId(forklaring.aar, forklaring.regelgruppe);
+  const id = feltId(forklaring.aar, forklaring.inntektsgruppe);
   return (
     <div className="beregningsforklaring-kort-felt" id={id} tabIndex={-1}>
       <div className="beregningsforklaring-kort-felt-header">
         <Nav.BodyShort size="small" className="beregningsforklaring-kort-felt-tittel">
-          {forklaring.aar} · {visRegelgruppe(forklaring.regelgruppe)}
+          {forklaring.aar} · {visInntektsgruppe(forklaring.inntektsgruppe)}
         </Nav.BodyShort>
         <Nav.Tag variant={REGEL_TAG_VARIANT[forklaring.valgtRegel] ?? "neutral"} size="xsmall">
           {visValgtRegel(forklaring.valgtRegel)}
@@ -339,7 +339,7 @@ export function BeregningsforklaringKort({
       <Nav.ExpansionCard.Content>
         <div ref={innholdRef}>
           {forklaringer.map((forklaring) => (
-            <Forklaringsfelt key={feltId(forklaring.aar, forklaring.regelgruppe)} forklaring={forklaring} />
+            <Forklaringsfelt key={feltId(forklaring.aar, forklaring.inntektsgruppe)} forklaring={forklaring} />
           ))}
         </div>
       </Nav.ExpansionCard.Content>

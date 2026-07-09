@@ -38,8 +38,8 @@ function TrygdeavgiftsperioderTabell({
   const [grunnlagÅpent, setGrunnlagÅpent] = useState(false);
   const [scrollTilFelt, setScrollTilFelt] = useState<string | null>(null);
 
-  const åpneGrunnlag = useCallback<ÅpneGrunnlagFn>((aar, regelgruppe) => {
-    setScrollTilFelt(feltId(aar, regelgruppe));
+  const åpneGrunnlag = useCallback<ÅpneGrunnlagFn>((aar, inntektsgruppe) => {
+    setScrollTilFelt(feltId(aar, inntektsgruppe));
     setGrunnlagÅpent(true);
   }, []);
 

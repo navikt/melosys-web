@@ -1,4 +1,8 @@
-import { Beregningsforklaring, Beregningsregel, Beregningsregelgruppe } from "../../../services/modules/trygdeavgift";
+import {
+  Beregningsforklaring,
+  Beregningsregel,
+  Beregningsinntektsgruppe,
+} from "../../../services/modules/trygdeavgift";
 import { feltId, useÅpneGrunnlag, ÅpneGrunnlagFn } from "./beregningsforklaringKortContext";
 
 import "./beregningsforklaring.less";
@@ -29,7 +33,7 @@ const BEREGNINGSREGEL_FORKLARINGER: Partial<Record<Beregningsregel, Beregningsre
   },
 };
 
-const AVGIFTSDEL_TIL_REGELGRUPPE: Record<string, Beregningsregelgruppe> = {
+const AVGIFTSDEL_TIL_INNTEKTSGRUPPE: Record<string, Beregningsinntektsgruppe> = {
   HELSE: "HELSEDEL",
   PENSJON: "PENSJONSDEL",
 };
@@ -42,9 +46,9 @@ export const MINSTEBELØP_ALERT_TEKST = BEREGNINGSREGEL_FORKLARINGER.MINSTEBELØ
 
 /**
  * Finner forklaringsfeltet som hører til en tabellperiode. Matcher på året (utledet fra
- * `fom`) når det er tilgjengelig, deretter regelgruppe utledet fra `avgiftsdel`, ellers på
+ * `fom`) når det er tilgjengelig, deretter inntektsgruppe utledet fra `avgiftsdel`, ellers på
  * valgt regel (`*`=25 %, `**`=minstebeløp). Året skiller forklaringer når API-et returnerer
- * flere år, slik at `*`/`**` åpner riktig felt (felt-id bygges på år+regelgruppe).
+ * flere år, slik at `*`/`**` åpner riktig felt (felt-id bygges på år+inntektsgruppe).
  */
 export function finnForklaringForPeriode(
   forklaringer: Beregningsforklaring[] | undefined,
@@ -52,7 +56,7 @@ export function finnForklaringForPeriode(
 ): Beregningsforklaring | undefined {
   if (!forklaringer || forklaringer.length === 0 || !periode.beregningsregel) return undefined;
 
-  const ønsketGruppe = periode.avgiftsdel ? AVGIFTSDEL_TIL_REGELGRUPPE[periode.avgiftsdel] : undefined;
+  const ønsketGruppe = periode.avgiftsdel ? AVGIFTSDEL_TIL_INNTEKTSGRUPPE[periode.avgiftsdel] : undefined;
   const periodeAar = periode.fom ? Number(periode.fom.slice(0, 4)) : undefined;
   const harÅr = periodeAar !== undefined && !Number.isNaN(periodeAar);
 
@@ -60,7 +64,7 @@ export function finnForklaringForPeriode(
     f.valgtRegel === periode.beregningsregel && (!harÅr || f.aar === periodeAar);
 
   if (ønsketGruppe) {
-    const påGruppe = forklaringer.find((f) => f.regelgruppe === ønsketGruppe && matcherRegelOgÅr(f));
+    const påGruppe = forklaringer.find((f) => f.inntektsgruppe === ønsketGruppe && matcherRegelOgÅr(f));
     if (påGruppe) return påGruppe;
   }
   return forklaringer.find(matcherRegelOgÅr);
@@ -81,7 +85,7 @@ function SatsSymbol({
       type="button"
       className="beregningsforklaring-symbol"
       title="Hvorfor? Klikk for beregningsforklaring"
-      onClick={() => åpneGrunnlag(forklaring.aar, forklaring.regelgruppe)}
+      onClick={() => åpneGrunnlag(forklaring.aar, forklaring.inntektsgruppe)}
     >
       {symbol}
     </button>
@@ -160,7 +164,7 @@ function HvorforLenke({
     <button
       type="button"
       className="beregningsforklaring-hvorfor"
-      onClick={() => åpneGrunnlag(forklaring.aar, forklaring.regelgruppe)}
+      onClick={() => åpneGrunnlag(forklaring.aar, forklaring.inntektsgruppe)}
     >
       Hvorfor? →
     </button>

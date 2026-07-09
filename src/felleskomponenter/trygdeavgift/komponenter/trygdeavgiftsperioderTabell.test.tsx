@@ -241,7 +241,7 @@ describe("TrygdeavgiftsperioderTabell", () => {
 
 const lagForklaring = (): Beregningsforklaring => ({
   aar: 2025,
-  regelgruppe: "SAMLET",
+  inntektsgruppe: "SAMLET",
   valgtRegel: "TJUEFEM_PROSENT_REGEL",
   aarsak: "BEREGNET",
   inntektsgrunnlag: [

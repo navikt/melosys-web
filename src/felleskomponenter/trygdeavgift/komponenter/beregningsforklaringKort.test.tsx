@@ -33,7 +33,7 @@ import { Beregningsforklaring } from "../../../services/modules/trygdeavgift";
 
 const lag25ProsentForklaring = (): Beregningsforklaring => ({
   aar: 2025,
-  regelgruppe: "SAMLET",
+  inntektsgruppe: "SAMLET",
   valgtRegel: "TJUEFEM_PROSENT_REGEL",
   aarsak: "BEREGNET",
   inntektsgrunnlag: [
@@ -66,7 +66,7 @@ const lag25ProsentForklaring = (): Beregningsforklaring => ({
 
 const lagMinstebeloepForklaring = (): Beregningsforklaring => ({
   aar: 2025,
-  regelgruppe: "SAMLET",
+  inntektsgruppe: "SAMLET",
   valgtRegel: "MINSTEBELØP",
   aarsak: "INNTEKT_UNDER_MINSTEBELØP",
   inntektsgrunnlag: [
@@ -112,7 +112,7 @@ const lagForklaringMedEkskludert = (): Beregningsforklaring => ({
 
 const lagForklaringAllInntektSkattepliktig = (): Beregningsforklaring => ({
   aar: 2024,
-  regelgruppe: "SAMLET",
+  inntektsgruppe: "SAMLET",
   valgtRegel: "ORDINÆR",
   aarsak: "INGEN_INNTEKT",
   inntektsgrunnlag: [],
@@ -153,7 +153,7 @@ describe("BeregningsforklaringKort", () => {
     expect(screen.getByText(/Inntekt som inngår i vurderingen/)).toBeDefined();
     expect(screen.getByText(/Sjekk mot minstebeløpet/)).toBeDefined();
     expect(screen.getByText(/25 %-regelen \(maksgrense\)/)).toBeDefined();
-    // Regelgruppe oversatt til norsk
+    // Inntektsgruppe oversatt til norsk
     expect(screen.getByText(/Samlet inntekt/)).toBeDefined();
     // Fastsatt avgift / 25 %-tak vises (beløpet forekommer flere steder)
     expect(screen.getAllByText("2587 kr").length).toBeGreaterThan(0);

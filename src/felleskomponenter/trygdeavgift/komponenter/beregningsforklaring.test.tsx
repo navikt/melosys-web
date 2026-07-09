@@ -154,7 +154,7 @@ describe("Beregningsforklaringer", () => {
 
 const lagForklaring = (overrides: Partial<Beregningsforklaring> = {}): Beregningsforklaring => ({
   aar: 2025,
-  regelgruppe: "SAMLET",
+  inntektsgruppe: "SAMLET",
   valgtRegel: "TJUEFEM_PROSENT_REGEL",
   aarsak: "BEREGNET",
   inntektsgrunnlag: [],
@@ -217,9 +217,9 @@ describe("finnForklaringForPeriode", () => {
     ).toBeUndefined();
   });
 
-  it("disambiguerer på regelgruppe via avgiftsdel", () => {
-    const helse = lagForklaring({ regelgruppe: "HELSEDEL" });
-    const pensjon = lagForklaring({ regelgruppe: "PENSJONSDEL" });
+  it("disambiguerer på inntektsgruppe via avgiftsdel", () => {
+    const helse = lagForklaring({ inntektsgruppe: "HELSEDEL" });
+    const pensjon = lagForklaring({ inntektsgruppe: "PENSJONSDEL" });
     expect(
       finnForklaringForPeriode([helse, pensjon], {
         beregningsregel: "TJUEFEM_PROSENT_REGEL",

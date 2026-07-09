@@ -69,7 +69,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
 
   const lagBeregningsforklaring = (): Beregningsforklaring => ({
     aar: 2023,
-    regelgruppe: "SAMLET",
+    inntektsgruppe: "SAMLET",
     valgtRegel: "ORDINÆR",
     aarsak: "BEREGNET",
     inntektsgrunnlag: [],
