@@ -2,11 +2,13 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import {
   erOrdinaerBeregning,
+  finnForklaringForPeriode,
   formaterDekning,
   formaterInntektskilde,
   formaterSats,
   Beregningsforklaringer,
 } from "./beregningsforklaring";
+import { Beregningsforklaring } from "../../../services/modules/trygdeavgift";
 
 describe("formaterSats", () => {
   it("viser '*' for TJUEFEM_PROSENT_REGEL", () => {
@@ -147,5 +149,91 @@ describe("Beregningsforklaringer", () => {
       />,
     );
     expect(screen.getAllByText(/Beregnet etter 25 %-regelen/)).toHaveLength(1);
+  });
+});
+
+const lagForklaring = (overrides: Partial<Beregningsforklaring> = {}): Beregningsforklaring => ({
+  aar: 2025,
+  inntektsgruppe: "SAMLET",
+  valgtRegel: "TJUEFEM_PROSENT_REGEL",
+  aarsak: "BEREGNET",
+  inntektsgrunnlag: [],
+  ekskluderteInntekter: [],
+  sumAarligInntekt: 110000,
+  minstebeloep: 99650,
+  inntektOverMinstebeloep: 10350,
+  maksimalAvgift25Prosent: 2587,
+  ordinaerAvgift: 8470,
+  ordinaerAvgiftPoster: [],
+  fastsattAvgift: 2587,
+  fastsattAvgiftPerMaaned: 215,
+  ...overrides,
+});
+
+describe("finnForklaringForPeriode", () => {
+  it("returnerer undefined uten forklaringer eller uten beregningsregel", () => {
+    expect(
+      finnForklaringForPeriode(undefined, { beregningsregel: "TJUEFEM_PROSENT_REGEL", avgiftssats: null }),
+    ).toBeUndefined();
+    expect(
+      finnForklaringForPeriode([], { beregningsregel: "TJUEFEM_PROSENT_REGEL", avgiftssats: null }),
+    ).toBeUndefined();
+    expect(finnForklaringForPeriode([lagForklaring()], { beregningsregel: null, avgiftssats: null })).toBeUndefined();
+  });
+
+  it("matcher på valgt regel når det finnes én forklaring", () => {
+    const forklaring = lagForklaring();
+    expect(
+      finnForklaringForPeriode([forklaring], { beregningsregel: "TJUEFEM_PROSENT_REGEL", avgiftssats: null }),
+    ).toBe(forklaring);
+  });
+
+  it("velger forklaringen for periodens år når API-et returnerer flere år", () => {
+    const forklaringer = [lagForklaring({ aar: 2024 }), lagForklaring({ aar: 2025 })];
+    expect(
+      finnForklaringForPeriode(forklaringer, {
+        beregningsregel: "TJUEFEM_PROSENT_REGEL",
+        avgiftssats: null,
+        fom: "2024-03-01",
+      }),
+    ).toBe(forklaringer[0]);
+    expect(
+      finnForklaringForPeriode(forklaringer, {
+        beregningsregel: "TJUEFEM_PROSENT_REGEL",
+        avgiftssats: null,
+        fom: "2025-03-01",
+      }),
+    ).toBe(forklaringer[1]);
+  });
+
+  it("returnerer undefined når ingen forklaring matcher periodens år (unngår feil felt)", () => {
+    const forklaring2024 = lagForklaring({ aar: 2024 });
+    expect(
+      finnForklaringForPeriode([forklaring2024], {
+        beregningsregel: "TJUEFEM_PROSENT_REGEL",
+        avgiftssats: null,
+        fom: "2025-03-01",
+      }),
+    ).toBeUndefined();
+  });
+
+  it("disambiguerer på inntektsgruppe via avgiftsdel", () => {
+    const helse = lagForklaring({ inntektsgruppe: "HELSEDEL" });
+    const pensjon = lagForklaring({ inntektsgruppe: "PENSJONSDEL" });
+    expect(
+      finnForklaringForPeriode([helse, pensjon], {
+        beregningsregel: "TJUEFEM_PROSENT_REGEL",
+        avgiftssats: null,
+        avgiftsdel: "PENSJON",
+        fom: "2025-01-01",
+      }),
+    ).toBe(pensjon);
+  });
+
+  it("faller tilbake til år-agnostisk match når perioden mangler fom", () => {
+    const forklaring = lagForklaring({ aar: 2024 });
+    expect(
+      finnForklaringForPeriode([forklaring], { beregningsregel: "TJUEFEM_PROSENT_REGEL", avgiftssats: null }),
+    ).toBe(forklaring);
   });
 });

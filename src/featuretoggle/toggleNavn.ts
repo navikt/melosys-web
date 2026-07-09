@@ -15,6 +15,7 @@ const MELOSYS_CDM_4_4 = "melosys.cdm-4-4";
 const MELOSYS_TEKSTBLOKKER = "melosys.tekstblokker";
 const MELOSYS_ADMINISTRASJON = "melosys.administrasjon";
 const MELOSYS_VIS_PENSJONSOPPTJENING_POPP = "melosys.vis-pensjonsopptjening-popp";
+const VIS_TRYGDEAVGIFT_BEREGNINGSFORKLARING = "melosys.trygdeavgift.vis_beregningsforklaring";
 
 const alleToggleNavn = [
   MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
@@ -32,6 +33,7 @@ const alleToggleNavn = [
   MELOSYS_TEKSTBLOKKER,
   MELOSYS_ADMINISTRASJON,
   MELOSYS_VIS_PENSJONSOPPTJENING_POPP,
+  VIS_TRYGDEAVGIFT_BEREGNINGSFORKLARING,
 ];
 
 export {
@@ -51,5 +53,6 @@ export {
   MELOSYS_TEKSTBLOKKER,
   MELOSYS_ADMINISTRASJON,
   MELOSYS_VIS_PENSJONSOPPTJENING_POPP,
+  VIS_TRYGDEAVGIFT_BEREGNINGSFORKLARING,
   alleToggleNavn,
 };

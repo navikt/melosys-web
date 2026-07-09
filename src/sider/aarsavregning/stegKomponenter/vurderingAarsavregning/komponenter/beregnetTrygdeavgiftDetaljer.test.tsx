@@ -1,8 +1,14 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Grunnlagsopplysninger } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { Beregningsforklaring } from "../../../../../services/modules/trygdeavgift";
 import { MedlemskapsperiodeForAvgift } from "../../../../../services/modules/types/periodeTyper";
 import { BeregnetTrygdeavgiftDetaljer } from "./beregnetTrygdeavgiftDetaljer";
+
+const useFeatureToggleMock = vi.fn((): boolean | undefined => false);
+vi.mock("../../../../../featuretoggle", () => ({
+  useFeatureToggle: () => useFeatureToggleMock(),
+}));
 
 // Testdata bruker alltid MEDLEMSKAPSPERIODE for avgiftspliktigperioder[0] (se createMockData),
 // men Avgiftspliktigperiode er en diskriminert union der trygdedekning ikke finnes på
@@ -58,6 +64,24 @@ vi.mock("../../../../../melosyskodeverk", () => ({
 describe("BeregnetTrygdeavgiftDetaljer", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    useFeatureToggleMock.mockReturnValue(false);
+  });
+
+  const lagBeregningsforklaring = (): Beregningsforklaring => ({
+    aar: 2023,
+    inntektsgruppe: "SAMLET",
+    valgtRegel: "ORDINÆR",
+    aarsak: "BEREGNET",
+    inntektsgrunnlag: [],
+    ekskluderteInntekter: [],
+    sumAarligInntekt: 500000,
+    minstebeloep: 54000,
+    inntektOverMinstebeloep: 446000,
+    maksimalAvgift25Prosent: 111500,
+    ordinaerAvgift: 41000,
+    ordinaerAvgiftPoster: [{ inntektskilde: "INNTEKT_FRA_UTLANDET", grunnlag: 500000, sats: 8.2, beloep: 41000 }],
+    fastsattAvgift: 41000,
+    fastsattAvgiftPerMaaned: 3416,
   });
 
   const createMockData = (): Grunnlagsopplysninger => ({
@@ -304,6 +328,58 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     expect(screen.queryByText(/Beregnet etter 25 %-regelen/)).not.toBeInTheDocument();
     expect(screen.queryByText(/Inntekten er under minstebeløpet/)).not.toBeInTheDocument();
     expect(screen.queryByText(/Mer enn en inntekt/)).not.toBeInTheDocument();
+  });
+
+  describe("Beregningsforklaring-kort", () => {
+    it("rendrer kortet når toggelen er på og beregningsforklaringer er ikke-tom", () => {
+      useFeatureToggleMock.mockReturnValue(true);
+
+      render(
+        <BeregnetTrygdeavgiftDetaljer
+          grunnlag={createMockData()}
+          medlemskapsTypeErPliktig={true}
+          beregningsforklaringer={[lagBeregningsforklaring()]}
+        />,
+      );
+
+      expect(screen.getByRole("region", { name: "Beregningsforklaring for trygdeavgift" })).toBeInTheDocument();
+    });
+
+    it("rendrer ikke kortet når toggelen er av selv om beregningsforklaringer er ikke-tom", () => {
+      useFeatureToggleMock.mockReturnValue(false);
+
+      render(
+        <BeregnetTrygdeavgiftDetaljer
+          grunnlag={createMockData()}
+          medlemskapsTypeErPliktig={true}
+          beregningsforklaringer={[lagBeregningsforklaring()]}
+        />,
+      );
+
+      expect(screen.queryByRole("region", { name: "Beregningsforklaring for trygdeavgift" })).not.toBeInTheDocument();
+    });
+
+    it("rendrer ikke kortet når toggelen er på men beregningsforklaringer er tom", () => {
+      useFeatureToggleMock.mockReturnValue(true);
+
+      render(
+        <BeregnetTrygdeavgiftDetaljer
+          grunnlag={createMockData()}
+          medlemskapsTypeErPliktig={true}
+          beregningsforklaringer={[]}
+        />,
+      );
+
+      expect(screen.queryByRole("region", { name: "Beregningsforklaring for trygdeavgift" })).not.toBeInTheDocument();
+    });
+
+    it("rendrer ikke kortet når beregningsforklaringer ikke er gitt", () => {
+      useFeatureToggleMock.mockReturnValue(true);
+
+      render(<BeregnetTrygdeavgiftDetaljer grunnlag={createMockData()} medlemskapsTypeErPliktig={true} />);
+
+      expect(screen.queryByRole("region", { name: "Beregningsforklaring for trygdeavgift" })).not.toBeInTheDocument();
+    });
   });
 
   it("viser Alert i stedet for tabell når alle perioder er under minstebeløpet", () => {

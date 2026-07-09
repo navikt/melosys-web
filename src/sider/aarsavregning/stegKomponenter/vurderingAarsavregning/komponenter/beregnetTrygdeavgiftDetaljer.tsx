@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Grunnlagsopplysninger } from "../../../../../services/modules/aarsavregning/aarsavregning";
-import { Beregningsregel } from "../../../../../services/modules/trygdeavgift";
+import { Beregningsforklaring, Beregningsregel } from "../../../../../services/modules/trygdeavgift";
 import {
   formaterSats,
   formaterDekning,
@@ -8,6 +9,9 @@ import {
   erUnderMinstebeløp,
   MINSTEBELØP_ALERT_TEKST,
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/beregningsforklaring";
+import { BeregningsforklaringKort } from "../../../../../felleskomponenter/trygdeavgift/komponenter/beregningsforklaringKort";
+import { useFeatureToggle } from "../../../../../featuretoggle";
+import { VIS_TRYGDEAVGIFT_BEREGNINGSFORKLARING } from "../../../../../featuretoggle/toggleNavn";
 import * as Nav from "../../../../../navFrontend";
 import * as Utils from "../../../../../utils";
 import MKV from "../../../../../melosyskodeverk";
@@ -36,10 +40,15 @@ interface DetaljerInterface {
 export function BeregnetTrygdeavgiftDetaljer({
   grunnlag,
   medlemskapsTypeErPliktig,
+  beregningsforklaringer,
 }: {
   grunnlag: Grunnlagsopplysninger | undefined;
   medlemskapsTypeErPliktig: boolean;
+  beregningsforklaringer?: Beregningsforklaring[];
 }) {
+  const visBeregningsforklaring = useFeatureToggle(VIS_TRYGDEAVGIFT_BEREGNINGSFORKLARING) === true;
+  const [grunnlagÅpent, setGrunnlagÅpent] = useState(false);
+
   if (!grunnlag || !grunnlag.avgift) return null;
   const erHelseutgiftDekkesPeriode = erPeriodeListeHelseutgiftdekkesperiode(
     grunnlag.trygdeavgiftsgrunnlag.avgiftspliktigperioder,
@@ -156,6 +165,14 @@ export function BeregnetTrygdeavgiftDetaljer({
             </Nav.Table.Body>
           </Nav.Table>
           <Beregningsforklaringer perioder={detaljerListe} />
+          {visBeregningsforklaring && (beregningsforklaringer?.length ?? 0) > 0 && (
+            <BeregningsforklaringKort
+              forklaringer={beregningsforklaringer!}
+              open={grunnlagÅpent}
+              onToggle={setGrunnlagÅpent}
+              scrollTilFelt={null}
+            />
+          )}
         </>
       )}
     </div>

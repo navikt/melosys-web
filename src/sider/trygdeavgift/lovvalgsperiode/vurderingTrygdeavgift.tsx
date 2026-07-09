@@ -401,6 +401,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
           <TrygdeavgiftsperioderTabell
             lagrePending={lagrePending}
             perioder={lagretTrygdeavgift?.trygdeavgiftsperioder}
+            beregningsforklaringer={lagretTrygdeavgift?.beregningsforklaringer}
           />
         </>
       )}
