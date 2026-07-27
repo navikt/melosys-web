@@ -130,7 +130,7 @@ describe("AarsavregningMedGrunnlagForm ny vurdering uten avgiftspliktige periode
       expect(oppdaterStatus).toHaveBeenLastCalledWith(true);
     });
 
-    expect(screen.getByText("Endelig beregnet trygdeavgift")).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "Endelig beregnet trygdeavgift" })).toBeInTheDocument();
     expect(screen.getByText("Tidligere beregnet trygdeavgift")).toBeInTheDocument();
     expect(screen.getByText("Differanse")).toBeInTheDocument();
   });

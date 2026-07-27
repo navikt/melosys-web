@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import MKV from "../../../../../melosyskodeverk";
 
 vi.mock("../../../../../navFrontend", () => ({
+  Heading: ({ children }: any) => <h2>{children}</h2>,
   HStack: ({ children }: any) => <div>{children}</div>,
   Radio: ({ children, value }: any) => <label data-value={value}>{children}</label>,
 }));
@@ -44,7 +45,7 @@ describe("EndeligAvgiftValgRadioGroup", () => {
 
   it("bruker ekte MKV-kodeverdier", () => {
     render(<EndeligAvgiftValgRadioGroup {...defaultProps} />);
-    const labels = screen.getAllByText(/trygdeavgift/);
+    const labels = screen.getByTestId("endeligAvgiftValg").querySelectorAll("label");
     expect(labels).toHaveLength(3);
     // Verifiser at MKV-kodene finnes
     expect(MKV.Koder.endeligAvgiftValg.OPPLYSNINGER_ENDRET).toBeDefined();
