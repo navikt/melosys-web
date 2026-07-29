@@ -14,8 +14,10 @@
   }
 
   &__innhold {
-    width: min(48rem, 94vw);
-    max-height: min(48rem, 90vh);
+    width: min(52rem, 94vw);
+    // Fast høyde, ikke max-height: ellers krymper popoveren når trefflista blir kort,
+    // og hopper i størrelse hver gang brukeren filtrerer.
+    height: min(46rem, 88vh);
     padding: 1.25rem 1.25rem 1rem;
     display: flex;
     flex-direction: column;
@@ -66,10 +68,9 @@
   }
 
   // Eneste scroll-området – hovring her scroller popoveren, ikke siden.
-  // Fast min-høyde hindrer at popoveren hopper når antall treff endres.
   &__liste {
     flex: 1 1 auto;
-    min-height: 16rem;
+    min-height: 0;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
