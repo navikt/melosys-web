@@ -239,6 +239,7 @@ function HtmlEditor({
     const selectionChangeHandler = (range: any, _oldRange: any, source: string) => {
       if (!range) return;
 
+      const forrigeMarkering = lastSelectionRef.current;
       lastSelectionRef.current = { index: range.index, length: range.length };
 
       if (range.length !== 0 || source !== "user") return;
@@ -252,6 +253,16 @@ function HtmlEditor({
         const { length } = matchResult[0];
 
         if (range.index > start && range.index < start + length) {
+          // Klikker man inni en placeholder som allerede er markert i sin helhet, lar vi
+          // markøren stå der brukeren klikket. Da kan teksten – inkludert klammene –
+          // redigeres og delvis markeres som vanlig tekst. Første klikk markerer alt.
+          if (forrigeMarkering?.index === start && forrigeMarkering.length === length) return;
+
+          // "silent" undertrykker selection-change, så vi må speile markeringen i
+          // lastSelectionRef selv. Ellers tror handleSettInnTekstblokk at ingenting er
+          // markert, og limer tekstblokken inn midt i placeholderen i stedet for å
+          // erstatte den.
+          lastSelectionRef.current = { index: start, length };
           quill.setSelection(start, length, "silent");
           return;
         }
