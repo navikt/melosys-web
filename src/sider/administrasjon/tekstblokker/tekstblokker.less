@@ -84,6 +84,11 @@
 
   &__modal-editor {
     min-height: 16rem;
+
+    // Skjemaet har allerede gap mellom feltene; editorens egen margin blir dobbelt opp.
+    .editor_label {
+      margin-top: 0;
+    }
   }
 
   &__modal-laster {

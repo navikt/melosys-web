@@ -12,6 +12,8 @@ interface SkjemaHtmlEditorProps {
   suppressMetaError?: boolean;
   // Vis brevmaler i tekstblokk-søket (kun fra Send brev).
   visBrevmaler?: boolean;
+  // Lar brukeren utvide editoren forbi A4-bredden (kun fra Send brev).
+  visBreddeToggle?: boolean;
 }
 
 function SkjemaHtmlEditorComponent({

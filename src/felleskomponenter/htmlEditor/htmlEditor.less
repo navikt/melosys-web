@@ -10,8 +10,24 @@
   }
 
   .editor-wrapper {
+    position: relative;
     background-color: @white;
+    // Speiler brevbredden, så saksbehandler ser omtrent hvordan teksten brytes i A4.
+    // Holdes i synk med BREVBREDDE_PX i htmlEditor.tsx.
     max-width: calc(210mm - 7rem);
+
+    &--fullbredde {
+      max-width: none;
+    }
+  }
+
+  // Ligger i det ledige feltet til høyre i Quill-toolbaren. Toolbaren har 8px padding
+  // og 24px høye knapper, så 9px sentrerer denne på samme linje som dem.
+  .editor-breddeknapp {
+    position: absolute;
+    top: 9px;
+    right: 8px;
+    z-index: 1;
   }
 
   .editor-wrapper {

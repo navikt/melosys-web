@@ -1,4 +1,3 @@
-import { BodyShort } from "@navikt/ds-react";
 import { useEffect, useState } from "react";
 
 import * as Nav from "../../../navFrontend";
@@ -61,9 +60,9 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
   return (
     <Nav.Modal open onClose={onLukk} aria-label={overskrift} width="medium">
       <Nav.Modal.Header>
-        <BodyShort weight="semibold" size="medium">
+        <Nav.Heading size="small" level="1">
           {overskrift}
-        </BodyShort>
+        </Nav.Heading>
       </Nav.Modal.Header>
       <Nav.Modal.Body>
         {erRedigering && eksisterende.isLoading ? (

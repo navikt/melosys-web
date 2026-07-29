@@ -67,6 +67,8 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
             error={feilmelding}
             // Send brev (sidemenyen): her kan brukeren også sette inn hele brevmaler.
             visBrevmaler
+            // Her er det plass til å utvide editoren forbi brevbredden.
+            visBreddeToggle
             // Skjul meta.error før innsending (vis først når showFieldErrors er true)
             suppressMetaError={!formValues?.showFieldErrors}
           />

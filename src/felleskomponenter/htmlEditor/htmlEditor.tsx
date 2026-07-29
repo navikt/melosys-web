@@ -1,7 +1,10 @@
+import { ExpandIcon, ShrinkIcon } from "@navikt/aksel-icons";
+import { Label } from "@navikt/ds-react";
 import classNames from "classnames";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ReactQuill, { Quill } from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+import * as Nav from "../../navFrontend";
 import "./htmlEditor.less";
 import TekstblokkSoek from "./tekstblokkSoek";
 
@@ -47,7 +50,32 @@ interface TekstEditorProps {
   // Skru av innsetting av tekstblokker. Brukes i admin-modalen, der man redigerer selve
   // tekstblokken/brevmalen – innsetting ville laget en frossen kopi av en annen blokk.
   visTekstblokkSoek?: boolean;
+  // Lar brukeren utvide editoren forbi A4-bredden. Kun relevant der det er plass til
+  // det, altså i Send brev.
+  visBreddeToggle?: boolean;
 }
+
+const BREDDE_LAGRINGSNOKKEL = "melosys.htmlEditor.fullBredde";
+
+// Speiler max-width på .editor-wrapper i htmlEditor.less. Brukes til å avgjøre om
+// A4-grensen i det hele tatt gjør editoren smalere enn plassen den har.
+const BREVBREDDE_PX = 210 * (96 / 25.4) - 7 * 16;
+
+const lesLagretFullBredde = (): boolean => {
+  try {
+    return window.localStorage.getItem(BREDDE_LAGRINGSNOKKEL) === "true";
+  } catch {
+    return false;
+  }
+};
+
+const lagreFullBredde = (fullBredde: boolean) => {
+  try {
+    window.localStorage.setItem(BREDDE_LAGRINGSNOKKEL, String(fullBredde));
+  } catch {
+    /* Privat modus e.l. – valget gjelder da kun for denne økten. */
+  }
+};
 
 // Hjelpefunksjoner for å pakke inn/ut innhold med ql-fritekst div
 const wrapWithHtmlEditorDiv = (content: string): string => {
@@ -77,7 +105,12 @@ function HtmlEditor({
   placeholder,
   visBrevmaler,
   visTekstblokkSoek = true,
+  visBreddeToggle = false,
 }: TekstEditorProps) {
+  const [fullBredde, setFullBredde] = useState(lesLagretFullBredde);
+  // Knappen har ingen hensikt der editoren uansett er smalere enn brevbredden.
+  const [harPlassTilUtvidelse, setHarPlassTilUtvidelse] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const quillRef = useRef<ReactQuill>(null);
   // Referanse for å spore om formatering pågår, for å unngå uendelig rekursjon
   const isFormattingRef = useRef(false);
@@ -287,6 +320,18 @@ function HtmlEditor({
     };
   }, []);
 
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!visBreddeToggle || !container) return undefined;
+
+    const oppdater = () => setHarPlassTilUtvidelse(container.clientWidth > BREVBREDDE_PX);
+    oppdater();
+
+    const observer = new ResizeObserver(oppdater);
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [visBreddeToggle]);
+
   const handleSettInnTekstblokk = (html: string) => {
     const quill = quillRef.current?.editor;
     if (!quill) return;
@@ -316,8 +361,12 @@ function HtmlEditor({
   };
 
   return (
-    <div className={classNames("htmlEditor", className)}>
-      {label && <div className="editor_label">{label}</div>}
+    <div className={classNames("htmlEditor", className)} ref={containerRef}>
+      {label && (
+        <Label as="div" size="small" className="editor_label">
+          {label}
+        </Label>
+      )}
       {visTekstblokkSoek && (
         <TekstblokkSoek onVelg={handleSettInnTekstblokk} disabled={disabled} visBrevmaler={visBrevmaler} />
       )}
@@ -325,8 +374,23 @@ function HtmlEditor({
         className={classNames("editor-wrapper", {
           "editor-wrapper--disabled": disabled,
           "editor-wrapper--error": !!feil,
+          "editor-wrapper--fullbredde": fullBredde,
         })}
       >
+        {visBreddeToggle && harPlassTilUtvidelse && !disabled && (
+          <Nav.Button
+            className="editor-breddeknapp"
+            variant="tertiary-neutral"
+            size="xsmall"
+            type="button"
+            icon={fullBredde ? <ShrinkIcon aria-hidden /> : <ExpandIcon aria-hidden />}
+            title={fullBredde ? "Vis editoren i brevbredde" : "Utvid editoren til full bredde"}
+            onClick={() => {
+              setFullBredde(!fullBredde);
+              lagreFullBredde(!fullBredde);
+            }}
+          />
+        )}
         <ReactQuill
           ref={quillRef}
           theme="snow"
