@@ -44,6 +44,9 @@ interface TekstEditorProps {
   // Vis brevmaler i tekstblokk-søket. Settes kun fra Send brev (sidemenyen);
   // i saksflytene viser vi kun tekstblokker.
   visBrevmaler?: boolean;
+  // Skru av innsetting av tekstblokker. Brukes i admin-modalen, der man redigerer selve
+  // tekstblokken/brevmalen – innsetting ville laget en frossen kopi av en annen blokk.
+  visTekstblokkSoek?: boolean;
 }
 
 // Hjelpefunksjoner for å pakke inn/ut innhold med ql-fritekst div
@@ -73,6 +76,7 @@ function HtmlEditor({
   className,
   placeholder,
   visBrevmaler,
+  visTekstblokkSoek = true,
 }: TekstEditorProps) {
   const quillRef = useRef<ReactQuill>(null);
   // Referanse for å spore om formatering pågår, for å unngå uendelig rekursjon
@@ -314,7 +318,9 @@ function HtmlEditor({
   return (
     <div className={classNames("htmlEditor", className)}>
       {label && <div className="editor_label">{label}</div>}
-      <TekstblokkSoek onVelg={handleSettInnTekstblokk} disabled={disabled} visBrevmaler={visBrevmaler} />
+      {visTekstblokkSoek && (
+        <TekstblokkSoek onVelg={handleSettInnTekstblokk} disabled={disabled} visBrevmaler={visBrevmaler} />
+      )}
       <div
         className={classNames("editor-wrapper", {
           "editor-wrapper--disabled": disabled,
