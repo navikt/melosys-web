@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import * as Nav from "../../../navFrontend";
 
 import { useFiltrerteTekstblokker, useTekstblokker } from "../../../services/api/tekstblokker";
-import { TekstblokkOversikt, TekstblokkType } from "../../../services/modules/tekstblokker";
+import { tellTags, TekstblokkOversikt, TekstblokkType } from "../../../services/modules/tekstblokker";
 import TekstblokkRedigeringModal from "./tekstblokkRedigeringModal";
 import TekstblokkSlettBekreftelse from "./tekstblokkSlettBekreftelse";
 import TekstblokkerFilter from "./tekstblokkerFilter";
@@ -26,7 +26,9 @@ function TekstblokkerSide() {
   const { data: blokker = [], isLoading, error } = useTekstblokker(type);
 
   const { tagAntall, synlige } = useFiltrerteTekstblokker(blokker, soek, valgteTags);
-  const forslagTags = useMemo(() => tagAntall.map(([t]) => t), [tagAntall]);
+  // Forslag i redigeringsmodalen skal være alle eksisterende tags. tagAntall telles kun
+  // over blokkene som matcher søket, og hører hjemme i filteret over lista – ikke her.
+  const forslagTags = useMemo(() => tellTags(blokker).map(([t]) => t), [blokker]);
 
   const alleErUtvidet = synlige.length > 0 && synlige.every((b) => utvidedeIder.has(b.id));
 
