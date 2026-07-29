@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { leggTilTag, matcherSoek, tellTags, TekstblokkOversikt } from "./tekstblokker";
+import { harAlleTags, leggTilTag, matcherSoek, tellTags, tellTagsMedValgte, TekstblokkOversikt } from "./tekstblokker";
 
 const blokk = (tittel: string, tags: string[], innhold = ""): TekstblokkOversikt => ({
   id: 1,
@@ -60,6 +60,71 @@ describe("tellTags", () => {
     expect(resultat).toContainEqual(["USA-avtale", 2]);
     expect(resultat).toContainEqual(["Norge", 1]);
     expect(resultat).toHaveLength(2);
+  });
+});
+
+describe("tellTagsMedValgte", () => {
+  const britiskSkip = blokk("Storbritannia – Arbeid på skip", ["storbritannia", "skip"]);
+
+  it("teller tags i utvalget når ingenting er valgt", () => {
+    expect(tellTagsMedValgte([britiskSkip], [])).toContainEqual(["skip", 1]);
+  });
+
+  it("tar med valgt tag som finnes i utvalget", () => {
+    const resultat = tellTagsMedValgte([britiskSkip], ["storbritannia"]);
+
+    expect(resultat).toContainEqual(["storbritannia", 1]);
+    expect(resultat).toHaveLength(2);
+  });
+
+  it("tar med valgt tag som ikke gir treff, med antall 0", () => {
+    // Uten dette ville taggen forsvinne fra filteret og ikke kunne fjernes igjen.
+    const resultat = tellTagsMedValgte([], ["storbritannia", "utsending"]);
+
+    expect(resultat).toEqual([
+      ["storbritannia", 0],
+      ["utsending", 0],
+    ]);
+  });
+
+  it("dupliserer ikke valgt tag med annen bokstavstørrelse", () => {
+    const medStorForbokstav = blokk("Tittel", ["Storbritannia"]);
+    const resultat = tellTagsMedValgte([medStorForbokstav], ["storbritannia"]);
+
+    expect(resultat).toEqual([["Storbritannia", 1]]);
+  });
+});
+
+describe("harAlleTags", () => {
+  const britiskSkip = blokk("Storbritannia (1990) – Arbeid på skip", ["storbritannia", "skip", "innvilgelse"]);
+  const australskSkip = blokk("Australia – Arbeid på skip", ["australia", "skip", "innvilgelse"]);
+
+  it("slipper alt gjennom når ingen tags er valgt", () => {
+    expect(harAlleTags(britiskSkip, [])).toBe(true);
+  });
+
+  it("krever alle valgte tags, ikke bare én", () => {
+    expect(harAlleTags(britiskSkip, ["storbritannia", "skip"])).toBe(true);
+    expect(harAlleTags(australskSkip, ["storbritannia", "skip"])).toBe(false);
+  });
+
+  it("matcher enkelttag", () => {
+    expect(harAlleTags(australskSkip, ["skip"])).toBe(true);
+    expect(harAlleTags(australskSkip, ["storbritannia"])).toBe(false);
+  });
+
+  it("matcher case-insensitivt begge veier", () => {
+    const medStorForbokstav = blokk("Tittel", ["USA-avtale", "Skip"]);
+    expect(harAlleTags(medStorForbokstav, ["usa-avtale", "skip"])).toBe(true);
+    expect(harAlleTags(britiskSkip, ["Storbritannia", "SKIP"])).toBe(true);
+  });
+
+  it("gir ingen treff når blokken mangler en av tagene", () => {
+    expect(harAlleTags(britiskSkip, ["storbritannia", "utsending"])).toBe(false);
+  });
+
+  it("blokk uten tags matcher ingen valgte tags", () => {
+    expect(harAlleTags(blokk("Uten tags", []), ["skip"])).toBe(false);
   });
 });
 

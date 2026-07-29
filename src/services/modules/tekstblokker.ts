@@ -79,6 +79,24 @@ export const tellTags = (blokker: TekstblokkOversikt[]): Array<[string, number]>
     .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "nb"));
 };
 
+// Teller tags i utvalget, men tar alltid med de valgte tagene – om nødvendig med 0.
+// Uten dette ville en valgt tag forsvinne fra filteret når kombinasjonen ikke gir treff,
+// og da kunne den ikke fjernes igjen.
+export const tellTagsMedValgte = (blokker: TekstblokkOversikt[], valgteTags: string[]): Array<[string, number]> => {
+  const telling = tellTags(blokker);
+  const manglende = valgteTags.filter((valgt) => !telling.some(([tag]) => tag.toLowerCase() === valgt.toLowerCase()));
+  return [...telling, ...manglende.map((tag): [string, number] => [tag, 0])];
+};
+
+// Blokken må ha alle de valgte tagene, ikke bare én av dem – velger du "storbritannia"
+// og "skip" skal du få blokkene om britiske skip, ikke alt om Storbritannia pluss alt om
+// skip. Sammenligner case-insensitivt, i tråd med at tellTags grupperer case-insensitivt.
+export const harAlleTags = (blokk: TekstblokkOversikt, valgteTags: string[]): boolean => {
+  if (valgteTags.length === 0) return true;
+  const blokkTags = blokk.tags.map((t) => t.toLowerCase());
+  return valgteTags.every((t) => blokkTags.includes(t.toLowerCase()));
+};
+
 export const toggleITegnliste = (liste: string[], element: string): string[] =>
   liste.includes(element) ? liste.filter((e) => e !== element) : [...liste, element];
 
