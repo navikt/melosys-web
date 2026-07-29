@@ -28,6 +28,7 @@ function TekstblokkSoek({ onVelg, disabled, visBrevmaler = false }: Props) {
 
 function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props) {
   const ankerRef = useRef<HTMLDivElement>(null);
+  const soekRef = useRef<HTMLInputElement>(null);
   const [aapen, setAapen] = useState(false);
   const [aktivType, setAktivType] = useState<TekstblokkType>("TEKSTBLOKK");
   // Fritekstsøk og tag-filter holdes adskilt slik at det er tydelig hva som er et
@@ -50,6 +51,12 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
 
   // Vis et begrenset antall om gangen; nullstill når søk/filter/type endres.
   useEffect(() => setAntallVist(SIDE_STORRELSE), [soek, valgteTags, aktivType]);
+
+  // Popover skjuler med CSS uten å unmounte, så autoFocus ville bare truffet ved
+  // første montering. Vi fokuserer eksplisitt hver gang popoveren åpnes.
+  useEffect(() => {
+    if (aapen) soekRef.current?.focus();
+  }, [aapen]);
 
   const synlige = filtrerte.slice(0, antallVist);
   const gjenstaaende = filtrerte.length - synlige.length;
@@ -129,10 +136,8 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
             )}
 
             <div className="tekstblokkSoek__filtre">
-              {/* Popover skjuler med CSS uten å unmounte, så autoFocus krever samme
-                  key-remount som Comboboxen for å faktisk gi fokus ved åpning. */}
               <Search
-                key={`soek-${aapen}`}
+                ref={soekRef}
                 label="Søk på tittel eller tag"
                 hideLabel={false}
                 size="small"
@@ -140,7 +145,6 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
                 placeholder="Søk…"
                 value={soek}
                 onChange={setSoek}
-                autoFocus
               />
 
               {/* key remounter Combobox ved gjenåpning så uncommittet input-tekst ikke

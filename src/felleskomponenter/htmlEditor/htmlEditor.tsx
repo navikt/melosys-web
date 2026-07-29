@@ -290,10 +290,13 @@ function HtmlEditor({
         const { length } = matchResult[0];
 
         if (range.index > start && range.index < start + length) {
-          // Klikker man inni en placeholder som allerede er markert i sin helhet, lar vi
-          // markøren stå der brukeren klikket. Da kan teksten – inkludert klammene –
-          // redigeres og delvis markeres som vanlig tekst. Første klikk markerer alt.
-          if (forrigeMarkering?.index === start && forrigeMarkering.length === length) return;
+          // Marker bare når brukeren kommer utenfra. Sto markøren allerede fritt inni
+          // placeholderen, har brukeren bevisst gått inn i den og skal kunne skrive og
+          // navigere uten at alt markeres på nytt ved hvert tastetrykk.
+          const heleVarMarkert = forrigeMarkering?.index === start && forrigeMarkering.length === length;
+          const stodFrittInni =
+            forrigeMarkering != null && forrigeMarkering.index > start && forrigeMarkering.index < start + length;
+          if (heleVarMarkert || stodFrittInni) return;
 
           // "silent" undertrykker selection-change, så vi må speile markeringen i
           // lastSelectionRef selv. Ellers tror handleSettInnTekstblokk at ingenting er
