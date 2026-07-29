@@ -3,8 +3,9 @@ import { useMemo } from "react";
 
 import * as Tekstblokker from "../modules/tekstblokker";
 import {
+  harAlleTags,
   matcherSoek,
-  tellTags,
+  tellTagsMedValgte,
   Tekstblokk,
   TekstblokkOversikt,
   TekstblokkRequest,
@@ -78,10 +79,10 @@ export const useFiltrerteTekstblokker = (
   valgteTags: string[],
 ): FiltrerteTekstblokker => {
   const etterSoek = useMemo(() => blokker.filter((b) => matcherSoek(b, soek)), [blokker, soek]);
-  const tagAntall = useMemo(() => tellTags(etterSoek), [etterSoek]);
-  const synlige = useMemo(
-    () => (valgteTags.length === 0 ? etterSoek : etterSoek.filter((b) => valgteTags.some((t) => b.tags.includes(t)))),
-    [etterSoek, valgteTags],
-  );
+  const synlige = useMemo(() => etterSoek.filter((b) => harAlleTags(b, valgteTags)), [etterSoek, valgteTags]);
+  // Tagene telles over det som faktisk er igjen, ikke over hele søketreffet. Med
+  // AND-filtrering ville resten bare ført til tomme lister. Antallet blir dermed
+  // "hvor mange treff får jeg hvis jeg legger til denne taggen også".
+  const tagAntall = useMemo(() => tellTagsMedValgte(synlige, valgteTags), [synlige, valgteTags]);
   return { tagAntall, synlige };
 };

@@ -1,7 +1,10 @@
+import { ExpandIcon, ShrinkIcon } from "@navikt/aksel-icons";
+import { Label } from "@navikt/ds-react";
 import classNames from "classnames";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ReactQuill, { Quill } from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+import * as Nav from "../../navFrontend";
 import "./htmlEditor.less";
 import TekstblokkSoek from "./tekstblokkSoek";
 
@@ -41,7 +44,38 @@ interface TekstEditorProps {
   feil?: string | { melding: string } | null;
   className?: string;
   placeholder?: string;
+  // Vis brevmaler i tekstblokk-søket. Settes kun fra Send brev (sidemenyen);
+  // i saksflytene viser vi kun tekstblokker.
+  visBrevmaler?: boolean;
+  // Skru av innsetting av tekstblokker. Brukes i admin-modalen, der man redigerer selve
+  // tekstblokken/brevmalen – innsetting ville laget en frossen kopi av en annen blokk.
+  visTekstblokkSoek?: boolean;
+  // Lar brukeren utvide editoren forbi A4-bredden. Kun relevant der det er plass til
+  // det, altså i Send brev.
+  visBreddeToggle?: boolean;
 }
+
+const BREDDE_LAGRINGSNOKKEL = "melosys.htmlEditor.fullBredde";
+
+// Speiler max-width på .editor-wrapper i htmlEditor.less. Brukes til å avgjøre om
+// A4-grensen i det hele tatt gjør editoren smalere enn plassen den har.
+const BREVBREDDE_PX = 210 * (96 / 25.4) - 7 * 16;
+
+const lesLagretFullBredde = (): boolean => {
+  try {
+    return window.localStorage.getItem(BREDDE_LAGRINGSNOKKEL) === "true";
+  } catch {
+    return false;
+  }
+};
+
+const lagreFullBredde = (fullBredde: boolean) => {
+  try {
+    window.localStorage.setItem(BREDDE_LAGRINGSNOKKEL, String(fullBredde));
+  } catch {
+    /* Privat modus e.l. – valget gjelder da kun for denne økten. */
+  }
+};
 
 // Hjelpefunksjoner for å pakke inn/ut innhold med ql-fritekst div
 const wrapWithHtmlEditorDiv = (content: string): string => {
@@ -61,7 +95,22 @@ const unwrapHtmlEditorDiv = (content: string): string => {
   return match ? match[1] : content;
 };
 
-function HtmlEditor({ value, onChange, disabled, label, feil, className, placeholder }: TekstEditorProps) {
+function HtmlEditor({
+  value,
+  onChange,
+  disabled,
+  label,
+  feil,
+  className,
+  placeholder,
+  visBrevmaler,
+  visTekstblokkSoek = true,
+  visBreddeToggle = false,
+}: TekstEditorProps) {
+  const [fullBredde, setFullBredde] = useState(lesLagretFullBredde);
+  // Knappen har ingen hensikt der editoren uansett er smalere enn brevbredden.
+  const [harPlassTilUtvidelse, setHarPlassTilUtvidelse] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const quillRef = useRef<ReactQuill>(null);
   // Referanse for å spore om formatering pågår, for å unngå uendelig rekursjon
   const isFormattingRef = useRef(false);
@@ -227,6 +276,7 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
     const selectionChangeHandler = (range: any, _oldRange: any, source: string) => {
       if (!range) return;
 
+      const forrigeMarkering = lastSelectionRef.current;
       lastSelectionRef.current = { index: range.index, length: range.length };
 
       if (range.length !== 0 || source !== "user") return;
@@ -240,6 +290,16 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
         const { length } = matchResult[0];
 
         if (range.index > start && range.index < start + length) {
+          // Klikker man inni en placeholder som allerede er markert i sin helhet, lar vi
+          // markøren stå der brukeren klikket. Da kan teksten – inkludert klammene –
+          // redigeres og delvis markeres som vanlig tekst. Første klikk markerer alt.
+          if (forrigeMarkering?.index === start && forrigeMarkering.length === length) return;
+
+          // "silent" undertrykker selection-change, så vi må speile markeringen i
+          // lastSelectionRef selv. Ellers tror handleSettInnTekstblokk at ingenting er
+          // markert, og limer tekstblokken inn midt i placeholderen i stedet for å
+          // erstatte den.
+          lastSelectionRef.current = { index: start, length };
           quill.setSelection(start, length, "silent");
           return;
         }
@@ -259,6 +319,18 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
       quill.off("selection-change", selectionChangeHandler);
     };
   }, []);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!visBreddeToggle || !container) return undefined;
+
+    const oppdater = () => setHarPlassTilUtvidelse(container.clientWidth > BREVBREDDE_PX);
+    oppdater();
+
+    const observer = new ResizeObserver(oppdater);
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [visBreddeToggle]);
 
   const handleSettInnTekstblokk = (html: string) => {
     const quill = quillRef.current?.editor;
@@ -284,20 +356,44 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
     const innsatt = quill.getLength() - lengdeFor;
 
     const nyIndeks = Math.max(0, Math.min(innsettingsindeks + innsatt, quill.getLength() - 1));
+    // "silent" emitter ingen selection-change, så refen må speiles her også. Ellers peker
+    // den fortsatt på forrige markering, og neste innsetting havner foran denne.
+    lastSelectionRef.current = { index: nyIndeks, length: 0 };
     quill.setSelection(nyIndeks, 0, "silent");
     quill.focus();
   };
 
   return (
-    <div className={classNames("htmlEditor", className)}>
-      {label && <div className="editor_label">{label}</div>}
-      <TekstblokkSoek onVelg={handleSettInnTekstblokk} disabled={disabled} />
+    <div className={classNames("htmlEditor", className)} ref={containerRef}>
+      {label && (
+        <Label as="div" size="small" className="editor_label">
+          {label}
+        </Label>
+      )}
+      {visTekstblokkSoek && (
+        <TekstblokkSoek onVelg={handleSettInnTekstblokk} disabled={disabled} visBrevmaler={visBrevmaler} />
+      )}
       <div
         className={classNames("editor-wrapper", {
           "editor-wrapper--disabled": disabled,
           "editor-wrapper--error": !!feil,
+          "editor-wrapper--fullbredde": fullBredde,
         })}
       >
+        {visBreddeToggle && harPlassTilUtvidelse && !disabled && (
+          <Nav.Button
+            className="editor-breddeknapp"
+            variant="tertiary-neutral"
+            size="xsmall"
+            type="button"
+            icon={fullBredde ? <ShrinkIcon aria-hidden /> : <ExpandIcon aria-hidden />}
+            title={fullBredde ? "Vis editoren i brevbredde" : "Utvid editoren til full bredde"}
+            onClick={() => {
+              setFullBredde(!fullBredde);
+              lagreFullBredde(!fullBredde);
+            }}
+          />
+        )}
         <ReactQuill
           ref={quillRef}
           theme="snow"

@@ -84,6 +84,11 @@
 
   &__modal-editor {
     min-height: 16rem;
+
+    // Skjemaet har allerede gap mellom feltene; editorens egen margin blir dobbelt opp.
+    .editor_label {
+      margin-top: 0;
+    }
   }
 
   &__modal-laster {
@@ -107,6 +112,17 @@
       color: var(--a-text-subtle);
       font-style: italic;
       font-size: 0.85rem;
+    }
+
+    // Tekstfelt og "Legg til"-knapp på samme linje. Feltet tar resten av bredden.
+    &-rad {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+
+      > *:first-child {
+        flex: 1 1 auto;
+      }
     }
   }
 }

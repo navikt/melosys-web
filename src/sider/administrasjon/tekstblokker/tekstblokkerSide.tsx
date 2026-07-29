@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import * as Nav from "../../../navFrontend";
 
 import { useFiltrerteTekstblokker, useTekstblokker } from "../../../services/api/tekstblokker";
-import { TekstblokkOversikt, TekstblokkType } from "../../../services/modules/tekstblokker";
+import { tellTags, TekstblokkOversikt, TekstblokkType } from "../../../services/modules/tekstblokker";
 import TekstblokkRedigeringModal from "./tekstblokkRedigeringModal";
 import TekstblokkSlettBekreftelse from "./tekstblokkSlettBekreftelse";
 import TekstblokkerFilter from "./tekstblokkerFilter";
@@ -25,8 +25,18 @@ function TekstblokkerSide() {
 
   const { data: blokker = [], isLoading, error } = useTekstblokker(type);
 
+  // Tags er ett felles vokabular på tvers av tekstblokker og brevmaler, så forslagene i
+  // modalen tar med begge typer. Hentes først når modalen åpnes.
+  const motsattType: TekstblokkType = type === "TEKSTBLOKK" ? "BREVMAL" : "TEKSTBLOKK";
+  const { data: blokkerAvMotsattType = [] } = useTekstblokker(motsattType, modal.type !== "lukket");
+
   const { tagAntall, synlige } = useFiltrerteTekstblokker(blokker, soek, valgteTags);
-  const forslagTags = useMemo(() => tagAntall.map(([t]) => t), [tagAntall]);
+  // Ikke tagAntall: det telles over blokkene som matcher søket, og hører hjemme i
+  // filteret over lista – ikke i forslagene.
+  const forslagTags = useMemo(
+    () => tellTags([...blokker, ...blokkerAvMotsattType]).map(([t]) => t),
+    [blokker, blokkerAvMotsattType],
+  );
 
   const alleErUtvidet = synlige.length > 0 && synlige.every((b) => utvidedeIder.has(b.id));
 

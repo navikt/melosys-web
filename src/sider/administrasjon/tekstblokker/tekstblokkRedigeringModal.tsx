@@ -1,10 +1,9 @@
-import { BodyShort } from "@navikt/ds-react";
 import { useEffect, useState } from "react";
 
 import * as Nav from "../../../navFrontend";
 import HtmlEditor from "../../../felleskomponenter/htmlEditor/htmlEditor";
 import { useOppdaterTekstblokk, useOpprettTekstblokk, useTekstblokk } from "../../../services/api/tekstblokker";
-import { TekstblokkRequest, TekstblokkType } from "../../../services/modules/tekstblokker";
+import { leggTilTag, TekstblokkRequest, TekstblokkType } from "../../../services/modules/tekstblokker";
 import TagInput from "./tagInput";
 import { labelForType } from "./labels";
 
@@ -24,6 +23,8 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
   const [tittel, setTittel] = useState("");
   const [innhold, setInnhold] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  // En tag som er skrevet, men ikke lagt til med Enter eller "Legg til"-knappen.
+  const [tagUtkast, setTagUtkast] = useState("");
 
   useEffect(() => {
     if (eksisterende.data) {
@@ -40,7 +41,12 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
 
   const handleLagre = () => {
     if (!kanLagre) return;
-    const request: TekstblokkRequest = { tittel: tittel.trim(), innhold, type, tags };
+    // Ta med en tag som står igjen i feltet, så den ikke går tapt fordi admin
+    // glemte Enter eller "Legg til".
+    const alleTags = leggTilTag(tags, tagUtkast);
+    setTags(alleTags);
+    setTagUtkast("");
+    const request: TekstblokkRequest = { tittel: tittel.trim(), innhold, type, tags: alleTags };
 
     if (redigerId !== null) {
       oppdater.mutate({ id: redigerId, body: request }, { onSuccess: onLukk });
@@ -54,9 +60,9 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
   return (
     <Nav.Modal open onClose={onLukk} aria-label={overskrift} width="medium">
       <Nav.Modal.Header>
-        <BodyShort weight="semibold" size="medium">
+        <Nav.Heading size="small" level="1">
           {overskrift}
-        </BodyShort>
+        </Nav.Heading>
       </Nav.Modal.Header>
       <Nav.Modal.Body>
         {erRedigering && eksisterende.isLoading ? (
@@ -73,10 +79,17 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
               maxLength={200}
             />
 
-            <TagInput verdier={tags} setVerdier={setTags} forslag={forslagTags} />
+            <TagInput
+              verdier={tags}
+              setVerdier={setTags}
+              forslag={forslagTags}
+              utkast={tagUtkast}
+              setUtkast={setTagUtkast}
+            />
 
             <div className="tekstblokker__modal-editor">
-              <HtmlEditor value={innhold} onChange={setInnhold} label="Innhold" />
+              {/* Ingen innsetting av andre tekstblokker her – vi redigerer selve kilden. */}
+              <HtmlEditor value={innhold} onChange={setInnhold} label="Innhold" visTekstblokkSoek={false} />
             </div>
 
             {feil && (

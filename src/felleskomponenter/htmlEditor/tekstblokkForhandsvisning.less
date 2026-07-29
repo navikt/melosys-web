@@ -26,8 +26,77 @@
 
   ul,
   ol {
-    margin: 4px 0 4px 1.5rem;
-    padding: 0;
+    margin: 4px 0;
+    padding-left: 1.5em;
+    counter-reset: ql-list;
+  }
+
+  // Quill 2 lagrer både punkt- og nummerliste som <ol> og skiller dem med
+  // <li data-list="bullet|ordered">. Vi rendrer markøren selv (speiler Quill)
+  // slik at forhåndsvisningen viser riktig punkt vs. nummer. Tom .ql-ui-span
+  // fra editoren skjules.
+  .ql-ui {
+    display: none;
+  }
+
+  li[data-list] {
+    list-style-type: none;
+    position: relative;
+  }
+
+  li[data-list]::before {
+    display: inline-block;
+    width: 1.2em;
+    margin-left: -1.5em;
+    margin-right: 0.3em;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  li[data-list="bullet"]::before {
+    content: "\2022";
+  }
+
+  li[data-list="ordered"] {
+    counter-increment: ql-list;
+  }
+
+  li[data-list="ordered"]::before {
+    content: counter(ql-list, decimal) ". ";
+  }
+
+  // Quill legger innrykk som ql-indent-N på <li>. Uten disse mister nestede lister
+  // strukturen i forhåndsvisningen, selv om sanitizeren tar vare på klassen.
+  li[data-list].ql-indent-1 {
+    margin-left: 1.5em;
+  }
+
+  li[data-list].ql-indent-2 {
+    margin-left: 3em;
+  }
+
+  li[data-list].ql-indent-3 {
+    margin-left: 4.5em;
+  }
+
+  li[data-list].ql-indent-4 {
+    margin-left: 6em;
+  }
+
+  li[data-list].ql-indent-5 {
+    margin-left: 7.5em;
+  }
+
+  li[data-list].ql-indent-6 {
+    margin-left: 9em;
+  }
+
+  li[data-list].ql-indent-7 {
+    margin-left: 10.5em;
+  }
+
+  li[data-list].ql-indent-8 {
+    margin-left: 12em;
   }
 
   .bracketed-text {
