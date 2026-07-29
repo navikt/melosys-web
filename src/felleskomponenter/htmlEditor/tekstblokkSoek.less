@@ -16,7 +16,9 @@
   &__innhold {
     width: min(52rem, 94vw);
     // Fast høyde, ikke max-height: ellers krymper popoveren når trefflista blir kort,
-    // og hopper i størrelse hver gang brukeren filtrerer.
+    // og hopper i størrelse hver gang brukeren filtrerer. Overstyres inline med den
+    // plassen som faktisk er ledig ved anker-elementet – Aksel-popoveren har ingen
+    // size-middleware og ville ellers blitt klippet der det er trangt.
     height: min(46rem, 88vh);
     padding: 1.25rem 1.25rem 1rem;
     display: flex;

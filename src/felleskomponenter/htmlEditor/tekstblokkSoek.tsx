@@ -20,6 +20,13 @@ interface Props {
 
 const SIDE_STORRELSE = 10;
 
+// Luft mot vindukanten, i tråd med shift-paddingen Aksel-popoveren bruker.
+const POPOVER_MARG = 16;
+
+// Header, faner og filtre tar rundt 15rem. Under dette blir det ikke plass til treff i
+// det hele tatt, så vi lar heller popoveren ta det meste av vinduet enn å vise en tom liste.
+const MIN_POPOVER_HOYDE = 384;
+
 function TekstblokkSoek({ onVelg, disabled, visBrevmaler = false }: Props) {
   const togglePaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
   if (!togglePaa) return null;
@@ -28,7 +35,6 @@ function TekstblokkSoek({ onVelg, disabled, visBrevmaler = false }: Props) {
 
 function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props) {
   const ankerRef = useRef<HTMLDivElement>(null);
-  const soekRef = useRef<HTMLInputElement>(null);
   const [aapen, setAapen] = useState(false);
   const [aktivType, setAktivType] = useState<TekstblokkType>("TEKSTBLOKK");
   // Fritekstsøk og tag-filter holdes adskilt slik at det er tydelig hva som er et
@@ -36,6 +42,7 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
   const [soek, setSoek] = useState("");
   const [valgteTags, setValgteTags] = useState<string[]>([]);
   const [antallVist, setAntallVist] = useState(SIDE_STORRELSE);
+  const [tilgjengeligHoyde, setTilgjengeligHoyde] = useState<number | null>(null);
 
   const { data: blokker = [], isLoading } = useTekstblokker(aktivType, aapen);
 
@@ -52,18 +59,27 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
   // Vis et begrenset antall om gangen; nullstill når søk/filter/type endres.
   useEffect(() => setAntallVist(SIDE_STORRELSE), [soek, valgteTags, aktivType]);
 
-  // Popover skjuler med CSS uten å unmounte, så autoFocus ville bare truffet ved
-  // første montering. Vi fokuserer eksplisitt hver gang popoveren åpnes.
-  useEffect(() => {
-    if (aapen) soekRef.current?.focus();
-  }, [aapen]);
-
   const synlige = filtrerte.slice(0, antallVist);
   const gjenstaaende = filtrerte.length - synlige.length;
 
   const nullstillFiltre = () => {
     setSoek("");
     setValgteTags([]);
+  };
+
+  // Popoveren har fast høyde og kan ikke krympe selv, så vi måler hvor mye plass som
+  // faktisk er ledig over og under knappen før den åpnes. Uten dette blir toppen –
+  // med søkefelt og tag-filter – klippet bort der det er trangt.
+  const aapne = () => {
+    const anker = ankerRef.current?.getBoundingClientRect();
+    if (anker) {
+      const plassOver = anker.top - POPOVER_MARG;
+      const plassUnder = window.innerHeight - anker.bottom - POPOVER_MARG;
+      const heleVinduet = window.innerHeight - POPOVER_MARG * 2;
+      const oenskethoyde = Math.max(plassOver, plassUnder, MIN_POPOVER_HOYDE);
+      setTilgjengeligHoyde(Math.min(oenskethoyde, heleVinduet));
+    }
+    setAapen(true);
   };
 
   const lukk = () => {
@@ -95,7 +111,7 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
         <Nav.Button
           variant="tertiary"
           size="small"
-          onClick={() => (aapen ? lukk() : setAapen(true))}
+          onClick={() => (aapen ? lukk() : aapne())}
           disabled={disabled}
           type="button"
         >
@@ -110,7 +126,10 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
         arrow={false}
         className="tekstblokkSoek__popover"
       >
-        <Popover.Content className="tekstblokkSoek__innhold">
+        <Popover.Content
+          className="tekstblokkSoek__innhold"
+          style={tilgjengeligHoyde ? { height: `min(46rem, ${tilgjengeligHoyde}px)` } : undefined}
+        >
           <div className="tekstblokkSoek__topp">
             <div className="tekstblokkSoek__header">
               <Nav.Heading size="xsmall" level="2">
@@ -137,7 +156,6 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
 
             <div className="tekstblokkSoek__filtre">
               <Search
-                ref={soekRef}
                 label="Søk på tittel eller tag"
                 hideLabel={false}
                 size="small"
