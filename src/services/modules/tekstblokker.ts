@@ -84,7 +84,12 @@ export const tellTags = (blokker: TekstblokkOversikt[]): Array<[string, number]>
 // Uten dette ville en valgt tag forsvinne fra filteret når kombinasjonen ikke gir treff,
 // og da kunne den ikke fjernes igjen.
 export const tellTagsMedValgte = (blokker: TekstblokkOversikt[], valgteTags: string[]): Array<[string, number]> => {
-  const telling = tellTags(blokker);
+  // Valgte tags vises med skrivemåten brukeren valgte, ikke den tilfeldige skrivemåten
+  // som først dukker opp i utvalget – ellers slutter chip/nedtrekk å matche det valgte.
+  const telling = tellTags(blokker).map(([tag, antall]): [string, number] => [
+    valgteTags.find((valgt) => valgt.toLowerCase() === tag.toLowerCase()) ?? tag,
+    antall,
+  ]);
   const manglende = valgteTags.filter((valgt) => !telling.some(([tag]) => tag.toLowerCase() === valgt.toLowerCase()));
   return [...telling, ...manglende.map((tag): [string, number] => [tag, 0])];
 };
@@ -98,8 +103,15 @@ export const harAlleTags = (blokk: TekstblokkOversikt, valgteTags: string[]): bo
   return valgteTags.every((t) => blokkTags.includes(t.toLowerCase()));
 };
 
-export const toggleITegnliste = (liste: string[], element: string): string[] =>
-  liste.includes(element) ? liste.filter((e) => e !== element) : [...liste, element];
+// Case-insensitiv, i tråd med tellTags og harAlleTags. Tags bevarer bokstavstørrelse, så
+// samme tag kan vises som "Skip" i én blokk og "skip" i en annen.
+export const toggleITagliste = (liste: string[], tag: string): string[] =>
+  liste.some((t) => t.toLowerCase() === tag.toLowerCase())
+    ? liste.filter((t) => t.toLowerCase() !== tag.toLowerCase())
+    : [...liste, tag];
+
+export const erTagValgt = (valgteTags: string[], tag: string): boolean =>
+  valgteTags.some((t) => t.toLowerCase() === tag.toLowerCase());
 
 // Legger til en tag i lista. Bevarer bokstavstørrelse (f.eks. "USA-avtale") og mellomrom;
 // kun ytterkanter trimmes. Tomt utkast og duplikater (case-insensitivt) ignoreres.

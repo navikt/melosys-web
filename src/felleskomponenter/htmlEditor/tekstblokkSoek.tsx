@@ -71,7 +71,9 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
   };
 
   const toggleTag = (verdi: string, valgt: boolean) =>
-    setValgteTags((forrige) => (valgt ? [...forrige, verdi] : forrige.filter((t) => t !== verdi)));
+    setValgteTags((forrige) =>
+      valgt ? [...forrige, verdi] : forrige.filter((t) => t.toLowerCase() !== verdi.toLowerCase()),
+    );
 
   const knappetekst = visBrevmaler ? "Legg til tekstblokker/brevmal" : "Legg til tekstblokker";
   const erBrevmal = visBrevmaler && aktivType === "BREVMAL";
@@ -127,7 +129,10 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
             )}
 
             <div className="tekstblokkSoek__filtre">
+              {/* Popover skjuler med CSS uten å unmounte, så autoFocus krever samme
+                  key-remount som Comboboxen for å faktisk gi fokus ved åpning. */}
               <Search
+                key={aapen ? "apen" : "lukket"}
                 label="Søk på tittel eller tag"
                 hideLabel={false}
                 size="small"

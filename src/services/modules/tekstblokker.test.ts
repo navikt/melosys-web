@@ -1,6 +1,15 @@
 import { describe, expect, it } from "vitest";
 
-import { harAlleTags, leggTilTag, matcherSoek, tellTags, tellTagsMedValgte, TekstblokkOversikt } from "./tekstblokker";
+import {
+  erTagValgt,
+  harAlleTags,
+  leggTilTag,
+  matcherSoek,
+  tellTags,
+  tellTagsMedValgte,
+  TekstblokkOversikt,
+  toggleITagliste,
+} from "./tekstblokker";
 
 const blokk = (tittel: string, tags: string[], innhold = ""): TekstblokkOversikt => ({
   id: 1,
@@ -88,11 +97,12 @@ describe("tellTagsMedValgte", () => {
     ]);
   });
 
-  it("dupliserer ikke valgt tag med annen bokstavstørrelse", () => {
+  it("viser valgt tag med brukerens skrivemåte, ikke utvalgets", () => {
+    // Ellers slutter chip/nedtrekk å matche det som faktisk er valgt.
     const medStorForbokstav = blokk("Tittel", ["Storbritannia"]);
     const resultat = tellTagsMedValgte([medStorForbokstav], ["storbritannia"]);
 
-    expect(resultat).toEqual([["Storbritannia", 1]]);
+    expect(resultat).toEqual([["storbritannia", 1]]);
   });
 });
 
@@ -126,6 +136,27 @@ describe("harAlleTags", () => {
 
   it("blokk uten tags matcher ingen valgte tags", () => {
     expect(harAlleTags(blokk("Uten tags", []), ["skip"])).toBe(false);
+  });
+});
+
+describe("toggleITagliste og erTagValgt", () => {
+  it("legger til tag som ikke er valgt", () => {
+    expect(toggleITagliste(["skip"], "storbritannia")).toEqual(["skip", "storbritannia"]);
+  });
+
+  it("fjerner tag uavhengig av bokstavstørrelse", () => {
+    // Tags bevarer skrivemåte, så samme tag kan hete "Skip" i én blokk og "skip" i en annen.
+    expect(toggleITagliste(["Skip", "norge"], "skip")).toEqual(["norge"]);
+  });
+
+  it("legger ikke til duplikat med annen bokstavstørrelse", () => {
+    expect(toggleITagliste(["Skip"], "skip")).toEqual([]);
+  });
+
+  it("erTagValgt matcher case-insensitivt", () => {
+    expect(erTagValgt(["Skip"], "skip")).toBe(true);
+    expect(erTagValgt(["Skip"], "SKIP")).toBe(true);
+    expect(erTagValgt(["Skip"], "norge")).toBe(false);
   });
 });
 

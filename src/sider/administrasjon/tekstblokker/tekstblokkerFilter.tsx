@@ -1,7 +1,7 @@
 import { Chips, Search, Tabs } from "@navikt/ds-react";
 import { useMemo, useState } from "react";
 
-import { TekstblokkType, toggleITegnliste } from "../../../services/modules/tekstblokker";
+import { erTagValgt, TekstblokkType, toggleITagliste } from "../../../services/modules/tekstblokker";
 
 const MAKS_TAGS_KOMPAKT = 15;
 
@@ -23,7 +23,7 @@ function TekstblokkerFilter({ type, setType, soek, setSoek, valgteTags, setValgt
     if (visAlleTags) return tilgjengeligeTags;
     const topp = tilgjengeligeTags.slice(0, MAKS_TAGS_KOMPAKT);
     const valgteUtenfor = tilgjengeligeTags.filter(
-      ([tag]) => valgteTags.includes(tag) && !topp.some(([t]) => t === tag),
+      ([tag]) => erTagValgt(valgteTags, tag) && !topp.some(([t]) => t === tag),
     );
     return [...topp, ...valgteUtenfor];
   }, [tilgjengeligeTags, visAlleTags, valgteTags]);
@@ -53,8 +53,8 @@ function TekstblokkerFilter({ type, setType, soek, setSoek, valgteTags, setValgt
           {synligeTags.map(([tag, antall]) => (
             <Chips.Toggle
               key={tag}
-              selected={valgteTags.includes(tag)}
-              onClick={() => setValgteTags(toggleITegnliste(valgteTags, tag))}
+              selected={erTagValgt(valgteTags, tag)}
+              onClick={() => setValgteTags(toggleITagliste(valgteTags, tag))}
             >
               {`${tag} (${antall})`}
             </Chips.Toggle>

@@ -356,6 +356,9 @@ function HtmlEditor({
     const innsatt = quill.getLength() - lengdeFor;
 
     const nyIndeks = Math.max(0, Math.min(innsettingsindeks + innsatt, quill.getLength() - 1));
+    // "silent" emitter ingen selection-change, så refen må speiles her også. Ellers peker
+    // den fortsatt på forrige markering, og neste innsetting havner foran denne.
+    lastSelectionRef.current = { index: nyIndeks, length: 0 };
     quill.setSelection(nyIndeks, 0, "silent");
     quill.focus();
   };
