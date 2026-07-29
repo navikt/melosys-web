@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { matcherSoek, tellTags, TekstblokkOversikt } from "./tekstblokker";
+import { leggTilTag, matcherSoek, tellTags, TekstblokkOversikt } from "./tekstblokker";
 
 const blokk = (tittel: string, tags: string[], innhold = ""): TekstblokkOversikt => ({
   id: 1,
@@ -60,5 +60,31 @@ describe("tellTags", () => {
     expect(resultat).toContainEqual(["USA-avtale", 2]);
     expect(resultat).toContainEqual(["Norge", 1]);
     expect(resultat).toHaveLength(2);
+  });
+});
+
+describe("leggTilTag", () => {
+  it("legger til tag og bevarer bokstavstørrelse og mellomrom", () => {
+    expect(leggTilTag([], "USA-avtale")).toEqual(["USA-avtale"]);
+    expect(leggTilTag([], "ny vurdering")).toEqual(["ny vurdering"]);
+  });
+
+  it("trimmer ytterkanter og slår sammen gjentatt blanktegn", () => {
+    expect(leggTilTag([], "  ny    vurdering  ")).toEqual(["ny vurdering"]);
+  });
+
+  it("ignorerer tomt utkast", () => {
+    expect(leggTilTag(["usa"], "")).toEqual(["usa"]);
+    expect(leggTilTag(["usa"], "   ")).toEqual(["usa"]);
+  });
+
+  it("ignorerer duplikat uavhengig av bokstavstørrelse", () => {
+    expect(leggTilTag(["USA-avtale"], "usa-avtale")).toEqual(["USA-avtale"]);
+  });
+
+  it("endrer ikke den opprinnelige lista", () => {
+    const original = ["usa"];
+    leggTilTag(original, "avslag");
+    expect(original).toEqual(["usa"]);
   });
 });

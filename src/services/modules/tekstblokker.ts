@@ -81,3 +81,13 @@ export const tellTags = (blokker: TekstblokkOversikt[]): Array<[string, number]>
 
 export const toggleITegnliste = (liste: string[], element: string): string[] =>
   liste.includes(element) ? liste.filter((e) => e !== element) : [...liste, element];
+
+// Legger til en tag i lista. Bevarer bokstavstørrelse (f.eks. "USA-avtale") og mellomrom;
+// kun ytterkanter trimmes. Tomt utkast og duplikater (case-insensitivt) ignoreres.
+// Ligger her fordi både tag-feltet og lagringen i redigeringsmodalen bruker den.
+export const leggTilTag = (verdier: string[], raaTag: string): string[] => {
+  const ny = raaTag.trim().replace(/\s+/g, " ");
+  if (!ny) return verdier;
+  if (verdier.some((t) => t.toLowerCase() === ny.toLowerCase())) return verdier;
+  return [...verdier, ny];
+};
