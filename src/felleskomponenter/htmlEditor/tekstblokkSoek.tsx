@@ -1,3 +1,4 @@
+import { XMarkIcon } from "@navikt/aksel-icons";
 import { BodyShort, Popover, Search, Tabs, UNSAFE_Combobox as Combobox } from "@navikt/ds-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -73,7 +74,11 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
     setValgteTags((forrige) => (valgt ? [...forrige, verdi] : forrige.filter((t) => t !== verdi)));
 
   const knappetekst = visBrevmaler ? "Legg til tekstblokker/brevmal" : "Legg til tekstblokker";
-  const typeOrd = visBrevmaler && aktivType === "BREVMAL" ? "brevmaler" : "tekstblokker";
+  const erBrevmal = visBrevmaler && aktivType === "BREVMAL";
+  const typeOrd = erBrevmal ? "brevmaler" : "tekstblokker";
+  const typeOrdEntall = erBrevmal ? "brevmal" : "tekstblokk";
+  const overskrift = visBrevmaler ? "Sett inn tekstblokk eller brevmal" : "Sett inn tekstblokk";
+  const harAktivtFilter = soek.trim().length > 0 || valgteTags.length > 0;
 
   return (
     <>
@@ -98,8 +103,22 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
       >
         <Popover.Content className="tekstblokkSoek__innhold">
           <div className="tekstblokkSoek__topp">
+            <div className="tekstblokkSoek__header">
+              <Nav.Heading size="xsmall" level="2">
+                {overskrift}
+              </Nav.Heading>
+              <Nav.Button
+                variant="tertiary-neutral"
+                size="small"
+                type="button"
+                icon={<XMarkIcon aria-hidden />}
+                onClick={lukk}
+                title="Lukk"
+              />
+            </div>
+
             {visBrevmaler && (
-              <Tabs value={aktivType} onChange={byttType} size="small">
+              <Tabs value={aktivType} onChange={byttType} size="small" className="tekstblokkSoek__faner">
                 <Tabs.List>
                   <Tabs.Tab value="TEKSTBLOKK" label="Tekstblokker" />
                   <Tabs.Tab value="BREVMAL" label="Brevmaler" />
@@ -107,29 +126,42 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
               </Tabs>
             )}
 
-            <Search
-              label="Søk på tittel eller tag"
-              size="small"
-              variant="simple"
-              placeholder="Søk på tittel eller tag…"
-              value={soek}
-              onChange={setSoek}
-              autoFocus
-            />
+            <div className="tekstblokkSoek__filtre">
+              <Search
+                label="Søk på tittel eller tag"
+                hideLabel={false}
+                size="small"
+                variant="simple"
+                placeholder="Søk…"
+                value={soek}
+                onChange={setSoek}
+                autoFocus
+              />
 
-            {/* key remounter Combobox ved gjenåpning så uncommittet input-tekst ikke
-                henger igjen (Popover skjuler med CSS, unmounter ikke innholdet). */}
-            <Combobox
-              key={aapen ? "apen" : "lukket"}
-              label="Filtrer på tags"
-              description="Velg én eller flere tags fra listen"
-              size="small"
-              isMultiSelect
-              options={tagOpsjoner}
-              selectedOptions={valgteTagOpsjoner}
-              onToggleSelected={toggleTag}
-              placeholder={tagOpsjoner.length ? "Velg tag…" : "Ingen tags tilgjengelig"}
-            />
+              {/* key remounter Combobox ved gjenåpning så uncommittet input-tekst ikke
+                  henger igjen (Popover skjuler med CSS, unmounter ikke innholdet). */}
+              <Combobox
+                key={aapen ? "apen" : "lukket"}
+                label="Filtrer på tags"
+                size="small"
+                isMultiSelect
+                options={tagOpsjoner}
+                selectedOptions={valgteTagOpsjoner}
+                onToggleSelected={toggleTag}
+                placeholder={tagOpsjoner.length ? "Velg tag…" : "Ingen tags tilgjengelig"}
+              />
+            </div>
+
+            <div className="tekstblokkSoek__resultatlinje">
+              <BodyShort size="small">
+                {filtrerte.length} {filtrerte.length === 1 ? typeOrdEntall : typeOrd}
+              </BodyShort>
+              {harAktivtFilter && (
+                <Nav.Button variant="tertiary" size="xsmall" type="button" onClick={nullstillFiltre}>
+                  Nullstill filter
+                </Nav.Button>
+              )}
+            </div>
           </div>
 
           <div className="tekstblokkSoek__liste">
