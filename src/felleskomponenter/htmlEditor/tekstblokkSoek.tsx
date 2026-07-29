@@ -60,6 +60,7 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
 
   const lukk = () => {
     setAapen(false);
+    setAktivType("TEKSTBLOKK");
     nullstillFiltre();
   };
 

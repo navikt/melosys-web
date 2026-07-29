@@ -44,7 +44,10 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
     if (!kanLagre) return;
     // Ta med en tag som står igjen i feltet, så den ikke går tapt fordi admin
     // glemte Enter eller "Legg til".
-    const request: TekstblokkRequest = { tittel: tittel.trim(), innhold, type, tags: leggTilTag(tags, tagUtkast) };
+    const alleTags = leggTilTag(tags, tagUtkast);
+    setTags(alleTags);
+    setTagUtkast("");
+    const request: TekstblokkRequest = { tittel: tittel.trim(), innhold, type, tags: alleTags };
 
     if (redigerId !== null) {
       oppdater.mutate({ id: redigerId, body: request }, { onSuccess: onLukk });
