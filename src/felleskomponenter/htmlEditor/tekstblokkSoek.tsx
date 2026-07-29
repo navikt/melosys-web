@@ -132,7 +132,7 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
               {/* Popover skjuler med CSS uten å unmounte, så autoFocus krever samme
                   key-remount som Comboboxen for å faktisk gi fokus ved åpning. */}
               <Search
-                key={aapen ? "apen" : "lukket"}
+                key={`soek-${aapen}`}
                 label="Søk på tittel eller tag"
                 hideLabel={false}
                 size="small"
@@ -146,7 +146,7 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
               {/* key remounter Combobox ved gjenåpning så uncommittet input-tekst ikke
                   henger igjen (Popover skjuler med CSS, unmounter ikke innholdet). */}
               <Combobox
-                key={aapen ? "apen" : "lukket"}
+                key={`tags-${aapen}`}
                 label="Filtrer på tags"
                 size="small"
                 isMultiSelect
