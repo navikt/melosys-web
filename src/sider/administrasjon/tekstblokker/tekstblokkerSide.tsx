@@ -25,10 +25,18 @@ function TekstblokkerSide() {
 
   const { data: blokker = [], isLoading, error } = useTekstblokker(type);
 
+  // Tags er ett felles vokabular på tvers av tekstblokker og brevmaler, så forslagene i
+  // modalen tar med begge typer. Hentes først når modalen åpnes.
+  const motsattType: TekstblokkType = type === "TEKSTBLOKK" ? "BREVMAL" : "TEKSTBLOKK";
+  const { data: blokkerAvMotsattType = [] } = useTekstblokker(motsattType, modal.type !== "lukket");
+
   const { tagAntall, synlige } = useFiltrerteTekstblokker(blokker, soek, valgteTags);
-  // Forslag i redigeringsmodalen skal være alle eksisterende tags. tagAntall telles kun
-  // over blokkene som matcher søket, og hører hjemme i filteret over lista – ikke her.
-  const forslagTags = useMemo(() => tellTags(blokker).map(([t]) => t), [blokker]);
+  // Ikke tagAntall: det telles over blokkene som matcher søket, og hører hjemme i
+  // filteret over lista – ikke i forslagene.
+  const forslagTags = useMemo(
+    () => tellTags([...blokker, ...blokkerAvMotsattType]).map(([t]) => t),
+    [blokker, blokkerAvMotsattType],
+  );
 
   const alleErUtvidet = synlige.length > 0 && synlige.every((b) => utvidedeIder.has(b.id));
 
