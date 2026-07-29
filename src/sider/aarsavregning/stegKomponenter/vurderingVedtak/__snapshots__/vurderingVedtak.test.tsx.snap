@@ -159,7 +159,7 @@ exports[`VurderingVedtak > should render snapshot with realistic data 1`] = `
       </div>
     </div>
     <div class="htmlEditor fritekst_editor">
-      <div class="editor_label">
+      <div class="editor_label navds-label navds-label--small">
         Fritekst til innledning
       </div>
       <div class="editor-wrapper">
@@ -602,7 +602,7 @@ exports[`VurderingVedtak > should render snapshot with realistic data 1`] = `
       </div>
     </div>
     <div class="htmlEditor fritekst_editor">
-      <div class="editor_label">
+      <div class="editor_label navds-label navds-label--small">
         Fritekst til begrunnelse
       </div>
       <div class="editor-wrapper">
