@@ -10,6 +10,7 @@ const blokk = (tittel: string, tags: string[], innhold = ""): TekstblokkOversikt
   tags,
   endretDato: "2026-01-01T00:00:00Z",
   endretAv: "Z123456",
+  endretAvNavn: null,
 });
 
 describe("matcherSoek", () => {

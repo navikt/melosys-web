@@ -11,6 +11,7 @@ export interface TekstblokkOversikt {
   tags: string[];
   endretDato: string;
   endretAv: string;
+  endretAvNavn: string | null;
 }
 
 export interface Tekstblokk {

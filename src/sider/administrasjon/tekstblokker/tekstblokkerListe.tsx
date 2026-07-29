@@ -85,7 +85,7 @@ function TekstblokkerListeRad({ blokk, utvidet, onToggleUtvidet, onRediger, onSl
         </div>
       </Nav.Table.DataCell>
       <Nav.Table.DataCell>{formatterDatoTilNorsk(blokk.endretDato, true)}</Nav.Table.DataCell>
-      <Nav.Table.DataCell>{blokk.endretAv}</Nav.Table.DataCell>
+      <Nav.Table.DataCell>{blokk.endretAvNavn ?? blokk.endretAv}</Nav.Table.DataCell>
       <Nav.Table.DataCell>
         <div className="tekstblokker__rad-handlinger">
           <Nav.Button
