@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { forberedTekstblokkHtml, PlaceholderBlot } from "./htmlEditor";
+import {
+  finnUerstattedeOmrader,
+  forberedTekstblokkHtml,
+  PlaceholderBlot,
+  PlaceholderUerstattetBlot,
+} from "./htmlEditor";
 import { PlaceholderVerdi } from "../../services/modules/placeholdere";
 
 const verdier: PlaceholderVerdi[] = [{ nokkel: "saksnummer", verdi: "2024/123456" }];
@@ -31,5 +36,43 @@ describe("PlaceholderBlot", () => {
     expect(node.tagName).toBe("SPAN");
     expect(node.classList.contains("placeholder-utfylt")).toBe(true);
     expect(node.getAttribute("data-placeholder")).toBe("dagens-dato");
+  });
+});
+
+describe("finnUerstattedeOmrader", () => {
+  it("treffer en uerstattet placeholder", () => {
+    expect(finnUerstattedeOmrader("Saken {saksnummer} er mottatt.")).toEqual([{ index: 6, length: 12 }]);
+  });
+
+  it("treffer flere placeholdere i samme tekst", () => {
+    const omrader = finnUerstattedeOmrader("{fornavn} {etternavn}");
+    expect(omrader).toEqual([
+      { index: 0, length: 9 },
+      { index: 10, length: 11 },
+    ]);
+  });
+
+  it("treffer ikke tomme klammer", () => {
+    expect(finnUerstattedeOmrader("Et {} her")).toEqual([]);
+  });
+
+  it("treffer ikke tekst i firkantklammer", () => {
+    expect(finnUerstattedeOmrader("Et [PLACEHOLDER] her")).toEqual([]);
+  });
+
+  it("treffer ikke tekst uten klammer", () => {
+    expect(finnUerstattedeOmrader("Saken 2024/123456 er mottatt.")).toEqual([]);
+  });
+});
+
+describe("PlaceholderUerstattetBlot", () => {
+  it("create setter klassen", () => {
+    const node = PlaceholderUerstattetBlot.create() as HTMLElement;
+    expect(node.tagName).toBe("SPAN");
+    expect(node.classList.contains("placeholder-uerstattet")).toBe(true);
+  });
+
+  it("formats returnerer true", () => {
+    expect(PlaceholderUerstattetBlot.formats()).toBe(true);
   });
 });

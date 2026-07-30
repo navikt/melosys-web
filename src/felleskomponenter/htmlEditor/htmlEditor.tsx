@@ -53,6 +53,36 @@ export class PlaceholderBlot extends Inline {
 
 Quill.register("formats/placeholder-utfylt", PlaceholderBlot);
 
+// Markerer placeholdere som står igjen uerstattet. Boolsk som BracketBlot: markeringen
+// utledes av selve klammeteksten på hver text-change, så den trenger ingen verdi.
+export class PlaceholderUerstattetBlot extends Inline {
+  static blotName = "placeholder-uerstattet";
+
+  static tagName = "span";
+
+  static className = "placeholder-uerstattet";
+
+  static formats() {
+    return true;
+  }
+}
+
+Quill.register("formats/placeholder-uerstattet", PlaceholderUerstattetBlot);
+
+// Utfylte verdier har ingen klammer igjen i teksten og treffes derfor aldri.
+export const finnUerstattedeOmrader = (tekst: string): Array<{ index: number; length: number }> => {
+  const regex = /\{[^{}]+\}/g;
+  const omrader: Array<{ index: number; length: number }> = [];
+
+  let treff: RegExpExecArray | null = regex.exec(tekst);
+  while (treff !== null) {
+    omrader.push({ index: treff.index, length: treff[0].length });
+    treff = regex.exec(tekst);
+  }
+
+  return omrader;
+};
+
 // HTML-en som går til dangerouslyPasteHTML ved innsetting av tekstblokk. Uten verdier
 // (toggle av / manglende data) er den urørt.
 export const forberedTekstblokkHtml = (html: string, placeholderVerdier?: PlaceholderVerdi[]): string =>
@@ -180,6 +210,7 @@ function HtmlEditor({
       "table",
       "bracketed",
       "placeholder-utfylt",
+      "placeholder-uerstattet",
       "break",
     ],
     [],
@@ -289,7 +320,7 @@ function HtmlEditor({
       }
     }
 
-    // Håndterer tekst i klammer
+    // Håndterer tekst i klammer og uerstattede placeholdere
     const textChangeHandler = () => {
       if (isFormattingRef.current) return;
 
@@ -309,6 +340,11 @@ function HtmlEditor({
 
           matchResult = bracketRegex.exec(text);
         }
+
+        quill.formatText(0, text.length, "placeholder-uerstattet", false);
+        finnUerstattedeOmrader(text).forEach(({ index, length }) => {
+          quill.formatText(index, length, "placeholder-uerstattet", true);
+        });
       } finally {
         isFormattingRef.current = false;
       }
