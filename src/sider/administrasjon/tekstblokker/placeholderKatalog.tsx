@@ -54,7 +54,8 @@ function PlaceholderKatalogInnhold() {
     <div className="tekstblokker__placeholder-katalog">
       <ReadMore header="Tilgjengelige placeholdere">
         <BodyShort spacing size="small">
-          Skriv nøkkelen med klammeparenteser i teksten. Den erstattes med verdien fra saken når brevet lages.
+          Skriv nøkkelen i krøllparenteser i teksten, f.eks. {"{saksnummer}"}. Den erstattes med verdien fra saken når
+          brevet lages. Klammer som {"[skriv begrunnelse]"} betyr fortsatt at saksbehandler fyller ut selv.
         </BodyShort>
         <PlaceholderKatalogTabell placeholdere={placeholdere} />
       </ReadMore>
