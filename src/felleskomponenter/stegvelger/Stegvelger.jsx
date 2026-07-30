@@ -38,10 +38,7 @@ import { Innsynsmelding, NyVurderingMelding, StatsborgerskapFeil } from "../aler
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.less";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
-import {
-  MELOSYS_NORGE_ER_UTPEKT_11_3_A,
-  MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
-} from "../../featuretoggle/toggleNavn";
+import { MELOSYS_NORGE_ER_UTPEKT_11_3_A } from "../../featuretoggle/toggleNavn";
 
 const byggStegStores = () => ({
   [StegStoreTyper.Anmodningsperiodersvar]: new EnkelDataStore(),
@@ -508,7 +505,6 @@ class Stegvelger extends Component {
       art11_3Aeller13_3A: props.art11_3Aeller13_3A,
       art11_4_1eller13_4_1: props.art11_4_1eller13_4_1,
       art11_4_2eller13_4_2: props.art11_4_2eller13_4_2,
-      eøsFaktureringAvTrygdeavgiftToggleEnabled: props.eøsFaktureringAvTrygdeavgiftToggleEnabled,
       oppsummering: props.oppsummering,
       harTrygdeavgiftperiode,
     };
@@ -556,14 +552,13 @@ class Stegvelger extends Component {
       sakstype,
       anmodningErSendtUtland,
       oppsummering,
-      eøsFaktureringAvTrygdeavgiftToggleEnabled,
     } = this.props;
     const { aktivtStegNummer, aktuelleSteg } = this.state;
     const erVurderingPeriode = aktuelleSteg[aktivtStegNummer]?.id == STEG.VURDERING_PERIODE;
     const erArbeidTjenestepersonEllerFly =
       oppsummering.behandlingstema.kode == MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY;
 
-    const flytHarIkkeVurderingPeriode = !(eøsFaktureringAvTrygdeavgiftToggleEnabled && erArbeidTjenestepersonEllerFly);
+    const flytHarIkkeVurderingPeriode = !erArbeidTjenestepersonEllerFly;
 
     this.bytterSteg = true;
     this.stegovergangId += 1;
@@ -838,7 +833,6 @@ const mapStateToProps = (state) => ({
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
   kontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
   norgeErUtpekt11_3AToggleEnabled: erFeatureToggleEnabled(MELOSYS_NORGE_ER_UTPEKT_11_3_A, state),
-  eøsFaktureringAvTrygdeavgiftToggleEnabled: erFeatureToggleEnabled(MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT, state),
 });
 
 /* eslint no-alert:off */
