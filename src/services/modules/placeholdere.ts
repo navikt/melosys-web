@@ -37,7 +37,9 @@ export const erstattPlaceholdere = (html: string, verdier: PlaceholderVerdi[]): 
   const verdiForNokkel = new Map(verdier.map(({ nokkel, verdi }) => [nokkel, verdi]));
   return html.replace(/\{([^{}<>]+)\}/g, (token, nokkel) => {
     const verdi = verdiForNokkel.get(nokkel);
-    if (verdi === undefined) return token;
+    // Tom verdi ville gitt en tom span som Quill kaster – da forsvinner {nokkel}
+    // sporløst. Behold tokenet så det gulmarkeres i stedet.
+    if (!verdi) return token;
     return `<span class="placeholder-utfylt" data-placeholder="${escapeHtml(nokkel)}">${escapeHtml(verdi)}</span>`;
   });
 };

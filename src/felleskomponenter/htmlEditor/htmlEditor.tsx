@@ -4,9 +4,12 @@ import classNames from "classnames";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ReactQuill, { Quill } from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+import { MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../featuretoggle/toggleNavn";
+import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import * as Nav from "../../navFrontend";
-import { erstattPlaceholdere, PlaceholderVerdi } from "../../services/modules/placeholdere";
+import { PlaceholderVerdi } from "../../services/modules/placeholdere";
 import "./htmlEditor.less";
+import { forberedTekstblokkHtml, markerUerstattedeOmrader } from "./placeholderMarkering";
 import TekstblokkSoek from "./tekstblokkSoek";
 
 // Registrerer egendefinert blot for tekst i klammer
@@ -29,64 +32,6 @@ class BracketBlot extends Inline {
 }
 
 Quill.register("formats/bracketed", BracketBlot);
-
-// Markerer utfylte placeholder-verdier. Deler tagName med BracketBlot, så className er
-// nødvendig for at Parchment skal skille dem. Nøkkelen bæres i data-attributtet slik at
-// markeringen overlever innliming mellom felter.
-export class PlaceholderBlot extends Inline {
-  static blotName = "placeholder-utfylt";
-
-  static tagName = "span";
-
-  static className = "placeholder-utfylt";
-
-  static create(value: string) {
-    const node = super.create();
-    node.setAttribute("data-placeholder", value);
-    return node;
-  }
-
-  static formats(node: HTMLElement) {
-    return node.getAttribute("data-placeholder");
-  }
-}
-
-Quill.register("formats/placeholder-utfylt", PlaceholderBlot);
-
-// Markerer placeholdere som står igjen uerstattet. Boolsk som BracketBlot: markeringen
-// utledes av selve klammeteksten på hver text-change, så den trenger ingen verdi.
-export class PlaceholderUerstattetBlot extends Inline {
-  static blotName = "placeholder-uerstattet";
-
-  static tagName = "span";
-
-  static className = "placeholder-uerstattet";
-
-  static formats() {
-    return true;
-  }
-}
-
-Quill.register("formats/placeholder-uerstattet", PlaceholderUerstattetBlot);
-
-// Utfylte verdier har ingen klammer igjen i teksten og treffes derfor aldri.
-export const finnUerstattedeOmrader = (tekst: string): Array<{ index: number; length: number }> => {
-  const regex = /\{[^{}]+\}/g;
-  const omrader: Array<{ index: number; length: number }> = [];
-
-  let treff: RegExpExecArray | null = regex.exec(tekst);
-  while (treff !== null) {
-    omrader.push({ index: treff.index, length: treff[0].length });
-    treff = regex.exec(tekst);
-  }
-
-  return omrader;
-};
-
-// HTML-en som går til dangerouslyPasteHTML ved innsetting av tekstblokk. Uten verdier
-// (toggle av / manglende data) er den urørt.
-export const forberedTekstblokkHtml = (html: string, placeholderVerdier?: PlaceholderVerdi[]): string =>
-  placeholderVerdier ? erstattPlaceholdere(html, placeholderVerdier) : html;
 
 interface DeltaOperation {
   insert?: any;
@@ -183,6 +128,25 @@ function HtmlEditor({
   const isExternalUpdateRef = useRef(false);
   // Siste kjente cursor-posisjon – brukes ved innsetting fra TekstblokkSoek
   const lastSelectionRef = useRef<{ index: number; length: number } | null>(null);
+  const dynamiskPlaceholderPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER);
+  // Quill-effekten under kjører kun ved mount, så handleren må lese togglen via ref
+  // for å få med seg at den kommer på etterpå.
+  const dynamiskPlaceholderPaaRef = useRef(dynamiskPlaceholderPaa);
+
+  useEffect(() => {
+    dynamiskPlaceholderPaaRef.current = dynamiskPlaceholderPaa;
+
+    const quill = quillRef.current?.editor;
+    if (!dynamiskPlaceholderPaa || !quill || isFormattingRef.current) return;
+
+    // Togglen lastes asynkront, så innhold som alt lå i editoren må markeres her.
+    isFormattingRef.current = true;
+    try {
+      markerUerstattedeOmrader(quill);
+    } finally {
+      isFormattingRef.current = false;
+    }
+  }, [dynamiskPlaceholderPaa]);
 
   // Synkroniserer med ekstern verdi når den endres, men bare hvis det ikke er forårsaket av vår egen onChange
   useEffect(() => {
@@ -341,10 +305,9 @@ function HtmlEditor({
           matchResult = bracketRegex.exec(text);
         }
 
-        quill.formatText(0, text.length, "placeholder-uerstattet", false);
-        finnUerstattedeOmrader(text).forEach(({ index, length }) => {
-          quill.formatText(index, length, "placeholder-uerstattet", true);
-        });
+        if (dynamiskPlaceholderPaaRef.current) {
+          markerUerstattedeOmrader(quill);
+        }
       } finally {
         isFormattingRef.current = false;
       }

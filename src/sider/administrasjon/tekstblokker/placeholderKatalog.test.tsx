@@ -15,7 +15,7 @@ vi.mock("../../../services/api/placeholdere", () => ({
 
 const katalog = [
   {
-    nokkel: "sokerNavn",
+    nokkel: "soker-navn",
     visningsnavn: "Søkers navn",
     beskrivelse: "Fullt navn på søker",
     eksempel: "Ola Nordmann",
@@ -37,7 +37,7 @@ describe("PlaceholderKatalog", () => {
     render(<PlaceholderKatalog />);
 
     expect(screen.getByText("Søkers navn")).toBeDefined();
-    expect(screen.getByText("{sokerNavn}")).toBeDefined();
+    expect(screen.getByText("{soker-navn}")).toBeDefined();
     expect(screen.getByText("Fullt navn på søker")).toBeDefined();
     expect(screen.getByText("Ola Nordmann")).toBeDefined();
   });

@@ -44,6 +44,11 @@ describe("erstattPlaceholdere", () => {
     expect(erstattPlaceholdere(html, [])).toBe(html);
   });
 
+  it("lar nøkkel med tom verdi stå urørt", () => {
+    const html = "<p>Hei {navn}.</p>";
+    expect(erstattPlaceholdere(html, [{ nokkel: "navn", verdi: "" }])).toBe(html);
+  });
+
   it("HTML-escaper verdien før innsetting i markup", () => {
     const resultat = erstattPlaceholdere("<p>{navn}</p>", [{ nokkel: "navn", verdi: 'A <B> & "C"' }]);
     expect(resultat).toContain("A &lt;B&gt; &amp; &quot;C&quot;");

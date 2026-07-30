@@ -5,7 +5,7 @@ import {
   forberedTekstblokkHtml,
   PlaceholderBlot,
   PlaceholderUerstattetBlot,
-} from "./htmlEditor";
+} from "./placeholderMarkering";
 import { PlaceholderVerdi } from "../../services/modules/placeholdere";
 
 const verdier: PlaceholderVerdi[] = [{ nokkel: "saksnummer", verdi: "2024/123456" }];
@@ -62,6 +62,10 @@ describe("finnUerstattedeOmrader", () => {
 
   it("treffer ikke tekst uten klammer", () => {
     expect(finnUerstattedeOmrader("Saken 2024/123456 er mottatt.")).toEqual([]);
+  });
+
+  it("treffer ikke over avsnittsgrenser når klammene står uparet på hver sin linje", () => {
+    expect(finnUerstattedeOmrader("Et { her\nog et } der")).toEqual([]);
   });
 });
 
