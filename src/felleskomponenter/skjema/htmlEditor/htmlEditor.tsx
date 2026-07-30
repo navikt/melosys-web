@@ -1,5 +1,6 @@
 import { Field, WrappedFieldProps } from "redux-form";
 import HtmlEditor from "../../htmlEditor";
+import { PlaceholderVerdi } from "../../../services/modules/placeholdere";
 
 interface SkjemaHtmlEditorProps {
   feltNavn: string;
@@ -14,6 +15,8 @@ interface SkjemaHtmlEditorProps {
   visBrevmaler?: boolean;
   // Lar brukeren utvide editoren forbi A4-bredden (kun fra Send brev).
   visBreddeToggle?: boolean;
+  // Verdier som erstatter {nokkel} ved innsetting av tekstblokk (kun fra Send brev).
+  placeholderVerdier?: PlaceholderVerdi[];
 }
 
 function SkjemaHtmlEditorComponent({

@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import ReactQuill, { Quill } from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import * as Nav from "../../navFrontend";
+import { erstattPlaceholdere, PlaceholderVerdi } from "../../services/modules/placeholdere";
 import "./htmlEditor.less";
 import TekstblokkSoek from "./tekstblokkSoek";
 
@@ -28,6 +29,34 @@ class BracketBlot extends Inline {
 }
 
 Quill.register("formats/bracketed", BracketBlot);
+
+// Markerer utfylte placeholder-verdier. Deler tagName med BracketBlot, så className er
+// nødvendig for at Parchment skal skille dem. Nøkkelen bæres i data-attributtet slik at
+// markeringen overlever innliming mellom felter.
+export class PlaceholderBlot extends Inline {
+  static blotName = "placeholder-utfylt";
+
+  static tagName = "span";
+
+  static className = "placeholder-utfylt";
+
+  static create(value: string) {
+    const node = super.create();
+    node.setAttribute("data-placeholder", value);
+    return node;
+  }
+
+  static formats(node: HTMLElement) {
+    return node.getAttribute("data-placeholder");
+  }
+}
+
+Quill.register("formats/placeholder-utfylt", PlaceholderBlot);
+
+// HTML-en som går til dangerouslyPasteHTML ved innsetting av tekstblokk. Uten verdier
+// (toggle av / manglende data) er den urørt.
+export const forberedTekstblokkHtml = (html: string, placeholderVerdier?: PlaceholderVerdi[]): string =>
+  placeholderVerdier ? erstattPlaceholdere(html, placeholderVerdier) : html;
 
 interface DeltaOperation {
   insert?: any;
@@ -53,6 +82,9 @@ interface TekstEditorProps {
   // Lar brukeren utvide editoren forbi A4-bredden. Kun relevant der det er plass til
   // det, altså i Send brev.
   visBreddeToggle?: boolean;
+  // Verdier som erstatter {nokkel} ved innsetting av tekstblokk. Settes kun fra
+  // Send brev når dynamisk placeholder-togglen er på.
+  placeholderVerdier?: PlaceholderVerdi[];
 }
 
 const BREDDE_LAGRINGSNOKKEL = "melosys.htmlEditor.fullBredde";
@@ -106,6 +138,7 @@ function HtmlEditor({
   visBrevmaler,
   visTekstblokkSoek = true,
   visBreddeToggle = false,
+  placeholderVerdier,
 }: TekstEditorProps) {
   const [fullBredde, setFullBredde] = useState(lesLagretFullBredde);
   // Knappen har ingen hensikt der editoren uansett er smalere enn brevbredden.
@@ -137,7 +170,18 @@ function HtmlEditor({
 
   // Tillatte formater
   const formats = useMemo(
-    () => ["header", "bold", "italic", "underline", "indent", "list", "table", "bracketed", "break"],
+    () => [
+      "header",
+      "bold",
+      "italic",
+      "underline",
+      "indent",
+      "list",
+      "table",
+      "bracketed",
+      "placeholder-utfylt",
+      "break",
+    ],
     [],
   );
 
@@ -355,7 +399,7 @@ function HtmlEditor({
     }
 
     const lengdeFor = quill.getLength();
-    quill.clipboard.dangerouslyPasteHTML(innsettingsindeks, html, "user");
+    quill.clipboard.dangerouslyPasteHTML(innsettingsindeks, forberedTekstblokkHtml(html, placeholderVerdier), "user");
     const innsatt = quill.getLength() - lengdeFor;
 
     const nyIndeks = Math.max(0, Math.min(innsettingsindeks + innsatt, quill.getLength() - 1));

@@ -11,6 +11,7 @@ import { begrensAntallTegn } from "../../../utils/normalisering";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 import "./brevFelt.less";
 import { SendBrevFormValues, SyncErrors } from "./types";
+import { PlaceholderVerdi } from "../../../services/modules/placeholdere";
 import { hentFeltFeilmelding, vurderPåkrevdOgMangler } from "./sendBrevSchema";
 import { unwrapMelding } from "../../skjema/utils";
 
@@ -19,9 +20,10 @@ interface BrevFeltProps {
   visFeltBeskrivelse: boolean;
   width: ColumnWidth;
   redigerbart: boolean;
+  placeholderVerdier?: PlaceholderVerdi[];
 }
 
-function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProps) {
+function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart, placeholderVerdier }: BrevFeltProps) {
   const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state)) as
     | SyncErrors
     | undefined;
@@ -71,6 +73,7 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart }: BrevFeltProp
             visBreddeToggle
             // Skjul meta.error før innsending (vis først når showFieldErrors er true)
             suppressMetaError={!formValues?.showFieldErrors}
+            placeholderVerdier={placeholderVerdier}
           />
         </>
       );

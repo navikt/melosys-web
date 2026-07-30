@@ -29,7 +29,7 @@ import { formSelectors } from "../../../ducks/form";
 import BrevMottaker, { erAnnenOrganisasjon, erNorskMyndighet, skalViseBrevmalvalg } from "./brevMottaker/brevMottaker";
 import BrevMottakereTabell from "./brevMottaker/brevMottakereTabell";
 import Brevutkast from "./brevutkast/brevutkast";
-import BrevValg from "./brevValg";
+import BrevValgMedPlaceholdere from "./brevValgMedPlaceholdere";
 import { SendBrevFormValues } from "./types";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
@@ -633,7 +633,8 @@ function SendBrev({
       )}
 
       {!valgtMottakerHarFeilmelding && (
-        <BrevValg
+        <BrevValgMedPlaceholdere
+          behandlingID={behandlingID}
           formValues={formValues}
           width={felterWidth}
           redigerbart={redigerbart}
