@@ -19,6 +19,8 @@ interface Props {
   visBrevmaler?: boolean;
   // Finnes når editoren kan fylle inn verdier – da forhåndsvises tekstblokken ferdig utfylt.
   placeholderVerdier?: PlaceholderVerdi[];
+  // Nøklene fra placeholder-katalogen; skiller ukjente nøkler (røde) fra gyldige uten verdi.
+  gyldigeNokler?: string[];
 }
 
 const SIDE_STORRELSE = 10;
@@ -30,7 +32,7 @@ const POPOVER_MARG = 16;
 // det hele tatt, så vi lar heller popoveren ta det meste av vinduet enn å vise en tom liste.
 const MIN_POPOVER_HOYDE = 384;
 
-function TekstblokkSoek({ onVelg, disabled, visBrevmaler = false, placeholderVerdier }: Props) {
+function TekstblokkSoek({ onVelg, disabled, visBrevmaler = false, placeholderVerdier, gyldigeNokler }: Props) {
   const togglePaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
   if (!togglePaa) return null;
   return (
@@ -39,11 +41,12 @@ function TekstblokkSoek({ onVelg, disabled, visBrevmaler = false, placeholderVer
       disabled={disabled}
       visBrevmaler={visBrevmaler}
       placeholderVerdier={placeholderVerdier}
+      gyldigeNokler={gyldigeNokler}
     />
   );
 }
 
-function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placeholderVerdier }: Props) {
+function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placeholderVerdier, gyldigeNokler }: Props) {
   const ankerRef = useRef<HTMLDivElement>(null);
   const [aapen, setAapen] = useState(false);
   const [aktivType, setAktivType] = useState<TekstblokkType>("TEKSTBLOKK");
@@ -220,6 +223,7 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placehol
                 key={blokk.id}
                 blokk={blokk}
                 placeholderVerdier={placeholderVerdier}
+                gyldigeNokler={gyldigeNokler}
                 onVelg={(html) => {
                   onVelg(html);
                   lukk();
@@ -249,9 +253,10 @@ interface RadProps {
   blokk: TekstblokkOversikt;
   onVelg: (html: string) => void;
   placeholderVerdier?: PlaceholderVerdi[];
+  gyldigeNokler?: string[];
 }
 
-function TekstblokkRad({ blokk, onVelg, placeholderVerdier }: RadProps) {
+function TekstblokkRad({ blokk, onVelg, placeholderVerdier, gyldigeNokler }: RadProps) {
   // Innhold er skjult som standard – vises kun når brukeren ber om det.
   const [visInnhold, setVisInnhold] = useState(false);
 
@@ -281,7 +286,11 @@ function TekstblokkRad({ blokk, onVelg, placeholderVerdier }: RadProps) {
       </div>
       {visInnhold && (
         <div className="tekstblokkSoek__forhandsvisning tekstblokkSoek__forhandsvisning--full">
-          <TekstblokkForhandsvisning html={blokk.innhold} placeholderVerdier={placeholderVerdier} />
+          <TekstblokkForhandsvisning
+            html={blokk.innhold}
+            placeholderVerdier={placeholderVerdier}
+            gyldigeNokler={gyldigeNokler}
+          />
         </div>
       )}
     </div>

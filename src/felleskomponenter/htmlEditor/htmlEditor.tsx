@@ -66,6 +66,9 @@ interface TekstEditorProps {
   // Verdier som erstatter {nokkel} ved innsetting av tekstblokk. Settes kun fra
   // Send brev når dynamisk placeholder-togglen er på.
   placeholderVerdier?: PlaceholderVerdi[];
+  // Nøklene fra placeholder-katalogen. Uten dem markeres alle uerstattede nøkler gult;
+  // med dem blir nøkler som ikke finnes i katalogen røde.
+  gyldigeNokler?: string[];
 }
 
 const BREDDE_LAGRINGSNOKKEL = "melosys.htmlEditor.fullBredde";
@@ -120,6 +123,7 @@ function HtmlEditor({
   visTekstblokkSoek = true,
   visBreddeToggle = false,
   placeholderVerdier,
+  gyldigeNokler,
 }: TekstEditorProps) {
   const [fullBredde, setFullBredde] = useState(lesLagretFullBredde);
   // Knappen har ingen hensikt der editoren uansett er smalere enn brevbredden.
@@ -139,10 +143,12 @@ function HtmlEditor({
   // for å få med seg at de lander etterpå.
   const dynamiskPlaceholderPaaRef = useRef(dynamiskPlaceholderPaa);
   const placeholderVerdierRef = useRef(placeholderVerdier);
+  const gyldigeNoklerRef = useRef(gyldigeNokler);
 
   useEffect(() => {
     dynamiskPlaceholderPaaRef.current = dynamiskPlaceholderPaa;
     placeholderVerdierRef.current = placeholderVerdier;
+    gyldigeNoklerRef.current = gyldigeNokler;
   });
 
   // Synkroniserer med ekstern verdi når den endres, men bare hvis det ikke er forårsaket av vår egen onChange
@@ -295,7 +301,7 @@ function HtmlEditor({
 
         if (dynamiskPlaceholderPaaRef.current) {
           fjernUgyldigeUtfylteMarkeringer(quill, placeholderVerdierRef.current);
-          markerUerstattedeOmrader(quill);
+          markerUerstattedeOmrader(quill, gyldigeNoklerRef.current);
         }
       } finally {
         isFormattingRef.current = false;
@@ -355,6 +361,20 @@ function HtmlEditor({
     };
   }, [dynamiskPlaceholderPaa]);
 
+  // Katalogen lander etter at editoren er montert; uten dette blir ukjente nøkler
+  // stående gule til brukeren skriver noe.
+  useEffect(() => {
+    const quill = quillRef.current?.editor;
+    if (!quill || !dynamiskPlaceholderPaa || !gyldigeNokler?.length) return;
+
+    isFormattingRef.current = true;
+    try {
+      markerUerstattedeOmrader(quill, gyldigeNokler);
+    } finally {
+      isFormattingRef.current = false;
+    }
+  }, [gyldigeNokler, dynamiskPlaceholderPaa]);
+
   useEffect(() => {
     const container = containerRef.current;
     if (!visBreddeToggle || !container) return undefined;
@@ -411,6 +431,7 @@ function HtmlEditor({
           disabled={disabled}
           visBrevmaler={visBrevmaler}
           placeholderVerdier={placeholderVerdier}
+          gyldigeNokler={gyldigeNokler}
         />
       )}
       <div

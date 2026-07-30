@@ -21,9 +21,10 @@ interface BrevFeltProps {
   width: ColumnWidth;
   redigerbart: boolean;
   placeholderVerdier?: PlaceholderVerdi[];
+  gyldigeNokler?: string[];
 }
 
-function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart, placeholderVerdier }: BrevFeltProps) {
+function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart, placeholderVerdier, gyldigeNokler }: BrevFeltProps) {
   const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state)) as
     | SyncErrors
     | undefined;
@@ -74,6 +75,7 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart, placeholderVer
             // Skjul meta.error før innsending (vis først når showFieldErrors er true)
             suppressMetaError={!formValues?.showFieldErrors}
             placeholderVerdier={placeholderVerdier}
+            gyldigeNokler={gyldigeNokler}
           />
         </>
       );

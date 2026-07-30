@@ -18,6 +18,7 @@ interface BrevValgProps {
   changeField: (felt: string, data: any) => void;
   finnValgAlternativ: (felt: Api.DokumenterV2.Felt) => Api.DokumenterV2.ValgAlternativ | undefined;
   placeholderVerdier?: PlaceholderVerdi[];
+  gyldigeNokler?: string[];
 }
 
 // For tittel-feltet for fritekstbrev ønsker vi å fjerne margin under for å unngå ekstra avstand til input-feltet (som ikke har noen label)
@@ -50,6 +51,7 @@ function BrevValg({
   changeField,
   finnValgAlternativ,
   placeholderVerdier,
+  gyldigeNokler,
 }: BrevValgProps) {
   const skalViseBrevFelt = (felt: Api.DokumenterV2.Felt) => {
     // For utenlandsk trygdemyndighet skal vi kun vise selve valget (ingen ekstra BrevFelt)
@@ -83,6 +85,7 @@ function BrevValg({
               width={width}
               redigerbart={redigerbart}
               placeholderVerdier={placeholderVerdier}
+              gyldigeNokler={gyldigeNokler}
             />
           )}
         </Fragment>

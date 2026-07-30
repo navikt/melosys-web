@@ -60,6 +60,55 @@ describe("HtmlEditor med ekte Quill", () => {
     expect(quill.root.querySelector(".placeholder-uerstattet")?.textContent).toBe("{navn}");
   });
 
+  it("markerer ukjent nøkkel rødt og gyldig nøkkel uten verdi gult", () => {
+    const quill = lagEditor();
+    quill.setText("{saksnummer} og {sksnummer}\n");
+
+    markerUerstattedeOmrader(quill, ["saksnummer"]);
+
+    expect(quill.root.querySelector(".placeholder-uerstattet")?.textContent).toBe("{saksnummer}");
+    expect(quill.root.querySelector(".placeholder-ukjent")?.textContent).toBe("{sksnummer}");
+    expect(quill.root.querySelector(".placeholder-ukjent")?.getAttribute("title")).toContain(
+      "Ikke en gyldig placeholder",
+    );
+  });
+
+  it("markerer alt gult uten kjente nøkler (katalogen ikke lastet)", () => {
+    const quill = lagEditor();
+    quill.setText("{sksnummer}\n");
+
+    markerUerstattedeOmrader(quill);
+
+    expect(quill.root.querySelector(".placeholder-ukjent")).toBeNull();
+    expect(quill.root.querySelector(".placeholder-uerstattet")?.textContent).toBe("{sksnummer}");
+  });
+
+  it("bytter markering fra rød til gul når nøkkelen rettes opp", () => {
+    const quill = lagEditor();
+    quill.setText("{sksnummer}\n");
+    markerUerstattedeOmrader(quill, ["saksnummer"]);
+    expect(quill.root.querySelector(".placeholder-ukjent")).not.toBeNull();
+
+    quill.insertText(2, "a");
+    markerUerstattedeOmrader(quill, ["saksnummer"]);
+
+    expect(quill.root.querySelector(".placeholder-ukjent")).toBeNull();
+    expect(quill.root.querySelector(".placeholder-uerstattet")?.textContent).toBe("{saksnummer}");
+  });
+
+  it("fjerner rødmarkeringen når brukeren sletter klammene rundt nøkkelen", () => {
+    const quill = lagEditor();
+    quill.setText("{ab}\n");
+    markerUerstattedeOmrader(quill, ["saksnummer"]);
+    expect(quill.root.querySelector(".placeholder-ukjent")).not.toBeNull();
+
+    quill.deleteText(3, 1);
+    quill.deleteText(0, 1);
+    markerUerstattedeOmrader(quill, ["saksnummer"]);
+
+    expect(quill.root.querySelector(".placeholder-ukjent")).toBeNull();
+  });
+
   it("markerer ikke over avsnittsgrenser når klammene står uparet på hver sin linje", () => {
     const quill = lagEditor();
     quill.setText("Et { her\nog et } der\n");

@@ -11,8 +11,10 @@ vi.mock("../../featuretoggle/useFeatureToggle", () => ({
 
 const verdier: PlaceholderVerdi[] = [{ nokkel: "saksnummer", verdi: "2024/123456" }];
 
-const renderHtml = (html: string, placeholderVerdier?: PlaceholderVerdi[]) =>
-  render(<TekstblokkForhandsvisning html={html} placeholderVerdier={placeholderVerdier} />).container;
+const renderHtml = (html: string, placeholderVerdier?: PlaceholderVerdi[], gyldigeNokler?: string[]) =>
+  render(
+    <TekstblokkForhandsvisning html={html} placeholderVerdier={placeholderVerdier} gyldigeNokler={gyldigeNokler} />,
+  ).container;
 
 const markupFor = (html: string, placeholderVerdier?: PlaceholderVerdi[]) =>
   renderHtml(html, placeholderVerdier).innerHTML;
@@ -71,6 +73,30 @@ describe("TekstblokkForhandsvisning", () => {
 
     expect(container.querySelectorAll(".bracketed-text")).toHaveLength(1);
     expect(container.querySelector(".bracketed-text")?.textContent).toBe("[dato]");
+  });
+
+  it("markerer ukjent nøkkel rødt og gyldig nøkkel uten verdi gult", () => {
+    const container = renderHtml("<p>{fornavn} og {frnavn}</p>", undefined, ["fornavn"]);
+
+    expect(container.querySelector(".placeholder-uerstattet")?.textContent).toBe("{fornavn}");
+    expect(container.querySelector(".placeholder-ukjent")?.textContent).toBe("{frnavn}");
+    expect(container.querySelector(".placeholder-ukjent")?.getAttribute("title")).toContain(
+      "Ikke en gyldig placeholder",
+    );
+  });
+
+  it("markerer alt gult uten kjente nøkler (katalogen ikke lastet)", () => {
+    const container = renderHtml("<p>{frnavn}</p>");
+
+    expect(container.querySelector(".placeholder-ukjent")).toBeNull();
+    expect(container.querySelector(".placeholder-uerstattet")?.textContent).toBe("{frnavn}");
+  });
+
+  it("markerer ikke nøkkel som er fylt inn med verdi som ukjent", () => {
+    const container = renderHtml("<p>Saken {saksnummer}.</p>", verdier, ["saksnummer"]);
+
+    expect(container.querySelector(".placeholder-utfylt")?.textContent).toBe("2024/123456");
+    expect(container.querySelector(".placeholder-ukjent")).toBeNull();
   });
 
   it("rører ikke krøllparenteser med togglen av, men uthever fortsatt klammer", () => {

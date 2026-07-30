@@ -47,6 +47,7 @@ vi.mock("../../../services/api", () => ({
 // setter ikke opp noen QueryClient.
 vi.mock("../../../services/api/placeholdere", () => ({
   usePlaceholderVerdier: () => ({ data: undefined }),
+  usePlaceholderKatalog: () => ({ data: undefined }),
 }));
 
 // Mock child components

@@ -5,6 +5,7 @@ import {
   forberedTekstblokkHtml,
   PlaceholderBlot,
   PlaceholderUerstattetBlot,
+  PlaceholderUkjentBlot,
 } from "./placeholderMarkering";
 import { PlaceholderVerdi } from "../../services/modules/placeholdere";
 
@@ -89,5 +90,23 @@ describe("PlaceholderUerstattetBlot", () => {
 
   it("formats returnerer true", () => {
     expect(PlaceholderUerstattetBlot.formats()).toBe(true);
+  });
+});
+
+describe("PlaceholderUkjentBlot", () => {
+  it("create setter klassen", () => {
+    const node = PlaceholderUkjentBlot.create() as HTMLElement;
+    expect(node.tagName).toBe("SPAN");
+    expect(node.classList.contains("placeholder-ukjent")).toBe(true);
+  });
+
+  it("create setter tooltip som viser til katalogen", () => {
+    const node = PlaceholderUkjentBlot.create() as HTMLElement;
+    expect(node.getAttribute("title")).toContain("Ikke en gyldig placeholder");
+    expect(node.getAttribute("title")).toContain("katalogen");
+  });
+
+  it("formats returnerer true", () => {
+    expect(PlaceholderUkjentBlot.formats()).toBe(true);
   });
 });

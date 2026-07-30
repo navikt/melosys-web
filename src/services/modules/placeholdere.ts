@@ -35,7 +35,18 @@ export const PLACEHOLDER_UTFYLT_TITTEL = (nokkel: string): string => `Fylt inn a
 export const PLACEHOLDER_UERSTATTET_TITTEL =
   "Ingen verdi tilgjengelig – fylles ut manuelt, eller erstattes automatisk ved innsetting fra Send brev";
 
-const MARKERINGSKLASSER = ["placeholder-uerstattet", "placeholder-utfylt", "bracketed-text"];
+export const PLACEHOLDER_UKJENT_TITTEL = "Ikke en gyldig placeholder – se katalogen over tilgjengelige placeholdere";
+
+// Nøkkelen inni {…}. Trimmes så «{ saksnummer }» ikke blir feilklassifisert som ukjent.
+const nokkelFraToken = (token: string): string => token.slice(1, -1).trim();
+
+// Skiller gyldig-men-uten-verdi (gult) fra nøkkel som ikke finnes i katalogen (rødt).
+// Uten liste – katalogen er ikke lastet, feilet eller er tom – kan vi ikke avgjøre
+// gyldighet, og alt markeres gult som før.
+export const erUkjentPlaceholder = (token: string, gyldigeNokler?: string[]): boolean =>
+  Boolean(gyldigeNokler?.length) && !gyldigeNokler?.includes(nokkelFraToken(token));
+
+const MARKERINGSKLASSER = ["placeholder-uerstattet", "placeholder-ukjent", "placeholder-utfylt", "bracketed-text"];
 
 // Lagrede tekstblokker/brevmaler kan ha markerings-spans fra editoren bakt inn i innholdet.
 // Uten opprydding nøstes markeringene ved gjenbruk – gul legger seg utenpå blå, og en

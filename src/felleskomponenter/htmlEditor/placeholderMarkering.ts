@@ -2,8 +2,10 @@ import { Quill } from "react-quill-new";
 
 import {
   erstattPlaceholdere,
+  erUkjentPlaceholder,
   fjernMarkeringsSpans,
   PLACEHOLDER_UERSTATTET_TITTEL,
+  PLACEHOLDER_UKJENT_TITTEL,
   PLACEHOLDER_UTFYLT_TITTEL,
   PlaceholderVerdi,
 } from "../../services/modules/placeholdere";
@@ -26,7 +28,7 @@ export const EDITOR_FORMATS = [
 
 // Legges til kun når dynamisk placeholder-toggle er på. Er de med uansett, overlever
 // markeringene i innlimt/lagret innhold en rollback av togglen.
-export const PLACEHOLDER_FORMATS = ["placeholder-utfylt", "placeholder-uerstattet"];
+export const PLACEHOLDER_FORMATS = ["placeholder-utfylt", "placeholder-uerstattet", "placeholder-ukjent"];
 
 // Markerer utfylte placeholder-verdier. Deler tagName med BracketBlot, så className er
 // nødvendig for at Parchment skal skille dem. Nøkkelen bæres i data-attributtet slik at
@@ -75,6 +77,28 @@ export class PlaceholderUerstattetBlot extends Inline {
 
 Quill.register("formats/placeholder-uerstattet", PlaceholderUerstattetBlot);
 
+// Markerer nøkler som ikke finnes i placeholder-katalogen. Boolsk som blotet over:
+// klassifiseringen gjøres på nytt fra teksten ved hver endring.
+export class PlaceholderUkjentBlot extends Inline {
+  static blotName = "placeholder-ukjent";
+
+  static tagName = "span";
+
+  static className = "placeholder-ukjent";
+
+  static create() {
+    const node = super.create();
+    node.setAttribute("title", PLACEHOLDER_UKJENT_TITTEL);
+    return node;
+  }
+
+  static formats() {
+    return true;
+  }
+}
+
+Quill.register("formats/placeholder-ukjent", PlaceholderUkjentBlot);
+
 // Utfylte verdier har ingen klammer igjen i teksten og treffes derfor aldri.
 // \n er utelatt fra tegnklassen så en uparet { ikke slår seg sammen med en } lenger
 // nede i teksten og gulfarger alt imellom.
@@ -92,18 +116,22 @@ export const finnUerstattedeOmrader = (tekst: string): Array<{ index: number; le
 };
 
 // Strippes og påføres på nytt ved hver endring, siden markeringen utledes av teksten.
-export const markerUerstattedeOmrader = (quill: Quill) => {
+// Med gyldigeNokler skilles ukjente nøkler (rødt) fra gyldige uten verdi (gult).
+export const markerUerstattedeOmrader = (quill: Quill, gyldigeNokler?: string[]) => {
   const tekst = quill.getText();
   const kanHaTreff = tekst.includes("{") && tekst.includes("}");
   // Klammefri tekst kan fortsatt ha markering igjen – f.eks. når brukeren nettopp slettet
   // klammene rundt en gulmarkert nøkkel – og den må strippes.
-  if (!kanHaTreff && !quill.root.querySelector(".placeholder-uerstattet")) return;
+  if (!kanHaTreff && !quill.root.querySelector(".placeholder-uerstattet, .placeholder-ukjent")) return;
 
   quill.formatText(0, tekst.length, "placeholder-uerstattet", false);
+  quill.formatText(0, tekst.length, "placeholder-ukjent", false);
   if (!kanHaTreff) return;
 
   finnUerstattedeOmrader(tekst).forEach(({ index, length }) => {
-    quill.formatText(index, length, "placeholder-uerstattet", true);
+    const token = tekst.slice(index, index + length);
+    const format = erUkjentPlaceholder(token, gyldigeNokler) ? "placeholder-ukjent" : "placeholder-uerstattet";
+    quill.formatText(index, length, format, true);
   });
 };
 

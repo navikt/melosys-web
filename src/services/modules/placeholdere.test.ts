@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { erstattPlaceholdere, fjernMarkeringsSpans, PlaceholderVerdi } from "./placeholdere";
+import { erstattPlaceholdere, erUkjentPlaceholder, fjernMarkeringsSpans, PlaceholderVerdi } from "./placeholdere";
 
 const verdier: PlaceholderVerdi[] = [
   { nokkel: "saksnummer", verdi: "2024/123456" },
@@ -67,6 +67,34 @@ describe("erstattPlaceholdere", () => {
   });
 });
 
+describe("erUkjentPlaceholder", () => {
+  const gyldige = ["saksnummer", "dagens-dato"];
+
+  it("regner nøkkel som finnes i katalogen som gyldig", () => {
+    expect(erUkjentPlaceholder("{saksnummer}", gyldige)).toBe(false);
+  });
+
+  it("regner nøkkel som ikke finnes i katalogen som ukjent", () => {
+    expect(erUkjentPlaceholder("{sksnummer}", gyldige)).toBe(true);
+  });
+
+  it("ser bort fra luft rundt nøkkelen", () => {
+    expect(erUkjentPlaceholder("{ saksnummer }", gyldige)).toBe(false);
+  });
+
+  it("skiller på store og små bokstaver", () => {
+    expect(erUkjentPlaceholder("{Saksnummer}", gyldige)).toBe(true);
+  });
+
+  it("regner ingenting som ukjent uten liste (katalogen ikke lastet)", () => {
+    expect(erUkjentPlaceholder("{tullenokkel}", undefined)).toBe(false);
+  });
+
+  it("regner ingenting som ukjent med tom liste (henting feilet)", () => {
+    expect(erUkjentPlaceholder("{tullenokkel}", [])).toBe(false);
+  });
+});
+
 describe("fjernMarkeringsSpans", () => {
   it("pakker ut uerstattet-markering som ligger lagret i innholdet", () => {
     const html = '<p><span class="placeholder-uerstattet">{saksnummer}</span></p>';
@@ -83,6 +111,11 @@ describe("fjernMarkeringsSpans", () => {
     const resultat = erstattPlaceholdere(fjernMarkeringsSpans(html), verdier);
     expect(resultat).toContain('<span class="placeholder-utfylt" data-placeholder="saksnummer"');
     expect(resultat).not.toContain("placeholder-uerstattet");
+  });
+
+  it("pakker ut ukjent-markering som ligger lagret i innholdet", () => {
+    const html = '<p><span class="placeholder-ukjent">{sksnummer}</span></p>';
+    expect(fjernMarkeringsSpans(html)).toBe("<p>{sksnummer}</p>");
   });
 
   it("beholder annen markup og lar HTML uten markeringer stå urørt", () => {
