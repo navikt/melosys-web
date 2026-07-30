@@ -406,6 +406,9 @@ function HtmlEditor({
           formats={formats}
           readOnly={disabled}
           placeholder={placeholder}
+          // getSemanticHTML() ville gjort punktlister om fra <ol data-list="bullet"> til
+          // <ul>, men sanitizeren i melosys-api og listestylingen i dokgen krever data-list.
+          useSemanticHTML={false}
         />
       </div>
       {feil && (
