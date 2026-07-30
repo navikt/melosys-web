@@ -48,7 +48,7 @@ describe("HtmlEditor med ekte Quill", () => {
     markerUerstattedeOmrader(quill);
 
     expect(quill.root.innerHTML).toContain('<span class="bracketed-text">[KLAMME]</span>');
-    expect(quill.root.innerHTML).toContain('<span class="placeholder-uerstattet">{nokkel}</span>');
+    expect(quill.root.querySelector(".placeholder-uerstattet")?.textContent).toBe("{nokkel}");
     expect(quill.getFormat(15, 8)).toEqual({ "placeholder-uerstattet": true });
     expect(quill.getFormat(3, 8)).toEqual({ bracketed: true });
   });
@@ -63,7 +63,7 @@ describe("HtmlEditor med ekte Quill", () => {
     markerUerstattedeOmrader(quill);
 
     expect(quill.getText()).toContain("{navn}");
-    expect(quill.root.innerHTML).toContain('<span class="placeholder-uerstattet">{navn}</span>');
+    expect(quill.root.querySelector(".placeholder-uerstattet")?.textContent).toBe("{navn}");
   });
 
   it("markerer ikke over avsnittsgrenser når klammene står uparet på hver sin linje", () => {

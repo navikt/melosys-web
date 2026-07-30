@@ -37,6 +37,11 @@ describe("PlaceholderBlot", () => {
     expect(node.classList.contains("placeholder-utfylt")).toBe(true);
     expect(node.getAttribute("data-placeholder")).toBe("dagens-dato");
   });
+
+  it("create setter tooltip som navngir nøkkelen", () => {
+    const node = PlaceholderBlot.create("saksnummer") as HTMLElement;
+    expect(node.getAttribute("title")).toBe("Fylt inn automatisk fra saken (saksnummer)");
+  });
 });
 
 describe("finnUerstattedeOmrader", () => {
@@ -74,6 +79,12 @@ describe("PlaceholderUerstattetBlot", () => {
     const node = PlaceholderUerstattetBlot.create() as HTMLElement;
     expect(node.tagName).toBe("SPAN");
     expect(node.classList.contains("placeholder-uerstattet")).toBe(true);
+  });
+
+  it("create setter tooltip som forklarer at verdien mangler", () => {
+    const node = PlaceholderUerstattetBlot.create() as HTMLElement;
+    expect(node.getAttribute("title")).toContain("Ingen verdi tilgjengelig");
+    expect(node.getAttribute("title")).toContain("Send brev");
   });
 
   it("formats returnerer true", () => {

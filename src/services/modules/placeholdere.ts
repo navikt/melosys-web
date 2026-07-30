@@ -28,6 +28,13 @@ const escapeHtml = (tekst: string): string =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 
+// Tooltips på markeringene (native title). Delt herfra så editor og forhåndsvisning
+// forklarer markeringene likt.
+export const PLACEHOLDER_UTFYLT_TITTEL = (nokkel: string): string => `Fylt inn automatisk fra saken (${nokkel})`;
+
+export const PLACEHOLDER_UERSTATTET_TITTEL =
+  "Ingen verdi tilgjengelig – fylles ut manuelt, eller erstattes automatisk ved innsetting fra Send brev";
+
 // Erstatter {nokkel} med verdien pakket i markerings-span (matcher PlaceholderBlot i
 // htmlEditor). Nøkler uten verdi blir stående urørt. Regexen tillater ikke < > i
 // klammene, så den treffer aldri på tvers av HTML-tagger – samme tilnærming som
@@ -40,6 +47,7 @@ export const erstattPlaceholdere = (html: string, verdier: PlaceholderVerdi[]): 
     // Tom verdi ville gitt en tom span som Quill kaster – da forsvinner {nokkel}
     // sporløst. Behold tokenet så det gulmarkeres i stedet.
     if (!verdi) return token;
-    return `<span class="placeholder-utfylt" data-placeholder="${escapeHtml(nokkel)}">${escapeHtml(verdi)}</span>`;
+    const escapetNokkel = escapeHtml(nokkel);
+    return `<span class="placeholder-utfylt" data-placeholder="${escapetNokkel}" title="${PLACEHOLDER_UTFYLT_TITTEL(escapetNokkel)}">${escapeHtml(verdi)}</span>`;
   });
 };

@@ -417,7 +417,12 @@ function HtmlEditor({
         </Label>
       )}
       {visTekstblokkSoek && (
-        <TekstblokkSoek onVelg={handleSettInnTekstblokk} disabled={disabled} visBrevmaler={visBrevmaler} />
+        <TekstblokkSoek
+          onVelg={handleSettInnTekstblokk}
+          disabled={disabled}
+          visBrevmaler={visBrevmaler}
+          placeholderVerdier={placeholderVerdier}
+        />
       )}
       <div
         className={classNames("editor-wrapper", {

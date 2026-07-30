@@ -11,8 +11,19 @@ describe("erstattPlaceholdere", () => {
   it("erstatter kjent nøkkel med verdi pakket i markerings-span", () => {
     const resultat = erstattPlaceholdere("<p>Saken {saksnummer} er mottatt.</p>", verdier);
     expect(resultat).toBe(
-      '<p>Saken <span class="placeholder-utfylt" data-placeholder="saksnummer">2024/123456</span> er mottatt.</p>',
+      '<p>Saken <span class="placeholder-utfylt" data-placeholder="saksnummer" ' +
+        'title="Fylt inn automatisk fra saken (saksnummer)">2024/123456</span> er mottatt.</p>',
     );
+  });
+
+  it("forklarer markeringen med en tooltip som navngir nøkkelen", () => {
+    const resultat = erstattPlaceholdere("<p>{dagens-dato}</p>", verdier);
+    expect(resultat).toContain('title="Fylt inn automatisk fra saken (dagens-dato)"');
+  });
+
+  it("escaper nøkkelen også i tooltipen", () => {
+    const resultat = erstattPlaceholdere('<p>{a"b}</p>', [{ nokkel: 'a"b', verdi: "X" }]);
+    expect(resultat).toContain('title="Fylt inn automatisk fra saken (a&quot;b)"');
   });
 
   it("lar ukjent nøkkel stå urørt", () => {

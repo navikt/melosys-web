@@ -1,6 +1,11 @@
 import { Quill } from "react-quill-new";
 
-import { erstattPlaceholdere, PlaceholderVerdi } from "../../services/modules/placeholdere";
+import {
+  erstattPlaceholdere,
+  PLACEHOLDER_UERSTATTET_TITTEL,
+  PLACEHOLDER_UTFYLT_TITTEL,
+  PlaceholderVerdi,
+} from "../../services/modules/placeholdere";
 
 const Inline = Quill.import("blots/inline") as any;
 
@@ -17,6 +22,8 @@ export class PlaceholderBlot extends Inline {
   static create(value: string) {
     const node = super.create();
     node.setAttribute("data-placeholder", value);
+    // Settes her og ikke bare i erstattPlaceholdere, så tooltipen overlever Quills normalisering.
+    node.setAttribute("title", PLACEHOLDER_UTFYLT_TITTEL(value));
     return node;
   }
 
@@ -35,6 +42,12 @@ export class PlaceholderUerstattetBlot extends Inline {
   static tagName = "span";
 
   static className = "placeholder-uerstattet";
+
+  static create() {
+    const node = super.create();
+    node.setAttribute("title", PLACEHOLDER_UERSTATTET_TITTEL);
+    return node;
+  }
 
   static formats() {
     return true;
