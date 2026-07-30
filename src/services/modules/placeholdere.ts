@@ -77,3 +77,36 @@ export const erstattPlaceholdere = (html: string, verdier: PlaceholderVerdi[]): 
     return `<span class="placeholder-utfylt" data-placeholder="${escapetNokkel}" title="${PLACEHOLDER_UTFYLT_TITTEL(escapetNokkel)}">${escapeHtml(verdi)}</span>`;
   });
 };
+export interface UtdatertPlaceholder {
+  nokkel: string;
+  innsattVerdi: string;
+  ferskVerdi: string;
+}
+
+// Innsatte verdier er frosset i brevteksten. Sammenligningen mot sakens ferske verdier
+// gir grunnlag for å varsle ved sending – den endrer aldri teksten.
+export const finnUtdaterteVerdier = (html: string, ferskeVerdier: PlaceholderVerdi[]): UtdatertPlaceholder[] => {
+  if (!html.includes("placeholder-utfylt")) return [];
+
+  const ferskForNokkel = new Map(ferskeVerdier.map(({ nokkel, verdi }) => [nokkel, verdi]));
+  const dokument = new DOMParser().parseFromString(html, "text/html");
+  const utdaterte: UtdatertPlaceholder[] = [];
+  const rapportert = new Set<string>();
+
+  dokument.body.querySelectorAll("span.placeholder-utfylt[data-placeholder]").forEach((span) => {
+    const nokkel = span.getAttribute("data-placeholder") ?? "";
+    const innsattVerdi = span.textContent ?? "";
+    // Nøkkel uten fersk verdi er utgått av registeret; den rapporteres med tom ferskVerdi.
+    const ferskVerdi = ferskForNokkel.get(nokkel) ?? "";
+    if (ferskVerdi === innsattVerdi) return;
+
+    // Samme nøkkel kan stå flere steder i brevet – varsle én gang per avvik.
+    const avviksNokkel = `${nokkel}${innsattVerdi}`;
+    if (rapportert.has(avviksNokkel)) return;
+    rapportert.add(avviksNokkel);
+
+    utdaterte.push({ nokkel, innsattVerdi, ferskVerdi });
+  });
+
+  return utdaterte;
+};

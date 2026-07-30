@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { erstattPlaceholdere, erUkjentPlaceholder, fjernMarkeringsSpans, PlaceholderVerdi } from "./placeholdere";
+import {
+  erstattPlaceholdere,
+  erUkjentPlaceholder,
+  finnUtdaterteVerdier,
+  fjernMarkeringsSpans,
+  PlaceholderVerdi,
+} from "./placeholdere";
 
 const verdier: PlaceholderVerdi[] = [
   { nokkel: "saksnummer", verdi: "2024/123456" },
@@ -121,5 +127,48 @@ describe("fjernMarkeringsSpans", () => {
   it("beholder annen markup og lar HTML uten markeringer stå urørt", () => {
     const html = "<p>Saken <strong>{saksnummer}</strong> er mottatt.</p>";
     expect(fjernMarkeringsSpans(html)).toBe(html);
+  });
+});
+
+describe("finnUtdaterteVerdier", () => {
+  const utfylt = (nokkel: string, verdi: string) =>
+    `<span class="placeholder-utfylt" data-placeholder="${nokkel}">${verdi}</span>`;
+
+  it("rapporterer innsatt verdi som avviker fra fersk verdi", () => {
+    const html = `<p>Saken ${utfylt("saksnummer", "MEL-21")} er mottatt.</p>`;
+    expect(finnUtdaterteVerdier(html, [{ nokkel: "saksnummer", verdi: "MEL-22" }])).toEqual([
+      { nokkel: "saksnummer", innsattVerdi: "MEL-21", ferskVerdi: "MEL-22" },
+    ]);
+  });
+
+  it("rapporterer ikke identiske verdier", () => {
+    const html = `<p>${utfylt("saksnummer", "2024/123456")}</p>`;
+    expect(finnUtdaterteVerdier(html, verdier)).toEqual([]);
+  });
+
+  it("rapporterer nøkkel uten fersk verdi med tom ferskVerdi", () => {
+    const html = `<p>${utfylt("utgaatt-nokkel", "Gammel verdi")}</p>`;
+    expect(finnUtdaterteVerdier(html, verdier)).toEqual([
+      { nokkel: "utgaatt-nokkel", innsattVerdi: "Gammel verdi", ferskVerdi: "" },
+    ]);
+  });
+
+  it("returnerer tom liste for tom HTML", () => {
+    expect(finnUtdaterteVerdier("", verdier)).toEqual([]);
+  });
+
+  it("ignorerer markerings-span uten data-placeholder", () => {
+    const html = '<p><span class="placeholder-utfylt">MEL-21</span></p>';
+    expect(finnUtdaterteVerdier(html, [{ nokkel: "saksnummer", verdi: "MEL-22" }])).toEqual([]);
+  });
+
+  it("rapporterer samme avvik én gang selv om nøkkelen står flere steder", () => {
+    const html = `<p>${utfylt("saksnummer", "MEL-21")}</p><p>${utfylt("saksnummer", "MEL-21")}</p>`;
+    expect(finnUtdaterteVerdier(html, [{ nokkel: "saksnummer", verdi: "MEL-22" }])).toHaveLength(1);
+  });
+
+  it("rapporterer flere ulike nøkler i rekkefølgen de står i brevet", () => {
+    const html = `<p>${utfylt("saksnummer", "MEL-21")} ${utfylt("dagens-dato", "01.01.2020")}</p>`;
+    expect(finnUtdaterteVerdier(html, verdier).map(({ nokkel }) => nokkel)).toEqual(["saksnummer", "dagens-dato"]);
   });
 });
