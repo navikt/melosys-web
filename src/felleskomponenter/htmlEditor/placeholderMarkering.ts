@@ -2,12 +2,31 @@ import { Quill } from "react-quill-new";
 
 import {
   erstattPlaceholdere,
+  fjernMarkeringsSpans,
   PLACEHOLDER_UERSTATTET_TITTEL,
   PLACEHOLDER_UTFYLT_TITTEL,
   PlaceholderVerdi,
 } from "../../services/modules/placeholdere";
 
 const Inline = Quill.import("blots/inline") as any;
+
+// Formats-whitelisten HtmlEditor gir Quill. Bor her så testene kan kjøre på selve
+// produksjonslisten i stedet for en kopi som driver ut av sync.
+export const EDITOR_FORMATS = [
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "indent",
+  "list",
+  "table",
+  "bracketed",
+  "break",
+];
+
+// Legges til kun når dynamisk placeholder-toggle er på. Er de med uansett, overlever
+// markeringene i innlimt/lagret innhold en rollback av togglen.
+export const PLACEHOLDER_FORMATS = ["placeholder-utfylt", "placeholder-uerstattet"];
 
 // Markerer utfylte placeholder-verdier. Deler tagName med BracketBlot, så className er
 // nødvendig for at Parchment skal skille dem. Nøkkelen bæres i data-attributtet slik at
@@ -75,16 +94,46 @@ export const finnUerstattedeOmrader = (tekst: string): Array<{ index: number; le
 // Strippes og påføres på nytt ved hver endring, siden markeringen utledes av teksten.
 export const markerUerstattedeOmrader = (quill: Quill) => {
   const tekst = quill.getText();
-  // Uten klammer i teksten finnes verken markering å strippe eller å påføre.
-  if (!tekst.includes("{") && !tekst.includes("}")) return;
+  const kanHaTreff = tekst.includes("{") && tekst.includes("}");
+  // Klammefri tekst kan fortsatt ha markering igjen – f.eks. når brukeren nettopp slettet
+  // klammene rundt en gulmarkert nøkkel – og den må strippes.
+  if (!kanHaTreff && !quill.root.querySelector(".placeholder-uerstattet")) return;
 
   quill.formatText(0, tekst.length, "placeholder-uerstattet", false);
+  if (!kanHaTreff) return;
+
   finnUerstattedeOmrader(tekst).forEach(({ index, length }) => {
     quill.formatText(index, length, "placeholder-uerstattet", true);
   });
 };
 
-// HTML-en som går til dangerouslyPasteHTML ved innsetting av tekstblokk. Uten verdier
-// (toggle av / manglende data) er den urørt.
-export const forberedTekstblokkHtml = (html: string, placeholderVerdier?: PlaceholderVerdi[]): string =>
-  placeholderVerdier ? erstattPlaceholdere(html, placeholderVerdier) : html;
+// «Rediger = overstyr»: PlaceholderBlot er et inline-format, så tekst brukeren skriver
+// inntil eller inni en utfylt verdi havner inne i spanen. Avviker spanteksten fra den
+// kjente verdien, er den redigert og markeringen skal bort. Uten verdier (andre editorer)
+// kan vi ikke avgjøre gyldighet, og lar spanene stå urørt.
+export const fjernUgyldigeUtfylteMarkeringer = (quill: Quill, verdier?: PlaceholderVerdi[]) => {
+  if (!verdier?.length) return;
+
+  const verdiForNokkel = new Map(verdier.map(({ nokkel, verdi }) => [nokkel, verdi]));
+  const ugyldige: Array<{ index: number; length: number }> = [];
+
+  quill.root.querySelectorAll<HTMLElement>("span.placeholder-utfylt").forEach((node) => {
+    const nokkel = node.getAttribute("data-placeholder");
+    const verdi = nokkel === null ? undefined : verdiForNokkel.get(nokkel);
+    if (verdi === undefined || node.textContent === verdi) return;
+
+    const blot = Quill.find(node);
+    if (!blot || blot instanceof Quill) return;
+    // Indeksene hentes før noe formateres, siden formatText ikke endrer tekstlengden.
+    ugyldige.push({ index: quill.getIndex(blot), length: blot.length() });
+  });
+
+  ugyldige.forEach(({ index, length }) => quill.formatText(index, length, "placeholder-utfylt", false));
+};
+
+// HTML-en som går til dangerouslyPasteHTML ved innsetting av tekstblokk. Markeringer som
+// ligger lagret i innholdet ryddes bort først; editoren markerer selv på nytt etterpå.
+export const forberedTekstblokkHtml = (html: string, placeholderVerdier?: PlaceholderVerdi[]): string => {
+  const rentHtml = fjernMarkeringsSpans(html);
+  return placeholderVerdier ? erstattPlaceholdere(rentHtml, placeholderVerdier) : rentHtml;
+};

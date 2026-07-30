@@ -9,9 +9,6 @@ export const placeholderKeys = {
   katalog: () => ["placeholdere", "katalog"] as const,
 };
 
-// Verdiene skal være ferske per åpning av Send brev, men stabile innen økten.
-const VERDIER_STALE_TIME = 5 * 60_000;
-
 // Katalogen endres bare ved deploy, så den kan stå lenge uten refetch.
 const KATALOG_STALE_TIME = 30 * 60_000;
 
@@ -20,7 +17,10 @@ export const usePlaceholderVerdier = (behandlingId: number | null, enabled = tru
     queryKey: placeholderKeys.verdier(behandlingId ?? 0),
     queryFn: () => Placeholdere.hentVerdier(behandlingId as number).then((respons) => respons.verdier),
     enabled: enabled && behandlingId !== null,
-    staleTime: VERDIER_STALE_TIME,
+    // Verdiene skal være ferske hver gang Send brev åpnes; cachen brukes kun som
+    // mellomlager mens dialogen står åpen.
+    staleTime: 0,
+    refetchOnMount: "always",
   });
 
 export const usePlaceholderKatalog = (enabled = true) =>

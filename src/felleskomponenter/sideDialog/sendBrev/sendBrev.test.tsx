@@ -43,6 +43,12 @@ vi.mock("../../../services/api", () => ({
   },
 }));
 
+// BrevValgMedPlaceholdere kaller useQuery uansett toggle-status, og renderWithProviders
+// setter ikke opp noen QueryClient.
+vi.mock("../../../services/api/placeholdere", () => ({
+  usePlaceholderVerdier: () => ({ data: undefined }),
+}));
+
 // Mock child components
 vi.mock("./brevMottaker", () => ({
   default: () => <div>BrevMottaker Mock</div>,

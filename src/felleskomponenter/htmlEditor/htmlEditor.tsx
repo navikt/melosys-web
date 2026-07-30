@@ -9,7 +9,13 @@ import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import * as Nav from "../../navFrontend";
 import { PlaceholderVerdi } from "../../services/modules/placeholdere";
 import "./htmlEditor.less";
-import { forberedTekstblokkHtml, markerUerstattedeOmrader } from "./placeholderMarkering";
+import {
+  EDITOR_FORMATS,
+  fjernUgyldigeUtfylteMarkeringer,
+  forberedTekstblokkHtml,
+  markerUerstattedeOmrader,
+  PLACEHOLDER_FORMATS,
+} from "./placeholderMarkering";
 import TekstblokkSoek from "./tekstblokkSoek";
 
 // Registrerer egendefinert blot for tekst i klammer
@@ -129,24 +135,15 @@ function HtmlEditor({
   // Siste kjente cursor-posisjon – brukes ved innsetting fra TekstblokkSoek
   const lastSelectionRef = useRef<{ index: number; length: number } | null>(null);
   const dynamiskPlaceholderPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER);
-  // Quill-effekten under kjører kun ved mount, så handleren må lese togglen via ref
-  // for å få med seg at den kommer på etterpå.
+  // Quill-handleren lever på tvers av rendringer, så den leser toggle og verdier via refs
+  // for å få med seg at de lander etterpå.
   const dynamiskPlaceholderPaaRef = useRef(dynamiskPlaceholderPaa);
+  const placeholderVerdierRef = useRef(placeholderVerdier);
 
   useEffect(() => {
     dynamiskPlaceholderPaaRef.current = dynamiskPlaceholderPaa;
-
-    const quill = quillRef.current?.editor;
-    if (!dynamiskPlaceholderPaa || !quill || isFormattingRef.current) return;
-
-    // Togglen lastes asynkront, så innhold som alt lå i editoren må markeres her.
-    isFormattingRef.current = true;
-    try {
-      markerUerstattedeOmrader(quill);
-    } finally {
-      isFormattingRef.current = false;
-    }
-  }, [dynamiskPlaceholderPaa]);
+    placeholderVerdierRef.current = placeholderVerdier;
+  });
 
   // Synkroniserer med ekstern verdi når den endres, men bare hvis det ikke er forårsaket av vår egen onChange
   useEffect(() => {
@@ -162,22 +159,11 @@ function HtmlEditor({
     }
   }, [value, internalValue]);
 
-  // Tillatte formater
+  // Tillatte formater. Placeholder-formatene må følge togglen, ellers beholder innlimt og
+  // lagret innhold markeringene selv om togglen skrus av.
   const formats = useMemo(
-    () => [
-      "header",
-      "bold",
-      "italic",
-      "underline",
-      "indent",
-      "list",
-      "table",
-      "bracketed",
-      "placeholder-utfylt",
-      "placeholder-uerstattet",
-      "break",
-    ],
-    [],
+    () => (dynamiskPlaceholderPaa ? [...EDITOR_FORMATS, ...PLACEHOLDER_FORMATS] : EDITOR_FORMATS),
+    [dynamiskPlaceholderPaa],
   );
 
   // Konfigurerer moduler
@@ -251,6 +237,8 @@ function HtmlEditor({
     onChange(wrappedContent);
   };
 
+  // Togglen bytter formats og dermed Quill-instansen (se key på ReactQuill), så handlerne
+  // må kobles opp på nytt når den lander.
   useEffect(() => {
     const quill = quillRef.current?.editor;
     if (!quill) return undefined;
@@ -306,6 +294,7 @@ function HtmlEditor({
         }
 
         if (dynamiskPlaceholderPaaRef.current) {
+          fjernUgyldigeUtfylteMarkeringer(quill, placeholderVerdierRef.current);
           markerUerstattedeOmrader(quill);
         }
       } finally {
@@ -364,7 +353,7 @@ function HtmlEditor({
       quill.off("text-change", textChangeHandler);
       quill.off("selection-change", selectionChangeHandler);
     };
-  }, []);
+  }, [dynamiskPlaceholderPaa]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -446,6 +435,10 @@ function HtmlEditor({
           />
         )}
         <ReactQuill
+          // ReactQuill bygger editoren på nytt når formats endres, men beholder da React-
+          // instansen – og våre handlere ville blitt hengende på den forkastede Quill-en.
+          // Med key monteres alt på nytt, og effekten over kobler seg til den nye editoren.
+          key={String(dynamiskPlaceholderPaa)}
           ref={quillRef}
           theme="snow"
           value={internalValue}

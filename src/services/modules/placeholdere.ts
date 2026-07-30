@@ -35,6 +35,21 @@ export const PLACEHOLDER_UTFYLT_TITTEL = (nokkel: string): string => `Fylt inn a
 export const PLACEHOLDER_UERSTATTET_TITTEL =
   "Ingen verdi tilgjengelig – fylles ut manuelt, eller erstattes automatisk ved innsetting fra Send brev";
 
+const MARKERINGSKLASSER = ["placeholder-uerstattet", "placeholder-utfylt", "bracketed-text"];
+
+// Lagrede tekstblokker/brevmaler kan ha markerings-spans fra editoren bakt inn i innholdet.
+// Uten opprydding nøstes markeringene ved gjenbruk – gul legger seg utenpå blå, og en
+// utfylt verdi ser ut som om den mangler. Teksten beholdes, kun spanene fjernes.
+export const fjernMarkeringsSpans = (html: string): string => {
+  if (!MARKERINGSKLASSER.some((klasse) => html.includes(klasse))) return html;
+
+  const dokument = new DOMParser().parseFromString(html, "text/html");
+  const velger = MARKERINGSKLASSER.map((klasse) => `span.${klasse}`).join(",");
+  // Ytterste span pakkes ut først; nøstede spans henger fortsatt i dokumentet etterpå.
+  dokument.body.querySelectorAll(velger).forEach((span) => span.replaceWith(...Array.from(span.childNodes)));
+  return dokument.body.innerHTML;
+};
+
 // Erstatter {nokkel} med verdien pakket i markerings-span (matcher PlaceholderBlot i
 // htmlEditor). Nøkler uten verdi blir stående urørt. Regexen tillater ikke < > i
 // klammene, så den treffer aldri på tvers av HTML-tagger – samme tilnærming som

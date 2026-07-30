@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { erstattPlaceholdere, PlaceholderVerdi } from "./placeholdere";
+import { erstattPlaceholdere, fjernMarkeringsSpans, PlaceholderVerdi } from "./placeholdere";
 
 const verdier: PlaceholderVerdi[] = [
   { nokkel: "saksnummer", verdi: "2024/123456" },
@@ -64,5 +64,29 @@ describe("erstattPlaceholdere", () => {
     const resultat = erstattPlaceholdere("<p>{navn}</p>", [{ nokkel: "navn", verdi: 'A <B> & "C"' }]);
     expect(resultat).toContain("A &lt;B&gt; &amp; &quot;C&quot;");
     expect(resultat).not.toContain("<B>");
+  });
+});
+
+describe("fjernMarkeringsSpans", () => {
+  it("pakker ut uerstattet-markering som ligger lagret i innholdet", () => {
+    const html = '<p><span class="placeholder-uerstattet">{saksnummer}</span></p>';
+    expect(fjernMarkeringsSpans(html)).toBe("<p>{saksnummer}</p>");
+  });
+
+  it("pakker ut dobbeltnøstede klammemarkeringer til én ren tekst", () => {
+    const html = '<p><span class="bracketed-text"><span class="bracketed-text">[dato]</span></span></p>';
+    expect(fjernMarkeringsSpans(html)).toBe("<p>[dato]</p>");
+  });
+
+  it("gjør lagret markering erstattbar igjen i stedet for nøstet", () => {
+    const html = '<p>Saken <span class="placeholder-uerstattet">{saksnummer}</span> er mottatt.</p>';
+    const resultat = erstattPlaceholdere(fjernMarkeringsSpans(html), verdier);
+    expect(resultat).toContain('<span class="placeholder-utfylt" data-placeholder="saksnummer"');
+    expect(resultat).not.toContain("placeholder-uerstattet");
+  });
+
+  it("beholder annen markup og lar HTML uten markeringer stå urørt", () => {
+    const html = "<p>Saken <strong>{saksnummer}</strong> er mottatt.</p>";
+    expect(fjernMarkeringsSpans(html)).toBe(html);
   });
 });

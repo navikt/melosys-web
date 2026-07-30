@@ -3,6 +3,7 @@ import { useMemo } from "react";
 
 import {
   erstattPlaceholdere,
+  fjernMarkeringsSpans,
   PLACEHOLDER_UERSTATTET_TITTEL,
   PlaceholderVerdi,
 } from "../../services/modules/placeholdere";
@@ -35,8 +36,10 @@ function TekstblokkForhandsvisning({ html, className, placeholderVerdier }: Prop
   // Samme rekkefølge som editoren: erstattede verdier har ingen klammer igjen og
   // treffes derfor ikke av uthevingen etterpå.
   const uthevet = useMemo(() => {
-    if (!dynamiskPlaceholderPaa) return uthevKlammer(html);
-    const erstattet = placeholderVerdier ? erstattPlaceholdere(html, placeholderVerdier) : html;
+    // Markeringer kan ligge lagret i innholdet; uten opprydding nøstes de opp på hverandre.
+    const rentHtml = fjernMarkeringsSpans(html);
+    if (!dynamiskPlaceholderPaa) return uthevKlammer(rentHtml);
+    const erstattet = placeholderVerdier ? erstattPlaceholdere(rentHtml, placeholderVerdier) : rentHtml;
     return uthevPlaceholders(uthevKlammer(erstattet));
   }, [html, placeholderVerdier, dynamiskPlaceholderPaa]);
   return (

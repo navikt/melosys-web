@@ -57,6 +57,22 @@ describe("TekstblokkForhandsvisning", () => {
     expect(container.querySelector(".placeholder-uerstattet")?.textContent).toBe("{saksnummer}");
   });
 
+  it("erstatter nøkkelen selv om markeringen ligger lagret i innholdet", () => {
+    const container = renderHtml('<p><span class="placeholder-uerstattet">{saksnummer}</span></p>', verdier);
+
+    expect(container.querySelector(".placeholder-utfylt")?.textContent).toBe("2024/123456");
+    expect(container.querySelector(".placeholder-uerstattet")).toBeNull();
+  });
+
+  it("uthever dobbeltnøstet lagret klammemarkering som én markering", () => {
+    const container = renderHtml(
+      '<p><span class="bracketed-text"><span class="bracketed-text">[dato]</span></span></p>',
+    );
+
+    expect(container.querySelectorAll(".bracketed-text")).toHaveLength(1);
+    expect(container.querySelector(".bracketed-text")?.textContent).toBe("[dato]");
+  });
+
   it("rører ikke krøllparenteser med togglen av, men uthever fortsatt klammer", () => {
     vi.mocked(useFeatureToggle).mockReturnValue(false);
 
