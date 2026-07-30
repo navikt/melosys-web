@@ -30,7 +30,11 @@ import BrevMottaker, { erAnnenOrganisasjon, erNorskMyndighet, skalViseBrevmalval
 import BrevMottakereTabell from "./brevMottaker/brevMottakereTabell";
 import Brevutkast from "./brevutkast/brevutkast";
 import BrevValgMedPlaceholdere from "./brevValgMedPlaceholdere";
+import PlaceholderUtdatertVarsel from "./placeholderUtdatertVarsel";
 import { SendBrevFormValues } from "./types";
+import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
+import { MELOSYS_TEKSTBLOKKER, MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggle/toggleNavn";
+import { finnUtdaterteVerdier, hentVerdier, UtdatertPlaceholder } from "../../../services/modules/placeholdere";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "./sendBrevSchema";
@@ -114,6 +118,7 @@ function SendBrev({
   const [sendBrevSpinner, setSendBrevSpinner] = useState(false);
   const [lagreUtkastSpinner, setLagreUtkastSpinner] = useState(false);
   const [forkastBrevSpinner, setForkastBrevSpinner] = useState(false);
+  const [utdaterteVerdier, setUtdaterteVerdier] = useState<UtdatertPlaceholder[]>([]);
   const brevBestiltTimerRef = useRef<number | undefined>(undefined);
   const tilgjengeligeMottakere = useMemo(
     () => tilgjengeligeMaler?.map((mal) => mal.mottaker) || [],
@@ -124,6 +129,9 @@ function SendBrev({
     [tilgjengeligeMaler, formValues?.mottaker],
   );
   const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
+  // Backend krever begge: placeholdere er en utvidelse av tekstblokk-funksjonaliteten.
+  const tekstblokkerPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
+  const dynamiskPlaceholderPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER);
   const { accounts } = useMsal();
   const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state));
 
@@ -455,7 +463,23 @@ function SendBrev({
     institusjonID: hentFormVerdi("UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER", true, true),
   });
 
-  const sendBrev = () => {
+  const hentFritekstHtml = () =>
+    (formValues?.valgtBrev?.felter ?? [])
+      .filter((felt) => felt.feltType === Api.DokumenterV2.FeltType.FRITEKST)
+      .map((felt) => formValues.felt?.[felt.kode]?.feltVerdi ?? "")
+      .join("");
+
+  const hentUtdaterteVerdier = async (html: string): Promise<UtdatertPlaceholder[]> => {
+    try {
+      const { verdier } = await hentVerdier(behandlingID);
+      return finnUtdaterteVerdier(html, verdier);
+    } catch {
+      // Uten ferske verdier har vi ingenting å sammenligne mot; brevet sendes uten varsel.
+      return [];
+    }
+  };
+
+  const sendBrev = async () => {
     if (!formValues?.valgtMottaker) return;
 
     if (!formIsValid) {
@@ -464,6 +488,23 @@ function SendBrev({
       touchAllFields();
       return;
     }
+
+    const fritekstHtml = tekstblokkerPaa && dynamiskPlaceholderPaa ? hentFritekstHtml() : "";
+    if (fritekstHtml) {
+      setSendBrevSpinner(true);
+      const utdaterte = await hentUtdaterteVerdier(fritekstHtml);
+      if (utdaterte.length > 0) {
+        setSendBrevSpinner(false);
+        setUtdaterteVerdier(utdaterte);
+        return;
+      }
+    }
+
+    bestillBrev();
+  };
+
+  const bestillBrev = () => {
+    if (!formValues?.valgtMottaker) return;
 
     setSendBrevSpinner(true);
     setFeil(undefined);
@@ -685,7 +726,7 @@ function SendBrev({
           variant="primary"
           disabled={knappErDisabled}
           className="brevknapp"
-          onClick={sendBrev}
+          onClick={() => void sendBrev()}
           loading={sendBrevSpinner}
         >
           Send brev
@@ -709,6 +750,17 @@ function SendBrev({
           Forkast brev
         </Nav.Button>
       </div>
+
+      {utdaterteVerdier.length > 0 && (
+        <PlaceholderUtdatertVarsel
+          utdaterte={utdaterteVerdier}
+          onSendLikevel={() => {
+            setUtdaterteVerdier([]);
+            bestillBrev();
+          }}
+          onAvbryt={() => setUtdaterteVerdier([])}
+        />
+      )}
 
       {visBrevBestiltAlert && (
         <Nav.Alert variant="success" className="brev_sendt">
