@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as Nav from "../../navFrontend";
 import { useFiltrerteTekstblokker, useTekstblokker } from "../../services/api/tekstblokker";
 import { TekstblokkOversikt, TekstblokkType } from "../../services/modules/tekstblokker";
+import { PlaceholderVerdi } from "../../services/modules/placeholdere";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER } from "../../featuretoggle/toggleNavn";
 import TekstblokkForhandsvisning from "./tekstblokkForhandsvisning";
@@ -16,6 +17,10 @@ interface Props {
   // I Send brev (sidemenyen) kan brukeren også sette inn hele brevmaler. I selve
   // saksflytene er vedtaksbrevet allerede en mal, så da viser vi kun tekstblokker.
   visBrevmaler?: boolean;
+  // Finnes når editoren kan fylle inn verdier – da forhåndsvises tekstblokken ferdig utfylt.
+  placeholderVerdier?: PlaceholderVerdi[];
+  // Nøklene fra placeholder-katalogen; skiller ukjente nøkler (røde) fra gyldige uten verdi.
+  gyldigeNokler?: string[];
 }
 
 const SIDE_STORRELSE = 10;
@@ -27,13 +32,21 @@ const POPOVER_MARG = 16;
 // det hele tatt, så vi lar heller popoveren ta det meste av vinduet enn å vise en tom liste.
 const MIN_POPOVER_HOYDE = 384;
 
-function TekstblokkSoek({ onVelg, disabled, visBrevmaler = false }: Props) {
+function TekstblokkSoek({ onVelg, disabled, visBrevmaler = false, placeholderVerdier, gyldigeNokler }: Props) {
   const togglePaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
   if (!togglePaa) return null;
-  return <TekstblokkSoekIntern onVelg={onVelg} disabled={disabled} visBrevmaler={visBrevmaler} />;
+  return (
+    <TekstblokkSoekIntern
+      onVelg={onVelg}
+      disabled={disabled}
+      visBrevmaler={visBrevmaler}
+      placeholderVerdier={placeholderVerdier}
+      gyldigeNokler={gyldigeNokler}
+    />
+  );
 }
 
-function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props) {
+function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placeholderVerdier, gyldigeNokler }: Props) {
   const ankerRef = useRef<HTMLDivElement>(null);
   const [aapen, setAapen] = useState(false);
   const [aktivType, setAktivType] = useState<TekstblokkType>("TEKSTBLOKK");
@@ -209,6 +222,8 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
               <TekstblokkRad
                 key={blokk.id}
                 blokk={blokk}
+                placeholderVerdier={placeholderVerdier}
+                gyldigeNokler={gyldigeNokler}
                 onVelg={(html) => {
                   onVelg(html);
                   lukk();
@@ -237,9 +252,11 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
 interface RadProps {
   blokk: TekstblokkOversikt;
   onVelg: (html: string) => void;
+  placeholderVerdier?: PlaceholderVerdi[];
+  gyldigeNokler?: string[];
 }
 
-function TekstblokkRad({ blokk, onVelg }: RadProps) {
+function TekstblokkRad({ blokk, onVelg, placeholderVerdier, gyldigeNokler }: RadProps) {
   // Innhold er skjult som standard – vises kun når brukeren ber om det.
   const [visInnhold, setVisInnhold] = useState(false);
 
@@ -269,7 +286,11 @@ function TekstblokkRad({ blokk, onVelg }: RadProps) {
       </div>
       {visInnhold && (
         <div className="tekstblokkSoek__forhandsvisning tekstblokkSoek__forhandsvisning--full">
-          <TekstblokkForhandsvisning html={blokk.innhold} />
+          <TekstblokkForhandsvisning
+            html={blokk.innhold}
+            placeholderVerdier={placeholderVerdier}
+            gyldigeNokler={gyldigeNokler}
+          />
         </div>
       )}
     </div>

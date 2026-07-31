@@ -29,8 +29,17 @@ import { formSelectors } from "../../../ducks/form";
 import BrevMottaker, { erAnnenOrganisasjon, erNorskMyndighet, skalViseBrevmalvalg } from "./brevMottaker/brevMottaker";
 import BrevMottakereTabell from "./brevMottaker/brevMottakereTabell";
 import Brevutkast from "./brevutkast/brevutkast";
-import BrevValg from "./brevValg";
+import BrevValgMedPlaceholdere from "./brevValgMedPlaceholdere";
+import PlaceholderUtdatertVarsel from "./placeholderUtdatertVarsel";
 import { SendBrevFormValues } from "./types";
+import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
+import { MELOSYS_TEKSTBLOKKER, MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggle/toggleNavn";
+import {
+  finnUtdaterteVerdier,
+  harInnsatteVerdier,
+  hentVerdier,
+  UtdatertPlaceholder,
+} from "../../../services/modules/placeholdere";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "./sendBrevSchema";
@@ -114,6 +123,7 @@ function SendBrev({
   const [sendBrevSpinner, setSendBrevSpinner] = useState(false);
   const [lagreUtkastSpinner, setLagreUtkastSpinner] = useState(false);
   const [forkastBrevSpinner, setForkastBrevSpinner] = useState(false);
+  const [utdaterteVerdier, setUtdaterteVerdier] = useState<UtdatertPlaceholder[]>([]);
   const brevBestiltTimerRef = useRef<number | undefined>(undefined);
   const tilgjengeligeMottakere = useMemo(
     () => tilgjengeligeMaler?.map((mal) => mal.mottaker) || [],
@@ -124,6 +134,9 @@ function SendBrev({
     [tilgjengeligeMaler, formValues?.mottaker],
   );
   const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
+  // Backend krever begge: placeholdere er en utvidelse av tekstblokk-funksjonaliteten.
+  const tekstblokkerPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
+  const dynamiskPlaceholderPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER);
   const { accounts } = useMsal();
   const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state));
 
@@ -431,16 +444,22 @@ function SendBrev({
     }
   };
 
+  // Fritekstfeltene brevet faktisk sendes med. hentFormVerdi gir null for felter som ikke
+  // vises, så ferskhetssjekken under kan gjenbruke nøyaktig dette utvalget.
+  const hentFritekstFelter = () => ({
+    innledningFritekst: hentFormVerdi("INNLEDNING_FRITEKST"),
+    manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
+    fritekst: hentFormVerdi("FRITEKST"),
+  });
+
   const hentBrevRequest = (mottakerRolle: string): Api.DokumenterV2.OpprettBrevReqDto => ({
     produserbardokument: formValues.type || "",
     mottaker: mottakerRolle,
     orgNr: hentOrgnr(mottakerRolle),
     kontaktpersonNavn: erAnnenOrganisasjon(mottakerRolle) ? formValues.kontaktperson : null,
     orgnrNorskMyndighet: formValues.norskeMyndigheter,
-    innledningFritekst: hentFormVerdi("INNLEDNING_FRITEKST"),
-    manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
+    ...hentFritekstFelter(),
     fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
-    fritekst: hentFormVerdi("FRITEKST"),
     kopiMottakere: hentKopiMottakere() || [],
     skalViseStandardTekstOmkontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
     saksvedlegg: valgteVedlegg?.saksvedlegg.map((vedlegg) => ({
@@ -455,7 +474,24 @@ function SendBrev({
     institusjonID: hentFormVerdi("UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER", true, true),
   });
 
-  const sendBrev = () => {
+  // Kun teksten som blir med i bestillingen – fritekstvedleggene inkludert, siden de sendes
+  // sammen med brevet og kan ha innsatte verdier.
+  const hentFritekstHtml = () =>
+    [...Object.values(hentFritekstFelter()), ...fritekstvedlegg.map(({ fritekst }) => fritekst)]
+      .filter(Boolean)
+      .join("");
+
+  const hentUtdaterteVerdier = async (html: string): Promise<UtdatertPlaceholder[]> => {
+    try {
+      const { verdier } = await hentVerdier(behandlingID);
+      return finnUtdaterteVerdier(html, verdier);
+    } catch {
+      // Uten ferske verdier har vi ingenting å sammenligne mot; brevet sendes uten varsel.
+      return [];
+    }
+  };
+
+  const sendBrev = async () => {
     if (!formValues?.valgtMottaker) return;
 
     if (!formIsValid) {
@@ -464,6 +500,24 @@ function SendBrev({
       touchAllFields();
       return;
     }
+
+    const fritekstHtml = tekstblokkerPaa && dynamiskPlaceholderPaa ? hentFritekstHtml() : "";
+    // Uten innsatte verdier er det ingenting å sammenligne, og oppslaget er unødvendig.
+    if (harInnsatteVerdier(fritekstHtml)) {
+      setSendBrevSpinner(true);
+      const utdaterte = await hentUtdaterteVerdier(fritekstHtml);
+      if (utdaterte.length > 0) {
+        setSendBrevSpinner(false);
+        setUtdaterteVerdier(utdaterte);
+        return;
+      }
+    }
+
+    bestillBrev();
+  };
+
+  const bestillBrev = () => {
+    if (!formValues?.valgtMottaker) return;
 
     setSendBrevSpinner(true);
     setFeil(undefined);
@@ -633,7 +687,8 @@ function SendBrev({
       )}
 
       {!valgtMottakerHarFeilmelding && (
-        <BrevValg
+        <BrevValgMedPlaceholdere
+          behandlingID={behandlingID}
           formValues={formValues}
           width={felterWidth}
           redigerbart={redigerbart}
@@ -684,7 +739,7 @@ function SendBrev({
           variant="primary"
           disabled={knappErDisabled}
           className="brevknapp"
-          onClick={sendBrev}
+          onClick={() => void sendBrev()}
           loading={sendBrevSpinner}
         >
           Send brev
@@ -708,6 +763,17 @@ function SendBrev({
           Forkast brev
         </Nav.Button>
       </div>
+
+      {utdaterteVerdier.length > 0 && (
+        <PlaceholderUtdatertVarsel
+          utdaterte={utdaterteVerdier}
+          onSendLikevel={() => {
+            setUtdaterteVerdier([]);
+            bestillBrev();
+          }}
+          onAvbryt={() => setUtdaterteVerdier([])}
+        />
+      )}
 
       {visBrevBestiltAlert && (
         <Nav.Alert variant="success" className="brev_sendt">
