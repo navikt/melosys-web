@@ -140,14 +140,14 @@ export const PLACEHOLDER_MARKERINGSKLASSER = [
 
 // bracketed-text er bevisst web-only – api-et pakker aldri ut klamme-spans, siden det ville
 // endret innhold fra master-æraen ved lagring med togglen av.
-const MARKERINGSKLASSER = [...PLACEHOLDER_MARKERINGSKLASSER, "bracketed-text"];
+export const ALLE_MARKERINGSKLASSER = [...PLACEHOLDER_MARKERINGSKLASSER, "bracketed-text"];
 
 // Lagrede tekstblokker/brevmaler kan ha markerings-spans fra editoren bakt inn i innholdet.
 // Uten opprydding nøstes markeringene ved gjenbruk – gul legger seg utenpå blå, og en
 // utfylt verdi ser ut som om den mangler. Teksten beholdes, kun spanene fjernes.
 // Med et klasse-utvalg beholdes de øvrige markeringene urørt.
-export const fjernMarkeringsSpans = (html: string, klasser: string[] = MARKERINGSKLASSER): string => {
-  if (!MARKERINGSKLASSER.some((klasse) => html.includes(klasse))) return html;
+export const fjernMarkeringsSpans = (html: string, klasser: string[] = ALLE_MARKERINGSKLASSER): string => {
+  if (!ALLE_MARKERINGSKLASSER.some((klasse) => html.includes(klasse))) return html;
 
   const dokument = new DOMParser().parseFromString(html, "text/html");
   const pakkUt = (span: Element) => span.replaceWith(...Array.from(span.childNodes));
@@ -180,8 +180,11 @@ export const erstattPlaceholdere = (html: string, verdier: PlaceholderVerdi[]): 
   });
 };
 // Blokkelementene et token kan stå alene i. Er tokenet alene her, styrer det hele blokker;
-// ellers må paret stå i samme tekstnode for å ha et entydig omfang.
+// ellers avgjøres omfanget inne i blokken tokenene deler.
 const BLOKKTAGGER = new Set(["P", "H1", "H2", "H3", "H4", "H5", "H6", "LI", "DIV", "TD", "TH", "BLOCKQUOTE", "PRE"]);
+
+// Celler og listepunkter er strukturelle: fjernes de, kollapser tabellraden eller lista.
+const CELLE_VELGER = "td,th,li";
 
 interface TokenTreff {
   node: Text;
@@ -239,19 +242,43 @@ const blokkOmfang = ({ start, slutt }: Par): { fra: Element; til: Element } | nu
   const til = blokkFor(slutt.node);
   if (fra === null || til === null || fra.parentNode !== til.parentNode) return null;
   if (fra.textContent?.trim() !== start.token || til.textContent?.trim() !== slutt.token) return null;
+  // Ulik celle eller listepunkt: å fjerne blokkene ville revet i stykker raden eller lista.
+  if (fra.closest(CELLE_VELGER) !== til.closest(CELLE_VELGER)) return null;
   return { fra, til };
 };
 
-const losOppInline = ({ start, slutt }: Par, oppfylt: boolean) => {
-  const tekst = start.node.data;
-  const innhold = oppfylt ? tekst.slice(start.index + start.token.length, slutt.index) : "";
-  start.node.data = tekst.slice(0, start.index) + innhold + tekst.slice(slutt.index + slutt.token.length);
+const fjernTokentekst = ({ node, index, token }: TokenTreff) => node.deleteData(index, token.length);
+
+// Tokenene står som regel med mellomrom på hver side; uten dette blir det dobbelt igjen.
+const fjernDobbeltMellomrom = ({ start, slutt }: Par) => {
+  const bakIndeks = start.node === slutt.node ? start.index : 0;
+  if (start.index === 0 || start.node.data[start.index - 1] !== " ") return;
+  if (slutt.node.data[bakIndeks] !== " ") return;
+  slutt.node.deleteData(bakIndeks, 1);
+};
+
+// Tokenene deler blokk, men ikke nødvendigvis tekstnode: en Range dekker også elementene mellom dem.
+const losOppInline = (par: Par, oppfylt: boolean, dokument: Document) => {
+  const { start, slutt } = par;
+  if (oppfylt) {
+    // Sluttet først: i en delt tekstnode ville fjerning av starten forskjøvet indeksen.
+    fjernTokentekst(slutt);
+    fjernTokentekst(start);
+    return;
+  }
+
+  const spenn = dokument.createRange();
+  spenn.setStart(start.node, start.index);
+  spenn.setEnd(slutt.node, slutt.index + slutt.token.length);
+  spenn.deleteContents();
+  fjernDobbeltMellomrom(par);
 };
 
 const losOppBlokk = ({ fra, til }: { fra: Element; til: Element }, oppfylt: boolean) => {
   if (!oppfylt) {
-    for (let mellom = fra.nextElementSibling; mellom !== null && mellom !== til; ) {
-      const neste = mellom.nextElementSibling;
+    // nextSibling, ikke nextElementSibling: løs tekst mellom blokkene hører til grenen.
+    for (let mellom = fra.nextSibling; mellom !== null && mellom !== til; ) {
+      const neste = mellom.nextSibling;
       mellom.remove();
       mellom = neste;
     }
@@ -261,8 +288,8 @@ const losOppBlokk = ({ fra, til }: { fra: Element; til: Element }, oppfylt: bool
 };
 
 // Løser opp {#hvis nokkel}…{/hvis} mot sakens fakta. oppfylt=true beholder innholdet og
-// fjerner tokenene, false fjerner begge deler. Ukjent nøkkel – og alt som ikke har entydig
-// omfang – står urørt, så tokenene blir stående synlig markert i stedet for å endre brevet.
+// fjerner tokenene, false fjerner begge deler. Ukjent nøkkel – og par uten entydig omfang –
+// hoppes over hver for seg, så tokenene blir stående synlig markert mens resten løses.
 export const losOppBetingelser = (html: string, betingelser?: Betingelse[]): string => {
   if (!html.includes("{#hvis") && !html.includes(HVIS_SLUTT_TOKEN)) return html;
 
@@ -278,12 +305,12 @@ export const losOppBetingelser = (html: string, betingelser?: Betingelse[]): str
     const oppfylt = oppfyltForNokkel.get(nokkel);
     if (oppfylt === undefined) continue;
 
-    if (gjeldende.start.node === gjeldende.slutt.node) {
-      oppgaver.push(() => losOppInline(gjeldende, oppfylt));
+    if (blokkFor(gjeldende.start.node) === blokkFor(gjeldende.slutt.node)) {
+      oppgaver.push(() => losOppInline(gjeldende, oppfylt, dokument));
     } else {
       const omfang = blokkOmfang(gjeldende);
-      if (omfang === null) return html;
-      oppgaver.push(() => losOppBlokk(omfang, oppfylt));
+      // Kun dette paret hoppes over; å avlyse hele dokumentet ville låst de gyldige parene.
+      if (omfang !== null) oppgaver.push(() => losOppBlokk(omfang, oppfylt));
     }
   }
 
@@ -291,6 +318,27 @@ export const losOppBetingelser = (html: string, betingelser?: Betingelse[]): str
   // Baklengs: flere par i samme tekstnode ville ellers fått indeksene forskjøvet.
   oppgaver.reverse().forEach((utfor) => utfor());
   return dokument.body.innerHTML;
+};
+
+// Delt av innsetting og forhåndsvisning, så de to aldri kan vise ulikt resultat.
+export const forberedInnhold = (
+  html: string,
+  placeholderVerdier?: PlaceholderVerdi[],
+  betingelser?: Betingelse[],
+): string => {
+  const rentHtml = losOppBetingelser(fjernMarkeringsSpans(html, ALLE_MARKERINGSKLASSER), betingelser);
+  return placeholderVerdier ? erstattPlaceholdere(rentHtml, placeholderVerdier) : rentHtml;
+};
+
+// Betingelsestokener som står igjen ved sending; de er styring og ville blitt sendt ordrett.
+export const finnUopplosteBetingelser = (html: string): string[] => {
+  if (!html.includes("{#hvis") && !html.includes(HVIS_SLUTT_TOKEN)) return [];
+
+  const nokler = new Set<string>();
+  const regex = /\{#hvis\s+([^{}<>\s|:]+)\}/g;
+  for (let treff = regex.exec(html); treff !== null; treff = regex.exec(html)) nokler.add(treff[1]);
+  // Et slutt-token uten lesbart starttoken har ingen nøkkel, men må varsles likevel.
+  return nokler.size > 0 ? [...nokler] : [HVIS_SLUTT_TOKEN];
 };
 
 export interface UtdatertPlaceholder {

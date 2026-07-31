@@ -3,11 +3,9 @@ import { Quill } from "react-quill-new";
 import {
   Betingelse,
   erBetingelsesToken,
-  erstattPlaceholdere,
   erUkjentPlaceholder,
   erValgToken,
-  fjernMarkeringsSpans,
-  losOppBetingelser,
+  forberedInnhold,
   parseValgAlternativer,
   PLACEHOLDER_BETINGELSE_TITTEL,
   PLACEHOLDER_UERSTATTET_TITTEL,
@@ -297,14 +295,9 @@ export const fjernUgyldigeValgteMarkeringer = (quill: Quill) => {
   ugyldige.forEach(({ index, length }) => quill.formatText(index, length, "placeholder-valgt", false));
 };
 
-// HTML-en som går til dangerouslyPasteHTML ved innsetting av tekstblokk. Markeringer som
-// ligger lagret i innholdet ryddes bort først; editoren markerer selv på nytt etterpå.
-// Betingelsene løses før verdiene, så en fjernet gren aldri får satt inn verdier.
+// HTML-en som går til dangerouslyPasteHTML ved innsetting av tekstblokk.
 export const forberedTekstblokkHtml = (
   html: string,
   placeholderVerdier?: PlaceholderVerdi[],
   betingelser?: Betingelse[],
-): string => {
-  const rentHtml = losOppBetingelser(fjernMarkeringsSpans(html), betingelser);
-  return placeholderVerdier ? erstattPlaceholdere(rentHtml, placeholderVerdier) : rentHtml;
-};
+): string => forberedInnhold(html, placeholderVerdier, betingelser);

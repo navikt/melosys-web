@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import TekstblokkerListe from "./tekstblokkerListe";
@@ -136,6 +137,36 @@ describe("TekstblokkerListe – historikk", () => {
   it("viser ingen historikk før den er valgt", () => {
     visListe([blokk()], { utvidedeIder: new Set([1]) });
 
+    expect(screen.queryByRole("columnheader", { name: "Versjon" })).toBeNull();
+  });
+
+  it("nullstiller historikkvalget når raden lukkes, så ny åpning viser forhåndsvisningen", async () => {
+    // Utvidelsen styres av siden, så testen holder den samme tilstanden som den gjør.
+    function Vert() {
+      const [utvidedeIder, setUtvidedeIder] = useState<Set<number>>(new Set());
+      const toggle = (id: number) =>
+        setUtvidedeIder((forrige) => (forrige.has(id) ? new Set<number>() : new Set([id])));
+      return (
+        <TekstblokkerListe
+          blokker={[blokk()]}
+          utvidedeIder={utvidedeIder}
+          onToggleUtvidet={toggle}
+          onRediger={vi.fn()}
+          onSlett={vi.fn()}
+          onPubliser={vi.fn()}
+        />
+      );
+    }
+
+    render(<Vert />);
+    await userEvent.click(screen.getByRole("button", { name: "Historikk" }));
+    expect(screen.getByRole("button", { name: "Historikk" }).getAttribute("aria-pressed")).toBe("true");
+
+    await userEvent.click(screen.getByRole("button", { name: "Vis mindre" }));
+    // Første treff er radens egen utvid-knapp; historikktabellen har sine egne.
+    await userEvent.click(screen.getAllByRole("button", { name: "Vis mer" })[0]);
+
+    expect(screen.getByRole("button", { name: "Historikk" }).getAttribute("aria-pressed")).toBe("false");
     expect(screen.queryByRole("columnheader", { name: "Versjon" })).toBeNull();
   });
 });

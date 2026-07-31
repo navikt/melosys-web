@@ -26,6 +26,12 @@ function TekstblokkerListe({ blokker, utvidedeIder, onToggleUtvidet, onRediger, 
     if (!utvidedeIder.has(id)) onToggleUtvidet(id);
   };
 
+  // Lukkes raden, står ikke historikkvalget ved lag: neste åpning viser forhåndsvisningen.
+  const toggleUtvidet = (id: number) => {
+    if (utvidedeIder.has(id) && historikkId === id) setHistorikkId(null);
+    onToggleUtvidet(id);
+  };
+
   if (blokker.length === 0) {
     return (
       <div className="tekstblokker__tom">
@@ -54,7 +60,7 @@ function TekstblokkerListe({ blokker, utvidedeIder, onToggleUtvidet, onRediger, 
             blokk={blokk}
             utvidet={utvidedeIder.has(blokk.id)}
             visHistorikk={historikkId === blokk.id}
-            onToggleUtvidet={onToggleUtvidet}
+            onToggleUtvidet={toggleUtvidet}
             onToggleHistorikk={toggleHistorikk}
             onRediger={onRediger}
             onSlett={onSlett}

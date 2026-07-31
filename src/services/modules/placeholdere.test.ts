@@ -6,6 +6,7 @@ import {
   erstattPlaceholdere,
   erUkjentPlaceholder,
   erValgToken,
+  finnUopplosteBetingelser,
   finnUtdaterteVerdier,
   fjernMarkeringsSpans,
   losOppBetingelser,
@@ -340,9 +341,57 @@ describe("losOppBetingelser", () => {
     expect(losOppBetingelser(html, oppfylt)).toBe("<p>Vedtaket er avslått i saken.</p>");
   });
 
-  it("fjerner tekstspennet inline når betingelsen ikke er oppfylt", () => {
+  // Tokenene står med mellomrom på hver side; uten normalisering ble det dobbelt igjen.
+  it("fjerner tekstspennet inline og etterlater ett mellomrom når betingelsen ikke er oppfylt", () => {
     const html = "<p>Vedtaket er {#hvis avslag}avslått{/hvis} i saken.</p>";
-    expect(losOppBetingelser(html, ikkeOppfylt)).toBe("<p>Vedtaket er  i saken.</p>");
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe("<p>Vedtaket er i saken.</p>");
+  });
+
+  it("beholder formatert innhold mellom tokenene i samme blokk når betingelsen er oppfylt", () => {
+    const html = "<p>Vedtaket er {#hvis avslag}<strong>avslått</strong>{/hvis} i saken.</p>";
+    expect(losOppBetingelser(html, oppfylt)).toBe("<p>Vedtaket er <strong>avslått</strong> i saken.</p>");
+  });
+
+  it("fjerner både tokenene og elementene mellom dem i samme blokk når betingelsen ikke er oppfylt", () => {
+    const html = "<p>Vedtaket er {#hvis avslag}<strong>avslått</strong> med <em>frist</em>{/hvis} i saken.</p>";
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe("<p>Vedtaket er i saken.</p>");
+  });
+
+  it("løser paret når tokenene deler blokk, men står i hver sin celle-frie tekstnode", () => {
+    const html = "<li>{#hvis avslag}Avslag <strong>gjelder</strong>{/hvis}</li>";
+    expect(losOppBetingelser(html, oppfylt)).toBe("<li>Avslag <strong>gjelder</strong></li>");
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe("<li></li>");
+  });
+
+  it("løser de gyldige parene og hopper bare over paret uten entydig omfang", () => {
+    const html =
+      "<p>{#hvis avslag}</p><p>Betinget</p><p>{/hvis}</p>" +
+      "<p>Tekst {#hvis annen} mer</p><p>Uavklart</p><p>{/hvis}</p>";
+    const betingelser: Betingelse[] = [
+      { nokkel: "avslag", oppfylt: true },
+      { nokkel: "annen", oppfylt: false },
+    ];
+
+    expect(losOppBetingelser(html, betingelser)).toBe(
+      "<p>Betinget</p><p>Tekst {#hvis annen} mer</p><p>Uavklart</p><p>{/hvis}</p>",
+    );
+  });
+
+  // Å fjerne cellene ville revet raden i stykker; tokenene blir heller stående markert.
+  it("rører ikke en tabellrad der tokenene står i hver sin celle", () => {
+    const html = "<table><tbody><tr><td>{#hvis avslag}</td><td>X</td><td>{/hvis}</td></tr></tbody></table>";
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe(html);
+    expect(losOppBetingelser(html, oppfylt)).toBe(html);
+  });
+
+  it("rører ikke listepunkter der tokenene står i hvert sitt punkt", () => {
+    const html = "<ul><li>{#hvis avslag}</li><li>Betinget</li><li>{/hvis}</li></ul>";
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe(html);
+  });
+
+  it("fjerner løse tekstnoder mellom blokkene når betingelsen ikke er oppfylt", () => {
+    const html = "<p>{#hvis avslag}</p>Løs tekst<p>Betinget</p><p>{/hvis}</p><p>Etter</p>";
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe("<p>Etter</p>");
   });
 
   it("løser flere inline-par i samme tekstnode uten å forskyve indeksene", () => {
@@ -396,5 +445,31 @@ describe("losOppBetingelser", () => {
     const html = "<p>{#hvis avslag}</p><h2>Tittel</h2><ol><li>Ett</li></ol><p>{/hvis}</p>";
     expect(losOppBetingelser(html, ikkeOppfylt)).toBe("");
     expect(losOppBetingelser(html, oppfylt)).toBe("<h2>Tittel</h2><ol><li>Ett</li></ol>");
+  });
+});
+
+describe("finnUopplosteBetingelser", () => {
+  it("lister nøkkelen til et par som fortsatt står i teksten", () => {
+    const html = "<p>{#hvis avslag}</p><p>Betinget</p><p>{/hvis}</p>";
+    expect(finnUopplosteBetingelser(html)).toEqual(["avslag"]);
+  });
+
+  it("lister hver nøkkel én gang, i rekkefølgen de står i brevet", () => {
+    const html = "<p>{#hvis avslag}A{/hvis} {#hvis frist}B{/hvis} {#hvis avslag}C{/hvis}</p>";
+    expect(finnUopplosteBetingelser(html)).toEqual(["avslag", "frist"]);
+  });
+
+  it("finner tokener som ligger inni markerings-spans fra editoren", () => {
+    const html = '<p><span class="placeholder-betingelse">{#hvis avslag}</span></p>';
+    expect(finnUopplosteBetingelser(html)).toEqual(["avslag"]);
+  });
+
+  it("varsler om et slutt-token uten lesbart starttoken", () => {
+    expect(finnUopplosteBetingelser("<p>Tekst{/hvis}</p>")).toEqual(["{/hvis}"]);
+  });
+
+  it("gir tom liste for tekst uten betingelsestokener", () => {
+    expect(finnUopplosteBetingelser("<p>Saken {saksnummer} er mottatt.</p>")).toEqual([]);
+    expect(finnUopplosteBetingelser("")).toEqual([]);
   });
 });

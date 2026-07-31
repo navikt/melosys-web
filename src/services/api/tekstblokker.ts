@@ -104,6 +104,7 @@ export const useFiltrerteTekstblokker = (
   valgteTags: string[],
   sakstype?: string,
   behandlingstema?: string,
+  // "ALLE" er admin, der utkast skal vises; saksbehandlerflaten sender "PUBLISERT" som klientsidevern.
   statusfilter: Statusfilter = "ALLE",
 ): FiltrerteTekstblokker => {
   // Konteksten avgrenses først, slik at både søk og tag-telling gjelder det utvalget
