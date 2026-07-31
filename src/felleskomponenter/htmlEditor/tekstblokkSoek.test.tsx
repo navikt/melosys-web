@@ -26,6 +26,7 @@ const blokk = (id: number, tittel: string, sakstyper: string[], behandlingstemae
   tags: [],
   sakstyper,
   behandlingstemaer,
+  status: "PUBLISERT",
   endretDato: "2026-01-01T00:00:00Z",
   endretAv: "Z123456",
   endretAvNavn: null,

@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import * as Nav from "../../../navFrontend";
 
 import { useFiltrerteTekstblokker, useTekstblokker } from "../../../services/api/tekstblokker";
-import { tellTags, TekstblokkOversikt, TekstblokkType } from "../../../services/modules/tekstblokker";
+import { Statusfilter, tellTags, TekstblokkOversikt, TekstblokkType } from "../../../services/modules/tekstblokker";
+import TekstblokkPubliserBekreftelse from "./tekstblokkPubliserBekreftelse";
 import TekstblokkRedigeringModal from "./tekstblokkRedigeringModal";
 import TekstblokkSlettBekreftelse from "./tekstblokkSlettBekreftelse";
 import TekstblokkerFilter from "./tekstblokkerFilter";
@@ -21,7 +22,9 @@ function TekstblokkerSide() {
   const [soek, setSoek] = useState("");
   const [valgteTags, setValgteTags] = useState<string[]>([]);
   const [modal, setModal] = useState<ModalTilstand>({ type: "lukket" });
+  const [statusfilter, setStatusfilter] = useState<Statusfilter>("ALLE");
   const [slettBlokk, setSlettBlokk] = useState<TekstblokkOversikt | null>(null);
+  const [publiserBlokk, setPubliserBlokk] = useState<TekstblokkOversikt | null>(null);
   const [utvidedeIder, setUtvidedeIder] = useState<Set<number>>(new Set());
 
   const { data: blokker = [], isLoading, error } = useTekstblokker(type);
@@ -31,7 +34,14 @@ function TekstblokkerSide() {
   const motsattType: TekstblokkType = type === "TEKSTBLOKK" ? "BREVMAL" : "TEKSTBLOKK";
   const { data: blokkerAvMotsattType = [] } = useTekstblokker(motsattType, modal.type !== "lukket");
 
-  const { tagAntall, synlige } = useFiltrerteTekstblokker(blokker, soek, valgteTags);
+  const { tagAntall, synlige } = useFiltrerteTekstblokker(
+    blokker,
+    soek,
+    valgteTags,
+    undefined,
+    undefined,
+    statusfilter,
+  );
   // Ikke tagAntall: det telles over blokkene som matcher søket, og hører hjemme i
   // filteret over lista – ikke i forslagene.
   const forslagTags = useMemo(
@@ -81,6 +91,8 @@ function TekstblokkerSide() {
         valgteTags={valgteTags}
         setValgteTags={setValgteTags}
         tilgjengeligeTags={tagAntall}
+        statusfilter={statusfilter}
+        setStatusfilter={setStatusfilter}
       />
 
       {isLoading && (
@@ -111,6 +123,7 @@ function TekstblokkerSide() {
           onToggleUtvidet={toggleRad}
           onRediger={(id) => setModal({ type: "rediger", id })}
           onSlett={setSlettBlokk}
+          onPubliser={setPubliserBlokk}
         />
       )}
 
@@ -124,6 +137,8 @@ function TekstblokkerSide() {
       )}
 
       <TekstblokkSlettBekreftelse blokk={slettBlokk} onLukk={() => setSlettBlokk(null)} />
+
+      <TekstblokkPubliserBekreftelse blokk={publiserBlokk} onLukk={() => setPubliserBlokk(null)} />
     </div>
   );
 }

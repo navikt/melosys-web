@@ -3,6 +3,10 @@ import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../utils";
 
 export type TekstblokkType = "TEKSTBLOKK" | "BREVMAL";
 
+export type TekstblokkStatus = "UTKAST" | "PUBLISERT";
+
+export type Endringstype = "OPPRETTET" | "ENDRET" | "SLETTET";
+
 export interface TekstblokkOversikt {
   id: number;
   tittel: string;
@@ -12,6 +16,7 @@ export interface TekstblokkOversikt {
   // Kodeverdier (EU_EOS, UTSENDT_ARBEIDSTAKER …). Tom liste betyr «gjelder alle».
   sakstyper: string[];
   behandlingstemaer: string[];
+  status: TekstblokkStatus;
   endretDato: string;
   endretAv: string;
   endretAvNavn: string | null;
@@ -25,6 +30,7 @@ export interface Tekstblokk {
   tags: string[];
   sakstyper: string[];
   behandlingstemaer: string[];
+  status: TekstblokkStatus;
   registrertDato: string;
   registrertAv: string;
   endretDato: string;
@@ -38,33 +44,60 @@ export interface TekstblokkRequest {
   tags: string[];
   sakstyper: string[];
   behandlingstemaer: string[];
+  status?: TekstblokkStatus;
+}
+
+export interface TekstblokkVersjon {
+  versjon: number;
+  gyldigFra: string;
+  gyldigTil: string | null;
+  endretAv: string;
+  endretAvNavn: string | null;
+  endringstype: Endringstype;
+  tittel: string;
+  innhold: string;
 }
 
 const baseUrl = `${API_BASE_URL}${TEKSTBLOKKER}`;
 
-// Et api uten avgrensningsstøtte (under utrulling) utelater feltene. Vi normaliserer her, på
-// api-grensen, slik at alle konsumenter kan regne med lister.
-const medAvgrensning = (blokk: { sakstyper?: string[]; behandlingstemaer?: string[] }) => ({
+type Normaliserbar = { sakstyper?: string[]; behandlingstemaer?: string[]; status?: TekstblokkStatus };
+type Normalisert = Pick<TekstblokkOversikt, "sakstyper" | "behandlingstemaer" | "status">;
+
+// Et api uten avgrensning eller status (under utrulling) utelater feltene. Vi normaliserer her, på
+// api-grensen, slik at alle konsumenter kan regne med lister og en status.
+const normaliser = (blokk: Normaliserbar): Normalisert => ({
   sakstyper: blokk.sakstyper ?? [],
   behandlingstemaer: blokk.behandlingstemaer ?? [],
+  status: blokk.status ?? "PUBLISERT",
 });
 
 export const hentAlle = (type?: TekstblokkType): Promise<TekstblokkOversikt[]> => {
   const url = type ? `${baseUrl}?type=${type}` : baseUrl;
   return getAsJson(url).then((blokker: TekstblokkOversikt[]) =>
-    blokker.map((blokk) => ({ ...blokk, ...medAvgrensning(blokk) })),
+    blokker.map((blokk) => ({ ...blokk, ...normaliser(blokk) })),
   );
 };
 
 export const hent = (id: number): Promise<Tekstblokk> =>
-  getAsJson(`${baseUrl}/${id}`).then((blokk: Tekstblokk) => ({ ...blokk, ...medAvgrensning(blokk) }));
+  getAsJson(`${baseUrl}/${id}`).then((blokk: Tekstblokk) => ({ ...blokk, ...normaliser(blokk) }));
 
-export const opprett = (body: TekstblokkRequest): Promise<Tekstblokk> => postAsJson(baseUrl, body);
+export const opprett = (body: TekstblokkRequest): Promise<Tekstblokk> =>
+  postAsJson(baseUrl, body).then((blokk: Tekstblokk) => ({ ...blokk, ...normaliser(blokk) }));
 
 export const oppdater = (id: number, body: TekstblokkRequest): Promise<Tekstblokk> =>
-  putAsJson(`${baseUrl}/${id}`, body);
+  putAsJson(`${baseUrl}/${id}`, body).then((blokk: Tekstblokk) => ({ ...blokk, ...normaliser(blokk) }));
+
+export const publiser = (id: number): Promise<Tekstblokk> =>
+  postAsJson(`${baseUrl}/${id}/publiser`).then((blokk: Tekstblokk) => ({ ...blokk, ...normaliser(blokk) }));
+
+export const hentHistorikk = (id: number): Promise<TekstblokkVersjon[]> => getAsJson(`${baseUrl}/${id}/historikk`);
 
 export const slett = (id: number): Promise<unknown> => deleteAsJson(`${baseUrl}/${id}`);
+
+export type Statusfilter = "ALLE" | "PUBLISERT" | "UTKAST";
+
+export const harStatus = (blokk: Pick<TekstblokkOversikt, "status">, filter: Statusfilter): boolean =>
+  filter === "ALLE" || blokk.status === filter;
 
 export const matcherSoek = (blokk: TekstblokkOversikt, soek: string): boolean => {
   const ord = soek

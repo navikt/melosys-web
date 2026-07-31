@@ -1,9 +1,16 @@
 import { Chips, Search, Tabs } from "@navikt/ds-react";
 import { useMemo, useState } from "react";
 
-import { erTagValgt, TekstblokkType, toggleITagliste } from "../../../services/modules/tekstblokker";
+import * as Nav from "../../../navFrontend";
+import { erTagValgt, Statusfilter, TekstblokkType, toggleITagliste } from "../../../services/modules/tekstblokker";
 
 const MAKS_TAGS_KOMPAKT = 15;
+
+const STATUSVALG: Array<[Statusfilter, string]> = [
+  ["ALLE", "Alle"],
+  ["PUBLISERT", "Publiserte"],
+  ["UTKAST", "Utkast"],
+];
 
 interface Props {
   type: TekstblokkType;
@@ -13,9 +20,21 @@ interface Props {
   valgteTags: string[];
   setValgteTags: (tags: string[]) => void;
   tilgjengeligeTags: Array<[string, number]>;
+  statusfilter: Statusfilter;
+  setStatusfilter: (statusfilter: Statusfilter) => void;
 }
 
-function TekstblokkerFilter({ type, setType, soek, setSoek, valgteTags, setValgteTags, tilgjengeligeTags }: Props) {
+function TekstblokkerFilter({
+  type,
+  setType,
+  soek,
+  setSoek,
+  valgteTags,
+  setValgteTags,
+  tilgjengeligeTags,
+  statusfilter,
+  setStatusfilter,
+}: Props) {
   const [visAlleTags, setVisAlleTags] = useState(false);
 
   // Vis de mest brukte tagene i kompakt modus, men hold valgte tags alltid synlige.
@@ -47,6 +66,18 @@ function TekstblokkerFilter({ type, setType, soek, setSoek, valgteTags, setValgt
         onChange={setSoek}
         variant="simple"
       />
+
+      {/* Status står for seg selv med egen ledetekst, så den ikke leses som enda en tag. */}
+      <div className="tekstblokker__statusfilter">
+        <Nav.BodyShort size="small">Status:</Nav.BodyShort>
+        <Chips size="small">
+          {STATUSVALG.map(([verdi, label]) => (
+            <Chips.Toggle key={verdi} selected={statusfilter === verdi} onClick={() => setStatusfilter(verdi)}>
+              {label}
+            </Chips.Toggle>
+          ))}
+        </Chips>
+      </div>
 
       {tilgjengeligeTags.length > 0 && (
         <Chips size="small">
