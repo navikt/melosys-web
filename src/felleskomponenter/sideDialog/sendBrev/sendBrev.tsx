@@ -35,6 +35,7 @@ import { SendBrevFormValues } from "./types";
 import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER, MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggle/toggleNavn";
 import {
+  finnUopplosteBetingelser,
   finnUtdaterteVerdier,
   harInnsatteVerdier,
   hentVerdier,
@@ -124,6 +125,7 @@ function SendBrev({
   const [lagreUtkastSpinner, setLagreUtkastSpinner] = useState(false);
   const [forkastBrevSpinner, setForkastBrevSpinner] = useState(false);
   const [utdaterteVerdier, setUtdaterteVerdier] = useState<UtdatertPlaceholder[]>([]);
+  const [uopplosteBetingelser, setUopplosteBetingelser] = useState<string[]>([]);
   const brevBestiltTimerRef = useRef<number | undefined>(undefined);
   const tilgjengeligeMottakere = useMemo(
     () => tilgjengeligeMaler?.map((mal) => mal.mottaker) || [],
@@ -482,6 +484,8 @@ function SendBrev({
       .join("");
 
   const hentUtdaterteVerdier = async (html: string): Promise<UtdatertPlaceholder[]> => {
+    // Spinneren står mens oppslaget pågår; sende-flyten slår den av igjen.
+    setSendBrevSpinner(true);
     try {
       const { verdier } = await hentVerdier(behandlingID);
       return finnUtdaterteVerdier(html, verdier);
@@ -489,6 +493,11 @@ function SendBrev({
       // Uten ferske verdier har vi ingenting å sammenligne mot; brevet sendes uten varsel.
       return [];
     }
+  };
+
+  const lukkPlaceholderVarsel = () => {
+    setUtdaterteVerdier([]);
+    setUopplosteBetingelser([]);
   };
 
   const sendBrev = async () => {
@@ -502,15 +511,16 @@ function SendBrev({
     }
 
     const fritekstHtml = tekstblokkerPaa && dynamiskPlaceholderPaa ? hentFritekstHtml() : "";
+    // Uoppløste betingelser varsles i samme modal som utdaterte verdier, uten å blokkere sendingen.
+    const uopploste = finnUopplosteBetingelser(fritekstHtml);
     // Uten innsatte verdier er det ingenting å sammenligne, og oppslaget er unødvendig.
-    if (harInnsatteVerdier(fritekstHtml)) {
-      setSendBrevSpinner(true);
-      const utdaterte = await hentUtdaterteVerdier(fritekstHtml);
-      if (utdaterte.length > 0) {
-        setSendBrevSpinner(false);
-        setUtdaterteVerdier(utdaterte);
-        return;
-      }
+    const utdaterte = harInnsatteVerdier(fritekstHtml) ? await hentUtdaterteVerdier(fritekstHtml) : [];
+
+    if (utdaterte.length > 0 || uopploste.length > 0) {
+      setSendBrevSpinner(false);
+      setUtdaterteVerdier(utdaterte);
+      setUopplosteBetingelser(uopploste);
+      return;
     }
 
     bestillBrev();
@@ -764,14 +774,15 @@ function SendBrev({
         </Nav.Button>
       </div>
 
-      {utdaterteVerdier.length > 0 && (
+      {(utdaterteVerdier.length > 0 || uopplosteBetingelser.length > 0) && (
         <PlaceholderUtdatertVarsel
           utdaterte={utdaterteVerdier}
+          uopploste={uopplosteBetingelser}
           onSendLikevel={() => {
-            setUtdaterteVerdier([]);
+            lukkPlaceholderVarsel();
             bestillBrev();
           }}
-          onAvbryt={() => setUtdaterteVerdier([])}
+          onAvbryt={lukkPlaceholderVarsel}
         />
       )}
 

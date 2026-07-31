@@ -92,6 +92,8 @@ function TekstblokkSoekIntern({
     valgteTags,
     ignorerKontekst ? undefined : sakstype,
     ignorerKontekst ? undefined : behandlingstema,
+    // Api-et skal alt ha filtrert bort utkast; filteret her er belte i tillegg til seler.
+    "PUBLISERT",
   );
 
   // Kun reelle tags vises i nedtrekket – med antall treff – så det er tydelig

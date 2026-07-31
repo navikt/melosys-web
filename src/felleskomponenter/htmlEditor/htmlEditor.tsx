@@ -133,6 +133,8 @@ function HtmlEditor({
   // saksflyt-editorene får aldri placeholder-kontekst.
   const markeringAktiv =
     dynamiskPlaceholderPaa === true && (placeholderVerdier !== undefined || gyldigeNokler !== undefined);
+  // Med sakens verdier (Send brev) må et gjenstående betingelsestoken ryddes før sending – da varsles det.
+  const betingelseVarsel = markeringAktiv && placeholderVerdier !== undefined;
   // Quill-handleren lever på tvers av rendringer, så den leser tilstanden via refs for å få
   // med seg at toggle, verdier og katalog lander etterpå.
   const markeringAktivRef = useRef(markeringAktiv);
@@ -423,7 +425,10 @@ function HtmlEditor({
   };
 
   return (
-    <div className={classNames("htmlEditor", className)} ref={containerRef}>
+    <div
+      className={classNames("htmlEditor", { "htmlEditor--betingelse-varsel": betingelseVarsel }, className)}
+      ref={containerRef}
+    >
       {label && (
         <Label as="div" size="small" className="editor_label">
           {label}

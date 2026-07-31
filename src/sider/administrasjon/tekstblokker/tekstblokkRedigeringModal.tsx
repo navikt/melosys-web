@@ -69,8 +69,8 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
 
   const kanLagre = tittel.trim().length > 0 && innhold.trim().length > 0 && !lagrer;
 
-  // Redigering beholder statusen blokken har – publisering er en egen beslutning fra lista.
-  const handleLagre = (status: TekstblokkStatus = eksisterende.data?.status ?? "PUBLISERT") => {
+  // Typet parameter: utypet ville en onClick={handleLagre} sendt MouseEvent som status.
+  const handleLagre = (status: TekstblokkStatus = "PUBLISERT") => {
     if (!kanLagre) return;
     // Ta med en tag som står igjen i feltet, så den ikke går tapt fordi admin
     // glemte Enter eller "Legg til".
@@ -84,13 +84,13 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
       tags: alleTags,
       sakstyper,
       behandlingstemaer,
-      status,
     };
 
     if (redigerId !== null) {
+      // PUT er ingen statusbeslutning: feltet utelates, og api-et lar statusen stå som den er.
       oppdater.mutate({ id: redigerId, body: request }, { onSuccess: onLukk });
     } else {
-      opprett.mutate(request, { onSuccess: onLukk });
+      opprett.mutate({ ...request, status }, { onSuccess: onLukk });
     }
   };
 

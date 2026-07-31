@@ -13,10 +13,16 @@ function TekstblokkPubliserBekreftelse({ blokk, onLukk }: Props) {
 
   if (!blokk) return null;
 
-  const handlePubliser = () => publiser.mutate(blokk.id, { onSuccess: onLukk });
+  // Komponenten lever videre mellom åpningene; uten nullstilling vises forrige feil på nytt.
+  const handleLukk = () => {
+    publiser.reset();
+    onLukk();
+  };
+
+  const handlePubliser = () => publiser.mutate(blokk.id, { onSuccess: handleLukk });
 
   return (
-    <Nav.Modal open onClose={onLukk} aria-label="Bekreft publisering" width="small">
+    <Nav.Modal open onClose={handleLukk} aria-label="Bekreft publisering" width="small">
       <Nav.Modal.Header>
         <Nav.Heading size="small" level="1">
           Publisere {labelForType(blokk.type)}?
@@ -37,7 +43,7 @@ function TekstblokkPubliserBekreftelse({ blokk, onLukk }: Props) {
         <Nav.Button variant="primary" onClick={handlePubliser} loading={publiser.isPending}>
           Publiser
         </Nav.Button>
-        <Nav.Button variant="tertiary" onClick={onLukk} disabled={publiser.isPending}>
+        <Nav.Button variant="tertiary" onClick={handleLukk} disabled={publiser.isPending}>
           Avbryt
         </Nav.Button>
       </Nav.Modal.Footer>

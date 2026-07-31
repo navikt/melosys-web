@@ -299,3 +299,27 @@ describe("HtmlEditor med klikk på utfylt verdi", () => {
     );
   });
 });
+
+describe("HtmlEditor – tone på betingelsestokener", () => {
+  beforeEach(() => {
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+  });
+
+  it("varsler om betingelsestokener når verten har sakens verdier (Send brev)", () => {
+    const container = renderEditor("<p>{#hvis avslag}</p>", { placeholderVerdier: [] });
+
+    expect(container.querySelector(".htmlEditor--betingelse-varsel")).not.toBeNull();
+  });
+
+  it("holder tonen nøytral der verten bare har katalogen (admin)", () => {
+    const container = renderEditor("<p>{#hvis avslag}</p>", { gyldigeNokler: ["saksnummer"] });
+
+    expect(container.querySelector(".htmlEditor--betingelse-varsel")).toBeNull();
+  });
+
+  it("holder tonen nøytral uten placeholder-kontekst (saksflyt)", () => {
+    const container = renderEditor("<p>{#hvis avslag}</p>");
+
+    expect(container.querySelector(".htmlEditor--betingelse-varsel")).toBeNull();
+  });
+});
