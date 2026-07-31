@@ -111,7 +111,9 @@ describe("TekstblokkForhandsvisning", () => {
 
     const markering = container.querySelector(".placeholder-valg");
     expect(markering?.textContent).toBe("{velg:Serbia|Montenegro}");
-    expect(markering?.getAttribute("title")).toBe("Klikk for å velge mellom alternativene");
+    // Forhåndsvisningen er ikke klikkbar, så tittelen kan ikke love et klikk.
+    expect(markering?.getAttribute("title")).toBe("Alternativet velges når teksten settes inn i brevet");
+    expect(markering?.getAttribute("title")).not.toContain("Klikk");
     expect(container.querySelector(".placeholder-ukjent")).toBeNull();
   });
 

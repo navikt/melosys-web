@@ -144,6 +144,14 @@ describe("parseValgAlternativer", () => {
   it("gir tom liste for tom streng (attributtet mangler eller er tomt)", () => {
     expect(parseValgAlternativer("")).toEqual([]);
   });
+
+  it("slår sammen like alternativer – to like knapper er ikke noe valg", () => {
+    expect(parseValgAlternativer("A|A|B")).toEqual(["A", "B"]);
+  });
+
+  it("avviser et token der alle alternativene er like", () => {
+    expect(parseValgToken("{velg:A|A}")).toBeNull();
+  });
 });
 
 describe("erUkjentPlaceholder", () => {

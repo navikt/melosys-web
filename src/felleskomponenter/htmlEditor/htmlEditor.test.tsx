@@ -1,8 +1,10 @@
 import { act, render, screen, waitFor } from "@testing-library/react";
 import { useState } from "react";
+import { Quill } from "react-quill-new";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import HtmlEditor from "./htmlEditor";
+import { markerUerstattedeOmrader } from "./placeholderMarkering";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import { usePlaceholderKatalog } from "../../services/api/placeholdere";
 
@@ -98,6 +100,12 @@ describe("HtmlEditor", () => {
 
 const klikk = (node: Element) => act(() => void node.dispatchEvent(new MouseEvent("click", { bubbles: true })));
 
+// Editoren eier Quill-instansen internt; testene når den via containeren Quill selv er bygd på.
+const hentQuill = (container: HTMLElement) => Quill.find(container.querySelector(".ql-container") as Node) as Quill;
+
+const trykkEnter = (quill: Quill) =>
+  act(() => void quill.root.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true })));
+
 // Klikk-lytteren ligger som delegering på quill.root, så et boblende MouseEvent på selve
 // markeringen er akkurat det brukerens klikk gir.
 describe("HtmlEditor med valgtokener", () => {
@@ -143,6 +151,56 @@ describe("HtmlEditor med valgtokener", () => {
     klikk(screen.getByRole("button", { name: "Serbia" }));
 
     await waitFor(() => expect(container.querySelector("span.placeholder-valgt")?.textContent).toBe("Serbia"));
+  });
+
+  it("erstatter tokenet selv om markeringene påføres på nytt mens popoveren står åpen", async () => {
+    const container = renderMedValg({ gyldigeNokler: ["saksnummer"] });
+    klikk(await ventPaaValgmarkering(container));
+
+    // Katalogen lander gjerne mens popoveren står åpen, og remarkeringen bytter ut DOM-noden.
+    act(() => markerUerstattedeOmrader(hentQuill(container), ["saksnummer"]));
+    klikk(screen.getByRole("button", { name: "Montenegro" }));
+
+    await waitFor(() => expect(container.querySelector("span.placeholder-valgt")?.textContent).toBe("Montenegro"));
+    expect(container.querySelector(".ql-editor")?.textContent).not.toContain("{velg:");
+  });
+
+  it("markerer hele valgtokenet ved klikk, så en innsatt tekstblokk erstatter det", async () => {
+    const container = renderMedValg();
+    const markering = await ventPaaValgmarkering(container);
+
+    klikk(markering);
+
+    expect(hentQuill(container).getSelection()).toEqual({ index: 6, length: "{velg:Serbia|Montenegro}".length });
+  });
+
+  it("åpner popoveren og flytter fokus dit når Enter trykkes inni valgtokenet", async () => {
+    const container = renderMedValg();
+    await ventPaaValgmarkering(container);
+    const quill = hentQuill(container);
+    act(() => {
+      quill.focus();
+      quill.setSelection(10, 0);
+    });
+
+    trykkEnter(quill);
+
+    expect(screen.getByRole("button", { name: "Serbia" })).toHaveFocus();
+  });
+
+  it("lar Enter utenfor valgtokenet gi linjeskift som før", async () => {
+    const container = renderMedValg();
+    await ventPaaValgmarkering(container);
+    const quill = hentQuill(container);
+    act(() => {
+      quill.focus();
+      quill.setSelection(0, 0);
+    });
+
+    trykkEnter(quill);
+
+    expect(screen.queryByRole("button", { name: "Serbia" })).not.toBeInTheDocument();
+    expect(quill.getText()).toBe("\nLand: {velg:Serbia|Montenegro}\n");
   });
 
   it("åpner ingen popover uten placeholder-kontekst fra verten", async () => {
@@ -213,6 +271,19 @@ describe("HtmlEditor med klikk på utfylt verdi", () => {
     await klikkPaaVerdi(container);
 
     expect(screen.queryByRole("button", { name: "01.03.2024" })).not.toBeInTheDocument();
+  });
+
+  it("lar markøren stå der brukeren klikket i den utfylte verdien", async () => {
+    const container = renderMedVerdi(medKandidater);
+    await waitFor(() => expect(container.querySelector("span.placeholder-utfylt")).not.toBeNull());
+    const quill = hentQuill(container);
+    // Quill har alt satt markøren på mouseup; hel-seleksjon her ville gjort at neste
+    // tastetrykk erstattet hele verdien i stedet for å rette den.
+    act(() => quill.setSelection(7, 0));
+
+    klikk(container.querySelector("span.placeholder-utfylt") as HTMLElement);
+
+    expect(quill.getSelection()).toEqual({ index: 7, length: 0 });
   });
 
   it("bytter verdi ved valg av kandidat og beholder nøkkelen", async () => {

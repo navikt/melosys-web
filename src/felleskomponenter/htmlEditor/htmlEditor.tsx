@@ -144,6 +144,9 @@ function HtmlEditor({
   // Togglen er undefined til den er lastet; formatene må med uansett, ellers stripper Quill
   // lagrede markeringer permanent. Kun en eksplisitt av-toggle (rollback) skal fjerne dem.
   const placeholderFormatsAktive = dynamiskPlaceholderPaa !== false;
+  // Én kilde til key-en på ReactQuill: skifter den, er Quill-instansen en annen, og handlerne
+  // i usePlaceholderValg må kobles opp på nytt.
+  const editorNokkel = String(placeholderFormatsAktive);
   // Markering krever at verten kan levere verdier eller katalog (Send brev og admin);
   // saksflyt-editorene får aldri placeholder-kontekst.
   const markeringAktiv =
@@ -158,7 +161,7 @@ function HtmlEditor({
     quillRef,
     sisteMarkering: lastSelectionRef,
     aktiv: markeringAktiv && !disabled,
-    editorNokkel: String(placeholderFormatsAktive),
+    editorNokkel,
     placeholderVerdier,
   });
 
@@ -477,7 +480,7 @@ function HtmlEditor({
           // ReactQuill bygger editoren på nytt når formats endres, men beholder da React-
           // instansen – og våre handlere ville blitt hengende på den forkastede Quill-en.
           // Med key monteres alt på nytt, og effekten over kobler seg til den nye editoren.
-          key={String(placeholderFormatsAktive)}
+          key={editorNokkel}
           ref={quillRef}
           theme="snow"
           value={internalValue}

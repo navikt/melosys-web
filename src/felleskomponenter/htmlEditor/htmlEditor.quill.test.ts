@@ -300,6 +300,46 @@ describe("Valgmekanikk i Quill", () => {
     expect(quill.root.querySelector("span.placeholder-valgt")?.textContent).toBe("Montenegro");
   });
 
+  it("beholder fet formatering på tokenet når alternativet settes inn", () => {
+    const quill = lagEditor();
+    quill.setText("Land: {velg:Serbia|Montenegro}\n");
+    quill.formatText(6, "{velg:Serbia|Montenegro}".length, "bold", true);
+    markerUerstattedeOmrader(quill);
+
+    settInnValg(quill, valgTreffFor(quill, "span.placeholder-valg"), "Montenegro", { current: null });
+
+    expect(quill.getText()).toBe("Land: Montenegro\n");
+    expect(quill.getFormat(6, "Montenegro".length)).toMatchObject({
+      bold: true,
+      "placeholder-valgt": "Serbia|Montenegro",
+    });
+  });
+
+  it("arver ikke overskriftsformatet inn i det innsatte valget", () => {
+    const quill = lagEditor();
+    quill.setText("{velg:Serbia|Montenegro}\n");
+    quill.formatLine(0, 1, "header", 2);
+    markerUerstattedeOmrader(quill);
+
+    settInnValg(quill, valgTreffFor(quill, "span.placeholder-valg"), "Serbia", { current: null });
+
+    // header hører til linjeskiftet; kommer det med i selve inserten, følger overskriften
+    // teksten videre i stedet for linjen.
+    const valgOp = quill.getContents().ops.find((op) => op.insert === "Serbia");
+    expect(valgOp?.attributes).toEqual({ "placeholder-valgt": "Serbia|Montenegro" });
+    expect(quill.root.querySelector("h2")?.textContent).toContain("Serbia");
+  });
+
+  it("lar markøren stå utenfor valget, så videre skriving havner etter markeringen", () => {
+    const quill = medValgtAlternativ("Land: {velg:Serbia|Montenegro}\n", "Montenegro");
+    const markor = quill.getSelection(true);
+
+    quill.insertText(markor.index, "!", quill.getFormat());
+
+    expect(quill.root.querySelector("span.placeholder-valgt")?.textContent).toBe("Montenegro");
+    expect(quill.getText()).toBe("Land: Montenegro!\n");
+  });
+
   it("gir ingen treff for klikk utenfor en valgmarkering", () => {
     const quill = lagEditor();
     quill.setText("Land: {velg:Serbia|Montenegro}\n");
@@ -356,6 +396,30 @@ describe("Klikk på utfylt verdi", () => {
     const span = quill.root.querySelector("span.placeholder-utfylt");
     expect(span?.textContent).toBe("01.01.2023");
     expect(span?.getAttribute("data-placeholder")).toBe("lovvalgsperiode-fra");
+  });
+
+  it("beholder fet formatering på verdien ved kandidatbytte", () => {
+    const quill = medUtfyltVerdi(medKandidater);
+    quill.formatText(4, "01.03.2024".length, "bold", true);
+
+    settInnValg(quill, valgTreffFor(quill, "span.placeholder-utfylt", medKandidater), "01.01.2023", { current: null });
+
+    expect(quill.getText()).toBe("Fra 01.01.2023.\n");
+    expect(quill.getFormat(4, "01.01.2023".length)).toMatchObject({
+      bold: true,
+      "placeholder-utfylt": "lovvalgsperiode-fra",
+    });
+  });
+
+  it("gir ingen treff for en utfylt verdi som formatering har delt i to", () => {
+    const quill = medUtfyltVerdi(medKandidater);
+    // Fet på halve verdien splitter markeringen i to spans med samme nøkkel. Et kandidatbytte
+    // på én av dem ville byttet ut halve verdien og latt resten stå igjen.
+    quill.formatText(4, 5, "bold", true);
+
+    const deler = quill.root.querySelectorAll<HTMLElement>("span.placeholder-utfylt");
+    expect(deler).toHaveLength(2);
+    deler.forEach((del) => expect(finnPlaceholderTreff(quill, del, medKandidater)).toBeNull());
   });
 
   it("lar en valgt kandidat beholde markeringen når markeringene ryddes", () => {
