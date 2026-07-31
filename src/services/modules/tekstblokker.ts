@@ -42,12 +42,22 @@ export interface TekstblokkRequest {
 
 const baseUrl = `${API_BASE_URL}${TEKSTBLOKKER}`;
 
+// Et api uten avgrensningsstøtte (under utrulling) utelater feltene. Vi normaliserer her, på
+// api-grensen, slik at alle konsumenter kan regne med lister.
+const medAvgrensning = (blokk: { sakstyper?: string[]; behandlingstemaer?: string[] }) => ({
+  sakstyper: blokk.sakstyper ?? [],
+  behandlingstemaer: blokk.behandlingstemaer ?? [],
+});
+
 export const hentAlle = (type?: TekstblokkType): Promise<TekstblokkOversikt[]> => {
   const url = type ? `${baseUrl}?type=${type}` : baseUrl;
-  return getAsJson(url);
+  return getAsJson(url).then((blokker: TekstblokkOversikt[]) =>
+    blokker.map((blokk) => ({ ...blokk, ...medAvgrensning(blokk) })),
+  );
 };
 
-export const hent = (id: number): Promise<Tekstblokk> => getAsJson(`${baseUrl}/${id}`);
+export const hent = (id: number): Promise<Tekstblokk> =>
+  getAsJson(`${baseUrl}/${id}`).then((blokk: Tekstblokk) => ({ ...blokk, ...medAvgrensning(blokk) }));
 
 export const opprett = (body: TekstblokkRequest): Promise<Tekstblokk> => postAsJson(baseUrl, body);
 
@@ -71,10 +81,9 @@ export const matcherSoek = (blokk: TekstblokkOversikt, soek: string): boolean =>
 };
 
 // Avgrensningen er støyreduksjon, ikke sikkerhet: en tom avgrensning gjelder alle, og en
-// tom kontekstverdi (admin, som ikke står i en sak) filtrerer ingenting bort. Manglende
-// felt (api uten avgrensningsstøtte under utrulling) behandles som tom avgrensning.
-const passerAvgrensning = (avgrensning: string[] | undefined, kontekstverdi?: string): boolean =>
-  !avgrensning?.length || !kontekstverdi || avgrensning.includes(kontekstverdi);
+// tom kontekstverdi (admin, som ikke står i en sak) filtrerer ingenting bort.
+const passerAvgrensning = (avgrensning: string[], kontekstverdi?: string): boolean =>
+  avgrensning.length === 0 || !kontekstverdi || avgrensning.includes(kontekstverdi);
 
 export const gjelderKontekst = (
   blokk: Pick<TekstblokkOversikt, "sakstyper" | "behandlingstemaer">,

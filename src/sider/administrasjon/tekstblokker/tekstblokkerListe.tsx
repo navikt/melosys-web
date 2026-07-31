@@ -30,6 +30,7 @@ function TekstblokkerListe({ blokker, utvidedeIder, onToggleUtvidet, onRediger, 
           <Nav.Table.HeaderCell scope="col" aria-label="Utvid" />
           <Nav.Table.HeaderCell scope="col">Tittel</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Tags</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell scope="col">Gjelder</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Sist endret</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Av</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col" aria-label="Handlinger" />
@@ -83,8 +84,11 @@ function TekstblokkerListeRad({ blokk, utvidet, onToggleUtvidet, onRediger, onSl
               {tag}
             </Nav.Tag>
           ))}
-          {/* Avgrensningen vises ved siden av tagene, men aldri sammenblandet med dem.
-              Ingen merker = gjelder alle. */}
+        </div>
+      </Nav.Table.DataCell>
+      {/* Avgrensningen står i egen kolonne, ikke skilt fra tagene på farge alene (WCAG 1.4.1). */}
+      <Nav.Table.DataCell>
+        <div className="tekstblokker__rad-tags">
           {blokk.sakstyper.map((kode) => (
             <Nav.Tag key={`sakstype-${kode}`} size="xsmall" variant="info">
               {termForSakstype(kode)}
@@ -95,6 +99,11 @@ function TekstblokkerListeRad({ blokk, utvidet, onToggleUtvidet, onRediger, onSl
               {termForBehandlingstema(kode)}
             </Nav.Tag>
           ))}
+          {blokk.sakstyper.length === 0 && blokk.behandlingstemaer.length === 0 && (
+            <Nav.BodyShort size="small" textColor="subtle">
+              Alle
+            </Nav.BodyShort>
+          )}
         </div>
       </Nav.Table.DataCell>
       <Nav.Table.DataCell>{formatterDatoTilNorsk(blokk.endretDato, true)}</Nav.Table.DataCell>
