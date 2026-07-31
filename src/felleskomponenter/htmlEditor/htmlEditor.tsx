@@ -12,10 +12,12 @@ import "./htmlEditor.less";
 import {
   EDITOR_FORMATS,
   fjernUgyldigeUtfylteMarkeringer,
+  fjernUgyldigeValgteMarkeringer,
   forberedTekstblokkHtml,
   markerUerstattedeOmrader,
   PLACEHOLDER_FORMATS,
 } from "./placeholderMarkering";
+import { usePlaceholderValg } from "./placeholderValg";
 import TekstblokkSoek from "./tekstblokkSoek";
 
 // Registrerer egendefinert blot for tekst i klammer
@@ -151,6 +153,13 @@ function HtmlEditor({
   const markeringAktivRef = useRef(markeringAktiv);
   const placeholderVerdierRef = useRef(placeholderVerdier);
   const gyldigeNoklerRef = useRef(gyldigeNokler);
+
+  const { valgPopover } = usePlaceholderValg({
+    quillRef,
+    sisteMarkering: lastSelectionRef,
+    aktiv: markeringAktiv && !disabled,
+    editorNokkel: String(placeholderFormatsAktive),
+  });
 
   useEffect(() => {
     markeringAktivRef.current = markeringAktiv;
@@ -308,6 +317,7 @@ function HtmlEditor({
 
         if (markeringAktivRef.current) {
           fjernUgyldigeUtfylteMarkeringer(quill, placeholderVerdierRef.current);
+          fjernUgyldigeValgteMarkeringer(quill);
           markerUerstattedeOmrader(quill, gyldigeNoklerRef.current);
         }
       } finally {
@@ -479,6 +489,7 @@ function HtmlEditor({
           // <ul>, men sanitizeren i melosys-api og listestylingen i dokgen krever data-list.
           useSemanticHTML={false}
         />
+        {valgPopover}
       </div>
       {feil && (
         // TODO Bruk av ExclamationmarkTriangleFillIcon from "@navikt/aksel-icons" ser ikke bra ut her, trolig pga

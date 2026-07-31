@@ -3,10 +3,14 @@ import { Quill } from "react-quill-new";
 import {
   erstattPlaceholdere,
   erUkjentPlaceholder,
+  erValgToken,
   fjernMarkeringsSpans,
+  parseValgAlternativer,
   PLACEHOLDER_UERSTATTET_TITTEL,
   PLACEHOLDER_UKJENT_TITTEL,
   PLACEHOLDER_UTFYLT_TITTEL,
+  PLACEHOLDER_VALG_TITTEL,
+  PLACEHOLDER_VALGT_TITTEL,
   PlaceholderVerdi,
 } from "../../services/modules/placeholdere";
 
@@ -28,7 +32,13 @@ export const EDITOR_FORMATS = [
 
 // Legges til kun når dynamisk placeholder-toggle er på. Er de med uansett, overlever
 // markeringene i innlimt/lagret innhold en rollback av togglen.
-export const PLACEHOLDER_FORMATS = ["placeholder-utfylt", "placeholder-uerstattet", "placeholder-ukjent"];
+export const PLACEHOLDER_FORMATS = [
+  "placeholder-utfylt",
+  "placeholder-uerstattet",
+  "placeholder-ukjent",
+  "placeholder-valg",
+  "placeholder-valgt",
+];
 
 // Markerer utfylte placeholder-verdier. Deler tagName med BracketBlot, så className er
 // nødvendig for at Parchment skal skille dem. Nøkkelen bæres i data-attributtet slik at
@@ -99,6 +109,52 @@ export class PlaceholderUkjentBlot extends Inline {
 
 Quill.register("formats/placeholder-ukjent", PlaceholderUkjentBlot);
 
+// Markerer et uvalgt {velg:A|B|C}. Boolsk som blotene over: alternativene står i
+// klammeteksten, så markeringen utledes på nytt ved hver endring.
+export class PlaceholderValgBlot extends Inline {
+  static blotName = "placeholder-valg";
+
+  static tagName = "span";
+
+  static className = "placeholder-valg";
+
+  static create() {
+    const node = super.create();
+    node.setAttribute("title", PLACEHOLDER_VALG_TITTEL);
+    return node;
+  }
+
+  static formats() {
+    return true;
+  }
+}
+
+Quill.register("formats/placeholder-valg", PlaceholderValgBlot);
+
+// Markerer et innsatt valg. Teksten er det valgte alternativet alene, så markeringen kan
+// ikke utledes av teksten – alternativlisten bæres i data-valg slik at et nytt klikk kan
+// åpne samme valg igjen.
+export class PlaceholderValgtBlot extends Inline {
+  static blotName = "placeholder-valgt";
+
+  static tagName = "span";
+
+  static className = "placeholder-valgt";
+
+  static create(value: string) {
+    const node = super.create();
+    node.setAttribute("data-valg", value);
+    node.setAttribute("title", PLACEHOLDER_VALGT_TITTEL);
+    return node;
+  }
+
+  static formats(node: HTMLElement) {
+    return node.getAttribute("data-valg");
+  }
+}
+
+Quill.register("formats/placeholder-valgt", PlaceholderValgtBlot);
+
 // Utfylte verdier har ingen klammer igjen i teksten og treffes derfor aldri.
 // \n er utelatt fra tegnklassen så en uparet { ikke slår seg sammen med en } lenger
 // nede i teksten og gulfarger alt imellom.
@@ -115,22 +171,30 @@ export const finnUerstattedeOmrader = (tekst: string): Array<{ index: number; le
   return omrader;
 };
 
+// Valgtokenet sjekkes først: «velg:»-prefikset er reservert, så det kan aldri bli rødt.
+const markeringsFormat = (token: string, gyldigeNokler?: string[]): string => {
+  if (erValgToken(token)) return "placeholder-valg";
+  return erUkjentPlaceholder(token, gyldigeNokler) ? "placeholder-ukjent" : "placeholder-uerstattet";
+};
+
 // Strippes og påføres på nytt ved hver endring, siden markeringen utledes av teksten.
 // Med gyldigeNokler skilles ukjente nøkler (rødt) fra gyldige uten verdi (gult).
+// placeholder-valgt er ikke med: den bæres av formatet, ikke av teksten.
 export const markerUerstattedeOmrader = (quill: Quill, gyldigeNokler?: string[]) => {
   const tekst = quill.getText();
   const kanHaTreff = tekst.includes("{") && tekst.includes("}");
   // Klammefri tekst kan fortsatt ha markering igjen – f.eks. når brukeren nettopp slettet
   // klammene rundt en gulmarkert nøkkel – og den må strippes.
-  if (!kanHaTreff && !quill.root.querySelector(".placeholder-uerstattet, .placeholder-ukjent")) return;
+  if (!kanHaTreff && !quill.root.querySelector(".placeholder-uerstattet, .placeholder-ukjent, .placeholder-valg"))
+    return;
 
   quill.formatText(0, tekst.length, "placeholder-uerstattet", false);
   quill.formatText(0, tekst.length, "placeholder-ukjent", false);
+  quill.formatText(0, tekst.length, "placeholder-valg", false);
   if (!kanHaTreff) return;
 
   finnUerstattedeOmrader(tekst).forEach(({ index, length }) => {
-    const token = tekst.slice(index, index + length);
-    const format = erUkjentPlaceholder(token, gyldigeNokler) ? "placeholder-ukjent" : "placeholder-uerstattet";
+    const format = markeringsFormat(tekst.slice(index, index + length), gyldigeNokler);
     quill.formatText(index, length, format, true);
   });
 };
@@ -157,6 +221,23 @@ export const fjernUgyldigeUtfylteMarkeringer = (quill: Quill, verdier?: Placehol
   });
 
   ugyldige.forEach(({ index, length }) => quill.formatText(index, length, "placeholder-utfylt", false));
+};
+
+// Samme «rediger = overstyr» for innsatte valg: står ikke spanteksten lenger blant
+// alternativene i data-valg, har brukeren skrevet i den og markeringen skal bort.
+export const fjernUgyldigeValgteMarkeringer = (quill: Quill) => {
+  const ugyldige: Array<{ index: number; length: number }> = [];
+
+  quill.root.querySelectorAll<HTMLElement>("span.placeholder-valgt[data-valg]").forEach((node) => {
+    const alternativer = parseValgAlternativer(node.getAttribute("data-valg") ?? "");
+    if (alternativer.includes(node.textContent ?? "")) return;
+
+    const blot = Quill.find(node);
+    if (!blot || blot instanceof Quill) return;
+    ugyldige.push({ index: quill.getIndex(blot), length: blot.length() });
+  });
+
+  ugyldige.forEach(({ index, length }) => quill.formatText(index, length, "placeholder-valgt", false));
 };
 
 // HTML-en som går til dangerouslyPasteHTML ved innsetting av tekstblokk. Markeringer som

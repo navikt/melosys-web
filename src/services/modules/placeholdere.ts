@@ -37,17 +37,56 @@ export const PLACEHOLDER_UERSTATTET_TITTEL =
 
 export const PLACEHOLDER_UKJENT_TITTEL = "Ikke en gyldig placeholder – se katalogen over tilgjengelige placeholdere";
 
+export const PLACEHOLDER_VALG_TITTEL = "Klikk for å velge mellom alternativene";
+
+export const PLACEHOLDER_VALGT_TITTEL = "Klikk for å endre valget";
+
 // Nøkkelen inni {…}. Trimmes så «{ saksnummer }» ikke blir feilklassifisert som ukjent.
 const nokkelFraToken = (token: string): string => token.slice(1, -1).trim();
+
+const VALG_PREFIKS = "{velg:";
+
+// «velg:» er et reservert prefiks; nøkkelmønsteret tillater ikke kolon, så et valgtoken
+// kolliderer aldri med en katalognøkkel.
+const VALG_TOKEN_MONSTER = /^\{velg:[^{}<>\n]+\}$/;
+
+// Alternativene i «A|B|C» – både fra tokenteksten og fra data-valg på et innsatt valg.
+// Ett alternativ er ikke et valg, så da regnes strengen som ugyldig og gir tom liste.
+export const parseValgAlternativer = (alternativStreng: string): string[] => {
+  const alternativer = alternativStreng
+    .split("|")
+    .map((alternativ) => alternativ.trim())
+    .filter(Boolean);
+  return alternativer.length >= 2 ? alternativer : [];
+};
+
+// Valgtoken: {velg:A|B|C}. Ugyldig innhold gir null, og tokenet klassifiseres da som
+// en vanlig (ukjent) nøkkel i stedet.
+export const parseValgToken = (token: string): { alternativer: string[] } | null => {
+  if (!VALG_TOKEN_MONSTER.test(token)) return null;
+  const alternativer = parseValgAlternativer(token.slice(VALG_PREFIKS.length, -1));
+  return alternativer.length > 0 ? { alternativer } : null;
+};
+
+export const erValgToken = (token: string): boolean => parseValgToken(token) !== null;
 
 // Skiller gyldig-men-uten-verdi (gult) fra nøkkel som ikke finnes i katalogen (rødt).
 // Uten liste – katalogen er ikke lastet, feilet eller er tom – kan vi ikke avgjøre
 // gyldighet, og alt markeres gult som før.
-export const erUkjentPlaceholder = (token: string, gyldigeNokler?: string[]): boolean =>
-  Boolean(gyldigeNokler?.length) && !gyldigeNokler?.includes(nokkelFraToken(token));
+export const erUkjentPlaceholder = (token: string, gyldigeNokler?: string[]): boolean => {
+  // Valgtokener slås aldri opp i katalogen – de skal ikke kunne bli røde.
+  if (erValgToken(token)) return false;
+  return Boolean(gyldigeNokler?.length) && !gyldigeNokler?.includes(nokkelFraToken(token));
+};
 
 // Må speile MARKERINGSKLASSER i melosys-api service/.../tekstblokk/TekstblokkHtmlSanitizer.kt
-export const PLACEHOLDER_MARKERINGSKLASSER = ["placeholder-uerstattet", "placeholder-ukjent", "placeholder-utfylt"];
+export const PLACEHOLDER_MARKERINGSKLASSER = [
+  "placeholder-uerstattet",
+  "placeholder-ukjent",
+  "placeholder-utfylt",
+  "placeholder-valg",
+  "placeholder-valgt",
+];
 
 // bracketed-text er bevisst web-only – api-et pakker aldri ut klamme-spans, siden det ville
 // endret innhold fra master-æraen ved lagring med togglen av.
@@ -78,6 +117,8 @@ export const erstattPlaceholdere = (html: string, verdier: PlaceholderVerdi[]): 
   if (verdier.length === 0) return html;
   const verdiForNokkel = new Map(verdier.map(({ nokkel, verdi }) => [nokkel, verdi]));
   return html.replace(/\{[^{}<>]+\}/g, (token) => {
+    // Valgtokener har ingen saksverdi – de erstattes av brukerens valg i editoren.
+    if (erValgToken(token)) return token;
     // Samme trimmede nøkkel som erUkjentPlaceholder, ellers blir «{ saksnummer }» aldri erstattet.
     const nokkel = nokkelFraToken(token);
     const verdi = verdiForNokkel.get(nokkel);

@@ -1,4 +1,4 @@
-import { render, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import { useState } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -87,5 +87,64 @@ describe("HtmlEditor", () => {
     const container = renderEditor("<p>Hei {saksnummer}</p>", { placeholderVerdier: [] });
 
     await waitFor(() => expect(container.querySelector(".placeholder-uerstattet")?.textContent).toBe("{saksnummer}"));
+  });
+});
+
+const klikk = (node: Element) => act(() => void node.dispatchEvent(new MouseEvent("click", { bubbles: true })));
+
+// Klikk-lytteren ligger som delegering på quill.root, så et boblende MouseEvent på selve
+// markeringen er akkurat det brukerens klikk gir.
+describe("HtmlEditor med valgtokener", () => {
+  beforeEach(() => {
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+  });
+
+  const renderMedValg = (props: Partial<EditorProps> = {}) =>
+    renderEditor("<p>Land: {velg:Serbia|Montenegro}</p>", { placeholderVerdier: [], ...props });
+
+  const ventPaaValgmarkering = async (container: HTMLElement) => {
+    await waitFor(() => expect(container.querySelector("span.placeholder-valg")).not.toBeNull());
+    return container.querySelector("span.placeholder-valg") as HTMLElement;
+  };
+
+  it("åpner popover med alternativene når valgtokenet klikkes", async () => {
+    const container = renderMedValg();
+
+    klikk(await ventPaaValgmarkering(container));
+
+    expect(screen.getByRole("button", { name: "Serbia" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Montenegro" })).toBeInTheDocument();
+  });
+
+  it("erstatter tokenet med valgt alternativ", async () => {
+    const container = renderMedValg();
+    klikk(await ventPaaValgmarkering(container));
+
+    klikk(screen.getByRole("button", { name: "Montenegro" }));
+
+    await waitFor(() => expect(container.querySelector("span.placeholder-valgt")?.textContent).toBe("Montenegro"));
+    expect(container.querySelector("span.placeholder-valgt")?.getAttribute("data-valg")).toBe("Serbia|Montenegro");
+    expect(container.querySelector(".ql-editor")?.textContent).not.toContain("{velg:");
+  });
+
+  it("åpner samme valg på nytt ved klikk på det innsatte valget", async () => {
+    const container = renderMedValg();
+    klikk(await ventPaaValgmarkering(container));
+    klikk(screen.getByRole("button", { name: "Montenegro" }));
+    await waitFor(() => expect(container.querySelector("span.placeholder-valgt")).not.toBeNull());
+
+    klikk(container.querySelector("span.placeholder-valgt") as HTMLElement);
+    klikk(screen.getByRole("button", { name: "Serbia" }));
+
+    await waitFor(() => expect(container.querySelector("span.placeholder-valgt")?.textContent).toBe("Serbia"));
+  });
+
+  it("åpner ingen popover uten placeholder-kontekst fra verten", async () => {
+    const container = renderEditor("<p>Land: {velg:Serbia|Montenegro}</p>");
+    await waitFor(() => expect(container.querySelector(".ql-editor")?.textContent).toContain("{velg:"));
+
+    klikk(container.querySelector(".ql-editor") as HTMLElement);
+
+    expect(screen.queryByRole("button", { name: "Serbia" })).not.toBeInTheDocument();
   });
 });

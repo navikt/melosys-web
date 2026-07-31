@@ -7,10 +7,12 @@ import "./htmlEditor";
 import {
   EDITOR_FORMATS,
   fjernUgyldigeUtfylteMarkeringer,
+  fjernUgyldigeValgteMarkeringer,
   forberedTekstblokkHtml,
   markerUerstattedeOmrader,
   PLACEHOLDER_FORMATS,
 } from "./placeholderMarkering";
+import { finnValgTreff, settInnValg } from "./placeholderValg";
 import { PlaceholderVerdi } from "../../services/modules/placeholdere";
 
 // Kjører en ekte Quill 2-instans med produksjonens formats-liste og blots, slik at vi
@@ -18,7 +20,8 @@ import { PlaceholderVerdi } from "../../services/modules/placeholdere";
 const lagEditor = (formats: string[] = [...EDITOR_FORMATS, ...PLACEHOLDER_FORMATS]) => {
   const node = document.createElement("div");
   document.body.appendChild(node);
-  return new Quill(node, { formats });
+  // userOnly speiler produksjonen: kun "user"-endringer havner på angrestakken.
+  return new Quill(node, { formats, modules: { history: { userOnly: true } } });
 };
 
 const verdier: PlaceholderVerdi[] = [{ nokkel: "saksnummer", verdi: "2024/123456" }];
@@ -189,5 +192,119 @@ describe("HtmlEditor med ekte Quill", () => {
     expect(quill.root.querySelector(".placeholder-utfylt")?.textContent).toBe("2024/123456");
     expect(quill.root.querySelector(".placeholder-uerstattet")).toBeNull();
     expect(quill.getText()).toContain("[dato]");
+  });
+});
+
+// Treffet finnes normalt fra et klikk-event; her hentes det direkte fra markeringen.
+const valgTreffFor = (quill: Quill, velger: string) => {
+  const treff = finnValgTreff(quill, quill.root.querySelector(velger));
+  if (!treff) throw new Error(`Fant ingen valgtreff for ${velger}`);
+  return treff;
+};
+
+const medValgtAlternativ = (tekst: string, alternativ: string) => {
+  const quill = lagEditor();
+  quill.setText(tekst);
+  markerUerstattedeOmrader(quill);
+  settInnValg(quill, valgTreffFor(quill, "span.placeholder-valg"), alternativ, { current: null });
+  return quill;
+};
+
+describe("Valgmekanikk i Quill", () => {
+  it("markerer valgtoken som valg og ikke som ukjent nøkkel", () => {
+    const quill = lagEditor();
+    quill.setText("Land: {velg:Serbia|Montenegro} og {sksnummer}\n");
+
+    markerUerstattedeOmrader(quill, ["saksnummer"]);
+
+    expect(quill.root.querySelector(".placeholder-valg")?.textContent).toBe("{velg:Serbia|Montenegro}");
+    expect(quill.root.querySelector(".placeholder-valg")?.getAttribute("title")).toContain("Klikk for å velge");
+    expect(quill.root.querySelector(".placeholder-ukjent")?.textContent).toBe("{sksnummer}");
+  });
+
+  it("markerer valgtoken med for få alternativer som vanlig nøkkel", () => {
+    const quill = lagEditor();
+    quill.setText("{velg:Bare denne}\n");
+
+    markerUerstattedeOmrader(quill, ["saksnummer"]);
+
+    expect(quill.root.querySelector(".placeholder-valg")).toBeNull();
+    expect(quill.root.querySelector(".placeholder-ukjent")?.textContent).toBe("{velg:Bare denne}");
+  });
+
+  it("erstatter tokenet med valgt alternativ og tar vare på alternativlisten", () => {
+    const quill = medValgtAlternativ("Land: {velg:Serbia|Montenegro}\n", "Montenegro");
+
+    expect(quill.getText()).toBe("Land: Montenegro\n");
+    const span = quill.root.querySelector("span.placeholder-valgt");
+    expect(span?.textContent).toBe("Montenegro");
+    expect(span?.getAttribute("data-valg")).toBe("Serbia|Montenegro");
+    expect(span?.getAttribute("title")).toContain("Klikk for å endre");
+  });
+
+  it("speiler markeringen bak det innsatte valget", () => {
+    const quill = lagEditor();
+    quill.setText("Land: {velg:Serbia|Montenegro}\n");
+    markerUerstattedeOmrader(quill);
+    const sisteMarkering: { current: { index: number; length: number } | null } = { current: null };
+
+    settInnValg(quill, valgTreffFor(quill, "span.placeholder-valg"), "Montenegro", sisteMarkering);
+
+    expect(sisteMarkering.current).toEqual({ index: "Land: Montenegro".length, length: 0 });
+  });
+
+  it("legger hele valget på angrestakken i ett steg", () => {
+    const quill = medValgtAlternativ("Land: {velg:Serbia|Montenegro}\n", "Montenegro");
+
+    quill.history.undo();
+
+    expect(quill.getText()).toBe("Land: {velg:Serbia|Montenegro}\n");
+  });
+
+  it("leser alternativene fra data-valg ved omvalg", () => {
+    const quill = medValgtAlternativ("Land: {velg:Serbia|Montenegro}\n", "Montenegro");
+
+    const omvalg = valgTreffFor(quill, "span.placeholder-valgt");
+    expect(omvalg.alternativer).toEqual(["Serbia", "Montenegro"]);
+    expect(omvalg.valgt).toBe("Montenegro");
+
+    settInnValg(quill, omvalg, "Serbia", { current: null });
+
+    expect(quill.getText()).toBe("Land: Serbia\n");
+    expect(quill.root.querySelector("span.placeholder-valgt")?.getAttribute("data-valg")).toBe("Serbia|Montenegro");
+  });
+
+  it("beholder det innsatte valget når markeringene påføres på nytt", () => {
+    const quill = medValgtAlternativ("Land: {velg:Serbia|Montenegro}\n", "Montenegro");
+
+    markerUerstattedeOmrader(quill);
+
+    expect(quill.root.querySelector("span.placeholder-valgt")?.textContent).toBe("Montenegro");
+  });
+
+  it("fjerner valgt-markeringen når det skrives inni det valgte alternativet", () => {
+    const quill = medValgtAlternativ("Land: {velg:Serbia|Montenegro}\n", "Montenegro");
+
+    quill.insertText(8, "X");
+    fjernUgyldigeValgteMarkeringer(quill);
+
+    expect(quill.getText()).toContain("MoXntenegro");
+    expect(quill.root.querySelector("span.placeholder-valgt")).toBeNull();
+  });
+
+  it("lar et urørt valg beholde markeringen", () => {
+    const quill = medValgtAlternativ("Land: {velg:Serbia|Montenegro}\n", "Montenegro");
+
+    fjernUgyldigeValgteMarkeringer(quill);
+
+    expect(quill.root.querySelector("span.placeholder-valgt")?.textContent).toBe("Montenegro");
+  });
+
+  it("gir ingen treff for klikk utenfor en valgmarkering", () => {
+    const quill = lagEditor();
+    quill.setText("Land: {velg:Serbia|Montenegro}\n");
+    markerUerstattedeOmrader(quill);
+
+    expect(finnValgTreff(quill, quill.root)).toBeNull();
   });
 });

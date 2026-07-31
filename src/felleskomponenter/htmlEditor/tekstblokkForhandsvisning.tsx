@@ -4,10 +4,12 @@ import { useMemo } from "react";
 import {
   erstattPlaceholdere,
   erUkjentPlaceholder,
+  erValgToken,
   fjernMarkeringsSpans,
   PLACEHOLDER_MARKERINGSKLASSER,
   PLACEHOLDER_UERSTATTET_TITTEL,
   PLACEHOLDER_UKJENT_TITTEL,
+  PLACEHOLDER_VALG_TITTEL,
   PlaceholderVerdi,
 } from "../../services/modules/placeholdere";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
@@ -32,11 +34,18 @@ const uthevKlammer = (html: string): string =>
     treff.startsWith("[") ? `<span class="bracketed-text">${treff}</span>` : treff,
   );
 
+// Samme trevegs-klassifisering som editoren, men uten klikk: forhåndsvisningen viser bare
+// at tokenet er et valg.
+const markeringFor = (token: string, gyldigeNokler?: string[]): { klasse: string; tittel: string } => {
+  if (erValgToken(token)) return { klasse: "placeholder-valg", tittel: PLACEHOLDER_VALG_TITTEL };
+  if (erUkjentPlaceholder(token, gyldigeNokler))
+    return { klasse: "placeholder-ukjent", tittel: PLACEHOLDER_UKJENT_TITTEL };
+  return { klasse: "placeholder-uerstattet", tittel: PLACEHOLDER_UERSTATTET_TITTEL };
+};
+
 const uthevPlaceholders = (html: string, gyldigeNokler?: string[]): string =>
   html.replace(/\{[^{}<>\n]+\}/g, (token) => {
-    const ukjent = erUkjentPlaceholder(token, gyldigeNokler);
-    const klasse = ukjent ? "placeholder-ukjent" : "placeholder-uerstattet";
-    const tittel = ukjent ? PLACEHOLDER_UKJENT_TITTEL : PLACEHOLDER_UERSTATTET_TITTEL;
+    const { klasse, tittel } = markeringFor(token, gyldigeNokler);
     return `<span class="${klasse}" title="${tittel}">${token}</span>`;
   });
 
