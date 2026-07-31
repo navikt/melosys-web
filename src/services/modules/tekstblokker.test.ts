@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   erTagValgt,
+  gjelderKontekst,
   harAlleTags,
   leggTilTag,
   matcherSoek,
@@ -11,12 +12,22 @@ import {
   toggleITagliste,
 } from "./tekstblokker";
 
-const blokk = (tittel: string, tags: string[], innhold = ""): TekstblokkOversikt => ({
+type Kontekstavgrensning = Pick<TekstblokkOversikt, "sakstyper" | "behandlingstemaer">;
+
+const blokk = (
+  tittel: string,
+  tags: string[],
+  innhold = "",
+  avgrensning: Partial<Kontekstavgrensning> = {},
+): TekstblokkOversikt => ({
   id: 1,
   tittel,
   innhold,
   type: "TEKSTBLOKK",
   tags,
+  sakstyper: [],
+  behandlingstemaer: [],
+  ...avgrensning,
   endretDato: "2026-01-01T00:00:00Z",
   endretAv: "Z123456",
   endretAvNavn: null,
@@ -136,6 +147,55 @@ describe("harAlleTags", () => {
 
   it("blokk uten tags matcher ingen valgte tags", () => {
     expect(harAlleTags(blokk("Uten tags", []), ["skip"])).toBe(false);
+  });
+});
+
+describe("gjelderKontekst", () => {
+  const uavgrenset: Kontekstavgrensning = { sakstyper: [], behandlingstemaer: [] };
+  const kunEuEos: Kontekstavgrensning = { sakstyper: ["EU_EOS"], behandlingstemaer: [] };
+  const kunUtsendt: Kontekstavgrensning = { sakstyper: [], behandlingstemaer: ["UTSENDT_ARBEIDSTAKER"] };
+  const begge: Kontekstavgrensning = { sakstyper: ["EU_EOS"], behandlingstemaer: ["UTSENDT_ARBEIDSTAKER"] };
+
+  it("uavgrenset blokk gjelder alltid", () => {
+    expect(gjelderKontekst(uavgrenset, "EU_EOS", "UTSENDT_ARBEIDSTAKER")).toBe(true);
+    expect(gjelderKontekst(uavgrenset, "FTRL", "PENSJONIST")).toBe(true);
+    expect(gjelderKontekst(uavgrenset)).toBe(true);
+  });
+
+  it("tom kontekst filtrerer ingenting bort (admin uten sak)", () => {
+    expect(gjelderKontekst(begge)).toBe(true);
+    expect(gjelderKontekst(begge, "", "")).toBe(true);
+  });
+
+  it("avgrensning på sakstype treffer kun sin sakstype", () => {
+    expect(gjelderKontekst(kunEuEos, "EU_EOS", "PENSJONIST")).toBe(true);
+    expect(gjelderKontekst(kunEuEos, "FTRL", "PENSJONIST")).toBe(false);
+  });
+
+  it("avgrensning på behandlingstema treffer kun sitt behandlingstema", () => {
+    expect(gjelderKontekst(kunUtsendt, "FTRL", "UTSENDT_ARBEIDSTAKER")).toBe(true);
+    expect(gjelderKontekst(kunUtsendt, "FTRL", "PENSJONIST")).toBe(false);
+  });
+
+  it("begge avgrensningene må passere samtidig", () => {
+    expect(gjelderKontekst(begge, "EU_EOS", "UTSENDT_ARBEIDSTAKER")).toBe(true);
+    expect(gjelderKontekst(begge, "EU_EOS", "PENSJONIST")).toBe(false);
+    expect(gjelderKontekst(begge, "FTRL", "UTSENDT_ARBEIDSTAKER")).toBe(false);
+    expect(gjelderKontekst(begge, "FTRL", "PENSJONIST")).toBe(false);
+  });
+
+  it("en avgrensning ignoreres når den andre delen av konteksten mangler", () => {
+    expect(gjelderKontekst(begge, "EU_EOS")).toBe(true);
+    expect(gjelderKontekst(begge, "FTRL")).toBe(false);
+    expect(gjelderKontekst(begge, "", "UTSENDT_ARBEIDSTAKER")).toBe(true);
+    expect(gjelderKontekst(begge, "", "PENSJONIST")).toBe(false);
+  });
+
+  it("flere verdier i avgrensningen virker som ELLER", () => {
+    const flere: Kontekstavgrensning = { sakstyper: ["EU_EOS", "TRYGDEAVTALE"], behandlingstemaer: [] };
+    expect(gjelderKontekst(flere, "EU_EOS")).toBe(true);
+    expect(gjelderKontekst(flere, "TRYGDEAVTALE")).toBe(true);
+    expect(gjelderKontekst(flere, "FTRL")).toBe(false);
   });
 });
 
