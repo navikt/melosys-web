@@ -11,7 +11,7 @@ import { begrensAntallTegn } from "../../../utils/normalisering";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 import "./brevFelt.less";
 import { SendBrevFormValues, SyncErrors } from "./types";
-import { PlaceholderVerdi } from "../../../services/modules/placeholdere";
+import { Betingelse, PlaceholderVerdi } from "../../../services/modules/placeholdere";
 import { hentFeltFeilmelding, vurderPåkrevdOgMangler } from "./sendBrevSchema";
 import { unwrapMelding } from "../../skjema/utils";
 
@@ -22,9 +22,18 @@ interface BrevFeltProps {
   redigerbart: boolean;
   placeholderVerdier?: PlaceholderVerdi[];
   gyldigeNokler?: string[];
+  betingelser?: Betingelse[];
 }
 
-function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart, placeholderVerdier, gyldigeNokler }: BrevFeltProps) {
+function BrevFelt({
+  felt,
+  visFeltBeskrivelse,
+  width,
+  redigerbart,
+  placeholderVerdier,
+  gyldigeNokler,
+  betingelser,
+}: BrevFeltProps) {
   const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state)) as
     | SyncErrors
     | undefined;
@@ -76,6 +85,7 @@ function BrevFelt({ felt, visFeltBeskrivelse, width, redigerbart, placeholderVer
             suppressMetaError={!formValues?.showFieldErrors}
             placeholderVerdier={placeholderVerdier}
             gyldigeNokler={gyldigeNokler}
+            betingelser={betingelser}
           />
         </>
       );

@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   finnUerstattedeOmrader,
   forberedTekstblokkHtml,
+  PlaceholderBetingelseBlot,
   PlaceholderBlot,
   PlaceholderUerstattetBlot,
   PlaceholderUkjentBlot,
@@ -24,6 +25,38 @@ describe("forberedTekstblokkHtml", () => {
   it("lar HTML-en stå urørt uten verdier (toggle av / manglende data)", () => {
     const html = "<p>Saken {saksnummer} er mottatt.</p>";
     expect(forberedTekstblokkHtml(html, undefined)).toBe(html);
+  });
+
+  it("løser betingelsen før verdiene, så en fjernet gren aldri får innsatte verdier", () => {
+    const html = "<p>{#hvis avslag}</p><p>Saken {saksnummer}</p><p>{/hvis}</p><p>Slutt</p>";
+
+    const resultat = forberedTekstblokkHtml(html, verdier, [{ nokkel: "avslag", oppfylt: false }]);
+
+    expect(resultat).toBe("<p>Slutt</p>");
+    expect(resultat).not.toContain("2024/123456");
+  });
+
+  it("beholder tokenene når betingelsene mangler (admin/saksflyt)", () => {
+    const html = "<p>{#hvis avslag}</p><p>Betinget</p><p>{/hvis}</p>";
+    expect(forberedTekstblokkHtml(html, undefined, undefined)).toBe(html);
+  });
+});
+
+describe("PlaceholderBetingelseBlot", () => {
+  it("create setter klassen", () => {
+    const node = PlaceholderBetingelseBlot.create() as HTMLElement;
+    expect(node.tagName).toBe("SPAN");
+    expect(node.classList.contains("placeholder-betingelse")).toBe(true);
+  });
+
+  it("create setter tooltip som forklarer når innholdet vises", () => {
+    const node = PlaceholderBetingelseBlot.create() as HTMLElement;
+    expect(node.getAttribute("title")).toContain("Vises bare når betingelsen er oppfylt");
+    expect(node.getAttribute("title")).toContain("Send brev");
+  });
+
+  it("formats returnerer true – markeringen utledes av tokenteksten", () => {
+    expect(PlaceholderBetingelseBlot.formats()).toBe(true);
   });
 });
 

@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 
 import PlaceholderKatalog from "./placeholderKatalog";
 import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
-import { usePlaceholderKatalog } from "../../../services/api/placeholdere";
+import { useBetingelseKatalog, usePlaceholderKatalog } from "../../../services/api/placeholdere";
 
 vi.mock("../../../featuretoggle/useFeatureToggle", () => ({
   default: vi.fn(),
@@ -11,6 +11,7 @@ vi.mock("../../../featuretoggle/useFeatureToggle", () => ({
 
 vi.mock("../../../services/api/placeholdere", () => ({
   usePlaceholderKatalog: vi.fn(),
+  useBetingelseKatalog: vi.fn(),
 }));
 
 const katalog = [
@@ -23,11 +24,23 @@ const katalog = [
   },
 ];
 
+const betingelser = [
+  {
+    nokkel: "delvis-innvilgelse",
+    visningsnavn: "Delvis innvilgelse",
+    beskrivelse: "Utlandet godtok avtalen delvis",
+    sakstyper: ["FTRL"],
+  },
+];
+
 const mockKatalog = (verdi: object) => vi.mocked(usePlaceholderKatalog).mockReturnValue(verdi as any);
+
+const mockBetingelser = (data: object[]) => vi.mocked(useBetingelseKatalog).mockReturnValue({ data } as any);
 
 describe("PlaceholderKatalog", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockBetingelser([]);
   });
 
   it("viser visningsnavn, nøkkel og eksempel når togglen er på", () => {
@@ -49,6 +62,39 @@ describe("PlaceholderKatalog", () => {
     render(<PlaceholderKatalog />);
 
     expect(screen.getByText(/\{velg:Alternativ A\|Alternativ B\}/)).toBeDefined();
+  });
+
+  it("viser betingelsesseksjonen med nøkkel, visningsnavn og beskrivelse", () => {
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+    mockKatalog({ data: katalog, error: null });
+    mockBetingelser(betingelser);
+
+    render(<PlaceholderKatalog />);
+
+    expect(screen.getByText("Betingelser")).toBeDefined();
+    expect(screen.getByText("Delvis innvilgelse")).toBeDefined();
+    expect(screen.getByText("{#hvis delvis-innvilgelse}")).toBeDefined();
+    expect(screen.getByText("Utlandet godtok avtalen delvis")).toBeDefined();
+  });
+
+  it("forklarer hvis-syntaksen i betingelsesseksjonen", () => {
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+    mockKatalog({ data: katalog, error: null });
+    mockBetingelser(betingelser);
+
+    render(<PlaceholderKatalog />);
+
+    expect(screen.getByText(/\{#hvis nokkel\}/)).toBeDefined();
+    expect(screen.getByText(/\{\/hvis\}/)).toBeDefined();
+  });
+
+  it("skjuler betingelsesseksjonen når api-et ikke leverer betingelser", () => {
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+    mockKatalog({ data: katalog, error: null });
+
+    render(<PlaceholderKatalog />);
+
+    expect(screen.queryByText("Betingelser")).toBeNull();
   });
 
   it("rendrer ingenting når togglen er av", () => {

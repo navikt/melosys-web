@@ -1,10 +1,10 @@
-import { BodyShort, ReadMore } from "@navikt/ds-react";
+import { BodyShort, Heading, ReadMore } from "@navikt/ds-react";
 
 import * as Nav from "../../../navFrontend";
 import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggle/toggleNavn";
-import { usePlaceholderKatalog } from "../../../services/api/placeholdere";
-import { PlaceholderBeskrivelse } from "../../../services/modules/placeholdere";
+import { useBetingelseKatalog, usePlaceholderKatalog } from "../../../services/api/placeholdere";
+import { BetingelseBeskrivelse, PlaceholderBeskrivelse } from "../../../services/modules/placeholdere";
 
 interface Props {
   placeholdere: PlaceholderBeskrivelse[];
@@ -48,6 +48,42 @@ export function PlaceholderValgHjelpetekst() {
   );
 }
 
+// Betingelsene har ingen eksempelverdi – de styrer om innholdet tas med, ikke hva som vises.
+export function BetingelseKatalogTabell({ betingelser }: { betingelser: BetingelseBeskrivelse[] }) {
+  return (
+    <Nav.Table className="tekstblokker__placeholder-tabell">
+      <Nav.Table.Header>
+        <Nav.Table.Row>
+          <Nav.Table.HeaderCell scope="col">Navn</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell scope="col">Nøkkel</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell scope="col">Beskrivelse</Nav.Table.HeaderCell>
+        </Nav.Table.Row>
+      </Nav.Table.Header>
+      <Nav.Table.Body>
+        {betingelser.map(({ nokkel, visningsnavn, beskrivelse }) => (
+          <Nav.Table.Row key={nokkel}>
+            <Nav.Table.DataCell>{visningsnavn}</Nav.Table.DataCell>
+            <Nav.Table.DataCell>
+              <code className="tekstblokker__placeholder-nokkel">{`{#hvis ${nokkel}}`}</code>
+            </Nav.Table.DataCell>
+            <Nav.Table.DataCell>{beskrivelse}</Nav.Table.DataCell>
+          </Nav.Table.Row>
+        ))}
+      </Nav.Table.Body>
+    </Nav.Table>
+  );
+}
+
+export function PlaceholderBetingelseHjelpetekst() {
+  return (
+    <BodyShort spacing size="small">
+      Betinget innhold skrives {"{#hvis nokkel}"} … {"{/hvis}"} – innholdet mellom tokenene blir bare med når
+      betingelsen er oppfylt. Står tokenene i hvert sitt avsnitt, styrer de hele avsnitt; står de i samme avsnitt,
+      styrer de teksten imellom.
+    </BodyShort>
+  );
+}
+
 function PlaceholderKatalog() {
   const togglePaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER);
   if (!togglePaa) return null;
@@ -56,6 +92,8 @@ function PlaceholderKatalog() {
 
 function PlaceholderKatalogInnhold() {
   const { data: placeholdere = [], error } = usePlaceholderKatalog();
+  // Eldre api uten betingelser gir tom liste, og seksjonen uteblir.
+  const { data: betingelser = [] } = useBetingelseKatalog();
 
   // Hjelpevisning: feiler hentingen, eller er katalogen tom, skjuler vi seksjonen stille.
   if (error || placeholdere.length === 0) return null;
@@ -69,6 +107,15 @@ function PlaceholderKatalogInnhold() {
         </BodyShort>
         <PlaceholderValgHjelpetekst />
         <PlaceholderKatalogTabell placeholdere={placeholdere} />
+        {betingelser.length > 0 && (
+          <>
+            <Heading size="xsmall" level="3" spacing>
+              Betingelser
+            </Heading>
+            <PlaceholderBetingelseHjelpetekst />
+            <BetingelseKatalogTabell betingelser={betingelser} />
+          </>
+        )}
       </ReadMore>
     </div>
   );
