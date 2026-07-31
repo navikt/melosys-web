@@ -60,6 +60,8 @@ vi.mock("../../../services/modules/placeholdere", async () => ({
 vi.mock("../../../services/api/placeholdere", () => ({
   usePlaceholderVerdier: () => ({ data: undefined }),
   usePlaceholderKatalog: () => ({ data: [{ nokkel: "saksnummer", visningsnavn: "Saksnummer" }] }),
+  useBetingelseVerdier: () => ({ data: [] }),
+  useBetingelseKatalog: () => ({ data: [] }),
 }));
 
 // Malene får uuid tildelt ved henting; en fast uuid lar skjemaverdiene peke på riktig mal.

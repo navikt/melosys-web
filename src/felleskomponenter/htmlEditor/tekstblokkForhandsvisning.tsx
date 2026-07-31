@@ -2,10 +2,14 @@ import classNames from "classnames";
 import { useMemo } from "react";
 
 import {
+  Betingelse,
+  erBetingelsesToken,
   erstattPlaceholdere,
   erUkjentPlaceholder,
   erValgToken,
   fjernMarkeringsSpans,
+  losOppBetingelser,
+  PLACEHOLDER_BETINGELSE_TITTEL,
   PLACEHOLDER_MARKERINGSKLASSER,
   PLACEHOLDER_UERSTATTET_TITTEL,
   PLACEHOLDER_UKJENT_TITTEL,
@@ -23,6 +27,8 @@ interface Props {
   placeholderVerdier?: PlaceholderVerdi[];
   // Nøklene fra placeholder-katalogen; uten dem markeres alle uerstattede nøkler gult.
   gyldigeNokler?: string[];
+  // Med betingelser løses {#hvis …} opp som ved innsetting; uten dem markeres tokenene.
+  betingelser?: Betingelse[];
 }
 
 // Speiler editoren: [klammer] rødt, uerstattede {nokkel} gult, ukjente nøkler røde.
@@ -37,6 +43,7 @@ const uthevKlammer = (html: string): string =>
 // Samme trevegs-klassifisering som editoren, men uten klikk: forhåndsvisningen viser bare
 // at tokenet er et valg.
 const markeringFor = (token: string, gyldigeNokler?: string[]): { klasse: string; tittel: string } => {
+  if (erBetingelsesToken(token)) return { klasse: "placeholder-betingelse", tittel: PLACEHOLDER_BETINGELSE_TITTEL };
   if (erValgToken(token)) return { klasse: "placeholder-valg", tittel: PLACEHOLDER_VALG_TITTEL_VISNING };
   if (erUkjentPlaceholder(token, gyldigeNokler))
     return { klasse: "placeholder-ukjent", tittel: PLACEHOLDER_UKJENT_TITTEL };
@@ -49,7 +56,7 @@ const uthevPlaceholders = (html: string, gyldigeNokler?: string[]): string =>
     return `<span class="${klasse}" title="${tittel}">${token}</span>`;
   });
 
-function TekstblokkForhandsvisning({ html, className, placeholderVerdier, gyldigeNokler }: Props) {
+function TekstblokkForhandsvisning({ html, className, placeholderVerdier, gyldigeNokler, betingelser }: Props) {
   // Samme gating som editoren: uten togglen finnes ikke placeholder-funksjonen, og
   // {…} skal verken erstattes eller markeres. [klammer] uthevet uansett.
   const dynamiskPlaceholderPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER);
@@ -59,9 +66,10 @@ function TekstblokkForhandsvisning({ html, className, placeholderVerdier, gyldig
     // Markeringer kan ligge lagret i innholdet; uten opprydding nøstes de opp på hverandre.
     const rentHtml = fjernMarkeringsSpans(html, PLACEHOLDER_MARKERINGSKLASSER);
     if (!dynamiskPlaceholderPaa) return uthevKlammer(rentHtml);
-    const erstattet = placeholderVerdier ? erstattPlaceholdere(rentHtml, placeholderVerdier) : rentHtml;
+    const lost = losOppBetingelser(rentHtml, betingelser);
+    const erstattet = placeholderVerdier ? erstattPlaceholdere(lost, placeholderVerdier) : lost;
     return uthevPlaceholders(uthevKlammer(erstattet), gyldigeNokler);
-  }, [html, placeholderVerdier, gyldigeNokler, dynamiskPlaceholderPaa]);
+  }, [html, placeholderVerdier, gyldigeNokler, betingelser, dynamiskPlaceholderPaa]);
   return (
     <div
       className={classNames("tekstblokk-forhandsvisning", className)}

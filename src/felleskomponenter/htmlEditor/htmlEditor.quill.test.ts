@@ -1,8 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { Quill } from "react-quill-new";
 
-// Importeres for sideeffekten: HtmlEditor registrerer BracketBlot, placeholderMarkering
-// registrerer de to placeholder-blotene.
+// Importeres for sideeffekten: placeholderMarkering registrerer klamme- og placeholder-blotene.
 import "./htmlEditor";
 import {
   EDITOR_FORMATS,
@@ -429,5 +428,72 @@ describe("Klikk på utfylt verdi", () => {
     fjernUgyldigeUtfylteMarkeringer(quill, medKandidater);
 
     expect(quill.root.querySelector("span.placeholder-utfylt")?.textContent).toBe("01.01.2023");
+  });
+});
+
+describe("Betingelsestokener i Quill", () => {
+  it("markerer begge tokenformene nøytralt, ikke som ukjente nøkler", () => {
+    const quill = lagEditor();
+    quill.setText("{#hvis avslag} Avslått {/hvis}\n");
+
+    markerUerstattedeOmrader(quill, ["saksnummer"]);
+
+    const markeringer = quill.root.querySelectorAll(".placeholder-betingelse");
+    expect(Array.from(markeringer).map((node) => node.textContent)).toEqual(["{#hvis avslag}", "{/hvis}"]);
+    expect(quill.root.querySelector(".placeholder-ukjent")).toBeNull();
+    expect(quill.root.querySelector(".placeholder-uerstattet")).toBeNull();
+  });
+
+  it("gir betingelsesmarkeringen en tooltip som forklarer at den løses ved innsetting", () => {
+    const quill = lagEditor();
+    quill.setText("{#hvis avslag}\n");
+
+    markerUerstattedeOmrader(quill);
+
+    expect(quill.root.querySelector(".placeholder-betingelse")?.getAttribute("title")).toContain("Send brev");
+  });
+
+  it("beholder markeringen gjennom formats-whitelisten ved innliming", () => {
+    const quill = lagEditor();
+
+    quill.clipboard.dangerouslyPasteHTML(0, "<p>{#hvis avslag}avslått{/hvis}</p>");
+    markerUerstattedeOmrader(quill);
+
+    expect(quill.root.querySelectorAll(".placeholder-betingelse")).toHaveLength(2);
+  });
+
+  it("stripper markeringen når tokenet redigeres bort", () => {
+    const quill = lagEditor();
+    quill.setText("{#hvis avslag}\n");
+    markerUerstattedeOmrader(quill);
+
+    quill.setText("avslag\n");
+    markerUerstattedeOmrader(quill);
+
+    expect(quill.root.querySelector(".placeholder-betingelse")).toBeNull();
+  });
+
+  it("løser opp betingelsen ved innsetting av tekstblokk", () => {
+    const quill = lagEditor();
+    const html = "<p>{#hvis avslag}</p><p>Betinget</p><p>{/hvis}</p><p>Etter</p>";
+
+    quill.clipboard.dangerouslyPasteHTML(
+      0,
+      forberedTekstblokkHtml(html, undefined, [{ nokkel: "avslag", oppfylt: true }]),
+    );
+
+    expect(quill.getText()).toContain("Betinget");
+    expect(quill.getText()).not.toContain("{#hvis avslag}");
+  });
+
+  it("lar tokenene stå ved innsetting når betingelsen er ukjent", () => {
+    const quill = lagEditor();
+    const html = "<p>{#hvis avslag}</p><p>Betinget</p><p>{/hvis}</p>";
+
+    quill.clipboard.dangerouslyPasteHTML(0, forberedTekstblokkHtml(html, undefined, []));
+    markerUerstattedeOmrader(quill);
+
+    expect(quill.getText()).toContain("{#hvis avslag}");
+    expect(quill.root.querySelectorAll(".placeholder-betingelse")).toHaveLength(2);
   });
 });

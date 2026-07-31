@@ -48,6 +48,8 @@ vi.mock("../../../services/api", () => ({
 vi.mock("../../../services/api/placeholdere", () => ({
   usePlaceholderVerdier: () => ({ data: undefined }),
   usePlaceholderKatalog: () => ({ data: undefined }),
+  useBetingelseVerdier: () => ({ data: undefined }),
+  useBetingelseKatalog: () => ({ data: undefined }),
 }));
 
 // Mock child components
