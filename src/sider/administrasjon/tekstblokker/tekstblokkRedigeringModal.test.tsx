@@ -19,11 +19,12 @@ const mocks = vi.hoisted(() => ({
   tekstblokk: vi.fn(() => ({ data: undefined, isLoading: false }) as { data?: unknown; isLoading: boolean }),
   opprett: vi.fn(),
   oppdater: vi.fn(),
+  opprettFeil: vi.fn((): Error | null => null),
 }));
 
 vi.mock("../../../services/api/tekstblokker", () => ({
   useTekstblokk: () => mocks.tekstblokk(),
-  useOpprettTekstblokk: () => ({ mutate: mocks.opprett, isPending: false, error: null }),
+  useOpprettTekstblokk: () => ({ mutate: mocks.opprett, isPending: false, error: mocks.opprettFeil() }),
   useOppdaterTekstblokk: () => ({ mutate: mocks.oppdater, isPending: false, error: null }),
 }));
 
@@ -114,6 +115,41 @@ describe("TekstblokkRedigeringModal", () => {
     visModal();
 
     expect(screen.queryByText("Tilgjengelige placeholdere")).toBeNull();
+  });
+});
+
+describe("TekstblokkRedigeringModal – feilmelding ved lagring", () => {
+  const apiFeil = (status: number, melding: string) => Object.assign(new Error(melding), { status });
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(useFeatureToggle).mockReturnValue(false);
+    mockKatalog({ data: undefined });
+    mocks.tekstblokk.mockReturnValue({ data: undefined, isLoading: false });
+  });
+
+  it("oversetter 400 til en forståelig melding", () => {
+    mocks.opprettFeil.mockReturnValue(apiFeil(400, "JSON parse error: Cannot deserialize value of type Sakstype"));
+
+    visModal();
+
+    expect(screen.getByText("Ugyldig verdi i avgrensningen — last siden på nytt og prøv igjen")).toBeDefined();
+  });
+
+  it("viser meldingen som den er for andre feil", () => {
+    mocks.opprettFeil.mockReturnValue(apiFeil(500, "Internal Server Error"));
+
+    visModal();
+
+    expect(screen.getByText("Internal Server Error")).toBeDefined();
+  });
+
+  it("viser ingen feilmelding uten feil", () => {
+    mocks.opprettFeil.mockReturnValue(null);
+
+    visModal();
+
+    expect(screen.queryByRole("alert")).toBeNull();
   });
 });
 

@@ -1,4 +1,4 @@
-import { UNSAFE_Combobox as Combobox } from "@navikt/ds-react";
+import { BodyShort, UNSAFE_Combobox as Combobox } from "@navikt/ds-react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV from "../../../melosyskodeverk";
@@ -37,6 +37,10 @@ interface Props {
 function Kontekstavgrensning({ sakstyper, setSakstyper, behandlingstemaer, setBehandlingstemaer }: Props) {
   return (
     <div className="tekstblokker__kontekst">
+      <BodyShort size="small" textColor="subtle">
+        Begge avgrensningene må passe (OG): tekstblokken vises bare der både sakstypen og behandlingstemaet stemmer. Et
+        tomt felt betyr alle.
+      </BodyShort>
       <Combobox
         label="Gjelder sakstype"
         description="Tomt betyr at den gjelder alle sakstyper"

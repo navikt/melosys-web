@@ -34,20 +34,26 @@ const visListe = (blokker: TekstblokkOversikt[]) =>
     />,
   );
 
+// Avgrensningen ligger i «Gjelder»-kolonnen; tagene i sin egen.
+const gjelderCelle = () => {
+  const kolonner = screen.getAllByRole("columnheader").map((celle) => celle.textContent);
+  return screen.getAllByRole("cell")[kolonner.indexOf("Gjelder")];
+};
+
 describe("TekstblokkerListe – avgrensning", () => {
-  it("viser termene for avgrensningen ved siden av tagene", () => {
+  it("viser termene for avgrensningen i «Gjelder»-kolonnen, ikke blant tagene", () => {
     visListe([blokk({ sakstyper: ["EU_EOS"], behandlingstemaer: ["ARBEID_KUN_NORGE"] })]);
 
     expect(screen.getByText("usa")).toBeDefined();
-    expect(screen.getByText("EU/EØS-land")).toBeDefined();
-    expect(screen.getByText("Arbeid kun i Norge")).toBeDefined();
+    expect(screen.getByRole("columnheader", { name: "Gjelder" })).toBeDefined();
+    expect(gjelderCelle().textContent).toBe("EU/EØS-landArbeid kun i Norge");
   });
 
-  it("viser ingenting når blokken gjelder alle", () => {
-    const { container } = visListe([blokk()]);
+  it("viser «Alle» når blokken ikke er avgrenset", () => {
+    visListe([blokk()]);
 
     expect(screen.getByText("usa")).toBeDefined();
-    expect(container.querySelectorAll(".navds-tag--info")).toHaveLength(0);
+    expect(gjelderCelle().textContent).toBe("Alle");
   });
 
   it("faller tilbake til koden for en ukjent avgrensningsverdi", () => {

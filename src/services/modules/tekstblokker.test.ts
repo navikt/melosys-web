@@ -1,9 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   erTagValgt,
   gjelderKontekst,
   harAlleTags,
+  hent,
+  hentAlle,
   leggTilTag,
   matcherSoek,
   tellTags,
@@ -11,6 +13,14 @@ import {
   TekstblokkOversikt,
   toggleITagliste,
 } from "./tekstblokker";
+import { getAsJson } from "../utils";
+
+vi.mock("../utils", () => ({
+  getAsJson: vi.fn(),
+  postAsJson: vi.fn(),
+  putAsJson: vi.fn(),
+  deleteAsJson: vi.fn(),
+}));
 
 type Kontekstavgrensning = Pick<TekstblokkOversikt, "sakstyper" | "behandlingstemaer">;
 
@@ -31,6 +41,42 @@ const blokk = (
   endretDato: "2026-01-01T00:00:00Z",
   endretAv: "Z123456",
   endretAvNavn: null,
+});
+
+describe("normalisering på api-grensen", () => {
+  beforeEach(() => vi.mocked(getAsJson).mockReset());
+
+  const utenAvgrensning = {
+    id: 1,
+    tittel: "Om utsending",
+    innhold: "<p>Tekst</p>",
+    type: "TEKSTBLOKK",
+    tags: ["usa"],
+  };
+
+  it("hentAlle gir tomme lister når api-et utelater avgrensningsfeltene", async () => {
+    vi.mocked(getAsJson).mockResolvedValue([utenAvgrensning]);
+
+    const blokker = await hentAlle("TEKSTBLOKK");
+
+    expect(blokker[0]).toMatchObject({ tittel: "Om utsending", sakstyper: [], behandlingstemaer: [] });
+  });
+
+  it("hentAlle beholder avgrensningen når api-et sender den", async () => {
+    vi.mocked(getAsJson).mockResolvedValue([{ ...utenAvgrensning, sakstyper: ["EU_EOS"], behandlingstemaer: [] }]);
+
+    const blokker = await hentAlle();
+
+    expect(blokker[0]).toMatchObject({ sakstyper: ["EU_EOS"], behandlingstemaer: [] });
+  });
+
+  it("hent gir tomme lister når api-et utelater avgrensningsfeltene", async () => {
+    vi.mocked(getAsJson).mockResolvedValue(utenAvgrensning);
+
+    const blokk = await hent(1);
+
+    expect(blokk).toMatchObject({ tittel: "Om utsending", sakstyper: [], behandlingstemaer: [] });
+  });
 });
 
 describe("matcherSoek", () => {

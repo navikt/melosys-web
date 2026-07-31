@@ -72,4 +72,29 @@ describe("TekstblokkSoek – kontekstavgrensning", () => {
     expect(screen.getByText("Bare EU/EØS")).toBeDefined();
     expect(screen.getByText("Bare pensjonist")).toBeDefined();
   });
+
+  it("sier fra når avgrensningen alene tømmer lista, og «Vis alle» viser resten", async () => {
+    vi.mocked(useTekstblokker).mockReturnValue({
+      data: [blokk(2, "Bare EU/EØS", ["EU_EOS"], [])],
+      isLoading: false,
+    } as ReturnType<typeof useTekstblokker>);
+
+    await aapneSoek(sakskontekst("FTRL", "PENSJONIST"));
+
+    expect(screen.getByText("Ingen tekstblokker gjelder denne saken (sakstype/behandlingstema).")).toBeDefined();
+    expect(screen.queryByText(/Prøv et annet søkeord/)).toBeNull();
+
+    await userEvent.click(screen.getByRole("button", { name: "Vis alle" }));
+
+    expect(screen.getByText("Bare EU/EØS")).toBeDefined();
+    expect(screen.queryByText(/gjelder denne saken/)).toBeNull();
+  });
+
+  it("beholder søketeksten i tomtilstanden når søket er det som tømmer lista", async () => {
+    await aapneSoek(sakskontekst("EU_EOS", "UTSENDT_ARBEIDSTAKER"));
+    await userEvent.type(screen.getByRole("searchbox", { name: "Søk på tittel eller tag" }), "finnesikke");
+
+    expect(screen.getByText(/Prøv et annet søkeord/)).toBeDefined();
+    expect(screen.queryByRole("button", { name: "Vis alle" })).toBeNull();
+  });
 });

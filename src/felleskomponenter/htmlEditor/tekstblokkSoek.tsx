@@ -58,6 +58,8 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placehol
   const [soek, setSoek] = useState("");
   const [valgteTags, setValgteTags] = useState<string[]>([]);
   const [antallVist, setAntallVist] = useState(SIDE_STORRELSE);
+  // «Vis alle» slår av kontekstavgrensningen for økten i popoveren – den er støyreduksjon, ikke sikkerhet.
+  const [ignorerKontekst, setIgnorerKontekst] = useState(false);
   const [tilgjengeligHoyde, setTilgjengeligHoyde] = useState<number | null>(null);
 
   // Konteksten leses her i stedet for å sendes som props, så alle saksflyt-editorene
@@ -71,8 +73,8 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placehol
     blokker,
     soek,
     valgteTags,
-    sakstype,
-    behandlingstema,
+    ignorerKontekst ? undefined : sakstype,
+    ignorerKontekst ? undefined : behandlingstema,
   );
 
   // Kun reelle tags vises i nedtrekket – med antall treff – så det er tydelig
@@ -112,6 +114,7 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placehol
   const lukk = () => {
     setAapen(false);
     setAktivType("TEKSTBLOKK");
+    setIgnorerKontekst(false);
     nullstillFiltre();
   };
 
@@ -131,6 +134,8 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placehol
   const typeOrdEntall = erBrevmal ? "brevmal" : "tekstblokk";
   const overskrift = visBrevmaler ? "Sett inn tekstblokk eller brevmal" : "Sett inn tekstblokk";
   const harAktivtFilter = soek.trim().length > 0 || valgteTags.length > 0;
+  // Lista er tom fordi avgrensningen tok alt – ikke fordi søket eller tagene ikke gir treff.
+  const kunKontekstTommerLista = !harAktivtFilter && blokker.length > 0 && filtrerte.length === 0;
 
   return (
     <>
@@ -229,7 +234,16 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placehol
                 <BodyShort size="small" weight="semibold">
                   Fant ingen {typeOrd}
                 </BodyShort>
-                <BodyShort size="small">Prøv et annet søkeord, eller fjern noen av de valgte taggene.</BodyShort>
+                {kunKontekstTommerLista ? (
+                  <>
+                    <BodyShort size="small">Ingen {typeOrd} gjelder denne saken (sakstype/behandlingstema).</BodyShort>
+                    <Nav.Button variant="tertiary" size="small" type="button" onClick={() => setIgnorerKontekst(true)}>
+                      Vis alle
+                    </Nav.Button>
+                  </>
+                ) : (
+                  <BodyShort size="small">Prøv et annet søkeord, eller fjern noen av de valgte taggene.</BodyShort>
+                )}
               </div>
             )}
             {synlige.map((blokk) => (
