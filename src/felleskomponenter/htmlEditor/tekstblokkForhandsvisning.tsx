@@ -9,7 +9,7 @@ import {
   PLACEHOLDER_MARKERINGSKLASSER,
   PLACEHOLDER_UERSTATTET_TITTEL,
   PLACEHOLDER_UKJENT_TITTEL,
-  PLACEHOLDER_VALG_TITTEL,
+  PLACEHOLDER_VALG_TITTEL_VISNING,
   PlaceholderVerdi,
 } from "../../services/modules/placeholdere";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
@@ -37,7 +37,7 @@ const uthevKlammer = (html: string): string =>
 // Samme trevegs-klassifisering som editoren, men uten klikk: forhåndsvisningen viser bare
 // at tokenet er et valg.
 const markeringFor = (token: string, gyldigeNokler?: string[]): { klasse: string; tittel: string } => {
-  if (erValgToken(token)) return { klasse: "placeholder-valg", tittel: PLACEHOLDER_VALG_TITTEL };
+  if (erValgToken(token)) return { klasse: "placeholder-valg", tittel: PLACEHOLDER_VALG_TITTEL_VISNING };
   if (erUkjentPlaceholder(token, gyldigeNokler))
     return { klasse: "placeholder-ukjent", tittel: PLACEHOLDER_UKJENT_TITTEL };
   return { klasse: "placeholder-uerstattet", tittel: PLACEHOLDER_UERSTATTET_TITTEL };

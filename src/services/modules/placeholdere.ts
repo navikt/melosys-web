@@ -42,6 +42,9 @@ export const PLACEHOLDER_UKJENT_TITTEL = "Ikke en gyldig placeholder – se kata
 
 export const PLACEHOLDER_VALG_TITTEL = "Klikk for å velge mellom alternativene";
 
+// Forhåndsvisningen er ikke klikkbar, så den kan ikke love et klikk.
+export const PLACEHOLDER_VALG_TITTEL_VISNING = "Alternativet velges når teksten settes inn i brevet";
+
 export const PLACEHOLDER_VALGT_TITTEL = "Klikk for å endre valget";
 
 // Nøkkelen inni {…}. Trimmes så «{ saksnummer }» ikke blir feilklassifisert som ukjent.
@@ -55,11 +58,16 @@ const VALG_TOKEN_MONSTER = /^\{velg:[^{}<>\n]+\}$/;
 
 // Alternativene i «A|B|C» – både fra tokenteksten og fra data-valg på et innsatt valg.
 // Ett alternativ er ikke et valg, så da regnes strengen som ugyldig og gir tom liste.
+// Duplikater slås sammen: to like knapper er ingen reell valgmulighet.
 export const parseValgAlternativer = (alternativStreng: string): string[] => {
-  const alternativer = alternativStreng
-    .split("|")
-    .map((alternativ) => alternativ.trim())
-    .filter(Boolean);
+  const alternativer = [
+    ...new Set(
+      alternativStreng
+        .split("|")
+        .map((alternativ) => alternativ.trim())
+        .filter(Boolean),
+    ),
+  ];
   return alternativer.length >= 2 ? alternativer : [];
 };
 

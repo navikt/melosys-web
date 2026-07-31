@@ -1,4 +1,5 @@
 import { Popover } from "@navikt/ds-react";
+import { useEffect, useRef } from "react";
 
 import * as Nav from "../../navFrontend";
 import { usePlaceholderKatalog } from "../../services/api/placeholdere";
@@ -12,6 +13,8 @@ interface Props {
   valgt?: string;
   // Katalognøkkelen bak en utfylt verdi. Satt kun for utfylte verdier.
   nokkel?: string;
+  // Åpnet fra tastaturet: da må fokus flyttes hit, ellers ville brukeren ikke nådd knappene.
+  fokuserAlternativ?: boolean;
   onVelg: (alternativ: string) => void;
   onGjorOmTilTekst?: () => void;
   onLukk: () => void;
@@ -36,7 +39,22 @@ function UtfyltOverskrift({ nokkel }: { nokkel: string }) {
 
 // Alternativene for et {velg:…}-token eller en utfylt verdi, forankret i selve markeringen
 // i editoren. Popover er den eneste Aksel-komponenten som tar et Element som anker direkte.
-function PlaceholderValgPopover({ anker, alternativer, valgt, nokkel, onVelg, onGjorOmTilTekst, onLukk }: Props) {
+function PlaceholderValgPopover({
+  anker,
+  alternativer,
+  valgt,
+  nokkel,
+  fokuserAlternativ,
+  onVelg,
+  onGjorOmTilTekst,
+  onLukk,
+}: Props) {
+  const innholdRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (fokuserAlternativ) innholdRef.current?.querySelector("button")?.focus();
+  }, [fokuserAlternativ]);
+
   return (
     <Popover
       open
@@ -46,7 +64,7 @@ function PlaceholderValgPopover({ anker, alternativer, valgt, nokkel, onVelg, on
       arrow={false}
       className="placeholderValg__popover"
     >
-      <Popover.Content className="placeholderValg__innhold">
+      <Popover.Content ref={innholdRef} className="placeholderValg__innhold">
         {nokkel === undefined ? (
           <Nav.BodyShort size="small" weight="semibold">
             Velg alternativ
