@@ -7,7 +7,7 @@ import "react-quill-new/dist/quill.snow.css";
 import { MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../featuretoggle/toggleNavn";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import * as Nav from "../../navFrontend";
-import { PlaceholderVerdi } from "../../services/modules/placeholdere";
+import { Betingelse, PlaceholderVerdi } from "../../services/modules/placeholdere";
 import "./htmlEditor.less";
 import {
   EDITOR_FORMATS,
@@ -19,27 +19,6 @@ import {
 } from "./placeholderMarkering";
 import { usePlaceholderValg } from "./placeholderValg";
 import TekstblokkSoek from "./tekstblokkSoek";
-
-// Registrerer egendefinert blot for tekst i klammer
-const Inline = Quill.import("blots/inline") as any;
-
-class BracketBlot extends Inline {
-  static blotName = "bracketed";
-
-  static tagName = "span";
-
-  static create() {
-    const node = super.create();
-    node.classList.add("bracketed-text");
-    return node;
-  }
-
-  static formats() {
-    return true;
-  }
-}
-
-Quill.register("formats/bracketed", BracketBlot);
 
 interface DeltaOperation {
   insert?: any;
@@ -71,6 +50,8 @@ interface TekstEditorProps {
   // Nøklene fra placeholder-katalogen. Uten dem markeres alle uerstattede nøkler gult;
   // med dem blir nøkler som ikke finnes i katalogen røde.
   gyldigeNokler?: string[];
+  // Sakens fakta som {#hvis …} løses mot ved innsetting. Settes kun fra Send brev.
+  betingelser?: Betingelse[];
 }
 
 const BREDDE_LAGRINGSNOKKEL = "melosys.htmlEditor.fullBredde";
@@ -126,6 +107,7 @@ function HtmlEditor({
   visBreddeToggle = false,
   placeholderVerdier,
   gyldigeNokler,
+  betingelser,
 }: TekstEditorProps) {
   const [fullBredde, setFullBredde] = useState(lesLagretFullBredde);
   // Knappen har ingen hensikt der editoren uansett er smalere enn brevbredden.
@@ -428,7 +410,8 @@ function HtmlEditor({
     }
 
     const lengdeFor = quill.getLength();
-    quill.clipboard.dangerouslyPasteHTML(innsettingsindeks, forberedTekstblokkHtml(html, placeholderVerdier), "user");
+    const klarHtml = forberedTekstblokkHtml(html, placeholderVerdier, betingelser);
+    quill.clipboard.dangerouslyPasteHTML(innsettingsindeks, klarHtml, "user");
     const innsatt = quill.getLength() - lengdeFor;
 
     const nyIndeks = Math.max(0, Math.min(innsettingsindeks + innsatt, quill.getLength() - 1));
@@ -453,6 +436,7 @@ function HtmlEditor({
           visBrevmaler={visBrevmaler}
           placeholderVerdier={placeholderVerdier}
           gyldigeNokler={gyldigeNokler}
+          betingelser={betingelser}
         />
       )}
       <div

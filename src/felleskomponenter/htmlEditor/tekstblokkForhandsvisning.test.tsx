@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render } from "@testing-library/react";
 
 import TekstblokkForhandsvisning from "./tekstblokkForhandsvisning";
-import { PlaceholderVerdi } from "../../services/modules/placeholdere";
+import { Betingelse, PlaceholderVerdi } from "../../services/modules/placeholdere";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 
 vi.mock("../../featuretoggle/useFeatureToggle", () => ({
@@ -129,6 +129,45 @@ describe("TekstblokkForhandsvisning", () => {
 
     expect(container.querySelector(".placeholder-valgt")).toBeNull();
     expect(container.textContent).toBe("B");
+  });
+
+  it("markerer betingelsestokener nøytralt uten betingelser (admin/saksflyt)", () => {
+    const container = renderHtml("<p>{#hvis avslag}</p><p>Betinget</p><p>{/hvis}</p>", undefined, ["saksnummer"]);
+
+    const markeringer = container.querySelectorAll(".placeholder-betingelse");
+    expect(Array.from(markeringer).map((node) => node.textContent)).toEqual(["{#hvis avslag}", "{/hvis}"]);
+    expect(container.querySelector(".placeholder-ukjent")).toBeNull();
+    expect(container.textContent).toContain("Betinget");
+  });
+
+  it("gir betingelsesmarkeringen en tooltip om at den løses ved innsetting", () => {
+    const container = renderHtml("<p>{/hvis}</p>");
+    expect(container.querySelector(".placeholder-betingelse")?.getAttribute("title")).toContain("Send brev");
+  });
+
+  it("løser opp betingelsen når betingelsene er tilgjengelige", () => {
+    const betingelser: Betingelse[] = [{ nokkel: "avslag", oppfylt: true }];
+    const container = render(
+      <TekstblokkForhandsvisning
+        html="<p>{#hvis avslag}</p><p>Betinget</p><p>{/hvis}</p><p>Etter</p>"
+        betingelser={betingelser}
+      />,
+    ).container;
+
+    expect(container.querySelector(".placeholder-betingelse")).toBeNull();
+    expect(container.textContent).toBe("BetingetEtter");
+  });
+
+  it("fjerner innholdet i forhåndsvisningen når betingelsen ikke er oppfylt", () => {
+    const betingelser: Betingelse[] = [{ nokkel: "avslag", oppfylt: false }];
+    const container = render(
+      <TekstblokkForhandsvisning
+        html="<p>{#hvis avslag}</p><p>Betinget</p><p>{/hvis}</p><p>Etter</p>"
+        betingelser={betingelser}
+      />,
+    ).container;
+
+    expect(container.textContent).toBe("Etter");
   });
 
   it("rører ikke krøllparenteser med togglen av, men uthever fortsatt klammer", () => {

@@ -26,6 +26,8 @@ vi.mock("../../../../featuretoggle/useFeatureToggle", () => ({ default: () => tr
 vi.mock("../../../../services/api/placeholdere", () => ({
   usePlaceholderVerdier: () => ({ data: [{ nokkel: "saksnummer", verdi: "MEL-21" }] }),
   usePlaceholderKatalog: () => ({ data: [{ nokkel: "saksnummer", visningsnavn: "Saksnummer" }] }),
+  useBetingelseVerdier: () => ({ data: [] }),
+  useBetingelseKatalog: () => ({ data: [] }),
 }));
 
 const props = {
