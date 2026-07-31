@@ -1,9 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import TekstblokkRedigeringModal from "./tekstblokkRedigeringModal";
 import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
 import { usePlaceholderKatalog } from "../../../services/api/placeholdere";
+import { Tekstblokk } from "../../../services/modules/tekstblokker";
 
 vi.mock("../../../featuretoggle/useFeatureToggle", () => ({
   default: vi.fn(),
@@ -13,16 +15,36 @@ vi.mock("../../../services/api/placeholdere", () => ({
   usePlaceholderKatalog: vi.fn(),
 }));
 
-vi.mock("../../../services/api/tekstblokker", () => ({
-  useTekstblokk: () => ({ data: undefined, isLoading: false }),
-  useOpprettTekstblokk: () => ({ mutate: vi.fn(), isPending: false, error: null }),
-  useOppdaterTekstblokk: () => ({ mutate: vi.fn(), isPending: false, error: null }),
+const mocks = vi.hoisted(() => ({
+  tekstblokk: vi.fn(() => ({ data: undefined, isLoading: false }) as { data?: unknown; isLoading: boolean }),
+  opprett: vi.fn(),
+  oppdater: vi.fn(),
 }));
 
-// Editoren stubbes: her handler det om katalogen og nøklene den får, ikke om Quill.
+vi.mock("../../../services/api/tekstblokker", () => ({
+  useTekstblokk: () => mocks.tekstblokk(),
+  useOpprettTekstblokk: () => ({ mutate: mocks.opprett, isPending: false, error: null }),
+  useOppdaterTekstblokk: () => ({ mutate: mocks.oppdater, isPending: false, error: null }),
+}));
+
+// Editoren stubbes: her handler det om katalogen, nøklene og requesten – ikke om Quill.
 vi.mock("../../../felleskomponenter/htmlEditor/htmlEditor", () => ({
-  default: ({ gyldigeNokler }: { gyldigeNokler?: string[] }) => (
-    <div data-testid="editor" data-gyldige-nokler={(gyldigeNokler ?? []).join(",")} />
+  default: ({
+    gyldigeNokler,
+    value,
+    onChange,
+  }: {
+    gyldigeNokler?: string[];
+    value: string;
+    onChange: (v: string) => void;
+  }) => (
+    <textarea
+      aria-label="Innhold"
+      data-testid="editor"
+      data-gyldige-nokler={(gyldigeNokler ?? []).join(",")}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    />
   ),
 }));
 
@@ -38,12 +60,28 @@ const katalog = [
 
 const mockKatalog = (verdi: object) => vi.mocked(usePlaceholderKatalog).mockReturnValue(verdi as any);
 
-const visModal = () =>
-  render(<TekstblokkRedigeringModal redigerId={null} type="TEKSTBLOKK" forslagTags={[]} onLukk={vi.fn()} />);
+const visModal = (redigerId: number | null = null) =>
+  render(<TekstblokkRedigeringModal redigerId={redigerId} type="TEKSTBLOKK" forslagTags={[]} onLukk={vi.fn()} />);
+
+const lagret = (avgrensning: Partial<Tekstblokk> = {}): Tekstblokk => ({
+  id: 7,
+  tittel: "Om utsending",
+  innhold: "<p>Tekst</p>",
+  type: "TEKSTBLOKK",
+  tags: [],
+  sakstyper: [],
+  behandlingstemaer: [],
+  registrertDato: "2026-01-01T00:00:00Z",
+  registrertAv: "Z123456",
+  endretDato: "2026-01-01T00:00:00Z",
+  endretAv: "Z123456",
+  ...avgrensning,
+});
 
 describe("TekstblokkRedigeringModal", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.tekstblokk.mockReturnValue({ data: undefined, isLoading: false });
   });
 
   it("viser katalogen og gir editoren nøklene når togglen er på", () => {
@@ -76,5 +114,65 @@ describe("TekstblokkRedigeringModal", () => {
     visModal();
 
     expect(screen.queryByText("Tilgjengelige placeholdere")).toBeNull();
+  });
+});
+
+describe("TekstblokkRedigeringModal – kontekstavgrensning", () => {
+  const velg = async (feltnavn: string, opsjon: string) => {
+    await userEvent.click(screen.getByRole("combobox", { name: feltnavn }));
+    await userEvent.click(screen.getByRole("option", { name: opsjon }));
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(useFeatureToggle).mockReturnValue(false);
+    mockKatalog({ data: undefined });
+  });
+
+  it("er tomme på en ny tekstblokk og sendes som tomme lister", async () => {
+    mocks.tekstblokk.mockReturnValue({ data: undefined, isLoading: false });
+
+    visModal();
+    await userEvent.type(screen.getByRole("textbox", { name: "Tittel" }), "Ny blokk");
+    await userEvent.type(screen.getByRole("textbox", { name: "Innhold" }), "Tekst");
+    await userEvent.click(screen.getByRole("button", { name: "Opprett" }));
+
+    expect(screen.queryByRole("button", { name: /EU\/EØS-land/ })).toBeNull();
+    expect(mocks.opprett).toHaveBeenCalledWith(
+      expect.objectContaining({ sakstyper: [], behandlingstemaer: [] }),
+      expect.anything(),
+    );
+  });
+
+  it("initierer feltene fra den lagrede avgrensningen", () => {
+    mocks.tekstblokk.mockReturnValue({
+      data: lagret({ sakstyper: ["EU_EOS"], behandlingstemaer: ["ARBEID_KUN_NORGE"] }),
+      isLoading: false,
+    });
+
+    visModal(7);
+
+    expect(screen.getByRole("button", { name: /EU\/EØS-land/ })).toBeDefined();
+    expect(screen.getByRole("button", { name: /Arbeid kun i Norge/ })).toBeDefined();
+  });
+
+  it("sender endret avgrensning i requesten", async () => {
+    mocks.tekstblokk.mockReturnValue({ data: lagret({ sakstyper: ["EU_EOS"] }), isLoading: false });
+
+    visModal(7);
+    await velg("Gjelder sakstype", "Avtaleland");
+    await velg("Gjelder behandlingstema", "Arbeid kun i Norge");
+    await userEvent.click(screen.getByRole("button", { name: "Lagre endringer" }));
+
+    expect(mocks.oppdater).toHaveBeenCalledWith(
+      {
+        id: 7,
+        body: expect.objectContaining({
+          sakstyper: ["EU_EOS", "TRYGDEAVTALE"],
+          behandlingstemaer: ["ARBEID_KUN_NORGE"],
+        }),
+      },
+      expect.anything(),
+    );
   });
 });

@@ -8,6 +8,7 @@ import { MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggl
 import { usePlaceholderKatalog } from "../../../services/api/placeholdere";
 import { useOppdaterTekstblokk, useOpprettTekstblokk, useTekstblokk } from "../../../services/api/tekstblokker";
 import { leggTilTag, TekstblokkRequest, TekstblokkType } from "../../../services/modules/tekstblokker";
+import Kontekstavgrensning from "./kontekstavgrensning";
 import { PlaceholderKatalogTabell, PlaceholderValgHjelpetekst } from "./placeholderKatalog";
 import TagInput from "./tagInput";
 import { labelForType } from "./labels";
@@ -33,6 +34,8 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
   const [tittel, setTittel] = useState("");
   const [innhold, setInnhold] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  const [sakstyper, setSakstyper] = useState<string[]>([]);
+  const [behandlingstemaer, setBehandlingstemaer] = useState<string[]>([]);
   // En tag som er skrevet, men ikke lagt til med Enter eller "Legg til"-knappen.
   const [tagUtkast, setTagUtkast] = useState("");
 
@@ -41,6 +44,8 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
       setTittel(eksisterende.data.tittel);
       setInnhold(eksisterende.data.innhold);
       setTags(eksisterende.data.tags);
+      setSakstyper(eksisterende.data.sakstyper);
+      setBehandlingstemaer(eksisterende.data.behandlingstemaer);
     }
   }, [eksisterende.data]);
 
@@ -56,7 +61,14 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
     const alleTags = leggTilTag(tags, tagUtkast);
     setTags(alleTags);
     setTagUtkast("");
-    const request: TekstblokkRequest = { tittel: tittel.trim(), innhold, type, tags: alleTags };
+    const request: TekstblokkRequest = {
+      tittel: tittel.trim(),
+      innhold,
+      type,
+      tags: alleTags,
+      sakstyper,
+      behandlingstemaer,
+    };
 
     if (redigerId !== null) {
       oppdater.mutate({ id: redigerId, body: request }, { onSuccess: onLukk });
@@ -95,6 +107,13 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
               forslag={forslagTags}
               utkast={tagUtkast}
               setUtkast={setTagUtkast}
+            />
+
+            <Kontekstavgrensning
+              sakstyper={sakstyper}
+              setSakstyper={setSakstyper}
+              behandlingstemaer={behandlingstemaer}
+              setBehandlingstemaer={setBehandlingstemaer}
             />
 
             <div className="tekstblokker__modal-editor">

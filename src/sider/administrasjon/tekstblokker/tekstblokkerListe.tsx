@@ -4,6 +4,7 @@ import * as Nav from "../../../navFrontend";
 import TekstblokkForhandsvisning from "../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning";
 import { TekstblokkOversikt } from "../../../services/modules/tekstblokker";
 import { formatterDatoTilNorsk } from "../../../utils/dato";
+import { termForBehandlingstema, termForSakstype } from "./kontekstavgrensning";
 
 interface Props {
   blokker: TekstblokkOversikt[];
@@ -80,6 +81,18 @@ function TekstblokkerListeRad({ blokk, utvidet, onToggleUtvidet, onRediger, onSl
           {blokk.tags.map((tag) => (
             <Nav.Tag key={tag} size="xsmall" variant="neutral">
               {tag}
+            </Nav.Tag>
+          ))}
+          {/* Avgrensningen vises ved siden av tagene, men aldri sammenblandet med dem.
+              Ingen merker = gjelder alle. */}
+          {blokk.sakstyper.map((kode) => (
+            <Nav.Tag key={`sakstype-${kode}`} size="xsmall" variant="info">
+              {termForSakstype(kode)}
+            </Nav.Tag>
+          ))}
+          {blokk.behandlingstemaer.map((kode) => (
+            <Nav.Tag key={`behandlingstema-${kode}`} size="xsmall" variant="info">
+              {termForBehandlingstema(kode)}
             </Nav.Tag>
           ))}
         </div>

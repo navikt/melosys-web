@@ -1,8 +1,11 @@
 import { XMarkIcon } from "@navikt/aksel-icons";
 import { BodyShort, Popover, Search, Tabs, UNSAFE_Combobox as Combobox } from "@navikt/ds-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 
 import * as Nav from "../../navFrontend";
+import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { fagsakSelectors } from "../../ducks/fagsaker";
 import { useFiltrerteTekstblokker, useTekstblokker } from "../../services/api/tekstblokker";
 import { TekstblokkOversikt, TekstblokkType } from "../../services/modules/tekstblokker";
 import { PlaceholderVerdi } from "../../services/modules/placeholdere";
@@ -57,9 +60,20 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placehol
   const [antallVist, setAntallVist] = useState(SIDE_STORRELSE);
   const [tilgjengeligHoyde, setTilgjengeligHoyde] = useState<number | null>(null);
 
+  // Konteksten leses her i stedet for å sendes som props, så alle saksflyt-editorene
+  // avgrenses likt. Utenfor en sak (f.eks. i admin) er kodene "" og filtrerer ingenting.
+  const sakstype: string = useSelector(fagsakSelectors.SakstypeKodeSelector);
+  const behandlingstema: string = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
+
   const { data: blokker = [], isLoading } = useTekstblokker(aktivType, aapen);
 
-  const { tagAntall, synlige: filtrerte } = useFiltrerteTekstblokker(blokker, soek, valgteTags);
+  const { tagAntall, synlige: filtrerte } = useFiltrerteTekstblokker(
+    blokker,
+    soek,
+    valgteTags,
+    sakstype,
+    behandlingstema,
+  );
 
   // Kun reelle tags vises i nedtrekket – med antall treff – så det er tydelig
   // hvilke tags som faktisk finnes.

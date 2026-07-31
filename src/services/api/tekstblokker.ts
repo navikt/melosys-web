@@ -3,6 +3,7 @@ import { useMemo } from "react";
 
 import * as Tekstblokker from "../modules/tekstblokker";
 import {
+  gjelderKontekst,
   harAlleTags,
   matcherSoek,
   tellTagsMedValgte,
@@ -77,8 +78,16 @@ export const useFiltrerteTekstblokker = (
   blokker: TekstblokkOversikt[],
   soek: string,
   valgteTags: string[],
+  sakstype?: string,
+  behandlingstema?: string,
 ): FiltrerteTekstblokker => {
-  const etterSoek = useMemo(() => blokker.filter((b) => matcherSoek(b, soek)), [blokker, soek]);
+  // Konteksten avgrenses først, slik at både søk og tag-telling gjelder det utvalget
+  // saksbehandleren faktisk kan bruke i denne saken.
+  const iKontekst = useMemo(
+    () => blokker.filter((b) => gjelderKontekst(b, sakstype, behandlingstema)),
+    [blokker, sakstype, behandlingstema],
+  );
+  const etterSoek = useMemo(() => iKontekst.filter((b) => matcherSoek(b, soek)), [iKontekst, soek]);
   const synlige = useMemo(() => etterSoek.filter((b) => harAlleTags(b, valgteTags)), [etterSoek, valgteTags]);
   // Tagene telles over det som faktisk er igjen, ikke over hele søketreffet. Med
   // AND-filtrering ville resten bare ført til tomme lister. Antallet blir dermed
