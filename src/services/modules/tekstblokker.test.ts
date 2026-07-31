@@ -4,16 +4,19 @@ import {
   erTagValgt,
   gjelderKontekst,
   harAlleTags,
+  harStatus,
   hent,
   hentAlle,
+  hentHistorikk,
   leggTilTag,
   matcherSoek,
+  publiser,
   tellTags,
   tellTagsMedValgte,
   TekstblokkOversikt,
   toggleITagliste,
 } from "./tekstblokker";
-import { getAsJson } from "../utils";
+import { getAsJson, postAsJson } from "../utils";
 
 vi.mock("../utils", () => ({
   getAsJson: vi.fn(),
@@ -38,6 +41,7 @@ const blokk = (
   sakstyper: [],
   behandlingstemaer: [],
   ...avgrensning,
+  status: "PUBLISERT",
   endretDato: "2026-01-01T00:00:00Z",
   endretAv: "Z123456",
   endretAvNavn: null,
@@ -76,6 +80,64 @@ describe("normalisering på api-grensen", () => {
     const blokk = await hent(1);
 
     expect(blokk).toMatchObject({ tittel: "Om utsending", sakstyper: [], behandlingstemaer: [] });
+  });
+
+  it("regner en blokk uten status som publisert", async () => {
+    vi.mocked(getAsJson).mockResolvedValue([utenAvgrensning]);
+
+    const blokker = await hentAlle();
+
+    expect(blokker[0].status).toBe("PUBLISERT");
+  });
+
+  it("beholder statusen api-et sender", async () => {
+    vi.mocked(getAsJson).mockResolvedValue({ ...utenAvgrensning, status: "UTKAST" });
+
+    const blokk = await hent(1);
+
+    expect(blokk.status).toBe("UTKAST");
+  });
+});
+
+describe("publiser og hentHistorikk", () => {
+  beforeEach(() => {
+    vi.mocked(getAsJson).mockReset();
+    vi.mocked(postAsJson).mockReset();
+  });
+
+  it("publiser kaller publiser-endepunktet og normaliserer svaret", async () => {
+    vi.mocked(postAsJson).mockResolvedValue({ id: 7, tittel: "Om utsending", status: "PUBLISERT" });
+
+    const blokk = await publiser(7);
+
+    expect(postAsJson).toHaveBeenCalledWith(expect.stringContaining("brev/tekstblokker/7/publiser"));
+    expect(blokk).toMatchObject({ status: "PUBLISERT", sakstyper: [], behandlingstemaer: [] });
+  });
+
+  it("hentHistorikk henter versjonene for blokken", async () => {
+    vi.mocked(getAsJson).mockResolvedValue([{ versjon: 1, endringstype: "OPPRETTET" }]);
+
+    const versjoner = await hentHistorikk(7);
+
+    expect(getAsJson).toHaveBeenCalledWith(expect.stringContaining("brev/tekstblokker/7/historikk"));
+    expect(versjoner).toHaveLength(1);
+  });
+});
+
+describe("harStatus", () => {
+  const utkast = { status: "UTKAST" } as const;
+  const publisert = { status: "PUBLISERT" } as const;
+
+  it("«Alle» slipper gjennom begge statusene", () => {
+    expect(harStatus(utkast, "ALLE")).toBe(true);
+    expect(harStatus(publisert, "ALLE")).toBe(true);
+  });
+
+  it("filtrerer på den valgte statusen", () => {
+    expect(harStatus(utkast, "UTKAST")).toBe(true);
+    expect(harStatus(publisert, "UTKAST")).toBe(false);
+    expect(harStatus(publisert, "PUBLISERT")).toBe(true);
+    expect(harStatus(utkast, "PUBLISERT")).toBe(false);
   });
 });
 
