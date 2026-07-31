@@ -4,6 +4,9 @@ import { getAsJson } from "../utils";
 export interface PlaceholderVerdi {
   nokkel: string;
   verdi: string;
+  // Forhåndsvalget står i verdi; kandidatlisten følger kun med når det er reelt flere å
+  // velge mellom. Api-et leverer feltet først i runde 3.
+  kandidater?: string[];
 }
 
 export interface PlaceholderBeskrivelse {
@@ -143,7 +146,7 @@ export const harInnsatteVerdier = (html: string): boolean => html.includes("plac
 export const finnUtdaterteVerdier = (html: string, ferskeVerdier: PlaceholderVerdi[]): UtdatertPlaceholder[] => {
   if (!harInnsatteVerdier(html)) return [];
 
-  const ferskForNokkel = new Map(ferskeVerdier.map(({ nokkel, verdi }) => [nokkel, verdi]));
+  const ferskForNokkel = new Map(ferskeVerdier.map((fersk) => [fersk.nokkel, fersk]));
   const dokument = new DOMParser().parseFromString(html, "text/html");
   const utdaterte: UtdatertPlaceholder[] = [];
   const rapportert = new Set<string>();
@@ -151,9 +154,11 @@ export const finnUtdaterteVerdier = (html: string, ferskeVerdier: PlaceholderVer
   dokument.body.querySelectorAll("span.placeholder-utfylt[data-placeholder]").forEach((span) => {
     const nokkel = span.getAttribute("data-placeholder") ?? "";
     const innsattVerdi = span.textContent ?? "";
+    const fersk = ferskForNokkel.get(nokkel);
     // Nøkkel uten fersk verdi er utgått av registeret; den rapporteres med tom ferskVerdi.
-    const ferskVerdi = ferskForNokkel.get(nokkel) ?? "";
-    if (ferskVerdi === innsattVerdi) return;
+    const ferskVerdi = fersk?.verdi ?? "";
+    // En valgt kandidat er et bevisst valg, ikke en foreldet verdi.
+    if (ferskVerdi === innsattVerdi || fersk?.kandidater?.includes(innsattVerdi)) return;
 
     // Samme nøkkel kan stå flere steder i brevet – varsle én gang per avvik.
     const avviksNokkel = `${nokkel}${innsattVerdi}`;

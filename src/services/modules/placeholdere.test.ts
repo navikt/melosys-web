@@ -241,6 +241,13 @@ describe("finnUtdaterteVerdier", () => {
     expect(finnUtdaterteVerdier(html, verdier)).toEqual([]);
   });
 
+  it("rapporterer ikke en verdi saksbehandler har valgt blant kandidatene", () => {
+    const html = `<p>${utfylt("saksnummer", "MEL-21")}</p>`;
+    const ferske: PlaceholderVerdi[] = [{ nokkel: "saksnummer", verdi: "MEL-22", kandidater: ["MEL-22", "MEL-21"] }];
+
+    expect(finnUtdaterteVerdier(html, ferske)).toEqual([]);
+  });
+
   it("rapporterer nøkkel uten fersk verdi med tom ferskVerdi", () => {
     const html = `<p>${utfylt("utgaatt-nokkel", "Gammel verdi")}</p>`;
     expect(finnUtdaterteVerdier(html, verdier)).toEqual([

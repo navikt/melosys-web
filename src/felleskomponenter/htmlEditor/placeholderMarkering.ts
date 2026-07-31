@@ -206,13 +206,16 @@ export const markerUerstattedeOmrader = (quill: Quill, gyldigeNokler?: string[])
 export const fjernUgyldigeUtfylteMarkeringer = (quill: Quill, verdier?: PlaceholderVerdi[]) => {
   if (!verdier?.length) return;
 
-  const verdiForNokkel = new Map(verdier.map(({ nokkel, verdi }) => [nokkel, verdi]));
+  const verdiForNokkel = new Map(verdier.map((verdi) => [verdi.nokkel, verdi]));
   const ugyldige: Array<{ index: number; length: number }> = [];
 
   quill.root.querySelectorAll<HTMLElement>("span.placeholder-utfylt").forEach((node) => {
     const nokkel = node.getAttribute("data-placeholder");
-    const verdi = nokkel === null ? undefined : verdiForNokkel.get(nokkel);
-    if (verdi === undefined || node.textContent === verdi) return;
+    const kjent = nokkel === null ? undefined : verdiForNokkel.get(nokkel);
+    const tekst = node.textContent ?? "";
+    // En valgt kandidat er like gyldig som forhåndsvalget, ellers ville markeringen falt
+    // bort i samme øyeblikk som saksbehandleren byttet verdi.
+    if (kjent === undefined || tekst === kjent.verdi || kjent.kandidater?.includes(tekst)) return;
 
     const blot = Quill.find(node);
     if (!blot || blot instanceof Quill) return;

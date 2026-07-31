@@ -54,6 +54,7 @@ describe("TekstblokkRedigeringModal", () => {
 
     expect(screen.getByText("Tilgjengelige placeholdere")).toBeDefined();
     expect(screen.getByText("{soker-navn}")).toBeDefined();
+    expect(screen.getByText(/\{velg:Alternativ A\|Alternativ B\}/)).toBeDefined();
     expect(screen.getByTestId("editor").getAttribute("data-gyldige-nokler")).toBe("soker-navn");
   });
 

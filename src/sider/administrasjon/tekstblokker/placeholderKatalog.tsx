@@ -38,6 +38,16 @@ export function PlaceholderKatalogTabell({ placeholdere }: Props) {
   );
 }
 
+// Valgtokener står ikke i katalogtabellen – syntaksen må derfor forklares der admin
+// leter etter placeholdere, både i seksjonen og i redigeringsmodalen.
+export function PlaceholderValgHjelpetekst() {
+  return (
+    <BodyShort spacing size="small">
+      Faste alternativer skrives {"{velg:Alternativ A|Alternativ B}"} – saksbehandler velger ved klikk i brevet.
+    </BodyShort>
+  );
+}
+
 function PlaceholderKatalog() {
   const togglePaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER);
   if (!togglePaa) return null;
@@ -57,6 +67,7 @@ function PlaceholderKatalogInnhold() {
           Skriv nøkkelen i krøllparenteser i teksten, f.eks. {"{saksnummer}"}. Den erstattes med verdien fra saken når
           brevet lages. Klammer som {"[skriv begrunnelse]"} betyr fortsatt at saksbehandler fyller ut selv.
         </BodyShort>
+        <PlaceholderValgHjelpetekst />
         <PlaceholderKatalogTabell placeholdere={placeholdere} />
       </ReadMore>
     </div>

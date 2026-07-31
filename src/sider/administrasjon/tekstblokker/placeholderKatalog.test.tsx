@@ -42,6 +42,15 @@ describe("PlaceholderKatalog", () => {
     expect(screen.getByText("Ola Nordmann")).toBeDefined();
   });
 
+  it("forklarer valgtoken-syntaksen", () => {
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+    mockKatalog({ data: katalog, error: null });
+
+    render(<PlaceholderKatalog />);
+
+    expect(screen.getByText(/\{velg:Alternativ A\|Alternativ B\}/)).toBeDefined();
+  });
+
   it("rendrer ingenting når togglen er av", () => {
     vi.mocked(useFeatureToggle).mockReturnValue(false);
     mockKatalog({ data: katalog, error: null });

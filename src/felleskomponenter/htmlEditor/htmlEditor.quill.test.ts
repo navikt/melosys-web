@@ -12,7 +12,7 @@ import {
   markerUerstattedeOmrader,
   PLACEHOLDER_FORMATS,
 } from "./placeholderMarkering";
-import { finnValgTreff, settInnValg } from "./placeholderValg";
+import { finnPlaceholderTreff, gjorOmTilVanligTekst, settInnValg } from "./placeholderValg";
 import { PlaceholderVerdi } from "../../services/modules/placeholdere";
 
 // Kjører en ekte Quill 2-instans med produksjonens formats-liste og blots, slik at vi
@@ -196,8 +196,8 @@ describe("HtmlEditor med ekte Quill", () => {
 });
 
 // Treffet finnes normalt fra et klikk-event; her hentes det direkte fra markeringen.
-const valgTreffFor = (quill: Quill, velger: string) => {
-  const treff = finnValgTreff(quill, quill.root.querySelector(velger));
+const valgTreffFor = (quill: Quill, velger: string, verdier?: PlaceholderVerdi[]) => {
+  const treff = finnPlaceholderTreff(quill, quill.root.querySelector(velger), verdier);
   if (!treff) throw new Error(`Fant ingen valgtreff for ${velger}`);
   return treff;
 };
@@ -305,6 +305,65 @@ describe("Valgmekanikk i Quill", () => {
     quill.setText("Land: {velg:Serbia|Montenegro}\n");
     markerUerstattedeOmrader(quill);
 
-    expect(finnValgTreff(quill, quill.root)).toBeNull();
+    expect(finnPlaceholderTreff(quill, quill.root)).toBeNull();
+  });
+});
+
+const medKandidater: PlaceholderVerdi[] = [
+  { nokkel: "lovvalgsperiode-fra", verdi: "01.03.2024", kandidater: ["01.03.2024", "01.01.2023"] },
+];
+
+const medUtfyltVerdi = (verdier: PlaceholderVerdi[]) => {
+  const quill = lagEditor();
+  quill.clipboard.dangerouslyPasteHTML(0, forberedTekstblokkHtml("<p>Fra {lovvalgsperiode-fra}.</p>", verdier));
+  return quill;
+};
+
+describe("Klikk på utfylt verdi", () => {
+  it("gir treff med nøkkel og kandidater for den utfylte verdien", () => {
+    const quill = medUtfyltVerdi(medKandidater);
+
+    const treff = valgTreffFor(quill, "span.placeholder-utfylt", medKandidater);
+
+    expect(treff.type).toBe("utfylt");
+    expect(treff.type === "utfylt" && treff.nokkel).toBe("lovvalgsperiode-fra");
+    expect(treff.alternativer).toEqual(["01.03.2024", "01.01.2023"]);
+    expect(treff.valgt).toBe("01.03.2024");
+  });
+
+  it("gir treff uten alternativer når verdien ikke har kandidater", () => {
+    const enkleVerdier: PlaceholderVerdi[] = [{ nokkel: "lovvalgsperiode-fra", verdi: "01.03.2024" }];
+    const quill = medUtfyltVerdi(enkleVerdier);
+
+    expect(valgTreffFor(quill, "span.placeholder-utfylt", enkleVerdier).alternativer).toEqual([]);
+  });
+
+  it("beholder teksten uten markering når verdien gjøres om til vanlig tekst", () => {
+    const quill = medUtfyltVerdi(medKandidater);
+
+    gjorOmTilVanligTekst(quill, valgTreffFor(quill, "span.placeholder-utfylt", medKandidater), { current: null });
+
+    expect(quill.getText()).toBe("Fra 01.03.2024.\n");
+    expect(quill.root.querySelector("span.placeholder-utfylt")).toBeNull();
+  });
+
+  it("erstatter verdien med valgt kandidat og beholder nøkkelen", () => {
+    const quill = medUtfyltVerdi(medKandidater);
+
+    settInnValg(quill, valgTreffFor(quill, "span.placeholder-utfylt", medKandidater), "01.01.2023", { current: null });
+
+    expect(quill.getText()).toBe("Fra 01.01.2023.\n");
+    const span = quill.root.querySelector("span.placeholder-utfylt");
+    expect(span?.textContent).toBe("01.01.2023");
+    expect(span?.getAttribute("data-placeholder")).toBe("lovvalgsperiode-fra");
+  });
+
+  it("lar en valgt kandidat beholde markeringen når markeringene ryddes", () => {
+    const quill = medUtfyltVerdi(medKandidater);
+    settInnValg(quill, valgTreffFor(quill, "span.placeholder-utfylt", medKandidater), "01.01.2023", { current: null });
+
+    fjernUgyldigeUtfylteMarkeringer(quill, medKandidater);
+
+    expect(quill.root.querySelector("span.placeholder-utfylt")?.textContent).toBe("01.01.2023");
   });
 });

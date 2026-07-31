@@ -8,7 +8,7 @@ import { MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggl
 import { usePlaceholderKatalog } from "../../../services/api/placeholdere";
 import { useOppdaterTekstblokk, useOpprettTekstblokk, useTekstblokk } from "../../../services/api/tekstblokker";
 import { leggTilTag, TekstblokkRequest, TekstblokkType } from "../../../services/modules/tekstblokker";
-import { PlaceholderKatalogTabell } from "./placeholderKatalog";
+import { PlaceholderKatalogTabell, PlaceholderValgHjelpetekst } from "./placeholderKatalog";
 import TagInput from "./tagInput";
 import { labelForType } from "./labels";
 
@@ -110,6 +110,7 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
 
             {dynamiskPlaceholderPaa && katalog && katalog.length > 0 && (
               <ReadMore header="Tilgjengelige placeholdere" size="small">
+                <PlaceholderValgHjelpetekst />
                 <PlaceholderKatalogTabell placeholdere={katalog} />
               </ReadMore>
             )}

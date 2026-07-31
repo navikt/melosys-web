@@ -4,9 +4,15 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import HtmlEditor from "./htmlEditor";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
+import { usePlaceholderKatalog } from "../../services/api/placeholdere";
 
 vi.mock("../../featuretoggle/useFeatureToggle", () => ({
   default: vi.fn(),
+}));
+
+// Popoveren slår opp visningsnavnet i katalogen; her trengs ingen react-query-kontekst.
+vi.mock("../../services/api/placeholdere", () => ({
+  usePlaceholderKatalog: vi.fn(() => ({ data: undefined })),
 }));
 
 vi.mock("./tekstblokkSoek", () => ({
@@ -146,5 +152,79 @@ describe("HtmlEditor med valgtokener", () => {
     klikk(container.querySelector(".ql-editor") as HTMLElement);
 
     expect(screen.queryByRole("button", { name: "Serbia" })).not.toBeInTheDocument();
+  });
+});
+
+const HTML_MED_UTFYLT_VERDI =
+  '<p>Fra <span class="placeholder-utfylt" data-placeholder="lovvalgsperiode-fra">01.03.2024</span>.</p>';
+
+const KATALOG = [
+  {
+    nokkel: "lovvalgsperiode-fra",
+    visningsnavn: "Lovvalgsperiode fra",
+    beskrivelse: "Startdato",
+    eksempel: "01.03.2024",
+    sakstyper: [],
+  },
+];
+
+describe("HtmlEditor med klikk på utfylt verdi", () => {
+  beforeEach(() => {
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+    vi.mocked(usePlaceholderKatalog).mockReturnValue({ data: KATALOG } as any);
+  });
+
+  const renderMedVerdi = (verdier: React.ComponentProps<typeof HtmlEditor>["placeholderVerdier"]) =>
+    renderEditor(HTML_MED_UTFYLT_VERDI, { placeholderVerdier: verdier });
+
+  const utenKandidater = [{ nokkel: "lovvalgsperiode-fra", verdi: "01.03.2024" }];
+  const medKandidater = [
+    { nokkel: "lovvalgsperiode-fra", verdi: "01.03.2024", kandidater: ["01.03.2024", "01.01.2023"] },
+  ];
+
+  const klikkPaaVerdi = async (container: HTMLElement) => {
+    await waitFor(() => expect(container.querySelector("span.placeholder-utfylt")).not.toBeNull());
+    klikk(container.querySelector("span.placeholder-utfylt") as HTMLElement);
+  };
+
+  it("viser visningsnavn, nøkkel og fjern-handling", async () => {
+    const container = renderMedVerdi(utenKandidater);
+
+    await klikkPaaVerdi(container);
+
+    expect(screen.getByText("Lovvalgsperiode fra")).toBeInTheDocument();
+    expect(screen.getByText("{lovvalgsperiode-fra}")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Gjør om til vanlig tekst" })).toBeInTheDocument();
+  });
+
+  it("beholder teksten uten markering når verdien gjøres om til vanlig tekst", async () => {
+    const container = renderMedVerdi(utenKandidater);
+    await klikkPaaVerdi(container);
+
+    klikk(screen.getByRole("button", { name: "Gjør om til vanlig tekst" }));
+
+    await waitFor(() => expect(container.querySelector("span.placeholder-utfylt")).toBeNull());
+    expect(container.querySelector(".ql-editor")?.textContent).toContain("Fra 01.03.2024.");
+  });
+
+  it("viser ingen alternativer når verdien mangler kandidater", async () => {
+    const container = renderMedVerdi(utenKandidater);
+
+    await klikkPaaVerdi(container);
+
+    expect(screen.queryByRole("button", { name: "01.03.2024" })).not.toBeInTheDocument();
+  });
+
+  it("bytter verdi ved valg av kandidat og beholder nøkkelen", async () => {
+    const container = renderMedVerdi(medKandidater);
+    await klikkPaaVerdi(container);
+    expect(screen.getByRole("button", { name: "01.03.2024" })).toBeInTheDocument();
+
+    klikk(screen.getByRole("button", { name: "01.01.2023" }));
+
+    await waitFor(() => expect(container.querySelector("span.placeholder-utfylt")?.textContent).toBe("01.01.2023"));
+    expect(container.querySelector("span.placeholder-utfylt")?.getAttribute("data-placeholder")).toBe(
+      "lovvalgsperiode-fra",
+    );
   });
 });

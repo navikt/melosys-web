@@ -159,6 +159,7 @@ function HtmlEditor({
     sisteMarkering: lastSelectionRef,
     aktiv: markeringAktiv && !disabled,
     editorNokkel: String(placeholderFormatsAktive),
+    placeholderVerdier,
   });
 
   useEffect(() => {
