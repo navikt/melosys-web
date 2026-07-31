@@ -71,9 +71,10 @@ export const matcherSoek = (blokk: TekstblokkOversikt, soek: string): boolean =>
 };
 
 // Avgrensningen er støyreduksjon, ikke sikkerhet: en tom avgrensning gjelder alle, og en
-// tom kontekstverdi (admin, som ikke står i en sak) filtrerer ingenting bort.
-const passerAvgrensning = (avgrensning: string[], kontekstverdi?: string): boolean =>
-  avgrensning.length === 0 || !kontekstverdi || avgrensning.includes(kontekstverdi);
+// tom kontekstverdi (admin, som ikke står i en sak) filtrerer ingenting bort. Manglende
+// felt (api uten avgrensningsstøtte under utrulling) behandles som tom avgrensning.
+const passerAvgrensning = (avgrensning: string[] | undefined, kontekstverdi?: string): boolean =>
+  !avgrensning?.length || !kontekstverdi || avgrensning.includes(kontekstverdi);
 
 export const gjelderKontekst = (
   blokk: Pick<TekstblokkOversikt, "sakstyper" | "behandlingstemaer">,
