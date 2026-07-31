@@ -34,7 +34,12 @@ import PlaceholderUtdatertVarsel from "./placeholderUtdatertVarsel";
 import { SendBrevFormValues } from "./types";
 import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER, MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggle/toggleNavn";
-import { finnUtdaterteVerdier, hentVerdier, UtdatertPlaceholder } from "../../../services/modules/placeholdere";
+import {
+  finnUtdaterteVerdier,
+  harInnsatteVerdier,
+  hentVerdier,
+  UtdatertPlaceholder,
+} from "../../../services/modules/placeholdere";
 
 import { lagYupToReduxformErrorMapper } from "../../../yup";
 import sendBrevSchema from "./sendBrevSchema";
@@ -439,16 +444,22 @@ function SendBrev({
     }
   };
 
+  // Fritekstfeltene brevet faktisk sendes med. hentFormVerdi gir null for felter som ikke
+  // vises, så ferskhetssjekken under kan gjenbruke nøyaktig dette utvalget.
+  const hentFritekstFelter = () => ({
+    innledningFritekst: hentFormVerdi("INNLEDNING_FRITEKST"),
+    manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
+    fritekst: hentFormVerdi("FRITEKST"),
+  });
+
   const hentBrevRequest = (mottakerRolle: string): Api.DokumenterV2.OpprettBrevReqDto => ({
     produserbardokument: formValues.type || "",
     mottaker: mottakerRolle,
     orgNr: hentOrgnr(mottakerRolle),
     kontaktpersonNavn: erAnnenOrganisasjon(mottakerRolle) ? formValues.kontaktperson : null,
     orgnrNorskMyndighet: formValues.norskeMyndigheter,
-    innledningFritekst: hentFormVerdi("INNLEDNING_FRITEKST"),
-    manglerFritekst: hentFormVerdi("MANGLER_FRITEKST"),
+    ...hentFritekstFelter(),
     fritekstTittel: hentFormVerdi("BREV_TITTEL", true),
-    fritekst: hentFormVerdi("FRITEKST"),
     kopiMottakere: hentKopiMottakere() || [],
     skalViseStandardTekstOmkontaktopplysninger: hentFormVerdi("STANDARDTEKST_KONTAKTINFORMASJON"),
     saksvedlegg: valgteVedlegg?.saksvedlegg.map((vedlegg) => ({
@@ -463,10 +474,11 @@ function SendBrev({
     institusjonID: hentFormVerdi("UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER", true, true),
   });
 
+  // Kun teksten som blir med i bestillingen – fritekstvedleggene inkludert, siden de sendes
+  // sammen med brevet og kan ha innsatte verdier.
   const hentFritekstHtml = () =>
-    (formValues?.valgtBrev?.felter ?? [])
-      .filter((felt) => felt.feltType === Api.DokumenterV2.FeltType.FRITEKST)
-      .map((felt) => formValues.felt?.[felt.kode]?.feltVerdi ?? "")
+    [...Object.values(hentFritekstFelter()), ...fritekstvedlegg.map(({ fritekst }) => fritekst)]
+      .filter(Boolean)
       .join("");
 
   const hentUtdaterteVerdier = async (html: string): Promise<UtdatertPlaceholder[]> => {
@@ -490,7 +502,8 @@ function SendBrev({
     }
 
     const fritekstHtml = tekstblokkerPaa && dynamiskPlaceholderPaa ? hentFritekstHtml() : "";
-    if (fritekstHtml) {
+    // Uten innsatte verdier er det ingenting å sammenligne, og oppslaget er unødvendig.
+    if (harInnsatteVerdier(fritekstHtml)) {
       setSendBrevSpinner(true);
       const utdaterte = await hentUtdaterteVerdier(fritekstHtml);
       if (utdaterte.length > 0) {

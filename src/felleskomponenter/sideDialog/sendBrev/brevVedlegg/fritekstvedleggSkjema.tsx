@@ -7,6 +7,7 @@ import "./fritekstvedleggSkjema.less";
 import { begrensAntallTegn } from "../../../../utils/normalisering";
 import Knapperad from "../../../knapperad";
 import { ColumnWidth } from "nav-frontend-grid";
+import { PlaceholderVerdi } from "../../../../services/modules/placeholdere";
 
 interface FritekstvedleggSkjemaProps {
   felt: DokumenterV2.Felt;
@@ -18,6 +19,9 @@ interface FritekstvedleggSkjemaProps {
   resetFritekstvedlegg: () => void;
   leggTilFritekstvedlegg: () => void;
   width?: ColumnWidth;
+  // Samme placeholder-kontekst som brevfeltene: vedlegget sendes som del av brevet.
+  placeholderVerdier?: PlaceholderVerdi[];
+  gyldigeNokler?: string[];
 }
 
 const TEGNBEGRENSNING = 60;
@@ -28,6 +32,8 @@ function FritekstvedleggSkjema({
   resetFritekstvedlegg,
   leggTilFritekstvedlegg,
   width,
+  placeholderVerdier,
+  gyldigeNokler,
 }: FritekstvedleggSkjemaProps) {
   const cls = bem("fritekstvedleggSkjema");
 
@@ -47,7 +53,13 @@ function FritekstvedleggSkjema({
             />
           </Nav.Column>
         </Nav.Row>
-        <Skjema.HTMLEditor feltNavn={`felt.${felt.kode}_FRITEKST.feltVerdi`} key={index} visBrevmaler />
+        <Skjema.HTMLEditor
+          feltNavn={`felt.${felt.kode}_FRITEKST.feltVerdi`}
+          key={index}
+          visBrevmaler
+          placeholderVerdier={placeholderVerdier}
+          gyldigeNokler={gyldigeNokler}
+        />
         <Nav.Row>
           <Knapperad
             bekreft={leggTilFritekstvedlegg}

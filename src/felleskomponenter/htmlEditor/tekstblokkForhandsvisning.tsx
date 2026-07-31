@@ -5,6 +5,7 @@ import {
   erstattPlaceholdere,
   erUkjentPlaceholder,
   fjernMarkeringsSpans,
+  PLACEHOLDER_MARKERINGSKLASSER,
   PLACEHOLDER_UERSTATTET_TITTEL,
   PLACEHOLDER_UKJENT_TITTEL,
   PlaceholderVerdi,
@@ -25,8 +26,11 @@ interface Props {
 // Speiler editoren: [klammer] rødt, uerstattede {nokkel} gult, ukjente nøkler røde.
 // Tegnklassene i begge utelater < > (og linjeskift) så uthevingen aldri løper over
 // tag- eller avsnittsgrenser.
+// Lagret klammemarkering hoppes over: regexen kan ikke gjenskape den rundt inline-tagger.
 const uthevKlammer = (html: string): string =>
-  html.replace(/\[[^[\]<>]*\]/g, (token) => `<span class="bracketed-text">${token}</span>`);
+  html.replace(/<span class="bracketed-text">[\s\S]*?<\/span>|\[[^[\]<>]*\]/g, (treff) =>
+    treff.startsWith("[") ? `<span class="bracketed-text">${treff}</span>` : treff,
+  );
 
 const uthevPlaceholders = (html: string, gyldigeNokler?: string[]): string =>
   html.replace(/\{[^{}<>\n]+\}/g, (token) => {
@@ -44,7 +48,7 @@ function TekstblokkForhandsvisning({ html, className, placeholderVerdier, gyldig
   // treffes derfor ikke av uthevingen etterpå.
   const uthevet = useMemo(() => {
     // Markeringer kan ligge lagret i innholdet; uten opprydding nøstes de opp på hverandre.
-    const rentHtml = fjernMarkeringsSpans(html);
+    const rentHtml = fjernMarkeringsSpans(html, PLACEHOLDER_MARKERINGSKLASSER);
     if (!dynamiskPlaceholderPaa) return uthevKlammer(rentHtml);
     const erstattet = placeholderVerdier ? erstattPlaceholdere(rentHtml, placeholderVerdier) : rentHtml;
     return uthevPlaceholders(uthevKlammer(erstattet), gyldigeNokler);

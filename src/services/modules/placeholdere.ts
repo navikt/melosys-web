@@ -46,18 +46,27 @@ const nokkelFraToken = (token: string): string => token.slice(1, -1).trim();
 export const erUkjentPlaceholder = (token: string, gyldigeNokler?: string[]): boolean =>
   Boolean(gyldigeNokler?.length) && !gyldigeNokler?.includes(nokkelFraToken(token));
 
-const MARKERINGSKLASSER = ["placeholder-uerstattet", "placeholder-ukjent", "placeholder-utfylt", "bracketed-text"];
+// Må speile MARKERINGSKLASSER i melosys-api service/.../tekstblokk/TekstblokkHtmlSanitizer.kt
+export const PLACEHOLDER_MARKERINGSKLASSER = ["placeholder-uerstattet", "placeholder-ukjent", "placeholder-utfylt"];
+
+// bracketed-text er bevisst web-only – api-et pakker aldri ut klamme-spans, siden det ville
+// endret innhold fra master-æraen ved lagring med togglen av.
+const MARKERINGSKLASSER = [...PLACEHOLDER_MARKERINGSKLASSER, "bracketed-text"];
 
 // Lagrede tekstblokker/brevmaler kan ha markerings-spans fra editoren bakt inn i innholdet.
 // Uten opprydding nøstes markeringene ved gjenbruk – gul legger seg utenpå blå, og en
 // utfylt verdi ser ut som om den mangler. Teksten beholdes, kun spanene fjernes.
-export const fjernMarkeringsSpans = (html: string): string => {
+// Med et klasse-utvalg beholdes de øvrige markeringene urørt.
+export const fjernMarkeringsSpans = (html: string, klasser: string[] = MARKERINGSKLASSER): string => {
   if (!MARKERINGSKLASSER.some((klasse) => html.includes(klasse))) return html;
 
   const dokument = new DOMParser().parseFromString(html, "text/html");
-  const velger = MARKERINGSKLASSER.map((klasse) => `span.${klasse}`).join(",");
+  const pakkUt = (span: Element) => span.replaceWith(...Array.from(span.childNodes));
+  const velger = klasser.map((klasse) => `span.${klasse}`).join(",");
   // Ytterste span pakkes ut først; nøstede spans henger fortsatt i dokumentet etterpå.
-  dokument.body.querySelectorAll(velger).forEach((span) => span.replaceWith(...Array.from(span.childNodes)));
+  dokument.body.querySelectorAll(velger).forEach(pakkUt);
+  // Klammemarkering inni klammemarkering er alltid overflødig – ytterste holder.
+  dokument.body.querySelectorAll("span.bracketed-text span.bracketed-text").forEach(pakkUt);
   return dokument.body.innerHTML;
 };
 
@@ -68,7 +77,9 @@ export const fjernMarkeringsSpans = (html: string): string => {
 export const erstattPlaceholdere = (html: string, verdier: PlaceholderVerdi[]): string => {
   if (verdier.length === 0) return html;
   const verdiForNokkel = new Map(verdier.map(({ nokkel, verdi }) => [nokkel, verdi]));
-  return html.replace(/\{([^{}<>]+)\}/g, (token, nokkel) => {
+  return html.replace(/\{[^{}<>]+\}/g, (token) => {
+    // Samme trimmede nøkkel som erUkjentPlaceholder, ellers blir «{ saksnummer }» aldri erstattet.
+    const nokkel = nokkelFraToken(token);
     const verdi = verdiForNokkel.get(nokkel);
     // Tom verdi ville gitt en tom span som Quill kaster – da forsvinner {nokkel}
     // sporløst. Behold tokenet så det gulmarkeres i stedet.
@@ -83,10 +94,13 @@ export interface UtdatertPlaceholder {
   ferskVerdi: string;
 }
 
+// Billig sjekk på om teksten i det hele tatt har innsatte verdier å sammenligne.
+export const harInnsatteVerdier = (html: string): boolean => html.includes("placeholder-utfylt");
+
 // Innsatte verdier er frosset i brevteksten. Sammenligningen mot sakens ferske verdier
 // gir grunnlag for å varsle ved sending – den endrer aldri teksten.
 export const finnUtdaterteVerdier = (html: string, ferskeVerdier: PlaceholderVerdi[]): UtdatertPlaceholder[] => {
-  if (!html.includes("placeholder-utfylt")) return [];
+  if (!harInnsatteVerdier(html)) return [];
 
   const ferskForNokkel = new Map(ferskeVerdier.map(({ nokkel, verdi }) => [nokkel, verdi]));
   const dokument = new DOMParser().parseFromString(html, "text/html");

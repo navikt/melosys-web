@@ -173,6 +173,49 @@ describe("SendBrev – varsel om utdaterte placeholder-verdier", () => {
     expect(screen.queryByText("Noen innsatte verdier er utdaterte")).not.toBeInTheDocument();
   });
 
+  it("slår ikke opp ferske verdier for fritekst som ikke er med i bestillingen", async () => {
+    vi.mocked(Api.DokumenterV2.hentTilgjengeligeMaler).mockResolvedValue([
+      { mottaker, brevTyper: [{ ...brevType, felter: [{ ...brevType.felter[0], kode: "IKKE_I_BESTILLINGEN" }] }] },
+    ] as any);
+    renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
+      preloadedState: {
+        ...preloadedState,
+        form: {
+          send_brev: {
+            values: {
+              ...preloadedState.form.send_brev.values,
+              felt: { IKKE_I_BESTILLINGEN: { feltVerdi: FRITEKST_HTML } },
+            },
+          },
+        },
+      },
+    });
+    await klikkSendBrev();
+
+    await ventPaaBestilt();
+    expect(Placeholdere.hentVerdier).not.toHaveBeenCalled();
+  });
+
+  it("slår ikke opp ferske verdier når friteksten ikke har innsatte verdier", async () => {
+    renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
+      preloadedState: {
+        ...preloadedState,
+        form: {
+          send_brev: {
+            values: {
+              ...preloadedState.form.send_brev.values,
+              felt: { FRITEKST: { feltVerdi: "<p>Saken er mottatt.</p>" } },
+            },
+          },
+        },
+      },
+    });
+    await klikkSendBrev();
+
+    await ventPaaBestilt();
+    expect(Placeholdere.hentVerdier).not.toHaveBeenCalled();
+  });
+
   it("slår ikke opp ferske verdier når togglene er av", async () => {
     renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
       preloadedState: { ...preloadedState, featureToggle: { status: STATUS.OK, data: {} } },

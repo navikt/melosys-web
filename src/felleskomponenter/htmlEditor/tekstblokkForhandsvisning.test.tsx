@@ -75,6 +75,13 @@ describe("TekstblokkForhandsvisning", () => {
     expect(container.querySelector(".bracketed-text")?.textContent).toBe("[dato]");
   });
 
+  it("beholder lagret klammemarkering rundt innhold med inline-tagger", () => {
+    const container = renderHtml('<p><span class="bracketed-text">[navn <strong>x</strong>]</span></p>');
+
+    expect(container.querySelectorAll(".bracketed-text")).toHaveLength(1);
+    expect(container.querySelector(".bracketed-text")?.textContent).toBe("[navn x]");
+  });
+
   it("markerer ukjent nøkkel rødt og gyldig nøkkel uten verdi gult", () => {
     const container = renderHtml("<p>{fornavn} og {frnavn}</p>", undefined, ["fornavn"]);
 

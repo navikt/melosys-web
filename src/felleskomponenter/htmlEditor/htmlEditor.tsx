@@ -139,14 +139,21 @@ function HtmlEditor({
   // Siste kjente cursor-posisjon – brukes ved innsetting fra TekstblokkSoek
   const lastSelectionRef = useRef<{ index: number; length: number } | null>(null);
   const dynamiskPlaceholderPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER);
-  // Quill-handleren lever på tvers av rendringer, så den leser toggle og verdier via refs
-  // for å få med seg at de lander etterpå.
-  const dynamiskPlaceholderPaaRef = useRef(dynamiskPlaceholderPaa);
+  // Togglen er undefined til den er lastet; formatene må med uansett, ellers stripper Quill
+  // lagrede markeringer permanent. Kun en eksplisitt av-toggle (rollback) skal fjerne dem.
+  const placeholderFormatsAktive = dynamiskPlaceholderPaa !== false;
+  // Markering krever at verten kan levere verdier eller katalog (Send brev og admin);
+  // saksflyt-editorene får aldri placeholder-kontekst.
+  const markeringAktiv =
+    dynamiskPlaceholderPaa === true && (placeholderVerdier !== undefined || gyldigeNokler !== undefined);
+  // Quill-handleren lever på tvers av rendringer, så den leser tilstanden via refs for å få
+  // med seg at toggle, verdier og katalog lander etterpå.
+  const markeringAktivRef = useRef(markeringAktiv);
   const placeholderVerdierRef = useRef(placeholderVerdier);
   const gyldigeNoklerRef = useRef(gyldigeNokler);
 
   useEffect(() => {
-    dynamiskPlaceholderPaaRef.current = dynamiskPlaceholderPaa;
+    markeringAktivRef.current = markeringAktiv;
     placeholderVerdierRef.current = placeholderVerdier;
     gyldigeNoklerRef.current = gyldigeNokler;
   });
@@ -165,11 +172,11 @@ function HtmlEditor({
     }
   }, [value, internalValue]);
 
-  // Tillatte formater. Placeholder-formatene må følge togglen, ellers beholder innlimt og
-  // lagret innhold markeringene selv om togglen skrus av.
+  // Tillatte formater. Placeholder-formatene faller bort først når togglen eksplisitt er av,
+  // ellers beholder innlimt og lagret innhold markeringene etter en rollback.
   const formats = useMemo(
-    () => (dynamiskPlaceholderPaa ? [...EDITOR_FORMATS, ...PLACEHOLDER_FORMATS] : EDITOR_FORMATS),
-    [dynamiskPlaceholderPaa],
+    () => (placeholderFormatsAktive ? [...EDITOR_FORMATS, ...PLACEHOLDER_FORMATS] : EDITOR_FORMATS),
+    [placeholderFormatsAktive],
   );
 
   // Konfigurerer moduler
@@ -299,7 +306,7 @@ function HtmlEditor({
           matchResult = bracketRegex.exec(text);
         }
 
-        if (dynamiskPlaceholderPaaRef.current) {
+        if (markeringAktivRef.current) {
           fjernUgyldigeUtfylteMarkeringer(quill, placeholderVerdierRef.current);
           markerUerstattedeOmrader(quill, gyldigeNoklerRef.current);
         }
@@ -359,13 +366,13 @@ function HtmlEditor({
       quill.off("text-change", textChangeHandler);
       quill.off("selection-change", selectionChangeHandler);
     };
-  }, [dynamiskPlaceholderPaa]);
+  }, [markeringAktiv, placeholderFormatsAktive]);
 
   // Katalogen lander etter at editoren er montert; uten dette blir ukjente nøkler
   // stående gule til brukeren skriver noe.
   useEffect(() => {
     const quill = quillRef.current?.editor;
-    if (!quill || !dynamiskPlaceholderPaa || !gyldigeNokler?.length) return;
+    if (!quill || !markeringAktiv || !gyldigeNokler?.length) return;
 
     isFormattingRef.current = true;
     try {
@@ -373,7 +380,7 @@ function HtmlEditor({
     } finally {
       isFormattingRef.current = false;
     }
-  }, [gyldigeNokler, dynamiskPlaceholderPaa]);
+  }, [gyldigeNokler, markeringAktiv]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -459,7 +466,7 @@ function HtmlEditor({
           // ReactQuill bygger editoren på nytt når formats endres, men beholder da React-
           // instansen – og våre handlere ville blitt hengende på den forkastede Quill-en.
           // Med key monteres alt på nytt, og effekten over kobler seg til den nye editoren.
-          key={String(dynamiskPlaceholderPaa)}
+          key={String(placeholderFormatsAktive)}
           ref={quillRef}
           theme="snow"
           value={internalValue}

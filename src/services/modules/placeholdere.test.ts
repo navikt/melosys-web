@@ -5,6 +5,7 @@ import {
   erUkjentPlaceholder,
   finnUtdaterteVerdier,
   fjernMarkeringsSpans,
+  PLACEHOLDER_MARKERINGSKLASSER,
   PlaceholderVerdi,
 } from "./placeholdere";
 
@@ -30,6 +31,12 @@ describe("erstattPlaceholdere", () => {
   it("escaper nøkkelen også i tooltipen", () => {
     const resultat = erstattPlaceholdere('<p>{a"b}</p>', [{ nokkel: 'a"b', verdi: "X" }]);
     expect(resultat).toContain('title="Fylt inn automatisk fra saken (a&quot;b)"');
+  });
+
+  it("erstatter nøkkel med luft rundt seg, som erUkjentPlaceholder regner som gyldig", () => {
+    const resultat = erstattPlaceholdere("<p>Saken { saksnummer } er mottatt.</p>", verdier);
+    expect(resultat).toContain('data-placeholder="saksnummer"');
+    expect(resultat).toContain("2024/123456");
   });
 
   it("lar ukjent nøkkel stå urørt", () => {
@@ -122,6 +129,15 @@ describe("fjernMarkeringsSpans", () => {
   it("pakker ut ukjent-markering som ligger lagret i innholdet", () => {
     const html = '<p><span class="placeholder-ukjent">{sksnummer}</span></p>';
     expect(fjernMarkeringsSpans(html)).toBe("<p>{sksnummer}</p>");
+  });
+
+  it("beholder klammemarkeringen når kun placeholder-klassene skal strippes", () => {
+    const html =
+      '<p><span class="bracketed-text">[navn <strong>x</strong>]</span> ' +
+      '<span class="placeholder-uerstattet">{saksnummer}</span></p>';
+    expect(fjernMarkeringsSpans(html, PLACEHOLDER_MARKERINGSKLASSER)).toBe(
+      '<p><span class="bracketed-text">[navn <strong>x</strong>]</span> {saksnummer}</p>',
+    );
   });
 
   it("beholder annen markup og lar HTML uten markeringer stå urørt", () => {
