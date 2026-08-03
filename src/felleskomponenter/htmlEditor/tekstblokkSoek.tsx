@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as Nav from "../../navFrontend";
 import { useFiltrerteTekstblokker, useTekstblokker } from "../../services/api/tekstblokker";
 import { TekstblokkOversikt, TekstblokkType } from "../../services/modules/tekstblokker";
+import { PlaceholderVerdi } from "../../services/modules/placeholdere";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER } from "../../featuretoggle/toggleNavn";
 import TekstblokkForhandsvisning from "./tekstblokkForhandsvisning";
@@ -16,17 +17,36 @@ interface Props {
   // I Send brev (sidemenyen) kan brukeren også sette inn hele brevmaler. I selve
   // saksflytene er vedtaksbrevet allerede en mal, så da viser vi kun tekstblokker.
   visBrevmaler?: boolean;
+  // Finnes når editoren kan fylle inn verdier – da forhåndsvises tekstblokken ferdig utfylt.
+  placeholderVerdier?: PlaceholderVerdi[];
+  // Nøklene fra placeholder-katalogen; skiller ukjente nøkler (røde) fra gyldige uten verdi.
+  gyldigeNokler?: string[];
 }
 
 const SIDE_STORRELSE = 10;
 
-function TekstblokkSoek({ onVelg, disabled, visBrevmaler = false }: Props) {
+// Luft mot vindukanten, i tråd med shift-paddingen Aksel-popoveren bruker.
+const POPOVER_MARG = 16;
+
+// Header, faner og filtre tar rundt 15rem. Under dette blir det ikke plass til treff i
+// det hele tatt, så vi lar heller popoveren ta det meste av vinduet enn å vise en tom liste.
+const MIN_POPOVER_HOYDE = 384;
+
+function TekstblokkSoek({ onVelg, disabled, visBrevmaler = false, placeholderVerdier, gyldigeNokler }: Props) {
   const togglePaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
   if (!togglePaa) return null;
-  return <TekstblokkSoekIntern onVelg={onVelg} disabled={disabled} visBrevmaler={visBrevmaler} />;
+  return (
+    <TekstblokkSoekIntern
+      onVelg={onVelg}
+      disabled={disabled}
+      visBrevmaler={visBrevmaler}
+      placeholderVerdier={placeholderVerdier}
+      gyldigeNokler={gyldigeNokler}
+    />
+  );
 }
 
-function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props) {
+function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placeholderVerdier, gyldigeNokler }: Props) {
   const ankerRef = useRef<HTMLDivElement>(null);
   const [aapen, setAapen] = useState(false);
   const [aktivType, setAktivType] = useState<TekstblokkType>("TEKSTBLOKK");
@@ -35,6 +55,7 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
   const [soek, setSoek] = useState("");
   const [valgteTags, setValgteTags] = useState<string[]>([]);
   const [antallVist, setAntallVist] = useState(SIDE_STORRELSE);
+  const [tilgjengeligHoyde, setTilgjengeligHoyde] = useState<number | null>(null);
 
   const { data: blokker = [], isLoading } = useTekstblokker(aktivType, aapen);
 
@@ -57,6 +78,21 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
   const nullstillFiltre = () => {
     setSoek("");
     setValgteTags([]);
+  };
+
+  // Popoveren har fast høyde og kan ikke krympe selv, så vi måler hvor mye plass som
+  // faktisk er ledig over og under knappen før den åpnes. Uten dette blir toppen –
+  // med søkefelt og tag-filter – klippet bort der det er trangt.
+  const aapne = () => {
+    const anker = ankerRef.current?.getBoundingClientRect();
+    if (anker) {
+      const plassOver = anker.top - POPOVER_MARG;
+      const plassUnder = window.innerHeight - anker.bottom - POPOVER_MARG;
+      const heleVinduet = window.innerHeight - POPOVER_MARG * 2;
+      const oenskethoyde = Math.max(plassOver, plassUnder, MIN_POPOVER_HOYDE);
+      setTilgjengeligHoyde(Math.min(oenskethoyde, heleVinduet));
+    }
+    setAapen(true);
   };
 
   const lukk = () => {
@@ -88,7 +124,7 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
         <Nav.Button
           variant="tertiary"
           size="small"
-          onClick={() => (aapen ? lukk() : setAapen(true))}
+          onClick={() => (aapen ? lukk() : aapne())}
           disabled={disabled}
           type="button"
         >
@@ -103,7 +139,10 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
         arrow={false}
         className="tekstblokkSoek__popover"
       >
-        <Popover.Content className="tekstblokkSoek__innhold">
+        <Popover.Content
+          className="tekstblokkSoek__innhold"
+          style={tilgjengeligHoyde ? { height: `min(46rem, ${tilgjengeligHoyde}px)` } : undefined}
+        >
           <div className="tekstblokkSoek__topp">
             <div className="tekstblokkSoek__header">
               <Nav.Heading size="xsmall" level="2">
@@ -129,10 +168,7 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
             )}
 
             <div className="tekstblokkSoek__filtre">
-              {/* Popover skjuler med CSS uten å unmounte, så autoFocus krever samme
-                  key-remount som Comboboxen for å faktisk gi fokus ved åpning. */}
               <Search
-                key={aapen ? "apen" : "lukket"}
                 label="Søk på tittel eller tag"
                 hideLabel={false}
                 size="small"
@@ -140,13 +176,12 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
                 placeholder="Søk…"
                 value={soek}
                 onChange={setSoek}
-                autoFocus
               />
 
               {/* key remounter Combobox ved gjenåpning så uncommittet input-tekst ikke
                   henger igjen (Popover skjuler med CSS, unmounter ikke innholdet). */}
               <Combobox
-                key={aapen ? "apen" : "lukket"}
+                key={`tags-${aapen}`}
                 label="Filtrer på tags"
                 size="small"
                 isMultiSelect
@@ -187,6 +222,8 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
               <TekstblokkRad
                 key={blokk.id}
                 blokk={blokk}
+                placeholderVerdier={placeholderVerdier}
+                gyldigeNokler={gyldigeNokler}
                 onVelg={(html) => {
                   onVelg(html);
                   lukk();
@@ -215,9 +252,11 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false }: Props)
 interface RadProps {
   blokk: TekstblokkOversikt;
   onVelg: (html: string) => void;
+  placeholderVerdier?: PlaceholderVerdi[];
+  gyldigeNokler?: string[];
 }
 
-function TekstblokkRad({ blokk, onVelg }: RadProps) {
+function TekstblokkRad({ blokk, onVelg, placeholderVerdier, gyldigeNokler }: RadProps) {
   // Innhold er skjult som standard – vises kun når brukeren ber om det.
   const [visInnhold, setVisInnhold] = useState(false);
 
@@ -247,7 +286,11 @@ function TekstblokkRad({ blokk, onVelg }: RadProps) {
       </div>
       {visInnhold && (
         <div className="tekstblokkSoek__forhandsvisning tekstblokkSoek__forhandsvisning--full">
-          <TekstblokkForhandsvisning html={blokk.innhold} />
+          <TekstblokkForhandsvisning
+            html={blokk.innhold}
+            placeholderVerdier={placeholderVerdier}
+            gyldigeNokler={gyldigeNokler}
+          />
         </div>
       )}
     </div>

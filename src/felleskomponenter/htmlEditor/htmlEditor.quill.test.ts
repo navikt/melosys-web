@@ -1,0 +1,193 @@
+import { describe, expect, it } from "vitest";
+import { Quill } from "react-quill-new";
+
+// Importeres for sideeffekten: HtmlEditor registrerer BracketBlot, placeholderMarkering
+// registrerer de to placeholder-blotene.
+import "./htmlEditor";
+import {
+  EDITOR_FORMATS,
+  fjernUgyldigeUtfylteMarkeringer,
+  forberedTekstblokkHtml,
+  markerUerstattedeOmrader,
+  PLACEHOLDER_FORMATS,
+} from "./placeholderMarkering";
+import { PlaceholderVerdi } from "../../services/modules/placeholdere";
+
+// Kjører en ekte Quill 2-instans med produksjonens formats-liste og blots, slik at vi
+// fanger opp det ren regex-testing ikke ser: at Parchment beholder markeringene.
+const lagEditor = (formats: string[] = [...EDITOR_FORMATS, ...PLACEHOLDER_FORMATS]) => {
+  const node = document.createElement("div");
+  document.body.appendChild(node);
+  return new Quill(node, { formats });
+};
+
+const verdier: PlaceholderVerdi[] = [{ nokkel: "saksnummer", verdi: "2024/123456" }];
+
+describe("HtmlEditor med ekte Quill", () => {
+  it("beholder verdi og nøkkel når erstattet tekstblokk-HTML limes inn", () => {
+    const quill = lagEditor();
+
+    quill.clipboard.dangerouslyPasteHTML(0, forberedTekstblokkHtml("<p>Saken {saksnummer} er mottatt.</p>", verdier));
+
+    expect(quill.root.innerHTML).toContain("2024/123456");
+    expect(quill.root.innerHTML).toContain('data-placeholder="saksnummer"');
+    expect(quill.getText()).not.toContain("{saksnummer}");
+  });
+
+  it("markerer uerstattet placeholder uten å røre klammemarkeringen", () => {
+    const quill = lagEditor();
+    quill.setText("Se [KLAMME] og {nokkel} her\n");
+    quill.formatText(3, 8, "bracketed", true);
+
+    markerUerstattedeOmrader(quill);
+
+    expect(quill.root.innerHTML).toContain('<span class="bracketed-text">[KLAMME]</span>');
+    expect(quill.root.querySelector(".placeholder-uerstattet")?.textContent).toBe("{nokkel}");
+    expect(quill.getFormat(15, 8)).toEqual({ "placeholder-uerstattet": true });
+    expect(quill.getFormat(3, 8)).toEqual({ bracketed: true });
+  });
+
+  it("lar {nokkel} med tom verdi bli stående og gulmarkerer den", () => {
+    const quill = lagEditor();
+
+    quill.clipboard.dangerouslyPasteHTML(
+      0,
+      forberedTekstblokkHtml("<p>Hei {navn}.</p>", [{ nokkel: "navn", verdi: "" }]),
+    );
+    markerUerstattedeOmrader(quill);
+
+    expect(quill.getText()).toContain("{navn}");
+    expect(quill.root.querySelector(".placeholder-uerstattet")?.textContent).toBe("{navn}");
+  });
+
+  it("markerer ukjent nøkkel rødt og gyldig nøkkel uten verdi gult", () => {
+    const quill = lagEditor();
+    quill.setText("{saksnummer} og {sksnummer}\n");
+
+    markerUerstattedeOmrader(quill, ["saksnummer"]);
+
+    expect(quill.root.querySelector(".placeholder-uerstattet")?.textContent).toBe("{saksnummer}");
+    expect(quill.root.querySelector(".placeholder-ukjent")?.textContent).toBe("{sksnummer}");
+    expect(quill.root.querySelector(".placeholder-ukjent")?.getAttribute("title")).toContain(
+      "Ikke en gyldig placeholder",
+    );
+  });
+
+  it("markerer alt gult uten kjente nøkler (katalogen ikke lastet)", () => {
+    const quill = lagEditor();
+    quill.setText("{sksnummer}\n");
+
+    markerUerstattedeOmrader(quill);
+
+    expect(quill.root.querySelector(".placeholder-ukjent")).toBeNull();
+    expect(quill.root.querySelector(".placeholder-uerstattet")?.textContent).toBe("{sksnummer}");
+  });
+
+  it("bytter markering fra rød til gul når nøkkelen rettes opp", () => {
+    const quill = lagEditor();
+    quill.setText("{sksnummer}\n");
+    markerUerstattedeOmrader(quill, ["saksnummer"]);
+    expect(quill.root.querySelector(".placeholder-ukjent")).not.toBeNull();
+
+    quill.insertText(2, "a");
+    markerUerstattedeOmrader(quill, ["saksnummer"]);
+
+    expect(quill.root.querySelector(".placeholder-ukjent")).toBeNull();
+    expect(quill.root.querySelector(".placeholder-uerstattet")?.textContent).toBe("{saksnummer}");
+  });
+
+  it("fjerner rødmarkeringen når brukeren sletter klammene rundt nøkkelen", () => {
+    const quill = lagEditor();
+    quill.setText("{ab}\n");
+    markerUerstattedeOmrader(quill, ["saksnummer"]);
+    expect(quill.root.querySelector(".placeholder-ukjent")).not.toBeNull();
+
+    quill.deleteText(3, 1);
+    quill.deleteText(0, 1);
+    markerUerstattedeOmrader(quill, ["saksnummer"]);
+
+    expect(quill.root.querySelector(".placeholder-ukjent")).toBeNull();
+  });
+
+  it("markerer ikke over avsnittsgrenser når klammene står uparet på hver sin linje", () => {
+    const quill = lagEditor();
+    quill.setText("Et { her\nog et } der\n");
+
+    markerUerstattedeOmrader(quill);
+
+    expect(quill.root.innerHTML).not.toContain("placeholder-uerstattet");
+  });
+
+  it("fjerner gulmarkeringen når brukeren sletter klammene rundt nøkkelen", () => {
+    const quill = lagEditor();
+    quill.setText("{ab}\n");
+    markerUerstattedeOmrader(quill);
+    expect(quill.root.querySelector(".placeholder-uerstattet")).not.toBeNull();
+
+    // Klammene slettes hver for seg, så teksten står igjen helt uten klammer.
+    quill.deleteText(3, 1);
+    quill.deleteText(0, 1);
+    markerUerstattedeOmrader(quill);
+
+    expect(quill.getText()).toContain("ab");
+    expect(quill.root.querySelector(".placeholder-uerstattet")).toBeNull();
+  });
+
+  it("dropper markeringene i innlimt innhold når formats mangler placeholder-navnene", () => {
+    const quill = lagEditor(EDITOR_FORMATS);
+
+    quill.clipboard.dangerouslyPasteHTML(0, forberedTekstblokkHtml("<p>Saken {saksnummer} er mottatt.</p>", verdier));
+
+    expect(quill.getText()).toContain("2024/123456");
+    expect(quill.root.innerHTML).not.toContain("placeholder-utfylt");
+    expect(quill.root.innerHTML).not.toContain("data-placeholder");
+  });
+
+  it("fjerner utfylt-markeringen når det skrives inni verdien", () => {
+    const quill = lagEditor();
+    quill.clipboard.dangerouslyPasteHTML(0, forberedTekstblokkHtml("<p>Saken {saksnummer} er mottatt.</p>", verdier));
+
+    // "Saken " er 6 tegn, så indeks 10 ligger midt inne i den utfylte verdien.
+    quill.insertText(10, "X");
+    fjernUgyldigeUtfylteMarkeringer(quill, verdier);
+
+    expect(quill.getText()).toContain("2024X/123456");
+    expect(quill.root.querySelector(".placeholder-utfylt")).toBeNull();
+  });
+
+  it("lar en urørt utfylt verdi beholde markeringen", () => {
+    const quill = lagEditor();
+    quill.clipboard.dangerouslyPasteHTML(0, forberedTekstblokkHtml("<p>Saken {saksnummer} er mottatt.</p>", verdier));
+
+    fjernUgyldigeUtfylteMarkeringer(quill, verdier);
+
+    expect(quill.root.querySelector(".placeholder-utfylt")?.textContent).toBe("2024/123456");
+  });
+
+  it("rører ikke markeringene uten kjente verdier (andre editorer)", () => {
+    const quill = lagEditor();
+    quill.clipboard.dangerouslyPasteHTML(0, forberedTekstblokkHtml("<p>Saken {saksnummer} er mottatt.</p>", verdier));
+
+    fjernUgyldigeUtfylteMarkeringer(quill, undefined);
+
+    expect(quill.root.querySelector(".placeholder-utfylt")?.textContent).toBe("2024/123456");
+  });
+
+  it("nøster ikke markeringer når lagret innhold alt har markerings-spans", () => {
+    const quill = lagEditor();
+
+    quill.clipboard.dangerouslyPasteHTML(
+      0,
+      forberedTekstblokkHtml(
+        '<p><span class="placeholder-uerstattet">{saksnummer}</span> og ' +
+          '<span class="bracketed-text"><span class="bracketed-text">[dato]</span></span></p>',
+        verdier,
+      ),
+    );
+    markerUerstattedeOmrader(quill);
+
+    expect(quill.root.querySelector(".placeholder-utfylt")?.textContent).toBe("2024/123456");
+    expect(quill.root.querySelector(".placeholder-uerstattet")).toBeNull();
+    expect(quill.getText()).toContain("[dato]");
+  });
+});

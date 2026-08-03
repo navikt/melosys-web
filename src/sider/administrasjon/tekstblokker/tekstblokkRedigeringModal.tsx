@@ -1,9 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { ReadMore } from "@navikt/ds-react";
 
 import * as Nav from "../../../navFrontend";
 import HtmlEditor from "../../../felleskomponenter/htmlEditor/htmlEditor";
+import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
+import { MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggle/toggleNavn";
+import { usePlaceholderKatalog } from "../../../services/api/placeholdere";
 import { useOppdaterTekstblokk, useOpprettTekstblokk, useTekstblokk } from "../../../services/api/tekstblokker";
 import { leggTilTag, TekstblokkRequest, TekstblokkType } from "../../../services/modules/tekstblokker";
+import { PlaceholderKatalogTabell } from "./placeholderKatalog";
 import TagInput from "./tagInput";
 import { labelForType } from "./labels";
 
@@ -19,6 +24,11 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
   const eksisterende = useTekstblokk(redigerId);
   const opprett = useOpprettTekstblokk();
   const oppdater = useOppdaterTekstblokk();
+  const dynamiskPlaceholderPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER);
+  // Boolean(): en toggle som ennå ikke er lastet er undefined, og ville truffet enabled-defaulten.
+  const { data: katalog } = usePlaceholderKatalog(Boolean(dynamiskPlaceholderPaa));
+  // Uten verdier her blir gyldige nøkler gule og ukjente røde – nettopp det admin trenger.
+  const gyldigeNokler = useMemo(() => katalog?.map(({ nokkel }) => nokkel), [katalog]);
 
   const [tittel, setTittel] = useState("");
   const [innhold, setInnhold] = useState("");
@@ -89,8 +99,20 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
 
             <div className="tekstblokker__modal-editor">
               {/* Ingen innsetting av andre tekstblokker her – vi redigerer selve kilden. */}
-              <HtmlEditor value={innhold} onChange={setInnhold} label="Innhold" visTekstblokkSoek={false} />
+              <HtmlEditor
+                value={innhold}
+                onChange={setInnhold}
+                label="Innhold"
+                visTekstblokkSoek={false}
+                gyldigeNokler={gyldigeNokler}
+              />
             </div>
+
+            {dynamiskPlaceholderPaa && katalog && katalog.length > 0 && (
+              <ReadMore header="Tilgjengelige placeholdere" size="small">
+                <PlaceholderKatalogTabell placeholdere={katalog} />
+              </ReadMore>
+            )}
 
             {feil && (
               <Nav.Alert variant="error" size="small">

@@ -9,6 +9,7 @@ import TekstblokkRedigeringModal from "./tekstblokkRedigeringModal";
 import TekstblokkSlettBekreftelse from "./tekstblokkSlettBekreftelse";
 import TekstblokkerFilter from "./tekstblokkerFilter";
 import TekstblokkerListe from "./tekstblokkerListe";
+import PlaceholderKatalog from "./placeholderKatalog";
 import { labelForType } from "./labels";
 
 import "./tekstblokker.less";
@@ -69,6 +70,8 @@ function TekstblokkerSide() {
           Ny {labelForType(type)}
         </Nav.Button>
       </div>
+
+      <PlaceholderKatalog />
 
       <TekstblokkerFilter
         type={type}

@@ -104,6 +104,24 @@
     color: var(--a-text-danger);
   }
 
+  // Samme blå utfylt-tone som i editoren (htmlEditor.less).
+  .placeholder-utfylt {
+    background-color: var(--a-surface-info-subtle, #e0f1ff);
+    border-radius: 2px;
+  }
+
+  // Samme gule varseltone som i editoren (htmlEditor.less).
+  .placeholder-uerstattet {
+    background-color: var(--a-surface-warning-subtle, #ffeccc);
+    border-radius: 2px;
+  }
+
+  // Samme røde tone som i editoren: nøkkelen finnes ikke i katalogen.
+  .placeholder-ukjent {
+    background-color: var(--a-surface-danger-subtle, #ffe3e3);
+    border-radius: 2px;
+  }
+
   table {
     width: auto !important;
     max-width: 100% !important;
