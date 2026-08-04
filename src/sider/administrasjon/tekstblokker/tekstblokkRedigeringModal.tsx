@@ -19,13 +19,17 @@ import { PlaceholderKatalogTabell, PlaceholderValgHjelpetekst } from "./placehol
 import TagInput from "./tagInput";
 import { labelForType } from "./labels";
 
-// En 400 herfra er en verdi api-et ikke godtar (typisk en avgrensningskode), og den rå
-// meldingen er teknisk. Andre feil viser vi som de er.
+// En 400 med feilkoder er bean-validering (for lang tittel/tag) – de meldingene peker på
+// riktig felt og vises som de er. En 400 uten feilkoder er en verdi api-et ikke kunne lese,
+// i denne modalen i praksis en avgrensningskode. Andre feil viser vi som de er.
 const feilmelding = (feil: Error | null): string | null => {
   if (!feil) return null;
-  return isApiError(feil) && feil.status === 400
-    ? "Ugyldig verdi i avgrensningen — last siden på nytt og prøv igjen"
-    : feil.message;
+  if (!isApiError(feil) || feil.status !== 400) return feil.message;
+  const feilkoder = feil.body?.feilkoder;
+  if (feilkoder?.length) {
+    return feilkoder.map((feilkode) => (typeof feilkode === "string" ? feilkode : feilkode.kode)).join(", ");
+  }
+  return "Ugyldig verdi i avgrensningen — last siden på nytt og prøv igjen";
 };
 
 interface Props {

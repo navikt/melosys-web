@@ -71,8 +71,14 @@ const normaliser = (blokk: Normaliserbar): Normalisert => ({
   status: blokk.status ?? "PUBLISERT",
 });
 
-export const hentAlle = (type?: TekstblokkType): Promise<TekstblokkOversikt[]> => {
-  const url = type ? `${baseUrl}?type=${type}` : baseUrl;
+// inkluderUtkast sendes kun fra admin-flaten. Api-et leverer utkast bare når parameteren
+// er satt OG brukeren har admin-toggle – Send brev-søket ber aldri om dem.
+export const hentAlle = (type?: TekstblokkType, inkluderUtkast = false): Promise<TekstblokkOversikt[]> => {
+  const parametre = new URLSearchParams();
+  if (type) parametre.set("type", type);
+  if (inkluderUtkast) parametre.set("inkluderUtkast", "true");
+  const query = parametre.toString();
+  const url = query ? `${baseUrl}?${query}` : baseUrl;
   return getAsJson(url).then((blokker: TekstblokkOversikt[]) =>
     blokker.map((blokk) => ({ ...blokk, ...normaliser(blokk) })),
   );

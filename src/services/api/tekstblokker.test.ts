@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { useFiltrerteTekstblokker } from "./tekstblokker";
 import { Statusfilter, TekstblokkOversikt, TekstblokkStatus } from "../modules/tekstblokker";
+import { tekstblokkOversikt } from "../modules/tekstblokkTestdata";
 
 const blokk = (
   id: number,
@@ -11,19 +12,7 @@ const blokk = (
   sakstyper: string[] = [],
   behandlingstemaer: string[] = [],
   status: TekstblokkStatus = "PUBLISERT",
-): TekstblokkOversikt => ({
-  id,
-  tittel,
-  innhold: "",
-  type: "TEKSTBLOKK",
-  tags,
-  sakstyper,
-  behandlingstemaer,
-  status,
-  endretDato: "2026-01-01T00:00:00Z",
-  endretAv: "Z123456",
-  endretAvNavn: null,
-});
+): TekstblokkOversikt => tekstblokkOversikt({ id, tittel, innhold: "", tags, sakstyper, behandlingstemaer, status });
 
 const alle = blokk(1, "Gjelder alle", ["felles"]);
 const euEos = blokk(2, "Kun EU/EØS", ["felles", "eueos"], ["EU_EOS"]);

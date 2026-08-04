@@ -245,7 +245,7 @@ describe("finnUtdaterteVerdier", () => {
   it("rapporterer innsatt verdi som avviker fra fersk verdi", () => {
     const html = `<p>Saken ${utfylt("saksnummer", "MEL-21")} er mottatt.</p>`;
     expect(finnUtdaterteVerdier(html, [{ nokkel: "saksnummer", verdi: "MEL-22" }])).toEqual([
-      { nokkel: "saksnummer", innsattVerdi: "MEL-21", ferskVerdi: "MEL-22" },
+      { nokkel: "saksnummer", innsattVerdi: "MEL-21", ferskVerdi: "MEL-22", fortsattKandidat: false },
     ]);
   });
 
@@ -254,17 +254,21 @@ describe("finnUtdaterteVerdier", () => {
     expect(finnUtdaterteVerdier(html, verdier)).toEqual([]);
   });
 
-  it("rapporterer ikke en verdi saksbehandler har valgt blant kandidatene", () => {
+  it("rapporterer avvik som fortsatt står i kandidatlisten, flagget som mulig bevisst valg", () => {
+    // Et forhåndsvalg som senere endret seg kan bli stående i kandidatlisten – da må
+    // avviket varsles likevel, ellers går utdaterte verdier ut i brevet uten varsel.
     const html = `<p>${utfylt("saksnummer", "MEL-21")}</p>`;
     const ferske: PlaceholderVerdi[] = [{ nokkel: "saksnummer", verdi: "MEL-22", kandidater: ["MEL-22", "MEL-21"] }];
 
-    expect(finnUtdaterteVerdier(html, ferske)).toEqual([]);
+    expect(finnUtdaterteVerdier(html, ferske)).toEqual([
+      { nokkel: "saksnummer", innsattVerdi: "MEL-21", ferskVerdi: "MEL-22", fortsattKandidat: true },
+    ]);
   });
 
   it("rapporterer nøkkel uten fersk verdi med tom ferskVerdi", () => {
     const html = `<p>${utfylt("utgaatt-nokkel", "Gammel verdi")}</p>`;
     expect(finnUtdaterteVerdier(html, verdier)).toEqual([
-      { nokkel: "utgaatt-nokkel", innsattVerdi: "Gammel verdi", ferskVerdi: "" },
+      { nokkel: "utgaatt-nokkel", innsattVerdi: "Gammel verdi", ferskVerdi: "", fortsattKandidat: false },
     ]);
   });
 

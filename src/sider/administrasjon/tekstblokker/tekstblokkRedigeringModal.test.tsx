@@ -129,12 +129,27 @@ describe("TekstblokkRedigeringModal – feilmelding ved lagring", () => {
     mocks.tekstblokk.mockReturnValue({ data: undefined, isLoading: false });
   });
 
-  it("oversetter 400 til en forståelig melding", () => {
+  it("oversetter 400 uten feilkoder til en forståelig melding", () => {
     mocks.opprettFeil.mockReturnValue(apiFeil(400, "JSON parse error: Cannot deserialize value of type Sakstype"));
 
     visModal();
 
     expect(screen.getByText("Ugyldig verdi i avgrensningen — last siden på nytt og prøv igjen")).toBeDefined();
+  });
+
+  it("viser feilkodene fra en 400 med bean-validering i stedet for avgrensningsmeldingen", () => {
+    // En for lang tittel har ingenting med avgrensningen å gjøre – meldingen fra api-et
+    // peker på riktig felt og skal frem til admin.
+    mocks.opprettFeil.mockReturnValue(
+      Object.assign(apiFeil(400, "Validation failed"), {
+        body: { feilkoder: ["tittel: size must be between 0 and 200"] },
+      }),
+    );
+
+    visModal();
+
+    expect(screen.getByText("tittel: size must be between 0 and 200")).toBeDefined();
+    expect(screen.queryByText(/Ugyldig verdi i avgrensningen/)).toBeNull();
   });
 
   it("viser meldingen som den er for andre feil", () => {
