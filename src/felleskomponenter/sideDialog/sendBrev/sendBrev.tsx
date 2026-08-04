@@ -37,7 +37,8 @@ import { MELOSYS_TEKSTBLOKKER, MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from 
 import {
   finnUopplosteBetingelser,
   finnUtdaterteVerdier,
-  finnUutfylte,
+  finnUutfylteKlammer,
+  finnUutfylteTokener,
   harInnsatteVerdier,
   hentVerdier,
   UtdatertPlaceholder,
@@ -513,13 +514,16 @@ function SendBrev({
       return;
     }
 
-    const fritekstHtml = tekstblokkerPaa && dynamiskPlaceholderPaa ? hentFritekstHtml() : "";
+    // Klammer-varselet gjelder alle brev – [felt]-konvensjonen er uavhengig av
+    // placeholder-funksjonen. Token- og verdisjekkene krever togglene.
+    const brevHtml = hentFritekstHtml();
+    const placeholderAktiv = Boolean(tekstblokkerPaa && dynamiskPlaceholderPaa);
     // Uoppløste betingelser varsles i samme modal som utdaterte verdier, uten å blokkere sendingen.
-    const uopploste = finnUopplosteBetingelser(fritekstHtml);
+    const uopploste = placeholderAktiv ? finnUopplosteBetingelser(brevHtml) : [];
     // Klammefelt og tokener som aldri ble fylt ut ville gått ordrett ut i brevet.
-    const uutfylte = finnUutfylte(fritekstHtml);
+    const uutfylte = [...finnUutfylteKlammer(brevHtml), ...(placeholderAktiv ? finnUutfylteTokener(brevHtml) : [])];
     // Uten innsatte verdier er det ingenting å sammenligne, og oppslaget er unødvendig.
-    const utdaterte = harInnsatteVerdier(fritekstHtml) ? await hentUtdaterteVerdier(fritekstHtml) : [];
+    const utdaterte = placeholderAktiv && harInnsatteVerdier(brevHtml) ? await hentUtdaterteVerdier(brevHtml) : [];
 
     if (utdaterte.length > 0 || uopploste.length > 0 || uutfylte.length > 0) {
       setSendBrevSpinner(false);

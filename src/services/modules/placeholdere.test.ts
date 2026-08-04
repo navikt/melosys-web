@@ -10,7 +10,8 @@ import {
   finnSakstypeKonflikter,
   finnUopplosteBetingelser,
   finnUtdaterteVerdier,
-  finnUutfylte,
+  finnUutfylteKlammer,
+  finnUutfylteTokener,
   PlaceholderBeskrivelse,
   fjernMarkeringsSpans,
   losOppBetingelser,
@@ -554,29 +555,39 @@ describe("finnSakstypeKonflikter", () => {
   });
 });
 
-describe("finnUutfylte", () => {
+describe("finnUutfylteKlammer", () => {
   it("lister klammefelt i teksten", () => {
-    expect(finnUutfylte("<p>Hei [navn], du får [beløp].</p>")).toEqual(["[navn]", "[beløp]"]);
+    expect(finnUutfylteKlammer("<p>Hei [navn], du får [beløp].</p>")).toEqual(["[navn]", "[beløp]"]);
   });
 
   it("lister klammefelt som editoren har markert, uten duplikat", () => {
     const html = '<p>Hei <span class="bracketed-text">[navn]</span> og [navn].</p>';
-    expect(finnUutfylte(html)).toEqual(["[navn]"]);
+    expect(finnUutfylteKlammer(html)).toEqual(["[navn]"]);
   });
 
-  it("lister uerstattede tokener og uvalgte valgtokener", () => {
-    const html = "<p>{saksnummer} {velg:Ja|Nei}</p>";
-    expect(finnUutfylte(html)).toEqual(["{saksnummer}", "{velg:Ja|Nei}"]);
-  });
-
-  it("lister ikke betingelsestokener – de varsles for seg", () => {
-    expect(finnUutfylte("<p>{#hvis avslag}Avslag{/hvis}</p>")).toEqual([]);
+  it("lister ikke tokener – de hører til finnUutfylteTokener", () => {
+    expect(finnUutfylteKlammer("<p>{saksnummer}</p>")).toEqual([]);
   });
 
   it("lister ingenting for et utfylt brev", () => {
     const html =
       '<p>Saken <span class="placeholder-utfylt" data-placeholder="saksnummer">MEL-21</span> er mottatt.</p>';
-    expect(finnUutfylte(html)).toEqual([]);
-    expect(finnUutfylte("")).toEqual([]);
+    expect(finnUutfylteKlammer(html)).toEqual([]);
+    expect(finnUutfylteKlammer("")).toEqual([]);
+  });
+});
+
+describe("finnUutfylteTokener", () => {
+  it("lister uerstattede tokener og uvalgte valgtokener", () => {
+    const html = "<p>{saksnummer} {velg:Ja|Nei}</p>";
+    expect(finnUutfylteTokener(html)).toEqual(["{saksnummer}", "{velg:Ja|Nei}"]);
+  });
+
+  it("lister ikke betingelsestokener – de varsles for seg", () => {
+    expect(finnUutfylteTokener("<p>{#hvis avslag}Avslag{/hvis}</p>")).toEqual([]);
+  });
+
+  it("lister ikke klammefelt", () => {
+    expect(finnUutfylteTokener("<p>Hei [navn].</p>")).toEqual([]);
   });
 });
