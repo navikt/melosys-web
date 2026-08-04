@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ReadMore } from "@navikt/ds-react";
 
 import * as Nav from "../../../navFrontend";
@@ -61,8 +61,16 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
   const [tagUtkast, setTagUtkast] = useState("");
   const [avgrensningApen, setAvgrensningApen] = useState(false);
 
+  // Skjemaet fylles én gang per åpnet blokk: en bakgrunns-refetch gir et nytt data-objekt, og
+  // uten dette ville den nullstilt det admin holder på å skrive.
+  const initiertId = useRef<number | null>(null);
   useEffect(() => {
-    if (eksisterende.data) {
+    initiertId.current = null;
+  }, [redigerId]);
+
+  useEffect(() => {
+    if (eksisterende.data && initiertId.current !== eksisterende.data.id) {
+      initiertId.current = eksisterende.data.id;
       setTittel(eksisterende.data.tittel);
       setInnhold(eksisterende.data.innhold);
       setTags(eksisterende.data.tags);

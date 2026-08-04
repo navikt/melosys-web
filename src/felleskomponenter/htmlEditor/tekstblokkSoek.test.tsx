@@ -81,6 +81,18 @@ describe("TekstblokkSoek – kontekstavgrensning", () => {
     expect(screen.queryByText(/gjelder denne saken/)).toBeNull();
   });
 
+  it("tilbyr «Vis alle» sammen med søkerådet når søket bare treffer utenfor konteksten", async () => {
+    await aapneSoek(sakskontekst("FTRL", "PENSJONIST"));
+    await userEvent.type(screen.getByRole("searchbox", { name: "Søk på tittel eller tag" }), "EU/EØS");
+
+    expect(screen.getByText("Ingen tekstblokker gjelder denne saken (sakstype/behandlingstema).")).toBeDefined();
+    expect(screen.getByText(/Prøv et annet søkeord/)).toBeDefined();
+
+    await userEvent.click(screen.getByRole("button", { name: "Vis alle" }));
+
+    expect(screen.getByText("Bare EU/EØS")).toBeDefined();
+  });
+
   it("beholder søketeksten i tomtilstanden når søket er det som tømmer lista", async () => {
     await aapneSoek(sakskontekst("EU_EOS", "UTSENDT_ARBEIDSTAKER"));
     await userEvent.type(screen.getByRole("searchbox", { name: "Søk på tittel eller tag" }), "finnesikke");

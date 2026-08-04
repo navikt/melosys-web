@@ -11,7 +11,7 @@ import {
   markerUerstattedeOmrader,
   PLACEHOLDER_FORMATS,
 } from "./placeholderMarkering";
-import { finnPlaceholderTreff, gjorOmTilVanligTekst, settInnValg } from "./placeholderValg";
+import { finnPlaceholderTreff, gjorOmTilVanligTekst, naermestePosisjon, settInnValg } from "./placeholderValg";
 import { PlaceholderVerdi } from "../../services/modules/placeholdere";
 
 // Kjører en ekte Quill 2-instans med produksjonens formats-liste og blots, slik at vi
@@ -359,6 +359,23 @@ describe("Valgmekanikk i Quill", () => {
 
     expect(quill.root.querySelector("span.placeholder-valgt")?.textContent).toBe("Montenegro");
     expect(quill.getText()).toBe("Land: Montenegro!\n");
+  });
+
+  // Popoveren slår opp markeringen på nytt etter en redigering; med to like tokener skiller
+  // hverken tekst eller markering dem, og den første i DOM-en er som regel feil.
+  it("velger tokenet nærmest der treffet ble åpnet når to like står i teksten", () => {
+    const quill = lagEditor();
+    quill.setText("A {velg:Ja|Nei} og B {velg:Ja|Nei}\n");
+    markerUerstattedeOmrader(quill);
+    const kandidater = Array.from(quill.root.querySelectorAll<HTMLElement>("span.placeholder-valg")).map((span) => {
+      const treff = finnPlaceholderTreff(quill, span);
+      if (!treff) throw new Error("Fant ingen valgtreff");
+      return treff;
+    });
+    const [forste, andre] = kandidater;
+
+    expect(naermestePosisjon(kandidater, andre.index - 1)?.index).toBe(andre.index);
+    expect(naermestePosisjon(kandidater, forste.index + 1)?.index).toBe(forste.index);
   });
 
   it("gir ingen treff for klikk utenfor en valgmarkering", () => {

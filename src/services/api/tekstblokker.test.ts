@@ -64,6 +64,28 @@ describe("useFiltrerteTekstblokker med kontekst", () => {
   });
 });
 
+describe("useFiltrerteTekstblokker – antall uten kontekst", () => {
+  it("teller treffene søket og tagene gir når kontekstavgrensningen ses bort fra", () => {
+    const { synlige, antallUtenKontekst } = filtrer("eu/eøs", [], "FTRL", "PENSJONIST");
+
+    expect(titler(synlige)).toEqual([]);
+    expect(antallUtenKontekst).toBe(1);
+  });
+
+  it("teller ingenting når det er søket – ikke konteksten – som tømmer lista", () => {
+    expect(filtrer("finnesikke", [], "FTRL", "PENSJONIST").antallUtenKontekst).toBe(0);
+  });
+
+  it("holder statusfilteret utenfor: utkast teller aldri som skjult av konteksten", () => {
+    const utkast = blokk(9, "Uferdig", [], [], [], "UTKAST");
+    const { antallUtenKontekst } = renderHook(() =>
+      useFiltrerteTekstblokker([utkast], "", [], "FTRL", "PENSJONIST", "PUBLISERT"),
+    ).result.current;
+
+    expect(antallUtenKontekst).toBe(0);
+  });
+});
+
 describe("useFiltrerteTekstblokker med statusfilter", () => {
   const publisert = blokk(1, "Publisert blokk", ["felles"]);
   const utkast = blokk(2, "Utkast blokk", ["felles", "nytt"], [], [], "UTKAST");

@@ -2,10 +2,8 @@ import { Quill } from "react-quill-new";
 
 import {
   Betingelse,
-  erBetingelsesToken,
-  erUkjentPlaceholder,
-  erValgToken,
   forberedInnhold,
+  markeringsklasseFor,
   parseValgAlternativer,
   PLACEHOLDER_BETINGELSE_TITTEL,
   PLACEHOLDER_UERSTATTET_TITTEL,
@@ -217,13 +215,6 @@ export const finnUerstattedeOmrader = (tekst: string): Array<{ index: number; le
   return omrader;
 };
 
-// De reserverte tokenformene sjekkes først: «velg:» og «#hvis»/«/hvis» kan aldri bli røde.
-const markeringsFormat = (token: string, gyldigeNokler?: string[]): string => {
-  if (erBetingelsesToken(token)) return "placeholder-betingelse";
-  if (erValgToken(token)) return "placeholder-valg";
-  return erUkjentPlaceholder(token, gyldigeNokler) ? "placeholder-ukjent" : "placeholder-uerstattet";
-};
-
 // Blotet setter én fast title i create(); her rettes den etter konteksten editoren står i.
 const settUerstattetTittel = (quill: Quill, harVerdikontekst: boolean) => {
   const tittel = harVerdikontekst ? PLACEHOLDER_UERSTATTET_TITTEL : PLACEHOLDER_UERSTATTET_UTEN_VERDIER_TITTEL;
@@ -251,14 +242,17 @@ export const markerUerstattedeOmrader = (quill: Quill, gyldigeNokler?: string[],
   )
     return;
 
-  quill.formatText(0, tekst.length, "placeholder-uerstattet", false);
-  quill.formatText(0, tekst.length, "placeholder-ukjent", false);
-  quill.formatText(0, tekst.length, "placeholder-valg", false);
-  quill.formatText(0, tekst.length, "placeholder-betingelse", false);
+  // Ett pass over hele teksten: fire separate formatText-kall ville gitt fire Delta-er per tastetrykk.
+  quill.formatText(0, tekst.length, {
+    "placeholder-uerstattet": false,
+    "placeholder-ukjent": false,
+    "placeholder-valg": false,
+    "placeholder-betingelse": false,
+  });
   if (!kanHaTreff) return;
 
   finnUerstattedeOmrader(tekst).forEach(({ index, length }) => {
-    const format = markeringsFormat(tekst.slice(index, index + length), gyldigeNokler);
+    const format = markeringsklasseFor(tekst.slice(index, index + length), gyldigeNokler);
     quill.formatText(index, length, format, true);
   });
 

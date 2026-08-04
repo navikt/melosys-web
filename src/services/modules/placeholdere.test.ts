@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   Betingelse,
@@ -12,6 +12,7 @@ import {
   finnUtdaterteVerdier,
   finnUutfylteKlammer,
   finnUutfylteTokener,
+  hentKatalog,
   PlaceholderBeskrivelse,
   fjernMarkeringsSpans,
   losOppBetingelser,
@@ -21,6 +22,9 @@ import {
   PLACEHOLDER_MARKERINGSKLASSER,
   PlaceholderVerdi,
 } from "./placeholdere";
+import { getAsJson } from "../utils";
+
+vi.mock("../utils", () => ({ getAsJson: vi.fn() }));
 
 const verdier: PlaceholderVerdi[] = [
   { nokkel: "saksnummer", verdi: "2024/123456" },
@@ -356,6 +360,12 @@ describe("losOppBetingelser", () => {
     expect(losOppBetingelser(html, ikkeOppfylt)).toBe("<p>Vedtaket er i saken.</p>");
   });
 
+  // Quill skriver nbsp der et vanlig mellomrom ville kollapset.
+  it("regner nbsp foran starttokenet som mellomrom", () => {
+    const html = "<p>Vedtaket er\u00a0{#hvis avslag}avslått{/hvis} i saken.</p>";
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe("<p>Vedtaket er&nbsp;i saken.</p>");
+  });
+
   it("beholder formatert innhold mellom tokenene i samme blokk når betingelsen er oppfylt", () => {
     const html = "<p>Vedtaket er {#hvis avslag}<strong>avslått</strong>{/hvis} i saken.</p>";
     expect(losOppBetingelser(html, oppfylt)).toBe("<p>Vedtaket er <strong>avslått</strong> i saken.</p>");
@@ -477,9 +487,52 @@ describe("finnUopplosteBetingelser", () => {
     expect(finnUopplosteBetingelser("<p>Tekst{/hvis}</p>")).toEqual(["{/hvis}"]);
   });
 
+  it("tar med et foreldreløst slutt-token også når gyldige nøkler finnes", () => {
+    const html = "<p>{#hvis avslag}Avslag{/hvis} og {/hvis}</p>";
+    expect(finnUopplosteBetingelser(html)).toEqual(["avslag", "{/hvis}"]);
+  });
+
+  it("lister et misformet starttoken ordrett, uten å påstå at det står et {/hvis} i brevet", () => {
+    expect(finnUopplosteBetingelser("<p>{#hvis to ord}</p>")).toEqual(["{#hvis to ord}"]);
+  });
+
   it("gir tom liste for tekst uten betingelsestokener", () => {
     expect(finnUopplosteBetingelser("<p>Saken {saksnummer} er mottatt.</p>")).toEqual([]);
     expect(finnUopplosteBetingelser("")).toEqual([]);
+  });
+});
+
+describe("hentKatalog – normalisering på api-grensen", () => {
+  beforeEach(() => vi.mocked(getAsJson).mockReset());
+
+  const placeholder = (nokkel: string, sakstyper: unknown[]) => ({
+    nokkel,
+    visningsnavn: nokkel,
+    beskrivelse: "",
+    eksempel: "",
+    sakstyper,
+  });
+
+  // Api-et har levert begge former; web skal tåle en revert uten å miste sakstypene.
+  it("leser sakstyper både som {kode}-objekter og som rene koder", async () => {
+    vi.mocked(getAsJson).mockResolvedValue({
+      placeholdere: [placeholder("a", [{ kode: "EU_EOS", term: "EU/EØS-land" }]), placeholder("b", ["FTRL"])],
+      betingelser: [{ nokkel: "c", visningsnavn: "C", beskrivelse: "", sakstyper: [{ kode: "TRYGDEAVTALE" }] }],
+    });
+
+    const katalog = await hentKatalog();
+
+    expect(katalog.placeholdere.map(({ sakstyper }) => sakstyper)).toEqual([["EU_EOS"], ["FTRL"]]);
+    expect(katalog.betingelser?.[0].sakstyper).toEqual(["TRYGDEAVTALE"]);
+  });
+
+  it("gir tom sakstypeliste når feltet mangler, og lar betingelsene være uleverte", async () => {
+    vi.mocked(getAsJson).mockResolvedValue({ placeholdere: [{ nokkel: "a", visningsnavn: "A" }] });
+
+    const katalog = await hentKatalog();
+
+    expect(katalog.placeholdere[0].sakstyper).toEqual([]);
+    expect(katalog.betingelser).toBeUndefined();
   });
 });
 

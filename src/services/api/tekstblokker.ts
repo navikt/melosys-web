@@ -99,7 +99,19 @@ export const useSlettTekstblokk = () => {
 interface FiltrerteTekstblokker {
   tagAntall: Array<[string, number]>;
   synlige: TekstblokkOversikt[];
+  // Samme filtrering uten kontekstavgrensningen. Tomtilstanden trenger å vite om det er
+  // konteksten – og ikke søket, tagene eller statusen – som skjuler de siste treffene.
+  antallUtenKontekst: number;
 }
+
+// Alt bortsett fra kontekstavgrensningen. Delt så tomtilstanden kan telle det samme utvalget
+// uten kontekst i stedet for å gjenskape reglene.
+const matcherFiltre = (
+  blokk: TekstblokkOversikt,
+  soek: string,
+  valgteTags: string[],
+  statusfilter: Statusfilter,
+): boolean => harStatus(blokk, statusfilter) && matcherSoek(blokk, soek) && harAlleTags(blokk, valgteTags);
 
 export const useFiltrerteTekstblokker = (
   blokker: TekstblokkOversikt[],
@@ -110,17 +122,20 @@ export const useFiltrerteTekstblokker = (
   // "ALLE" er admin, der utkast skal vises; saksbehandlerflaten sender "PUBLISERT" som klientsidevern.
   statusfilter: Statusfilter = "ALLE",
 ): FiltrerteTekstblokker => {
-  // Konteksten avgrenses først, slik at både søk og tag-telling gjelder det utvalget
-  // saksbehandleren faktisk kan bruke i denne saken.
-  const iKontekst = useMemo(
-    () => blokker.filter((b) => gjelderKontekst(b, sakstype, behandlingstema) && harStatus(b, statusfilter)),
-    [blokker, sakstype, behandlingstema, statusfilter],
+  const synlige = useMemo(
+    () =>
+      blokker.filter(
+        (b) => gjelderKontekst(b, sakstype, behandlingstema) && matcherFiltre(b, soek, valgteTags, statusfilter),
+      ),
+    [blokker, sakstype, behandlingstema, soek, valgteTags, statusfilter],
   );
-  const etterSoek = useMemo(() => iKontekst.filter((b) => matcherSoek(b, soek)), [iKontekst, soek]);
-  const synlige = useMemo(() => etterSoek.filter((b) => harAlleTags(b, valgteTags)), [etterSoek, valgteTags]);
+  const antallUtenKontekst = useMemo(
+    () => blokker.filter((b) => matcherFiltre(b, soek, valgteTags, statusfilter)).length,
+    [blokker, soek, valgteTags, statusfilter],
+  );
   // Tagene telles over det som faktisk er igjen, ikke over hele søketreffet. Med
   // AND-filtrering ville resten bare ført til tomme lister. Antallet blir dermed
   // "hvor mange treff får jeg hvis jeg legger til denne taggen også".
   const tagAntall = useMemo(() => tellTagsMedValgte(synlige, valgteTags), [synlige, valgteTags]);
-  return { tagAntall, synlige };
+  return { tagAntall, synlige, antallUtenKontekst };
 };

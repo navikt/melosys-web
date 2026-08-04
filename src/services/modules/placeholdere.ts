@@ -35,10 +35,34 @@ export const hentVerdier = (
 ): Promise<{ verdier: PlaceholderVerdi[]; betingelser?: Betingelse[] }> =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingId}/placeholdere`);
 
-export const hentKatalog = (): Promise<{
+// Api-et har levert sakstypene både som {kode, term}-objekter og som rene koder; begge former
+// leses her så en revert på api-siden ikke tømmer sakstypene i web.
+type SakstypeWire = string | { kode: string };
+
+interface KatalogWire {
+  placeholdere?: Array<Omit<PlaceholderBeskrivelse, "sakstyper"> & { sakstyper?: SakstypeWire[] }>;
+  betingelser?: Array<Omit<BetingelseBeskrivelse, "sakstyper"> & { sakstyper?: SakstypeWire[] }>;
+}
+
+const sakstypeKoder = (sakstyper?: SakstypeWire[]): string[] =>
+  (sakstyper ?? []).map((sakstype) => (typeof sakstype === "string" ? sakstype : sakstype.kode));
+
+export const hentKatalog = async (): Promise<{
   placeholdere: PlaceholderBeskrivelse[];
   betingelser?: BetingelseBeskrivelse[];
-}> => getAsJson(`${API_BASE_URL}${PLACEHOLDERE}`);
+}> => {
+  const respons: KatalogWire = await getAsJson(`${API_BASE_URL}${PLACEHOLDERE}`);
+  return {
+    placeholdere: (respons.placeholdere ?? []).map((beskrivelse) => ({
+      ...beskrivelse,
+      sakstyper: sakstypeKoder(beskrivelse.sakstyper),
+    })),
+    betingelser: respons.betingelser?.map((beskrivelse) => ({
+      ...beskrivelse,
+      sakstyper: sakstypeKoder(beskrivelse.sakstyper),
+    })),
+  };
+};
 
 const escapeHtml = (tekst: string): string =>
   tekst
@@ -132,6 +156,15 @@ export const erUkjentPlaceholder = (token: string, gyldigeNokler?: string[]): bo
   // Valg- og betingelsestokener slås aldri opp i katalogen – de skal ikke kunne bli røde.
   if (erValgToken(token) || erBetingelsesToken(token)) return false;
   return Boolean(gyldigeNokler?.length) && !gyldigeNokler?.includes(nokkelFraToken(token));
+};
+
+// Trevegs-klassifiseringen av et token, delt av editoren og forhåndsvisningen så de to aldri
+// kan markere ulikt. De reserverte tokenformene sjekkes først: «velg:» og «#hvis»/«/hvis» kan
+// aldri bli røde. Tittelen hører til visningen og settes av kalleren.
+export const markeringsklasseFor = (token: string, gyldigeNokler?: string[]): string => {
+  if (erBetingelsesToken(token)) return "placeholder-betingelse";
+  if (erValgToken(token)) return "placeholder-valg";
+  return erUkjentPlaceholder(token, gyldigeNokler) ? "placeholder-ukjent" : "placeholder-uerstattet";
 };
 
 // Må speile MARKERINGSKLASSER i melosys-api service/.../tekstblokk/TekstblokkHtmlSanitizer.kt
@@ -255,11 +288,14 @@ const blokkOmfang = ({ start, slutt }: Par): { fra: Element; til: Element } | nu
 
 const fjernTokentekst = ({ node, index, token }: TokenTreff) => node.deleteData(index, token.length);
 
+// Quill legger inn nbsp der et vanlig mellomrom ville kollapset, så begge må telle som mellomrom.
+const erMellomrom = (tegn: string | undefined): boolean => tegn === " " || tegn === "\u00a0";
+
 // Tokenene står som regel med mellomrom på hver side; uten dette blir det dobbelt igjen.
 const fjernDobbeltMellomrom = ({ start, slutt }: Par) => {
   const bakIndeks = start.node === slutt.node ? start.index : 0;
-  if (start.index === 0 || start.node.data[start.index - 1] !== " ") return;
-  if (slutt.node.data[bakIndeks] !== " ") return;
+  if (start.index === 0 || !erMellomrom(start.node.data[start.index - 1])) return;
+  if (!erMellomrom(slutt.node.data[bakIndeks])) return;
   slutt.node.deleteData(bakIndeks, 1);
 };
 
@@ -326,25 +362,45 @@ export const losOppBetingelser = (html: string, betingelser?: Betingelse[]): str
   return dokument.body.innerHTML;
 };
 
-// Delt av innsetting og forhåndsvisning, så de to aldri kan vise ulikt resultat.
+// Delt av innsetting og forhåndsvisning, så de to aldri kan vise ulikt resultat. Innsettingen
+// stripper alt (editoren remarkerer klammer tekstbasert), mens forhåndsvisningen ber om å få
+// beholde lagrede klamme-spans – regexen der kan ikke gjenskape dem rundt inline-tagger.
 export const forberedInnhold = (
   html: string,
   placeholderVerdier?: PlaceholderVerdi[],
   betingelser?: Betingelse[],
+  klasserSomStrippes: string[] = ALLE_MARKERINGSKLASSER,
 ): string => {
-  const rentHtml = losOppBetingelser(fjernMarkeringsSpans(html, ALLE_MARKERINGSKLASSER), betingelser);
+  const rentHtml = losOppBetingelser(fjernMarkeringsSpans(html, klasserSomStrippes), betingelser);
   return placeholderVerdier ? erstattPlaceholdere(rentHtml, placeholderVerdier) : rentHtml;
 };
 
+// Løsere enn det strenge starttokenet, så et misformet «{#hvis to ord}» også fanges opp.
+const HVIS_START_LOST_MONSTER = /\{#hvis[^{}]*\}/g;
+const HVIS_SLUTT_MONSTER = /\{\/hvis\}/g;
+
 // Betingelsestokener som står igjen ved sending; de er styring og ville blitt sendt ordrett.
+// Lista skal si hva som faktisk står i brevet: gyldige nøkler, et foreldreløst {/hvis}, og
+// misformede starttokener ordrett – de siste finnes ikke som nøkkel å slå opp.
 export const finnUopplosteBetingelser = (html: string): string[] => {
   if (!html.includes("{#hvis") && !html.includes(HVIS_SLUTT_TOKEN)) return [];
 
   const nokler = new Set<string>();
-  const regex = new RegExp(`\\{#hvis\\s+(${HVIS_NOKKEL})\\}`, "g");
-  for (let treff = regex.exec(html); treff !== null; treff = regex.exec(html)) nokler.add(treff[1]);
-  // Et slutt-token uten lesbart starttoken har ingen nøkkel, men må varsles likevel.
-  return nokler.size > 0 ? [...nokler] : [HVIS_SLUTT_TOKEN];
+  const misformede = new Set<string>();
+  let gyldigeStarttokener = 0;
+
+  for (const token of html.match(HVIS_START_LOST_MONSTER) ?? []) {
+    const nokkel = parseHvisStartToken(token)?.nokkel;
+    if (nokkel === undefined) misformede.add(token);
+    else {
+      nokler.add(nokkel);
+      gyldigeStarttokener += 1;
+    }
+  }
+
+  // Flere slutt-tokener enn startere betyr at minst ett står uten lesbar start.
+  const foreldreloseSlutt = (html.match(HVIS_SLUTT_MONSTER) ?? []).length > gyldigeStarttokener;
+  return [...nokler, ...(foreldreloseSlutt ? [HVIS_SLUTT_TOKEN] : []), ...misformede];
 };
 
 export interface SakstypeKonflikt {
