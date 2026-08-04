@@ -111,6 +111,15 @@ describe("TekstblokkForhandsvisning", () => {
     expect(container.querySelector(".placeholder-ukjent")).toBeNull();
   });
 
+  // Editoren ser det harde mellomrommet og klassifiserer på det; forhåndsvisningen dekoder
+  // entiteten på inngangen så begge lander på betingelse, ikke ukjent nøkkel.
+  it("klassifiserer et betingelsestoken med &nbsp;-entitet som betingelse", () => {
+    const container = renderHtml("<p>{#hvis&nbsp;avslag}</p>", undefined, ["saksnummer"]);
+
+    expect(container.querySelector(".placeholder-betingelse")?.textContent).toBe("{#hvis\u00a0avslag}");
+    expect(container.querySelector(".placeholder-ukjent")).toBeNull();
+  });
+
   it("markerer alt gult uten kjente nøkler (katalogen ikke lastet)", () => {
     const container = renderHtml("<p>{frnavn}</p>");
 

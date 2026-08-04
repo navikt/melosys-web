@@ -3,6 +3,7 @@ import { useMemo } from "react";
 
 import {
   Betingelse,
+  dekodTokenTekst,
   fjernMarkeringsSpans,
   forberedInnhold,
   markeringsklasseFor,
@@ -49,7 +50,9 @@ const TITTEL_FOR_KLASSE: Record<string, string> = {
 
 const uthevPlaceholders = (html: string, gyldigeNokler?: string[], harVerdikontekst = false): string =>
   html.replace(/\{[^{}<>\n]+\}/g, (token) => {
-    const klasse = markeringsklasseFor(token, gyldigeNokler);
+    // Klassifiseringen antar dekodet tekst, som editoren ser; her leses HTML-strengen, der
+    // Quill kan ha lagret mellomrommet som &nbsp;. Selve tokenet vises uendret.
+    const klasse = markeringsklasseFor(dekodTokenTekst(token), gyldigeNokler);
     // Uten verdier å slå opp i (admin) er nøkkelen ikke uten verdi – den er bare ikke løst ennå.
     const tittel =
       TITTEL_FOR_KLASSE[klasse] ??
