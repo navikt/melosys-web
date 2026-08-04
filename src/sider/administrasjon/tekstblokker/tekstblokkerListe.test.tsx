@@ -41,11 +41,11 @@ const gjelderCelle = () => {
 
 describe("TekstblokkerListe – avgrensning", () => {
   it("viser termene for avgrensningen i «Gjelder»-kolonnen, ikke blant tagene", () => {
-    visListe([blokk({ sakstyper: ["EU_EOS"], behandlingstemaer: ["ARBEID_KUN_NORGE"] })]);
+    visListe([blokk({ sakstyper: ["EU_EOS"], behandlingstemaer: [] })]);
 
     expect(screen.getByText("usa")).toBeDefined();
     expect(screen.getByRole("columnheader", { name: "Gjelder" })).toBeDefined();
-    expect(gjelderCelle().textContent).toBe("EU/EØS-landArbeid kun i Norge");
+    expect(gjelderCelle().textContent).toBe("EU/EØS-land");
   });
 
   it("viser «Alle» når blokken ikke er avgrenset", () => {
@@ -55,24 +55,54 @@ describe("TekstblokkerListe – avgrensning", () => {
     expect(gjelderCelle().textContent).toBe("Alle");
   });
 
-  it("viser maks tre termer og samler resten i en «+N»-tag med termene i tooltipen", () => {
+  it("viser én term og samler resten i en «+N»-knapp med termene i tooltipen", () => {
     visListe([
       blokk({
-        sakstyper: ["EU_EOS", "TRYGDEAVTALE", "FTRL"],
-        behandlingstemaer: ["ARBEID_KUN_NORGE", "IKKE_YRKESAKTIV"],
+        sakstyper: ["EU_EOS", "TRYGDEAVTALE"],
+        behandlingstemaer: ["ARBEID_KUN_NORGE"],
       }),
     ]);
 
-    expect(gjelderCelle().textContent).toBe("EU/EØS-landAvtalelandUtenfor avtaleland+2");
-    const skjulte = screen.getByText("+2");
-    expect(skjulte.getAttribute("title")).toBe("Arbeid kun i Norge, Ikke yrkesaktiv");
-    expect(skjulte.getAttribute("aria-label")).toBe("Arbeid kun i Norge, Ikke yrkesaktiv");
+    expect(gjelderCelle().textContent).toBe("EU/EØS-land+2");
+    const skjulte = screen.getByRole("button", { name: "Avtaleland, Arbeid kun i Norge" });
+    expect(skjulte.textContent).toBe("+2");
+    expect(skjulte.getAttribute("title")).toBe("Avtaleland, Arbeid kun i Norge");
+  });
+
+  it("utvider raden og viser alle gjelder-termene når «+N» klikkes", async () => {
+    const onToggleUtvidet = vi.fn();
+
+    visListe([blokk({ sakstyper: ["EU_EOS", "TRYGDEAVTALE"], behandlingstemaer: ["ARBEID_KUN_NORGE"] })], {
+      onToggleUtvidet,
+    });
+    await userEvent.click(screen.getByRole("button", { name: "Avtaleland, Arbeid kun i Norge" }));
+
+    expect(onToggleUtvidet).toHaveBeenCalledWith(1);
+  });
+
+  it("viser alle termene med ledetekst i den utvidede raden", () => {
+    visListe([blokk({ sakstyper: ["EU_EOS", "TRYGDEAVTALE"], behandlingstemaer: ["ARBEID_KUN_NORGE"] })], {
+      utvidedeIder: new Set([1]),
+    });
+
+    expect(screen.getByText("Gjelder:")).toBeDefined();
+    // Første term står også i kolonnen; de skjulte finnes kun i utvidelsen.
+    expect(screen.getAllByText("EU/EØS-land")).toHaveLength(2);
+    expect(screen.getByText("Avtaleland")).toBeDefined();
+    expect(screen.getByText("Arbeid kun i Norge")).toBeDefined();
+  });
+
+  it("viser ingen gjelder-ledetekst i utvidelsen når blokken ikke er avgrenset", () => {
+    visListe([blokk()], { utvidedeIder: new Set([1]) });
+
+    expect(screen.queryByText("Gjelder:")).toBeNull();
   });
 
   it("faller tilbake til koden for en ukjent avgrensningsverdi", () => {
     visListe([blokk({ sakstyper: ["UKJENT_KODE"] })]);
 
-    expect(screen.getByText("UKJENT_KODE")).toBeDefined();
+    // Termen står både i kolonnen og i radens utvidede innhold.
+    expect(screen.getAllByText("UKJENT_KODE").length).toBeGreaterThan(0);
   });
 });
 
@@ -144,7 +174,7 @@ describe("TekstblokkerListe – historikk", () => {
     expect(screen.getAllByText("Kari Saksbehandler")).toHaveLength(2);
   });
 
-  it("lister hvilke felter som skiller versjonen fra den forrige", async () => {
+  it("lister hvilke felter som skiller versjonen fra den forrige, med detaljene", async () => {
     await visHistorikk([
       versjon(1, "OPPRETTET", { tags: ["usa"], sakstyper: [], behandlingstemaer: [], status: "UTKAST" }),
       versjon(2, "ENDRET", {
@@ -156,7 +186,24 @@ describe("TekstblokkerListe – historikk", () => {
       }),
     ]);
 
-    expect(screen.getByText("Endret: tittel, tags, avgrensning, status")).toBeDefined();
+    expect(
+      screen.getByText("Endret: tittel, tags (+skip), avgrensning (+EU/EØS-land), status (Utkast → Publisert)"),
+    ).toBeDefined();
+  });
+
+  it("viser lagt til før fjernet i avgrensningen, på tvers av sakstype og behandlingstema", async () => {
+    await visHistorikk([
+      versjon(1, "OPPRETTET", { sakstyper: ["EU_EOS"], behandlingstemaer: [] }),
+      versjon(2, "ENDRET", { sakstyper: [], behandlingstemaer: ["ARBEID_KUN_NORGE"] }),
+    ]);
+
+    expect(screen.getByText("Endret: avgrensning (+Arbeid kun i Norge, −EU/EØS-land)")).toBeDefined();
+  });
+
+  it("viser fjernede tags med minus", async () => {
+    await visHistorikk([versjon(1, "OPPRETTET", { tags: ["usa", "skip"] }), versjon(2, "ENDRET", { tags: ["skip"] })]);
+
+    expect(screen.getByText("Endret: tags (−usa)")).toBeDefined();
   });
 
   it("sier ingenting om endring på den første versjonen", async () => {

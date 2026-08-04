@@ -8,8 +8,8 @@ import { formatterDatoTilNorsk } from "../../../utils/dato";
 import { termForBehandlingstema, termForSakstype } from "./kontekstavgrensning";
 import TekstblokkHistorikk from "./tekstblokkHistorikk";
 
-// Kolonnen skal kunne leses på et blikk; resten samles i én «+N»-tag med termene i tooltipen.
-const MAKS_SYNLIGE_TERMER = 3;
+// Kolonnen skal kunne leses på et blikk; resten samles i én «+N»-tag som åpner raden.
+const MAKS_SYNLIGE_TERMER = 1;
 
 const gjelderTermer = (blokk: TekstblokkOversikt): Array<{ noekkel: string; term: string }> => [
   ...blokk.sakstyper.map((kode) => ({ noekkel: `sakstype-${kode}`, term: termForSakstype(kode) })),
@@ -114,6 +114,18 @@ function TekstblokkerListeRad({
       togglePlacement="left"
       content={
         <div className="tekstblokker__rad-forhandsvisning">
+          {termer.length > 0 && (
+            <div className="tekstblokker__rad-gjelder">
+              <Nav.BodyShort size="small" textColor="subtle">
+                Gjelder:
+              </Nav.BodyShort>
+              {termer.map(({ noekkel, term }) => (
+                <Nav.Tag key={noekkel} size="xsmall" variant="info">
+                  {term}
+                </Nav.Tag>
+              ))}
+            </div>
+          )}
           {visHistorikk ? <TekstblokkHistorikk id={blokk.id} /> : <TekstblokkForhandsvisning html={blokk.innhold} />}
         </div>
       }
@@ -148,14 +160,21 @@ function TekstblokkerListeRad({
             </Nav.Tag>
           ))}
           {skjulteTermer.length > 0 && (
-            <Nav.Tag
-              size="xsmall"
-              variant="info"
+            <button
+              type="button"
+              className="tekstblokker__gjelder-mer"
               title={skjulteTermer.join(", ")}
               aria-label={skjulteTermer.join(", ")}
+              // stopPropagation: raden skal ikke også reagere på klikket om den senere gjøres klikkbar.
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleUtvidet(blokk.id);
+              }}
             >
-              {`+${skjulteTermer.length}`}
-            </Nav.Tag>
+              <Nav.Tag size="xsmall" variant="info">
+                {`+${skjulteTermer.length}`}
+              </Nav.Tag>
+            </button>
           )}
           {termer.length === 0 && (
             <Nav.BodyShort size="small" textColor="subtle">

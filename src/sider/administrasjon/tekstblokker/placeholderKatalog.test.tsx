@@ -55,6 +55,27 @@ describe("PlaceholderKatalog", () => {
     expect(screen.getByText("Ola Nordmann")).toBeDefined();
   });
 
+  it("viser sakstypene placeholderen og betingelsen gjelder for", () => {
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+    mockKatalog({ data: katalog, error: null });
+    mockBetingelser(betingelser);
+
+    render(<PlaceholderKatalog />);
+
+    expect(screen.getAllByText("Gjelder sakstype")).toHaveLength(2);
+    expect(screen.getAllByText("Utenfor avtaleland")).toHaveLength(2);
+  });
+
+  it("viser «Alle» for en placeholder uten sakstyper", () => {
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+    mockKatalog({ data: [{ ...katalog[0], sakstyper: [] }], error: null });
+
+    render(<PlaceholderKatalog />);
+
+    expect(screen.getByText("Alle")).toBeDefined();
+    expect(screen.queryByText("Utenfor avtaleland")).toBeNull();
+  });
+
   it("forklarer valgtoken-syntaksen", () => {
     vi.mocked(useFeatureToggle).mockReturnValue(true);
     mockKatalog({ data: katalog, error: null });

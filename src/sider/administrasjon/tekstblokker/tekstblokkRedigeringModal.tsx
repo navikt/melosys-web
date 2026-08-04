@@ -172,9 +172,13 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
               <Nav.Alert variant="warning" size="small">
                 <Nav.BodyShort size="small">Noen felter dekker ikke alle sakstypene blokken gjelder:</Nav.BodyShort>
                 <Nav.List>
-                  {konflikter.map(({ nokkel, visningsnavn, sakstyper: udekkede }) => (
+                  {konflikter.map(({ nokkel, visningsnavn, sakstyper: udekkede, stottedeSakstyper }) => (
                     <Nav.List.Item key={nokkel}>
-                      {`${visningsnavn} støtter ikke: ${udekkede.map(termForSakstype).join(", ")}`}
+                      {udekkede.length > 0
+                        ? `${visningsnavn} støtter ikke: ${udekkede.map(termForSakstype).join(", ")}`
+                        : `${visningsnavn} støttes bare for: ${stottedeSakstyper
+                            .map(termForSakstype)
+                            .join(", ")} — blokken gjelder alle sakstyper`}
                     </Nav.List.Item>
                   ))}
                 </Nav.List>

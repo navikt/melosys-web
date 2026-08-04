@@ -507,7 +507,9 @@ describe("finnSakstypeKonflikter", () => {
   it("rapporterer sakstypene placeholderen ikke dekker", () => {
     const konflikter = finnSakstypeKonflikter("<p>{soker-navn}</p>", ["EU_EOS", "FTRL"], katalog, betingelseKatalog);
 
-    expect(konflikter).toEqual([{ nokkel: "soker-navn", visningsnavn: "Søkers navn", sakstyper: ["FTRL"] }]);
+    expect(konflikter).toEqual([
+      { nokkel: "soker-navn", visningsnavn: "Søkers navn", sakstyper: ["FTRL"], stottedeSakstyper: ["EU_EOS"] },
+    ]);
   });
 
   it("rapporterer betingelser fra hvis-tokener på samme måte", () => {
@@ -518,15 +520,25 @@ describe("finnSakstypeKonflikter", () => {
       betingelseKatalog,
     );
 
-    expect(konflikter).toEqual([{ nokkel: "avslag", visningsnavn: "Avslag", sakstyper: ["TRYGDEAVTALE"] }]);
+    expect(konflikter).toEqual([
+      { nokkel: "avslag", visningsnavn: "Avslag", sakstyper: ["TRYGDEAVTALE"], stottedeSakstyper: ["EU_EOS"] },
+    ]);
   });
 
   it("rapporterer ingenting når alle valgte sakstyper er dekket", () => {
     expect(finnSakstypeKonflikter("<p>{soker-navn}</p>", ["EU_EOS"], katalog, betingelseKatalog)).toEqual([]);
   });
 
-  it("rapporterer ingenting når blokken gjelder alle sakstyper", () => {
-    expect(finnSakstypeKonflikter("<p>{soker-navn}</p>", [], katalog, betingelseKatalog)).toEqual([]);
+  it("rapporterer de støttede sakstypene når blokken gjelder alle", () => {
+    const konflikter = finnSakstypeKonflikter("<p>{soker-navn}</p>", [], katalog, betingelseKatalog);
+
+    expect(konflikter).toEqual([
+      { nokkel: "soker-navn", visningsnavn: "Søkers navn", sakstyper: [], stottedeSakstyper: ["EU_EOS"] },
+    ]);
+  });
+
+  it("rapporterer ingenting for en placeholder uten avgrensning når blokken gjelder alle", () => {
+    expect(finnSakstypeKonflikter("<p>{saksnummer}</p>", [], katalog, betingelseKatalog)).toEqual([]);
   });
 
   it("hopper over placeholdere som gjelder alle sakstyper, ukjente nøkler og valgtokener", () => {

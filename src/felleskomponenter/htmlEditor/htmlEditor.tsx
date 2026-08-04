@@ -306,7 +306,7 @@ function HtmlEditor({
         if (markeringAktivRef.current) {
           fjernUgyldigeUtfylteMarkeringer(quill, placeholderVerdierRef.current);
           fjernUgyldigeValgteMarkeringer(quill);
-          markerUerstattedeOmrader(quill, gyldigeNoklerRef.current);
+          markerUerstattedeOmrader(quill, gyldigeNoklerRef.current, placeholderVerdierRef.current !== undefined);
         }
       } finally {
         isFormattingRef.current = false;
@@ -374,11 +374,11 @@ function HtmlEditor({
 
     isFormattingRef.current = true;
     try {
-      markerUerstattedeOmrader(quill, gyldigeNokler);
+      markerUerstattedeOmrader(quill, gyldigeNokler, placeholderVerdier !== undefined);
     } finally {
       isFormattingRef.current = false;
     }
-  }, [gyldigeNokler, markeringAktiv]);
+  }, [gyldigeNokler, markeringAktiv, placeholderVerdier]);
 
   useEffect(() => {
     const container = containerRef.current;

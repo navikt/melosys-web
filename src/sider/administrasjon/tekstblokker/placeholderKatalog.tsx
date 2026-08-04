@@ -5,9 +5,21 @@ import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggle/toggleNavn";
 import { useBetingelseKatalog, usePlaceholderKatalog } from "../../../services/api/placeholdere";
 import { BetingelseBeskrivelse, PlaceholderBeskrivelse } from "../../../services/modules/placeholdere";
+import { termForSakstype } from "./kontekstavgrensning";
 
 interface Props {
   placeholdere: PlaceholderBeskrivelse[];
+}
+
+// Tom liste betyr «gjelder alle» – samme regel som avgrensningen på tekstblokken.
+function GjelderSakstype({ sakstyper }: { sakstyper: string[] }) {
+  if (sakstyper.length === 0)
+    return (
+      <BodyShort size="small" textColor="subtle">
+        Alle
+      </BodyShort>
+    );
+  return <>{sakstyper.map(termForSakstype).join(", ")}</>;
 }
 
 // Ren visning over katalogen, uten henting – gjenbrukes i redigeringsmodalen senere.
@@ -20,10 +32,11 @@ export function PlaceholderKatalogTabell({ placeholdere }: Props) {
           <Nav.Table.HeaderCell scope="col">Nøkkel</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Beskrivelse</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Eksempel</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell scope="col">Gjelder sakstype</Nav.Table.HeaderCell>
         </Nav.Table.Row>
       </Nav.Table.Header>
       <Nav.Table.Body>
-        {placeholdere.map(({ nokkel, visningsnavn, beskrivelse, eksempel }) => (
+        {placeholdere.map(({ nokkel, visningsnavn, beskrivelse, eksempel, sakstyper }) => (
           <Nav.Table.Row key={nokkel}>
             <Nav.Table.DataCell>{visningsnavn}</Nav.Table.DataCell>
             <Nav.Table.DataCell>
@@ -31,6 +44,9 @@ export function PlaceholderKatalogTabell({ placeholdere }: Props) {
             </Nav.Table.DataCell>
             <Nav.Table.DataCell>{beskrivelse}</Nav.Table.DataCell>
             <Nav.Table.DataCell>{eksempel}</Nav.Table.DataCell>
+            <Nav.Table.DataCell>
+              <GjelderSakstype sakstyper={sakstyper} />
+            </Nav.Table.DataCell>
           </Nav.Table.Row>
         ))}
       </Nav.Table.Body>
@@ -57,16 +73,20 @@ export function BetingelseKatalogTabell({ betingelser }: { betingelser: Betingel
           <Nav.Table.HeaderCell scope="col">Navn</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Nøkkel</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Beskrivelse</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell scope="col">Gjelder sakstype</Nav.Table.HeaderCell>
         </Nav.Table.Row>
       </Nav.Table.Header>
       <Nav.Table.Body>
-        {betingelser.map(({ nokkel, visningsnavn, beskrivelse }) => (
+        {betingelser.map(({ nokkel, visningsnavn, beskrivelse, sakstyper }) => (
           <Nav.Table.Row key={nokkel}>
             <Nav.Table.DataCell>{visningsnavn}</Nav.Table.DataCell>
             <Nav.Table.DataCell>
               <code className="tekstblokker__placeholder-nokkel">{`{#hvis ${nokkel}}`}</code>
             </Nav.Table.DataCell>
             <Nav.Table.DataCell>{beskrivelse}</Nav.Table.DataCell>
+            <Nav.Table.DataCell>
+              <GjelderSakstype sakstyper={sakstyper} />
+            </Nav.Table.DataCell>
           </Nav.Table.Row>
         ))}
       </Nav.Table.Body>

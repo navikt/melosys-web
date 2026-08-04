@@ -9,6 +9,7 @@ import {
   parseValgAlternativer,
   PLACEHOLDER_BETINGELSE_TITTEL,
   PLACEHOLDER_UERSTATTET_TITTEL,
+  PLACEHOLDER_UERSTATTET_UTEN_VERDIER_TITTEL,
   PLACEHOLDER_UKJENT_TITTEL,
   PLACEHOLDER_UTFYLT_TITTEL,
   PLACEHOLDER_VALG_TITTEL,
@@ -223,10 +224,21 @@ const markeringsFormat = (token: string, gyldigeNokler?: string[]): string => {
   return erUkjentPlaceholder(token, gyldigeNokler) ? "placeholder-ukjent" : "placeholder-uerstattet";
 };
 
+// Blotet setter én fast title i create(); her rettes den etter konteksten editoren står i.
+const settUerstattetTittel = (quill: Quill, harVerdikontekst: boolean) => {
+  const tittel = harVerdikontekst ? PLACEHOLDER_UERSTATTET_TITTEL : PLACEHOLDER_UERSTATTET_UTEN_VERDIER_TITTEL;
+  quill.root.querySelectorAll("span.placeholder-uerstattet").forEach((node) => {
+    // Bare ved faktisk avvik: en setAttribute med samme verdi ville gitt Quill en ny mutasjon å behandle.
+    if (node.getAttribute("title") !== tittel) node.setAttribute("title", tittel);
+  });
+};
+
 // Strippes og påføres på nytt ved hver endring, siden markeringen utledes av teksten.
 // Med gyldigeNokler skilles ukjente nøkler (rødt) fra gyldige uten verdi (gult).
 // placeholder-valgt er ikke med: den bæres av formatet, ikke av teksten.
-export const markerUerstattedeOmrader = (quill: Quill, gyldigeNokler?: string[]) => {
+// harVerdikontekst forteller om verten kan levere saksverdier (Send brev), og styrer
+// tooltipen på de gule markeringene.
+export const markerUerstattedeOmrader = (quill: Quill, gyldigeNokler?: string[], harVerdikontekst = false) => {
   const tekst = quill.getText();
   const kanHaTreff = tekst.includes("{") && tekst.includes("}");
   // Klammefri tekst kan fortsatt ha markering igjen – f.eks. når brukeren nettopp slettet
@@ -249,6 +261,8 @@ export const markerUerstattedeOmrader = (quill: Quill, gyldigeNokler?: string[])
     const format = markeringsFormat(tekst.slice(index, index + length), gyldigeNokler);
     quill.formatText(index, length, format, true);
   });
+
+  settUerstattetTittel(quill, harVerdikontekst);
 };
 
 // «Rediger = overstyr»: PlaceholderBlot er et inline-format, så tekst brukeren skriver

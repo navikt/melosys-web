@@ -11,6 +11,7 @@ import {
   PLACEHOLDER_BETINGELSE_TITTEL,
   PLACEHOLDER_MARKERINGSKLASSER,
   PLACEHOLDER_UERSTATTET_TITTEL,
+  PLACEHOLDER_UERSTATTET_UTEN_VERDIER_TITTEL,
   PLACEHOLDER_UKJENT_TITTEL,
   PLACEHOLDER_VALG_TITTEL_VISNING,
   PlaceholderVerdi,
@@ -42,17 +43,25 @@ const uthevKlammer = (html: string): string =>
 
 // Samme trevegs-klassifisering som editoren, men uten klikk: forhåndsvisningen viser bare
 // at tokenet er et valg.
-const markeringFor = (token: string, gyldigeNokler?: string[]): { klasse: string; tittel: string } => {
+const markeringFor = (
+  token: string,
+  gyldigeNokler?: string[],
+  harVerdikontekst = false,
+): { klasse: string; tittel: string } => {
   if (erBetingelsesToken(token)) return { klasse: "placeholder-betingelse", tittel: PLACEHOLDER_BETINGELSE_TITTEL };
   if (erValgToken(token)) return { klasse: "placeholder-valg", tittel: PLACEHOLDER_VALG_TITTEL_VISNING };
   if (erUkjentPlaceholder(token, gyldigeNokler))
     return { klasse: "placeholder-ukjent", tittel: PLACEHOLDER_UKJENT_TITTEL };
-  return { klasse: "placeholder-uerstattet", tittel: PLACEHOLDER_UERSTATTET_TITTEL };
+  // Uten verdier å slå opp i (admin) er nøkkelen ikke uten verdi – den er bare ikke løst ennå.
+  return {
+    klasse: "placeholder-uerstattet",
+    tittel: harVerdikontekst ? PLACEHOLDER_UERSTATTET_TITTEL : PLACEHOLDER_UERSTATTET_UTEN_VERDIER_TITTEL,
+  };
 };
 
-const uthevPlaceholders = (html: string, gyldigeNokler?: string[]): string =>
+const uthevPlaceholders = (html: string, gyldigeNokler?: string[], harVerdikontekst = false): string =>
   html.replace(/\{[^{}<>\n]+\}/g, (token) => {
-    const { klasse, tittel } = markeringFor(token, gyldigeNokler);
+    const { klasse, tittel } = markeringFor(token, gyldigeNokler, harVerdikontekst);
     return `<span class="${klasse}" title="${tittel}">${token}</span>`;
   });
 
@@ -68,7 +77,7 @@ function TekstblokkForhandsvisning({ html, className, placeholderVerdier, gyldig
     // innsetting er stripping trygg uansett – editoren remarkerer klammer tekstbasert.
     if (!dynamiskPlaceholderPaa) return uthevKlammer(fjernMarkeringsSpans(html, PLACEHOLDER_MARKERINGSKLASSER));
     const forberedt = forberedInnhold(html, placeholderVerdier, betingelser);
-    return uthevPlaceholders(uthevKlammer(forberedt), gyldigeNokler);
+    return uthevPlaceholders(uthevKlammer(forberedt), gyldigeNokler, placeholderVerdier !== undefined);
   }, [html, placeholderVerdier, gyldigeNokler, betingelser, dynamiskPlaceholderPaa]);
   return (
     <div

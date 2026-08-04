@@ -34,9 +34,17 @@ describe("TekstblokkForhandsvisning", () => {
     expect(markupFor("<p>Et { her</p><p>og et } der</p>")).not.toContain("placeholder-uerstattet");
   });
 
-  it("gir uerstattet markering en forklarende tooltip", () => {
-    const markering = renderHtml("<p>{nokkel}</p>").querySelector(".placeholder-uerstattet");
+  it("sier at nøkkelen mangler verdi når forhåndsvisningen har sakens verdier", () => {
+    const markering = renderHtml("<p>{nokkel}</p>", verdier).querySelector(".placeholder-uerstattet");
     expect(markering?.getAttribute("title")).toContain("Ingen verdi tilgjengelig");
+  });
+
+  it("lover erstatning ved innsetting når forhåndsvisningen er uten verdier (admin)", () => {
+    const markering = renderHtml("<p>{nokkel}</p>").querySelector(".placeholder-uerstattet");
+    expect(markering?.getAttribute("title")).toBe(
+      "Erstattes automatisk ved innsetting fra Send brev dersom saken har en verdi – ellers fylles den ut manuelt",
+    );
+    expect(markering?.getAttribute("title")).not.toContain("Ingen verdi tilgjengelig");
   });
 
   it("viser verdien med utfylt-markering når editoren har placeholderverdier", () => {
