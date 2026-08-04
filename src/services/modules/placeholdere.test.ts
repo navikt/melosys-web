@@ -3,8 +3,11 @@ import { describe, expect, it } from "vitest";
 import {
   erstattPlaceholdere,
   erUkjentPlaceholder,
+  erValgToken,
   finnUtdaterteVerdier,
   fjernMarkeringsSpans,
+  parseValgAlternativer,
+  parseValgToken,
   PLACEHOLDER_MARKERINGSKLASSER,
   PlaceholderVerdi,
 } from "./placeholdere";
@@ -73,10 +76,81 @@ describe("erstattPlaceholdere", () => {
     expect(erstattPlaceholdere(html, [{ nokkel: "navn", verdi: "" }])).toBe(html);
   });
 
+  it("lar valgtoken stå urørt – valget gjøres i editoren, ikke fra saksdata", () => {
+    const html = "<p>{velg:A|B} og {saksnummer}</p>";
+    const resultat = erstattPlaceholdere(html, [...verdier, { nokkel: "velg:A|B", verdi: "Skal ikke brukes" }]);
+    expect(resultat).toContain("{velg:A|B}");
+    expect(resultat).toContain("2024/123456");
+  });
+
   it("HTML-escaper verdien før innsetting i markup", () => {
     const resultat = erstattPlaceholdere("<p>{navn}</p>", [{ nokkel: "navn", verdi: 'A <B> & "C"' }]);
     expect(resultat).toContain("A &lt;B&gt; &amp; &quot;C&quot;");
     expect(resultat).not.toContain("<B>");
+  });
+});
+
+describe("parseValgToken", () => {
+  it("leser alternativene ut av et valgtoken", () => {
+    expect(parseValgToken("{velg:Bosnia-Hercegovina|Montenegro|Serbia}")).toEqual({
+      alternativer: ["Bosnia-Hercegovina", "Montenegro", "Serbia"],
+    });
+  });
+
+  it("trimmer luft rundt alternativene", () => {
+    expect(parseValgToken("{velg: A | B }")).toEqual({ alternativer: ["A", "B"] });
+  });
+
+  it("avviser ett alternativ – det er ikke noe å velge mellom", () => {
+    expect(parseValgToken("{velg:Bare denne}")).toBeNull();
+  });
+
+  it("avviser tomt alternativ som ville gitt et blankt valg", () => {
+    expect(parseValgToken("{velg:A|}")).toBeNull();
+  });
+
+  it("avviser token uten alternativer i det hele tatt", () => {
+    expect(parseValgToken("{velg:}")).toBeNull();
+  });
+
+  it("avviser vanlige nøkler", () => {
+    expect(parseValgToken("{saksnummer}")).toBeNull();
+  });
+
+  it("avviser token med tagg-tegn, som aldri kan stamme fra ett tekstelement", () => {
+    expect(parseValgToken("{velg:A|<b>B</b>}")).toBeNull();
+  });
+});
+
+describe("erValgToken", () => {
+  it("kjenner igjen et gyldig valgtoken", () => {
+    expect(erValgToken("{velg:A|B}")).toBe(true);
+  });
+
+  it("regner ugyldig valgtoken som vanlig nøkkel", () => {
+    expect(erValgToken("{velg:A}")).toBe(false);
+  });
+});
+
+describe("parseValgAlternativer", () => {
+  it("leser alternativene fra en data-valg-streng", () => {
+    expect(parseValgAlternativer("A|B|C")).toEqual(["A", "B", "C"]);
+  });
+
+  it("gir tom liste for ett alternativ", () => {
+    expect(parseValgAlternativer("A")).toEqual([]);
+  });
+
+  it("gir tom liste for tom streng (attributtet mangler eller er tomt)", () => {
+    expect(parseValgAlternativer("")).toEqual([]);
+  });
+
+  it("slår sammen like alternativer – to like knapper er ikke noe valg", () => {
+    expect(parseValgAlternativer("A|A|B")).toEqual(["A", "B"]);
+  });
+
+  it("avviser et token der alle alternativene er like", () => {
+    expect(parseValgToken("{velg:A|A}")).toBeNull();
   });
 });
 
@@ -105,6 +179,14 @@ describe("erUkjentPlaceholder", () => {
 
   it("regner ingenting som ukjent med tom liste (henting feilet)", () => {
     expect(erUkjentPlaceholder("{tullenokkel}", [])).toBe(false);
+  });
+
+  it("regner aldri et valgtoken som ukjent, selv om det ikke står i katalogen", () => {
+    expect(erUkjentPlaceholder("{velg:A|B}", gyldige)).toBe(false);
+  });
+
+  it("regner ugyldig valgtoken som ukjent nøkkel", () => {
+    expect(erUkjentPlaceholder("{velg:A}", gyldige)).toBe(true);
   });
 });
 
@@ -140,6 +222,11 @@ describe("fjernMarkeringsSpans", () => {
     );
   });
 
+  it("pakker ut et innsatt valg, så innsettingen starter fra rått token igjen", () => {
+    const html = '<p><span class="placeholder-valgt" data-valg="A|B">B</span></p>';
+    expect(fjernMarkeringsSpans(html)).toBe("<p>B</p>");
+  });
+
   it("beholder annen markup og lar HTML uten markeringer stå urørt", () => {
     const html = "<p>Saken <strong>{saksnummer}</strong> er mottatt.</p>";
     expect(fjernMarkeringsSpans(html)).toBe(html);
@@ -160,6 +247,13 @@ describe("finnUtdaterteVerdier", () => {
   it("rapporterer ikke identiske verdier", () => {
     const html = `<p>${utfylt("saksnummer", "2024/123456")}</p>`;
     expect(finnUtdaterteVerdier(html, verdier)).toEqual([]);
+  });
+
+  it("rapporterer ikke en verdi saksbehandler har valgt blant kandidatene", () => {
+    const html = `<p>${utfylt("saksnummer", "MEL-21")}</p>`;
+    const ferske: PlaceholderVerdi[] = [{ nokkel: "saksnummer", verdi: "MEL-22", kandidater: ["MEL-22", "MEL-21"] }];
+
+    expect(finnUtdaterteVerdier(html, ferske)).toEqual([]);
   });
 
   it("rapporterer nøkkel uten fersk verdi med tom ferskVerdi", () => {

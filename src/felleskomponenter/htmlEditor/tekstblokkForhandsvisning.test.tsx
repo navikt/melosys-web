@@ -106,6 +106,31 @@ describe("TekstblokkForhandsvisning", () => {
     expect(container.querySelector(".placeholder-ukjent")).toBeNull();
   });
 
+  it("markerer valgtoken som valg, ikke som ukjent nøkkel", () => {
+    const container = renderHtml("<p>Land: {velg:Serbia|Montenegro}</p>", undefined, ["saksnummer"]);
+
+    const markering = container.querySelector(".placeholder-valg");
+    expect(markering?.textContent).toBe("{velg:Serbia|Montenegro}");
+    // Forhåndsvisningen er ikke klikkbar, så tittelen kan ikke love et klikk.
+    expect(markering?.getAttribute("title")).toBe("Alternativet velges når teksten settes inn i brevet");
+    expect(markering?.getAttribute("title")).not.toContain("Klikk");
+    expect(container.querySelector(".placeholder-ukjent")).toBeNull();
+  });
+
+  it("markerer valgtoken med for få alternativer som ukjent nøkkel", () => {
+    const container = renderHtml("<p>{velg:Bare denne}</p>", undefined, ["saksnummer"]);
+
+    expect(container.querySelector(".placeholder-valg")).toBeNull();
+    expect(container.querySelector(".placeholder-ukjent")?.textContent).toBe("{velg:Bare denne}");
+  });
+
+  it("viser et lagret valg som ren tekst uten markering", () => {
+    const container = renderHtml('<p><span class="placeholder-valgt" data-valg="A|B">B</span></p>');
+
+    expect(container.querySelector(".placeholder-valgt")).toBeNull();
+    expect(container.textContent).toBe("B");
+  });
+
   it("rører ikke krøllparenteser med togglen av, men uthever fortsatt klammer", () => {
     vi.mocked(useFeatureToggle).mockReturnValue(false);
 

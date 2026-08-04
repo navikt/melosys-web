@@ -12,10 +12,12 @@ import "./htmlEditor.less";
 import {
   EDITOR_FORMATS,
   fjernUgyldigeUtfylteMarkeringer,
+  fjernUgyldigeValgteMarkeringer,
   forberedTekstblokkHtml,
   markerUerstattedeOmrader,
   PLACEHOLDER_FORMATS,
 } from "./placeholderMarkering";
+import { usePlaceholderValg } from "./placeholderValg";
 import TekstblokkSoek from "./tekstblokkSoek";
 
 // Registrerer egendefinert blot for tekst i klammer
@@ -142,6 +144,9 @@ function HtmlEditor({
   // Togglen er undefined til den er lastet; formatene må med uansett, ellers stripper Quill
   // lagrede markeringer permanent. Kun en eksplisitt av-toggle (rollback) skal fjerne dem.
   const placeholderFormatsAktive = dynamiskPlaceholderPaa !== false;
+  // Én kilde til key-en på ReactQuill: skifter den, er Quill-instansen en annen, og handlerne
+  // i usePlaceholderValg må kobles opp på nytt.
+  const editorNokkel = String(placeholderFormatsAktive);
   // Markering krever at verten kan levere verdier eller katalog (Send brev og admin);
   // saksflyt-editorene får aldri placeholder-kontekst.
   const markeringAktiv =
@@ -151,6 +156,14 @@ function HtmlEditor({
   const markeringAktivRef = useRef(markeringAktiv);
   const placeholderVerdierRef = useRef(placeholderVerdier);
   const gyldigeNoklerRef = useRef(gyldigeNokler);
+
+  const { valgPopover } = usePlaceholderValg({
+    quillRef,
+    sisteMarkering: lastSelectionRef,
+    aktiv: markeringAktiv && !disabled,
+    editorNokkel,
+    placeholderVerdier,
+  });
 
   useEffect(() => {
     markeringAktivRef.current = markeringAktiv;
@@ -308,6 +321,7 @@ function HtmlEditor({
 
         if (markeringAktivRef.current) {
           fjernUgyldigeUtfylteMarkeringer(quill, placeholderVerdierRef.current);
+          fjernUgyldigeValgteMarkeringer(quill);
           markerUerstattedeOmrader(quill, gyldigeNoklerRef.current);
         }
       } finally {
@@ -466,7 +480,7 @@ function HtmlEditor({
           // ReactQuill bygger editoren på nytt når formats endres, men beholder da React-
           // instansen – og våre handlere ville blitt hengende på den forkastede Quill-en.
           // Med key monteres alt på nytt, og effekten over kobler seg til den nye editoren.
-          key={String(placeholderFormatsAktive)}
+          key={editorNokkel}
           ref={quillRef}
           theme="snow"
           value={internalValue}
@@ -479,6 +493,7 @@ function HtmlEditor({
           // <ul>, men sanitizeren i melosys-api og listestylingen i dokgen krever data-list.
           useSemanticHTML={false}
         />
+        {valgPopover}
       </div>
       {feil && (
         // TODO Bruk av ExclamationmarkTriangleFillIcon from "@navikt/aksel-icons" ser ikke bra ut her, trolig pga

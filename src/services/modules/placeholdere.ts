@@ -4,6 +4,9 @@ import { getAsJson } from "../utils";
 export interface PlaceholderVerdi {
   nokkel: string;
   verdi: string;
+  // Forhåndsvalget står i verdi; kandidatlisten følger kun med når det er reelt flere å
+  // velge mellom. Api-et leverer feltet først i runde 3.
+  kandidater?: string[];
 }
 
 export interface PlaceholderBeskrivelse {
@@ -37,17 +40,64 @@ export const PLACEHOLDER_UERSTATTET_TITTEL =
 
 export const PLACEHOLDER_UKJENT_TITTEL = "Ikke en gyldig placeholder – se katalogen over tilgjengelige placeholdere";
 
+export const PLACEHOLDER_VALG_TITTEL = "Klikk for å velge mellom alternativene";
+
+// Forhåndsvisningen er ikke klikkbar, så den kan ikke love et klikk.
+export const PLACEHOLDER_VALG_TITTEL_VISNING = "Alternativet velges når teksten settes inn i brevet";
+
+export const PLACEHOLDER_VALGT_TITTEL = "Klikk for å endre valget";
+
 // Nøkkelen inni {…}. Trimmes så «{ saksnummer }» ikke blir feilklassifisert som ukjent.
 const nokkelFraToken = (token: string): string => token.slice(1, -1).trim();
+
+const VALG_PREFIKS = "{velg:";
+
+// «velg:» er et reservert prefiks; nøkkelmønsteret tillater ikke kolon, så et valgtoken
+// kolliderer aldri med en katalognøkkel.
+const VALG_TOKEN_MONSTER = /^\{velg:[^{}<>\n]+\}$/;
+
+// Alternativene i «A|B|C» – både fra tokenteksten og fra data-valg på et innsatt valg.
+// Ett alternativ er ikke et valg, så da regnes strengen som ugyldig og gir tom liste.
+// Duplikater slås sammen: to like knapper er ingen reell valgmulighet.
+export const parseValgAlternativer = (alternativStreng: string): string[] => {
+  const alternativer = [
+    ...new Set(
+      alternativStreng
+        .split("|")
+        .map((alternativ) => alternativ.trim())
+        .filter(Boolean),
+    ),
+  ];
+  return alternativer.length >= 2 ? alternativer : [];
+};
+
+// Valgtoken: {velg:A|B|C}. Ugyldig innhold gir null, og tokenet klassifiseres da som
+// en vanlig (ukjent) nøkkel i stedet.
+export const parseValgToken = (token: string): { alternativer: string[] } | null => {
+  if (!VALG_TOKEN_MONSTER.test(token)) return null;
+  const alternativer = parseValgAlternativer(token.slice(VALG_PREFIKS.length, -1));
+  return alternativer.length > 0 ? { alternativer } : null;
+};
+
+export const erValgToken = (token: string): boolean => parseValgToken(token) !== null;
 
 // Skiller gyldig-men-uten-verdi (gult) fra nøkkel som ikke finnes i katalogen (rødt).
 // Uten liste – katalogen er ikke lastet, feilet eller er tom – kan vi ikke avgjøre
 // gyldighet, og alt markeres gult som før.
-export const erUkjentPlaceholder = (token: string, gyldigeNokler?: string[]): boolean =>
-  Boolean(gyldigeNokler?.length) && !gyldigeNokler?.includes(nokkelFraToken(token));
+export const erUkjentPlaceholder = (token: string, gyldigeNokler?: string[]): boolean => {
+  // Valgtokener slås aldri opp i katalogen – de skal ikke kunne bli røde.
+  if (erValgToken(token)) return false;
+  return Boolean(gyldigeNokler?.length) && !gyldigeNokler?.includes(nokkelFraToken(token));
+};
 
 // Må speile MARKERINGSKLASSER i melosys-api service/.../tekstblokk/TekstblokkHtmlSanitizer.kt
-export const PLACEHOLDER_MARKERINGSKLASSER = ["placeholder-uerstattet", "placeholder-ukjent", "placeholder-utfylt"];
+export const PLACEHOLDER_MARKERINGSKLASSER = [
+  "placeholder-uerstattet",
+  "placeholder-ukjent",
+  "placeholder-utfylt",
+  "placeholder-valg",
+  "placeholder-valgt",
+];
 
 // bracketed-text er bevisst web-only – api-et pakker aldri ut klamme-spans, siden det ville
 // endret innhold fra master-æraen ved lagring med togglen av.
@@ -78,6 +128,8 @@ export const erstattPlaceholdere = (html: string, verdier: PlaceholderVerdi[]): 
   if (verdier.length === 0) return html;
   const verdiForNokkel = new Map(verdier.map(({ nokkel, verdi }) => [nokkel, verdi]));
   return html.replace(/\{[^{}<>]+\}/g, (token) => {
+    // Valgtokener har ingen saksverdi – de erstattes av brukerens valg i editoren.
+    if (erValgToken(token)) return token;
     // Samme trimmede nøkkel som erUkjentPlaceholder, ellers blir «{ saksnummer }» aldri erstattet.
     const nokkel = nokkelFraToken(token);
     const verdi = verdiForNokkel.get(nokkel);
@@ -102,7 +154,7 @@ export const harInnsatteVerdier = (html: string): boolean => html.includes("plac
 export const finnUtdaterteVerdier = (html: string, ferskeVerdier: PlaceholderVerdi[]): UtdatertPlaceholder[] => {
   if (!harInnsatteVerdier(html)) return [];
 
-  const ferskForNokkel = new Map(ferskeVerdier.map(({ nokkel, verdi }) => [nokkel, verdi]));
+  const ferskForNokkel = new Map(ferskeVerdier.map((fersk) => [fersk.nokkel, fersk]));
   const dokument = new DOMParser().parseFromString(html, "text/html");
   const utdaterte: UtdatertPlaceholder[] = [];
   const rapportert = new Set<string>();
@@ -110,9 +162,11 @@ export const finnUtdaterteVerdier = (html: string, ferskeVerdier: PlaceholderVer
   dokument.body.querySelectorAll("span.placeholder-utfylt[data-placeholder]").forEach((span) => {
     const nokkel = span.getAttribute("data-placeholder") ?? "";
     const innsattVerdi = span.textContent ?? "";
+    const fersk = ferskForNokkel.get(nokkel);
     // Nøkkel uten fersk verdi er utgått av registeret; den rapporteres med tom ferskVerdi.
-    const ferskVerdi = ferskForNokkel.get(nokkel) ?? "";
-    if (ferskVerdi === innsattVerdi) return;
+    const ferskVerdi = fersk?.verdi ?? "";
+    // En valgt kandidat er et bevisst valg, ikke en foreldet verdi.
+    if (ferskVerdi === innsattVerdi || fersk?.kandidater?.includes(innsattVerdi)) return;
 
     // Samme nøkkel kan stå flere steder i brevet – varsle én gang per avvik.
     const avviksNokkel = `${nokkel}${innsattVerdi}`;

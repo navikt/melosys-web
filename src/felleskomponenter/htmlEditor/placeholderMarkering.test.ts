@@ -6,6 +6,8 @@ import {
   PlaceholderBlot,
   PlaceholderUerstattetBlot,
   PlaceholderUkjentBlot,
+  PlaceholderValgBlot,
+  PlaceholderValgtBlot,
 } from "./placeholderMarkering";
 import { PlaceholderVerdi } from "../../services/modules/placeholdere";
 
@@ -90,6 +92,43 @@ describe("PlaceholderUerstattetBlot", () => {
 
   it("formats returnerer true", () => {
     expect(PlaceholderUerstattetBlot.formats()).toBe(true);
+  });
+});
+
+describe("PlaceholderValgBlot", () => {
+  it("create setter klassen", () => {
+    const node = PlaceholderValgBlot.create() as HTMLElement;
+    expect(node.tagName).toBe("SPAN");
+    expect(node.classList.contains("placeholder-valg")).toBe(true);
+  });
+
+  it("create setter tooltip som oppfordrer til å velge", () => {
+    expect((PlaceholderValgBlot.create() as HTMLElement).getAttribute("title")).toBe(
+      "Klikk for å velge mellom alternativene",
+    );
+  });
+
+  it("formats returnerer true – markeringen utledes av klammeteksten", () => {
+    expect(PlaceholderValgBlot.formats()).toBe(true);
+  });
+});
+
+describe("PlaceholderValgtBlot", () => {
+  it("create setter klasse og alternativene i data-valg", () => {
+    const node = PlaceholderValgtBlot.create("A|B|C") as HTMLElement;
+    expect(node.tagName).toBe("SPAN");
+    expect(node.classList.contains("placeholder-valgt")).toBe(true);
+    expect(node.getAttribute("data-valg")).toBe("A|B|C");
+  });
+
+  it("create setter tooltip om omvalg", () => {
+    expect((PlaceholderValgtBlot.create("A|B") as HTMLElement).getAttribute("title")).toBe("Klikk for å endre valget");
+  });
+
+  it("formats leser alternativene fra data-attributtet", () => {
+    const node = document.createElement("span");
+    node.setAttribute("data-valg", "A|B");
+    expect(PlaceholderValgtBlot.formats(node)).toBe("A|B");
   });
 });
 

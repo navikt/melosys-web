@@ -45,9 +45,12 @@
 
       // Utfylte placeholder-verdier – dus blå så de skiller seg tydelig fra den røde
       // klammemarkeringen uten å konkurrere med brødteksten.
+      // Pekeren gjelder kun i editoren: der åpner klikk popoveren, i forhåndsvisningen er
+      // verdien ren visning.
       .placeholder-utfylt {
         background-color: var(--a-surface-info-subtle, #e0f1ff);
         border-radius: 2px;
+        cursor: pointer;
       }
 
       // Uerstattede placeholdere – gul varseltone: her mangler det en verdi.
@@ -61,6 +64,15 @@
       .placeholder-ukjent {
         background-color: var(--a-surface-danger-subtle, #ffe3e3);
         border-radius: 2px;
+      }
+
+      // Valgtokener og innsatte valg – lilla, en egen tone fra de tre statusfargene, og
+      // pekeren viser at markeringen er noe å klikke på.
+      .placeholder-valg,
+      .placeholder-valgt {
+        background-color: var(--a-surface-alt-1-subtle, #e0d8e9);
+        border-radius: 2px;
+        cursor: pointer;
       }
 
       table {
