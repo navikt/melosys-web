@@ -10,7 +10,7 @@ interface Markering {
   length: number;
 }
 
-interface TreffPosisjon {
+export interface TreffPosisjon {
   span: HTMLElement;
   // Teksten treffet ble åpnet på. Brukes til å kjenne igjen markeringen etterpå.
   tekst: string;
@@ -78,19 +78,33 @@ export const finnPlaceholderTreff = (
 const erSammeMarkering = (treff: PlaceholderTreff, tolket: TreffInnhold): boolean =>
   treff.type === "utfylt" ? tolket.type === "utfylt" && tolket.nokkel === treff.nokkel : tolket.type === "valg";
 
+// To like tokener i samme brev er ikke til å skille på tekst og markering alene. Den som ligger
+// nærmest der treffet ble åpnet er den brukeren pekte på – den første i DOM-en kan være en annen.
+export const naermestePosisjon = (kandidater: TreffPosisjon[], indeks: number): TreffPosisjon | null =>
+  kandidater.reduce<TreffPosisjon | null>(
+    (naermeste, kandidat) =>
+      naermeste === null || Math.abs(kandidat.index - indeks) < Math.abs(naermeste.index - indeks)
+        ? kandidat
+        : naermeste,
+    null,
+  );
+
 // Popoveren kan ha stått åpen gjennom både redigering og remarkering, og remarkering bytter ut
 // DOM-noden. Posisjonen godtas derfor så lenge teksten står urørt der treffet ble åpnet;
 // ellers letes markeringen opp på nytt i DOM-en.
 const ferskPosisjon = (quill: Quill, treff: PlaceholderTreff, verdier?: PlaceholderVerdi[]): TreffPosisjon | null => {
   if (quill.getText(treff.index, treff.length) === treff.tekst) return treff;
 
-  const funnet = Array.from(quill.root.querySelectorAll<HTMLElement>(TREFF_VELGER)).find((span) => {
-    if ((span.textContent ?? "") !== treff.tekst) return false;
-    const tolket = tolkSpan(span, treff.tekst, verdier);
-    return tolket !== null && erSammeMarkering(treff, tolket);
-  });
+  const kandidater = Array.from(quill.root.querySelectorAll<HTMLElement>(TREFF_VELGER))
+    .filter((span) => {
+      if ((span.textContent ?? "") !== treff.tekst) return false;
+      const tolket = tolkSpan(span, treff.tekst, verdier);
+      return tolket !== null && erSammeMarkering(treff, tolket);
+    })
+    .map((span) => posisjonFor(quill, span))
+    .filter((posisjon): posisjon is TreffPosisjon => posisjon !== null);
 
-  return funnet ? posisjonFor(quill, funnet) : null;
+  return naermestePosisjon(kandidater, treff.index);
 };
 
 // Et kandidatbytte beholder placeholder-nøkkelen, mens et valg bærer alternativlisten

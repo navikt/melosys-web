@@ -3,6 +3,7 @@ import { vi } from "vitest";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import SendBrev from "./sendBrev";
 import * as Api from "../../../services/api";
+import { useBetingelseKatalog, usePlaceholderKatalog } from "../../../services/api/placeholdere";
 import * as Placeholdere from "../../../services/modules/placeholdere";
 import { MELOSYS_TEKSTBLOKKER, MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggle/toggleNavn";
 import { STATUS } from "../../../services";
@@ -59,9 +60,9 @@ vi.mock("../../../services/modules/placeholdere", async () => ({
 
 vi.mock("../../../services/api/placeholdere", () => ({
   usePlaceholderVerdier: () => ({ data: undefined }),
-  usePlaceholderKatalog: () => ({ data: [{ nokkel: "saksnummer", visningsnavn: "Saksnummer" }] }),
+  usePlaceholderKatalog: vi.fn(() => ({ data: [{ nokkel: "saksnummer", visningsnavn: "Saksnummer" }] })),
   useBetingelseVerdier: () => ({ data: [] }),
-  useBetingelseKatalog: () => ({ data: [] }),
+  useBetingelseKatalog: vi.fn(() => ({ data: [] })),
 }));
 
 // Malene får uuid tildelt ved henting; en fast uuid lar skjemaverdiene peke på riktig mal.
@@ -106,6 +107,19 @@ const renderMedFritekst = (fritekst: string) =>
   renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
     preloadedState: {
       ...preloadedState,
+      form: {
+        send_brev: {
+          values: { ...preloadedState.form.send_brev.values, felt: { FRITEKST: { feltVerdi: fritekst } } },
+        },
+      },
+    },
+  });
+
+const renderMedToggles = (fritekst: string, toggles: Record<string, boolean>) =>
+  renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
+    preloadedState: {
+      ...preloadedState,
+      featureToggle: { status: STATUS.OK, data: toggles },
       form: {
         send_brev: {
           values: { ...preloadedState.form.send_brev.values, felt: { FRITEKST: { feltVerdi: fritekst } } },
@@ -330,22 +344,10 @@ describe("SendBrev – varsel om uutfylte felter", () => {
     await ventPaaBestilt();
   });
 
-  // Klammefeltene er dagens konvensjon i brev og varsles uavhengig av placeholder-togglene.
-  it("varsler om klammefelt også når togglene er av", async () => {
-    renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
-      preloadedState: {
-        ...preloadedState,
-        featureToggle: { status: STATUS.OK, data: {} },
-        form: {
-          send_brev: {
-            values: {
-              ...preloadedState.form.send_brev.values,
-              felt: { FRITEKST: { feltVerdi: "<p>Hei [navn].</p>" } },
-            },
-          },
-        },
-      },
-    });
+  // Klammefeltene er dagens konvensjon i brev; varselet er fagbesluttet gatet på
+  // tekstblokk-togglen alene, ikke på dynamisk placeholder.
+  it("varsler om klammefelt med tekstblokk-togglen på, selv om dynamisk placeholder er av", async () => {
+    renderMedToggles("<p>Hei [navn].</p>", { [MELOSYS_TEKSTBLOKKER]: true });
     await klikkSendBrev();
 
     expect(await screen.findByText("Brevet har felter som ikke er fylt ut")).toBeInTheDocument();
@@ -353,24 +355,36 @@ describe("SendBrev – varsel om uutfylte felter", () => {
     expect(Api.DokumenterV2.opprettBrev).not.toHaveBeenCalled();
   });
 
-  it("varsler ikke om tokener når togglene er av", async () => {
-    renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
-      preloadedState: {
-        ...preloadedState,
-        featureToggle: { status: STATUS.OK, data: {} },
-        form: {
-          send_brev: {
-            values: {
-              ...preloadedState.form.send_brev.values,
-              felt: { FRITEKST: { feltVerdi: "<p>Hei {saksnummer}.</p>" } },
-            },
-          },
-        },
-      },
-    });
+  it("varsler ikke om klammefelt når tekstblokk-togglen er av", async () => {
+    renderMedToggles("<p>Hei [navn].</p>", {});
     await klikkSendBrev();
 
     await ventPaaBestilt();
     expect(screen.queryByText("Brevet har felter som ikke er fylt ut")).not.toBeInTheDocument();
+  });
+
+  it("varsler ikke om tokener når togglene er av", async () => {
+    renderMedToggles("<p>Hei {saksnummer}.</p>", {});
+    await klikkSendBrev();
+
+    await ventPaaBestilt();
+    expect(screen.queryByText("Brevet har felter som ikke er fylt ut")).not.toBeInTheDocument();
+  });
+
+  it("henter ikke katalogen til varselet når placeholder-togglene er av", async () => {
+    renderMedToggles("<p>Hei [navn].</p>", { [MELOSYS_TEKSTBLOKKER]: true });
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet har felter som ikke er fylt ut")).toBeInTheDocument();
+    expect(usePlaceholderKatalog).toHaveBeenCalledWith(false);
+    expect(useBetingelseKatalog).toHaveBeenCalledWith(false);
+  });
+
+  it("henter katalogen til visningsnavnene når begge togglene er på", async () => {
+    renderMedFritekst("<p>Hei [navn].</p>");
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet har felter som ikke er fylt ut")).toBeInTheDocument();
+    expect(usePlaceholderKatalog).toHaveBeenCalledWith(true);
   });
 });

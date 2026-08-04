@@ -514,14 +514,16 @@ function SendBrev({
       return;
     }
 
-    // Klammer-varselet gjelder alle brev – [felt]-konvensjonen er uavhengig av
-    // placeholder-funksjonen. Token- og verdisjekkene krever togglene.
     const brevHtml = hentFritekstHtml();
     const placeholderAktiv = Boolean(tekstblokkerPaa && dynamiskPlaceholderPaa);
     // Uoppløste betingelser varsles i samme modal som utdaterte verdier, uten å blokkere sendingen.
     const uopploste = placeholderAktiv ? finnUopplosteBetingelser(brevHtml) : [];
-    // Klammefelt og tokener som aldri ble fylt ut ville gått ordrett ut i brevet.
-    const uutfylte = [...finnUutfylteKlammer(brevHtml), ...(placeholderAktiv ? finnUutfylteTokener(brevHtml) : [])];
+    // Klammefelt og tokener som aldri ble fylt ut ville gått ordrett ut i brevet. Fagbesluttet
+    // gating: klammer-varselet står på tekstblokk-togglen alene – den er på i prod, så dette er
+    // en bryter, ikke en utsettelse. Tokenene krever i tillegg dynamisk-togglen.
+    const uutfylte = tekstblokkerPaa
+      ? [...finnUutfylteKlammer(brevHtml), ...(placeholderAktiv ? finnUutfylteTokener(brevHtml) : [])]
+      : [];
     // Uten innsatte verdier er det ingenting å sammenligne, og oppslaget er unødvendig.
     const utdaterte = placeholderAktiv && harInnsatteVerdier(brevHtml) ? await hentUtdaterteVerdier(brevHtml) : [];
 

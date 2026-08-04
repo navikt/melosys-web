@@ -80,6 +80,18 @@ describe("TekstblokkerListe – avgrensning", () => {
     expect(onToggleUtvidet).toHaveBeenCalledWith(1);
   });
 
+  it("lar «+N» stå som en ren åpne-knapp: en utvidet rad kollapser ikke", async () => {
+    const onToggleUtvidet = vi.fn();
+
+    visListe([blokk({ sakstyper: ["EU_EOS", "TRYGDEAVTALE"], behandlingstemaer: ["ARBEID_KUN_NORGE"] })], {
+      utvidedeIder: new Set([1]),
+      onToggleUtvidet,
+    });
+    await userEvent.click(screen.getByRole("button", { name: "Avtaleland, Arbeid kun i Norge" }));
+
+    expect(onToggleUtvidet).not.toHaveBeenCalled();
+  });
+
   it("viser alle termene med ledetekst i den utvidede raden", () => {
     visListe([blokk({ sakstyper: ["EU_EOS", "TRYGDEAVTALE"], behandlingstemaer: ["ARBEID_KUN_NORGE"] })], {
       utvidedeIder: new Set([1]),

@@ -3,11 +3,9 @@ import { useMemo } from "react";
 
 import {
   Betingelse,
-  erBetingelsesToken,
-  erUkjentPlaceholder,
-  erValgToken,
   fjernMarkeringsSpans,
   forberedInnhold,
+  markeringsklasseFor,
   PLACEHOLDER_BETINGELSE_TITTEL,
   PLACEHOLDER_MARKERINGSKLASSER,
   PLACEHOLDER_UERSTATTET_TITTEL,
@@ -41,27 +39,21 @@ const uthevKlammer = (html: string): string =>
     treff.startsWith("<span") ? treff : `<span class="bracketed-text">${treff}</span>`,
   );
 
-// Samme trevegs-klassifisering som editoren, men uten klikk: forhåndsvisningen viser bare
-// at tokenet er et valg.
-const markeringFor = (
-  token: string,
-  gyldigeNokler?: string[],
-  harVerdikontekst = false,
-): { klasse: string; tittel: string } => {
-  if (erBetingelsesToken(token)) return { klasse: "placeholder-betingelse", tittel: PLACEHOLDER_BETINGELSE_TITTEL };
-  if (erValgToken(token)) return { klasse: "placeholder-valg", tittel: PLACEHOLDER_VALG_TITTEL_VISNING };
-  if (erUkjentPlaceholder(token, gyldigeNokler))
-    return { klasse: "placeholder-ukjent", tittel: PLACEHOLDER_UKJENT_TITTEL };
-  // Uten verdier å slå opp i (admin) er nøkkelen ikke uten verdi – den er bare ikke løst ennå.
-  return {
-    klasse: "placeholder-uerstattet",
-    tittel: harVerdikontekst ? PLACEHOLDER_UERSTATTET_TITTEL : PLACEHOLDER_UERSTATTET_UTEN_VERDIER_TITTEL,
-  };
+// Klassifiseringen deles med editoren; kun tittelen er forhåndsvisningens egen – her finnes
+// ingen klikk, så valgtittelen kan ikke love et.
+const TITTEL_FOR_KLASSE: Record<string, string> = {
+  "placeholder-betingelse": PLACEHOLDER_BETINGELSE_TITTEL,
+  "placeholder-valg": PLACEHOLDER_VALG_TITTEL_VISNING,
+  "placeholder-ukjent": PLACEHOLDER_UKJENT_TITTEL,
 };
 
 const uthevPlaceholders = (html: string, gyldigeNokler?: string[], harVerdikontekst = false): string =>
   html.replace(/\{[^{}<>\n]+\}/g, (token) => {
-    const { klasse, tittel } = markeringFor(token, gyldigeNokler, harVerdikontekst);
+    const klasse = markeringsklasseFor(token, gyldigeNokler);
+    // Uten verdier å slå opp i (admin) er nøkkelen ikke uten verdi – den er bare ikke løst ennå.
+    const tittel =
+      TITTEL_FOR_KLASSE[klasse] ??
+      (harVerdikontekst ? PLACEHOLDER_UERSTATTET_TITTEL : PLACEHOLDER_UERSTATTET_UTEN_VERDIER_TITTEL);
     return `<span class="${klasse}" title="${tittel}">${token}</span>`;
   });
 
@@ -72,11 +64,10 @@ function TekstblokkForhandsvisning({ html, className, placeholderVerdier, gyldig
   // Samme rekkefølge som editoren: erstattede verdier har ingen klammer igjen og
   // treffes derfor ikke av uthevingen etterpå.
   const uthevet = useMemo(() => {
-    // Toggle av er master-oppførsel: lagrede klamme-spans beholdes (uthevKlammer kan ikke
-    // gjenskape dem rundt inline-tagger), kun placeholder-markeringene strippes. Ved
-    // innsetting er stripping trygg uansett – editoren remarkerer klammer tekstbasert.
+    // Lagrede klamme-spans beholdes i begge toggle-stiene: uthevKlammer kan ikke gjenskape dem
+    // rundt inline-tagger, så stripping ville mistet markeringen. Kun innsettingen stripper alt.
     if (!dynamiskPlaceholderPaa) return uthevKlammer(fjernMarkeringsSpans(html, PLACEHOLDER_MARKERINGSKLASSER));
-    const forberedt = forberedInnhold(html, placeholderVerdier, betingelser);
+    const forberedt = forberedInnhold(html, placeholderVerdier, betingelser, PLACEHOLDER_MARKERINGSKLASSER);
     return uthevPlaceholders(uthevKlammer(forberedt), gyldigeNokler, placeholderVerdier !== undefined);
   }, [html, placeholderVerdier, gyldigeNokler, betingelser, dynamiskPlaceholderPaa]);
   return (

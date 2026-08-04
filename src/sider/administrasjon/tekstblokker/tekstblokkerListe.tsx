@@ -166,9 +166,11 @@ function TekstblokkerListeRad({
               title={skjulteTermer.join(", ")}
               aria-label={skjulteTermer.join(", ")}
               // stopPropagation: raden skal ikke også reagere på klikket om den senere gjøres klikkbar.
+              // Knappen åpner bare: på en åpen rad står termene allerede der, og et klikk som
+              // lukket dem ville tatt bort nettopp det brukeren ba om å få se.
               onClick={(e) => {
                 e.stopPropagation();
-                onToggleUtvidet(blokk.id);
+                if (!utvidet) onToggleUtvidet(blokk.id);
               }}
             >
               <Nav.Tag size="xsmall" variant="info">

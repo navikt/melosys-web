@@ -401,3 +401,37 @@ describe("TekstblokkRedigeringModal – varsel om sakstyper placeholderen ikke s
     expect(useBetingelseKatalog).toHaveBeenCalledWith(false);
   });
 });
+
+describe("TekstblokkRedigeringModal – skjemaet ved refetch", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(useFeatureToggle).mockReturnValue(false);
+    mockKatalog({ data: undefined });
+  });
+
+  // React Query gir et nytt data-objekt ved bakgrunns-refetch; init-effekten skal ikke
+  // kjøre om igjen og skrive over det admin holder på å skrive.
+  it("beholder admins endringer når det kommer ferske data for samme blokk", async () => {
+    mocks.tekstblokk.mockReturnValue({ data: lagret(), isLoading: false });
+    const { rerender } = visModal(7);
+
+    const tittel = screen.getByRole("textbox", { name: "Tittel" });
+    await userEvent.clear(tittel);
+    await userEvent.type(tittel, "Halvferdig tittel");
+
+    mocks.tekstblokk.mockReturnValue({ data: lagret(), isLoading: false });
+    rerender(<TekstblokkRedigeringModal redigerId={7} type="TEKSTBLOKK" forslagTags={[]} onLukk={vi.fn()} />);
+
+    expect((screen.getByRole("textbox", { name: "Tittel" }) as HTMLInputElement).value).toBe("Halvferdig tittel");
+  });
+
+  it("fyller skjemaet på nytt når en annen blokk åpnes", () => {
+    mocks.tekstblokk.mockReturnValue({ data: lagret(), isLoading: false });
+    const { rerender } = visModal(7);
+
+    mocks.tekstblokk.mockReturnValue({ data: lagret({ id: 8, tittel: "En annen blokk" }), isLoading: false });
+    rerender(<TekstblokkRedigeringModal redigerId={8} type="TEKSTBLOKK" forslagTags={[]} onLukk={vi.fn()} />);
+
+    expect((screen.getByRole("textbox", { name: "Tittel" }) as HTMLInputElement).value).toBe("En annen blokk");
+  });
+});

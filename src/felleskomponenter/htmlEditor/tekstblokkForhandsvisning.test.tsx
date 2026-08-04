@@ -83,13 +83,13 @@ describe("TekstblokkForhandsvisning", () => {
     expect(container.querySelector(".bracketed-text")?.textContent).toBe("[dato]");
   });
 
-  // Innsettingen pakker ut lagrede klammemarkeringer, og regexen gjenskaper dem ikke rundt inline-tagger.
-  it("viser klammetekst med inline-tagger umarkert, slik innsettingen gir den", () => {
-    const html = '<p><span class="bracketed-text">[navn <strong>x</strong>]</span></p>';
-    const container = renderHtml(html);
+  // Regexen kan ikke gjenskape markering rundt inline-tagger, så spanet må stå igjen.
+  it("beholder lagret klammemarkering rundt innhold med inline-tagger", () => {
+    const container = renderHtml('<p><span class="bracketed-text">[navn <strong>x</strong>]</span></p>');
 
-    expect(container.querySelectorAll(".bracketed-text")).toHaveLength(0);
-    expect(container.textContent).toBe("[navn x]");
+    const markering = container.querySelector(".bracketed-text");
+    expect(markering?.textContent).toBe("[navn x]");
+    expect(markering?.querySelector("strong")?.textContent).toBe("x");
   });
 
   it("markerer ukjent nøkkel rødt og gyldig nøkkel uten verdi gult", () => {
