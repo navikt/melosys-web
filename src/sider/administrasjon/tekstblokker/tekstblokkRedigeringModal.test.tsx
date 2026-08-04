@@ -253,7 +253,7 @@ describe("TekstblokkRedigeringModal – kontekstavgrensning", () => {
     await userEvent.type(screen.getByRole("textbox", { name: "Innhold" }), "Tekst");
     await userEvent.click(screen.getByRole("button", { name: "Opprett" }));
 
-    expect(screen.queryByRole("button", { name: /EU\/EØS/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /EU\/EØS-land/ })).toBeNull();
     expect(mocks.opprett).toHaveBeenCalledWith(
       expect.objectContaining({ sakstyper: [], behandlingstemaer: [] }),
       expect.anything(),
@@ -268,7 +268,7 @@ describe("TekstblokkRedigeringModal – kontekstavgrensning", () => {
 
     visModal(7);
 
-    expect(screen.getByRole("button", { name: /EU\/EØS/ })).toBeDefined();
+    expect(screen.getByRole("button", { name: /EU\/EØS-land/ })).toBeDefined();
     expect(screen.getByRole("button", { name: /Arbeid kun i Norge/ })).toBeDefined();
   });
 
@@ -341,7 +341,7 @@ describe("TekstblokkRedigeringModal – varsel om sakstyper placeholderen ikke s
 
     visModal(7);
 
-    const punkt = konfliktPunkt("Søkers navn støtter ikke: EU/EØS");
+    const punkt = konfliktPunkt("Søkers navn støtter ikke: EU/EØS-land");
     // Feltnavnet skal skille seg fra resten av setningen.
     expect(punkt.querySelector("strong")?.textContent).toBe("Søkers navn");
   });
@@ -354,7 +354,7 @@ describe("TekstblokkRedigeringModal – varsel om sakstyper placeholderen ikke s
 
     visModal(7);
 
-    expect(konfliktPunkt("Avslag støtter ikke: EU/EØS")).toBeDefined();
+    expect(konfliktPunkt("Avslag støtter ikke: EU/EØS-land")).toBeDefined();
   });
 
   it("varsler med de støttede sakstypene når blokken gjelder alle", () => {
