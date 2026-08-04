@@ -263,7 +263,7 @@ function TekstblokkSoekIntern({
                 {kontekstSkjulerTreff && (
                   <BodyShort size="small">
                     {harAktivtFilter
-                      ? "Treffene for søket ditt gjelder ikke denne saken (sakstype/behandlingstema)."
+                      ? "Treffene for filtrene dine gjelder ikke denne saken (sakstype/behandlingstema)."
                       : `Ingen ${typeOrd} gjelder denne saken (sakstype/behandlingstema).`}
                   </BodyShort>
                 )}

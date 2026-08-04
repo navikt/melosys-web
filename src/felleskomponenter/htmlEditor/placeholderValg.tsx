@@ -91,13 +91,14 @@ export const naermestePosisjon = (kandidater: TreffPosisjon[], indeks: number): 
 
 // Står den opprinnelige spanen igjen urørt, er det den brukeren pekte på. Identitet slår
 // avstand: etter et større skift kan den foreldede indeksen ligge nærmest et likt token
-// et helt annet sted i brevet.
+// et helt annet sted i brevet. Delegerer til hovedstien så nye gyldighetsregler der
+// aldri kan bli hengende igjen her.
 const uendretSpan = (quill: Quill, treff: PlaceholderTreff, verdier?: PlaceholderVerdi[]): TreffPosisjon | null => {
-  if (!treff.span.isConnected || !quill.root.contains(treff.span)) return null;
-  if ((treff.span.textContent ?? "") !== treff.tekst) return null;
-  const tolket = tolkSpan(treff.span, treff.tekst, verdier);
-  if (tolket === null || !erSammeMarkering(treff, tolket)) return null;
-  return posisjonFor(quill, treff.span);
+  if (!treff.span.isConnected) return null;
+  const gjenfunnet = finnPlaceholderTreff(quill, treff.span, verdier);
+  if (gjenfunnet === null || gjenfunnet.span !== treff.span) return null;
+  if (gjenfunnet.tekst !== treff.tekst || !erSammeMarkering(treff, gjenfunnet)) return null;
+  return gjenfunnet;
 };
 
 // Popoveren kan ha stått åpen gjennom både redigering og remarkering, og remarkering bytter ut

@@ -87,7 +87,7 @@ describe("TekstblokkSoek – kontekstavgrensning", () => {
     await userEvent.type(screen.getByRole("searchbox", { name: "Søk på tittel eller tag" }), "EU/EØS");
 
     expect(
-      screen.getByText("Treffene for søket ditt gjelder ikke denne saken (sakstype/behandlingstema)."),
+      screen.getByText("Treffene for filtrene dine gjelder ikke denne saken (sakstype/behandlingstema)."),
     ).toBeDefined();
     expect(screen.queryByText(/Ingen tekstblokker gjelder denne saken/)).toBeNull();
     expect(screen.getByText(/Prøv et annet søkeord/)).toBeDefined();

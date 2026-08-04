@@ -95,14 +95,13 @@ export const PLACEHOLDER_VALGT_TITTEL = "Klikk for å endre valget";
 export const PLACEHOLDER_BETINGELSE_TITTEL =
   "Vises bare når betingelsen er oppfylt – løses ved innsetting fra Send brev";
 
+// Forhåndsvisning og sendevarsler leser HTML-strengen, der mellomrom kan stå som
+// &nbsp;-entitet, mens editoren ser U+00A0. Dekodes før all token-parsing og -visning,
+// så begge veier klassifiserer likt og varsellistene er lesbare.
+const dekodTokenTekst = (token: string): string => token.replace(/&nbsp;/g, " ");
+
 // Nøkkelen inni {…}. Trimmes så «{ saksnummer }» ikke blir feilklassifisert som ukjent.
-// Forhåndsvisningen leser HTML-strengen, der mellomrommet kan stå som &nbsp;-entitet, mens
-// editoren ser U+00A0 som trim() tar. Entiteten dekodes her så begge veier gir samme nøkkel.
-const nokkelFraToken = (token: string): string =>
-  token
-    .slice(1, -1)
-    .replace(/&nbsp;/g, " ")
-    .trim();
+const nokkelFraToken = (token: string): string => dekodTokenTekst(token.slice(1, -1)).trim();
 
 const VALG_PREFIKS = "{velg:";
 
@@ -128,8 +127,9 @@ export const parseValgAlternativer = (alternativStreng: string): string[] => {
 // Valgtoken: {velg:A|B|C}. Ugyldig innhold gir null, og tokenet klassifiseres da som
 // en vanlig (ukjent) nøkkel i stedet.
 export const parseValgToken = (token: string): { alternativer: string[] } | null => {
-  if (!VALG_TOKEN_MONSTER.test(token)) return null;
-  const alternativer = parseValgAlternativer(token.slice(VALG_PREFIKS.length, -1));
+  const dekodet = dekodTokenTekst(token);
+  if (!VALG_TOKEN_MONSTER.test(dekodet)) return null;
+  const alternativer = parseValgAlternativer(dekodet.slice(VALG_PREFIKS.length, -1));
   return alternativer.length > 0 ? { alternativer } : null;
 };
 
@@ -141,11 +141,12 @@ export const erValgToken = (token: string): boolean => parseValgToken(token) !==
 // som leser grammatikken – en justering ett sted kan ikke la de andre henge igjen.
 const HVIS_NOKKEL = "[^{}<>\\s|:]+";
 const HVIS_START_MONSTER = new RegExp(`^\\{#hvis\\s+(${HVIS_NOKKEL})\\}$`);
+const HVIS_START_LITTERAL = "{#hvis";
 
 export const HVIS_SLUTT_TOKEN = "{/hvis}";
 
 export const parseHvisStartToken = (token: string): { nokkel: string } | null => {
-  const treff = HVIS_START_MONSTER.exec(token);
+  const treff = HVIS_START_MONSTER.exec(dekodTokenTekst(token));
   return treff ? { nokkel: treff[1] } : null;
 };
 
@@ -339,7 +340,7 @@ const losOppBlokk = ({ fra, til }: { fra: Element; til: Element }, oppfylt: bool
 // fjerner tokenene, false fjerner begge deler. Ukjent nøkkel – og par uten entydig omfang –
 // hoppes over hver for seg, så tokenene blir stående synlig markert mens resten løses.
 export const losOppBetingelser = (html: string, betingelser?: Betingelse[]): string => {
-  if (!html.includes("{#hvis") && !html.includes(HVIS_SLUTT_TOKEN)) return html;
+  if (!html.includes(HVIS_START_LITTERAL) && !html.includes(HVIS_SLUTT_TOKEN)) return html;
 
   const dokument = new DOMParser().parseFromString(html, "text/html");
   const par = parBetingelser(finnBetingelsesTokener(dokument));
@@ -387,10 +388,8 @@ export const forberedInnhold = (
 const HVIS_START_LOST_MONSTER = /\{#hvis[^{}<>\n]*\}/g;
 const HVIS_SLUTT_MONSTER = /\{\/hvis\}/g;
 
-const HVIS_START_LITTERAL = "{#hvis";
-
-// Foreldreløst = et {/hvis} som ikke har et gyldig starttoken foran seg i teksten. Balansen
-// telles i dokumentrekkefølge, så både overskudd av {/hvis} og et reversert par fanges.
+// Foreldreløst = et {/hvis} uten noe starttoken (gyldig eller misformet) foran seg i
+// teksten. Balansen telles i dokumentrekkefølge, så både overskudd og reversert par fanges.
 const harForeldreloseSlutt = (html: string, startIndekser: number[]): boolean => {
   const sluttIndekser = [...html.matchAll(HVIS_SLUTT_MONSTER)].map((treff) => treff.index);
   const hendelser = [
@@ -416,17 +415,17 @@ export const finnUopplosteBetingelser = (html: string): string[] => {
 
   const nokler = new Set<string>();
   const misformede = new Set<string>();
-  const startIndekser: number[] = [];
+  // Også misformede starttokener åpner et par visuelt: et {/hvis} rett etter en skrivefeil
+  // er ikke foreldreløst – å rette starttokenet er hele fikset.
+  const aapnerIndekser: number[] = [];
   let antallStartTreff = 0;
 
   for (const treff of html.matchAll(HVIS_START_LOST_MONSTER)) {
     antallStartTreff += 1;
+    aapnerIndekser.push(treff.index);
     const nokkel = parseHvisStartToken(treff[0])?.nokkel;
-    if (nokkel === undefined) misformede.add(treff[0]);
-    else {
-      nokler.add(nokkel);
-      startIndekser.push(treff.index);
-    }
+    if (nokkel === undefined) misformede.add(dekodTokenTekst(treff[0]));
+    else nokler.add(nokkel);
   }
 
   // Flere «{#hvis» i teksten enn hele tokener betyr at minst ett aldri ble lukket.
@@ -434,7 +433,7 @@ export const finnUopplosteBetingelser = (html: string): string[] => {
 
   return [
     ...nokler,
-    ...(harForeldreloseSlutt(html, startIndekser) ? [HVIS_SLUTT_TOKEN] : []),
+    ...(harForeldreloseSlutt(html, aapnerIndekser) ? [HVIS_SLUTT_TOKEN] : []),
     ...misformede,
     ...(uavsluttetFragment ? [HVIS_START_LITTERAL] : []),
   ];
@@ -523,7 +522,7 @@ export const finnUutfylteTokener = (html: string): string[] => {
     // Betingelsestokener er styring, ikke felter – de varsles av finnUopplosteBetingelser.
     // Prefikssjekk, ikke erHvisStartToken: også et misformet «{#hvis to ord}» hører hjemme der.
     if (token.startsWith(HVIS_START_LITTERAL) || erHvisSluttToken(token)) continue;
-    uutfylte.add(token);
+    uutfylte.add(dekodTokenTekst(token));
   }
   return [...uutfylte];
 };
