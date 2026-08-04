@@ -8,7 +8,7 @@ import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { fagsakSelectors } from "../../ducks/fagsaker";
 import { useFiltrerteTekstblokker, useTekstblokker } from "../../services/api/tekstblokker";
 import { TekstblokkOversikt, TekstblokkType } from "../../services/modules/tekstblokker";
-import { Betingelse, PlaceholderVerdi } from "../../services/modules/placeholdere";
+import { Betingelse, harBetingelseEllerValgTokener, PlaceholderVerdi } from "../../services/modules/placeholdere";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER } from "../../featuretoggle/toggleNavn";
 import TekstblokkForhandsvisning from "./tekstblokkForhandsvisning";
@@ -323,6 +323,12 @@ function TekstblokkRad({ blokk, onVelg, placeholderVerdier, gyldigeNokler, betin
   // Innhold er skjult som standard – vises kun når brukeren ber om det.
   const [visInnhold, setVisInnhold] = useState(false);
 
+  // Uten noen av de tre løser ikke editoren tokener ved innsetting, og saksflyten har heller
+  // ingen sendevarsel som fanger dem opp senere.
+  const utenPlaceholderKontekst =
+    placeholderVerdier === undefined && gyldigeNokler === undefined && betingelser === undefined;
+  const advarOmTokener = utenPlaceholderKontekst && harBetingelseEllerValgTokener(blokk.innhold);
+
   return (
     <div className={`tekstblokkSoek__rad${visInnhold ? " tekstblokkSoek__rad--utvidet" : ""}`}>
       <div className="tekstblokkSoek__rad-topp">
@@ -335,6 +341,16 @@ function TekstblokkRad({ blokk, onVelg, placeholderVerdier, gyldigeNokler, betin
                   {tag}
                 </Nav.Tag>
               ))}
+            </div>
+          )}
+          {advarOmTokener && (
+            <div className="tekstblokkSoek__rad-advarsel">
+              <Nav.Tag size="xsmall" variant="warning">
+                Inneholder felter som ikke fylles ut her
+              </Nav.Tag>
+              <BodyShort size="small">
+                Betingelser og valg settes inn slik de står, og må fjernes eller fylles ut manuelt etterpå.
+              </BodyShort>
             </div>
           )}
         </div>

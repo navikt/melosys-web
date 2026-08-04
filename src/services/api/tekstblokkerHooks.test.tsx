@@ -27,6 +27,10 @@ const versjon = {
   endringstype: "OPPRETTET",
   tittel: "Om utsending",
   innhold: "<p>Tekst</p>",
+  tags: [],
+  sakstyper: [],
+  behandlingstemaer: [],
+  status: "PUBLISERT",
 } as Tekstblokker.TekstblokkVersjon;
 
 const lagWrapper = (queryClient: QueryClient) =>

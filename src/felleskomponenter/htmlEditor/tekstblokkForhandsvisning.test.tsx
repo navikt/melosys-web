@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render } from "@testing-library/react";
 
 import TekstblokkForhandsvisning from "./tekstblokkForhandsvisning";
+import { forberedTekstblokkHtml } from "./placeholderMarkering";
 import { Betingelse, PlaceholderVerdi } from "../../services/modules/placeholdere";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 
@@ -238,5 +239,33 @@ describe("TekstblokkForhandsvisning", () => {
     expect(container.querySelector(".placeholder-uerstattet")).toBeNull();
     expect(container.querySelector(".bracketed-text")?.textContent).toBe("[navn y]");
     expect(container.textContent).toContain("{saksnummer}");
+  });
+});
+
+// Innsettingen (forberedTekstblokkHtml) og forhåndsvisningen kaller forberedInnhold med ulike
+// markeringsklasser, så HTML-en skiller seg i spans. Teksten saksbehandleren ender opp med i
+// brevet skal likevel være nøyaktig den forhåndsvisningen viste.
+describe("TekstblokkForhandsvisning – paritet med innsettingen", () => {
+  const betingelser: Betingelse[] = [{ nokkel: "avslag", oppfylt: false }];
+
+  const tekstenI = (html: string): string => new DOMParser().parseFromString(html, "text/html").body.textContent ?? "";
+
+  beforeEach(() => {
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+  });
+
+  it.each([
+    ["<p>Saken {saksnummer} er mottatt.</p>"],
+    ['<p><span class="bracketed-text">[navn <strong>x</strong>]</span> {saksnummer}</p>'],
+    ['<p><span class="placeholder-uerstattet">{saksnummer}</span></p>'],
+    ['<p><span class="placeholder-valgt" data-valg="A|B">B</span></p>'],
+    ["<p>Vedtaket er {#hvis avslag}avslått{/hvis} i saken.</p>"],
+    ["<p>{#hvis avslag}</p><p>Betinget {saksnummer}</p><p>{/hvis}</p><p>Etter</p>"],
+  ])("viser samme tekst som innsettingen gir for %s", (html) => {
+    const forhandsvist = render(
+      <TekstblokkForhandsvisning html={html} placeholderVerdier={verdier} betingelser={betingelser} />,
+    ).container;
+
+    expect(forhandsvist.textContent).toBe(tekstenI(forberedTekstblokkHtml(html, verdier, betingelser)));
   });
 });

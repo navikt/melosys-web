@@ -5,7 +5,7 @@ export interface PlaceholderVerdi {
   nokkel: string;
   verdi: string;
   // Forhåndsvalget står i verdi; kandidatlisten følger kun med når det er reelt flere å
-  // velge mellom. Api-et leverer feltet først i runde 3.
+  // velge mellom.
   kandidater?: string[];
 }
 
@@ -17,7 +17,7 @@ export interface PlaceholderBeskrivelse {
   sakstyper: string[];
 }
 
-// Ferdig beregnet fakta om saken. Api-et leverer feltet først i runde 5.
+// Ferdig beregnet fakta om saken.
 export interface Betingelse {
   nokkel: string;
   oppfylt: boolean;
@@ -35,8 +35,7 @@ export const hentVerdier = (
 ): Promise<{ verdier: PlaceholderVerdi[]; betingelser?: Betingelse[] }> =>
   getAsJson(`${API_BASE_URL}${BEHANDLINGER}/${behandlingId}/placeholdere`);
 
-// Api-et har levert sakstypene både som {kode, term}-objekter og som rene koder; begge former
-// leses her så en revert på api-siden ikke tømmer sakstypene i web.
+// Sakstypene kommer både som {kode, term}-objekter og som rene koder; begge former leses her.
 type SakstypeWire = string | { kode: string };
 
 interface KatalogWire {
@@ -97,10 +96,8 @@ export const PLACEHOLDER_BETINGELSE_TITTEL =
 
 // Token-parserne under antar dekodet tekst – den DOM-en gir. De gjenværende konsumentene som
 // leser HTML-strengen (erstattPlaceholdere og forhåndsvisningens utheving) dekoder på
-// inngangen, så en &nbsp;-entitet og et hardt mellomrom klassifiseres likt.
-// Kun den formen Quill faktisk serialiserer. Å enumerere flere skrivemåter (&NBSP;, &#x00a0;)
-// treffer aldri HTML-parserens regler: case-insensitiv matching dekoder former DOM-en lar stå,
-// og lista blir aldri komplett. Kjent begrensning, dokumentert i dok/dynamiske-placeholdere.
+// inngangen, så en &nbsp;-entitet og et hardt mellomrom klassifiseres likt. Kun formen Quill
+// serialiserer dekodes; andre skrivemåter (&NBSP;, &#x00a0;) forekommer ikke i lagret innhold.
 export const dekodTokenTekst = (token: string): string => token.replace(/&nbsp;/g, " ");
 
 // Hardt mellomrom vises identisk med et vanlig, så to varianter av samme felt ville stått
@@ -164,7 +161,7 @@ export const erBetingelsesToken = (token: string): boolean => erHvisStartToken(t
 
 // Skiller gyldig-men-uten-verdi (gult) fra nøkkel som ikke finnes i katalogen (rødt).
 // Uten liste – katalogen er ikke lastet, feilet eller er tom – kan vi ikke avgjøre
-// gyldighet, og alt markeres gult som før.
+// gyldighet, og alt markeres gult.
 export const erUkjentPlaceholder = (token: string, gyldigeNokler?: string[]): boolean => {
   // Valg- og betingelsestokener slås aldri opp i katalogen – de skal ikke kunne bli røde.
   if (erValgToken(token) || erBetingelsesToken(token)) return false;
@@ -190,8 +187,8 @@ export const PLACEHOLDER_MARKERINGSKLASSER = [
   "placeholder-betingelse",
 ];
 
-// bracketed-text er bevisst web-only – api-et pakker aldri ut klamme-spans, siden det ville
-// endret innhold fra master-æraen ved lagring med togglen av.
+// bracketed-text er web-only: api-et pakker aldri ut klamme-spans, så innhold som er lagret
+// med markeringen beholder den.
 export const ALLE_MARKERINGSKLASSER = [...PLACEHOLDER_MARKERINGSKLASSER, "bracketed-text"];
 
 // Lagrede tekstblokker/brevmaler kan ha markerings-spans fra editoren bakt inn i innholdet.
@@ -284,6 +281,11 @@ const tokenerIHtml = (html: string): TokenTreff[] => {
   return finnTokenerIDom(new DOMParser().parseFromString(html, "text/html"), TOKEN_MONSTER);
 };
 
+// Tokener som krever mer enn en verdi å slå opp: betingelsene løses mot sakens fakta, og et
+// valg tas i editoren. Uten den konteksten blir begge stående ordrett i teksten.
+export const harBetingelseEllerValgTokener = (html: string): boolean =>
+  tokenerIHtml(html).some(({ token }) => erBetingelsesToken(token) || erValgToken(token));
+
 // Nesting og ubalanse gir null: da er omfanget tvetydig, og teksten skal stå urørt. Alt eller
 // ingenting – å løse opp de balanserte parene i et ubalansert dokument kan slippe betinget
 // tekst ut i brevet.
@@ -328,11 +330,11 @@ const fjernTokentekst = ({ node, index, token }: TokenTreff) => node.deleteData(
 const erMellomrom = (tegn: string | undefined): boolean => tegn === " " || tegn === "\u00a0";
 
 // Tokenene står som regel med mellomrom på hver side; uten dette blir det dobbelt igjen.
-const fjernDobbeltMellomrom = ({ start, slutt }: Par) => {
-  const bakIndeks = start.node === slutt.node ? start.index : 0;
-  if (start.index === 0 || !erMellomrom(start.node.data[start.index - 1])) return;
-  if (!erMellomrom(slutt.node.data[bakIndeks])) return;
-  slutt.node.deleteData(bakIndeks, 1);
+// Tegnet foran og tegnet bak leses hver for seg, siden et fjernet spenn kan gå over to noder.
+const fjernDobbeltMellomrom = (foran: Text, foranIndeks: number, bak: Text, bakIndeks: number) => {
+  if (foranIndeks === 0 || !erMellomrom(foran.data[foranIndeks - 1])) return;
+  if (!erMellomrom(bak.data[bakIndeks])) return;
+  bak.deleteData(bakIndeks, 1);
 };
 
 // Tokenene deler blokk, men ikke nødvendigvis tekstnode: en Range dekker også elementene mellom dem.
@@ -340,8 +342,11 @@ const losOppInline = (par: Par, oppfylt: boolean, dokument: Document) => {
   const { start, slutt } = par;
   if (oppfylt) {
     // Sluttet først: i en delt tekstnode ville fjerning av starten forskjøvet indeksen.
+    // Hvert token etterlater sitt eget mellomromspar, så begge sider normaliseres.
     fjernTokentekst(slutt);
+    fjernDobbeltMellomrom(slutt.node, slutt.index, slutt.node, slutt.index);
     fjernTokentekst(start);
+    fjernDobbeltMellomrom(start.node, start.index, start.node, start.index);
     return;
   }
 
@@ -349,7 +354,7 @@ const losOppInline = (par: Par, oppfylt: boolean, dokument: Document) => {
   spenn.setStart(start.node, start.index);
   spenn.setEnd(slutt.node, slutt.index + slutt.token.length);
   spenn.deleteContents();
-  fjernDobbeltMellomrom(par);
+  fjernDobbeltMellomrom(start.node, start.index, slutt.node, start.node === slutt.node ? start.index : 0);
 };
 
 const losOppBlokk = ({ fra, til }: { fra: Element; til: Element }, oppfylt: boolean) => {

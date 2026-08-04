@@ -20,26 +20,15 @@ const likeLister = (a: string[], b: string[]): boolean => {
   return sortertA.every((verdi, indeks) => verdi === sortertB[indeks]);
 };
 
-// Mangler feltet på én av versjonene, leverte ikke api-et det – da vet vi ingenting om endringen.
-const listeEndret = (ny?: string[], gammel?: string[]): boolean => Boolean(ny && gammel && !likeLister(ny, gammel));
-
 interface Listediff {
   lagtTil: string[];
   fjernet: string[];
 }
 
-// Samme forbehold som listeEndret: mangler feltet på én versjon, sier vi ingenting om det.
-const listediff = (
-  ny: string[] | undefined,
-  gammel: string[] | undefined,
-  term: (kode: string) => string,
-): Listediff =>
-  ny && gammel
-    ? {
-        lagtTil: ny.filter((kode) => !gammel.includes(kode)).map(term),
-        fjernet: gammel.filter((kode) => !ny.includes(kode)).map(term),
-      }
-    : { lagtTil: [], fjernet: [] };
+const listediff = (ny: string[], gammel: string[], term: (kode: string) => string): Listediff => ({
+  lagtTil: ny.filter((kode) => !gammel.includes(kode)).map(term),
+  fjernet: gammel.filter((kode) => !ny.includes(kode)).map(term),
+});
 
 // U+2212, ikke bindestrek: fortegnet skal lese som motstykket til «+».
 const MINUS = "−";
@@ -58,11 +47,11 @@ const endredeFelter = (versjon: TekstblokkVersjon, forrige?: TekstblokkVersjon):
   const endringer: string[] = [];
   if (versjon.tittel !== forrige.tittel) endringer.push("tittel");
   if (versjon.innhold !== forrige.innhold) endringer.push("innhold");
-  if (listeEndret(versjon.tags, forrige.tags))
+  if (!likeLister(versjon.tags, forrige.tags))
     endringer.push(medDetaljer("tags", [listediff(versjon.tags, forrige.tags, (tag) => tag)]));
   if (
-    listeEndret(versjon.sakstyper, forrige.sakstyper) ||
-    listeEndret(versjon.behandlingstemaer, forrige.behandlingstemaer)
+    !likeLister(versjon.sakstyper, forrige.sakstyper) ||
+    !likeLister(versjon.behandlingstemaer, forrige.behandlingstemaer)
   )
     endringer.push(
       medDetaljer("avgrensning", [
@@ -70,7 +59,7 @@ const endredeFelter = (versjon: TekstblokkVersjon, forrige?: TekstblokkVersjon):
         listediff(versjon.behandlingstemaer, forrige.behandlingstemaer, termForBehandlingstema),
       ]),
     );
-  if (versjon.status && forrige.status && versjon.status !== forrige.status)
+  if (versjon.status !== forrige.status)
     endringer.push(`status (${labelForStatus(forrige.status)} → ${labelForStatus(versjon.status)})`);
   return endringer;
 };

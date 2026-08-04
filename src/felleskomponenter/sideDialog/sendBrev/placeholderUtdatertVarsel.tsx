@@ -60,8 +60,10 @@ function PlaceholderUtdatertVarsel({ utdaterte, uopploste, uutfylte, onSendLikev
         )}
         {uopploste.length > 0 && (
           <>
+            {/* Teksten mellom tokenene står igjen i brevet, så det holder ikke å slette tokenene. */}
             <Nav.BodyLong>
-              Brevet inneholder uoppløste betingelser — disse må fjernes eller fylles ut manuelt.
+              Brevet inneholder uoppløste betingelser. Både tokenene og teksten mellom dem står igjen i brevet — vurder
+              om teksten skal være med, og fjern eller fyll ut resten manuelt.
             </Nav.BodyLong>
             <Nav.List>
               {uopploste.map((nokkel) => (

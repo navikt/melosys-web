@@ -115,6 +115,28 @@ const renderMedFritekst = (fritekst: string) =>
     },
   });
 
+// Innledning og hovedtekst er to felter i samme brev; analysen skal se dem som atskilte.
+const innledningsfelt = { ...brevType.felter[0], kode: "INNLEDNING_FRITEKST", beskrivelse: "Innledning" };
+
+const renderMedToFritekstfelter = (innledning: string, fritekst: string) => {
+  vi.mocked(Api.DokumenterV2.hentTilgjengeligeMaler).mockResolvedValue([
+    { mottaker, brevTyper: [{ ...brevType, felter: [innledningsfelt, brevType.felter[0]] }] },
+  ] as any);
+  return renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
+    preloadedState: {
+      ...preloadedState,
+      form: {
+        send_brev: {
+          values: {
+            ...preloadedState.form.send_brev.values,
+            felt: { INNLEDNING_FRITEKST: { feltVerdi: innledning }, FRITEKST: { feltVerdi: fritekst } },
+          },
+        },
+      },
+    },
+  });
+};
+
 const renderMedToggles = (fritekst: string, toggles: Record<string, boolean>) =>
   renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
     preloadedState: {
@@ -256,7 +278,9 @@ describe("SendBrev – varsel om utdaterte placeholder-verdier", () => {
     await klikkSendBrev();
 
     expect(await screen.findByText("Brevet inneholder uoppløste betingelser")).toBeInTheDocument();
-    expect(screen.getByText(/må fjernes eller fylles ut manuelt/)).toBeInTheDocument();
+    // Ordlyden må nevne teksten mellom tokenene: den blir stående i brevet om bare tokenene slettes.
+    expect(screen.getByText(/teksten mellom dem står igjen i brevet/)).toBeInTheDocument();
+    expect(screen.getByText(/vurder om teksten skal være med/)).toBeInTheDocument();
     expect(screen.getByText("avslag")).toBeInTheDocument();
     expect(Placeholdere.hentVerdier).not.toHaveBeenCalled();
     expect(Api.DokumenterV2.opprettBrev).not.toHaveBeenCalled();
@@ -325,6 +349,22 @@ describe("SendBrev – varsel om uutfylte felter", () => {
 
     expect(await screen.findByText("Brevet har felter som ikke er fylt ut")).toBeInTheDocument();
     expect(screen.getByText("{velg:innvilget|avslag}")).toBeInTheDocument();
+  });
+
+  it("parer ikke en klamme i ett fritekstfelt med en klamme i et annet", async () => {
+    renderMedToFritekstfelter("Innledningen slutter med {", "og hovedteksten begynner med }");
+    await klikkSendBrev();
+
+    await ventPaaBestilt();
+    expect(screen.queryByText("Brevet har felter som ikke er fylt ut")).not.toBeInTheDocument();
+  });
+
+  it("varsler fortsatt om et helt token i ett av flere fritekstfelter", async () => {
+    renderMedToFritekstfelter("<p>Innledning</p>", "<p>Saken {saksnummer} er mottatt.</p>");
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet har felter som ikke er fylt ut")).toBeInTheDocument();
+    expect(screen.getByText("{saksnummer}")).toBeInTheDocument();
   });
 
   it("sender direkte når brevet er fylt ut", async () => {

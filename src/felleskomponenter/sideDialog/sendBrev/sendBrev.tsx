@@ -477,11 +477,12 @@ function SendBrev({
   });
 
   // Kun teksten som blir med i bestillingen – fritekstvedleggene inkludert, siden de sendes
-  // sammen med brevet og kan ha innsatte verdier.
+  // sammen med brevet og kan ha innsatte verdier. Brukes bare til varselanalysen, aldri til å
+  // bygge brevet. <hr> skiller feltene i DOM-en, så et token aldri kan matche på tvers av dem.
   const hentFritekstHtml = () =>
     [...Object.values(hentFritekstFelter()), ...fritekstvedlegg.map(({ fritekst }) => fritekst)]
       .filter(Boolean)
-      .join("");
+      .join("<hr>");
 
   const hentUtdaterteVerdier = async (html: string): Promise<UtdatertPlaceholder[]> => {
     // Spinneren står mens oppslaget pågår; sende-flyten slår den av igjen.
