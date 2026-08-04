@@ -496,6 +496,22 @@ describe("finnUopplosteBetingelser", () => {
     expect(finnUopplosteBetingelser("<p>{#hvis to ord}</p>")).toEqual(["{#hvis to ord}"]);
   });
 
+  it("varsler om et uavsluttet {#hvis-fragment", () => {
+    expect(finnUopplosteBetingelser("<p>{#hvis avslag</p>")).toEqual(["{#hvis"]);
+  });
+
+  // Uten <>\n-ekskludering ville mønsteret spent fra fragmentet til klammen i neste avsnitt
+  // og listet hele HTML-en imellom som «nøkkel».
+  it("lister en kort markør, ikke en HTML-blob, når en løs } står i et annet avsnitt", () => {
+    const uopploste = finnUopplosteBetingelser("<p>{#hvis avslag</p><p>et helt avsnitt til}</p>");
+
+    expect(uopploste).toEqual(["{#hvis"]);
+  });
+
+  it("varsler om {/hvis} som står før sin egen start", () => {
+    expect(finnUopplosteBetingelser("<p>{/hvis} tekst {#hvis avslag}</p>")).toEqual(["avslag", "{/hvis}"]);
+  });
+
   it("gir tom liste for tekst uten betingelsestokener", () => {
     expect(finnUopplosteBetingelser("<p>Saken {saksnummer} er mottatt.</p>")).toEqual([]);
     expect(finnUopplosteBetingelser("")).toEqual([]);
@@ -638,6 +654,15 @@ describe("finnUutfylteTokener", () => {
 
   it("lister ikke betingelsestokener – de varsles for seg", () => {
     expect(finnUutfylteTokener("<p>{#hvis avslag}Avslag{/hvis}</p>")).toEqual([]);
+  });
+
+  // Partisjonen mot finnUopplosteBetingelser: et misformet betingelsestoken skal varsles
+  // ett sted, ikke stå som «uutfylt felt» i tillegg.
+  it("lister ikke et misformet betingelsestoken", () => {
+    const html = "<p>{#hvis to ord}</p>";
+
+    expect(finnUutfylteTokener(html)).toEqual([]);
+    expect(finnUopplosteBetingelser(html)).toEqual(["{#hvis to ord}"]);
   });
 
   it("lister ikke klammefelt", () => {

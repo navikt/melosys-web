@@ -96,7 +96,13 @@ export const PLACEHOLDER_BETINGELSE_TITTEL =
   "Vises bare når betingelsen er oppfylt – løses ved innsetting fra Send brev";
 
 // Nøkkelen inni {…}. Trimmes så «{ saksnummer }» ikke blir feilklassifisert som ukjent.
-const nokkelFraToken = (token: string): string => token.slice(1, -1).trim();
+// Forhåndsvisningen leser HTML-strengen, der mellomrommet kan stå som &nbsp;-entitet, mens
+// editoren ser U+00A0 som trim() tar. Entiteten dekodes her så begge veier gir samme nøkkel.
+const nokkelFraToken = (token: string): string =>
+  token
+    .slice(1, -1)
+    .replace(/&nbsp;/g, " ")
+    .trim();
 
 const VALG_PREFIKS = "{velg:";
 
@@ -375,32 +381,63 @@ export const forberedInnhold = (
   return placeholderVerdier ? erstattPlaceholdere(rentHtml, placeholderVerdier) : rentHtml;
 };
 
-// Løsere enn det strenge starttokenet, så et misformet «{#hvis to ord}» også fanges opp.
-const HVIS_START_LOST_MONSTER = /\{#hvis[^{}]*\}/g;
+// Løsere enn det strenge starttokenet, så et misformet «{#hvis to ord}» også fanges opp, men
+// med samme <>\n-ekskludering som de andre tokenmønstrene: et treff som spente over en
+// tagg-grense ville listet en HTML-blob i varselet.
+const HVIS_START_LOST_MONSTER = /\{#hvis[^{}<>\n]*\}/g;
 const HVIS_SLUTT_MONSTER = /\{\/hvis\}/g;
 
+const HVIS_START_LITTERAL = "{#hvis";
+
+// Foreldreløst = et {/hvis} som ikke har et gyldig starttoken foran seg i teksten. Balansen
+// telles i dokumentrekkefølge, så både overskudd av {/hvis} og et reversert par fanges.
+const harForeldreloseSlutt = (html: string, startIndekser: number[]): boolean => {
+  const sluttIndekser = [...html.matchAll(HVIS_SLUTT_MONSTER)].map((treff) => treff.index);
+  const hendelser = [
+    ...startIndekser.map((index) => ({ index, erStart: true })),
+    ...sluttIndekser.map((index) => ({ index, erStart: false })),
+  ].sort((a, b) => a.index - b.index);
+
+  let balanse = 0;
+  for (const { erStart } of hendelser) {
+    if (erStart) balanse += 1;
+    else if (balanse === 0) return true;
+    else balanse -= 1;
+  }
+  return false;
+};
+
 // Betingelsestokener som står igjen ved sending; de er styring og ville blitt sendt ordrett.
-// Lista skal si hva som faktisk står i brevet: gyldige nøkler, et foreldreløst {/hvis}, og
-// misformede starttokener ordrett – de siste finnes ikke som nøkkel å slå opp.
+// Lista skal si hva som faktisk står i brevet: gyldige nøkler, et foreldreløst {/hvis},
+// misformede starttokener ordrett, og «{#hvis» som markør for et uavsluttet fragment – de
+// tre siste finnes ikke som nøkkel å slå opp.
 export const finnUopplosteBetingelser = (html: string): string[] => {
-  if (!html.includes("{#hvis") && !html.includes(HVIS_SLUTT_TOKEN)) return [];
+  if (!html.includes(HVIS_START_LITTERAL) && !html.includes(HVIS_SLUTT_TOKEN)) return [];
 
   const nokler = new Set<string>();
   const misformede = new Set<string>();
-  let gyldigeStarttokener = 0;
+  const startIndekser: number[] = [];
+  let antallStartTreff = 0;
 
-  for (const token of html.match(HVIS_START_LOST_MONSTER) ?? []) {
-    const nokkel = parseHvisStartToken(token)?.nokkel;
-    if (nokkel === undefined) misformede.add(token);
+  for (const treff of html.matchAll(HVIS_START_LOST_MONSTER)) {
+    antallStartTreff += 1;
+    const nokkel = parseHvisStartToken(treff[0])?.nokkel;
+    if (nokkel === undefined) misformede.add(treff[0]);
     else {
       nokler.add(nokkel);
-      gyldigeStarttokener += 1;
+      startIndekser.push(treff.index);
     }
   }
 
-  // Flere slutt-tokener enn startere betyr at minst ett står uten lesbar start.
-  const foreldreloseSlutt = (html.match(HVIS_SLUTT_MONSTER) ?? []).length > gyldigeStarttokener;
-  return [...nokler, ...(foreldreloseSlutt ? [HVIS_SLUTT_TOKEN] : []), ...misformede];
+  // Flere «{#hvis» i teksten enn hele tokener betyr at minst ett aldri ble lukket.
+  const uavsluttetFragment = html.split(HVIS_START_LITTERAL).length - 1 > antallStartTreff;
+
+  return [
+    ...nokler,
+    ...(harForeldreloseSlutt(html, startIndekser) ? [HVIS_SLUTT_TOKEN] : []),
+    ...misformede,
+    ...(uavsluttetFragment ? [HVIS_START_LITTERAL] : []),
+  ];
 };
 
 export interface SakstypeKonflikt {
@@ -484,7 +521,9 @@ export const finnUutfylteTokener = (html: string): string[] => {
   const uutfylte = new Set<string>();
   for (const token of html.match(/\{[^{}<>\n]+\}/g) ?? []) {
     // Betingelsestokener er styring, ikke felter – de varsles av finnUopplosteBetingelser.
-    if (!erBetingelsesToken(token)) uutfylte.add(token);
+    // Prefikssjekk, ikke erHvisStartToken: også et misformet «{#hvis to ord}» hører hjemme der.
+    if (token.startsWith(HVIS_START_LITTERAL) || erHvisSluttToken(token)) continue;
+    uutfylte.add(token);
   }
   return [...uutfylte];
 };

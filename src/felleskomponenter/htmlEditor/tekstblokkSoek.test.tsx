@@ -81,11 +81,15 @@ describe("TekstblokkSoek – kontekstavgrensning", () => {
     expect(screen.queryByText(/gjelder denne saken/)).toBeNull();
   });
 
+  // Andre blokker gjelder fortsatt saken – det er bare søketreffene som ligger utenfor.
   it("tilbyr «Vis alle» sammen med søkerådet når søket bare treffer utenfor konteksten", async () => {
     await aapneSoek(sakskontekst("FTRL", "PENSJONIST"));
     await userEvent.type(screen.getByRole("searchbox", { name: "Søk på tittel eller tag" }), "EU/EØS");
 
-    expect(screen.getByText("Ingen tekstblokker gjelder denne saken (sakstype/behandlingstema).")).toBeDefined();
+    expect(
+      screen.getByText("Treffene for søket ditt gjelder ikke denne saken (sakstype/behandlingstema)."),
+    ).toBeDefined();
+    expect(screen.queryByText(/Ingen tekstblokker gjelder denne saken/)).toBeNull();
     expect(screen.getByText(/Prøv et annet søkeord/)).toBeDefined();
 
     await userEvent.click(screen.getByRole("button", { name: "Vis alle" }));

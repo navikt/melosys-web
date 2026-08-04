@@ -32,8 +32,7 @@ import Brevutkast from "./brevutkast/brevutkast";
 import BrevValgMedPlaceholdere from "./brevValgMedPlaceholdere";
 import PlaceholderUtdatertVarsel from "./placeholderUtdatertVarsel";
 import { SendBrevFormValues } from "./types";
-import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
-import { MELOSYS_TEKSTBLOKKER, MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggle/toggleNavn";
+import usePlaceholderToggles from "../../../featuretoggle/usePlaceholderToggles";
 import {
   finnUopplosteBetingelser,
   finnUtdaterteVerdier,
@@ -139,9 +138,7 @@ function SendBrev({
     [tilgjengeligeMaler, formValues?.mottaker],
   );
   const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
-  // Backend krever begge: placeholdere er en utvidelse av tekstblokk-funksjonaliteten.
-  const tekstblokkerPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
-  const dynamiskPlaceholderPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER);
+  const { tekstblokkerPaa, placeholderAktiv } = usePlaceholderToggles();
   const { accounts } = useMsal();
   const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state));
 
@@ -515,7 +512,6 @@ function SendBrev({
     }
 
     const brevHtml = hentFritekstHtml();
-    const placeholderAktiv = Boolean(tekstblokkerPaa && dynamiskPlaceholderPaa);
     // Uoppløste betingelser varsles i samme modal som utdaterte verdier, uten å blokkere sendingen.
     const uopploste = placeholderAktiv ? finnUopplosteBetingelser(brevHtml) : [];
     // Klammefelt og tokener som aldri ble fylt ut ville gått ordrett ut i brevet. Fagbesluttet
