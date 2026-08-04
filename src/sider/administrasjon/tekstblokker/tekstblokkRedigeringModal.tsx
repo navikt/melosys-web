@@ -5,12 +5,23 @@ import * as Nav from "../../../navFrontend";
 import HtmlEditor from "../../../felleskomponenter/htmlEditor/htmlEditor";
 import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggle/toggleNavn";
+import { isApiError } from "../../../services";
 import { usePlaceholderKatalog } from "../../../services/api/placeholdere";
 import { useOppdaterTekstblokk, useOpprettTekstblokk, useTekstblokk } from "../../../services/api/tekstblokker";
 import { leggTilTag, TekstblokkRequest, TekstblokkType } from "../../../services/modules/tekstblokker";
+import Kontekstavgrensning from "./kontekstavgrensning";
 import { PlaceholderKatalogTabell, PlaceholderValgHjelpetekst } from "./placeholderKatalog";
 import TagInput from "./tagInput";
 import { labelForType } from "./labels";
+
+// En 400 herfra er en verdi api-et ikke godtar (typisk en avgrensningskode), og den rå
+// meldingen er teknisk. Andre feil viser vi som de er.
+const feilmelding = (feil: Error | null): string | null => {
+  if (!feil) return null;
+  return isApiError(feil) && feil.status === 400
+    ? "Ugyldig verdi i avgrensningen — last siden på nytt og prøv igjen"
+    : feil.message;
+};
 
 interface Props {
   redigerId: number | null;
@@ -33,6 +44,8 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
   const [tittel, setTittel] = useState("");
   const [innhold, setInnhold] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  const [sakstyper, setSakstyper] = useState<string[]>([]);
+  const [behandlingstemaer, setBehandlingstemaer] = useState<string[]>([]);
   // En tag som er skrevet, men ikke lagt til med Enter eller "Legg til"-knappen.
   const [tagUtkast, setTagUtkast] = useState("");
 
@@ -41,11 +54,13 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
       setTittel(eksisterende.data.tittel);
       setInnhold(eksisterende.data.innhold);
       setTags(eksisterende.data.tags);
+      setSakstyper(eksisterende.data.sakstyper);
+      setBehandlingstemaer(eksisterende.data.behandlingstemaer);
     }
   }, [eksisterende.data]);
 
   const lagrer = opprett.isPending || oppdater.isPending;
-  const feil = opprett.error?.message ?? oppdater.error?.message ?? null;
+  const feil = feilmelding(opprett.error ?? oppdater.error);
 
   const kanLagre = tittel.trim().length > 0 && innhold.trim().length > 0 && !lagrer;
 
@@ -56,7 +71,14 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
     const alleTags = leggTilTag(tags, tagUtkast);
     setTags(alleTags);
     setTagUtkast("");
-    const request: TekstblokkRequest = { tittel: tittel.trim(), innhold, type, tags: alleTags };
+    const request: TekstblokkRequest = {
+      tittel: tittel.trim(),
+      innhold,
+      type,
+      tags: alleTags,
+      sakstyper,
+      behandlingstemaer,
+    };
 
     if (redigerId !== null) {
       oppdater.mutate({ id: redigerId, body: request }, { onSuccess: onLukk });
@@ -95,6 +117,13 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
               forslag={forslagTags}
               utkast={tagUtkast}
               setUtkast={setTagUtkast}
+            />
+
+            <Kontekstavgrensning
+              sakstyper={sakstyper}
+              setSakstyper={setSakstyper}
+              behandlingstemaer={behandlingstemaer}
+              setBehandlingstemaer={setBehandlingstemaer}
             />
 
             <div className="tekstblokker__modal-editor">
