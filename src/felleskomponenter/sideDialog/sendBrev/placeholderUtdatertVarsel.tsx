@@ -5,16 +5,19 @@ import { UtdatertPlaceholder } from "../../../services/modules/placeholdere";
 interface Props {
   utdaterte: UtdatertPlaceholder[];
   uopploste: string[];
+  uutfylte: string[];
   onSendLikevel: () => void;
   onAvbryt: () => void;
 }
 
-const overskriftFor = (harUtdaterte: boolean, harUopploste: boolean): string => {
-  if (harUtdaterte && harUopploste) return "Sjekk innholdet i brevet";
-  return harUtdaterte ? "Noen innsatte verdier er utdaterte" : "Brevet inneholder uoppløste betingelser";
+const overskriftFor = (harUtdaterte: boolean, harUopploste: boolean, harUutfylte: boolean): string => {
+  // Flere kategorier har ingen felles ordlyd som er presis nok til å nevne alle.
+  if ([harUtdaterte, harUopploste, harUutfylte].filter(Boolean).length > 1) return "Sjekk innholdet i brevet";
+  if (harUtdaterte) return "Noen innsatte verdier er utdaterte";
+  return harUopploste ? "Brevet inneholder uoppløste betingelser" : "Brevet har felter som ikke er fylt ut";
 };
 
-function PlaceholderUtdatertVarsel({ utdaterte, uopploste, onSendLikevel, onAvbryt }: Props) {
+function PlaceholderUtdatertVarsel({ utdaterte, uopploste, uutfylte, onSendLikevel, onAvbryt }: Props) {
   const { data: katalog } = usePlaceholderKatalog();
   const { data: betingelseKatalog } = useBetingelseKatalog();
 
@@ -28,7 +31,7 @@ function PlaceholderUtdatertVarsel({ utdaterte, uopploste, onSendLikevel, onAvbr
     <Nav.Modal open onClose={onAvbryt} aria-label="Sjekk innholdet i brevet" width="small">
       <Nav.Modal.Header>
         <Nav.Heading size="small" level="1">
-          {overskriftFor(utdaterte.length > 0, uopploste.length > 0)}
+          {overskriftFor(utdaterte.length > 0, uopploste.length > 0, uutfylte.length > 0)}
         </Nav.Heading>
       </Nav.Modal.Header>
       <Nav.Modal.Body>
@@ -59,6 +62,16 @@ function PlaceholderUtdatertVarsel({ utdaterte, uopploste, onSendLikevel, onAvbr
             <Nav.List>
               {uopploste.map((nokkel) => (
                 <Nav.List.Item key={nokkel}>{betingelsesnavn(nokkel)}</Nav.List.Item>
+              ))}
+            </Nav.List>
+          </>
+        )}
+        {uutfylte.length > 0 && (
+          <>
+            <Nav.BodyLong>Ikke utfylt — disse feltene står igjen i brevet slik de er:</Nav.BodyLong>
+            <Nav.List>
+              {uutfylte.map((felt) => (
+                <Nav.List.Item key={felt}>{felt}</Nav.List.Item>
               ))}
             </Nav.List>
           </>

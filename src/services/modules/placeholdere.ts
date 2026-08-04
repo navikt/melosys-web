@@ -343,6 +343,76 @@ export const finnUopplosteBetingelser = (html: string): string[] => {
   return nokler.size > 0 ? [...nokler] : [HVIS_SLUTT_TOKEN];
 };
 
+export interface SakstypeKonflikt {
+  nokkel: string;
+  visningsnavn: string;
+  // Blokkens valgte sakstyper som placeholderen/betingelsen ikke dekker.
+  sakstyper: string[];
+}
+
+// Alle {…}-tokener i teksten, med betingelsesnøkkelen pakket ut av {#hvis …}.
+const noklerITekst = (html: string): string[] => {
+  const nokler = new Set<string>();
+  for (const token of html.match(/\{[^{}<>]+\}/g) ?? []) {
+    if (erValgToken(token)) continue;
+    const hvis = parseHvisStartToken(token);
+    if (hvis) nokler.add(hvis.nokkel);
+    else if (!erBetingelsesToken(token)) nokler.add(nokkelFraToken(token));
+  }
+  return [...nokler];
+};
+
+// En blokk avgrenset til sakstyper kan bruke placeholdere som ikke finnes i alle sammen.
+// Tom valgteSakstyper (blokken gjelder alle) gir ingen konflikt – da avgjøres dekningen
+// først ved bruk, i den enkelte saken.
+export const finnSakstypeKonflikter = (
+  html: string,
+  valgteSakstyper: string[],
+  katalog: PlaceholderBeskrivelse[] = [],
+  betingelseKatalog: BetingelseBeskrivelse[] = [],
+): SakstypeKonflikt[] => {
+  if (valgteSakstyper.length === 0) return [];
+
+  const beskrivelser = new Map(
+    [...katalog, ...betingelseKatalog].map(({ nokkel, visningsnavn, sakstyper }) => [
+      nokkel,
+      { visningsnavn, sakstyper },
+    ]),
+  );
+
+  return noklerITekst(html).flatMap((nokkel) => {
+    const beskrivelse = beskrivelser.get(nokkel);
+    // Ukjent nøkkel markeres rødt i editoren, og tom sakstypeliste betyr «gjelder alle».
+    if (!beskrivelse || beskrivelse.sakstyper.length === 0) return [];
+    const udekkede = valgteSakstyper.filter((sakstype) => !beskrivelse.sakstyper.includes(sakstype));
+    return udekkede.length > 0 ? [{ nokkel, visningsnavn: beskrivelse.visningsnavn, sakstyper: udekkede }] : [];
+  });
+};
+
+// Felter saksbehandler må fylle ut selv: klammefelt fra malen og placeholder-tokener som
+// ikke fikk verdi. Brukes kun til varsel ved sending – teksten endres aldri.
+export const finnUutfylte = (html: string): string[] => {
+  const uutfylte = new Set<string>();
+
+  if (html.includes("bracketed-text")) {
+    const dokument = new DOMParser().parseFromString(html, "text/html");
+    dokument.body.querySelectorAll("span.bracketed-text").forEach((span) => {
+      const tekst = span.textContent?.trim();
+      if (tekst) uutfylte.add(tekst);
+    });
+  }
+
+  // Samme tegnklasse som uthevKlammer, så treffet aldri går over en tagg-grense.
+  for (const klammefelt of html.match(/\[[^[\]<>]*\]/g) ?? []) uutfylte.add(klammefelt);
+
+  for (const token of html.match(/\{[^{}<>\n]+\}/g) ?? []) {
+    // Betingelsestokener er styring, ikke felter – de varsles av finnUopplosteBetingelser.
+    if (!erBetingelsesToken(token)) uutfylte.add(token);
+  }
+
+  return [...uutfylte];
+};
+
 export interface UtdatertPlaceholder {
   nokkel: string;
   innsattVerdi: string;

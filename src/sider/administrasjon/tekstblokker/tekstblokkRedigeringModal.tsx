@@ -6,15 +6,16 @@ import HtmlEditor from "../../../felleskomponenter/htmlEditor/htmlEditor";
 import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggle/toggleNavn";
 import { isApiError } from "../../../services";
-import { usePlaceholderKatalog } from "../../../services/api/placeholdere";
+import { useBetingelseKatalog, usePlaceholderKatalog } from "../../../services/api/placeholdere";
 import { useOppdaterTekstblokk, useOpprettTekstblokk, useTekstblokk } from "../../../services/api/tekstblokker";
+import { finnSakstypeKonflikter } from "../../../services/modules/placeholdere";
 import {
   leggTilTag,
   TekstblokkRequest,
   TekstblokkStatus,
   TekstblokkType,
 } from "../../../services/modules/tekstblokker";
-import Kontekstavgrensning from "./kontekstavgrensning";
+import Kontekstavgrensning, { termForSakstype } from "./kontekstavgrensning";
 import { PlaceholderKatalogTabell, PlaceholderValgHjelpetekst } from "./placeholderKatalog";
 import TagInput from "./tagInput";
 import { labelForType } from "./labels";
@@ -47,6 +48,7 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
   const dynamiskPlaceholderPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER);
   // Boolean(): en toggle som ennå ikke er lastet er undefined, og ville truffet enabled-defaulten.
   const { data: katalog } = usePlaceholderKatalog(Boolean(dynamiskPlaceholderPaa));
+  const { data: betingelseKatalog } = useBetingelseKatalog(Boolean(dynamiskPlaceholderPaa));
   // Uten verdier her blir gyldige nøkler gule og ukjente røde – nettopp det admin trenger.
   const gyldigeNokler = useMemo(() => katalog?.map(({ nokkel }) => nokkel), [katalog]);
 
@@ -57,6 +59,7 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
   const [behandlingstemaer, setBehandlingstemaer] = useState<string[]>([]);
   // En tag som er skrevet, men ikke lagt til med Enter eller "Legg til"-knappen.
   const [tagUtkast, setTagUtkast] = useState("");
+  const [avgrensningApen, setAvgrensningApen] = useState(false);
 
   useEffect(() => {
     if (eksisterende.data) {
@@ -65,8 +68,16 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
       setTags(eksisterende.data.tags);
       setSakstyper(eksisterende.data.sakstyper);
       setBehandlingstemaer(eksisterende.data.behandlingstemaer);
+      // En lagret avgrensning må være synlig med en gang, ellers ser blokken ut til å gjelde alle.
+      if (eksisterende.data.sakstyper.length > 0 || eksisterende.data.behandlingstemaer.length > 0)
+        setAvgrensningApen(true);
     }
   }, [eksisterende.data]);
+
+  const konflikter = useMemo(
+    () => (dynamiskPlaceholderPaa ? finnSakstypeKonflikter(innhold, sakstyper, katalog, betingelseKatalog) : []),
+    [dynamiskPlaceholderPaa, innhold, sakstyper, katalog, betingelseKatalog],
+  );
 
   const lagrer = opprett.isPending || oppdater.isPending;
   const feil = feilmelding(opprett.error ?? oppdater.error);
@@ -130,12 +141,19 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
               setUtkast={setTagUtkast}
             />
 
-            <Kontekstavgrensning
-              sakstyper={sakstyper}
-              setSakstyper={setSakstyper}
-              behandlingstemaer={behandlingstemaer}
-              setBehandlingstemaer={setBehandlingstemaer}
-            />
+            <ReadMore
+              header="Avgrens til sakstype/behandlingstema"
+              size="small"
+              open={avgrensningApen}
+              onClick={() => setAvgrensningApen(!avgrensningApen)}
+            >
+              <Kontekstavgrensning
+                sakstyper={sakstyper}
+                setSakstyper={setSakstyper}
+                behandlingstemaer={behandlingstemaer}
+                setBehandlingstemaer={setBehandlingstemaer}
+              />
+            </ReadMore>
 
             <div className="tekstblokker__modal-editor">
               {/* Ingen innsetting av andre tekstblokker her – vi redigerer selve kilden. */}
@@ -147,6 +165,21 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
                 gyldigeNokler={gyldigeNokler}
               />
             </div>
+
+            {/* Ikke-blokkerende: avgrensningen kan være riktig selv om placeholderen mangler
+                for én sakstype – da må admin vurdere teksten. */}
+            {konflikter.length > 0 && (
+              <Nav.Alert variant="warning" size="small">
+                <Nav.BodyShort size="small">Noen felter dekker ikke alle sakstypene blokken gjelder:</Nav.BodyShort>
+                <Nav.List>
+                  {konflikter.map(({ nokkel, visningsnavn, sakstyper: udekkede }) => (
+                    <Nav.List.Item key={nokkel}>
+                      {`${visningsnavn} støtter ikke: ${udekkede.map(termForSakstype).join(", ")}`}
+                    </Nav.List.Item>
+                  ))}
+                </Nav.List>
+              </Nav.Alert>
+            )}
 
             {dynamiskPlaceholderPaa && katalog && katalog.length > 0 && (
               <ReadMore header="Tilgjengelige placeholdere" size="small">

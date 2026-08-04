@@ -279,3 +279,75 @@ describe("SendBrev – varsel om utdaterte placeholder-verdier", () => {
     expect(Placeholdere.hentVerdier).not.toHaveBeenCalled();
   });
 });
+
+describe("SendBrev – varsel om uutfylte felter", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(Api.DokumenterV2.hentTilgjengeligeMaler).mockResolvedValue([{ mottaker, brevTyper: [brevType] }] as any);
+    vi.mocked(Api.DokumenterV2.opprettBrev).mockResolvedValue({} as any);
+  });
+
+  it("varsler om klammefelt som ikke er fylt ut", async () => {
+    renderMedFritekst("<p>Hei [navn], saken gjelder [tema].</p>");
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet har felter som ikke er fylt ut")).toBeInTheDocument();
+    expect(screen.getByText("[navn]")).toBeInTheDocument();
+    expect(screen.getByText("[tema]")).toBeInTheDocument();
+    expect(Api.DokumenterV2.opprettBrev).not.toHaveBeenCalled();
+  });
+
+  it("varsler om et token som aldri fikk verdi", async () => {
+    renderMedFritekst("<p>Saken {saksnummer} er mottatt.</p>");
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet har felter som ikke er fylt ut")).toBeInTheDocument();
+    expect(screen.getByText("{saksnummer}")).toBeInTheDocument();
+  });
+
+  it("varsler om et valg som ikke er tatt", async () => {
+    renderMedFritekst("<p>Du får {velg:innvilget|avslag}.</p>");
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet har felter som ikke er fylt ut")).toBeInTheDocument();
+    expect(screen.getByText("{velg:innvilget|avslag}")).toBeInTheDocument();
+  });
+
+  it("sender direkte når brevet er fylt ut", async () => {
+    renderMedFritekst("<p>Saken er mottatt.</p>");
+    await klikkSendBrev();
+
+    await ventPaaBestilt();
+    expect(screen.queryByText("Brevet har felter som ikke er fylt ut")).not.toBeInTheDocument();
+  });
+
+  it("sender brevet med feltene i behold når saksbehandler velger Send likevel", async () => {
+    renderMedFritekst("<p>Hei [navn].</p>");
+    await klikkSendBrev();
+
+    fireEvent.click(await screen.findByRole("button", { name: "Send likevel" }));
+
+    await ventPaaBestilt();
+  });
+
+  it("sjekker ingenting når togglene er av", async () => {
+    renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
+      preloadedState: {
+        ...preloadedState,
+        featureToggle: { status: STATUS.OK, data: {} },
+        form: {
+          send_brev: {
+            values: {
+              ...preloadedState.form.send_brev.values,
+              felt: { FRITEKST: { feltVerdi: "<p>Hei [navn].</p>" } },
+            },
+          },
+        },
+      },
+    });
+    await klikkSendBrev();
+
+    await ventPaaBestilt();
+    expect(screen.queryByText("Brevet har felter som ikke er fylt ut")).not.toBeInTheDocument();
+  });
+});

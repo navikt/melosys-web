@@ -12,6 +12,31 @@ const formatterTidspunkt = (tidspunkt: string): string => moment(tidspunkt).form
 const tidsrom = (versjon: TekstblokkVersjon): string =>
   `${formatterTidspunkt(versjon.gyldigFra)} – ${versjon.gyldigTil ? formatterTidspunkt(versjon.gyldigTil) : "nå"}`;
 
+// Rekkefølgen i listene er uten betydning for hva blokken gjelder.
+const likeLister = (a: string[], b: string[]): boolean => {
+  if (a.length !== b.length) return false;
+  const [sortertA, sortertB] = [[...a].sort(), [...b].sort()];
+  return sortertA.every((verdi, indeks) => verdi === sortertB[indeks]);
+};
+
+// Mangler feltet på én av versjonene, leverte ikke api-et det – da vet vi ingenting om endringen.
+const listeEndret = (ny?: string[], gammel?: string[]): boolean => Boolean(ny && gammel && !likeLister(ny, gammel));
+
+const endredeFelter = (versjon: TekstblokkVersjon, forrige?: TekstblokkVersjon): string[] => {
+  if (!forrige) return [];
+  const endringer: string[] = [];
+  if (versjon.tittel !== forrige.tittel) endringer.push("tittel");
+  if (versjon.innhold !== forrige.innhold) endringer.push("innhold");
+  if (listeEndret(versjon.tags, forrige.tags)) endringer.push("tags");
+  if (
+    listeEndret(versjon.sakstyper, forrige.sakstyper) ||
+    listeEndret(versjon.behandlingstemaer, forrige.behandlingstemaer)
+  )
+    endringer.push("avgrensning");
+  if (versjon.status && forrige.status && versjon.status !== forrige.status) endringer.push("status");
+  return endringer;
+};
+
 interface Props {
   id: number;
 }
@@ -33,6 +58,13 @@ function TekstblokkHistorikk({ id }: Props) {
     return <Nav.BodyShort size="small">Ingen versjonshistorikk registrert for denne blokken.</Nav.BodyShort>;
   }
 
+  const nyesteForst = [...versjoner].reverse();
+  // Neste rad er den eldre versjonen, siden lista står nyeste først.
+  const rader = nyesteForst.map((versjon, indeks) => ({
+    versjon,
+    endringer: endredeFelter(versjon, nyesteForst[indeks + 1]),
+  }));
+
   return (
     <Nav.Table size="small" className="tekstblokker__historikk">
       <Nav.Table.Header>
@@ -46,7 +78,7 @@ function TekstblokkHistorikk({ id }: Props) {
       </Nav.Table.Header>
       <Nav.Table.Body>
         {/* Nyeste først: den gjeldende versjonen er den admin oftest sammenligner mot. */}
-        {[...versjoner].reverse().map((versjon) => (
+        {rader.map(({ versjon, endringer }) => (
           <Nav.Table.ExpandableRow
             key={versjon.versjon}
             togglePlacement="left"
@@ -60,7 +92,14 @@ function TekstblokkHistorikk({ id }: Props) {
             <Nav.Table.DataCell>{versjon.versjon}</Nav.Table.DataCell>
             <Nav.Table.DataCell>{tidsrom(versjon)}</Nav.Table.DataCell>
             <Nav.Table.DataCell>{versjon.endretAvNavn ?? versjon.endretAv}</Nav.Table.DataCell>
-            <Nav.Table.DataCell>{labelForEndringstype(versjon.endringstype)}</Nav.Table.DataCell>
+            <Nav.Table.DataCell>
+              {labelForEndringstype(versjon.endringstype)}
+              {endringer.length > 0 && (
+                <Nav.BodyShort size="small" textColor="subtle">
+                  {`Endret: ${endringer.join(", ")}`}
+                </Nav.BodyShort>
+              )}
+            </Nav.Table.DataCell>
           </Nav.Table.ExpandableRow>
         ))}
       </Nav.Table.Body>
