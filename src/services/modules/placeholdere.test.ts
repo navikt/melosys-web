@@ -496,6 +496,21 @@ describe("finnUopplosteBetingelser", () => {
     expect(finnUopplosteBetingelser("<p>{#hvis to ord}</p>")).toEqual(["{#hvis to ord}"]);
   });
 
+  // Skrivefeilen er hele problemet: {/hvis} rett etter sin (misformede) start er ikke foreldreløst.
+  it("melder ikke {/hvis} som foreldreløst når det lukker et misformet starttoken", () => {
+    expect(finnUopplosteBetingelser("<p>{#hvis to ord}Innhold{/hvis}</p>")).toEqual(["{#hvis to ord}"]);
+  });
+
+  it("melder fortsatt {/hvis} som foreldreløst når det står FØR eneste (misformede) start", () => {
+    expect(finnUopplosteBetingelser("<p>{/hvis} og {#hvis to ord}</p>")).toEqual(["{/hvis}", "{#hvis to ord}"]);
+  });
+
+  // Quill kan serialisere mellomrommet i tokenet som &nbsp;-entitet i HTML-strengen.
+  it("leser et gyldig betingelsestoken med &nbsp;-mellomrom som nøkkel, ikke som misformet", () => {
+    expect(finnUopplosteBetingelser("<p>{#hvis&nbsp;avslag}Innhold{/hvis}</p>")).toEqual(["avslag"]);
+    expect(erBetingelsesToken("{#hvis&nbsp;avslag}")).toBe(true);
+  });
+
   it("varsler om et uavsluttet {#hvis-fragment", () => {
     expect(finnUopplosteBetingelser("<p>{#hvis avslag</p>")).toEqual(["{#hvis"]);
   });
@@ -667,5 +682,9 @@ describe("finnUutfylteTokener", () => {
 
   it("lister ikke klammefelt", () => {
     expect(finnUutfylteTokener("<p>Hei [navn].</p>")).toEqual([]);
+  });
+
+  it("viser tokenet med dekodet &nbsp; i varsellisten", () => {
+    expect(finnUutfylteTokener("<p>{&nbsp;saksnummer&nbsp;}</p>")).toEqual(["{ saksnummer }"]);
   });
 });

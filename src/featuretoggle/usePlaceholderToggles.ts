@@ -3,8 +3,8 @@ import { MELOSYS_TEKSTBLOKKER, MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from 
 
 interface PlaceholderToggles {
   tekstblokkerPaa: boolean | undefined;
-  dynamiskPlaceholderPaa: boolean | undefined;
   // Backend krever begge: placeholdere er en utvidelse av tekstblokk-funksjonaliteten.
+  // Dynamisk-togglen eksponeres bevisst ikke alene – ingen flate skal gate på den uten paret.
   placeholderAktiv: boolean;
 }
 
@@ -15,7 +15,6 @@ export const usePlaceholderToggles = (): PlaceholderToggles => {
   const dynamiskPlaceholderPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER);
   return {
     tekstblokkerPaa,
-    dynamiskPlaceholderPaa,
     placeholderAktiv: Boolean(tekstblokkerPaa && dynamiskPlaceholderPaa),
   };
 };
