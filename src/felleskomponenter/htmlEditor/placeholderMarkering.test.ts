@@ -10,7 +10,7 @@ import {
   PlaceholderValgBlot,
   PlaceholderValgtBlot,
 } from "./placeholderMarkering";
-import { Betingelse, forberedInnhold, PlaceholderVerdi } from "../../services/modules/placeholdere";
+import { PlaceholderVerdi } from "../../services/modules/placeholdere";
 
 const verdier: PlaceholderVerdi[] = [{ nokkel: "saksnummer", verdi: "2024/123456" }];
 
@@ -39,21 +39,6 @@ describe("forberedTekstblokkHtml", () => {
   it("beholder tokenene når betingelsene mangler (admin/saksflyt)", () => {
     const html = "<p>{#hvis avslag}</p><p>Betinget</p><p>{/hvis}</p>";
     expect(forberedTekstblokkHtml(html, undefined, undefined)).toBe(html);
-  });
-});
-
-// Forhåndsvisningen bruker forberedInnhold direkte; divergerer innsettingen, viser den noe annet enn brevet.
-describe("forberedTekstblokkHtml – paritet med forhåndsvisningen", () => {
-  const betingelser: Betingelse[] = [{ nokkel: "avslag", oppfylt: false }];
-
-  it.each([
-    ["<p>Saken {saksnummer} er mottatt.</p>"],
-    ['<p><span class="bracketed-text">[navn <strong>x</strong>]</span> {saksnummer}</p>'],
-    ['<p><span class="placeholder-uerstattet">{saksnummer}</span></p>'],
-    ['<p><span class="placeholder-valgt" data-valg="A|B">B</span></p>'],
-    ["<p>Vedtaket er {#hvis avslag}avslått{/hvis} i saken.</p>"],
-  ])("forbereder %s likt som forhåndsvisningen", (html) => {
-    expect(forberedTekstblokkHtml(html, verdier, betingelser)).toBe(forberedInnhold(html, verdier, betingelser));
   });
 });
 

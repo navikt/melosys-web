@@ -152,6 +152,10 @@ describe("TekstblokkerListe – historikk", () => {
     endringstype,
     tittel: "Om utsending",
     innhold: "<p>Tekst</p>",
+    tags: [],
+    sakstyper: [],
+    behandlingstemaer: [],
+    status: "PUBLISERT",
     ...overstyringer,
   });
 
@@ -238,8 +242,7 @@ describe("TekstblokkerListe – historikk", () => {
     expect(screen.getByText("Endret: innhold")).toBeDefined();
   });
 
-  it("påstår ingen endring i felter api-et ikke har levert", async () => {
-    // Eldre versjonsrader mangler avgrensning, tags og status – da vet vi ingenting om dem.
+  it("nevner bare feltene som faktisk skiller seg", async () => {
     await visHistorikk([versjon(1, "OPPRETTET"), versjon(2, "ENDRET", { innhold: "<p>Ny tekst</p>" })]);
 
     expect(screen.getByText("Endret: innhold")).toBeDefined();

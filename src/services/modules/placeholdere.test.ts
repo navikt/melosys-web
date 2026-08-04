@@ -12,6 +12,7 @@ import {
   finnUtdaterteVerdier,
   finnUutfylteKlammer,
   finnUutfylteTokener,
+  harBetingelseEllerValgTokener,
   hentKatalog,
   PlaceholderBeskrivelse,
   fjernMarkeringsSpans,
@@ -328,6 +329,22 @@ describe("erBetingelsesToken", () => {
   });
 });
 
+describe("harBetingelseEllerValgTokener", () => {
+  it("kjenner igjen både betingelses- og valgtokener", () => {
+    expect(harBetingelseEllerValgTokener("<p>{#hvis avslag}Avslag{/hvis}</p>")).toBe(true);
+    expect(harBetingelseEllerValgTokener("<p>Du får {velg:innvilget|avslag}.</p>")).toBe(true);
+  });
+
+  it("regner vanlige nøkler og klammefelt som vanlig tekst", () => {
+    expect(harBetingelseEllerValgTokener("<p>Saken {saksnummer}, [navn].</p>")).toBe(false);
+    expect(harBetingelseEllerValgTokener("<p>Ren tekst.</p>")).toBe(false);
+  });
+
+  it("leser tokenet fra DOM-en, så et &nbsp;-mellomrom teller som mellomrom", () => {
+    expect(harBetingelseEllerValgTokener("<p>{#hvis&nbsp;avslag}Avslag{/hvis}</p>")).toBe(true);
+  });
+});
+
 describe("erUkjentPlaceholder for betingelsestokener", () => {
   it("markerer aldri reserverte betingelsestokener som ukjente", () => {
     expect(erUkjentPlaceholder("{#hvis avslag}", ["saksnummer"])).toBe(false);
@@ -351,6 +368,11 @@ describe("losOppBetingelser", () => {
 
   it("beholder tekstspennet inline og fjerner bare tokenene når betingelsen er oppfylt", () => {
     const html = "<p>Vedtaket er {#hvis avslag}avslått{/hvis} i saken.</p>";
+    expect(losOppBetingelser(html, oppfylt)).toBe("<p>Vedtaket er avslått i saken.</p>");
+  });
+
+  it("etterlater ett mellomrom på hver side av den beholdte teksten når betingelsen er oppfylt", () => {
+    const html = "<p>Vedtaket er {#hvis avslag} avslått {/hvis} i saken.</p>";
     expect(losOppBetingelser(html, oppfylt)).toBe("<p>Vedtaket er avslått i saken.</p>");
   });
 

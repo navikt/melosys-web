@@ -8,6 +8,7 @@ import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import { useTekstblokker } from "../../services/api/tekstblokker";
 import { TekstblokkOversikt } from "../../services/modules/tekstblokker";
 import { tekstblokkOversikt } from "../../services/modules/tekstblokkTestdata";
+import { PlaceholderVerdi } from "../../services/modules/placeholdere";
 
 vi.mock("../../featuretoggle/useFeatureToggle", () => ({
   default: vi.fn(),
@@ -103,6 +104,57 @@ describe("TekstblokkSoek – kontekstavgrensning", () => {
 
     expect(screen.getByText(/Prøv et annet søkeord/)).toBeDefined();
     expect(screen.queryByRole("button", { name: "Vis alle" })).toBeNull();
+  });
+});
+
+describe("TekstblokkSoek – advarsel om tokener editoren ikke løser", () => {
+  const ADVARSEL = "Inneholder felter som ikke fylles ut her";
+  const verdier: PlaceholderVerdi[] = [{ nokkel: "saksnummer", verdi: "2024/123456" }];
+
+  const aapneMedInnhold = async (innhold: string, props: Partial<{ placeholderVerdier: PlaceholderVerdi[] }> = {}) => {
+    vi.mocked(useTekstblokker).mockReturnValue({
+      data: [tekstblokkOversikt({ tittel: "Om avslag", innhold })],
+      isLoading: false,
+    } as ReturnType<typeof useTekstblokker>);
+
+    renderWithProviders(<TekstblokkSoek onVelg={vi.fn()} {...props} />, { preloadedState: {} });
+    await userEvent.click(screen.getByRole("button", { name: "Legg til tekstblokker" }));
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+  });
+
+  it("advarer om en betingelsesblokk når editoren mangler placeholder-kontekst", async () => {
+    await aapneMedInnhold("<p>{#hvis avslag}Avslag{/hvis}</p>");
+
+    expect(screen.getByText(ADVARSEL)).toBeDefined();
+    expect(screen.getByText(/må fjernes eller fylles ut manuelt etterpå/)).toBeDefined();
+  });
+
+  it("advarer også om et valgtoken", async () => {
+    await aapneMedInnhold("<p>Du får {velg:innvilget|avslag}.</p>");
+
+    expect(screen.getByText(ADVARSEL)).toBeDefined();
+  });
+
+  it("lar blokken settes inn selv om den er advart om", async () => {
+    await aapneMedInnhold("<p>{#hvis avslag}Avslag{/hvis}</p>");
+
+    expect(screen.getByRole("button", { name: "Sett inn" })).toBeEnabled();
+  });
+
+  it("advarer ikke når editoren har placeholder-kontekst (Send brev)", async () => {
+    await aapneMedInnhold("<p>{#hvis avslag}Avslag{/hvis}</p>", { placeholderVerdier: verdier });
+
+    expect(screen.queryByText(ADVARSEL)).toBeNull();
+  });
+
+  it("advarer aldri om en blokk uten betingelser eller valg", async () => {
+    await aapneMedInnhold("<p>Saken {saksnummer} er mottatt. Fyll ut [navn].</p>");
+
+    expect(screen.queryByText(ADVARSEL)).toBeNull();
   });
 });
 
