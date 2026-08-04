@@ -122,17 +122,16 @@ export const useFiltrerteTekstblokker = (
   // "ALLE" er admin, der utkast skal vises; saksbehandlerflaten sender "PUBLISERT" som klientsidevern.
   statusfilter: Statusfilter = "ALLE",
 ): FiltrerteTekstblokker => {
-  const synlige = useMemo(
-    () =>
-      blokker.filter(
-        (b) => gjelderKontekst(b, sakstype, behandlingstema) && matcherFiltre(b, soek, valgteTags, statusfilter),
-      ),
-    [blokker, sakstype, behandlingstema, soek, valgteTags, statusfilter],
-  );
-  const antallUtenKontekst = useMemo(
-    () => blokker.filter((b) => matcherFiltre(b, soek, valgteTags, statusfilter)).length,
+  // Ett filterpass: kontekstavgrensningen legges oppå det samme utvalget tomtilstanden teller.
+  const matchende = useMemo(
+    () => blokker.filter((b) => matcherFiltre(b, soek, valgteTags, statusfilter)),
     [blokker, soek, valgteTags, statusfilter],
   );
+  const synlige = useMemo(
+    () => matchende.filter((b) => gjelderKontekst(b, sakstype, behandlingstema)),
+    [matchende, sakstype, behandlingstema],
+  );
+  const antallUtenKontekst = matchende.length;
   // Tagene telles over det som faktisk er igjen, ikke over hele søketreffet. Med
   // AND-filtrering ville resten bare ført til tomme lister. Antallet blir dermed
   // "hvor mange treff får jeg hvis jeg legger til denne taggen også".

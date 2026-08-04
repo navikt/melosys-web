@@ -102,6 +102,15 @@ describe("TekstblokkForhandsvisning", () => {
     );
   });
 
+  // Editoren ser U+00A0 (som trim() tar), mens forhåndsvisningen leser HTML-strengen der
+  // Quill kan ha lagret mellomrommet som &nbsp;-entitet. Begge skal gi samme nøkkel.
+  it("behandler et token med &nbsp;-entitet som samme nøkkel som med vanlig mellomrom", () => {
+    const container = renderHtml("<p>Saken {&nbsp;saksnummer&nbsp;} er mottatt.</p>", verdier, ["saksnummer"]);
+
+    expect(container.querySelector(".placeholder-utfylt")?.textContent).toBe("2024/123456");
+    expect(container.querySelector(".placeholder-ukjent")).toBeNull();
+  });
+
   it("markerer alt gult uten kjente nøkler (katalogen ikke lastet)", () => {
     const container = renderHtml("<p>{frnavn}</p>");
 

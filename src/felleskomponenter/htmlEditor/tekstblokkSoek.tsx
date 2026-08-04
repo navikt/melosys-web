@@ -258,8 +258,14 @@ function TekstblokkSoekIntern({
                 <BodyShort size="small" weight="semibold">
                   Fant ingen {typeOrd}
                 </BodyShort>
+                {/* Med et aktivt filter er det bare søketreffene som er kontekst-skjult –
+                    å påstå at ingen blokker gjelder saken ville vært usant. */}
                 {kontekstSkjulerTreff && (
-                  <BodyShort size="small">Ingen {typeOrd} gjelder denne saken (sakstype/behandlingstema).</BodyShort>
+                  <BodyShort size="small">
+                    {harAktivtFilter
+                      ? "Treffene for søket ditt gjelder ikke denne saken (sakstype/behandlingstema)."
+                      : `Ingen ${typeOrd} gjelder denne saken (sakstype/behandlingstema).`}
+                  </BodyShort>
                 )}
                 {/* Rådet gjelder bare når det faktisk er et filter å endre på – tømmer
                     utkast-filtrering eller en tom liste, ville rådet pekt feil vei. */}

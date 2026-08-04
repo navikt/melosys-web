@@ -1,6 +1,5 @@
 import * as Nav from "../../../navFrontend";
-import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
-import { MELOSYS_TEKSTBLOKKER, MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggle/toggleNavn";
+import usePlaceholderToggles from "../../../featuretoggle/usePlaceholderToggles";
 import { useBetingelseKatalog, usePlaceholderKatalog } from "../../../services/api/placeholdere";
 import { UtdatertPlaceholder } from "../../../services/modules/placeholdere";
 
@@ -22,9 +21,7 @@ const overskriftFor = (harUtdaterte: boolean, harUopploste: boolean, harUutfylte
 function PlaceholderUtdatertVarsel({ utdaterte, uopploste, uutfylte, onSendLikevel, onAvbryt }: Props) {
   // Modalen vises også for klammefelt alene, altså med placeholder-togglene av. Katalogen er
   // da kun til visningsnavn, og oppslagene faller tilbake til nøkkelen.
-  const tekstblokkerPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
-  const dynamiskPlaceholderPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER);
-  const katalogAktiv = Boolean(tekstblokkerPaa && dynamiskPlaceholderPaa);
+  const { placeholderAktiv: katalogAktiv } = usePlaceholderToggles();
   const { data: katalog } = usePlaceholderKatalog(katalogAktiv);
   const { data: betingelseKatalog } = useBetingelseKatalog(katalogAktiv);
 

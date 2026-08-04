@@ -89,10 +89,28 @@ export const naermestePosisjon = (kandidater: TreffPosisjon[], indeks: number): 
     null,
   );
 
+// Står den opprinnelige spanen igjen urørt, er det den brukeren pekte på. Identitet slår
+// avstand: etter et større skift kan den foreldede indeksen ligge nærmest et likt token
+// et helt annet sted i brevet.
+const uendretSpan = (quill: Quill, treff: PlaceholderTreff, verdier?: PlaceholderVerdi[]): TreffPosisjon | null => {
+  if (!treff.span.isConnected || !quill.root.contains(treff.span)) return null;
+  if ((treff.span.textContent ?? "") !== treff.tekst) return null;
+  const tolket = tolkSpan(treff.span, treff.tekst, verdier);
+  if (tolket === null || !erSammeMarkering(treff, tolket)) return null;
+  return posisjonFor(quill, treff.span);
+};
+
 // Popoveren kan ha stått åpen gjennom både redigering og remarkering, og remarkering bytter ut
-// DOM-noden. Posisjonen godtas derfor så lenge teksten står urørt der treffet ble åpnet;
-// ellers letes markeringen opp på nytt i DOM-en.
-const ferskPosisjon = (quill: Quill, treff: PlaceholderTreff, verdier?: PlaceholderVerdi[]): TreffPosisjon | null => {
+// DOM-noden. Er spanen borte, godtas posisjonen så lenge teksten står urørt der treffet ble
+// åpnet; ellers letes markeringen opp på nytt i DOM-en.
+export const ferskPosisjon = (
+  quill: Quill,
+  treff: PlaceholderTreff,
+  verdier?: PlaceholderVerdi[],
+): TreffPosisjon | null => {
+  const uendret = uendretSpan(quill, treff, verdier);
+  if (uendret !== null) return uendret;
+
   if (quill.getText(treff.index, treff.length) === treff.tekst) return treff;
 
   const kandidater = Array.from(quill.root.querySelectorAll<HTMLElement>(TREFF_VELGER))
