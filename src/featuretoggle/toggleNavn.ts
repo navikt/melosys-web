@@ -1,7 +1,6 @@
 const MELOSYS_FAKTURERINGSKOMPONENTEN_VIS_REFERANSE = "melosys.faktureringskomponent.vis_referanse";
 const MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK = "melosys.ftrl.begrense_periode_vedtak";
 const FEATURE_TOGGLE = "feature-toggle";
-const MELOSYS_NORGE_ER_UTPEKT_11_3_A = "melosys.11_3_a_Norge_er_utpekt";
 const MELOSYS_PENSJONIST = "melosys.pensjonist";
 const MELOSYS_PENSJONIST_EØS = "melosys.pensjonist_eos";
 const STANDARDVEDLEGG_EGET_VEDLEGG_AVTALELAND = "standardvedlegg_eget_vedlegg_avtaleland";
@@ -20,7 +19,6 @@ const VIS_TRYGDEAVGIFT_BEREGNINGSFORKLARING = "melosys.trygdeavgift.vis_beregnin
 
 const alleToggleNavn = [
   MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
-  MELOSYS_NORGE_ER_UTPEKT_11_3_A,
   MELOSYS_PENSJONIST,
   MELOSYS_PENSJONIST_EØS,
   STANDARDVEDLEGG_EGET_VEDLEGG_AVTALELAND,
@@ -41,7 +39,6 @@ const alleToggleNavn = [
 export {
   FEATURE_TOGGLE,
   MELOSYS_FTRL_BEGRENSE_PERIODE_VEDTAK,
-  MELOSYS_NORGE_ER_UTPEKT_11_3_A,
   MELOSYS_PENSJONIST,
   MELOSYS_PENSJONIST_EØS,
   ÅRSAVREGNING,

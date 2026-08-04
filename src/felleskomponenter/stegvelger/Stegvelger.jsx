@@ -38,10 +38,7 @@ import { Innsynsmelding, NyVurderingMelding, StatsborgerskapFeil } from "../aler
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.less";
 import { erFeatureToggleEnabled } from "../../featuretoggle";
-import {
-  MELOSYS_NORGE_ER_UTPEKT_11_3_A,
-  MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
-} from "../../featuretoggle/toggleNavn";
+import { MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT } from "../../featuretoggle/toggleNavn";
 
 const byggStegStores = () => ({
   [StegStoreTyper.Anmodningsperiodersvar]: new EnkelDataStore(),
@@ -501,7 +498,6 @@ class Stegvelger extends Component {
       bestemmelser: props.bestemmelser,
       soknadsperiode: props.soknadsperiode,
       harFeilmeldinger: !Utils._isEmpty(props.feilmeldinger) || !Utils._isEmpty(props.kontrollfeil),
-      norgeErUtpekt11_3AToggleEnabled: props.norgeErUtpekt11_3AToggleEnabled,
       utsendingsvilkår: props.utsendingsvilkår,
       unntaksvilkår: props.unntaksvilkår,
       behandlingOppfriskes: props.behandlingOppfriskes,
@@ -749,7 +745,6 @@ Stegvelger.propTypes = {
       felter: PT.arrayOf(PT.string).isRequired,
     }),
   ),
-  norgeErUtpekt11_3AToggleEnabled: PT.bool.isRequired,
   utsendingsvilkår: PT.object.isRequired,
   unntaksvilkår: PT.object.isRequired,
   art11_3Aeller13_3A: PT.object.isRequired,
@@ -837,7 +832,6 @@ const mapStateToProps = (state) => ({
   soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
   kontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
-  norgeErUtpekt11_3AToggleEnabled: erFeatureToggleEnabled(MELOSYS_NORGE_ER_UTPEKT_11_3_A, state),
   eøsFaktureringAvTrygdeavgiftToggleEnabled: erFeatureToggleEnabled(MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT, state),
 });
 
