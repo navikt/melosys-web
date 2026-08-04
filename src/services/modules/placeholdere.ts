@@ -95,13 +95,13 @@ export const PLACEHOLDER_VALGT_TITTEL = "Klikk for å endre valget";
 export const PLACEHOLDER_BETINGELSE_TITTEL =
   "Vises bare når betingelsen er oppfylt – løses ved innsetting fra Send brev";
 
-// Forhåndsvisning og sendevarsler leser HTML-strengen, der mellomrom kan stå som
-// &nbsp;-entitet, mens editoren ser U+00A0. Dekodes før all token-parsing og -visning,
-// så begge veier klassifiserer likt og varsellistene er lesbare.
-const dekodTokenTekst = (token: string): string => token.replace(/&nbsp;/g, " ");
+// Token-parserne under antar dekodet tekst – den DOM-en gir. De gjenværende konsumentene som
+// leser HTML-strengen (erstattPlaceholdere og forhåndsvisningens utheving) dekoder på
+// inngangen, så en &nbsp;-entitet og et hardt mellomrom klassifiseres likt.
+export const dekodTokenTekst = (token: string): string => token.replace(/&nbsp;/g, " ");
 
 // Nøkkelen inni {…}. Trimmes så «{ saksnummer }» ikke blir feilklassifisert som ukjent.
-const nokkelFraToken = (token: string): string => dekodTokenTekst(token.slice(1, -1)).trim();
+const nokkelFraToken = (token: string): string => token.slice(1, -1).trim();
 
 const VALG_PREFIKS = "{velg:";
 
@@ -127,9 +127,8 @@ export const parseValgAlternativer = (alternativStreng: string): string[] => {
 // Valgtoken: {velg:A|B|C}. Ugyldig innhold gir null, og tokenet klassifiseres da som
 // en vanlig (ukjent) nøkkel i stedet.
 export const parseValgToken = (token: string): { alternativer: string[] } | null => {
-  const dekodet = dekodTokenTekst(token);
-  if (!VALG_TOKEN_MONSTER.test(dekodet)) return null;
-  const alternativer = parseValgAlternativer(dekodet.slice(VALG_PREFIKS.length, -1));
+  if (!VALG_TOKEN_MONSTER.test(token)) return null;
+  const alternativer = parseValgAlternativer(token.slice(VALG_PREFIKS.length, -1));
   return alternativer.length > 0 ? { alternativer } : null;
 };
 
@@ -146,7 +145,7 @@ const HVIS_START_LITTERAL = "{#hvis";
 export const HVIS_SLUTT_TOKEN = "{/hvis}";
 
 export const parseHvisStartToken = (token: string): { nokkel: string } | null => {
-  const treff = HVIS_START_MONSTER.exec(dekodTokenTekst(token));
+  const treff = HVIS_START_MONSTER.exec(token);
   return treff ? { nokkel: treff[1] } : null;
 };
 
@@ -212,15 +211,18 @@ export const fjernMarkeringsSpans = (html: string, klasser: string[] = ALLE_MARK
 export const erstattPlaceholdere = (html: string, verdier: PlaceholderVerdi[]): string => {
   if (verdier.length === 0) return html;
   const verdiForNokkel = new Map(verdier.map(({ nokkel, verdi }) => [nokkel, verdi]));
-  return html.replace(/\{[^{}<>]+\}/g, (token) => {
+  return html.replace(/\{[^{}<>]+\}/g, (rattToken) => {
+    // Strengen kan ha entiteter parserne ikke kjenner; det rå tokenet returneres uendret
+    // i alle grener som lar teksten stå, så HTML-en ikke endres på veien.
+    const token = dekodTokenTekst(rattToken);
     // Valgtokener har ingen saksverdi – de erstattes av brukerens valg i editoren.
-    if (erValgToken(token)) return token;
+    if (erValgToken(token)) return rattToken;
     // Samme trimmede nøkkel som erUkjentPlaceholder, ellers blir «{ saksnummer }» aldri erstattet.
     const nokkel = nokkelFraToken(token);
     const verdi = verdiForNokkel.get(nokkel);
     // Tom verdi ville gitt en tom span som Quill kaster – da forsvinner {nokkel}
     // sporløst. Behold tokenet så det gulmarkeres i stedet.
-    if (!verdi) return token;
+    if (!verdi) return rattToken;
     const escapetNokkel = escapeHtml(nokkel);
     return `<span class="placeholder-utfylt" data-placeholder="${escapetNokkel}" title="${PLACEHOLDER_UTFYLT_TITTEL(escapetNokkel)}">${escapeHtml(verdi)}</span>`;
   });
@@ -243,37 +245,63 @@ interface Par {
   slutt: TokenTreff;
 }
 
-const finnBetingelsesTokener = (dokument: Document): TokenTreff[] => {
-  const treff: TokenTreff[] = [];
+const tekstnoder = (dokument: Document): Text[] => {
+  const noder: Text[] = [];
   const vandrer = dokument.createTreeWalker(dokument.body, NodeFilter.SHOW_TEXT);
-
-  for (let node = vandrer.nextNode() as Text | null; node !== null; node = vandrer.nextNode() as Text | null) {
-    const regex = new RegExp(`\\{#hvis\\s+${HVIS_NOKKEL}\\}|\\{/hvis\\}`, "g");
-    for (let match = regex.exec(node.data); match !== null; match = regex.exec(node.data)) {
-      treff.push({ node, index: match.index, token: match[0] });
-    }
-  }
-
-  return treff;
+  for (let node = vandrer.nextNode(); node !== null; node = vandrer.nextNode()) noder.push(node as Text);
+  return noder;
 };
 
-// Nesting og ubalanse gir null: da er omfanget tvetydig, og teksten skal stå urørt.
-const parBetingelser = (treff: TokenTreff[]): Par[] | null => {
+// Delt av oppløsningen og varsellaget, så de to aldri kan bli uenige om hva som står i
+// teksten. En tekstnode inneholder per definisjon ingen tagger og har ferdig dekodede
+// entiteter, så mønstrene trenger verken <>-ekskludering eller egen dekoding.
+const finnTokenerIDom = (dokument: Document, monster: string): TokenTreff[] =>
+  tekstnoder(dokument).flatMap((node) =>
+    [...node.data.matchAll(new RegExp(monster, "g"))].map((treff) => ({
+      node,
+      index: treff.index,
+      token: treff[0],
+    })),
+  );
+
+// Kun gyldige tokener; oppløsningen skal aldri gjette omfanget av en skrivefeil.
+const BETINGELSE_MONSTER = `\\{#hvis\\s+${HVIS_NOKKEL}\\}|\\{/hvis\\}`;
+
+// \n utelatt, så en uparet { ikke slår seg sammen med en } lenger nede i samme tekstnode.
+const TOKEN_MONSTER = "\\{[^{}\\n]+\\}";
+
+// Alle {…}-tokener i en HTML-streng, lest fra DOM-en. Vokteren sparer parsingen for tekst
+// uten tokener i det hele tatt.
+const tokenerIHtml = (html: string): TokenTreff[] => {
+  if (!html.includes("{") || !html.includes("}")) return [];
+  return finnTokenerIDom(new DOMParser().parseFromString(html, "text/html"), TOKEN_MONSTER);
+};
+
+// Ubalanserte tokener faller ut hver for seg – en skrivefeil ett sted skal ikke stoppe
+// oppløsningen av de gyldige parene ellers i dokumentet. Nestede par røres ikke: omfanget
+// er tvetydig, og delvis oppløsning ville fjernet innhold inne i en betingelse som fortsatt
+// står synlig. Begge tokenene blir da stående og varslet.
+const parBetingelser = (treff: TokenTreff[]): Par[] => {
   const par: Par[] = [];
-  let apen: TokenTreff | null = null;
+  const apne: TokenTreff[] = [];
+  let nestet = false;
 
   for (const token of treff) {
-    if (erHvisSluttToken(token.token)) {
-      if (apen === null) return null;
-      par.push({ start: apen, slutt: token });
-      apen = null;
-    } else {
-      if (apen !== null) return null;
-      apen = token;
+    if (!erHvisSluttToken(token.token)) {
+      apne.push(token);
+      if (apne.length > 1) nestet = true;
+      continue;
     }
+
+    const start = apne.pop();
+    if (start === undefined) continue;
+    const tvetydig = nestet || apne.length > 0;
+    // Ytterste lukker avslutter gruppen; en senere nesting-fri betingelse skal løses.
+    if (apne.length === 0) nestet = false;
+    if (!tvetydig) par.push({ start, slutt: token });
   }
 
-  return apen === null ? par : null;
+  return par;
 };
 
 const blokkFor = (node: Node): Element | null => {
@@ -343,8 +371,8 @@ export const losOppBetingelser = (html: string, betingelser?: Betingelse[]): str
   if (!html.includes(HVIS_START_LITTERAL) && !html.includes(HVIS_SLUTT_TOKEN)) return html;
 
   const dokument = new DOMParser().parseFromString(html, "text/html");
-  const par = parBetingelser(finnBetingelsesTokener(dokument));
-  if (par === null || par.length === 0) return html;
+  const par = parBetingelser(finnTokenerIDom(dokument, BETINGELSE_MONSTER));
+  if (par.length === 0) return html;
 
   const oppfyltForNokkel = new Map((betingelser ?? []).map(({ nokkel, oppfylt }) => [nokkel, oppfylt]));
   const oppgaver: Array<() => void> = [];
@@ -382,29 +410,9 @@ export const forberedInnhold = (
   return placeholderVerdier ? erstattPlaceholdere(rentHtml, placeholderVerdier) : rentHtml;
 };
 
-// Løsere enn det strenge starttokenet, så et misformet «{#hvis to ord}» også fanges opp, men
-// med samme <>\n-ekskludering som de andre tokenmønstrene: et treff som spente over en
-// tagg-grense ville listet en HTML-blob i varselet.
-const HVIS_START_LOST_MONSTER = /\{#hvis[^{}<>\n]*\}/g;
-const HVIS_SLUTT_MONSTER = /\{\/hvis\}/g;
-
-// Foreldreløst = et {/hvis} uten noe starttoken (gyldig eller misformet) foran seg i
-// teksten. Balansen telles i dokumentrekkefølge, så både overskudd og reversert par fanges.
-const harForeldreloseSlutt = (html: string, startIndekser: number[]): boolean => {
-  const sluttIndekser = [...html.matchAll(HVIS_SLUTT_MONSTER)].map((treff) => treff.index);
-  const hendelser = [
-    ...startIndekser.map((index) => ({ index, erStart: true })),
-    ...sluttIndekser.map((index) => ({ index, erStart: false })),
-  ].sort((a, b) => a.index - b.index);
-
-  let balanse = 0;
-  for (const { erStart } of hendelser) {
-    if (erStart) balanse += 1;
-    else if (balanse === 0) return true;
-    else balanse -= 1;
-  }
-  return false;
-};
+// Løsere enn det strenge mønsteret, så et misformet «{#hvis to ord}» også fanges opp.
+// \n er fortsatt utelatt: et treff over en avsnittsgrense ville listet en tekstblokk som «token».
+const BETINGELSE_LOST_MONSTER = "\\{#hvis[^{}\\n]*\\}|\\{/hvis\\}";
 
 // Betingelsestokener som står igjen ved sending; de er styring og ville blitt sendt ordrett.
 // Lista skal si hva som faktisk står i brevet: gyldige nøkler, et foreldreløst {/hvis},
@@ -413,29 +421,42 @@ const harForeldreloseSlutt = (html: string, startIndekser: number[]): boolean =>
 export const finnUopplosteBetingelser = (html: string): string[] => {
   if (!html.includes(HVIS_START_LITTERAL) && !html.includes(HVIS_SLUTT_TOKEN)) return [];
 
+  const dokument = new DOMParser().parseFromString(html, "text/html");
   const nokler = new Set<string>();
   const misformede = new Set<string>();
-  // Også misformede starttokener åpner et par visuelt: et {/hvis} rett etter en skrivefeil
-  // er ikke foreldreløst – å rette starttokenet er hele fikset.
-  const aapnerIndekser: number[] = [];
   let antallStartTreff = 0;
+  let apneGyldige = 0;
+  let foreldreloesSlutt = false;
 
-  for (const treff of html.matchAll(HVIS_START_LOST_MONSTER)) {
+  for (const { token } of finnTokenerIDom(dokument, BETINGELSE_LOST_MONSTER)) {
+    if (erHvisSluttToken(token)) {
+      // Samme paringsregel som parBetingelser: kun et gyldig starttoken åpner et par, så
+      // varselet og oppløsningen aldri kan bli uenige om hva som er foreldreløst.
+      if (apneGyldige === 0) foreldreloesSlutt = true;
+      else apneGyldige -= 1;
+      continue;
+    }
+
     antallStartTreff += 1;
-    aapnerIndekser.push(treff.index);
-    const nokkel = parseHvisStartToken(treff[0])?.nokkel;
-    if (nokkel === undefined) misformede.add(dekodTokenTekst(treff[0]));
-    else nokler.add(nokkel);
+    const nokkel = parseHvisStartToken(token)?.nokkel;
+    if (nokkel === undefined) misformede.add(token);
+    else {
+      nokler.add(nokkel);
+      apneGyldige += 1;
+    }
   }
 
   // Flere «{#hvis» i teksten enn hele tokener betyr at minst ett aldri ble lukket.
-  const uavsluttetFragment = html.split(HVIS_START_LITTERAL).length - 1 > antallStartTreff;
+  const antallLitteraler = tekstnoder(dokument).reduce(
+    (sum, node) => sum + node.data.split(HVIS_START_LITTERAL).length - 1,
+    0,
+  );
 
   return [
     ...nokler,
-    ...(harForeldreloseSlutt(html, aapnerIndekser) ? [HVIS_SLUTT_TOKEN] : []),
+    ...(foreldreloesSlutt ? [HVIS_SLUTT_TOKEN] : []),
     ...misformede,
-    ...(uavsluttetFragment ? [HVIS_START_LITTERAL] : []),
+    ...(antallLitteraler > antallStartTreff ? [HVIS_START_LITTERAL] : []),
   ];
 };
 
@@ -452,7 +473,7 @@ export interface SakstypeKonflikt {
 // Alle {…}-tokener i teksten, med betingelsesnøkkelen pakket ut av {#hvis …}.
 const noklerITekst = (html: string): string[] => {
   const nokler = new Set<string>();
-  for (const token of html.match(/\{[^{}<>]+\}/g) ?? []) {
+  for (const { token } of tokenerIHtml(html)) {
     if (erValgToken(token)) continue;
     const hvis = parseHvisStartToken(token);
     if (hvis) nokler.add(hvis.nokkel);
@@ -498,18 +519,19 @@ export const finnSakstypeKonflikter = (
 // [felt]-konvensjonen er eldre enn placeholder-funksjonen og varsles uavhengig av toggle.
 // Brukes kun til varsel ved sending – teksten endres aldri.
 export const finnUutfylteKlammer = (html: string): string[] => {
+  if (!html.includes("[") && !html.includes("bracketed-text")) return [];
+
+  const dokument = new DOMParser().parseFromString(html, "text/html");
   const uutfylte = new Set<string>();
 
-  if (html.includes("bracketed-text")) {
-    const dokument = new DOMParser().parseFromString(html, "text/html");
-    dokument.body.querySelectorAll("span.bracketed-text").forEach((span) => {
-      const tekst = span.textContent?.trim();
-      if (tekst) uutfylte.add(tekst);
-    });
-  }
+  // Markerte felter leses fra spanet: bare det fanger klammer rundt inline-tagger.
+  dokument.body.querySelectorAll("span.bracketed-text").forEach((span) => {
+    const tekst = span.textContent?.trim();
+    if (tekst) uutfylte.add(tekst);
+  });
 
-  // Samme tegnklasse som uthevKlammer, så treffet aldri går over en tagg-grense.
-  for (const klammefelt of html.match(/\[[^[\]<>]*\]/g) ?? []) uutfylte.add(klammefelt);
+  // Samme dekodede tekst i begge grener, så et markert felt aldri listes to ganger.
+  for (const { token } of finnTokenerIDom(dokument, "\\[[^[\\]]*\\]")) uutfylte.add(token);
 
   return [...uutfylte];
 };
@@ -518,11 +540,11 @@ export const finnUutfylteKlammer = (html: string): string[] => {
 // funksjonen på – vilkårlig {tekst} i et brev skal ikke gi varsel for alle.
 export const finnUutfylteTokener = (html: string): string[] => {
   const uutfylte = new Set<string>();
-  for (const token of html.match(/\{[^{}<>\n]+\}/g) ?? []) {
+  for (const { token } of tokenerIHtml(html)) {
     // Betingelsestokener er styring, ikke felter – de varsles av finnUopplosteBetingelser.
     // Prefikssjekk, ikke erHvisStartToken: også et misformet «{#hvis to ord}» hører hjemme der.
     if (token.startsWith(HVIS_START_LITTERAL) || erHvisSluttToken(token)) continue;
-    uutfylte.add(dekodTokenTekst(token));
+    uutfylte.add(token);
   }
   return [...uutfylte];
 };
