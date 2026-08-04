@@ -402,9 +402,10 @@ export const finnSakstypeKonflikter = (
   });
 };
 
-// Felter saksbehandler må fylle ut selv: klammefelt fra malen og placeholder-tokener som
-// ikke fikk verdi. Brukes kun til varsel ved sending – teksten endres aldri.
-export const finnUutfylte = (html: string): string[] => {
+// Klammefelter saksbehandler skulle fylt ut selv. Delt fra token-varianten under fordi
+// [felt]-konvensjonen er eldre enn placeholder-funksjonen og varsles uavhengig av toggle.
+// Brukes kun til varsel ved sending – teksten endres aldri.
+export const finnUutfylteKlammer = (html: string): string[] => {
   const uutfylte = new Set<string>();
 
   if (html.includes("bracketed-text")) {
@@ -418,11 +419,17 @@ export const finnUutfylte = (html: string): string[] => {
   // Samme tegnklasse som uthevKlammer, så treffet aldri går over en tagg-grense.
   for (const klammefelt of html.match(/\[[^[\]<>]*\]/g) ?? []) uutfylte.add(klammefelt);
 
+  return [...uutfylte];
+};
+
+// Placeholder-tokener uten verdi, inkl. uvalgte {velg:…}. Varsles kun med placeholder-
+// funksjonen på – vilkårlig {tekst} i et brev skal ikke gi varsel for alle.
+export const finnUutfylteTokener = (html: string): string[] => {
+  const uutfylte = new Set<string>();
   for (const token of html.match(/\{[^{}<>\n]+\}/g) ?? []) {
     // Betingelsestokener er styring, ikke felter – de varsles av finnUopplosteBetingelser.
     if (!erBetingelsesToken(token)) uutfylte.add(token);
   }
-
   return [...uutfylte];
 };
 

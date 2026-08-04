@@ -330,7 +330,8 @@ describe("SendBrev – varsel om uutfylte felter", () => {
     await ventPaaBestilt();
   });
 
-  it("sjekker ingenting når togglene er av", async () => {
+  // Klammefeltene er dagens konvensjon i brev og varsles uavhengig av placeholder-togglene.
+  it("varsler om klammefelt også når togglene er av", async () => {
     renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
       preloadedState: {
         ...preloadedState,
@@ -340,6 +341,28 @@ describe("SendBrev – varsel om uutfylte felter", () => {
             values: {
               ...preloadedState.form.send_brev.values,
               felt: { FRITEKST: { feltVerdi: "<p>Hei [navn].</p>" } },
+            },
+          },
+        },
+      },
+    });
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet har felter som ikke er fylt ut")).toBeInTheDocument();
+    expect(screen.getByText("[navn]")).toBeInTheDocument();
+    expect(Api.DokumenterV2.opprettBrev).not.toHaveBeenCalled();
+  });
+
+  it("varsler ikke om tokener når togglene er av", async () => {
+    renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
+      preloadedState: {
+        ...preloadedState,
+        featureToggle: { status: STATUS.OK, data: {} },
+        form: {
+          send_brev: {
+            values: {
+              ...preloadedState.form.send_brev.values,
+              felt: { FRITEKST: { feltVerdi: "<p>Hei {saksnummer}.</p>" } },
             },
           },
         },
