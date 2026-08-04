@@ -174,9 +174,11 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
                 <Nav.List>
                   {konflikter.map(({ nokkel, visningsnavn, sakstyper: udekkede, stottedeSakstyper }) => (
                     <Nav.List.Item key={nokkel}>
+                      {/* Fet: feltnavnet skal kunne skilles fra resten av setningen på et blikk. */}
+                      <strong>{visningsnavn}</strong>
                       {udekkede.length > 0
-                        ? `${visningsnavn} støtter ikke: ${udekkede.map(termForSakstype).join(", ")}`
-                        : `${visningsnavn} støttes bare for: ${stottedeSakstyper
+                        ? ` støtter ikke: ${udekkede.map(termForSakstype).join(", ")}`
+                        : ` støttes bare for: ${stottedeSakstyper
                             .map(termForSakstype)
                             .join(", ")} — blokken gjelder alle sakstyper`}
                     </Nav.List.Item>
