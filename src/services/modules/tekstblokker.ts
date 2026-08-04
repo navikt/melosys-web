@@ -56,6 +56,12 @@ export interface TekstblokkVersjon {
   endringstype: Endringstype;
   tittel: string;
   innhold: string;
+  // Api-et leverer disse fra og med runde 5. Eldre versjonsrader har dem ikke, og da skal
+  // historikken tie om dem i stedet for å påstå en endring.
+  tags?: string[];
+  sakstyper?: string[];
+  behandlingstemaer?: string[];
+  status?: TekstblokkStatus;
 }
 
 const baseUrl = `${API_BASE_URL}${TEKSTBLOKKER}`;
@@ -96,7 +102,23 @@ export const oppdater = (id: number, body: TekstblokkRequest): Promise<Tekstblok
 export const publiser = (id: number): Promise<Tekstblokk> =>
   postAsJson(`${baseUrl}/${id}/publiser`).then((blokk: Tekstblokk) => ({ ...blokk, ...normaliser(blokk) }));
 
-export const hentHistorikk = (id: number): Promise<TekstblokkVersjon[]> => getAsJson(`${baseUrl}/${id}/historikk`);
+// Samme normalisering som for blokkene, men kun for versjoner api-et faktisk har data om:
+// en rad helt uten de nye feltene lar dem stå undefined, så sammenligningen kan hoppe over
+// dem i stedet for å lese dem som «tømt».
+const normaliserVersjon = (versjon: TekstblokkVersjon): TekstblokkVersjon => {
+  const { tags, sakstyper, behandlingstemaer, status } = versjon;
+  if ([tags, sakstyper, behandlingstemaer, status].every((felt) => felt === undefined)) return versjon;
+  return {
+    ...versjon,
+    tags: tags ?? [],
+    sakstyper: sakstyper ?? [],
+    behandlingstemaer: behandlingstemaer ?? [],
+    status: status ?? "PUBLISERT",
+  };
+};
+
+export const hentHistorikk = (id: number): Promise<TekstblokkVersjon[]> =>
+  getAsJson(`${baseUrl}/${id}/historikk`).then((versjoner: TekstblokkVersjon[]) => versjoner.map(normaliserVersjon));
 
 export const slett = (id: number): Promise<unknown> => deleteAsJson(`${baseUrl}/${id}`);
 

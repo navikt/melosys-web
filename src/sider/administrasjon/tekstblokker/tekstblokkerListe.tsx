@@ -8,6 +8,17 @@ import { formatterDatoTilNorsk } from "../../../utils/dato";
 import { termForBehandlingstema, termForSakstype } from "./kontekstavgrensning";
 import TekstblokkHistorikk from "./tekstblokkHistorikk";
 
+// Kolonnen skal kunne leses på et blikk; resten samles i én «+N»-tag med termene i tooltipen.
+const MAKS_SYNLIGE_TERMER = 3;
+
+const gjelderTermer = (blokk: TekstblokkOversikt): Array<{ noekkel: string; term: string }> => [
+  ...blokk.sakstyper.map((kode) => ({ noekkel: `sakstype-${kode}`, term: termForSakstype(kode) })),
+  ...blokk.behandlingstemaer.map((kode) => ({
+    noekkel: `behandlingstema-${kode}`,
+    term: termForBehandlingstema(kode),
+  })),
+];
+
 interface Props {
   blokker: TekstblokkOversikt[];
   utvidedeIder: Set<number>;
@@ -93,6 +104,9 @@ function TekstblokkerListeRad({
   onSlett,
   onPubliser,
 }: RadProps) {
+  const termer = gjelderTermer(blokk);
+  const skjulteTermer = termer.slice(MAKS_SYNLIGE_TERMER).map(({ term }) => term);
+
   return (
     <Nav.Table.ExpandableRow
       open={utvidet}
@@ -128,17 +142,22 @@ function TekstblokkerListeRad({
       {/* Avgrensningen står i egen kolonne, ikke skilt fra tagene på farge alene (WCAG 1.4.1). */}
       <Nav.Table.DataCell>
         <div className="tekstblokker__rad-tags">
-          {blokk.sakstyper.map((kode) => (
-            <Nav.Tag key={`sakstype-${kode}`} size="xsmall" variant="info">
-              {termForSakstype(kode)}
+          {termer.slice(0, MAKS_SYNLIGE_TERMER).map(({ noekkel, term }) => (
+            <Nav.Tag key={noekkel} size="xsmall" variant="info">
+              {term}
             </Nav.Tag>
           ))}
-          {blokk.behandlingstemaer.map((kode) => (
-            <Nav.Tag key={`behandlingstema-${kode}`} size="xsmall" variant="info">
-              {termForBehandlingstema(kode)}
+          {skjulteTermer.length > 0 && (
+            <Nav.Tag
+              size="xsmall"
+              variant="info"
+              title={skjulteTermer.join(", ")}
+              aria-label={skjulteTermer.join(", ")}
+            >
+              {`+${skjulteTermer.length}`}
             </Nav.Tag>
-          ))}
-          {blokk.sakstyper.length === 0 && blokk.behandlingstemaer.length === 0 && (
+          )}
+          {termer.length === 0 && (
             <Nav.BodyShort size="small" textColor="subtle">
               Alle
             </Nav.BodyShort>

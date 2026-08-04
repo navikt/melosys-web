@@ -120,6 +120,23 @@ describe("publiser og hentHistorikk", () => {
     expect(getAsJson).toHaveBeenCalledWith(expect.stringContaining("brev/tekstblokker/7/historikk"));
     expect(versjoner).toHaveLength(1);
   });
+
+  it("hentHistorikk fyller ut manglende felter på versjoner api-et har levert data om", async () => {
+    vi.mocked(getAsJson).mockResolvedValue([{ versjon: 1, endringstype: "OPPRETTET", sakstyper: ["EU_EOS"] }]);
+
+    const [versjon] = await hentHistorikk(7);
+
+    expect(versjon).toMatchObject({ sakstyper: ["EU_EOS"], behandlingstemaer: [], tags: [], status: "PUBLISERT" });
+  });
+
+  it("hentHistorikk lar feltene stå udefinert for versjoner fra et api uten dem", async () => {
+    vi.mocked(getAsJson).mockResolvedValue([{ versjon: 1, endringstype: "OPPRETTET" }]);
+
+    const [versjon] = await hentHistorikk(7);
+
+    expect(versjon.sakstyper).toBeUndefined();
+    expect(versjon.status).toBeUndefined();
+  });
 });
 
 describe("harStatus", () => {

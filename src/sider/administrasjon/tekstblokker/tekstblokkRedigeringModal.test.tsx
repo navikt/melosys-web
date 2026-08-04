@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 
 import TekstblokkRedigeringModal from "./tekstblokkRedigeringModal";
 import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
-import { usePlaceholderKatalog } from "../../../services/api/placeholdere";
+import { useBetingelseKatalog, usePlaceholderKatalog } from "../../../services/api/placeholdere";
 import { Tekstblokk } from "../../../services/modules/tekstblokker";
 
 vi.mock("../../../featuretoggle/useFeatureToggle", () => ({
@@ -13,6 +13,7 @@ vi.mock("../../../featuretoggle/useFeatureToggle", () => ({
 
 vi.mock("../../../services/api/placeholdere", () => ({
   usePlaceholderKatalog: vi.fn(),
+  useBetingelseKatalog: vi.fn(),
 }));
 
 const mocks = vi.hoisted(() => ({
@@ -59,7 +60,14 @@ const katalog = [
   },
 ];
 
-const mockKatalog = (verdi: object) => vi.mocked(usePlaceholderKatalog).mockReturnValue(verdi as any);
+const betingelseKatalog = [
+  { nokkel: "avslag", visningsnavn: "Avslag", beskrivelse: "Saken er avslått", sakstyper: ["FTRL"] },
+];
+
+const mockKatalog = (verdi: object, betingelser: object = { data: [] }) => {
+  vi.mocked(usePlaceholderKatalog).mockReturnValue(verdi as any);
+  vi.mocked(useBetingelseKatalog).mockReturnValue(betingelser as any);
+};
 
 const visModal = (redigerId: number | null = null) =>
   render(<TekstblokkRedigeringModal redigerId={redigerId} type="TEKSTBLOKK" forslagTags={[]} onLukk={vi.fn()} />);
@@ -264,6 +272,35 @@ describe("TekstblokkRedigeringModal – kontekstavgrensning", () => {
     expect(screen.getByRole("button", { name: /Arbeid kun i Norge/ })).toBeDefined();
   });
 
+  it("holder avgrensningen skjult bak utvidelsen på en ny tekstblokk", () => {
+    mocks.tekstblokk.mockReturnValue({ data: undefined, isLoading: false });
+
+    visModal();
+
+    const utvidelse = screen.getByRole("button", { name: "Avgrens til sakstype/behandlingstema" });
+    expect(utvidelse.getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("åpner utvidelsen når blokken allerede er avgrenset", () => {
+    mocks.tekstblokk.mockReturnValue({ data: lagret({ behandlingstemaer: ["ARBEID_KUN_NORGE"] }), isLoading: false });
+
+    visModal(7);
+
+    const utvidelse = screen.getByRole("button", { name: "Avgrens til sakstype/behandlingstema" });
+    expect(utvidelse.getAttribute("aria-expanded")).toBe("true");
+  });
+
+  it("lar admin åpne utvidelsen selv på en uavgrenset blokk", async () => {
+    mocks.tekstblokk.mockReturnValue({ data: lagret(), isLoading: false });
+
+    visModal(7);
+    await userEvent.click(screen.getByRole("button", { name: "Avgrens til sakstype/behandlingstema" }));
+
+    expect(
+      screen.getByRole("button", { name: "Avgrens til sakstype/behandlingstema" }).getAttribute("aria-expanded"),
+    ).toBe("true");
+  });
+
   it("sender endret avgrensning i requesten", async () => {
     mocks.tekstblokk.mockReturnValue({ data: lagret({ sakstyper: ["EU_EOS"] }), isLoading: false });
 
@@ -282,5 +319,67 @@ describe("TekstblokkRedigeringModal – kontekstavgrensning", () => {
       },
       expect.anything(),
     );
+  });
+});
+
+describe("TekstblokkRedigeringModal – varsel om sakstyper placeholderen ikke støtter", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+    mockKatalog({ data: katalog }, { data: betingelseKatalog });
+  });
+
+  it("varsler når en placeholder ikke dekker sakstypen blokken er avgrenset til", () => {
+    mocks.tekstblokk.mockReturnValue({
+      data: lagret({ innhold: "<p>{soker-navn}</p>", sakstyper: ["EU_EOS"] }),
+      isLoading: false,
+    });
+
+    visModal(7);
+
+    expect(screen.getByText("Søkers navn støtter ikke: EU/EØS-land")).toBeDefined();
+  });
+
+  it("varsler også for betingelser i teksten", () => {
+    mocks.tekstblokk.mockReturnValue({
+      data: lagret({ innhold: "<p>{#hvis avslag}Avslag{/hvis}</p>", sakstyper: ["EU_EOS"] }),
+      isLoading: false,
+    });
+
+    visModal(7);
+
+    expect(screen.getByText("Avslag støtter ikke: EU/EØS-land")).toBeDefined();
+  });
+
+  it("varsler ikke når blokken gjelder alle sakstyper", () => {
+    mocks.tekstblokk.mockReturnValue({ data: lagret({ innhold: "<p>{soker-navn}</p>" }), isLoading: false });
+
+    visModal(7);
+
+    expect(screen.queryByText(/støtter ikke/)).toBeNull();
+  });
+
+  it("varsler ikke når placeholderen dekker sakstypen", () => {
+    mocks.tekstblokk.mockReturnValue({
+      data: lagret({ innhold: "<p>{soker-navn}</p>", sakstyper: ["FTRL"] }),
+      isLoading: false,
+    });
+
+    visModal(7);
+
+    expect(screen.queryByText(/støtter ikke/)).toBeNull();
+  });
+
+  it("sjekker ingenting når togglen er av", () => {
+    vi.mocked(useFeatureToggle).mockReturnValue(false);
+    mocks.tekstblokk.mockReturnValue({
+      data: lagret({ innhold: "<p>{soker-navn}</p>", sakstyper: ["EU_EOS"] }),
+      isLoading: false,
+    });
+
+    visModal(7);
+
+    expect(screen.queryByText(/støtter ikke/)).toBeNull();
+    expect(useBetingelseKatalog).toHaveBeenCalledWith(false);
   });
 });

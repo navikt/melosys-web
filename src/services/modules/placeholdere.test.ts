@@ -2,12 +2,16 @@ import { describe, expect, it } from "vitest";
 
 import {
   Betingelse,
+  BetingelseBeskrivelse,
   erBetingelsesToken,
   erstattPlaceholdere,
   erUkjentPlaceholder,
   erValgToken,
+  finnSakstypeKonflikter,
   finnUopplosteBetingelser,
   finnUtdaterteVerdier,
+  finnUutfylte,
+  PlaceholderBeskrivelse,
   fjernMarkeringsSpans,
   losOppBetingelser,
   parseHvisStartToken,
@@ -475,5 +479,92 @@ describe("finnUopplosteBetingelser", () => {
   it("gir tom liste for tekst uten betingelsestokener", () => {
     expect(finnUopplosteBetingelser("<p>Saken {saksnummer} er mottatt.</p>")).toEqual([]);
     expect(finnUopplosteBetingelser("")).toEqual([]);
+  });
+});
+
+describe("finnSakstypeKonflikter", () => {
+  const katalog: PlaceholderBeskrivelse[] = [
+    {
+      nokkel: "soker-navn",
+      visningsnavn: "Søkers navn",
+      beskrivelse: "Fullt navn",
+      eksempel: "Ola Nordmann",
+      sakstyper: ["EU_EOS"],
+    },
+    {
+      nokkel: "saksnummer",
+      visningsnavn: "Saksnummer",
+      beskrivelse: "Saksnummer",
+      eksempel: "MEL-21",
+      sakstyper: [],
+    },
+  ];
+
+  const betingelseKatalog: BetingelseBeskrivelse[] = [
+    { nokkel: "avslag", visningsnavn: "Avslag", beskrivelse: "Saken er avslått", sakstyper: ["EU_EOS"] },
+  ];
+
+  it("rapporterer sakstypene placeholderen ikke dekker", () => {
+    const konflikter = finnSakstypeKonflikter("<p>{soker-navn}</p>", ["EU_EOS", "FTRL"], katalog, betingelseKatalog);
+
+    expect(konflikter).toEqual([{ nokkel: "soker-navn", visningsnavn: "Søkers navn", sakstyper: ["FTRL"] }]);
+  });
+
+  it("rapporterer betingelser fra hvis-tokener på samme måte", () => {
+    const konflikter = finnSakstypeKonflikter(
+      "<p>{#hvis avslag}Avslått{/hvis}</p>",
+      ["TRYGDEAVTALE"],
+      katalog,
+      betingelseKatalog,
+    );
+
+    expect(konflikter).toEqual([{ nokkel: "avslag", visningsnavn: "Avslag", sakstyper: ["TRYGDEAVTALE"] }]);
+  });
+
+  it("rapporterer ingenting når alle valgte sakstyper er dekket", () => {
+    expect(finnSakstypeKonflikter("<p>{soker-navn}</p>", ["EU_EOS"], katalog, betingelseKatalog)).toEqual([]);
+  });
+
+  it("rapporterer ingenting når blokken gjelder alle sakstyper", () => {
+    expect(finnSakstypeKonflikter("<p>{soker-navn}</p>", [], katalog, betingelseKatalog)).toEqual([]);
+  });
+
+  it("hopper over placeholdere som gjelder alle sakstyper, ukjente nøkler og valgtokener", () => {
+    const html = "<p>{saksnummer} {finnes-ikke} {velg:Ja|Nei}</p>";
+
+    expect(finnSakstypeKonflikter(html, ["FTRL"], katalog, betingelseKatalog)).toEqual([]);
+  });
+
+  it("rapporterer hver nøkkel én gang selv om den står flere steder", () => {
+    const html = "<p>{soker-navn}</p><p>{soker-navn}</p>";
+
+    expect(finnSakstypeKonflikter(html, ["FTRL"], katalog, betingelseKatalog)).toHaveLength(1);
+  });
+});
+
+describe("finnUutfylte", () => {
+  it("lister klammefelt i teksten", () => {
+    expect(finnUutfylte("<p>Hei [navn], du får [beløp].</p>")).toEqual(["[navn]", "[beløp]"]);
+  });
+
+  it("lister klammefelt som editoren har markert, uten duplikat", () => {
+    const html = '<p>Hei <span class="bracketed-text">[navn]</span> og [navn].</p>';
+    expect(finnUutfylte(html)).toEqual(["[navn]"]);
+  });
+
+  it("lister uerstattede tokener og uvalgte valgtokener", () => {
+    const html = "<p>{saksnummer} {velg:Ja|Nei}</p>";
+    expect(finnUutfylte(html)).toEqual(["{saksnummer}", "{velg:Ja|Nei}"]);
+  });
+
+  it("lister ikke betingelsestokener – de varsles for seg", () => {
+    expect(finnUutfylte("<p>{#hvis avslag}Avslag{/hvis}</p>")).toEqual([]);
+  });
+
+  it("lister ingenting for et utfylt brev", () => {
+    const html =
+      '<p>Saken <span class="placeholder-utfylt" data-placeholder="saksnummer">MEL-21</span> er mottatt.</p>';
+    expect(finnUutfylte(html)).toEqual([]);
+    expect(finnUutfylte("")).toEqual([]);
   });
 });

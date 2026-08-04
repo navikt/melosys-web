@@ -37,6 +37,7 @@ import { MELOSYS_TEKSTBLOKKER, MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from 
 import {
   finnUopplosteBetingelser,
   finnUtdaterteVerdier,
+  finnUutfylte,
   harInnsatteVerdier,
   hentVerdier,
   UtdatertPlaceholder,
@@ -126,6 +127,7 @@ function SendBrev({
   const [forkastBrevSpinner, setForkastBrevSpinner] = useState(false);
   const [utdaterteVerdier, setUtdaterteVerdier] = useState<UtdatertPlaceholder[]>([]);
   const [uopplosteBetingelser, setUopplosteBetingelser] = useState<string[]>([]);
+  const [uutfylteFelter, setUutfylteFelter] = useState<string[]>([]);
   const brevBestiltTimerRef = useRef<number | undefined>(undefined);
   const tilgjengeligeMottakere = useMemo(
     () => tilgjengeligeMaler?.map((mal) => mal.mottaker) || [],
@@ -498,6 +500,7 @@ function SendBrev({
   const lukkPlaceholderVarsel = () => {
     setUtdaterteVerdier([]);
     setUopplosteBetingelser([]);
+    setUutfylteFelter([]);
   };
 
   const sendBrev = async () => {
@@ -513,13 +516,16 @@ function SendBrev({
     const fritekstHtml = tekstblokkerPaa && dynamiskPlaceholderPaa ? hentFritekstHtml() : "";
     // Uoppløste betingelser varsles i samme modal som utdaterte verdier, uten å blokkere sendingen.
     const uopploste = finnUopplosteBetingelser(fritekstHtml);
+    // Klammefelt og tokener som aldri ble fylt ut ville gått ordrett ut i brevet.
+    const uutfylte = finnUutfylte(fritekstHtml);
     // Uten innsatte verdier er det ingenting å sammenligne, og oppslaget er unødvendig.
     const utdaterte = harInnsatteVerdier(fritekstHtml) ? await hentUtdaterteVerdier(fritekstHtml) : [];
 
-    if (utdaterte.length > 0 || uopploste.length > 0) {
+    if (utdaterte.length > 0 || uopploste.length > 0 || uutfylte.length > 0) {
       setSendBrevSpinner(false);
       setUtdaterteVerdier(utdaterte);
       setUopplosteBetingelser(uopploste);
+      setUutfylteFelter(uutfylte);
       return;
     }
 
@@ -774,10 +780,11 @@ function SendBrev({
         </Nav.Button>
       </div>
 
-      {(utdaterteVerdier.length > 0 || uopplosteBetingelser.length > 0) && (
+      {(utdaterteVerdier.length > 0 || uopplosteBetingelser.length > 0 || uutfylteFelter.length > 0) && (
         <PlaceholderUtdatertVarsel
           utdaterte={utdaterteVerdier}
           uopploste={uopplosteBetingelser}
+          uutfylte={uutfylteFelter}
           onSendLikevel={() => {
             lukkPlaceholderVarsel();
             bestillBrev();

@@ -55,6 +55,20 @@ describe("TekstblokkerListe – avgrensning", () => {
     expect(gjelderCelle().textContent).toBe("Alle");
   });
 
+  it("viser maks tre termer og samler resten i en «+N»-tag med termene i tooltipen", () => {
+    visListe([
+      blokk({
+        sakstyper: ["EU_EOS", "TRYGDEAVTALE", "FTRL"],
+        behandlingstemaer: ["ARBEID_KUN_NORGE", "IKKE_YRKESAKTIV"],
+      }),
+    ]);
+
+    expect(gjelderCelle().textContent).toBe("EU/EØS-landAvtalelandUtenfor avtaleland+2");
+    const skjulte = screen.getByText("+2");
+    expect(skjulte.getAttribute("title")).toBe("Arbeid kun i Norge, Ikke yrkesaktiv");
+    expect(skjulte.getAttribute("aria-label")).toBe("Arbeid kun i Norge, Ikke yrkesaktiv");
+  });
+
   it("faller tilbake til koden for en ukjent avgrensningsverdi", () => {
     visListe([blokk({ sakstyper: ["UKJENT_KODE"] })]);
 
@@ -83,7 +97,11 @@ describe("TekstblokkerListe – utkast", () => {
 });
 
 describe("TekstblokkerListe – historikk", () => {
-  const versjon = (versjonsnr: number, endringstype: TekstblokkVersjon["endringstype"]): TekstblokkVersjon => ({
+  const versjon = (
+    versjonsnr: number,
+    endringstype: TekstblokkVersjon["endringstype"],
+    overstyringer: Partial<TekstblokkVersjon> = {},
+  ): TekstblokkVersjon => ({
     versjon: versjonsnr,
     gyldigFra: "2026-01-02T10:00:00",
     gyldigTil: versjonsnr === 1 ? "2026-01-03T12:00:00" : null,
@@ -92,7 +110,19 @@ describe("TekstblokkerListe – historikk", () => {
     endringstype,
     tittel: "Om utsending",
     innhold: "<p>Tekst</p>",
+    ...overstyringer,
   });
+
+  const visHistorikk = async (versjoner: TekstblokkVersjon[]) => {
+    vi.mocked(useTekstblokkHistorikk).mockReturnValue({
+      data: versjoner,
+      isLoading: false,
+      error: null,
+    } as ReturnType<typeof useTekstblokkHistorikk>);
+
+    visListe([blokk()], { utvidedeIder: new Set([1]) });
+    await userEvent.click(screen.getByRole("button", { name: "Historikk" }));
+  };
 
   it("åpner raden og viser versjonene når historikk velges", async () => {
     vi.mocked(useTekstblokkHistorikk).mockReturnValue({
@@ -112,6 +142,48 @@ describe("TekstblokkerListe – historikk", () => {
     expect(screen.getByText("Endret")).toBeDefined();
     expect(screen.getByText("02.01.2026 10:00 – nå")).toBeDefined();
     expect(screen.getAllByText("Kari Saksbehandler")).toHaveLength(2);
+  });
+
+  it("lister hvilke felter som skiller versjonen fra den forrige", async () => {
+    await visHistorikk([
+      versjon(1, "OPPRETTET", { tags: ["usa"], sakstyper: [], behandlingstemaer: [], status: "UTKAST" }),
+      versjon(2, "ENDRET", {
+        tittel: "Om utsending til USA",
+        tags: ["usa", "skip"],
+        sakstyper: ["EU_EOS"],
+        behandlingstemaer: [],
+        status: "PUBLISERT",
+      }),
+    ]);
+
+    expect(screen.getByText("Endret: tittel, tags, avgrensning, status")).toBeDefined();
+  });
+
+  it("sier ingenting om endring på den første versjonen", async () => {
+    await visHistorikk([versjon(1, "OPPRETTET", { tags: [], sakstyper: [], behandlingstemaer: [] })]);
+
+    expect(screen.queryByText(/^Endret: /)).toBeNull();
+  });
+
+  it("nevner kun innhold når bare innholdet er endret", async () => {
+    await visHistorikk([
+      versjon(1, "OPPRETTET", { tags: ["usa"], sakstyper: ["EU_EOS"], behandlingstemaer: [] }),
+      versjon(2, "ENDRET", {
+        innhold: "<p>Ny tekst</p>",
+        tags: ["usa"],
+        sakstyper: ["EU_EOS"],
+        behandlingstemaer: [],
+      }),
+    ]);
+
+    expect(screen.getByText("Endret: innhold")).toBeDefined();
+  });
+
+  it("påstår ingen endring i felter api-et ikke har levert", async () => {
+    // Eldre versjonsrader mangler avgrensning, tags og status – da vet vi ingenting om dem.
+    await visHistorikk([versjon(1, "OPPRETTET"), versjon(2, "ENDRET", { innhold: "<p>Ny tekst</p>" })]);
+
+    expect(screen.getByText("Endret: innhold")).toBeDefined();
   });
 
   it("åpner raden når historikk velges på en lukket rad", async () => {
