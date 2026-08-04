@@ -447,24 +447,31 @@ describe("losOppBetingelser", () => {
     expect(finnUopplosteBetingelser(html)).toEqual(["avslag", "frist"]);
   });
 
-  // Nestingen skal ikke smitte: en nesting-fri betingelse etterpå løses som normalt.
-  it("løser en nesting-fri betingelse som følger etter et nestet par", () => {
-    const html = "<p>{#hvis avslag}a {#hvis frist}b{/hvis} c{/hvis}</p><p>{#hvis avslag}d{/hvis}</p>";
-
-    expect(losOppBetingelser(html, [{ nokkel: "frist", oppfylt: true }, ...oppfylt])).toBe(
-      "<p>{#hvis avslag}a {#hvis frist}b{/hvis} c{/hvis}</p><p>d</p>",
-    );
-  });
-
-  // Ubalanse ett sted låste tidligere hele dokumentet: ett uparet token avlyste all oppløsning.
+  // Et misformet starttoken er usynlig for det strenge mønsteret, så resten av dokumentet
+  // er balansert og løses normalt.
   it("løser et gyldig par selv om et annet starttoken i samme dokument har en skrivefeil", () => {
     const html = "<p>{#hvis to ord}</p><p>{#hvis avslag}</p><p>Betinget</p><p>{/hvis}</p>";
     expect(losOppBetingelser(html, oppfylt)).toBe("<p>{#hvis to ord}</p><p>Betinget</p>");
   });
 
-  it("løser et gyldig par selv om et foreldreløst {/hvis} står i samme dokument", () => {
+  // Alt-eller-ingenting ved ubalanse: en overflødig {/hvis} ville ellers lukket en uoppfylt
+  // betingelse for tidlig og sluppet den skjulte teksten ut i brevet.
+  it("rører ingenting når et foreldreløst {/hvis} gjør dokumentet ubalansert", () => {
     const html = "<p>{#hvis avslag}Avslag{/hvis} og {/hvis}</p>";
-    expect(losOppBetingelser(html, oppfylt)).toBe("<p>Avslag og {/hvis}</p>");
+    expect(losOppBetingelser(html, oppfylt)).toBe(html);
+  });
+
+  it("lar ikke en overflødig {/hvis} slippe ut tekst fra en uoppfylt betingelse", () => {
+    const html = "<p>{#hvis frist}Hemmelig {/hvis} mer hemmelig{/hvis}</p>";
+    const rest = losOppBetingelser(html, [{ nokkel: "frist", oppfylt: false }]);
+
+    expect(rest).toBe(html);
+    expect(rest).toContain("mer hemmelig");
+  });
+
+  it("rører ingenting når et gyldig starttoken aldri lukkes", () => {
+    const html = "<p>{#hvis avslag}</p><p>{#hvis frist}Skjult{/hvis}</p>";
+    expect(losOppBetingelser(html, [{ nokkel: "frist", oppfylt: false }, ...oppfylt])).toBe(html);
   });
 
   it("rører ingenting når tokenene verken deler tekstnode eller står alene i hver sin blokk", () => {
@@ -570,43 +577,99 @@ describe("paritet mellom varsellaget og oppløsningslaget", () => {
     { nokkel: "frist", oppfylt: false },
   ];
 
-  const tilfeller: Array<{ navn: string; html: string; forventet: string[] }> = [
-    { navn: "gyldig par løses opp og varsles ikke", html: "<p>A {#hvis avslag}B{/hvis} C</p>", forventet: [] },
-    { navn: "par med ukjent nøkkel står igjen", html: "<p>{#hvis annen}B{/hvis}</p>", forventet: ["annen"] },
+  const tilfeller: Array<{ navn: string; html: string; forventet: string[]; rest: string[] }> = [
+    {
+      navn: "gyldig par løses opp og varsles ikke",
+      html: "<p>A {#hvis avslag}B{/hvis} C</p>",
+      forventet: [],
+      rest: [],
+    },
+    {
+      navn: "par med ukjent nøkkel står igjen",
+      html: "<p>{#hvis annen}B{/hvis}</p>",
+      forventet: ["annen"],
+      rest: ["{#hvis annen}", "{/hvis}"],
+    },
     {
       navn: "par uten entydig omfang står igjen",
       html: "<p>Tekst {#hvis avslag} mer</p><p>B</p><p>{/hvis}</p>",
       forventet: ["avslag"],
+      rest: ["{#hvis avslag}", "{/hvis}"],
     },
-    { navn: "start uten slutt", html: "<p>{#hvis avslag}B</p>", forventet: ["avslag"] },
-    { navn: "misformet start", html: "<p>{#hvis to ord}B</p>", forventet: ["{#hvis to ord}"] },
+    { navn: "start uten slutt", html: "<p>{#hvis avslag}B</p>", forventet: ["avslag"], rest: ["{#hvis avslag}"] },
+    {
+      navn: "misformet start",
+      html: "<p>{#hvis to ord}B</p>",
+      forventet: ["{#hvis to ord}"],
+      rest: ["{#hvis to ord}"],
+    },
     {
       navn: "misformet start og fjernt slutt-token",
       html: "<p>{#hvis to ord}</p><p>B</p><p>{/hvis}</p>",
       forventet: ["{/hvis}", "{#hvis to ord}"],
+      rest: ["{#hvis to ord}", "{/hvis}"],
     },
-    { navn: "foreldreløst slutt-token", html: "<p>Tekst{/hvis}</p>", forventet: ["{/hvis}"] },
-    { navn: "reversert rekkefølge", html: "<p>{/hvis} tekst {#hvis avslag}</p>", forventet: ["avslag", "{/hvis}"] },
-    { navn: "uavsluttet fragment", html: "<p>{#hvis avslag</p>", forventet: ["{#hvis"] },
+    { navn: "foreldreløst slutt-token", html: "<p>Tekst{/hvis}</p>", forventet: ["{/hvis}"], rest: ["{/hvis}"] },
+    {
+      navn: "reversert rekkefølge",
+      html: "<p>{/hvis} tekst {#hvis avslag}</p>",
+      forventet: ["avslag", "{/hvis}"],
+      rest: ["{#hvis avslag}", "{/hvis}"],
+    },
+    { navn: "uavsluttet fragment", html: "<p>{#hvis avslag</p>", forventet: ["{#hvis"], rest: ["{#hvis"] },
     {
       navn: "fragment som først lukkes i et annet avsnitt",
       html: "<p>{#hvis avslag</p><p>et helt avsnitt til}</p>",
       forventet: ["{#hvis"],
+      rest: ["{#hvis"],
     },
     {
       navn: "skrivefeil ved siden av et gyldig par",
       html: "<p>{#hvis avslag}B{/hvis} og {#hvis to ord}</p>",
       forventet: ["{#hvis to ord}"],
+      rest: ["{#hvis to ord}"],
     },
     {
       navn: "nesting: begge parene står igjen urørt",
       html: "<p>Ute {#hvis avslag}inn {#hvis frist}nær{/hvis} ut{/hvis}</p>",
       forventet: ["avslag", "frist"],
+      rest: ["{#hvis avslag}", "{#hvis frist}", "{/hvis}", "{/hvis}"],
     },
-    { navn: "token med &nbsp;-entitet", html: "<p>{#hvis&nbsp;annen}B{/hvis}</p>", forventet: ["annen"] },
+    {
+      navn: "token med &nbsp;-entitet",
+      html: "<p>{#hvis&nbsp;annen}B{/hvis}</p>",
+      forventet: ["annen"],
+      rest: ["{#hvis annen}", "{/hvis}"],
+    },
+    // Slettegrenen: uoppfylt betingelse fjerner innholdet, og ingenting skal bli stående igjen.
+    {
+      navn: "uoppfylt betingelse fjerner innholdet",
+      html: "<p>A {#hvis frist}B{/hvis} C</p>",
+      forventet: [],
+      rest: [],
+    },
+    {
+      navn: "uoppfylt betingelse fjerner hele blokker",
+      html: "<p>{#hvis frist}</p><p>Skjult</p><p>{/hvis}</p><p>Etter</p>",
+      forventet: [],
+      rest: [],
+    },
   ];
 
-  it.each(tilfeller)("$navn", ({ html, forventet }) => {
+  // Alle betingelsesformer som står igjen, talt opp hver for seg og per tekstnode – ellers
+  // ville avsnitt smeltet sammen i selve testen og skjult hva som faktisk står hvor.
+  const gjenstaaende = (html: string): string[] => {
+    const dokument = new DOMParser().parseFromString(html, "text/html");
+    const vandrer = dokument.createTreeWalker(dokument.body, NodeFilter.SHOW_TEXT);
+    const funnet: string[] = [];
+    for (let node = vandrer.nextNode(); node !== null; node = vandrer.nextNode()) {
+      const tekst = (node.textContent ?? "").replace(/\u00a0/g, " ");
+      funnet.push(...(tekst.match(/\{#hvis[^{}]*\}|\{\/hvis\}|\{#hvis/g) ?? []));
+    }
+    return funnet.sort();
+  };
+
+  it.each(tilfeller)("$navn", ({ html, forventet, rest: forventetRest }) => {
     const rest = losOppBetingelser(html, betingelser);
     // Hardt mellomrom leses som mellomrom, slik mønstrene gjør – ellers er sammenligningen ren tekst.
     const tekst = (new DOMParser().parseFromString(rest, "text/html").body.textContent ?? "").replace(/\u00a0/g, " ");
@@ -614,8 +677,10 @@ describe("paritet mellom varsellaget og oppløsningslaget", () => {
     expect(finnUopplosteBetingelser(rest)).toEqual(forventet);
     // Alt som rapporteres står ordrett igjen i teksten – nøkler som hele starttokenet sitt.
     forventet.forEach((post) => expect(tekst).toContain(post.startsWith("{") ? post : `{#hvis ${post}}`));
-    // ... og ingenting som står igjen er urapportert.
-    expect(tekst.includes("{#hvis") || tekst.includes("{/hvis}")).toBe(forventet.length > 0);
+
+    // ... og nøyaktig disse tokenene står igjen. Eksplisitt liste, ikke en utledning: en
+    // boolean ville ikke fanget at ett av to gjenstående tokener manglet i varselet.
+    expect(gjenstaaende(rest)).toEqual([...forventetRest].sort());
   });
 });
 
@@ -777,9 +842,10 @@ describe("finnUutfylteTokener", () => {
     expect(finnUutfylteTokener("<p>Hei [navn].</p>")).toEqual([]);
   });
 
-  // Dekodingen kommer fra DOM-en: entiteten vises som tegnet den står for, ikke som markup.
-  it("viser tokenet med &nbsp;-entiteten dekodet til det harde mellomrommet den er", () => {
-    expect(finnUutfylteTokener("<p>{&nbsp;saksnummer&nbsp;}</p>")).toEqual(["{\u00a0saksnummer\u00a0}"]);
+  // Dekodingen kommer fra DOM-en, og hardt mellomrom normaliseres ved visning: to varianter
+  // av samme felt ville ellers stått som to like linjer i varselet.
+  it("viser tokenet med &nbsp;-entiteten som et vanlig mellomrom, uten duplikat", () => {
+    expect(finnUutfylteTokener("<p>{&nbsp;saksnummer&nbsp;} og { saksnummer }</p>")).toEqual(["{ saksnummer }"]);
   });
 
   it("viser også andre entiteter dekodet i varsellisten", () => {
@@ -787,10 +853,15 @@ describe("finnUutfylteTokener", () => {
   });
 
   // Editoren ser bokstavelig «&nbsp;»-tekst som nettopp det – ingen sti skal godta den som
-  // et gyldig token, ellers markerer editoren og forhåndsvisningen ulikt.
-  it("regner bokstavelig &nbsp;-tekst som en vanlig (ukjent) nøkkel, ikke som betingelse eller valg", () => {
+  // en gyldig betingelse, ellers markerer editoren og forhåndsvisningen ulikt.
+  it("regner bokstavelig &nbsp;-tekst i et betingelsestoken som en vanlig (ukjent) nøkkel", () => {
     expect(erBetingelsesToken("{#hvis&nbsp;avslag}")).toBe(false);
     expect(parseHvisStartToken("{#hvis&nbsp;avslag}")).toBeNull();
+  });
+
+  // Valgtokenet er gyldig uansett: teksten er bare et alternativnavn, ikke en nøkkel som
+  // slås opp, så en bokstavelig «&nbsp;» blir stående som del av knappeteksten.
+  it("godtar bokstavelig &nbsp;-tekst inne i et alternativ, som er ren visningstekst", () => {
     expect(parseValgToken("{velg:A&nbsp;B|C}")?.alternativer).toEqual(["A&nbsp;B", "C"]);
   });
 });
