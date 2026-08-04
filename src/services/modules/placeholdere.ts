@@ -98,7 +98,10 @@ export const PLACEHOLDER_BETINGELSE_TITTEL =
 // Token-parserne under antar dekodet tekst – den DOM-en gir. De gjenværende konsumentene som
 // leser HTML-strengen (erstattPlaceholdere og forhåndsvisningens utheving) dekoder på
 // inngangen, så en &nbsp;-entitet og et hardt mellomrom klassifiseres likt.
-export const dekodTokenTekst = (token: string): string => token.replace(/&nbsp;|&#160;|&#xa0;/gi, " ");
+// Kun den formen Quill faktisk serialiserer. Å enumerere flere skrivemåter (&NBSP;, &#x00a0;)
+// treffer aldri HTML-parserens regler: case-insensitiv matching dekoder former DOM-en lar stå,
+// og lista blir aldri komplett. Kjent begrensning, dokumentert i dok/dynamiske-placeholdere.
+export const dekodTokenTekst = (token: string): string => token.replace(/&nbsp;/g, " ");
 
 // Hardt mellomrom vises identisk med et vanlig, så to varianter av samme felt ville stått
 // som to like linjer i varselet. Normaliseres kun ved visning – teksten endres aldri.
@@ -281,10 +284,9 @@ const tokenerIHtml = (html: string): TokenTreff[] => {
   return finnTokenerIDom(new DOMParser().parseFromString(html, "text/html"), TOKEN_MONSTER);
 };
 
-// Nesting og ubalanse gir null: da er omfanget tvetydig, og teksten skal stå urørt.
-// Bevisst alt-eller-ingenting: forsøk på å løse opp de balanserte parene i et ubalansert
-// dokument lekket betinget tekst ut i brevet (en overflødig {/hvis} lukket en uoppfylt
-// betingelse for tidlig). Ved tvil skal alle tokenene bli stående synlige og varsles.
+// Nesting og ubalanse gir null: da er omfanget tvetydig, og teksten skal stå urørt. Alt eller
+// ingenting – å løse opp de balanserte parene i et ubalansert dokument kan slippe betinget
+// tekst ut i brevet.
 const parBetingelser = (treff: TokenTreff[]): Par[] | null => {
   const par: Par[] = [];
   let apen: TokenTreff | null = null;
@@ -409,10 +411,10 @@ export const forberedInnhold = (
   return placeholderVerdier ? erstattPlaceholdere(rentHtml, placeholderVerdier) : rentHtml;
 };
 
-// Løsere enn det strenge mønsteret, så et misformet «{#hvis to ord}» også fanges opp. Ingen
-// \n-ekskludering: det strenge mønsteret bruker \s+, og et avvik her ville gjort lagene uenige
-// om et starttoken med linjeskift. Tagg-grenser deler uansett tekstnodene.
-const BETINGELSE_LOST_MONSTER = "\\{#hvis[^{}]*\\}|\\{/hvis\\}";
+// Løsere enn det strenge mønsteret, så et misformet «{#hvis to ord}» også fanges opp, men
+// \n stopper treffet: uten det kan ett treff spenne over flere linjer i samme tekstnode og
+// vise et helt avsnitt av brevet som «token» i varselet.
+const BETINGELSE_LOST_MONSTER = "\\{#hvis[^{}\\n]*\\}|\\{/hvis\\}";
 
 // Betingelsestokener som står igjen ved sending; de er styring og ville blitt sendt ordrett.
 // Lista skal si hva som faktisk står i brevet: gyldige nøkler, et foreldreløst {/hvis},
@@ -439,7 +441,9 @@ export const finnUopplosteBetingelser = (html: string): string[] => {
 
     antallStartTreff += 1;
     const nokkel = parseHvisStartToken(token)?.nokkel;
-    if (nokkel === undefined) misformede.add(visningsform(token));
+    // Ordrett, ikke normalisert: to skrivefeil som bare skiller seg i mellomromstype er to
+    // ulike feil i brevet, og brukeren skal se begge.
+    if (nokkel === undefined) misformede.add(token);
     else {
       nokler.add(nokkel);
       apneGyldige += 1;
@@ -518,10 +522,8 @@ export const finnSakstypeKonflikter = (
 // Klammefelter saksbehandler skulle fylt ut selv. Delt fra token-varianten under fordi
 // [felt]-konvensjonen er eldre enn placeholder-funksjonen og varsles uavhengig av toggle.
 // Brukes kun til varsel ved sending – teksten endres aldri.
+// Ingen billig streng-vokter: entitetskodede klammer (&#91;) finnes bare i DOM-teksten.
 export const finnUutfylteKlammer = (html: string): string[] => {
-  // Ingen vokter på råstrengen: entitetskodede klammer (&#91;) finnes bare i DOM-teksten,
-  // og en billig streng-sjekk her ville gjeninnført skillet mellom streng og DOM.
-
   const dokument = new DOMParser().parseFromString(html, "text/html");
   const uutfylte = new Set<string>();
 

@@ -577,7 +577,14 @@ describe("paritet mellom varsellaget og oppløsningslaget", () => {
     { nokkel: "frist", oppfylt: false },
   ];
 
-  const tilfeller: Array<{ navn: string; html: string; forventet: string[]; rest: string[] }> = [
+  const tilfeller: Array<{
+    navn: string;
+    html: string;
+    forventet: string[];
+    rest: string[];
+    borte?: string[];
+    igjen?: string[];
+  }> = [
     {
       navn: "gyldig par løses opp og varsles ikke",
       html: "<p>A {#hvis avslag}B{/hvis} C</p>",
@@ -647,12 +654,16 @@ describe("paritet mellom varsellaget og oppløsningslaget", () => {
       html: "<p>A {#hvis frist}B{/hvis} C</p>",
       forventet: [],
       rest: [],
+      borte: ["B"],
+      igjen: ["A", "C"],
     },
     {
       navn: "uoppfylt betingelse fjerner hele blokker",
       html: "<p>{#hvis frist}</p><p>Skjult</p><p>{/hvis}</p><p>Etter</p>",
       forventet: [],
       rest: [],
+      borte: ["Skjult"],
+      igjen: ["Etter"],
     },
   ];
 
@@ -664,12 +675,12 @@ describe("paritet mellom varsellaget og oppløsningslaget", () => {
     const funnet: string[] = [];
     for (let node = vandrer.nextNode(); node !== null; node = vandrer.nextNode()) {
       const tekst = (node.textContent ?? "").replace(/\u00a0/g, " ");
-      funnet.push(...(tekst.match(/\{#hvis[^{}]*\}|\{\/hvis\}|\{#hvis/g) ?? []));
+      funnet.push(...(tekst.match(/\{#hvis[^{}\n]*\}|\{\/hvis\}|\{#hvis|\{\/hvis/g) ?? []));
     }
     return funnet.sort();
   };
 
-  it.each(tilfeller)("$navn", ({ html, forventet, rest: forventetRest }) => {
+  it.each(tilfeller)("$navn", ({ html, forventet, rest: forventetRest, borte, igjen }) => {
     const rest = losOppBetingelser(html, betingelser);
     // Hardt mellomrom leses som mellomrom, slik mønstrene gjør – ellers er sammenligningen ren tekst.
     const tekst = (new DOMParser().parseFromString(rest, "text/html").body.textContent ?? "").replace(/\u00a0/g, " ");
@@ -681,6 +692,10 @@ describe("paritet mellom varsellaget og oppløsningslaget", () => {
     // ... og nøyaktig disse tokenene står igjen. Eksplisitt liste, ikke en utledning: en
     // boolean ville ikke fanget at ett av to gjenstående tokener manglet i varselet.
     expect(gjenstaaende(rest)).toEqual([...forventetRest].sort());
+
+    // Der betingelsen faktisk ble løst: innholdet skal være borte, og resten stå igjen.
+    borte?.forEach((bit) => expect(tekst).not.toContain(bit));
+    igjen?.forEach((bit) => expect(tekst).toContain(bit));
   });
 });
 
