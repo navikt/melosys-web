@@ -8,8 +8,12 @@ interface Opsjon {
   value: string;
 }
 
+// Kodeverket sier «EU/EØS-land», men sakstypen omtales som «EU/EØS» i fagspråket.
+// Overstyres kun her – kodeverket er delt og brukes også der «-land» er riktig.
+const KORTTERMER: Record<string, string> = { EU_EOS: "EU/EØS" };
+
 const tilOpsjoner = (koder: KTObject[]): Opsjon[] =>
-  koder.map(({ kode, term }) => ({ label: term ?? kode, value: kode }));
+  koder.map(({ kode, term }) => ({ label: KORTTERMER[kode] ?? term ?? kode, value: kode }));
 
 export const sakstypeOpsjoner = tilOpsjoner(MKV.KTObjects.sakstyper);
 export const behandlingstemaOpsjoner = tilOpsjoner(MKV.KTObjects.behandlinger.behandlingstema);

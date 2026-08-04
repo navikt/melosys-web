@@ -45,7 +45,7 @@ describe("TekstblokkerListe – avgrensning", () => {
 
     expect(screen.getByText("usa")).toBeDefined();
     expect(screen.getByRole("columnheader", { name: "Gjelder" })).toBeDefined();
-    expect(gjelderCelle().textContent).toBe("EU/EØS-land");
+    expect(gjelderCelle().textContent).toBe("EU/EØS");
   });
 
   it("viser «Alle» når blokken ikke er avgrenset", () => {
@@ -63,7 +63,7 @@ describe("TekstblokkerListe – avgrensning", () => {
       }),
     ]);
 
-    expect(gjelderCelle().textContent).toBe("EU/EØS-land+2");
+    expect(gjelderCelle().textContent).toBe("EU/EØS+2");
     const skjulte = screen.getByRole("button", { name: "Avtaleland, Arbeid kun i Norge" });
     expect(skjulte.textContent).toBe("+2");
     expect(skjulte.getAttribute("title")).toBe("Avtaleland, Arbeid kun i Norge");
@@ -87,7 +87,7 @@ describe("TekstblokkerListe – avgrensning", () => {
 
     expect(screen.getByText("Gjelder:")).toBeDefined();
     // Første term står også i kolonnen; de skjulte finnes kun i utvidelsen.
-    expect(screen.getAllByText("EU/EØS-land")).toHaveLength(2);
+    expect(screen.getAllByText("EU/EØS")).toHaveLength(2);
     expect(screen.getByText("Avtaleland")).toBeDefined();
     expect(screen.getByText("Arbeid kun i Norge")).toBeDefined();
   });
@@ -187,7 +187,7 @@ describe("TekstblokkerListe – historikk", () => {
     ]);
 
     expect(
-      screen.getByText("Endret: tittel, tags (+skip), avgrensning (+EU/EØS-land), status (Utkast → Publisert)"),
+      screen.getByText("Endret: tittel, tags (+skip), avgrensning (+EU/EØS), status (Utkast → Publisert)"),
     ).toBeDefined();
   });
 
@@ -197,7 +197,7 @@ describe("TekstblokkerListe – historikk", () => {
       versjon(2, "ENDRET", { sakstyper: [], behandlingstemaer: ["ARBEID_KUN_NORGE"] }),
     ]);
 
-    expect(screen.getByText("Endret: avgrensning (+Arbeid kun i Norge, −EU/EØS-land)")).toBeDefined();
+    expect(screen.getByText("Endret: avgrensning (+Arbeid kun i Norge, −EU/EØS)")).toBeDefined();
   });
 
   it("viser fjernede tags med minus", async () => {
