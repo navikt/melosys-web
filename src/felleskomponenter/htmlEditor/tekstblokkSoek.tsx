@@ -7,7 +7,7 @@ import * as Nav from "../../navFrontend";
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { fagsakSelectors } from "../../ducks/fagsaker";
 import { useFiltrerteTekstblokker, useTekstblokker } from "../../services/api/tekstblokker";
-import { TekstblokkOversikt, TekstblokkType } from "../../services/modules/tekstblokker";
+import { harStatus, TekstblokkOversikt, TekstblokkType } from "../../services/modules/tekstblokker";
 import { Betingelse, PlaceholderVerdi } from "../../services/modules/placeholdere";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER } from "../../featuretoggle/toggleNavn";
@@ -153,8 +153,11 @@ function TekstblokkSoekIntern({
   const typeOrdEntall = erBrevmal ? "brevmal" : "tekstblokk";
   const overskrift = visBrevmaler ? "Sett inn tekstblokk eller brevmal" : "Sett inn tekstblokk";
   const harAktivtFilter = soek.trim().length > 0 || valgteTags.length > 0;
+  // Bare publiserte blokker teller som grunnlag: utkast filtreres bort uansett kontekst,
+  // og skal verken gi kontekst-skylden eller en «Vis alle»-knapp som ikke kan hjelpe.
+  const publiserte = useMemo(() => blokker.filter((blokk) => harStatus(blokk, "PUBLISERT")), [blokker]);
   // Lista er tom fordi avgrensningen tok alt – ikke fordi søket eller tagene ikke gir treff.
-  const kunKontekstTommerLista = !harAktivtFilter && blokker.length > 0 && filtrerte.length === 0;
+  const kunKontekstTommerLista = !harAktivtFilter && publiserte.length > 0 && filtrerte.length === 0;
 
   return (
     <>
@@ -253,14 +256,17 @@ function TekstblokkSoekIntern({
                 <BodyShort size="small" weight="semibold">
                   Fant ingen {typeOrd}
                 </BodyShort>
-                {kunKontekstTommerLista ? (
+                {kunKontekstTommerLista && (
                   <>
                     <BodyShort size="small">Ingen {typeOrd} gjelder denne saken (sakstype/behandlingstema).</BodyShort>
                     <Nav.Button variant="tertiary" size="small" type="button" onClick={() => setIgnorerKontekst(true)}>
                       Vis alle
                     </Nav.Button>
                   </>
-                ) : (
+                )}
+                {/* Rådet gjelder bare når det faktisk er et filter å endre på – tømmer
+                    utkast-filtrering eller en tom liste, ville rådet pekt feil vei. */}
+                {!kunKontekstTommerLista && harAktivtFilter && (
                   <BodyShort size="small">Prøv et annet søkeord, eller fjern noen av de valgte taggene.</BodyShort>
                 )}
               </div>

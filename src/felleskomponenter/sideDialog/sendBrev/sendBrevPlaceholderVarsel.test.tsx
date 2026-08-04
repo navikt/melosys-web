@@ -143,6 +143,25 @@ describe("SendBrev – varsel om utdaterte placeholder-verdier", () => {
     expect(Api.DokumenterV2.opprettBrev).not.toHaveBeenCalled();
   });
 
+  it("varsler også når den innsatte verdien fortsatt står i kandidatlisten, med mildere ordlyd", async () => {
+    // Verdien kan være et bevisst valg, men like gjerne et forhåndsvalg som senere endret
+    // seg – varselet skal ikke undertrykkes, bare formuleres uten å påstå at den er feil.
+    vi.mocked(Placeholdere.hentVerdier).mockResolvedValue({
+      verdier: [{ nokkel: "saksnummer", verdi: "MEL-22", kandidater: ["MEL-22", "MEL-21"] }],
+    });
+
+    renderSendBrev();
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Noen innsatte verdier er utdaterte")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Saksnummer: innsatt MEL-21 – forhåndsvalget er nå MEL-22, men innsatt verdi er fortsatt et gyldig alternativ",
+      ),
+    ).toBeInTheDocument();
+    expect(Api.DokumenterV2.opprettBrev).not.toHaveBeenCalled();
+  });
+
   it("sender brevet når saksbehandler velger Send likevel", async () => {
     vi.mocked(Placeholdere.hentVerdier).mockResolvedValue({ verdier: [{ nokkel: "saksnummer", verdi: "MEL-22" }] });
 

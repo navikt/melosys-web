@@ -182,4 +182,35 @@ describe("TekstblokkForhandsvisning", () => {
     expect(container.querySelector(".placeholder-utfylt")).toBeNull();
     expect(container.textContent).toContain("{saksnummer}");
   });
+
+  it("beholder lagret klammemarkering rundt inline-tagger med togglen av (master-oppførsel)", () => {
+    vi.mocked(useFeatureToggle).mockReturnValue(false);
+
+    const container = renderHtml('<p><span class="bracketed-text">[navn <strong>x</strong>]</span></p>');
+
+    const markering = container.querySelector(".bracketed-text");
+    expect(markering?.textContent).toBe("[navn x]");
+    expect(markering?.querySelector("strong")?.textContent).toBe("x");
+  });
+
+  it("pakker ikke lagret klammemarkering dobbelt med togglen av", () => {
+    vi.mocked(useFeatureToggle).mockReturnValue(false);
+
+    const container = renderHtml('<p><span class="bracketed-text">[dato]</span> og [sted]</p>');
+
+    expect(container.querySelectorAll(".bracketed-text")).toHaveLength(2);
+    expect(container.querySelector(".bracketed-text .bracketed-text")).toBeNull();
+  });
+
+  it("stripper lagrede placeholder-markeringer med togglen av, men beholder klamme-spans", () => {
+    vi.mocked(useFeatureToggle).mockReturnValue(false);
+
+    const container = renderHtml(
+      '<p><span class="placeholder-uerstattet">{saksnummer}</span> i <span class="bracketed-text">[navn <em>y</em>]</span></p>',
+    );
+
+    expect(container.querySelector(".placeholder-uerstattet")).toBeNull();
+    expect(container.querySelector(".bracketed-text")?.textContent).toBe("[navn y]");
+    expect(container.textContent).toContain("{saksnummer}");
+  });
 });

@@ -16,6 +16,7 @@ import {
   TekstblokkOversikt,
   toggleITagliste,
 } from "./tekstblokker";
+import { tekstblokkOversikt } from "./tekstblokkTestdata";
 import { getAsJson, postAsJson } from "../utils";
 
 vi.mock("../utils", () => ({
@@ -32,20 +33,7 @@ const blokk = (
   tags: string[],
   innhold = "",
   avgrensning: Partial<Kontekstavgrensning> = {},
-): TekstblokkOversikt => ({
-  id: 1,
-  tittel,
-  innhold,
-  type: "TEKSTBLOKK",
-  tags,
-  sakstyper: [],
-  behandlingstemaer: [],
-  ...avgrensning,
-  status: "PUBLISERT",
-  endretDato: "2026-01-01T00:00:00Z",
-  endretAv: "Z123456",
-  endretAvNavn: null,
-});
+): TekstblokkOversikt => tekstblokkOversikt({ tittel, innhold, tags, ...avgrensning });
 
 describe("normalisering på api-grensen", () => {
   beforeEach(() => vi.mocked(getAsJson).mockReset());
@@ -72,6 +60,16 @@ describe("normalisering på api-grensen", () => {
     const blokker = await hentAlle();
 
     expect(blokker[0]).toMatchObject({ sakstyper: ["EU_EOS"], behandlingstemaer: [] });
+  });
+
+  it("hentAlle ber kun om utkast når admin-flaten eksplisitt spør", async () => {
+    vi.mocked(getAsJson).mockResolvedValue([]);
+
+    await hentAlle("TEKSTBLOKK", true);
+    expect(vi.mocked(getAsJson).mock.calls[0][0]).toContain("inkluderUtkast=true");
+
+    await hentAlle("TEKSTBLOKK");
+    expect(vi.mocked(getAsJson).mock.calls[1][0]).not.toContain("inkluderUtkast");
   });
 
   it("hent gir tomme lister når api-et utelater avgrensningsfeltene", async () => {

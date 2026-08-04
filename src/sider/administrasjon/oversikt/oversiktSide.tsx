@@ -18,8 +18,9 @@ function OversiktSide() {
   const aktiveToggles = useAktiveToggles();
 
   const aktiv = Boolean(visTekstblokker);
-  const tekstblokkerQuery = useTekstblokker("TEKSTBLOKK", aktiv);
-  const brevmalerQuery = useTekstblokker("BREVMAL", aktiv);
+  // Admin-oversikten teller også utkast, i likhet med tekstblokk-lista.
+  const tekstblokkerQuery = useTekstblokker("TEKSTBLOKK", aktiv, true);
+  const brevmalerQuery = useTekstblokker("BREVMAL", aktiv, true);
   const lasterTekstblokker = tekstblokkerQuery.isLoading || brevmalerQuery.isLoading;
 
   const stats = useMemo(() => {
