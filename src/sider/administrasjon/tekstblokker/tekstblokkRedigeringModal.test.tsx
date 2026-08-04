@@ -72,6 +72,7 @@ const lagret = (avgrensning: Partial<Tekstblokk> = {}): Tekstblokk => ({
   tags: [],
   sakstyper: [],
   behandlingstemaer: [],
+  status: "PUBLISERT",
   registrertDato: "2026-01-01T00:00:00Z",
   registrertAv: "Z123456",
   endretDato: "2026-01-01T00:00:00Z",
@@ -150,6 +151,62 @@ describe("TekstblokkRedigeringModal – feilmelding ved lagring", () => {
     visModal();
 
     expect(screen.queryByRole("alert")).toBeNull();
+  });
+});
+
+describe("TekstblokkRedigeringModal – utkast", () => {
+  const fyllUt = async () => {
+    await userEvent.type(screen.getByRole("textbox", { name: "Tittel" }), "Ny blokk");
+    await userEvent.type(screen.getByRole("textbox", { name: "Innhold" }), "Tekst");
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(useFeatureToggle).mockReturnValue(false);
+    mockKatalog({ data: undefined });
+    mocks.tekstblokk.mockReturnValue({ data: undefined, isLoading: false });
+  });
+
+  it("sender UTKAST fra «Lagre som utkast» ved opprettelse", async () => {
+    visModal();
+    await fyllUt();
+    await userEvent.click(screen.getByRole("button", { name: "Lagre som utkast" }));
+
+    expect(mocks.opprett).toHaveBeenCalledWith(expect.objectContaining({ status: "UTKAST" }), expect.anything());
+  });
+
+  it("publiserer fra hovedknappen ved opprettelse", async () => {
+    visModal();
+    await fyllUt();
+    await userEvent.click(screen.getByRole("button", { name: "Opprett" }));
+
+    expect(mocks.opprett).toHaveBeenCalledWith(expect.objectContaining({ status: "PUBLISERT" }), expect.anything());
+  });
+
+  // PUT er ingen statusbeslutning: utelates feltet, lar api-et statusen stå som den er.
+  it("sender ingen status ved redigering, og har ingen egen utkast-knapp", async () => {
+    mocks.tekstblokk.mockReturnValue({ data: lagret({ status: "UTKAST" }), isLoading: false });
+
+    visModal(7);
+    await userEvent.click(screen.getByRole("button", { name: "Lagre endringer" }));
+
+    expect(screen.queryByRole("button", { name: "Lagre som utkast" })).toBeNull();
+    const [{ body }] = mocks.oppdater.mock.calls[0] as [{ id: number; body: Record<string, unknown> }];
+    expect(body).not.toHaveProperty("status");
+    expect(mocks.oppdater).toHaveBeenCalledWith(
+      { id: 7, body: expect.objectContaining({ tittel: "Om utsending" }) },
+      expect.anything(),
+    );
+  });
+
+  it("sender heller ingen status ved redigering av en publisert blokk", async () => {
+    mocks.tekstblokk.mockReturnValue({ data: lagret(), isLoading: false });
+
+    visModal(7);
+    await userEvent.click(screen.getByRole("button", { name: "Lagre endringer" }));
+
+    const [{ body }] = mocks.oppdater.mock.calls[0] as [{ id: number; body: Record<string, unknown> }];
+    expect(body).not.toHaveProperty("status");
   });
 });
 

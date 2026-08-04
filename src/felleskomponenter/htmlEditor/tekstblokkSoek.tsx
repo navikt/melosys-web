@@ -8,7 +8,7 @@ import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { fagsakSelectors } from "../../ducks/fagsaker";
 import { useFiltrerteTekstblokker, useTekstblokker } from "../../services/api/tekstblokker";
 import { TekstblokkOversikt, TekstblokkType } from "../../services/modules/tekstblokker";
-import { PlaceholderVerdi } from "../../services/modules/placeholdere";
+import { Betingelse, PlaceholderVerdi } from "../../services/modules/placeholdere";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER } from "../../featuretoggle/toggleNavn";
 import TekstblokkForhandsvisning from "./tekstblokkForhandsvisning";
@@ -24,6 +24,8 @@ interface Props {
   placeholderVerdier?: PlaceholderVerdi[];
   // Nøklene fra placeholder-katalogen; skiller ukjente nøkler (røde) fra gyldige uten verdi.
   gyldigeNokler?: string[];
+  // Sakens fakta; med dem forhåndsvises {#hvis …} ferdig oppløst.
+  betingelser?: Betingelse[];
 }
 
 const SIDE_STORRELSE = 10;
@@ -35,7 +37,14 @@ const POPOVER_MARG = 16;
 // det hele tatt, så vi lar heller popoveren ta det meste av vinduet enn å vise en tom liste.
 const MIN_POPOVER_HOYDE = 384;
 
-function TekstblokkSoek({ onVelg, disabled, visBrevmaler = false, placeholderVerdier, gyldigeNokler }: Props) {
+function TekstblokkSoek({
+  onVelg,
+  disabled,
+  visBrevmaler = false,
+  placeholderVerdier,
+  gyldigeNokler,
+  betingelser,
+}: Props) {
   const togglePaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
   if (!togglePaa) return null;
   return (
@@ -45,11 +54,19 @@ function TekstblokkSoek({ onVelg, disabled, visBrevmaler = false, placeholderVer
       visBrevmaler={visBrevmaler}
       placeholderVerdier={placeholderVerdier}
       gyldigeNokler={gyldigeNokler}
+      betingelser={betingelser}
     />
   );
 }
 
-function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placeholderVerdier, gyldigeNokler }: Props) {
+function TekstblokkSoekIntern({
+  onVelg,
+  disabled,
+  visBrevmaler = false,
+  placeholderVerdier,
+  gyldigeNokler,
+  betingelser,
+}: Props) {
   const ankerRef = useRef<HTMLDivElement>(null);
   const [aapen, setAapen] = useState(false);
   const [aktivType, setAktivType] = useState<TekstblokkType>("TEKSTBLOKK");
@@ -75,6 +92,8 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placehol
     valgteTags,
     ignorerKontekst ? undefined : sakstype,
     ignorerKontekst ? undefined : behandlingstema,
+    // Api-et skal alt ha filtrert bort utkast; filteret her er belte i tillegg til seler.
+    "PUBLISERT",
   );
 
   // Kun reelle tags vises i nedtrekket – med antall treff – så det er tydelig
@@ -252,6 +271,7 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placehol
                 blokk={blokk}
                 placeholderVerdier={placeholderVerdier}
                 gyldigeNokler={gyldigeNokler}
+                betingelser={betingelser}
                 onVelg={(html) => {
                   onVelg(html);
                   lukk();
@@ -282,9 +302,10 @@ interface RadProps {
   onVelg: (html: string) => void;
   placeholderVerdier?: PlaceholderVerdi[];
   gyldigeNokler?: string[];
+  betingelser?: Betingelse[];
 }
 
-function TekstblokkRad({ blokk, onVelg, placeholderVerdier, gyldigeNokler }: RadProps) {
+function TekstblokkRad({ blokk, onVelg, placeholderVerdier, gyldigeNokler, betingelser }: RadProps) {
   // Innhold er skjult som standard – vises kun når brukeren ber om det.
   const [visInnhold, setVisInnhold] = useState(false);
 
@@ -318,6 +339,7 @@ function TekstblokkRad({ blokk, onVelg, placeholderVerdier, gyldigeNokler }: Rad
             html={blokk.innhold}
             placeholderVerdier={placeholderVerdier}
             gyldigeNokler={gyldigeNokler}
+            betingelser={betingelser}
           />
         </div>
       )}

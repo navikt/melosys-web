@@ -2,7 +2,7 @@ import { renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { useFiltrerteTekstblokker } from "./tekstblokker";
-import { TekstblokkOversikt } from "../modules/tekstblokker";
+import { Statusfilter, TekstblokkOversikt, TekstblokkStatus } from "../modules/tekstblokker";
 
 const blokk = (
   id: number,
@@ -10,6 +10,7 @@ const blokk = (
   tags: string[],
   sakstyper: string[] = [],
   behandlingstemaer: string[] = [],
+  status: TekstblokkStatus = "PUBLISERT",
 ): TekstblokkOversikt => ({
   id,
   tittel,
@@ -18,6 +19,7 @@ const blokk = (
   tags,
   sakstyper,
   behandlingstemaer,
+  status,
   endretDato: "2026-01-01T00:00:00Z",
   endretAv: "Z123456",
   endretAvNavn: null,
@@ -70,5 +72,33 @@ describe("useFiltrerteTekstblokker med kontekst", () => {
     const { synlige } = filtrer("kun", ["felles"], "EU_EOS", "PENSJONIST");
 
     expect(titler(synlige)).toEqual(["Kun EU/EØS"]);
+  });
+});
+
+describe("useFiltrerteTekstblokker med statusfilter", () => {
+  const publisert = blokk(1, "Publisert blokk", ["felles"]);
+  const utkast = blokk(2, "Utkast blokk", ["felles", "nytt"], [], [], "UTKAST");
+
+  const filtrerStatus = (statusfilter: Statusfilter) =>
+    renderHook(() => useFiltrerteTekstblokker([publisert, utkast], "", [], undefined, undefined, statusfilter)).result
+      .current;
+
+  it("viser alt som standard", () => {
+    expect(titler(filtrerStatus("ALLE").synlige)).toEqual(["Publisert blokk", "Utkast blokk"]);
+  });
+
+  it("viser kun publiserte", () => {
+    expect(titler(filtrerStatus("PUBLISERT").synlige)).toEqual(["Publisert blokk"]);
+  });
+
+  it("viser kun utkast", () => {
+    expect(titler(filtrerStatus("UTKAST").synlige)).toEqual(["Utkast blokk"]);
+  });
+
+  it("tag-tellingen speiler statusfilteret", () => {
+    expect(filtrerStatus("UTKAST").tagAntall).toEqual([
+      ["felles", 1],
+      ["nytt", 1],
+    ]);
   });
 });

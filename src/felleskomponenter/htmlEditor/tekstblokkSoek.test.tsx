@@ -26,6 +26,7 @@ const blokk = (id: number, tittel: string, sakstyper: string[], behandlingstemae
   tags: [],
   sakstyper,
   behandlingstemaer,
+  status: "PUBLISERT",
   endretDato: "2026-01-01T00:00:00Z",
   endretAv: "Z123456",
   endretAvNavn: null,
@@ -96,5 +97,25 @@ describe("TekstblokkSoek – kontekstavgrensning", () => {
 
     expect(screen.getByText(/Prøv et annet søkeord/)).toBeDefined();
     expect(screen.queryByRole("button", { name: "Vis alle" })).toBeNull();
+  });
+});
+
+describe("TekstblokkSoek – statusfilter", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+  });
+
+  // Api-et skal alt ha filtrert bort utkast; dette er klientsidevernet mot en regresjon der.
+  it("viser ikke utkast selv om api-et skulle levere dem", async () => {
+    vi.mocked(useTekstblokker).mockReturnValue({
+      data: [blokk(1, "Gjelder alle saker", [], []), { ...blokk(9, "Uferdig utkast", [], []), status: "UTKAST" }],
+      isLoading: false,
+    } as ReturnType<typeof useTekstblokker>);
+
+    await aapneSoek({});
+
+    expect(screen.getByText("Gjelder alle saker")).toBeDefined();
+    expect(screen.queryByText("Uferdig utkast")).toBeNull();
   });
 });

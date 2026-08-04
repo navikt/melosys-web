@@ -1,10 +1,12 @@
-import { PencilIcon, TrashIcon } from "@navikt/aksel-icons";
+import { ClockDashedIcon, CheckmarkCircleIcon, PencilIcon, TrashIcon } from "@navikt/aksel-icons";
+import { useState } from "react";
 
 import * as Nav from "../../../navFrontend";
 import TekstblokkForhandsvisning from "../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning";
 import { TekstblokkOversikt } from "../../../services/modules/tekstblokker";
 import { formatterDatoTilNorsk } from "../../../utils/dato";
 import { termForBehandlingstema, termForSakstype } from "./kontekstavgrensning";
+import TekstblokkHistorikk from "./tekstblokkHistorikk";
 
 interface Props {
   blokker: TekstblokkOversikt[];
@@ -12,9 +14,24 @@ interface Props {
   onToggleUtvidet: (id: number) => void;
   onRediger: (id: number) => void;
   onSlett: (blokk: TekstblokkOversikt) => void;
+  onPubliser: (blokk: TekstblokkOversikt) => void;
 }
 
-function TekstblokkerListe({ blokker, utvidedeIder, onToggleUtvidet, onRediger, onSlett }: Props) {
+function TekstblokkerListe({ blokker, utvidedeIder, onToggleUtvidet, onRediger, onSlett, onPubliser }: Props) {
+  // Historikken deler den utvidbare raden med forhåndsvisningen, så bare én av dem vises av gangen.
+  const [historikkId, setHistorikkId] = useState<number | null>(null);
+
+  const toggleHistorikk = (id: number) => {
+    setHistorikkId(historikkId === id ? null : id);
+    if (!utvidedeIder.has(id)) onToggleUtvidet(id);
+  };
+
+  // Lukkes raden, står ikke historikkvalget ved lag: neste åpning viser forhåndsvisningen.
+  const toggleUtvidet = (id: number) => {
+    if (utvidedeIder.has(id) && historikkId === id) setHistorikkId(null);
+    onToggleUtvidet(id);
+  };
+
   if (blokker.length === 0) {
     return (
       <div className="tekstblokker__tom">
@@ -42,9 +59,12 @@ function TekstblokkerListe({ blokker, utvidedeIder, onToggleUtvidet, onRediger, 
             key={blokk.id}
             blokk={blokk}
             utvidet={utvidedeIder.has(blokk.id)}
-            onToggleUtvidet={onToggleUtvidet}
+            visHistorikk={historikkId === blokk.id}
+            onToggleUtvidet={toggleUtvidet}
+            onToggleHistorikk={toggleHistorikk}
             onRediger={onRediger}
             onSlett={onSlett}
+            onPubliser={onPubliser}
           />
         ))}
       </Nav.Table.Body>
@@ -55,12 +75,24 @@ function TekstblokkerListe({ blokker, utvidedeIder, onToggleUtvidet, onRediger, 
 interface RadProps {
   blokk: TekstblokkOversikt;
   utvidet: boolean;
+  visHistorikk: boolean;
   onToggleUtvidet: (id: number) => void;
+  onToggleHistorikk: (id: number) => void;
   onRediger: (id: number) => void;
   onSlett: (blokk: TekstblokkOversikt) => void;
+  onPubliser: (blokk: TekstblokkOversikt) => void;
 }
 
-function TekstblokkerListeRad({ blokk, utvidet, onToggleUtvidet, onRediger, onSlett }: RadProps) {
+function TekstblokkerListeRad({
+  blokk,
+  utvidet,
+  visHistorikk,
+  onToggleUtvidet,
+  onToggleHistorikk,
+  onRediger,
+  onSlett,
+  onPubliser,
+}: RadProps) {
   return (
     <Nav.Table.ExpandableRow
       open={utvidet}
@@ -68,14 +100,21 @@ function TekstblokkerListeRad({ blokk, utvidet, onToggleUtvidet, onRediger, onSl
       togglePlacement="left"
       content={
         <div className="tekstblokker__rad-forhandsvisning">
-          <TekstblokkForhandsvisning html={blokk.innhold} />
+          {visHistorikk ? <TekstblokkHistorikk id={blokk.id} /> : <TekstblokkForhandsvisning html={blokk.innhold} />}
         </div>
       }
     >
       <Nav.Table.DataCell>
-        <button type="button" className="tekstblokker__rad-tittel" onClick={() => onRediger(blokk.id)}>
-          {blokk.tittel}
-        </button>
+        <div className="tekstblokker__rad-tittel-celle">
+          <button type="button" className="tekstblokker__rad-tittel" onClick={() => onRediger(blokk.id)}>
+            {blokk.tittel}
+          </button>
+          {blokk.status === "UTKAST" && (
+            <Nav.Tag size="xsmall" variant="warning">
+              Utkast
+            </Nav.Tag>
+          )}
+        </div>
       </Nav.Table.DataCell>
       <Nav.Table.DataCell>
         <div className="tekstblokker__rad-tags">
@@ -110,6 +149,25 @@ function TekstblokkerListeRad({ blokk, utvidet, onToggleUtvidet, onRediger, onSl
       <Nav.Table.DataCell>{blokk.endretAvNavn ?? blokk.endretAv}</Nav.Table.DataCell>
       <Nav.Table.DataCell>
         <div className="tekstblokker__rad-handlinger">
+          {blokk.status === "UTKAST" && (
+            <Nav.Button
+              size="xsmall"
+              variant="tertiary"
+              icon={<CheckmarkCircleIcon aria-hidden />}
+              onClick={() => onPubliser(blokk)}
+            >
+              Publiser
+            </Nav.Button>
+          )}
+          <Nav.Button
+            size="xsmall"
+            variant="tertiary"
+            icon={<ClockDashedIcon aria-hidden />}
+            aria-pressed={visHistorikk}
+            onClick={() => onToggleHistorikk(blokk.id)}
+          >
+            Historikk
+          </Nav.Button>
           <Nav.Button
             size="xsmall"
             variant="tertiary"

@@ -5,18 +5,22 @@ import * as Tekstblokker from "../modules/tekstblokker";
 import {
   gjelderKontekst,
   harAlleTags,
+  harStatus,
   matcherSoek,
+  Statusfilter,
   tellTagsMedValgte,
   Tekstblokk,
   TekstblokkOversikt,
   TekstblokkRequest,
   TekstblokkType,
+  TekstblokkVersjon,
 } from "../modules/tekstblokker";
 
 export const tekstblokkerKeys = {
   all: ["tekstblokker"] as const,
   liste: (type?: TekstblokkType) => ["tekstblokker", "liste", type ?? "alle"] as const,
   detalj: (id: number) => ["tekstblokker", "detalj", id] as const,
+  historikk: (id: number) => ["tekstblokker", "historikk", id] as const,
 };
 
 const LISTE_STALE_TIME = 5 * 60_000;
@@ -59,6 +63,26 @@ export const useOppdaterTekstblokk = () => {
   });
 };
 
+export const usePubliserTekstblokk = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Tekstblokk, Error, number>({
+    mutationFn: Tekstblokker.publiser,
+    onSuccess: (publisert) => {
+      queryClient.invalidateQueries({ queryKey: tekstblokkerKeys.all });
+      queryClient.setQueryData(tekstblokkerKeys.detalj(publisert.id), publisert);
+    },
+  });
+};
+
+// Historikken hentes først når admin ber om den – den er stor og sjelden brukt.
+export const useTekstblokkHistorikk = (id: number | null, enabled = true) =>
+  useQuery<TekstblokkVersjon[]>({
+    queryKey: tekstblokkerKeys.historikk(id ?? 0),
+    queryFn: () => Tekstblokker.hentHistorikk(id as number),
+    enabled: enabled && id !== null,
+    staleTime: DETALJ_STALE_TIME,
+  });
+
 export const useSlettTekstblokk = () => {
   const queryClient = useQueryClient();
   return useMutation<unknown, Error, number>({
@@ -80,12 +104,14 @@ export const useFiltrerteTekstblokker = (
   valgteTags: string[],
   sakstype?: string,
   behandlingstema?: string,
+  // "ALLE" er admin, der utkast skal vises; saksbehandlerflaten sender "PUBLISERT" som klientsidevern.
+  statusfilter: Statusfilter = "ALLE",
 ): FiltrerteTekstblokker => {
   // Konteksten avgrenses først, slik at både søk og tag-telling gjelder det utvalget
   // saksbehandleren faktisk kan bruke i denne saken.
   const iKontekst = useMemo(
-    () => blokker.filter((b) => gjelderKontekst(b, sakstype, behandlingstema)),
-    [blokker, sakstype, behandlingstema],
+    () => blokker.filter((b) => gjelderKontekst(b, sakstype, behandlingstema) && harStatus(b, statusfilter)),
+    [blokker, sakstype, behandlingstema, statusfilter],
   );
   const etterSoek = useMemo(() => iKontekst.filter((b) => matcherSoek(b, soek)), [iKontekst, soek]);
   const synlige = useMemo(() => etterSoek.filter((b) => harAlleTags(b, valgteTags)), [etterSoek, valgteTags]);

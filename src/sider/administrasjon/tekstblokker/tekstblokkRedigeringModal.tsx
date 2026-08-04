@@ -8,7 +8,12 @@ import { MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggl
 import { isApiError } from "../../../services";
 import { usePlaceholderKatalog } from "../../../services/api/placeholdere";
 import { useOppdaterTekstblokk, useOpprettTekstblokk, useTekstblokk } from "../../../services/api/tekstblokker";
-import { leggTilTag, TekstblokkRequest, TekstblokkType } from "../../../services/modules/tekstblokker";
+import {
+  leggTilTag,
+  TekstblokkRequest,
+  TekstblokkStatus,
+  TekstblokkType,
+} from "../../../services/modules/tekstblokker";
 import Kontekstavgrensning from "./kontekstavgrensning";
 import { PlaceholderKatalogTabell, PlaceholderValgHjelpetekst } from "./placeholderKatalog";
 import TagInput from "./tagInput";
@@ -64,7 +69,8 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
 
   const kanLagre = tittel.trim().length > 0 && innhold.trim().length > 0 && !lagrer;
 
-  const handleLagre = () => {
+  // Typet parameter: utypet ville en onClick={handleLagre} sendt MouseEvent som status.
+  const handleLagre = (status: TekstblokkStatus = "PUBLISERT") => {
     if (!kanLagre) return;
     // Ta med en tag som står igjen i feltet, så den ikke går tapt fordi admin
     // glemte Enter eller "Legg til".
@@ -81,9 +87,10 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
     };
 
     if (redigerId !== null) {
+      // PUT er ingen statusbeslutning: feltet utelates, og api-et lar statusen stå som den er.
       oppdater.mutate({ id: redigerId, body: request }, { onSuccess: onLukk });
     } else {
-      opprett.mutate(request, { onSuccess: onLukk });
+      opprett.mutate({ ...request, status }, { onSuccess: onLukk });
     }
   };
 
@@ -153,9 +160,14 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
         )}
       </Nav.Modal.Body>
       <Nav.Modal.Footer>
-        <Nav.Button variant="primary" onClick={handleLagre} disabled={!kanLagre} loading={lagrer}>
+        <Nav.Button variant="primary" onClick={() => handleLagre()} disabled={!kanLagre} loading={lagrer}>
           {erRedigering ? "Lagre endringer" : "Opprett"}
         </Nav.Button>
+        {!erRedigering && (
+          <Nav.Button variant="secondary" onClick={() => handleLagre("UTKAST")} disabled={!kanLagre} loading={lagrer}>
+            Lagre som utkast
+          </Nav.Button>
+        )}
         <Nav.Button variant="tertiary" onClick={onLukk} disabled={lagrer}>
           Avbryt
         </Nav.Button>

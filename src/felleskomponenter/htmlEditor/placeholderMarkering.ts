@@ -1,11 +1,13 @@
 import { Quill } from "react-quill-new";
 
 import {
-  erstattPlaceholdere,
+  Betingelse,
+  erBetingelsesToken,
   erUkjentPlaceholder,
   erValgToken,
-  fjernMarkeringsSpans,
+  forberedInnhold,
   parseValgAlternativer,
+  PLACEHOLDER_BETINGELSE_TITTEL,
   PLACEHOLDER_UERSTATTET_TITTEL,
   PLACEHOLDER_UKJENT_TITTEL,
   PLACEHOLDER_UTFYLT_TITTEL,
@@ -38,7 +40,28 @@ export const PLACEHOLDER_FORMATS = [
   "placeholder-ukjent",
   "placeholder-valg",
   "placeholder-valgt",
+  "placeholder-betingelse",
 ];
+
+// Markerer tekst i klammer. Bor sammen med placeholder-blotene fordi alle deler tagName
+// span og må registreres før første Quill-instans lages.
+export class BracketBlot extends Inline {
+  static blotName = "bracketed";
+
+  static tagName = "span";
+
+  static create() {
+    const node = super.create();
+    node.classList.add("bracketed-text");
+    return node;
+  }
+
+  static formats() {
+    return true;
+  }
+}
+
+Quill.register("formats/bracketed", BracketBlot);
 
 // Markerer utfylte placeholder-verdier. Deler tagName med BracketBlot, så className er
 // nødvendig for at Parchment skal skille dem. Nøkkelen bæres i data-attributtet slik at
@@ -155,6 +178,28 @@ export class PlaceholderValgtBlot extends Inline {
 
 Quill.register("formats/placeholder-valgt", PlaceholderValgtBlot);
 
+// Markerer {#hvis nokkel}/{/hvis}. Boolsk og tekstdrevet som de andre tokenmarkeringene:
+// omfanget avgjøres først ved innsetting, så markeringen bærer ingen identitet selv.
+export class PlaceholderBetingelseBlot extends Inline {
+  static blotName = "placeholder-betingelse";
+
+  static tagName = "span";
+
+  static className = "placeholder-betingelse";
+
+  static create() {
+    const node = super.create();
+    node.setAttribute("title", PLACEHOLDER_BETINGELSE_TITTEL);
+    return node;
+  }
+
+  static formats() {
+    return true;
+  }
+}
+
+Quill.register("formats/placeholder-betingelse", PlaceholderBetingelseBlot);
+
 // Utfylte verdier har ingen klammer igjen i teksten og treffes derfor aldri.
 // \n er utelatt fra tegnklassen så en uparet { ikke slår seg sammen med en } lenger
 // nede i teksten og gulfarger alt imellom.
@@ -171,8 +216,9 @@ export const finnUerstattedeOmrader = (tekst: string): Array<{ index: number; le
   return omrader;
 };
 
-// Valgtokenet sjekkes først: «velg:»-prefikset er reservert, så det kan aldri bli rødt.
+// De reserverte tokenformene sjekkes først: «velg:» og «#hvis»/«/hvis» kan aldri bli røde.
 const markeringsFormat = (token: string, gyldigeNokler?: string[]): string => {
+  if (erBetingelsesToken(token)) return "placeholder-betingelse";
   if (erValgToken(token)) return "placeholder-valg";
   return erUkjentPlaceholder(token, gyldigeNokler) ? "placeholder-ukjent" : "placeholder-uerstattet";
 };
@@ -185,12 +231,18 @@ export const markerUerstattedeOmrader = (quill: Quill, gyldigeNokler?: string[])
   const kanHaTreff = tekst.includes("{") && tekst.includes("}");
   // Klammefri tekst kan fortsatt ha markering igjen – f.eks. når brukeren nettopp slettet
   // klammene rundt en gulmarkert nøkkel – og den må strippes.
-  if (!kanHaTreff && !quill.root.querySelector(".placeholder-uerstattet, .placeholder-ukjent, .placeholder-valg"))
+  if (
+    !kanHaTreff &&
+    !quill.root.querySelector(
+      ".placeholder-uerstattet, .placeholder-ukjent, .placeholder-valg, .placeholder-betingelse",
+    )
+  )
     return;
 
   quill.formatText(0, tekst.length, "placeholder-uerstattet", false);
   quill.formatText(0, tekst.length, "placeholder-ukjent", false);
   quill.formatText(0, tekst.length, "placeholder-valg", false);
+  quill.formatText(0, tekst.length, "placeholder-betingelse", false);
   if (!kanHaTreff) return;
 
   finnUerstattedeOmrader(tekst).forEach(({ index, length }) => {
@@ -243,9 +295,9 @@ export const fjernUgyldigeValgteMarkeringer = (quill: Quill) => {
   ugyldige.forEach(({ index, length }) => quill.formatText(index, length, "placeholder-valgt", false));
 };
 
-// HTML-en som går til dangerouslyPasteHTML ved innsetting av tekstblokk. Markeringer som
-// ligger lagret i innholdet ryddes bort først; editoren markerer selv på nytt etterpå.
-export const forberedTekstblokkHtml = (html: string, placeholderVerdier?: PlaceholderVerdi[]): string => {
-  const rentHtml = fjernMarkeringsSpans(html);
-  return placeholderVerdier ? erstattPlaceholdere(rentHtml, placeholderVerdier) : rentHtml;
-};
+// HTML-en som går til dangerouslyPasteHTML ved innsetting av tekstblokk.
+export const forberedTekstblokkHtml = (
+  html: string,
+  placeholderVerdier?: PlaceholderVerdi[],
+  betingelser?: Betingelse[],
+): string => forberedInnhold(html, placeholderVerdier, betingelser);

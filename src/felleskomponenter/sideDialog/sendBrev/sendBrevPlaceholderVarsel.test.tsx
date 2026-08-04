@@ -60,6 +60,8 @@ vi.mock("../../../services/modules/placeholdere", async () => ({
 vi.mock("../../../services/api/placeholdere", () => ({
   usePlaceholderVerdier: () => ({ data: undefined }),
   usePlaceholderKatalog: () => ({ data: [{ nokkel: "saksnummer", visningsnavn: "Saksnummer" }] }),
+  useBetingelseVerdier: () => ({ data: [] }),
+  useBetingelseKatalog: () => ({ data: [] }),
 }));
 
 // Malene får uuid tildelt ved henting; en fast uuid lar skjemaverdiene peke på riktig mal.
@@ -99,6 +101,18 @@ const preloadedState = {
 
 const renderSendBrev = () =>
   renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, { preloadedState });
+
+const renderMedFritekst = (fritekst: string) =>
+  renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
+    preloadedState: {
+      ...preloadedState,
+      form: {
+        send_brev: {
+          values: { ...preloadedState.form.send_brev.values, felt: { FRITEKST: { feltVerdi: fritekst } } },
+        },
+      },
+    },
+  });
 
 const klikkSendBrev = async () => {
   const knapp = await screen.findByRole("button", { name: "Send brev" });
@@ -197,23 +211,43 @@ describe("SendBrev – varsel om utdaterte placeholder-verdier", () => {
   });
 
   it("slår ikke opp ferske verdier når friteksten ikke har innsatte verdier", async () => {
-    renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
-      preloadedState: {
-        ...preloadedState,
-        form: {
-          send_brev: {
-            values: {
-              ...preloadedState.form.send_brev.values,
-              felt: { FRITEKST: { feltVerdi: "<p>Saken er mottatt.</p>" } },
-            },
-          },
-        },
-      },
-    });
+    renderMedFritekst("<p>Saken er mottatt.</p>");
     await klikkSendBrev();
 
     await ventPaaBestilt();
     expect(Placeholdere.hentVerdier).not.toHaveBeenCalled();
+  });
+
+  it("varsler om uoppløste betingelser, uten å slå opp ferske verdier", async () => {
+    renderMedFritekst("<p>{#hvis avslag}Avslag{/hvis}</p>");
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet inneholder uoppløste betingelser")).toBeInTheDocument();
+    expect(screen.getByText(/må fjernes eller fylles ut manuelt/)).toBeInTheDocument();
+    expect(screen.getByText("avslag")).toBeInTheDocument();
+    expect(Placeholdere.hentVerdier).not.toHaveBeenCalled();
+    expect(Api.DokumenterV2.opprettBrev).not.toHaveBeenCalled();
+  });
+
+  it("viser utdaterte verdier og uoppløste betingelser i samme varsel", async () => {
+    vi.mocked(Placeholdere.hentVerdier).mockResolvedValue({ verdier: [{ nokkel: "saksnummer", verdi: "MEL-22" }] });
+
+    renderMedFritekst(`${FRITEKST_HTML}<p>{#hvis avslag}Avslag{/hvis}</p>`);
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Sjekk innholdet i brevet")).toBeInTheDocument();
+    expect(screen.getByText("Saksnummer: innsatt MEL-21, nå MEL-22")).toBeInTheDocument();
+    expect(screen.getByText("avslag")).toBeInTheDocument();
+  });
+
+  it("sender brevet med tokenene i behold når saksbehandler velger Send likevel", async () => {
+    renderMedFritekst("<p>{#hvis avslag}Avslag{/hvis}</p>");
+    await klikkSendBrev();
+
+    fireEvent.click(await screen.findByRole("button", { name: "Send likevel" }));
+
+    await ventPaaBestilt();
+    expect(screen.queryByText("Brevet inneholder uoppløste betingelser")).not.toBeInTheDocument();
   });
 
   it("slår ikke opp ferske verdier når togglene er av", async () => {
