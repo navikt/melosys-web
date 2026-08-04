@@ -351,12 +351,24 @@ describe("TekstblokkRedigeringModal – varsel om sakstyper placeholderen ikke s
     expect(screen.getByText("Avslag støtter ikke: EU/EØS-land")).toBeDefined();
   });
 
-  it("varsler ikke når blokken gjelder alle sakstyper", () => {
+  it("varsler med de støttede sakstypene når blokken gjelder alle", () => {
     mocks.tekstblokk.mockReturnValue({ data: lagret({ innhold: "<p>{soker-navn}</p>" }), isLoading: false });
 
     visModal(7);
 
+    expect(
+      screen.getByText("Søkers navn støttes bare for: Utenfor avtaleland — blokken gjelder alle sakstyper"),
+    ).toBeDefined();
     expect(screen.queryByText(/støtter ikke/)).toBeNull();
+  });
+
+  it("varsler ikke for en placeholder uten avgrensning i en blokk som gjelder alle", () => {
+    mockKatalog({ data: [{ ...katalog[0], sakstyper: [] }] }, { data: betingelseKatalog });
+    mocks.tekstblokk.mockReturnValue({ data: lagret({ innhold: "<p>{soker-navn}</p>" }), isLoading: false });
+
+    visModal(7);
+
+    expect(screen.queryByText(/støttes bare for/)).toBeNull();
   });
 
   it("varsler ikke når placeholderen dekker sakstypen", () => {

@@ -4,7 +4,8 @@ import * as Nav from "../../../navFrontend";
 import TekstblokkForhandsvisning from "../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning";
 import { useTekstblokkHistorikk } from "../../../services/api/tekstblokker";
 import { TekstblokkVersjon } from "../../../services/modules/tekstblokker";
-import { labelForEndringstype } from "./labels";
+import { termForBehandlingstema, termForSakstype } from "./kontekstavgrensning";
+import { labelForEndringstype, labelForStatus } from "./labels";
 
 // gyldigFra/gyldigTil er LocalDateTime fra api-et – allerede norsk tid, så ingen soneomregning.
 const formatterTidspunkt = (tidspunkt: string): string => moment(tidspunkt).format("DD.MM.YYYY HH:mm");
@@ -22,18 +23,55 @@ const likeLister = (a: string[], b: string[]): boolean => {
 // Mangler feltet på én av versjonene, leverte ikke api-et det – da vet vi ingenting om endringen.
 const listeEndret = (ny?: string[], gammel?: string[]): boolean => Boolean(ny && gammel && !likeLister(ny, gammel));
 
+interface Listediff {
+  lagtTil: string[];
+  fjernet: string[];
+}
+
+// Samme forbehold som listeEndret: mangler feltet på én versjon, sier vi ingenting om det.
+const listediff = (
+  ny: string[] | undefined,
+  gammel: string[] | undefined,
+  term: (kode: string) => string,
+): Listediff =>
+  ny && gammel
+    ? {
+        lagtTil: ny.filter((kode) => !gammel.includes(kode)).map(term),
+        fjernet: gammel.filter((kode) => !ny.includes(kode)).map(term),
+      }
+    : { lagtTil: [], fjernet: [] };
+
+// U+2212, ikke bindestrek: fortegnet skal lese som motstykket til «+».
+const MINUS = "−";
+
+// «avgrensning (+Arbeid kun i Norge, −EU/EØS-land)» – lagt til før fjernet, på tvers av listene.
+const medDetaljer = (felt: string, differ: Listediff[]): string => {
+  const detaljer = [
+    ...differ.flatMap(({ lagtTil }) => lagtTil).map((term) => `+${term}`),
+    ...differ.flatMap(({ fjernet }) => fjernet).map((term) => `${MINUS}${term}`),
+  ];
+  return detaljer.length > 0 ? `${felt} (${detaljer.join(", ")})` : felt;
+};
+
 const endredeFelter = (versjon: TekstblokkVersjon, forrige?: TekstblokkVersjon): string[] => {
   if (!forrige) return [];
   const endringer: string[] = [];
   if (versjon.tittel !== forrige.tittel) endringer.push("tittel");
   if (versjon.innhold !== forrige.innhold) endringer.push("innhold");
-  if (listeEndret(versjon.tags, forrige.tags)) endringer.push("tags");
+  if (listeEndret(versjon.tags, forrige.tags))
+    endringer.push(medDetaljer("tags", [listediff(versjon.tags, forrige.tags, (tag) => tag)]));
   if (
     listeEndret(versjon.sakstyper, forrige.sakstyper) ||
     listeEndret(versjon.behandlingstemaer, forrige.behandlingstemaer)
   )
-    endringer.push("avgrensning");
-  if (versjon.status && forrige.status && versjon.status !== forrige.status) endringer.push("status");
+    endringer.push(
+      medDetaljer("avgrensning", [
+        listediff(versjon.sakstyper, forrige.sakstyper, termForSakstype),
+        listediff(versjon.behandlingstemaer, forrige.behandlingstemaer, termForBehandlingstema),
+      ]),
+    );
+  if (versjon.status && forrige.status && versjon.status !== forrige.status)
+    endringer.push(`status (${labelForStatus(forrige.status)} → ${labelForStatus(versjon.status)})`);
   return endringer;
 };
 

@@ -55,6 +55,10 @@ export const PLACEHOLDER_UTFYLT_TITTEL = (nokkel: string): string => `Fylt inn a
 export const PLACEHOLDER_UERSTATTET_TITTEL =
   "Ingen verdi tilgjengelig – fylles ut manuelt, eller erstattes automatisk ved innsetting fra Send brev";
 
+// I admin finnes ingen saksverdier å slå opp, så teksten over ville påstått at verdien mangler.
+export const PLACEHOLDER_UERSTATTET_UTEN_VERDIER_TITTEL =
+  "Erstattes automatisk ved innsetting fra Send brev dersom saken har en verdi – ellers fylles den ut manuelt";
+
 export const PLACEHOLDER_UKJENT_TITTEL = "Ikke en gyldig placeholder – se katalogen over tilgjengelige placeholdere";
 
 export const PLACEHOLDER_VALG_TITTEL = "Klikk for å velge mellom alternativene";
@@ -346,8 +350,11 @@ export const finnUopplosteBetingelser = (html: string): string[] => {
 export interface SakstypeKonflikt {
   nokkel: string;
   visningsnavn: string;
-  // Blokkens valgte sakstyper som placeholderen/betingelsen ikke dekker.
+  // Blokkens valgte sakstyper som placeholderen/betingelsen ikke dekker. Tom når blokken
+  // gjelder alle sakstyper – da finnes ingen valgte å måle mot.
   sakstyper: string[];
+  // Sakstypene placeholderen/betingelsen faktisk støtter.
+  stottedeSakstyper: string[];
 }
 
 // Alle {…}-tokener i teksten, med betingelsesnøkkelen pakket ut av {#hvis …}.
@@ -363,16 +370,14 @@ const noklerITekst = (html: string): string[] => {
 };
 
 // En blokk avgrenset til sakstyper kan bruke placeholdere som ikke finnes i alle sammen.
-// Tom valgteSakstyper (blokken gjelder alle) gir ingen konflikt – da avgjøres dekningen
-// først ved bruk, i den enkelte saken.
+// Gjelder blokken alle sakstyper (tom valgteSakstyper), er enhver avgrenset placeholder
+// verdt et varsel: den vil mangle i sakene utenfor listen.
 export const finnSakstypeKonflikter = (
   html: string,
   valgteSakstyper: string[],
   katalog: PlaceholderBeskrivelse[] = [],
   betingelseKatalog: BetingelseBeskrivelse[] = [],
 ): SakstypeKonflikt[] => {
-  if (valgteSakstyper.length === 0) return [];
-
   const beskrivelser = new Map(
     [...katalog, ...betingelseKatalog].map(({ nokkel, visningsnavn, sakstyper }) => [
       nokkel,
@@ -385,7 +390,15 @@ export const finnSakstypeKonflikter = (
     // Ukjent nøkkel markeres rødt i editoren, og tom sakstypeliste betyr «gjelder alle».
     if (!beskrivelse || beskrivelse.sakstyper.length === 0) return [];
     const udekkede = valgteSakstyper.filter((sakstype) => !beskrivelse.sakstyper.includes(sakstype));
-    return udekkede.length > 0 ? [{ nokkel, visningsnavn: beskrivelse.visningsnavn, sakstyper: udekkede }] : [];
+    if (valgteSakstyper.length > 0 && udekkede.length === 0) return [];
+    return [
+      {
+        nokkel,
+        visningsnavn: beskrivelse.visningsnavn,
+        sakstyper: udekkede,
+        stottedeSakstyper: beskrivelse.sakstyper,
+      },
+    ];
   });
 };
 

@@ -85,6 +85,28 @@ describe("HtmlEditor med ekte Quill", () => {
     expect(quill.root.querySelector(".placeholder-uerstattet")?.textContent).toBe("{sksnummer}");
   });
 
+  it("lover erstatning ved innsetting når editoren er uten saksverdier (admin)", () => {
+    const quill = lagEditor();
+    quill.setText("{saksnummer}\n");
+
+    markerUerstattedeOmrader(quill, ["saksnummer"]);
+
+    expect(quill.root.querySelector(".placeholder-uerstattet")?.getAttribute("title")).toBe(
+      "Erstattes automatisk ved innsetting fra Send brev dersom saken har en verdi – ellers fylles den ut manuelt",
+    );
+  });
+
+  it("sier at verdien mangler når editoren har sakens verdier (Send brev)", () => {
+    const quill = lagEditor();
+    quill.setText("{saksnummer}\n");
+
+    markerUerstattedeOmrader(quill, ["saksnummer"], true);
+
+    expect(quill.root.querySelector(".placeholder-uerstattet")?.getAttribute("title")).toContain(
+      "Ingen verdi tilgjengelig",
+    );
+  });
+
   it("bytter markering fra rød til gul når nøkkelen rettes opp", () => {
     const quill = lagEditor();
     quill.setText("{sksnummer}\n");
