@@ -27,12 +27,13 @@ function TekstblokkerSide() {
   const [publiserBlokk, setPubliserBlokk] = useState<TekstblokkOversikt | null>(null);
   const [utvidedeIder, setUtvidedeIder] = useState<Set<number>>(new Set());
 
-  const { data: blokker = [], isLoading, error } = useTekstblokker(type);
+  // Admin ber eksplisitt om utkast – api-et leverer dem kun hit, aldri til Send brev-søket.
+  const { data: blokker = [], isLoading, error } = useTekstblokker(type, true, true);
 
   // Tags er ett felles vokabular på tvers av tekstblokker og brevmaler, så forslagene i
   // modalen tar med begge typer. Hentes først når modalen åpnes.
   const motsattType: TekstblokkType = type === "TEKSTBLOKK" ? "BREVMAL" : "TEKSTBLOKK";
-  const { data: blokkerAvMotsattType = [] } = useTekstblokker(motsattType, modal.type !== "lukket");
+  const { data: blokkerAvMotsattType = [] } = useTekstblokker(motsattType, modal.type !== "lukket", true);
 
   const { tagAntall, synlige } = useFiltrerteTekstblokker(
     blokker,

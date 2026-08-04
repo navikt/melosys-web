@@ -103,8 +103,10 @@ export const erValgToken = (token: string): boolean => parseValgToken(token) !==
 
 // «#hvis »/«/hvis» er reserverte tokenformer på linje med «velg:». Nøkkeldelen følger samme
 // mønster som en katalognøkkel (ingen mellomrom, klammer, taggtegn eller |), så et
-// betingelsestoken kan aldri kollidere med en vanlig nøkkel.
-const HVIS_START_MONSTER = /^\{#hvis\s+([^{}<>\s|:]+)\}$/;
+// betingelsestoken kan aldri kollidere med en vanlig nøkkel. Delt kilde for alle regexene
+// som leser grammatikken – en justering ett sted kan ikke la de andre henge igjen.
+const HVIS_NOKKEL = "[^{}<>\\s|:]+";
+const HVIS_START_MONSTER = new RegExp(`^\\{#hvis\\s+(${HVIS_NOKKEL})\\}$`);
 
 export const HVIS_SLUTT_TOKEN = "{/hvis}";
 
@@ -202,7 +204,7 @@ const finnBetingelsesTokener = (dokument: Document): TokenTreff[] => {
   const vandrer = dokument.createTreeWalker(dokument.body, NodeFilter.SHOW_TEXT);
 
   for (let node = vandrer.nextNode() as Text | null; node !== null; node = vandrer.nextNode() as Text | null) {
-    const regex = /\{#hvis\s+[^{}<>\s|:]+\}|\{\/hvis\}/g;
+    const regex = new RegExp(`\\{#hvis\\s+${HVIS_NOKKEL}\\}|\\{/hvis\\}`, "g");
     for (let match = regex.exec(node.data); match !== null; match = regex.exec(node.data)) {
       treff.push({ node, index: match.index, token: match[0] });
     }
@@ -335,7 +337,7 @@ export const finnUopplosteBetingelser = (html: string): string[] => {
   if (!html.includes("{#hvis") && !html.includes(HVIS_SLUTT_TOKEN)) return [];
 
   const nokler = new Set<string>();
-  const regex = /\{#hvis\s+([^{}<>\s|:]+)\}/g;
+  const regex = new RegExp(`\\{#hvis\\s+(${HVIS_NOKKEL})\\}`, "g");
   for (let treff = regex.exec(html); treff !== null; treff = regex.exec(html)) nokler.add(treff[1]);
   // Et slutt-token uten lesbart starttoken har ingen nøkkel, men må varsles likevel.
   return nokler.size > 0 ? [...nokler] : [HVIS_SLUTT_TOKEN];
@@ -345,6 +347,10 @@ export interface UtdatertPlaceholder {
   nokkel: string;
   innsattVerdi: string;
   ferskVerdi: string;
+  // Verdien står fortsatt i kandidatlisten. Avviket kan være et bevisst valg, men like
+  // gjerne et forhåndsvalg som senere endret seg – DOM-en skiller ikke de to, så varselet
+  // vises uansett og formuleres mildere.
+  fortsattKandidat: boolean;
 }
 
 // Billig sjekk på om teksten i det hele tatt har innsatte verdier å sammenligne.
@@ -366,15 +372,19 @@ export const finnUtdaterteVerdier = (html: string, ferskeVerdier: PlaceholderVer
     const fersk = ferskForNokkel.get(nokkel);
     // Nøkkel uten fersk verdi er utgått av registeret; den rapporteres med tom ferskVerdi.
     const ferskVerdi = fersk?.verdi ?? "";
-    // En valgt kandidat er et bevisst valg, ikke en foreldet verdi.
-    if (ferskVerdi === innsattVerdi || fersk?.kandidater?.includes(innsattVerdi)) return;
+    if (ferskVerdi === innsattVerdi) return;
 
     // Samme nøkkel kan stå flere steder i brevet – varsle én gang per avvik.
     const avviksNokkel = `${nokkel}${innsattVerdi}`;
     if (rapportert.has(avviksNokkel)) return;
     rapportert.add(avviksNokkel);
 
-    utdaterte.push({ nokkel, innsattVerdi, ferskVerdi });
+    utdaterte.push({
+      nokkel,
+      innsattVerdi,
+      ferskVerdi,
+      fortsattKandidat: fersk?.kandidater?.includes(innsattVerdi) ?? false,
+    });
   });
 
   return utdaterte;

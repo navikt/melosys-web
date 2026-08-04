@@ -35,13 +35,17 @@ function PlaceholderUtdatertVarsel({ utdaterte, uopploste, onSendLikevel, onAvbr
         {utdaterte.length > 0 && (
           <>
             <Nav.BodyLong>
-              Verdiene under ble satt inn tidligere og stemmer ikke lenger med saken. Brevet sendes med teksten slik den
-              står nå.
+              Verdiene under ble satt inn tidligere og avviker fra sakens verdier i dag. Brevet sendes med teksten slik
+              den står nå.
             </Nav.BodyLong>
             <Nav.List>
-              {utdaterte.map(({ nokkel, innsattVerdi, ferskVerdi }) => (
+              {utdaterte.map(({ nokkel, innsattVerdi, ferskVerdi, fortsattKandidat }) => (
                 <Nav.List.Item key={`${nokkel} ${innsattVerdi}`}>
-                  {visningsnavn(nokkel)}: innsatt {innsattVerdi}, nå {ferskVerdi || "ingen verdi"}
+                  {/* Et avvik som fortsatt står blant kandidatene kan være et bevisst valg –
+                      det varsles, men uten å påstå at verdien er feil. */}
+                  {fortsattKandidat
+                    ? `${visningsnavn(nokkel)}: innsatt ${innsattVerdi} – forhåndsvalget er nå ${ferskVerdi}, men innsatt verdi er fortsatt et gyldig alternativ`
+                    : `${visningsnavn(nokkel)}: innsatt ${innsattVerdi}, nå ${ferskVerdi || "ingen verdi"}`}
                 </Nav.List.Item>
               ))}
             </Nav.List>

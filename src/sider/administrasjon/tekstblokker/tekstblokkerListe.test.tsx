@@ -6,6 +6,7 @@ import { describe, expect, it, vi } from "vitest";
 import TekstblokkerListe from "./tekstblokkerListe";
 import { useTekstblokkHistorikk } from "../../../services/api/tekstblokker";
 import { TekstblokkOversikt, TekstblokkVersjon } from "../../../services/modules/tekstblokker";
+import { tekstblokkOversikt } from "../../../services/modules/tekstblokkTestdata";
 
 // Forhåndsvisningen i den utvidbare raden trenger redux; her handler det om selve raden.
 vi.mock("../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning", () => ({
@@ -16,20 +17,8 @@ vi.mock("../../../services/api/tekstblokker", () => ({
   useTekstblokkHistorikk: vi.fn(() => ({ data: [], isLoading: false, error: null })),
 }));
 
-const blokk = (avgrensning: Partial<TekstblokkOversikt> = {}): TekstblokkOversikt => ({
-  id: 1,
-  tittel: "Om utsending",
-  innhold: "<p>Tekst</p>",
-  type: "TEKSTBLOKK",
-  tags: ["usa"],
-  sakstyper: [],
-  behandlingstemaer: [],
-  status: "PUBLISERT",
-  endretDato: "2026-01-01T00:00:00Z",
-  endretAv: "Z123456",
-  endretAvNavn: null,
-  ...avgrensning,
-});
+const blokk = (avgrensning: Partial<TekstblokkOversikt> = {}): TekstblokkOversikt =>
+  tekstblokkOversikt({ tittel: "Om utsending", tags: ["usa"], ...avgrensning });
 
 const visListe = (blokker: TekstblokkOversikt[], props: Partial<Parameters<typeof TekstblokkerListe>[0]> = {}) =>
   render(

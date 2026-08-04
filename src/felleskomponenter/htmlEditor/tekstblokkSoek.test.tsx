@@ -7,6 +7,7 @@ import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders"
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import { useTekstblokker } from "../../services/api/tekstblokker";
 import { TekstblokkOversikt } from "../../services/modules/tekstblokker";
+import { tekstblokkOversikt } from "../../services/modules/tekstblokkTestdata";
 
 vi.mock("../../featuretoggle/useFeatureToggle", () => ({
   default: vi.fn(),
@@ -18,19 +19,8 @@ vi.mock("../../services/api/tekstblokker", async (importOriginal) => ({
   useTekstblokker: vi.fn(),
 }));
 
-const blokk = (id: number, tittel: string, sakstyper: string[], behandlingstemaer: string[]): TekstblokkOversikt => ({
-  id,
-  tittel,
-  innhold: "<p>Tekst</p>",
-  type: "TEKSTBLOKK",
-  tags: [],
-  sakstyper,
-  behandlingstemaer,
-  status: "PUBLISERT",
-  endretDato: "2026-01-01T00:00:00Z",
-  endretAv: "Z123456",
-  endretAvNavn: null,
-});
+const blokk = (id: number, tittel: string, sakstyper: string[], behandlingstemaer: string[]): TekstblokkOversikt =>
+  tekstblokkOversikt({ id, tittel, sakstyper, behandlingstemaer });
 
 const blokker = [
   blokk(1, "Gjelder alle saker", [], []),
@@ -117,5 +107,22 @@ describe("TekstblokkSoek – statusfilter", () => {
 
     expect(screen.getByText("Gjelder alle saker")).toBeDefined();
     expect(screen.queryByText("Uferdig utkast")).toBeNull();
+  });
+
+  it("skylder ikke på konteksten når bare utkast-filtreringen tømmer lista", async () => {
+    // Typisk under utrulling: alle blokker av typen er fortsatt utkast. Da skal
+    // tomtilstanden verken peke på sakstype/behandlingstema eller tilby en «Vis alle»
+    // som ikke kan hjelpe (statusfilteret består uansett).
+    vi.mocked(useTekstblokker).mockReturnValue({
+      data: [{ ...blokk(9, "Uferdig utkast", [], []), status: "UTKAST" }],
+      isLoading: false,
+    } as ReturnType<typeof useTekstblokker>);
+
+    await aapneSoek(sakskontekst("FTRL", "PENSJONIST"));
+
+    expect(screen.getByText("Fant ingen tekstblokker")).toBeDefined();
+    expect(screen.queryByText(/gjelder denne saken/)).toBeNull();
+    expect(screen.queryByRole("button", { name: "Vis alle" })).toBeNull();
+    expect(screen.queryByText(/Prøv et annet søkeord/)).toBeNull();
   });
 });

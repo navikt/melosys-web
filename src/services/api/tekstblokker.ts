@@ -18,7 +18,10 @@ import {
 
 export const tekstblokkerKeys = {
   all: ["tekstblokker"] as const,
-  liste: (type?: TekstblokkType) => ["tekstblokker", "liste", type ?? "alle"] as const,
+  // Utkast-flagget er med i nøkkelen så admin-lista (med utkast) og Send brev-søket
+  // (uten) aldri deler cache.
+  liste: (type?: TekstblokkType, inkluderUtkast = false) =>
+    ["tekstblokker", "liste", type ?? "alle", inkluderUtkast] as const,
   detalj: (id: number) => ["tekstblokker", "detalj", id] as const,
   historikk: (id: number) => ["tekstblokker", "historikk", id] as const,
 };
@@ -26,10 +29,10 @@ export const tekstblokkerKeys = {
 const LISTE_STALE_TIME = 5 * 60_000;
 const DETALJ_STALE_TIME = 5 * 60_000;
 
-export const useTekstblokker = (type: TekstblokkType | undefined, enabled = true) =>
+export const useTekstblokker = (type: TekstblokkType | undefined, enabled = true, inkluderUtkast = false) =>
   useQuery<TekstblokkOversikt[]>({
-    queryKey: tekstblokkerKeys.liste(type),
-    queryFn: () => Tekstblokker.hentAlle(type),
+    queryKey: tekstblokkerKeys.liste(type, inkluderUtkast),
+    queryFn: () => Tekstblokker.hentAlle(type, inkluderUtkast),
     enabled,
     staleTime: LISTE_STALE_TIME,
   });
