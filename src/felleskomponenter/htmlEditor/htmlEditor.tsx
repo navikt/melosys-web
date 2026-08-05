@@ -50,6 +50,9 @@ interface TekstEditorProps {
   // Nøklene fra placeholder-katalogen. Uten dem markeres alle uerstattede nøkler gult;
   // med dem blir nøkler som ikke finnes i katalogen røde.
   gyldigeNokler?: string[];
+  // Nøklene fra betingelseskatalogen. Uten dem markeres alle {#hvis …} som betingelse;
+  // med dem blir en nøkkel som ikke finnes rød.
+  gyldigeBetingelsesNokler?: string[];
   // Sakens fakta som {#hvis …} løses mot ved innsetting. Settes kun fra Send brev.
   betingelser?: Betingelse[];
 }
@@ -107,6 +110,7 @@ function HtmlEditor({
   visBreddeToggle = false,
   placeholderVerdier,
   gyldigeNokler,
+  gyldigeBetingelsesNokler,
   betingelser,
 }: TekstEditorProps) {
   const [fullBredde, setFullBredde] = useState(lesLagretFullBredde);
@@ -124,7 +128,7 @@ function HtmlEditor({
   const lastSelectionRef = useRef<{ index: number; length: number } | null>(null);
   const dynamiskPlaceholderPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER);
   // Togglen er undefined til den er lastet; formatene må med uansett, ellers stripper Quill
-  // lagrede markeringer permanent. Kun en eksplisitt av-toggle (rollback) skal fjerne dem.
+  // lagrede markeringer permanent. Kun en eksplisitt av-toggle fjerner dem.
   const placeholderFormatsAktive = dynamiskPlaceholderPaa !== false;
   // Én kilde til key-en på ReactQuill: skifter den, er Quill-instansen en annen, og handlerne
   // i usePlaceholderValg må kobles opp på nytt.
@@ -140,6 +144,7 @@ function HtmlEditor({
   const markeringAktivRef = useRef(markeringAktiv);
   const placeholderVerdierRef = useRef(placeholderVerdier);
   const gyldigeNoklerRef = useRef(gyldigeNokler);
+  const gyldigeBetingelsesNoklerRef = useRef(gyldigeBetingelsesNokler);
 
   const { valgPopover } = usePlaceholderValg({
     quillRef,
@@ -153,6 +158,7 @@ function HtmlEditor({
     markeringAktivRef.current = markeringAktiv;
     placeholderVerdierRef.current = placeholderVerdier;
     gyldigeNoklerRef.current = gyldigeNokler;
+    gyldigeBetingelsesNoklerRef.current = gyldigeBetingelsesNokler;
   });
 
   // Synkroniserer med ekstern verdi når den endres, men bare hvis det ikke er forårsaket av vår egen onChange
@@ -170,7 +176,7 @@ function HtmlEditor({
   }, [value, internalValue]);
 
   // Tillatte formater. Placeholder-formatene faller bort først når togglen eksplisitt er av,
-  // ellers beholder innlimt og lagret innhold markeringene etter en rollback.
+  // så innlimt og lagret innhold beholder markeringene mens togglen laster.
   const formats = useMemo(
     () => (placeholderFormatsAktive ? [...EDITOR_FORMATS, ...PLACEHOLDER_FORMATS] : EDITOR_FORMATS),
     [placeholderFormatsAktive],
@@ -306,7 +312,12 @@ function HtmlEditor({
         if (markeringAktivRef.current) {
           fjernUgyldigeUtfylteMarkeringer(quill, placeholderVerdierRef.current);
           fjernUgyldigeValgteMarkeringer(quill);
-          markerUerstattedeOmrader(quill, gyldigeNoklerRef.current, placeholderVerdierRef.current !== undefined);
+          markerUerstattedeOmrader(
+            quill,
+            gyldigeNoklerRef.current,
+            placeholderVerdierRef.current !== undefined,
+            gyldigeBetingelsesNoklerRef.current,
+          );
         }
       } finally {
         isFormattingRef.current = false;
@@ -366,19 +377,19 @@ function HtmlEditor({
     };
   }, [markeringAktiv, placeholderFormatsAktive]);
 
-  // Katalogen lander etter at editoren er montert; uten dette blir ukjente nøkler
+  // Katalogene lander etter at editoren er montert; uten dette blir ukjente nøkler
   // stående gule til brukeren skriver noe.
   useEffect(() => {
     const quill = quillRef.current?.editor;
-    if (!quill || !markeringAktiv || !gyldigeNokler?.length) return;
+    if (!quill || !markeringAktiv || !(gyldigeNokler?.length || gyldigeBetingelsesNokler?.length)) return;
 
     isFormattingRef.current = true;
     try {
-      markerUerstattedeOmrader(quill, gyldigeNokler, placeholderVerdier !== undefined);
+      markerUerstattedeOmrader(quill, gyldigeNokler, placeholderVerdier !== undefined, gyldigeBetingelsesNokler);
     } finally {
       isFormattingRef.current = false;
     }
-  }, [gyldigeNokler, markeringAktiv, placeholderVerdier]);
+  }, [gyldigeNokler, gyldigeBetingelsesNokler, markeringAktiv, placeholderVerdier]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -441,6 +452,7 @@ function HtmlEditor({
           visBrevmaler={visBrevmaler}
           placeholderVerdier={placeholderVerdier}
           gyldigeNokler={gyldigeNokler}
+          gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
           betingelser={betingelser}
         />
       )}

@@ -67,8 +67,8 @@ const baseUrl = `${API_BASE_URL}${TEKSTBLOKKER}`;
 type Normaliserbar = { sakstyper?: string[]; behandlingstemaer?: string[]; status?: TekstblokkStatus };
 type Normalisert = Pick<TekstblokkOversikt, "sakstyper" | "behandlingstemaer" | "status">;
 
-// Et api uten avgrensning eller status (under utrulling) utelater feltene. Vi normaliserer her, på
-// api-grensen, slik at alle konsumenter kan regne med lister og en status.
+// Et api som ikke leverer avgrensning eller status utelater feltene. Normaliseringen skjer her,
+// på api-grensen, slik at alle konsumenter kan regne med lister og en status.
 const normaliser = (blokk: Normaliserbar): Normalisert => ({
   sakstyper: blokk.sakstyper ?? [],
   behandlingstemaer: blokk.behandlingstemaer ?? [],
@@ -116,7 +116,7 @@ export const matcherSoek = (blokk: TekstblokkOversikt, soek: string): boolean =>
     .filter(Boolean);
   if (ord.length === 0) return true;
 
-  // Vi søker bevisst kun i tittel og tags – ikke i innhold (fagønske).
+  // Søket dekker tittel og tags, ikke innholdet.
   const soekbareFelt = [blokk.tittel.toLowerCase(), ...blokk.tags.map((tag) => tag.toLowerCase())];
   // Hvert søkeord må matche minst ett felt (tittel eller en tag). Slik gir "USA avslag"
   // treff på blokker som har både "usa" og "avslag" i tittel/tags.

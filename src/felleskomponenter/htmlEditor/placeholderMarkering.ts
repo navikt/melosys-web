@@ -32,7 +32,7 @@ export const EDITOR_FORMATS = [
 ];
 
 // Legges til kun når dynamisk placeholder-toggle er på. Er de med uansett, overlever
-// markeringene i innlimt/lagret innhold en rollback av togglen.
+// markeringene i innlimt og lagret innhold at togglen slås av.
 export const PLACEHOLDER_FORMATS = [
   "placeholder-utfylt",
   "placeholder-uerstattet",
@@ -225,11 +225,17 @@ const settUerstattetTittel = (quill: Quill, harVerdikontekst: boolean) => {
 };
 
 // Strippes og påføres på nytt ved hver endring, siden markeringen utledes av teksten.
-// Med gyldigeNokler skilles ukjente nøkler (rødt) fra gyldige uten verdi (gult).
+// Med gyldigeNokler skilles ukjente nøkler (rødt) fra gyldige uten verdi (gult), og med
+// gyldigeBetingelsesNokler blir en feilstavet {#hvis …} rød i stedet for å se gyldig ut.
 // placeholder-valgt er ikke med: den bæres av formatet, ikke av teksten.
 // harVerdikontekst forteller om verten kan levere saksverdier (Send brev), og styrer
 // tooltipen på de gule markeringene.
-export const markerUerstattedeOmrader = (quill: Quill, gyldigeNokler?: string[], harVerdikontekst = false) => {
+export const markerUerstattedeOmrader = (
+  quill: Quill,
+  gyldigeNokler?: string[],
+  harVerdikontekst = false,
+  gyldigeBetingelsesNokler?: string[],
+) => {
   const tekst = quill.getText();
   const kanHaTreff = tekst.includes("{") && tekst.includes("}");
   // Klammefri tekst kan fortsatt ha markering igjen – f.eks. når brukeren nettopp slettet
@@ -252,7 +258,7 @@ export const markerUerstattedeOmrader = (quill: Quill, gyldigeNokler?: string[],
   if (!kanHaTreff) return;
 
   finnUerstattedeOmrader(tekst).forEach(({ index, length }) => {
-    const format = markeringsklasseFor(tekst.slice(index, index + length), gyldigeNokler);
+    const format = markeringsklasseFor(tekst.slice(index, index + length), gyldigeNokler, gyldigeBetingelsesNokler);
     quill.formatText(index, length, format, true);
   });
 

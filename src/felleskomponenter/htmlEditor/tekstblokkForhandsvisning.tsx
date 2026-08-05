@@ -26,6 +26,8 @@ interface Props {
   placeholderVerdier?: PlaceholderVerdi[];
   // Nøklene fra placeholder-katalogen; uten dem markeres alle uerstattede nøkler gult.
   gyldigeNokler?: string[];
+  // Nøklene fra betingelseskatalogen; uten dem markeres alle {#hvis …} som betingelse.
+  gyldigeBetingelsesNokler?: string[];
   // Med betingelser løses {#hvis …} opp som ved innsetting; uten dem markeres tokenene.
   betingelser?: Betingelse[];
 }
@@ -48,11 +50,16 @@ const TITTEL_FOR_KLASSE: Record<string, string> = {
   "placeholder-ukjent": PLACEHOLDER_UKJENT_TITTEL,
 };
 
-const uthevPlaceholders = (html: string, gyldigeNokler?: string[], harVerdikontekst = false): string =>
+const uthevPlaceholders = (
+  html: string,
+  gyldigeNokler?: string[],
+  harVerdikontekst = false,
+  gyldigeBetingelsesNokler?: string[],
+): string =>
   html.replace(/\{[^{}<>\n]+\}/g, (token) => {
     // Klassifiseringen antar dekodet tekst, som editoren ser; her leses HTML-strengen, der
     // Quill kan ha lagret mellomrommet som &nbsp;. Selve tokenet vises uendret.
-    const klasse = markeringsklasseFor(dekodTokenTekst(token), gyldigeNokler);
+    const klasse = markeringsklasseFor(dekodTokenTekst(token), gyldigeNokler, gyldigeBetingelsesNokler);
     // Uten verdier å slå opp i (admin) er nøkkelen ikke uten verdi – den er bare ikke løst ennå.
     const tittel =
       TITTEL_FOR_KLASSE[klasse] ??
@@ -60,7 +67,14 @@ const uthevPlaceholders = (html: string, gyldigeNokler?: string[], harVerdikonte
     return `<span class="${klasse}" title="${tittel}">${token}</span>`;
   });
 
-function TekstblokkForhandsvisning({ html, className, placeholderVerdier, gyldigeNokler, betingelser }: Props) {
+function TekstblokkForhandsvisning({
+  html,
+  className,
+  placeholderVerdier,
+  gyldigeNokler,
+  gyldigeBetingelsesNokler,
+  betingelser,
+}: Props) {
   // Samme gating som editoren: uten togglen finnes ikke placeholder-funksjonen, og
   // {…} skal verken erstattes eller markeres. [klammer] uthevet uansett.
   const dynamiskPlaceholderPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER);
@@ -71,8 +85,13 @@ function TekstblokkForhandsvisning({ html, className, placeholderVerdier, gyldig
     // rundt inline-tagger, så stripping ville mistet markeringen. Kun innsettingen stripper alt.
     if (!dynamiskPlaceholderPaa) return uthevKlammer(fjernMarkeringsSpans(html, PLACEHOLDER_MARKERINGSKLASSER));
     const forberedt = forberedInnhold(html, placeholderVerdier, betingelser, PLACEHOLDER_MARKERINGSKLASSER);
-    return uthevPlaceholders(uthevKlammer(forberedt), gyldigeNokler, placeholderVerdier !== undefined);
-  }, [html, placeholderVerdier, gyldigeNokler, betingelser, dynamiskPlaceholderPaa]);
+    return uthevPlaceholders(
+      uthevKlammer(forberedt),
+      gyldigeNokler,
+      placeholderVerdier !== undefined,
+      gyldigeBetingelsesNokler,
+    );
+  }, [html, placeholderVerdier, gyldigeNokler, gyldigeBetingelsesNokler, betingelser, dynamiskPlaceholderPaa]);
   return (
     <div
       className={classNames("tekstblokk-forhandsvisning", className)}

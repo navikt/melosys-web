@@ -169,6 +169,33 @@ describe("TekstblokkForhandsvisning", () => {
     expect(container.textContent).toContain("Betinget");
   });
 
+  it("markerer en betingelsesnøkkel som ikke finnes i betingelseskatalogen som ukjent", () => {
+    const container = render(
+      <TekstblokkForhandsvisning
+        html="<p>{#hvis avslgg}</p><p>Betinget</p><p>{/hvis}</p>"
+        gyldigeNokler={["saksnummer"]}
+        gyldigeBetingelsesNokler={["avslag"]}
+      />,
+    ).container;
+
+    expect(container.querySelector(".placeholder-ukjent")?.textContent).toBe("{#hvis avslgg}");
+    // {/hvis} bærer ingen nøkkel og skal fortsatt stå som betingelse.
+    expect(container.querySelector(".placeholder-betingelse")?.textContent).toBe("{/hvis}");
+  });
+
+  it("markerer en kjent betingelsesnøkkel som betingelse", () => {
+    const container = render(
+      <TekstblokkForhandsvisning
+        html="<p>{#hvis avslag}</p><p>Betinget</p><p>{/hvis}</p>"
+        gyldigeNokler={["saksnummer"]}
+        gyldigeBetingelsesNokler={["avslag"]}
+      />,
+    ).container;
+
+    expect(container.querySelector(".placeholder-ukjent")).toBeNull();
+    expect(container.querySelector(".placeholder-betingelse")?.textContent).toBe("{#hvis avslag}");
+  });
+
   it("gir betingelsesmarkeringen en tooltip om at den løses ved innsetting", () => {
     const container = renderHtml("<p>{/hvis}</p>");
     expect(container.querySelector(".placeholder-betingelse")?.getAttribute("title")).toContain("Send brev");

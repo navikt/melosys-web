@@ -51,6 +51,7 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
   const { data: betingelseKatalog } = useBetingelseKatalog(Boolean(dynamiskPlaceholderPaa));
   // Uten verdier her blir gyldige nøkler gule og ukjente røde – nettopp det admin trenger.
   const gyldigeNokler = useMemo(() => katalog?.map(({ nokkel }) => nokkel), [katalog]);
+  const gyldigeBetingelsesNokler = useMemo(() => betingelseKatalog?.map(({ nokkel }) => nokkel), [betingelseKatalog]);
 
   const [tittel, setTittel] = useState("");
   const [innhold, setInnhold] = useState("");
@@ -171,6 +172,7 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
                 label="Innhold"
                 visTekstblokkSoek={false}
                 gyldigeNokler={gyldigeNokler}
+                gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
               />
             </div>
 

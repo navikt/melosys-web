@@ -33,10 +33,12 @@ vi.mock("../../../services/api/tekstblokker", () => ({
 vi.mock("../../../felleskomponenter/htmlEditor/htmlEditor", () => ({
   default: ({
     gyldigeNokler,
+    gyldigeBetingelsesNokler,
     value,
     onChange,
   }: {
     gyldigeNokler?: string[];
+    gyldigeBetingelsesNokler?: string[];
     value: string;
     onChange: (v: string) => void;
   }) => (
@@ -44,6 +46,7 @@ vi.mock("../../../felleskomponenter/htmlEditor/htmlEditor", () => ({
       aria-label="Innhold"
       data-testid="editor"
       data-gyldige-nokler={(gyldigeNokler ?? []).join(",")}
+      data-gyldige-betingelser={(gyldigeBetingelsesNokler ?? []).join(",")}
       value={value}
       onChange={(e) => onChange(e.target.value)}
     />
@@ -106,6 +109,15 @@ describe("TekstblokkRedigeringModal", () => {
     expect(screen.getByTestId("editor").getAttribute("data-gyldige-nokler")).toBe("soker-navn");
   });
 
+  it("gir editoren betingelsesnøklene, så en feilstavet {#hvis …} kan markeres ukjent", () => {
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+    mockKatalog({ data: katalog }, { data: betingelseKatalog });
+
+    visModal();
+
+    expect(screen.getByTestId("editor").getAttribute("data-gyldige-betingelser")).toBe("avslag");
+  });
+
   it("viser ingen katalog og ingen nøkler når togglen er av", () => {
     vi.mocked(useFeatureToggle).mockReturnValue(false);
     mockKatalog({ data: undefined });
@@ -115,6 +127,7 @@ describe("TekstblokkRedigeringModal", () => {
     expect(screen.queryByText("Tilgjengelige placeholdere")).toBeNull();
     expect(usePlaceholderKatalog).toHaveBeenCalledWith(false);
     expect(screen.getByTestId("editor").getAttribute("data-gyldige-nokler")).toBe("");
+    expect(screen.getByTestId("editor").getAttribute("data-gyldige-betingelser")).toBe("");
   });
 
   it("viser ingen katalog når hentingen feiler eller katalogen er tom", () => {

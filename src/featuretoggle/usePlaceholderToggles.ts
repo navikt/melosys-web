@@ -3,8 +3,8 @@ import { MELOSYS_TEKSTBLOKKER, MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from 
 
 interface PlaceholderToggles {
   tekstblokkerPaa: boolean | undefined;
-  // Backend krever begge: placeholdere er en utvidelse av tekstblokk-funksjonaliteten.
-  // Dynamisk-togglen eksponeres bevisst ikke alene – ingen flate skal gate på den uten paret.
+  // Begge togglene kreves: placeholdere er en utvidelse av tekstblokk-funksjonaliteten.
+  // Dynamisk-togglen eksponeres ikke alene, så ingen flate kan gate på den uten paret.
   placeholderAktiv: boolean;
 }
 

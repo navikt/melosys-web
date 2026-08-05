@@ -286,6 +286,15 @@ describe("SendBrev – varsel om utdaterte placeholder-verdier", () => {
     expect(Api.DokumenterV2.opprettBrev).not.toHaveBeenCalled();
   });
 
+  it("varsler om både et uavsluttet og et foreldreløst token når de står i hvert sitt felt", async () => {
+    renderMedToFritekstfelter("<p>{#hvis avslag}Avslag</p>", "<p>resten av teksten{/hvis}</p>");
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet inneholder uoppløste betingelser")).toBeInTheDocument();
+    expect(screen.getByText("avslag")).toBeInTheDocument();
+    expect(screen.getByText("{/hvis}")).toBeInTheDocument();
+  });
+
   it("viser utdaterte verdier og uoppløste betingelser i samme varsel", async () => {
     vi.mocked(Placeholdere.hentVerdier).mockResolvedValue({ verdier: [{ nokkel: "saksnummer", verdi: "MEL-22" }] });
 
@@ -384,8 +393,7 @@ describe("SendBrev – varsel om uutfylte felter", () => {
     await ventPaaBestilt();
   });
 
-  // Klammefeltene er dagens konvensjon i brev; varselet er fagbesluttet gatet på
-  // tekstblokk-togglen alene, ikke på dynamisk placeholder.
+  // Klammefelt-varselet står på tekstblokk-togglen alene, ikke på dynamisk placeholder.
   it("varsler om klammefelt med tekstblokk-togglen på, selv om dynamisk placeholder er av", async () => {
     renderMedToggles("<p>Hei [navn].</p>", { [MELOSYS_TEKSTBLOKKER]: true });
     await klikkSendBrev();

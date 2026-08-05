@@ -466,6 +466,26 @@ describe("Betingelsestokener i Quill", () => {
     expect(quill.root.querySelector(".placeholder-uerstattet")).toBeNull();
   });
 
+  it("markerer en betingelsesnøkkel som ikke finnes i katalogen som ukjent", () => {
+    const quill = lagEditor();
+    quill.setText("{#hvis avslgg} Avslått {/hvis}\n");
+
+    markerUerstattedeOmrader(quill, ["saksnummer"], false, ["avslag"]);
+
+    expect(quill.root.querySelector(".placeholder-ukjent")?.textContent).toBe("{#hvis avslgg}");
+    expect(quill.root.querySelector(".placeholder-betingelse")?.textContent).toBe("{/hvis}");
+  });
+
+  it("markerer en kjent betingelsesnøkkel nøytralt", () => {
+    const quill = lagEditor();
+    quill.setText("{#hvis avslag} Avslått {/hvis}\n");
+
+    markerUerstattedeOmrader(quill, ["saksnummer"], false, ["avslag"]);
+
+    expect(quill.root.querySelector(".placeholder-ukjent")).toBeNull();
+    expect(quill.root.querySelectorAll(".placeholder-betingelse")).toHaveLength(2);
+  });
+
   it("gir betingelsesmarkeringen en tooltip som forklarer at den løses ved innsetting", () => {
     const quill = lagEditor();
     quill.setText("{#hvis avslag}\n");

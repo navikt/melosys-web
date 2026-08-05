@@ -22,6 +22,7 @@ interface BrevFeltProps {
   redigerbart: boolean;
   placeholderVerdier?: PlaceholderVerdi[];
   gyldigeNokler?: string[];
+  gyldigeBetingelsesNokler?: string[];
   betingelser?: Betingelse[];
 }
 
@@ -32,6 +33,7 @@ function BrevFelt({
   redigerbart,
   placeholderVerdier,
   gyldigeNokler,
+  gyldigeBetingelsesNokler,
   betingelser,
 }: BrevFeltProps) {
   const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state)) as
@@ -85,6 +87,7 @@ function BrevFelt({
             suppressMetaError={!formValues?.showFieldErrors}
             placeholderVerdier={placeholderVerdier}
             gyldigeNokler={gyldigeNokler}
+            gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
             betingelser={betingelser}
           />
         </>
