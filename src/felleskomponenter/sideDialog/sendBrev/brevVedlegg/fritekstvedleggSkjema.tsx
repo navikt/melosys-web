@@ -22,6 +22,7 @@ interface FritekstvedleggSkjemaProps {
   // Samme placeholder-kontekst som brevfeltene: vedlegget sendes som del av brevet.
   placeholderVerdier?: PlaceholderVerdi[];
   gyldigeNokler?: string[];
+  gyldigeBetingelsesNokler?: string[];
   betingelser?: Betingelse[];
 }
 
@@ -35,6 +36,7 @@ function FritekstvedleggSkjema({
   width,
   placeholderVerdier,
   gyldigeNokler,
+  gyldigeBetingelsesNokler,
   betingelser,
 }: FritekstvedleggSkjemaProps) {
   const cls = bem("fritekstvedleggSkjema");
@@ -61,6 +63,7 @@ function FritekstvedleggSkjema({
           visBrevmaler
           placeholderVerdier={placeholderVerdier}
           gyldigeNokler={gyldigeNokler}
+          gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
           betingelser={betingelser}
         />
         <Nav.Row>

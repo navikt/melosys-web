@@ -24,6 +24,8 @@ interface Props {
   placeholderVerdier?: PlaceholderVerdi[];
   // Nøklene fra placeholder-katalogen; skiller ukjente nøkler (røde) fra gyldige uten verdi.
   gyldigeNokler?: string[];
+  // Nøklene fra betingelseskatalogen; skiller ukjente betingelsesnøkler (røde) fra gyldige.
+  gyldigeBetingelsesNokler?: string[];
   // Sakens fakta; med dem forhåndsvises {#hvis …} ferdig oppløst.
   betingelser?: Betingelse[];
 }
@@ -43,6 +45,7 @@ function TekstblokkSoek({
   visBrevmaler = false,
   placeholderVerdier,
   gyldigeNokler,
+  gyldigeBetingelsesNokler,
   betingelser,
 }: Props) {
   const togglePaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
@@ -54,6 +57,7 @@ function TekstblokkSoek({
       visBrevmaler={visBrevmaler}
       placeholderVerdier={placeholderVerdier}
       gyldigeNokler={gyldigeNokler}
+      gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
       betingelser={betingelser}
     />
   );
@@ -65,6 +69,7 @@ function TekstblokkSoekIntern({
   visBrevmaler = false,
   placeholderVerdier,
   gyldigeNokler,
+  gyldigeBetingelsesNokler,
   betingelser,
 }: Props) {
   const ankerRef = useRef<HTMLDivElement>(null);
@@ -285,6 +290,7 @@ function TekstblokkSoekIntern({
                 blokk={blokk}
                 placeholderVerdier={placeholderVerdier}
                 gyldigeNokler={gyldigeNokler}
+                gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
                 betingelser={betingelser}
                 onVelg={(html) => {
                   onVelg(html);
@@ -316,10 +322,18 @@ interface RadProps {
   onVelg: (html: string) => void;
   placeholderVerdier?: PlaceholderVerdi[];
   gyldigeNokler?: string[];
+  gyldigeBetingelsesNokler?: string[];
   betingelser?: Betingelse[];
 }
 
-function TekstblokkRad({ blokk, onVelg, placeholderVerdier, gyldigeNokler, betingelser }: RadProps) {
+function TekstblokkRad({
+  blokk,
+  onVelg,
+  placeholderVerdier,
+  gyldigeNokler,
+  gyldigeBetingelsesNokler,
+  betingelser,
+}: RadProps) {
   // Innhold er skjult som standard – vises kun når brukeren ber om det.
   const [visInnhold, setVisInnhold] = useState(false);
 
@@ -369,6 +383,7 @@ function TekstblokkRad({ blokk, onVelg, placeholderVerdier, gyldigeNokler, betin
             html={blokk.innhold}
             placeholderVerdier={placeholderVerdier}
             gyldigeNokler={gyldigeNokler}
+            gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
             betingelser={betingelser}
           />
         </div>

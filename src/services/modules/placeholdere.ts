@@ -169,9 +169,17 @@ export const erUkjentPlaceholder = (token: string, gyldigeNokler?: string[]): bo
 };
 
 // Trevegs-klassifiseringen av et token, delt av editoren og forhåndsvisningen så de to aldri
-// kan markere ulikt. De reserverte tokenformene sjekkes først: «velg:» og «#hvis»/«/hvis» kan
-// aldri bli røde. Tittelen hører til visningen og settes av kalleren.
-export const markeringsklasseFor = (token: string, gyldigeNokler?: string[]): string => {
+// kan markere ulikt. «velg:» kan aldri bli rød, og «#hvis» kun mot betingelseskatalogen –
+// {/hvis} bærer ingen nøkkel. Tittelen hører til visningen og settes av kalleren.
+export const markeringsklasseFor = (
+  token: string,
+  gyldigeNokler?: string[],
+  gyldigeBetingelsesNokler?: string[],
+): string => {
+  const hvisNokkel = parseHvisStartToken(token)?.nokkel;
+  // Uten betingelseskatalog – ikke lastet, feilet eller tom – kan vi ikke avgjøre gyldighet.
+  if (hvisNokkel !== undefined && gyldigeBetingelsesNokler?.length && !gyldigeBetingelsesNokler.includes(hvisNokkel))
+    return "placeholder-ukjent";
   if (erBetingelsesToken(token)) return "placeholder-betingelse";
   if (erValgToken(token)) return "placeholder-valg";
   return erUkjentPlaceholder(token, gyldigeNokler) ? "placeholder-ukjent" : "placeholder-uerstattet";
@@ -235,8 +243,9 @@ export const erstattPlaceholdere = (html: string, verdier: PlaceholderVerdi[]): 
 // ellers avgjøres omfanget inne i blokken tokenene deler.
 const BLOKKTAGGER = new Set(["P", "H1", "H2", "H3", "H4", "H5", "H6", "LI", "DIV", "TD", "TH", "BLOCKQUOTE", "PRE"]);
 
-// Celler og listepunkter er strukturelle: fjernes de, kollapser tabellraden eller lista.
-const CELLE_VELGER = "td,th,li";
+// Å fjerne en celle river raden i stykker. Listepunkter er derimot trygge å fjerne: lista
+// står igjen med færre punkter, som er nettopp det en betinget liste skal gi.
+const CELLETAGGER = new Set(["TD", "TH"]);
 
 interface TokenTreff {
   node: Text;
@@ -319,8 +328,7 @@ const blokkOmfang = ({ start, slutt }: Par): { fra: Element; til: Element } | nu
   const til = blokkFor(slutt.node);
   if (fra === null || til === null || fra.parentNode !== til.parentNode) return null;
   if (fra.textContent?.trim() !== start.token || til.textContent?.trim() !== slutt.token) return null;
-  // Ulik celle eller listepunkt: å fjerne blokkene ville revet i stykker raden eller lista.
-  if (fra.closest(CELLE_VELGER) !== til.closest(CELLE_VELGER)) return null;
+  if (CELLETAGGER.has(fra.tagName) || CELLETAGGER.has(til.tagName)) return null;
   return { fra, til };
 };
 
@@ -524,9 +532,8 @@ export const finnSakstypeKonflikter = (
   });
 };
 
-// Klammefelter saksbehandler skulle fylt ut selv. Delt fra token-varianten under fordi
-// [felt]-konvensjonen er eldre enn placeholder-funksjonen og varsles uavhengig av toggle.
-// Brukes kun til varsel ved sending – teksten endres aldri.
+// Klammefelter saksbehandler skulle fylt ut selv. Skilt fra token-varianten under fordi de to
+// varsles på hver sin toggle. Brukes kun til varsel ved sending – teksten endres aldri.
 // Ingen billig streng-vokter: entitetskodede klammer (&#91;) finnes bare i DOM-teksten.
 export const finnUutfylteKlammer = (html: string): string[] => {
   const dokument = new DOMParser().parseFromString(html, "text/html");

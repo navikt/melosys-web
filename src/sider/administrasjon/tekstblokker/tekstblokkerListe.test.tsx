@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import TekstblokkerListe from "./tekstblokkerListe";
@@ -25,7 +24,9 @@ const visListe = (blokker: TekstblokkOversikt[], props: Partial<Parameters<typeo
     <TekstblokkerListe
       blokker={blokker}
       utvidedeIder={new Set()}
+      historikkId={null}
       onToggleUtvidet={vi.fn()}
+      onToggleHistorikk={vi.fn()}
       onRediger={vi.fn()}
       onSlett={vi.fn()}
       onPubliser={vi.fn()}
@@ -159,30 +160,19 @@ describe("TekstblokkerListe – historikk", () => {
     ...overstyringer,
   });
 
-  const visHistorikk = async (versjoner: TekstblokkVersjon[]) => {
+  const visHistorikk = (versjoner: TekstblokkVersjon[]) => {
     vi.mocked(useTekstblokkHistorikk).mockReturnValue({
       data: versjoner,
       isLoading: false,
       error: null,
     } as ReturnType<typeof useTekstblokkHistorikk>);
 
-    visListe([blokk()], { utvidedeIder: new Set([1]) });
-    await userEvent.click(screen.getByRole("button", { name: "Historikk" }));
+    visListe([blokk()], { utvidedeIder: new Set([1]), historikkId: 1 });
   };
 
-  it("åpner raden og viser versjonene når historikk velges", async () => {
-    vi.mocked(useTekstblokkHistorikk).mockReturnValue({
-      data: [versjon(1, "OPPRETTET"), versjon(2, "ENDRET")],
-      isLoading: false,
-      error: null,
-    } as ReturnType<typeof useTekstblokkHistorikk>);
-    const onToggleUtvidet = vi.fn();
+  it("viser versjonene i raden som er valgt for historikk", () => {
+    visHistorikk([versjon(1, "OPPRETTET"), versjon(2, "ENDRET")]);
 
-    visListe([blokk()], { onToggleUtvidet, utvidedeIder: new Set([1]) });
-    await userEvent.click(screen.getByRole("button", { name: "Historikk" }));
-
-    // Raden var åpen fra før, så den skal ikke lukkes av historikk-knappen.
-    expect(onToggleUtvidet).not.toHaveBeenCalled();
     expect(screen.getByRole("columnheader", { name: "Versjon" })).toBeDefined();
     expect(screen.getByText("Opprettet")).toBeDefined();
     expect(screen.getByText("Endret")).toBeDefined();
@@ -190,8 +180,8 @@ describe("TekstblokkerListe – historikk", () => {
     expect(screen.getAllByText("Kari Saksbehandler")).toHaveLength(2);
   });
 
-  it("lister hvilke felter som skiller versjonen fra den forrige, med detaljene", async () => {
-    await visHistorikk([
+  it("lister hvilke felter som skiller versjonen fra den forrige, med detaljene", () => {
+    visHistorikk([
       versjon(1, "OPPRETTET", { tags: ["usa"], sakstyper: [], behandlingstemaer: [], status: "UTKAST" }),
       versjon(2, "ENDRET", {
         tittel: "Om utsending til USA",
@@ -207,8 +197,8 @@ describe("TekstblokkerListe – historikk", () => {
     ).toBeDefined();
   });
 
-  it("viser lagt til før fjernet i avgrensningen, på tvers av sakstype og behandlingstema", async () => {
-    await visHistorikk([
+  it("viser lagt til før fjernet i avgrensningen, på tvers av sakstype og behandlingstema", () => {
+    visHistorikk([
       versjon(1, "OPPRETTET", { sakstyper: ["EU_EOS"], behandlingstemaer: [] }),
       versjon(2, "ENDRET", { sakstyper: [], behandlingstemaer: ["ARBEID_KUN_NORGE"] }),
     ]);
@@ -216,20 +206,20 @@ describe("TekstblokkerListe – historikk", () => {
     expect(screen.getByText("Endret: avgrensning (+Arbeid kun i Norge, −EU/EØS-land)")).toBeDefined();
   });
 
-  it("viser fjernede tags med minus", async () => {
-    await visHistorikk([versjon(1, "OPPRETTET", { tags: ["usa", "skip"] }), versjon(2, "ENDRET", { tags: ["skip"] })]);
+  it("viser fjernede tags med minus", () => {
+    visHistorikk([versjon(1, "OPPRETTET", { tags: ["usa", "skip"] }), versjon(2, "ENDRET", { tags: ["skip"] })]);
 
     expect(screen.getByText("Endret: tags (−usa)")).toBeDefined();
   });
 
-  it("sier ingenting om endring på den første versjonen", async () => {
-    await visHistorikk([versjon(1, "OPPRETTET", { tags: [], sakstyper: [], behandlingstemaer: [] })]);
+  it("sier ingenting om endring på den første versjonen", () => {
+    visHistorikk([versjon(1, "OPPRETTET", { tags: [], sakstyper: [], behandlingstemaer: [] })]);
 
     expect(screen.queryByText(/^Endret: /)).toBeNull();
   });
 
-  it("nevner kun innhold når bare innholdet er endret", async () => {
-    await visHistorikk([
+  it("nevner kun innhold når bare innholdet er endret", () => {
+    visHistorikk([
       versjon(1, "OPPRETTET", { tags: ["usa"], sakstyper: ["EU_EOS"], behandlingstemaer: [] }),
       versjon(2, "ENDRET", {
         innhold: "<p>Ny tekst</p>",
@@ -242,54 +232,24 @@ describe("TekstblokkerListe – historikk", () => {
     expect(screen.getByText("Endret: innhold")).toBeDefined();
   });
 
-  it("nevner bare feltene som faktisk skiller seg", async () => {
-    await visHistorikk([versjon(1, "OPPRETTET"), versjon(2, "ENDRET", { innhold: "<p>Ny tekst</p>" })]);
+  it("nevner bare feltene som faktisk skiller seg", () => {
+    visHistorikk([versjon(1, "OPPRETTET"), versjon(2, "ENDRET", { innhold: "<p>Ny tekst</p>" })]);
 
     expect(screen.getByText("Endret: innhold")).toBeDefined();
   });
 
-  it("åpner raden når historikk velges på en lukket rad", async () => {
-    const onToggleUtvidet = vi.fn();
+  it("melder fra om historikkvalget i stedet for å styre det selv", async () => {
+    const onToggleHistorikk = vi.fn();
 
-    visListe([blokk()], { onToggleUtvidet });
+    visListe([blokk()], { onToggleHistorikk });
     await userEvent.click(screen.getByRole("button", { name: "Historikk" }));
 
-    expect(onToggleUtvidet).toHaveBeenCalledWith(1);
+    expect(onToggleHistorikk).toHaveBeenCalledWith(1);
   });
 
   it("viser ingen historikk før den er valgt", () => {
     visListe([blokk()], { utvidedeIder: new Set([1]) });
 
-    expect(screen.queryByRole("columnheader", { name: "Versjon" })).toBeNull();
-  });
-
-  it("nullstiller historikkvalget når raden lukkes, så ny åpning viser forhåndsvisningen", async () => {
-    // Utvidelsen styres av siden, så testen holder den samme tilstanden som den gjør.
-    function Vert() {
-      const [utvidedeIder, setUtvidedeIder] = useState<Set<number>>(new Set());
-      const toggle = (id: number) =>
-        setUtvidedeIder((forrige) => (forrige.has(id) ? new Set<number>() : new Set([id])));
-      return (
-        <TekstblokkerListe
-          blokker={[blokk()]}
-          utvidedeIder={utvidedeIder}
-          onToggleUtvidet={toggle}
-          onRediger={vi.fn()}
-          onSlett={vi.fn()}
-          onPubliser={vi.fn()}
-        />
-      );
-    }
-
-    render(<Vert />);
-    await userEvent.click(screen.getByRole("button", { name: "Historikk" }));
-    expect(screen.getByRole("button", { name: "Historikk" }).getAttribute("aria-pressed")).toBe("true");
-
-    await userEvent.click(screen.getByRole("button", { name: "Vis mindre" }));
-    // Første treff er radens egen utvid-knapp; historikktabellen har sine egne.
-    await userEvent.click(screen.getAllByRole("button", { name: "Vis mer" })[0]);
-
-    expect(screen.getByRole("button", { name: "Historikk" }).getAttribute("aria-pressed")).toBe("false");
     expect(screen.queryByRole("columnheader", { name: "Versjon" })).toBeNull();
   });
 });

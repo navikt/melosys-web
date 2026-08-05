@@ -478,18 +478,22 @@ function SendBrev({
 
   // Kun teksten som blir med i bestillingen – fritekstvedleggene inkludert, siden de sendes
   // sammen med brevet og kan ha innsatte verdier. Brukes bare til varselanalysen, aldri til å
-  // bygge brevet. <hr> skiller feltene i DOM-en, så et token aldri kan matche på tvers av dem.
-  const hentFritekstHtml = () =>
-    [...Object.values(hentFritekstFelter()), ...fritekstvedlegg.map(({ fritekst }) => fritekst)]
-      .filter(Boolean)
-      .join("<hr>");
+  // bygge brevet. Hvert felt står for seg: en ubalansert betingelse i ett felt skal ikke kunne
+  // pare seg med et token i et annet.
+  const hentFritekstHtmlPerFelt = (): string[] =>
+    [...Object.values(hentFritekstFelter()), ...fritekstvedlegg.map(({ fritekst }) => fritekst)].filter(Boolean);
 
-  const hentUtdaterteVerdier = async (html: string): Promise<UtdatertPlaceholder[]> => {
+  const hentUtdaterteVerdier = async (felter: string[]): Promise<UtdatertPlaceholder[]> => {
     // Spinneren står mens oppslaget pågår; sende-flyten slår den av igjen.
     setSendBrevSpinner(true);
     try {
       const { verdier } = await hentVerdier(behandlingID);
-      return finnUtdaterteVerdier(html, verdier);
+      const perAvvik = new Map(
+        felter
+          .flatMap((felt) => finnUtdaterteVerdier(felt, verdier))
+          .map((utdatert) => [`${utdatert.nokkel}${utdatert.innsattVerdi}`, utdatert]),
+      );
+      return [...perAvvik.values()];
     } catch {
       // Uten ferske verdier har vi ingenting å sammenligne mot; brevet sendes uten varsel.
       return [];
@@ -512,17 +516,18 @@ function SendBrev({
       return;
     }
 
-    const brevHtml = hentFritekstHtml();
+    const brevFelter = hentFritekstHtmlPerFelt();
+    const samle = (finn: (html: string) => string[]) => [...new Set(brevFelter.flatMap(finn))];
     // Uoppløste betingelser varsles i samme modal som utdaterte verdier, uten å blokkere sendingen.
-    const uopploste = placeholderAktiv ? finnUopplosteBetingelser(brevHtml) : [];
-    // Klammefelt og tokener som aldri ble fylt ut ville gått ordrett ut i brevet. Fagbesluttet
-    // gating: klammer-varselet står på tekstblokk-togglen alene – den er på i prod, så dette er
-    // en bryter, ikke en utsettelse. Tokenene krever i tillegg dynamisk-togglen.
+    const uopploste = placeholderAktiv ? samle(finnUopplosteBetingelser) : [];
+    // Klammefelt og tokener som aldri ble fylt ut ville gått ordrett ut i brevet. Klammer-varselet
+    // står på tekstblokk-togglen alene; tokenene krever i tillegg dynamisk-togglen.
     const uutfylte = tekstblokkerPaa
-      ? [...finnUutfylteKlammer(brevHtml), ...(placeholderAktiv ? finnUutfylteTokener(brevHtml) : [])]
+      ? [...samle(finnUutfylteKlammer), ...(placeholderAktiv ? samle(finnUutfylteTokener) : [])]
       : [];
     // Uten innsatte verdier er det ingenting å sammenligne, og oppslaget er unødvendig.
-    const utdaterte = placeholderAktiv && harInnsatteVerdier(brevHtml) ? await hentUtdaterteVerdier(brevHtml) : [];
+    const utdaterte =
+      placeholderAktiv && brevFelter.some(harInnsatteVerdier) ? await hentUtdaterteVerdier(brevFelter) : [];
 
     if (utdaterte.length > 0 || uopploste.length > 0 || uutfylte.length > 0) {
       setSendBrevSpinner(false);

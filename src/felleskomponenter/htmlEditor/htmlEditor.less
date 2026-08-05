@@ -81,12 +81,6 @@
         background-color: var(--a-surface-neutral-subtle, #e6e6e6);
         color: var(--a-text-subtle, #545454);
         border-radius: 2px;
-
-        // I Send brev må et gjenstående token ryddes før sending – da er gul riktigere enn grå.
-        .htmlEditor--betingelse-varsel & {
-          background-color: var(--a-surface-warning-subtle, #ffeccc);
-          color: inherit;
-        }
       }
 
       table {
@@ -177,6 +171,14 @@
       font-size: 16px;
       font-weight: bold;
     }
+  }
+
+  // I Send brev må et gjenstående betingelsestoken ryddes før sending – da er gul riktigere
+  // enn grå. Modifikatoren står på samme element som .htmlEditor, så den må skrives sammen
+  // med den her, ikke som en forelder.
+  &.htmlEditor--betingelse-varsel .editor-wrapper .ql-container .placeholder-betingelse {
+    background-color: var(--a-surface-warning-subtle, #ffeccc);
+    color: inherit;
   }
 
   .feilmelding {

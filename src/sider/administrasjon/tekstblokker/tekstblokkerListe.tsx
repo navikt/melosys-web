@@ -1,5 +1,4 @@
 import { ClockDashedIcon, CheckmarkCircleIcon, PencilIcon, TrashIcon } from "@navikt/aksel-icons";
-import { useState } from "react";
 
 import * as Nav from "../../../navFrontend";
 import TekstblokkForhandsvisning from "../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning";
@@ -22,27 +21,26 @@ const gjelderTermer = (blokk: TekstblokkOversikt): Array<{ noekkel: string; term
 interface Props {
   blokker: TekstblokkOversikt[];
   utvidedeIder: Set<number>;
+  // Historikken deler den utvidbare raden med forhåndsvisningen, så bare én av dem vises av
+  // gangen. Valget bor sammen med utvidedeIder, så de to ikke kan komme ut av takt.
+  historikkId: number | null;
   onToggleUtvidet: (id: number) => void;
+  onToggleHistorikk: (id: number) => void;
   onRediger: (id: number) => void;
   onSlett: (blokk: TekstblokkOversikt) => void;
   onPubliser: (blokk: TekstblokkOversikt) => void;
 }
 
-function TekstblokkerListe({ blokker, utvidedeIder, onToggleUtvidet, onRediger, onSlett, onPubliser }: Props) {
-  // Historikken deler den utvidbare raden med forhåndsvisningen, så bare én av dem vises av gangen.
-  const [historikkId, setHistorikkId] = useState<number | null>(null);
-
-  const toggleHistorikk = (id: number) => {
-    setHistorikkId(historikkId === id ? null : id);
-    if (!utvidedeIder.has(id)) onToggleUtvidet(id);
-  };
-
-  // Lukkes raden, står ikke historikkvalget ved lag: neste åpning viser forhåndsvisningen.
-  const toggleUtvidet = (id: number) => {
-    if (utvidedeIder.has(id) && historikkId === id) setHistorikkId(null);
-    onToggleUtvidet(id);
-  };
-
+function TekstblokkerListe({
+  blokker,
+  utvidedeIder,
+  historikkId,
+  onToggleUtvidet,
+  onToggleHistorikk,
+  onRediger,
+  onSlett,
+  onPubliser,
+}: Props) {
   if (blokker.length === 0) {
     return (
       <div className="tekstblokker__tom">
@@ -71,8 +69,8 @@ function TekstblokkerListe({ blokker, utvidedeIder, onToggleUtvidet, onRediger, 
             blokk={blokk}
             utvidet={utvidedeIder.has(blokk.id)}
             visHistorikk={historikkId === blokk.id}
-            onToggleUtvidet={toggleUtvidet}
-            onToggleHistorikk={toggleHistorikk}
+            onToggleUtvidet={onToggleUtvidet}
+            onToggleHistorikk={onToggleHistorikk}
             onRediger={onRediger}
             onSlett={onSlett}
             onPubliser={onPubliser}

@@ -178,9 +178,9 @@ describe("TekstblokkSoek – statusfilter", () => {
   });
 
   it("skylder ikke på konteksten når bare utkast-filtreringen tømmer lista", async () => {
-    // Typisk under utrulling: alle blokker av typen er fortsatt utkast. Da skal
-    // tomtilstanden verken peke på sakstype/behandlingstema eller tilby en «Vis alle»
-    // som ikke kan hjelpe (statusfilteret består uansett).
+    // Er alle blokkene av typen utkast, skal tomtilstanden verken peke på
+    // sakstype/behandlingstema eller tilby en «Vis alle» som ikke kan hjelpe:
+    // statusfilteret består uansett.
     vi.mocked(useTekstblokker).mockReturnValue({
       data: [{ ...blokk(9, "Uferdig utkast", [], []), status: "UTKAST" }],
       isLoading: false,

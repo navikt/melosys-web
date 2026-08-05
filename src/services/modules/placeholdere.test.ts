@@ -14,6 +14,7 @@ import {
   finnUutfylteTokener,
   harBetingelseEllerValgTokener,
   hentKatalog,
+  markeringsklasseFor,
   PlaceholderBeskrivelse,
   fjernMarkeringsSpans,
   losOppBetingelser,
@@ -352,6 +353,30 @@ describe("erUkjentPlaceholder for betingelsestokener", () => {
   });
 });
 
+describe("markeringsklasseFor for betingelsestokener", () => {
+  it("markerer en kjent betingelsesnøkkel som betingelse", () => {
+    expect(markeringsklasseFor("{#hvis avslag}", ["saksnummer"], ["avslag"])).toBe("placeholder-betingelse");
+  });
+
+  it("markerer en nøkkel som ikke finnes i betingelseskatalogen som ukjent", () => {
+    expect(markeringsklasseFor("{#hvis avslgg}", ["saksnummer"], ["avslag"])).toBe("placeholder-ukjent");
+  });
+
+  it("markerer alt som betingelse uten betingelseskatalog", () => {
+    expect(markeringsklasseFor("{#hvis avslgg}", ["saksnummer"])).toBe("placeholder-betingelse");
+    expect(markeringsklasseFor("{#hvis avslgg}", ["saksnummer"], [])).toBe("placeholder-betingelse");
+  });
+
+  it("markerer aldri {/hvis} som ukjent – den bærer ingen nøkkel", () => {
+    expect(markeringsklasseFor("{/hvis}", ["saksnummer"], ["avslag"])).toBe("placeholder-betingelse");
+  });
+
+  it("slår ikke opp vanlige nøkler i betingelseskatalogen", () => {
+    expect(markeringsklasseFor("{saksnummer}", ["saksnummer"], ["avslag"])).toBe("placeholder-uerstattet");
+    expect(markeringsklasseFor("{avslag}", ["saksnummer"], ["avslag"])).toBe("placeholder-ukjent");
+  });
+});
+
 describe("losOppBetingelser", () => {
   const oppfylt: Betingelse[] = [{ nokkel: "avslag", oppfylt: true }];
   const ikkeOppfylt: Betingelse[] = [{ nokkel: "avslag", oppfylt: false }];
@@ -425,8 +450,20 @@ describe("losOppBetingelser", () => {
     expect(losOppBetingelser(html, oppfylt)).toBe(html);
   });
 
-  it("rører ikke listepunkter der tokenene står i hvert sitt punkt", () => {
+  // Et listepunkt kan trygt fjernes: lista står igjen med færre punkter.
+  it("beholder innholdspunktene og fjerner tokenpunktene i en betinget punktliste", () => {
+    const html = "<ul><li>{#hvis avslag}</li><li>Ett</li><li>To</li><li>{/hvis}</li></ul>";
+    expect(losOppBetingelser(html, oppfylt)).toBe("<ul><li>Ett</li><li>To</li></ul>");
+  });
+
+  it("fjerner alle punktene i en betinget punktliste når betingelsen ikke er oppfylt", () => {
     const html = "<ul><li>{#hvis avslag}</li><li>Betinget</li><li>{/hvis}</li></ul>";
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe("<ul></ul>");
+  });
+
+  it("rører ikke tokener som står alene i hver sin overskriftscelle", () => {
+    const html = "<table><tbody><tr><th>{#hvis avslag}</th><th>{/hvis}</th></tr></tbody></table>";
+    expect(losOppBetingelser(html, oppfylt)).toBe(html);
     expect(losOppBetingelser(html, ikkeOppfylt)).toBe(html);
   });
 

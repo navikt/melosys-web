@@ -19,6 +19,7 @@ interface BrevValgProps {
   finnValgAlternativ: (felt: Api.DokumenterV2.Felt) => Api.DokumenterV2.ValgAlternativ | undefined;
   placeholderVerdier?: PlaceholderVerdi[];
   gyldigeNokler?: string[];
+  gyldigeBetingelsesNokler?: string[];
   betingelser?: Betingelse[];
 }
 
@@ -53,6 +54,7 @@ function BrevValg({
   finnValgAlternativ,
   placeholderVerdier,
   gyldigeNokler,
+  gyldigeBetingelsesNokler,
   betingelser,
 }: BrevValgProps) {
   const skalViseBrevFelt = (felt: Api.DokumenterV2.Felt) => {
@@ -88,6 +90,7 @@ function BrevValg({
               redigerbart={redigerbart}
               placeholderVerdier={placeholderVerdier}
               gyldigeNokler={gyldigeNokler}
+              gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
               betingelser={betingelser}
             />
           )}

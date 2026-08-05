@@ -26,6 +26,9 @@ function TekstblokkerSide() {
   const [slettBlokk, setSlettBlokk] = useState<TekstblokkOversikt | null>(null);
   const [publiserBlokk, setPubliserBlokk] = useState<TekstblokkOversikt | null>(null);
   const [utvidedeIder, setUtvidedeIder] = useState<Set<number>>(new Set());
+  // Historikken vises i den utvidede raden, så valget hører sammen med utvidedeIder: lukkes
+  // raden, faller historikkvalget bort og neste åpning viser forhåndsvisningen.
+  const [historikkId, setHistorikkId] = useState<number | null>(null);
 
   // Admin ber eksplisitt om utkast – api-et leverer dem kun hit, aldri til Send brev-søket.
   const { data: blokker = [], isLoading, error } = useTekstblokker(type, true, true);
@@ -54,6 +57,7 @@ function TekstblokkerSide() {
 
   const toggleAlle = () => {
     setUtvidedeIder(alleErUtvidet ? new Set() : new Set(synlige.map((b) => b.id)));
+    if (alleErUtvidet) setHistorikkId(null);
   };
 
   const toggleRad = (id: number) => {
@@ -63,12 +67,20 @@ function TekstblokkerSide() {
       else ny.add(id);
       return ny;
     });
+    if (utvidedeIder.has(id) && historikkId === id) setHistorikkId(null);
+  };
+
+  // Historikken vises kun i en åpen rad, så knappen åpner raden om den er lukket.
+  const toggleHistorikk = (id: number) => {
+    setHistorikkId(historikkId === id ? null : id);
+    setUtvidedeIder((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
   };
 
   const byttType = (nyType: TekstblokkType) => {
     setType(nyType);
     setValgteTags([]);
     setUtvidedeIder(new Set());
+    setHistorikkId(null);
   };
 
   return (
@@ -121,7 +133,9 @@ function TekstblokkerSide() {
         <TekstblokkerListe
           blokker={synlige}
           utvidedeIder={utvidedeIder}
+          historikkId={historikkId}
           onToggleUtvidet={toggleRad}
+          onToggleHistorikk={toggleHistorikk}
           onRediger={(id) => setModal({ type: "rediger", id })}
           onSlett={setSlettBlokk}
           onPubliser={setPubliserBlokk}
