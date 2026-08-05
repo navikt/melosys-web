@@ -258,7 +258,9 @@ export const usePlaceholderValg = ({ quillRef, sisteMarkering, aktiv, editorNokk
 
     return () => {
       quill.root.removeEventListener("click", handterKlikk);
-      enterBindinger.splice(enterBindinger.indexOf(binding), 1);
+      // indexOf -1 ville fått splice til å telle bakfra og fjerne en av Quills egne bindinger.
+      const indeks = enterBindinger.indexOf(binding);
+      if (indeks >= 0) enterBindinger.splice(indeks, 1);
     };
   }, [aktiv, editorNokkel, quillRef, sisteMarkering]);
 
