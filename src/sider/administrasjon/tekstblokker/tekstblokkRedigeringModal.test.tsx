@@ -150,27 +150,25 @@ describe("TekstblokkRedigeringModal – feilmelding ved lagring", () => {
     mocks.tekstblokk.mockReturnValue({ data: undefined, isLoading: false });
   });
 
-  it("oversetter 400 uten feilkoder til en forståelig melding", () => {
-    mocks.opprettFeil.mockReturnValue(apiFeil(400, "JSON parse error: Cannot deserialize value of type Sakstype"));
-
-    visModal();
-
-    expect(screen.getByText("Ugyldig verdi i avgrensningen — last siden på nytt og prøv igjen")).toBeDefined();
-  });
-
-  it("viser feilkodene fra en 400 med bean-validering i stedet for avgrensningsmeldingen", () => {
-    // En for lang tittel har ingenting med avgrensningen å gjøre – meldingen fra api-et
-    // peker på riktig felt og skal frem til admin.
+  it("viser api-ets forklaring fra responsbodyen, ikke statusteksten", () => {
     mocks.opprettFeil.mockReturnValue(
-      Object.assign(apiFeil(400, "Validation failed"), {
-        body: { feilkoder: ["tittel: size must be between 0 and 200"] },
+      Object.assign(apiFeil(400, "Bad Request"), {
+        body: { message: "sakstyper: ugyldig kode EU_EOSS" },
       }),
     );
 
     visModal();
 
-    expect(screen.getByText("tittel: size must be between 0 and 200")).toBeDefined();
-    expect(screen.queryByText(/Ugyldig verdi i avgrensningen/)).toBeNull();
+    expect(screen.getByText("sakstyper: ugyldig kode EU_EOSS")).toBeDefined();
+    expect(screen.queryByText("Bad Request")).toBeNull();
+  });
+
+  it("faller tilbake til statusteksten når responsbodyen mangler melding", () => {
+    mocks.opprettFeil.mockReturnValue(Object.assign(apiFeil(400, "Bad Request"), { body: {} }));
+
+    visModal();
+
+    expect(screen.getByText("Bad Request")).toBeDefined();
   });
 
   it("viser meldingen som den er for andre feil", () => {
