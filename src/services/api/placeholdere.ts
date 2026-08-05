@@ -30,15 +30,28 @@ const katalogSporring = (enabled: boolean) => ({
   staleTime: KATALOG_STALE_TIME,
 });
 
-export const usePlaceholderVerdier = (behandlingId: number | null, enabled = true) =>
-  useQuery({ ...verdiSporring(behandlingId, enabled), select: (respons) => respons.verdier });
+// Stabile referanser: en select definert inline ville vært ny for hver render, og de som
+// bygger et nytt array ville gitt konsumentene ny data hver gang – med remarkering av hele
+// editoren som følge.
+const TOMME_BETINGELSER: Placeholdere.Betingelse[] = [];
+const TOMME_BETINGELSESBESKRIVELSER: Placeholdere.BetingelseBeskrivelse[] = [];
 
+const velgVerdier = (respons: { verdier: Placeholdere.PlaceholderVerdi[] }) => respons.verdier;
 // Eldre api uten feltet gir tom liste – da er alle betingelser ukjente og innholdet står urørt.
+const velgBetingelser = (respons: { betingelser?: Placeholdere.Betingelse[] }) =>
+  respons.betingelser ?? TOMME_BETINGELSER;
+const velgPlaceholdere = (respons: { placeholdere: Placeholdere.PlaceholderBeskrivelse[] }) => respons.placeholdere;
+const velgBetingelsesbeskrivelser = (respons: { betingelser?: Placeholdere.BetingelseBeskrivelse[] }) =>
+  respons.betingelser ?? TOMME_BETINGELSESBESKRIVELSER;
+
+export const usePlaceholderVerdier = (behandlingId: number | null, enabled = true) =>
+  useQuery({ ...verdiSporring(behandlingId, enabled), select: velgVerdier });
+
 export const useBetingelseVerdier = (behandlingId: number | null, enabled = true) =>
-  useQuery({ ...verdiSporring(behandlingId, enabled), select: (respons) => respons.betingelser ?? [] });
+  useQuery({ ...verdiSporring(behandlingId, enabled), select: velgBetingelser });
 
 export const usePlaceholderKatalog = (enabled = true) =>
-  useQuery({ ...katalogSporring(enabled), select: (respons) => respons.placeholdere });
+  useQuery({ ...katalogSporring(enabled), select: velgPlaceholdere });
 
 export const useBetingelseKatalog = (enabled = true) =>
-  useQuery({ ...katalogSporring(enabled), select: (respons) => respons.betingelser ?? [] });
+  useQuery({ ...katalogSporring(enabled), select: velgBetingelsesbeskrivelser });
