@@ -9,6 +9,7 @@ export const tekstblokkOversikt = (overstyringer: Partial<TekstblokkOversikt> = 
   type: "TEKSTBLOKK",
   tags: [],
   sakstyper: [],
+  sakstemaer: [],
   behandlingstemaer: [],
   status: "PUBLISERT",
   endretDato: "2026-01-01T00:00:00Z",

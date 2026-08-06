@@ -44,6 +44,7 @@ function TekstblokkerSide() {
     valgteTags,
     undefined,
     undefined,
+    undefined,
     statusfilter,
   );
   // Ikke tagAntall: det telles over blokkene som matcher søket, og hører hjemme i

@@ -118,6 +118,7 @@ export const useFiltrerteTekstblokker = (
   soek: string,
   valgteTags: string[],
   sakstype?: string,
+  sakstema?: string,
   behandlingstema?: string,
   // "ALLE" er admin, der utkast skal vises; saksbehandlerflaten sender "PUBLISERT" som klientsidevern.
   statusfilter: Statusfilter = "ALLE",
@@ -128,8 +129,8 @@ export const useFiltrerteTekstblokker = (
     [blokker, soek, valgteTags, statusfilter],
   );
   const synlige = useMemo(
-    () => matchende.filter((b) => gjelderKontekst(b, sakstype, behandlingstema)),
-    [matchende, sakstype, behandlingstema],
+    () => matchende.filter((b) => gjelderKontekst(b, sakstype, sakstema, behandlingstema)),
+    [matchende, sakstype, sakstema, behandlingstema],
   );
   const antallUtenKontekst = matchende.length;
   // Tagene telles over det som faktisk er igjen, ikke over hele søketreffet. Med

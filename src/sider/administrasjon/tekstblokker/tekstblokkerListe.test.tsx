@@ -155,6 +155,7 @@ describe("TekstblokkerListe – historikk", () => {
     innhold: "<p>Tekst</p>",
     tags: [],
     sakstyper: [],
+    sakstemaer: [],
     behandlingstemaer: [],
     status: "PUBLISERT",
     ...overstyringer,

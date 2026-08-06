@@ -29,6 +29,7 @@ const versjon = {
   innhold: "<p>Tekst</p>",
   tags: [],
   sakstyper: [],
+  sakstemaer: [],
   behandlingstemaer: [],
   status: "PUBLISERT",
 } as Tekstblokker.TekstblokkVersjon;

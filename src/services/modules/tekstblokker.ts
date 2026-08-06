@@ -15,6 +15,7 @@ export interface TekstblokkOversikt {
   tags: string[];
   // Kodeverdier (EU_EOS, UTSENDT_ARBEIDSTAKER …). Tom liste betyr «gjelder alle».
   sakstyper: string[];
+  sakstemaer: string[];
   behandlingstemaer: string[];
   status: TekstblokkStatus;
   endretDato: string;
@@ -29,6 +30,7 @@ export interface Tekstblokk {
   type: TekstblokkType;
   tags: string[];
   sakstyper: string[];
+  sakstemaer: string[];
   behandlingstemaer: string[];
   status: TekstblokkStatus;
   registrertDato: string;
@@ -43,6 +45,7 @@ export interface TekstblokkRequest {
   type: TekstblokkType;
   tags: string[];
   sakstyper: string[];
+  sakstemaer: string[];
   behandlingstemaer: string[];
   status?: TekstblokkStatus;
 }
@@ -58,19 +61,26 @@ export interface TekstblokkVersjon {
   innhold: string;
   tags: string[];
   sakstyper: string[];
+  sakstemaer: string[];
   behandlingstemaer: string[];
   status: TekstblokkStatus;
 }
 
 const baseUrl = `${API_BASE_URL}${TEKSTBLOKKER}`;
 
-type Normaliserbar = { sakstyper?: string[]; behandlingstemaer?: string[]; status?: TekstblokkStatus };
-type Normalisert = Pick<TekstblokkOversikt, "sakstyper" | "behandlingstemaer" | "status">;
+type Normaliserbar = {
+  sakstyper?: string[];
+  sakstemaer?: string[];
+  behandlingstemaer?: string[];
+  status?: TekstblokkStatus;
+};
+type Normalisert = Pick<TekstblokkOversikt, "sakstyper" | "sakstemaer" | "behandlingstemaer" | "status">;
 
 // Et api som ikke leverer avgrensning eller status utelater feltene. Normaliseringen skjer her,
 // på api-grensen, slik at alle konsumenter kan regne med lister og en status.
 const normaliser = (blokk: Normaliserbar): Normalisert => ({
   sakstyper: blokk.sakstyper ?? [],
+  sakstemaer: blokk.sakstemaer ?? [],
   behandlingstemaer: blokk.behandlingstemaer ?? [],
   status: blokk.status ?? "PUBLISERT",
 });
@@ -129,11 +139,14 @@ const passerAvgrensning = (avgrensning: string[], kontekstverdi?: string): boole
   avgrensning.length === 0 || !kontekstverdi || avgrensning.includes(kontekstverdi);
 
 export const gjelderKontekst = (
-  blokk: Pick<TekstblokkOversikt, "sakstyper" | "behandlingstemaer">,
+  blokk: Pick<TekstblokkOversikt, "sakstyper" | "sakstemaer" | "behandlingstemaer">,
   sakstype?: string,
+  sakstema?: string,
   behandlingstema?: string,
 ): boolean =>
-  passerAvgrensning(blokk.sakstyper, sakstype) && passerAvgrensning(blokk.behandlingstemaer, behandlingstema);
+  passerAvgrensning(blokk.sakstyper, sakstype) &&
+  passerAvgrensning(blokk.sakstemaer, sakstema) &&
+  passerAvgrensning(blokk.behandlingstemaer, behandlingstema);
 
 export const tellTags = (blokker: TekstblokkOversikt[]): Array<[string, number]> => {
   // Grupper case-insensitivt, men behold første skrivemåte vi ser, slik at
