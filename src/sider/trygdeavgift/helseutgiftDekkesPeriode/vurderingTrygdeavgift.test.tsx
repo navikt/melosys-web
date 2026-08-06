@@ -3,10 +3,7 @@ import { screen, waitFor } from "@testing-library/react";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import MKV from "../../../melosyskodeverk";
 import { STATUS } from "../../../services";
-import {
-  MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
-  MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
-} from "../../../featuretoggle/toggleNavn";
+import { MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER } from "../../../featuretoggle/toggleNavn";
 import { VurderingTrygdeavgift } from "./vurderingTrygdeavgift";
 import * as Api from "../../../services/api";
 import { useFeatureToggle } from "../../../featuretoggle";
@@ -99,9 +96,7 @@ describe("VurderingTrygdeavgift (helseutgiftDekkesPeriode / EØS Pensjonist)", (
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(useFeatureToggle).mockImplementation(
-      (toggle) =>
-        toggle === MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT ||
-        toggle === MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
+      (toggle) => toggle === MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
     );
     vi.mocked(Api.Trygdeavgift.hentBeregnetTrygdeavgiftEosPensjonist).mockResolvedValue(
       createMockBeregnetTrygdeavgift() as any,

@@ -33,7 +33,6 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
     generiskStegRedigerbart: true,
     medfolgendeBarn: [],
     erArbeidTjenestepersonEllerFly: false,
-    eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
     harTrygdeavgiftperiode: false,
     oppsummering: createOppsummering(),
     tilgjengeligeHandlers: {
@@ -73,27 +72,12 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
       const propsLight = createMockPropsLight({
         generiskStegRedigerbart: true,
         erArbeidTjenestepersonEllerFly: true,
-        eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
       });
 
       const virksomheter = new SaksbehandlingVirksomheter(propsLight, 3);
       const nesteSteg = virksomheter.nesteSteg();
 
       expect(nesteSteg).toBe(STEG.VURDERING_PERIODE);
-      expect(nesteSteg).not.toBe(STEG.MEDFOLGENDE_BARN);
-    });
-
-    it("Skal gå til ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK når toggle er av", () => {
-      const propsLight = createMockPropsLight({
-        generiskStegRedigerbart: true,
-        erArbeidTjenestepersonEllerFly: true,
-        eøsFaktureringAvTrygdeavgiftToggleEnabled: false,
-      });
-
-      const virksomheter = new SaksbehandlingVirksomheter(propsLight, 3);
-      const nesteSteg = virksomheter.nesteSteg();
-
-      expect(nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
       expect(nesteSteg).not.toBe(STEG.MEDFOLGENDE_BARN);
     });
   });
@@ -105,7 +89,6 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
         generiskStegRedigerbart: false,
         erArbeidTjenestepersonEllerFly: true,
         medfolgendeBarn: createMedfolgendeBarn(antallBarn),
-        eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
         avklartefakta: [
           {
             referanse: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
@@ -127,7 +110,6 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
         generiskStegRedigerbart: false,
         erArbeidTjenestepersonEllerFly: true,
         medfolgendeBarn: createMedfolgendeBarn(1),
-        eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
         oppsummering: createOppsummering("AVSLUTTET", DATO_FØR_PRODUKSJON),
       });
 
@@ -138,14 +120,14 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
       expect(nesteSteg).toBe(STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK);
     });
 
-    it("Gitt at jeg er i innsyn med offentlig tjenesteperson/fly uten barn-data og toggle av, skal IKKE gå til barn-steget (harAvklaring = false for tomme lister)", () => {
+    it("Gitt at jeg er i innsyn (avsluttet før produksjonsdato) med offentlig tjenesteperson/fly uten barn-data, skal IKKE gå til barn-steget (harAvklaring = false for tomme lister)", () => {
       // Merk: Når medfolgendeBarn er tom og det ikke finnes VURDERING_LOVVALG_BARN,
       // er harAvklaring = false fordi begge lengder er 0 (ny logikk ekskluderer tomme lister)
       const propsLight = createMockPropsLight({
         generiskStegRedigerbart: false,
         erArbeidTjenestepersonEllerFly: true,
         medfolgendeBarn: [],
-        eøsFaktureringAvTrygdeavgiftToggleEnabled: false,
+        oppsummering: createOppsummering("AVSLUTTET", DATO_FØR_PRODUKSJON),
       });
 
       const virksomheter = new SaksbehandlingVirksomheter(propsLight, 3);
@@ -197,7 +179,6 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
         generiskStegRedigerbart: false,
         erArbeidTjenestepersonEllerFly: true,
         medfolgendeBarn: createMedfolgendeBarn(2),
-        eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
         oppsummering: createOppsummering("AVSLUTTET", DATO_FØR_PRODUKSJON),
         avklartefakta: [
           {
@@ -220,7 +201,6 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
         generiskStegRedigerbart: false,
         erArbeidTjenestepersonEllerFly: true,
         medfolgendeBarn: createMedfolgendeBarn(1),
-        eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
         oppsummering: createOppsummering("AVSLUTTET", DATO_ETTER_PRODUKSJON),
         avklartefakta: [
           {
@@ -247,7 +227,6 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
         generiskStegRedigerbart: false,
         erArbeidTjenestepersonEllerFly: true,
         medfolgendeBarn: createMedfolgendeBarn(1),
-        eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
         avklartefakta: [
           {
             referanse: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
@@ -273,7 +252,6 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
       const propsLight = createMockPropsLight({
         generiskStegRedigerbart: false,
         erArbeidTjenestepersonEllerFly: true,
-        eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
         oppsummering: createOppsummering("AVSLUTTET", DATO_FØR_PRODUKSJON),
       });
 
@@ -287,7 +265,6 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
       const propsLight = createMockPropsLight({
         generiskStegRedigerbart: false,
         erArbeidTjenestepersonEllerFly: true,
-        eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
         oppsummering: createOppsummering("AVSLUTTET", DATO_ETTER_PRODUKSJON),
       });
 
@@ -301,7 +278,6 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
       const propsLight = createMockPropsLight({
         generiskStegRedigerbart: false,
         erArbeidTjenestepersonEllerFly: true,
-        eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
         oppsummering: createOppsummering("UNDER_BEHANDLING", DATO_FØR_PRODUKSJON),
       });
 
@@ -315,7 +291,6 @@ describe("SaksbehandlingVirksomheter - Offentlig tjenesteperson/flyvende persone
       const propsLight = createMockPropsLight({
         generiskStegRedigerbart: true,
         erArbeidTjenestepersonEllerFly: true,
-        eøsFaktureringAvTrygdeavgiftToggleEnabled: true,
         oppsummering: createOppsummering("AVSLUTTET", DATO_FØR_PRODUKSJON),
       });
 
