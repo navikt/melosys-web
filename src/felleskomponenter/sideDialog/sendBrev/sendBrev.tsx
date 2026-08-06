@@ -32,10 +32,12 @@ import Brevutkast from "./brevutkast/brevutkast";
 import BrevValgMedPlaceholdere from "./brevValgMedPlaceholdere";
 import PlaceholderUtdatertVarsel from "./placeholderUtdatertVarsel";
 import { SendBrevFormValues } from "./types";
-import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
-import { MELOSYS_TEKSTBLOKKER, MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggle/toggleNavn";
+import usePlaceholderToggles from "../../../featuretoggle/usePlaceholderToggles";
 import {
+  finnUopplosteBetingelser,
   finnUtdaterteVerdier,
+  finnUutfylteKlammer,
+  finnUutfylteTokener,
   harInnsatteVerdier,
   hentVerdier,
   UtdatertPlaceholder,
@@ -124,6 +126,8 @@ function SendBrev({
   const [lagreUtkastSpinner, setLagreUtkastSpinner] = useState(false);
   const [forkastBrevSpinner, setForkastBrevSpinner] = useState(false);
   const [utdaterteVerdier, setUtdaterteVerdier] = useState<UtdatertPlaceholder[]>([]);
+  const [uopplosteBetingelser, setUopplosteBetingelser] = useState<string[]>([]);
+  const [uutfylteFelter, setUutfylteFelter] = useState<string[]>([]);
   const brevBestiltTimerRef = useRef<number | undefined>(undefined);
   const tilgjengeligeMottakere = useMemo(
     () => tilgjengeligeMaler?.map((mal) => mal.mottaker) || [],
@@ -134,9 +138,7 @@ function SendBrev({
     [tilgjengeligeMaler, formValues?.mottaker],
   );
   const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
-  // Backend krever begge: placeholdere er en utvidelse av tekstblokk-funksjonaliteten.
-  const tekstblokkerPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
-  const dynamiskPlaceholderPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER);
+  const { tekstblokkerPaa, placeholderAktiv } = usePlaceholderToggles();
   const { accounts } = useMsal();
   const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state));
 
@@ -475,20 +477,33 @@ function SendBrev({
   });
 
   // Kun teksten som blir med i bestillingen – fritekstvedleggene inkludert, siden de sendes
-  // sammen med brevet og kan ha innsatte verdier.
-  const hentFritekstHtml = () =>
-    [...Object.values(hentFritekstFelter()), ...fritekstvedlegg.map(({ fritekst }) => fritekst)]
-      .filter(Boolean)
-      .join("");
+  // sammen med brevet og kan ha innsatte verdier. Brukes bare til varselanalysen, aldri til å
+  // bygge brevet. Hvert felt står for seg: en ubalansert betingelse i ett felt skal ikke kunne
+  // pare seg med et token i et annet.
+  const hentFritekstHtmlPerFelt = (): string[] =>
+    [...Object.values(hentFritekstFelter()), ...fritekstvedlegg.map(({ fritekst }) => fritekst)].filter(Boolean);
 
-  const hentUtdaterteVerdier = async (html: string): Promise<UtdatertPlaceholder[]> => {
+  const hentUtdaterteVerdier = async (felter: string[]): Promise<UtdatertPlaceholder[]> => {
+    // Spinneren står mens oppslaget pågår; sende-flyten slår den av igjen.
+    setSendBrevSpinner(true);
     try {
       const { verdier } = await hentVerdier(behandlingID);
-      return finnUtdaterteVerdier(html, verdier);
+      const perAvvik = new Map(
+        felter
+          .flatMap((felt) => finnUtdaterteVerdier(felt, verdier))
+          .map((utdatert) => [`${utdatert.nokkel}${utdatert.innsattVerdi}`, utdatert]),
+      );
+      return [...perAvvik.values()];
     } catch {
       // Uten ferske verdier har vi ingenting å sammenligne mot; brevet sendes uten varsel.
       return [];
     }
+  };
+
+  const lukkPlaceholderVarsel = () => {
+    setUtdaterteVerdier([]);
+    setUopplosteBetingelser([]);
+    setUutfylteFelter([]);
   };
 
   const sendBrev = async () => {
@@ -501,16 +516,25 @@ function SendBrev({
       return;
     }
 
-    const fritekstHtml = tekstblokkerPaa && dynamiskPlaceholderPaa ? hentFritekstHtml() : "";
+    const brevFelter = hentFritekstHtmlPerFelt();
+    const samle = (finn: (html: string) => string[]) => [...new Set(brevFelter.flatMap(finn))];
+    // Uoppløste betingelser varsles i samme modal som utdaterte verdier, uten å blokkere sendingen.
+    const uopploste = placeholderAktiv ? samle(finnUopplosteBetingelser) : [];
+    // Klammefelt og tokener som aldri ble fylt ut ville gått ordrett ut i brevet. Klammer-varselet
+    // står på tekstblokk-togglen alene; tokenene krever i tillegg dynamisk-togglen.
+    const uutfylte = tekstblokkerPaa
+      ? [...samle(finnUutfylteKlammer), ...(placeholderAktiv ? samle(finnUutfylteTokener) : [])]
+      : [];
     // Uten innsatte verdier er det ingenting å sammenligne, og oppslaget er unødvendig.
-    if (harInnsatteVerdier(fritekstHtml)) {
-      setSendBrevSpinner(true);
-      const utdaterte = await hentUtdaterteVerdier(fritekstHtml);
-      if (utdaterte.length > 0) {
-        setSendBrevSpinner(false);
-        setUtdaterteVerdier(utdaterte);
-        return;
-      }
+    const utdaterte =
+      placeholderAktiv && brevFelter.some(harInnsatteVerdier) ? await hentUtdaterteVerdier(brevFelter) : [];
+
+    if (utdaterte.length > 0 || uopploste.length > 0 || uutfylte.length > 0) {
+      setSendBrevSpinner(false);
+      setUtdaterteVerdier(utdaterte);
+      setUopplosteBetingelser(uopploste);
+      setUutfylteFelter(uutfylte);
+      return;
     }
 
     bestillBrev();
@@ -764,14 +788,16 @@ function SendBrev({
         </Nav.Button>
       </div>
 
-      {utdaterteVerdier.length > 0 && (
+      {(utdaterteVerdier.length > 0 || uopplosteBetingelser.length > 0 || uutfylteFelter.length > 0) && (
         <PlaceholderUtdatertVarsel
           utdaterte={utdaterteVerdier}
+          uopploste={uopplosteBetingelser}
+          uutfylte={uutfylteFelter}
           onSendLikevel={() => {
-            setUtdaterteVerdier([]);
+            lukkPlaceholderVarsel();
             bestillBrev();
           }}
-          onAvbryt={() => setUtdaterteVerdier([])}
+          onAvbryt={lukkPlaceholderVarsel}
         />
       )}
 

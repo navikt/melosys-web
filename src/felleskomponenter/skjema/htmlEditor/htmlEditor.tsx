@@ -1,6 +1,6 @@
 import { Field, WrappedFieldProps } from "redux-form";
 import HtmlEditor from "../../htmlEditor";
-import { PlaceholderVerdi } from "../../../services/modules/placeholdere";
+import { Betingelse, PlaceholderVerdi } from "../../../services/modules/placeholdere";
 
 interface SkjemaHtmlEditorProps {
   feltNavn: string;
@@ -19,6 +19,10 @@ interface SkjemaHtmlEditorProps {
   placeholderVerdier?: PlaceholderVerdi[];
   // Nøklene fra placeholder-katalogen; gir rød markering av ukjente nøkler.
   gyldigeNokler?: string[];
+  // Nøklene fra betingelseskatalogen; gir rød markering av ukjente betingelsesnøkler.
+  gyldigeBetingelsesNokler?: string[];
+  // Sakens fakta som {#hvis …} løses mot ved innsetting (kun fra Send brev).
+  betingelser?: Betingelse[];
 }
 
 function SkjemaHtmlEditorComponent({

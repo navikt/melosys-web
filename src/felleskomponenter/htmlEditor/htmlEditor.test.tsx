@@ -1,12 +1,20 @@
-import { render, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import { useState } from "react";
+import { Quill } from "react-quill-new";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import HtmlEditor from "./htmlEditor";
+import { markerUerstattedeOmrader } from "./placeholderMarkering";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
+import { usePlaceholderKatalog } from "../../services/api/placeholdere";
 
 vi.mock("../../featuretoggle/useFeatureToggle", () => ({
   default: vi.fn(),
+}));
+
+// Popoveren slår opp visningsnavnet i katalogen; her trengs ingen react-query-kontekst.
+vi.mock("../../services/api/placeholdere", () => ({
+  usePlaceholderKatalog: vi.fn(() => ({ data: undefined })),
 }));
 
 vi.mock("./tekstblokkSoek", () => ({
@@ -87,5 +95,231 @@ describe("HtmlEditor", () => {
     const container = renderEditor("<p>Hei {saksnummer}</p>", { placeholderVerdier: [] });
 
     await waitFor(() => expect(container.querySelector(".placeholder-uerstattet")?.textContent).toBe("{saksnummer}"));
+  });
+});
+
+const klikk = (node: Element) => act(() => void node.dispatchEvent(new MouseEvent("click", { bubbles: true })));
+
+// Editoren eier Quill-instansen internt; testene når den via containeren Quill selv er bygd på.
+const hentQuill = (container: HTMLElement) => Quill.find(container.querySelector(".ql-container") as Node) as Quill;
+
+const trykkEnter = (quill: Quill) =>
+  act(() => void quill.root.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true })));
+
+// Klikk-lytteren ligger som delegering på quill.root, så et boblende MouseEvent på selve
+// markeringen er akkurat det brukerens klikk gir.
+describe("HtmlEditor med valgtokener", () => {
+  beforeEach(() => {
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+  });
+
+  const renderMedValg = (props: Partial<EditorProps> = {}) =>
+    renderEditor("<p>Land: {velg:Serbia|Montenegro}</p>", { placeholderVerdier: [], ...props });
+
+  const ventPaaValgmarkering = async (container: HTMLElement) => {
+    await waitFor(() => expect(container.querySelector("span.placeholder-valg")).not.toBeNull());
+    return container.querySelector("span.placeholder-valg") as HTMLElement;
+  };
+
+  it("åpner popover med alternativene når valgtokenet klikkes", async () => {
+    const container = renderMedValg();
+
+    klikk(await ventPaaValgmarkering(container));
+
+    expect(screen.getByRole("button", { name: "Serbia" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Montenegro" })).toBeInTheDocument();
+  });
+
+  it("erstatter tokenet med valgt alternativ", async () => {
+    const container = renderMedValg();
+    klikk(await ventPaaValgmarkering(container));
+
+    klikk(screen.getByRole("button", { name: "Montenegro" }));
+
+    await waitFor(() => expect(container.querySelector("span.placeholder-valgt")?.textContent).toBe("Montenegro"));
+    expect(container.querySelector("span.placeholder-valgt")?.getAttribute("data-valg")).toBe("Serbia|Montenegro");
+    expect(container.querySelector(".ql-editor")?.textContent).not.toContain("{velg:");
+  });
+
+  it("åpner samme valg på nytt ved klikk på det innsatte valget", async () => {
+    const container = renderMedValg();
+    klikk(await ventPaaValgmarkering(container));
+    klikk(screen.getByRole("button", { name: "Montenegro" }));
+    await waitFor(() => expect(container.querySelector("span.placeholder-valgt")).not.toBeNull());
+
+    klikk(container.querySelector("span.placeholder-valgt") as HTMLElement);
+    klikk(screen.getByRole("button", { name: "Serbia" }));
+
+    await waitFor(() => expect(container.querySelector("span.placeholder-valgt")?.textContent).toBe("Serbia"));
+  });
+
+  it("erstatter tokenet selv om markeringene påføres på nytt mens popoveren står åpen", async () => {
+    const container = renderMedValg({ gyldigeNokler: ["saksnummer"] });
+    klikk(await ventPaaValgmarkering(container));
+
+    // Katalogen lander gjerne mens popoveren står åpen, og remarkeringen bytter ut DOM-noden.
+    act(() => markerUerstattedeOmrader(hentQuill(container), ["saksnummer"]));
+    klikk(screen.getByRole("button", { name: "Montenegro" }));
+
+    await waitFor(() => expect(container.querySelector("span.placeholder-valgt")?.textContent).toBe("Montenegro"));
+    expect(container.querySelector(".ql-editor")?.textContent).not.toContain("{velg:");
+  });
+
+  it("markerer hele valgtokenet ved klikk, så en innsatt tekstblokk erstatter det", async () => {
+    const container = renderMedValg();
+    const markering = await ventPaaValgmarkering(container);
+
+    klikk(markering);
+
+    expect(hentQuill(container).getSelection()).toEqual({ index: 6, length: "{velg:Serbia|Montenegro}".length });
+  });
+
+  it("åpner popoveren og flytter fokus dit når Enter trykkes inni valgtokenet", async () => {
+    const container = renderMedValg();
+    await ventPaaValgmarkering(container);
+    const quill = hentQuill(container);
+    act(() => {
+      quill.focus();
+      quill.setSelection(10, 0);
+    });
+
+    trykkEnter(quill);
+
+    expect(screen.getByRole("button", { name: "Serbia" })).toHaveFocus();
+  });
+
+  it("lar Enter utenfor valgtokenet gi linjeskift som før", async () => {
+    const container = renderMedValg();
+    await ventPaaValgmarkering(container);
+    const quill = hentQuill(container);
+    act(() => {
+      quill.focus();
+      quill.setSelection(0, 0);
+    });
+
+    trykkEnter(quill);
+
+    expect(screen.queryByRole("button", { name: "Serbia" })).not.toBeInTheDocument();
+    expect(quill.getText()).toBe("\nLand: {velg:Serbia|Montenegro}\n");
+  });
+
+  it("åpner ingen popover uten placeholder-kontekst fra verten", async () => {
+    const container = renderEditor("<p>Land: {velg:Serbia|Montenegro}</p>");
+    await waitFor(() => expect(container.querySelector(".ql-editor")?.textContent).toContain("{velg:"));
+
+    klikk(container.querySelector(".ql-editor") as HTMLElement);
+
+    expect(screen.queryByRole("button", { name: "Serbia" })).not.toBeInTheDocument();
+  });
+});
+
+const HTML_MED_UTFYLT_VERDI =
+  '<p>Fra <span class="placeholder-utfylt" data-placeholder="lovvalgsperiode-fra">01.03.2024</span>.</p>';
+
+const KATALOG = [
+  {
+    nokkel: "lovvalgsperiode-fra",
+    visningsnavn: "Lovvalgsperiode fra",
+    beskrivelse: "Startdato",
+    eksempel: "01.03.2024",
+    sakstyper: [],
+  },
+];
+
+describe("HtmlEditor med klikk på utfylt verdi", () => {
+  beforeEach(() => {
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+    vi.mocked(usePlaceholderKatalog).mockReturnValue({ data: KATALOG } as any);
+  });
+
+  const renderMedVerdi = (verdier: React.ComponentProps<typeof HtmlEditor>["placeholderVerdier"]) =>
+    renderEditor(HTML_MED_UTFYLT_VERDI, { placeholderVerdier: verdier });
+
+  const utenKandidater = [{ nokkel: "lovvalgsperiode-fra", verdi: "01.03.2024" }];
+  const medKandidater = [
+    { nokkel: "lovvalgsperiode-fra", verdi: "01.03.2024", kandidater: ["01.03.2024", "01.01.2023"] },
+  ];
+
+  const klikkPaaVerdi = async (container: HTMLElement) => {
+    await waitFor(() => expect(container.querySelector("span.placeholder-utfylt")).not.toBeNull());
+    klikk(container.querySelector("span.placeholder-utfylt") as HTMLElement);
+  };
+
+  it("viser visningsnavn, nøkkel og fjern-handling", async () => {
+    const container = renderMedVerdi(utenKandidater);
+
+    await klikkPaaVerdi(container);
+
+    expect(screen.getByText("Lovvalgsperiode fra")).toBeInTheDocument();
+    expect(screen.getByText("{lovvalgsperiode-fra}")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Gjør om til vanlig tekst" })).toBeInTheDocument();
+  });
+
+  it("beholder teksten uten markering når verdien gjøres om til vanlig tekst", async () => {
+    const container = renderMedVerdi(utenKandidater);
+    await klikkPaaVerdi(container);
+
+    klikk(screen.getByRole("button", { name: "Gjør om til vanlig tekst" }));
+
+    await waitFor(() => expect(container.querySelector("span.placeholder-utfylt")).toBeNull());
+    expect(container.querySelector(".ql-editor")?.textContent).toContain("Fra 01.03.2024.");
+  });
+
+  it("viser ingen alternativer når verdien mangler kandidater", async () => {
+    const container = renderMedVerdi(utenKandidater);
+
+    await klikkPaaVerdi(container);
+
+    expect(screen.queryByRole("button", { name: "01.03.2024" })).not.toBeInTheDocument();
+  });
+
+  it("lar markøren stå der brukeren klikket i den utfylte verdien", async () => {
+    const container = renderMedVerdi(medKandidater);
+    await waitFor(() => expect(container.querySelector("span.placeholder-utfylt")).not.toBeNull());
+    const quill = hentQuill(container);
+    // Quill har alt satt markøren på mouseup; hel-seleksjon her ville gjort at neste
+    // tastetrykk erstattet hele verdien i stedet for å rette den.
+    act(() => quill.setSelection(7, 0));
+
+    klikk(container.querySelector("span.placeholder-utfylt") as HTMLElement);
+
+    expect(quill.getSelection()).toEqual({ index: 7, length: 0 });
+  });
+
+  it("bytter verdi ved valg av kandidat og beholder nøkkelen", async () => {
+    const container = renderMedVerdi(medKandidater);
+    await klikkPaaVerdi(container);
+    expect(screen.getByRole("button", { name: "01.03.2024" })).toBeInTheDocument();
+
+    klikk(screen.getByRole("button", { name: "01.01.2023" }));
+
+    await waitFor(() => expect(container.querySelector("span.placeholder-utfylt")?.textContent).toBe("01.01.2023"));
+    expect(container.querySelector("span.placeholder-utfylt")?.getAttribute("data-placeholder")).toBe(
+      "lovvalgsperiode-fra",
+    );
+  });
+});
+
+describe("HtmlEditor – tone på betingelsestokener", () => {
+  beforeEach(() => {
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+  });
+
+  it("varsler om betingelsestokener når verten har sakens verdier (Send brev)", () => {
+    const container = renderEditor("<p>{#hvis avslag}</p>", { placeholderVerdier: [] });
+
+    expect(container.querySelector(".htmlEditor--betingelse-varsel")).not.toBeNull();
+  });
+
+  it("holder tonen nøytral der verten bare har katalogen (admin)", () => {
+    const container = renderEditor("<p>{#hvis avslag}</p>", { gyldigeNokler: ["saksnummer"] });
+
+    expect(container.querySelector(".htmlEditor--betingelse-varsel")).toBeNull();
+  });
+
+  it("holder tonen nøytral uten placeholder-kontekst (saksflyt)", () => {
+    const container = renderEditor("<p>{#hvis avslag}</p>");
+
+    expect(container.querySelector(".htmlEditor--betingelse-varsel")).toBeNull();
   });
 });

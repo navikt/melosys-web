@@ -1,11 +1,14 @@
 import { XMarkIcon } from "@navikt/aksel-icons";
 import { BodyShort, Popover, Search, Tabs, UNSAFE_Combobox as Combobox } from "@navikt/ds-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 
 import * as Nav from "../../navFrontend";
+import { behandlingerSelectors } from "../../ducks/behandlinger";
+import { fagsakSelectors } from "../../ducks/fagsaker";
 import { useFiltrerteTekstblokker, useTekstblokker } from "../../services/api/tekstblokker";
 import { TekstblokkOversikt, TekstblokkType } from "../../services/modules/tekstblokker";
-import { PlaceholderVerdi } from "../../services/modules/placeholdere";
+import { Betingelse, harBetingelseEllerValgTokener, PlaceholderVerdi } from "../../services/modules/placeholdere";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER } from "../../featuretoggle/toggleNavn";
 import TekstblokkForhandsvisning from "./tekstblokkForhandsvisning";
@@ -21,6 +24,10 @@ interface Props {
   placeholderVerdier?: PlaceholderVerdi[];
   // Nøklene fra placeholder-katalogen; skiller ukjente nøkler (røde) fra gyldige uten verdi.
   gyldigeNokler?: string[];
+  // Nøklene fra betingelseskatalogen; skiller ukjente betingelsesnøkler (røde) fra gyldige.
+  gyldigeBetingelsesNokler?: string[];
+  // Sakens fakta; med dem forhåndsvises {#hvis …} ferdig oppløst.
+  betingelser?: Betingelse[];
 }
 
 const SIDE_STORRELSE = 10;
@@ -32,7 +39,15 @@ const POPOVER_MARG = 16;
 // det hele tatt, så vi lar heller popoveren ta det meste av vinduet enn å vise en tom liste.
 const MIN_POPOVER_HOYDE = 384;
 
-function TekstblokkSoek({ onVelg, disabled, visBrevmaler = false, placeholderVerdier, gyldigeNokler }: Props) {
+function TekstblokkSoek({
+  onVelg,
+  disabled,
+  visBrevmaler = false,
+  placeholderVerdier,
+  gyldigeNokler,
+  gyldigeBetingelsesNokler,
+  betingelser,
+}: Props) {
   const togglePaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
   if (!togglePaa) return null;
   return (
@@ -42,11 +57,21 @@ function TekstblokkSoek({ onVelg, disabled, visBrevmaler = false, placeholderVer
       visBrevmaler={visBrevmaler}
       placeholderVerdier={placeholderVerdier}
       gyldigeNokler={gyldigeNokler}
+      gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
+      betingelser={betingelser}
     />
   );
 }
 
-function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placeholderVerdier, gyldigeNokler }: Props) {
+function TekstblokkSoekIntern({
+  onVelg,
+  disabled,
+  visBrevmaler = false,
+  placeholderVerdier,
+  gyldigeNokler,
+  gyldigeBetingelsesNokler,
+  betingelser,
+}: Props) {
   const ankerRef = useRef<HTMLDivElement>(null);
   const [aapen, setAapen] = useState(false);
   const [aktivType, setAktivType] = useState<TekstblokkType>("TEKSTBLOKK");
@@ -55,11 +80,30 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placehol
   const [soek, setSoek] = useState("");
   const [valgteTags, setValgteTags] = useState<string[]>([]);
   const [antallVist, setAntallVist] = useState(SIDE_STORRELSE);
+  // «Vis alle» slår av kontekstavgrensningen for økten i popoveren – den er støyreduksjon, ikke sikkerhet.
+  const [ignorerKontekst, setIgnorerKontekst] = useState(false);
   const [tilgjengeligHoyde, setTilgjengeligHoyde] = useState<number | null>(null);
+
+  // Konteksten leses her i stedet for å sendes som props, så alle saksflyt-editorene
+  // avgrenses likt. Utenfor en sak (f.eks. i admin) er kodene "" og filtrerer ingenting.
+  const sakstype: string = useSelector(fagsakSelectors.SakstypeKodeSelector);
+  const behandlingstema: string = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
 
   const { data: blokker = [], isLoading } = useTekstblokker(aktivType, aapen);
 
-  const { tagAntall, synlige: filtrerte } = useFiltrerteTekstblokker(blokker, soek, valgteTags);
+  const {
+    tagAntall,
+    synlige: filtrerte,
+    antallUtenKontekst,
+  } = useFiltrerteTekstblokker(
+    blokker,
+    soek,
+    valgteTags,
+    ignorerKontekst ? undefined : sakstype,
+    ignorerKontekst ? undefined : behandlingstema,
+    // Api-et skal alt ha filtrert bort utkast; filteret her er belte i tillegg til seler.
+    "PUBLISERT",
+  );
 
   // Kun reelle tags vises i nedtrekket – med antall treff – så det er tydelig
   // hvilke tags som faktisk finnes.
@@ -98,6 +142,7 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placehol
   const lukk = () => {
     setAapen(false);
     setAktivType("TEKSTBLOKK");
+    setIgnorerKontekst(false);
     nullstillFiltre();
   };
 
@@ -117,6 +162,9 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placehol
   const typeOrdEntall = erBrevmal ? "brevmal" : "tekstblokk";
   const overskrift = visBrevmaler ? "Sett inn tekstblokk eller brevmal" : "Sett inn tekstblokk";
   const harAktivtFilter = soek.trim().length > 0 || valgteTags.length > 0;
+  // Kontekstavgrensningen skjuler faktisk noe: samme søk/tags/status gir treff uten den. Da
+  // hjelper «Vis alle», også når søket er med på å tømme lista.
+  const kontekstSkjulerTreff = filtrerte.length === 0 && antallUtenKontekst > 0;
 
   return (
     <>
@@ -215,7 +263,25 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placehol
                 <BodyShort size="small" weight="semibold">
                   Fant ingen {typeOrd}
                 </BodyShort>
-                <BodyShort size="small">Prøv et annet søkeord, eller fjern noen av de valgte taggene.</BodyShort>
+                {/* Med et aktivt filter er det bare søketreffene som er kontekst-skjult –
+                    å påstå at ingen blokker gjelder saken ville vært usant. */}
+                {kontekstSkjulerTreff && (
+                  <BodyShort size="small">
+                    {harAktivtFilter
+                      ? "Treffene for filtrene dine gjelder ikke denne saken (sakstype/behandlingstema)."
+                      : `Ingen ${typeOrd} gjelder denne saken (sakstype/behandlingstema).`}
+                  </BodyShort>
+                )}
+                {/* Rådet gjelder bare når det faktisk er et filter å endre på – tømmer
+                    utkast-filtrering eller en tom liste, ville rådet pekt feil vei. */}
+                {harAktivtFilter && (
+                  <BodyShort size="small">Prøv et annet søkeord, eller fjern noen av de valgte taggene.</BodyShort>
+                )}
+                {kontekstSkjulerTreff && (
+                  <Nav.Button variant="tertiary" size="small" type="button" onClick={() => setIgnorerKontekst(true)}>
+                    Vis alle
+                  </Nav.Button>
+                )}
               </div>
             )}
             {synlige.map((blokk) => (
@@ -224,6 +290,8 @@ function TekstblokkSoekIntern({ onVelg, disabled, visBrevmaler = false, placehol
                 blokk={blokk}
                 placeholderVerdier={placeholderVerdier}
                 gyldigeNokler={gyldigeNokler}
+                gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
+                betingelser={betingelser}
                 onVelg={(html) => {
                   onVelg(html);
                   lukk();
@@ -254,11 +322,26 @@ interface RadProps {
   onVelg: (html: string) => void;
   placeholderVerdier?: PlaceholderVerdi[];
   gyldigeNokler?: string[];
+  gyldigeBetingelsesNokler?: string[];
+  betingelser?: Betingelse[];
 }
 
-function TekstblokkRad({ blokk, onVelg, placeholderVerdier, gyldigeNokler }: RadProps) {
+function TekstblokkRad({
+  blokk,
+  onVelg,
+  placeholderVerdier,
+  gyldigeNokler,
+  gyldigeBetingelsesNokler,
+  betingelser,
+}: RadProps) {
   // Innhold er skjult som standard – vises kun når brukeren ber om det.
   const [visInnhold, setVisInnhold] = useState(false);
+
+  // Uten noen av de tre løser ikke editoren tokener ved innsetting, og saksflyten har heller
+  // ingen sendevarsel som fanger dem opp senere.
+  const utenPlaceholderKontekst =
+    placeholderVerdier === undefined && gyldigeNokler === undefined && betingelser === undefined;
+  const advarOmTokener = utenPlaceholderKontekst && harBetingelseEllerValgTokener(blokk.innhold);
 
   return (
     <div className={`tekstblokkSoek__rad${visInnhold ? " tekstblokkSoek__rad--utvidet" : ""}`}>
@@ -272,6 +355,16 @@ function TekstblokkRad({ blokk, onVelg, placeholderVerdier, gyldigeNokler }: Rad
                   {tag}
                 </Nav.Tag>
               ))}
+            </div>
+          )}
+          {advarOmTokener && (
+            <div className="tekstblokkSoek__rad-advarsel">
+              <Nav.Tag size="xsmall" variant="warning">
+                Inneholder felter som ikke fylles ut her
+              </Nav.Tag>
+              <BodyShort size="small">
+                Betingelser og valg settes inn slik de står, og må fjernes eller fylles ut manuelt etterpå.
+              </BodyShort>
             </div>
           )}
         </div>
@@ -290,6 +383,8 @@ function TekstblokkRad({ blokk, onVelg, placeholderVerdier, gyldigeNokler }: Rad
             html={blokk.innhold}
             placeholderVerdier={placeholderVerdier}
             gyldigeNokler={gyldigeNokler}
+            gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
+            betingelser={betingelser}
           />
         </div>
       )}

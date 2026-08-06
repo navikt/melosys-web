@@ -3,6 +3,7 @@ import { vi } from "vitest";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import SendBrev from "./sendBrev";
 import * as Api from "../../../services/api";
+import { useBetingelseKatalog, usePlaceholderKatalog } from "../../../services/api/placeholdere";
 import * as Placeholdere from "../../../services/modules/placeholdere";
 import { MELOSYS_TEKSTBLOKKER, MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggle/toggleNavn";
 import { STATUS } from "../../../services";
@@ -59,7 +60,9 @@ vi.mock("../../../services/modules/placeholdere", async () => ({
 
 vi.mock("../../../services/api/placeholdere", () => ({
   usePlaceholderVerdier: () => ({ data: undefined }),
-  usePlaceholderKatalog: () => ({ data: [{ nokkel: "saksnummer", visningsnavn: "Saksnummer" }] }),
+  usePlaceholderKatalog: vi.fn(() => ({ data: [{ nokkel: "saksnummer", visningsnavn: "Saksnummer" }] })),
+  useBetingelseVerdier: () => ({ data: [] }),
+  useBetingelseKatalog: vi.fn(() => ({ data: [] })),
 }));
 
 // Malene får uuid tildelt ved henting; en fast uuid lar skjemaverdiene peke på riktig mal.
@@ -100,6 +103,53 @@ const preloadedState = {
 const renderSendBrev = () =>
   renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, { preloadedState });
 
+const renderMedFritekst = (fritekst: string) =>
+  renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
+    preloadedState: {
+      ...preloadedState,
+      form: {
+        send_brev: {
+          values: { ...preloadedState.form.send_brev.values, felt: { FRITEKST: { feltVerdi: fritekst } } },
+        },
+      },
+    },
+  });
+
+// Innledning og hovedtekst er to felter i samme brev; analysen skal se dem som atskilte.
+const innledningsfelt = { ...brevType.felter[0], kode: "INNLEDNING_FRITEKST", beskrivelse: "Innledning" };
+
+const renderMedToFritekstfelter = (innledning: string, fritekst: string) => {
+  vi.mocked(Api.DokumenterV2.hentTilgjengeligeMaler).mockResolvedValue([
+    { mottaker, brevTyper: [{ ...brevType, felter: [innledningsfelt, brevType.felter[0]] }] },
+  ] as any);
+  return renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
+    preloadedState: {
+      ...preloadedState,
+      form: {
+        send_brev: {
+          values: {
+            ...preloadedState.form.send_brev.values,
+            felt: { INNLEDNING_FRITEKST: { feltVerdi: innledning }, FRITEKST: { feltVerdi: fritekst } },
+          },
+        },
+      },
+    },
+  });
+};
+
+const renderMedToggles = (fritekst: string, toggles: Record<string, boolean>) =>
+  renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
+    preloadedState: {
+      ...preloadedState,
+      featureToggle: { status: STATUS.OK, data: toggles },
+      form: {
+        send_brev: {
+          values: { ...preloadedState.form.send_brev.values, felt: { FRITEKST: { feltVerdi: fritekst } } },
+        },
+      },
+    },
+  });
+
 const klikkSendBrev = async () => {
   const knapp = await screen.findByRole("button", { name: "Send brev" });
   await waitFor(() => expect(knapp).toBeEnabled());
@@ -126,6 +176,25 @@ describe("SendBrev – varsel om utdaterte placeholder-verdier", () => {
 
     expect(await screen.findByText("Noen innsatte verdier er utdaterte")).toBeInTheDocument();
     expect(screen.getByText("Saksnummer: innsatt MEL-21, nå MEL-22")).toBeInTheDocument();
+    expect(Api.DokumenterV2.opprettBrev).not.toHaveBeenCalled();
+  });
+
+  it("varsler også når den innsatte verdien fortsatt står i kandidatlisten, med mildere ordlyd", async () => {
+    // Verdien kan være et bevisst valg, men like gjerne et forhåndsvalg som senere endret
+    // seg – varselet skal ikke undertrykkes, bare formuleres uten å påstå at den er feil.
+    vi.mocked(Placeholdere.hentVerdier).mockResolvedValue({
+      verdier: [{ nokkel: "saksnummer", verdi: "MEL-22", kandidater: ["MEL-22", "MEL-21"] }],
+    });
+
+    renderSendBrev();
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Noen innsatte verdier er utdaterte")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Saksnummer: innsatt MEL-21 – forhåndsvalget er nå MEL-22, men innsatt verdi er fortsatt et gyldig alternativ",
+      ),
+    ).toBeInTheDocument();
     expect(Api.DokumenterV2.opprettBrev).not.toHaveBeenCalled();
   });
 
@@ -197,23 +266,54 @@ describe("SendBrev – varsel om utdaterte placeholder-verdier", () => {
   });
 
   it("slår ikke opp ferske verdier når friteksten ikke har innsatte verdier", async () => {
-    renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
-      preloadedState: {
-        ...preloadedState,
-        form: {
-          send_brev: {
-            values: {
-              ...preloadedState.form.send_brev.values,
-              felt: { FRITEKST: { feltVerdi: "<p>Saken er mottatt.</p>" } },
-            },
-          },
-        },
-      },
-    });
+    renderMedFritekst("<p>Saken er mottatt.</p>");
     await klikkSendBrev();
 
     await ventPaaBestilt();
     expect(Placeholdere.hentVerdier).not.toHaveBeenCalled();
+  });
+
+  it("varsler om uoppløste betingelser, uten å slå opp ferske verdier", async () => {
+    renderMedFritekst("<p>{#hvis avslag}Avslag{/hvis}</p>");
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet inneholder uoppløste betingelser")).toBeInTheDocument();
+    // Ordlyden må nevne teksten mellom tokenene: den blir stående i brevet om bare tokenene slettes.
+    expect(screen.getByText(/teksten mellom dem står igjen i brevet/)).toBeInTheDocument();
+    expect(screen.getByText(/vurder om teksten skal være med/)).toBeInTheDocument();
+    expect(screen.getByText("avslag")).toBeInTheDocument();
+    expect(Placeholdere.hentVerdier).not.toHaveBeenCalled();
+    expect(Api.DokumenterV2.opprettBrev).not.toHaveBeenCalled();
+  });
+
+  it("varsler om både et uavsluttet og et foreldreløst token når de står i hvert sitt felt", async () => {
+    renderMedToFritekstfelter("<p>{#hvis avslag}Avslag</p>", "<p>resten av teksten{/hvis}</p>");
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet inneholder uoppløste betingelser")).toBeInTheDocument();
+    expect(screen.getByText("avslag")).toBeInTheDocument();
+    expect(screen.getByText("{/hvis}")).toBeInTheDocument();
+  });
+
+  it("viser utdaterte verdier og uoppløste betingelser i samme varsel", async () => {
+    vi.mocked(Placeholdere.hentVerdier).mockResolvedValue({ verdier: [{ nokkel: "saksnummer", verdi: "MEL-22" }] });
+
+    renderMedFritekst(`${FRITEKST_HTML}<p>{#hvis avslag}Avslag{/hvis}</p>`);
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Sjekk innholdet i brevet")).toBeInTheDocument();
+    expect(screen.getByText("Saksnummer: innsatt MEL-21, nå MEL-22")).toBeInTheDocument();
+    expect(screen.getByText("avslag")).toBeInTheDocument();
+  });
+
+  it("sender brevet med tokenene i behold når saksbehandler velger Send likevel", async () => {
+    renderMedFritekst("<p>{#hvis avslag}Avslag{/hvis}</p>");
+    await klikkSendBrev();
+
+    fireEvent.click(await screen.findByRole("button", { name: "Send likevel" }));
+
+    await ventPaaBestilt();
+    expect(screen.queryByText("Brevet inneholder uoppløste betingelser")).not.toBeInTheDocument();
   });
 
   it("slår ikke opp ferske verdier når togglene er av", async () => {
@@ -224,5 +324,115 @@ describe("SendBrev – varsel om utdaterte placeholder-verdier", () => {
 
     await ventPaaBestilt();
     expect(Placeholdere.hentVerdier).not.toHaveBeenCalled();
+  });
+});
+
+describe("SendBrev – varsel om uutfylte felter", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(Api.DokumenterV2.hentTilgjengeligeMaler).mockResolvedValue([{ mottaker, brevTyper: [brevType] }] as any);
+    vi.mocked(Api.DokumenterV2.opprettBrev).mockResolvedValue({} as any);
+  });
+
+  it("varsler om klammefelt som ikke er fylt ut", async () => {
+    renderMedFritekst("<p>Hei [navn], saken gjelder [tema].</p>");
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet har felter som ikke er fylt ut")).toBeInTheDocument();
+    expect(screen.getByText("[navn]")).toBeInTheDocument();
+    expect(screen.getByText("[tema]")).toBeInTheDocument();
+    expect(Api.DokumenterV2.opprettBrev).not.toHaveBeenCalled();
+  });
+
+  it("varsler om et token som aldri fikk verdi", async () => {
+    renderMedFritekst("<p>Saken {saksnummer} er mottatt.</p>");
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet har felter som ikke er fylt ut")).toBeInTheDocument();
+    expect(screen.getByText("{saksnummer}")).toBeInTheDocument();
+  });
+
+  it("varsler om et valg som ikke er tatt", async () => {
+    renderMedFritekst("<p>Du får {velg:innvilget|avslag}.</p>");
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet har felter som ikke er fylt ut")).toBeInTheDocument();
+    expect(screen.getByText("{velg:innvilget|avslag}")).toBeInTheDocument();
+  });
+
+  it("parer ikke en klamme i ett fritekstfelt med en klamme i et annet", async () => {
+    renderMedToFritekstfelter("Innledningen slutter med {", "og hovedteksten begynner med }");
+    await klikkSendBrev();
+
+    await ventPaaBestilt();
+    expect(screen.queryByText("Brevet har felter som ikke er fylt ut")).not.toBeInTheDocument();
+  });
+
+  it("varsler fortsatt om et helt token i ett av flere fritekstfelter", async () => {
+    renderMedToFritekstfelter("<p>Innledning</p>", "<p>Saken {saksnummer} er mottatt.</p>");
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet har felter som ikke er fylt ut")).toBeInTheDocument();
+    expect(screen.getByText("{saksnummer}")).toBeInTheDocument();
+  });
+
+  it("sender direkte når brevet er fylt ut", async () => {
+    renderMedFritekst("<p>Saken er mottatt.</p>");
+    await klikkSendBrev();
+
+    await ventPaaBestilt();
+    expect(screen.queryByText("Brevet har felter som ikke er fylt ut")).not.toBeInTheDocument();
+  });
+
+  it("sender brevet med feltene i behold når saksbehandler velger Send likevel", async () => {
+    renderMedFritekst("<p>Hei [navn].</p>");
+    await klikkSendBrev();
+
+    fireEvent.click(await screen.findByRole("button", { name: "Send likevel" }));
+
+    await ventPaaBestilt();
+  });
+
+  // Klammefelt-varselet står på tekstblokk-togglen alene, ikke på dynamisk placeholder.
+  it("varsler om klammefelt med tekstblokk-togglen på, selv om dynamisk placeholder er av", async () => {
+    renderMedToggles("<p>Hei [navn].</p>", { [MELOSYS_TEKSTBLOKKER]: true });
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet har felter som ikke er fylt ut")).toBeInTheDocument();
+    expect(screen.getByText("[navn]")).toBeInTheDocument();
+    expect(Api.DokumenterV2.opprettBrev).not.toHaveBeenCalled();
+  });
+
+  it("varsler ikke om klammefelt når tekstblokk-togglen er av", async () => {
+    renderMedToggles("<p>Hei [navn].</p>", {});
+    await klikkSendBrev();
+
+    await ventPaaBestilt();
+    expect(screen.queryByText("Brevet har felter som ikke er fylt ut")).not.toBeInTheDocument();
+  });
+
+  it("varsler ikke om tokener når togglene er av", async () => {
+    renderMedToggles("<p>Hei {saksnummer}.</p>", {});
+    await klikkSendBrev();
+
+    await ventPaaBestilt();
+    expect(screen.queryByText("Brevet har felter som ikke er fylt ut")).not.toBeInTheDocument();
+  });
+
+  it("henter ikke katalogen til varselet når placeholder-togglene er av", async () => {
+    renderMedToggles("<p>Hei [navn].</p>", { [MELOSYS_TEKSTBLOKKER]: true });
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet har felter som ikke er fylt ut")).toBeInTheDocument();
+    expect(usePlaceholderKatalog).toHaveBeenCalledWith(false);
+    expect(useBetingelseKatalog).toHaveBeenCalledWith(false);
+  });
+
+  it("henter katalogen til visningsnavnene når begge togglene er på", async () => {
+    renderMedFritekst("<p>Hei [navn].</p>");
+    await klikkSendBrev();
+
+    expect(await screen.findByText("Brevet har felter som ikke er fylt ut")).toBeInTheDocument();
+    expect(usePlaceholderKatalog).toHaveBeenCalledWith(true);
   });
 });

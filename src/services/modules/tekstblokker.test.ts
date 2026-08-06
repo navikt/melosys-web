@@ -1,25 +1,150 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   erTagValgt,
+  gjelderKontekst,
   harAlleTags,
+  harStatus,
+  hent,
+  hentAlle,
+  hentHistorikk,
   leggTilTag,
   matcherSoek,
+  publiser,
   tellTags,
   tellTagsMedValgte,
   TekstblokkOversikt,
   toggleITagliste,
 } from "./tekstblokker";
+import { tekstblokkOversikt } from "./tekstblokkTestdata";
+import { getAsJson, postAsJson } from "../utils";
 
-const blokk = (tittel: string, tags: string[], innhold = ""): TekstblokkOversikt => ({
-  id: 1,
-  tittel,
-  innhold,
-  type: "TEKSTBLOKK",
-  tags,
-  endretDato: "2026-01-01T00:00:00Z",
-  endretAv: "Z123456",
-  endretAvNavn: null,
+vi.mock("../utils", () => ({
+  getAsJson: vi.fn(),
+  postAsJson: vi.fn(),
+  putAsJson: vi.fn(),
+  deleteAsJson: vi.fn(),
+}));
+
+type Kontekstavgrensning = Pick<TekstblokkOversikt, "sakstyper" | "behandlingstemaer">;
+
+const blokk = (
+  tittel: string,
+  tags: string[],
+  innhold = "",
+  avgrensning: Partial<Kontekstavgrensning> = {},
+): TekstblokkOversikt => tekstblokkOversikt({ tittel, innhold, tags, ...avgrensning });
+
+describe("normalisering på api-grensen", () => {
+  beforeEach(() => vi.mocked(getAsJson).mockReset());
+
+  const utenAvgrensning = {
+    id: 1,
+    tittel: "Om utsending",
+    innhold: "<p>Tekst</p>",
+    type: "TEKSTBLOKK",
+    tags: ["usa"],
+  };
+
+  it("hentAlle gir tomme lister når api-et utelater avgrensningsfeltene", async () => {
+    vi.mocked(getAsJson).mockResolvedValue([utenAvgrensning]);
+
+    const blokker = await hentAlle("TEKSTBLOKK");
+
+    expect(blokker[0]).toMatchObject({ tittel: "Om utsending", sakstyper: [], behandlingstemaer: [] });
+  });
+
+  it("hentAlle beholder avgrensningen når api-et sender den", async () => {
+    vi.mocked(getAsJson).mockResolvedValue([{ ...utenAvgrensning, sakstyper: ["EU_EOS"], behandlingstemaer: [] }]);
+
+    const blokker = await hentAlle();
+
+    expect(blokker[0]).toMatchObject({ sakstyper: ["EU_EOS"], behandlingstemaer: [] });
+  });
+
+  it("hentAlle ber kun om utkast når admin-flaten eksplisitt spør", async () => {
+    vi.mocked(getAsJson).mockResolvedValue([]);
+
+    await hentAlle("TEKSTBLOKK", true);
+    expect(vi.mocked(getAsJson).mock.calls[0][0]).toContain("inkluderUtkast=true");
+
+    await hentAlle("TEKSTBLOKK");
+    expect(vi.mocked(getAsJson).mock.calls[1][0]).not.toContain("inkluderUtkast");
+  });
+
+  it("hent gir tomme lister når api-et utelater avgrensningsfeltene", async () => {
+    vi.mocked(getAsJson).mockResolvedValue(utenAvgrensning);
+
+    const blokk = await hent(1);
+
+    expect(blokk).toMatchObject({ tittel: "Om utsending", sakstyper: [], behandlingstemaer: [] });
+  });
+
+  it("regner en blokk uten status som publisert", async () => {
+    vi.mocked(getAsJson).mockResolvedValue([utenAvgrensning]);
+
+    const blokker = await hentAlle();
+
+    expect(blokker[0].status).toBe("PUBLISERT");
+  });
+
+  it("beholder statusen api-et sender", async () => {
+    vi.mocked(getAsJson).mockResolvedValue({ ...utenAvgrensning, status: "UTKAST" });
+
+    const blokk = await hent(1);
+
+    expect(blokk.status).toBe("UTKAST");
+  });
+});
+
+describe("publiser og hentHistorikk", () => {
+  beforeEach(() => {
+    vi.mocked(getAsJson).mockReset();
+    vi.mocked(postAsJson).mockReset();
+  });
+
+  it("publiser kaller publiser-endepunktet og normaliserer svaret", async () => {
+    vi.mocked(postAsJson).mockResolvedValue({ id: 7, tittel: "Om utsending", status: "PUBLISERT" });
+
+    const blokk = await publiser(7);
+
+    expect(postAsJson).toHaveBeenCalledWith(expect.stringContaining("brev/tekstblokker/7/publiser"));
+    expect(blokk).toMatchObject({ status: "PUBLISERT", sakstyper: [], behandlingstemaer: [] });
+  });
+
+  it("hentHistorikk henter versjonene for blokken slik api-et leverer dem", async () => {
+    const versjon = {
+      versjon: 1,
+      endringstype: "OPPRETTET",
+      tags: ["usa"],
+      sakstyper: ["EU_EOS"],
+      behandlingstemaer: [],
+      status: "PUBLISERT",
+    };
+    vi.mocked(getAsJson).mockResolvedValue([versjon]);
+
+    const versjoner = await hentHistorikk(7);
+
+    expect(getAsJson).toHaveBeenCalledWith(expect.stringContaining("brev/tekstblokker/7/historikk"));
+    expect(versjoner).toEqual([versjon]);
+  });
+});
+
+describe("harStatus", () => {
+  const utkast = { status: "UTKAST" } as const;
+  const publisert = { status: "PUBLISERT" } as const;
+
+  it("«Alle» slipper gjennom begge statusene", () => {
+    expect(harStatus(utkast, "ALLE")).toBe(true);
+    expect(harStatus(publisert, "ALLE")).toBe(true);
+  });
+
+  it("filtrerer på den valgte statusen", () => {
+    expect(harStatus(utkast, "UTKAST")).toBe(true);
+    expect(harStatus(publisert, "UTKAST")).toBe(false);
+    expect(harStatus(publisert, "PUBLISERT")).toBe(true);
+    expect(harStatus(utkast, "PUBLISERT")).toBe(false);
+  });
 });
 
 describe("matcherSoek", () => {
@@ -136,6 +261,55 @@ describe("harAlleTags", () => {
 
   it("blokk uten tags matcher ingen valgte tags", () => {
     expect(harAlleTags(blokk("Uten tags", []), ["skip"])).toBe(false);
+  });
+});
+
+describe("gjelderKontekst", () => {
+  const uavgrenset: Kontekstavgrensning = { sakstyper: [], behandlingstemaer: [] };
+  const kunEuEos: Kontekstavgrensning = { sakstyper: ["EU_EOS"], behandlingstemaer: [] };
+  const kunUtsendt: Kontekstavgrensning = { sakstyper: [], behandlingstemaer: ["UTSENDT_ARBEIDSTAKER"] };
+  const begge: Kontekstavgrensning = { sakstyper: ["EU_EOS"], behandlingstemaer: ["UTSENDT_ARBEIDSTAKER"] };
+
+  it("uavgrenset blokk gjelder alltid", () => {
+    expect(gjelderKontekst(uavgrenset, "EU_EOS", "UTSENDT_ARBEIDSTAKER")).toBe(true);
+    expect(gjelderKontekst(uavgrenset, "FTRL", "PENSJONIST")).toBe(true);
+    expect(gjelderKontekst(uavgrenset)).toBe(true);
+  });
+
+  it("tom kontekst filtrerer ingenting bort (admin uten sak)", () => {
+    expect(gjelderKontekst(begge)).toBe(true);
+    expect(gjelderKontekst(begge, "", "")).toBe(true);
+  });
+
+  it("avgrensning på sakstype treffer kun sin sakstype", () => {
+    expect(gjelderKontekst(kunEuEos, "EU_EOS", "PENSJONIST")).toBe(true);
+    expect(gjelderKontekst(kunEuEos, "FTRL", "PENSJONIST")).toBe(false);
+  });
+
+  it("avgrensning på behandlingstema treffer kun sitt behandlingstema", () => {
+    expect(gjelderKontekst(kunUtsendt, "FTRL", "UTSENDT_ARBEIDSTAKER")).toBe(true);
+    expect(gjelderKontekst(kunUtsendt, "FTRL", "PENSJONIST")).toBe(false);
+  });
+
+  it("begge avgrensningene må passere samtidig", () => {
+    expect(gjelderKontekst(begge, "EU_EOS", "UTSENDT_ARBEIDSTAKER")).toBe(true);
+    expect(gjelderKontekst(begge, "EU_EOS", "PENSJONIST")).toBe(false);
+    expect(gjelderKontekst(begge, "FTRL", "UTSENDT_ARBEIDSTAKER")).toBe(false);
+    expect(gjelderKontekst(begge, "FTRL", "PENSJONIST")).toBe(false);
+  });
+
+  it("en avgrensning ignoreres når den andre delen av konteksten mangler", () => {
+    expect(gjelderKontekst(begge, "EU_EOS")).toBe(true);
+    expect(gjelderKontekst(begge, "FTRL")).toBe(false);
+    expect(gjelderKontekst(begge, "", "UTSENDT_ARBEIDSTAKER")).toBe(true);
+    expect(gjelderKontekst(begge, "", "PENSJONIST")).toBe(false);
+  });
+
+  it("flere verdier i avgrensningen virker som ELLER", () => {
+    const flere: Kontekstavgrensning = { sakstyper: ["EU_EOS", "TRYGDEAVTALE"], behandlingstemaer: [] };
+    expect(gjelderKontekst(flere, "EU_EOS")).toBe(true);
+    expect(gjelderKontekst(flere, "TRYGDEAVTALE")).toBe(true);
+    expect(gjelderKontekst(flere, "FTRL")).toBe(false);
   });
 });
 

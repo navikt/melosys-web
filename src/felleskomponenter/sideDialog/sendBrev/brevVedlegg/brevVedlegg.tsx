@@ -64,7 +64,8 @@ function BrevVedlegg({
   standardvedlegg,
 }: BrevVedleggProps) {
   const [forhandsvisFritekstvedleggError, setForhandsvisFritekstvedleggError] = useState(false);
-  const { placeholderVerdier, gyldigeNokler } = usePlaceholderKontekst(behandlingID);
+  const { placeholderVerdier, gyldigeNokler, gyldigeBetingelsesNokler, betingelser } =
+    usePlaceholderKontekst(behandlingID);
 
   const lagFritekstPdfUrl = async (index: number) => {
     const data = {
@@ -187,6 +188,8 @@ function BrevVedlegg({
             width={felterWidth}
             placeholderVerdier={placeholderVerdier}
             gyldigeNokler={gyldigeNokler}
+            gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
+            betingelser={betingelser}
           />
         ) : (
           <Mui.Lenkeknapp disabled={!redigerbart} onClick={() => setVisFritekstvedleggSkjema(true)} ikon={Ikoner.Add}>

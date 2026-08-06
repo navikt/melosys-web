@@ -7,7 +7,7 @@ import "./fritekstvedleggSkjema.less";
 import { begrensAntallTegn } from "../../../../utils/normalisering";
 import Knapperad from "../../../knapperad";
 import { ColumnWidth } from "nav-frontend-grid";
-import { PlaceholderVerdi } from "../../../../services/modules/placeholdere";
+import { Betingelse, PlaceholderVerdi } from "../../../../services/modules/placeholdere";
 
 interface FritekstvedleggSkjemaProps {
   felt: DokumenterV2.Felt;
@@ -22,6 +22,8 @@ interface FritekstvedleggSkjemaProps {
   // Samme placeholder-kontekst som brevfeltene: vedlegget sendes som del av brevet.
   placeholderVerdier?: PlaceholderVerdi[];
   gyldigeNokler?: string[];
+  gyldigeBetingelsesNokler?: string[];
+  betingelser?: Betingelse[];
 }
 
 const TEGNBEGRENSNING = 60;
@@ -34,6 +36,8 @@ function FritekstvedleggSkjema({
   width,
   placeholderVerdier,
   gyldigeNokler,
+  gyldigeBetingelsesNokler,
+  betingelser,
 }: FritekstvedleggSkjemaProps) {
   const cls = bem("fritekstvedleggSkjema");
 
@@ -59,6 +63,8 @@ function FritekstvedleggSkjema({
           visBrevmaler
           placeholderVerdier={placeholderVerdier}
           gyldigeNokler={gyldigeNokler}
+          gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
+          betingelser={betingelser}
         />
         <Nav.Row>
           <Knapperad

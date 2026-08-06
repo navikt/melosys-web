@@ -3,12 +3,20 @@ import { deleteAsJson, getAsJson, postAsJson, putAsJson } from "../utils";
 
 export type TekstblokkType = "TEKSTBLOKK" | "BREVMAL";
 
+export type TekstblokkStatus = "UTKAST" | "PUBLISERT";
+
+export type Endringstype = "OPPRETTET" | "ENDRET" | "SLETTET";
+
 export interface TekstblokkOversikt {
   id: number;
   tittel: string;
   innhold: string;
   type: TekstblokkType;
   tags: string[];
+  // Kodeverdier (EU_EOS, UTSENDT_ARBEIDSTAKER …). Tom liste betyr «gjelder alle».
+  sakstyper: string[];
+  behandlingstemaer: string[];
+  status: TekstblokkStatus;
   endretDato: string;
   endretAv: string;
   endretAvNavn: string | null;
@@ -20,6 +28,9 @@ export interface Tekstblokk {
   innhold: string;
   type: TekstblokkType;
   tags: string[];
+  sakstyper: string[];
+  behandlingstemaer: string[];
+  status: TekstblokkStatus;
   registrertDato: string;
   registrertAv: string;
   endretDato: string;
@@ -31,23 +42,72 @@ export interface TekstblokkRequest {
   innhold: string;
   type: TekstblokkType;
   tags: string[];
+  sakstyper: string[];
+  behandlingstemaer: string[];
+  status?: TekstblokkStatus;
+}
+
+export interface TekstblokkVersjon {
+  versjon: number;
+  gyldigFra: string;
+  gyldigTil: string | null;
+  endretAv: string;
+  endretAvNavn: string | null;
+  endringstype: Endringstype;
+  tittel: string;
+  innhold: string;
+  tags: string[];
+  sakstyper: string[];
+  behandlingstemaer: string[];
+  status: TekstblokkStatus;
 }
 
 const baseUrl = `${API_BASE_URL}${TEKSTBLOKKER}`;
 
-export const hentAlle = (type?: TekstblokkType): Promise<TekstblokkOversikt[]> => {
-  const url = type ? `${baseUrl}?type=${type}` : baseUrl;
-  return getAsJson(url);
+type Normaliserbar = { sakstyper?: string[]; behandlingstemaer?: string[]; status?: TekstblokkStatus };
+type Normalisert = Pick<TekstblokkOversikt, "sakstyper" | "behandlingstemaer" | "status">;
+
+// Et api som ikke leverer avgrensning eller status utelater feltene. Normaliseringen skjer her,
+// på api-grensen, slik at alle konsumenter kan regne med lister og en status.
+const normaliser = (blokk: Normaliserbar): Normalisert => ({
+  sakstyper: blokk.sakstyper ?? [],
+  behandlingstemaer: blokk.behandlingstemaer ?? [],
+  status: blokk.status ?? "PUBLISERT",
+});
+
+// inkluderUtkast sendes kun fra admin-flaten. Api-et leverer utkast bare når parameteren
+// er satt OG brukeren har admin-toggle – Send brev-søket ber aldri om dem.
+export const hentAlle = (type?: TekstblokkType, inkluderUtkast = false): Promise<TekstblokkOversikt[]> => {
+  const parametre = new URLSearchParams();
+  if (type) parametre.set("type", type);
+  if (inkluderUtkast) parametre.set("inkluderUtkast", "true");
+  const query = parametre.toString();
+  const url = query ? `${baseUrl}?${query}` : baseUrl;
+  return getAsJson(url).then((blokker: TekstblokkOversikt[]) =>
+    blokker.map((blokk) => ({ ...blokk, ...normaliser(blokk) })),
+  );
 };
 
-export const hent = (id: number): Promise<Tekstblokk> => getAsJson(`${baseUrl}/${id}`);
+export const hent = (id: number): Promise<Tekstblokk> =>
+  getAsJson(`${baseUrl}/${id}`).then((blokk: Tekstblokk) => ({ ...blokk, ...normaliser(blokk) }));
 
-export const opprett = (body: TekstblokkRequest): Promise<Tekstblokk> => postAsJson(baseUrl, body);
+export const opprett = (body: TekstblokkRequest): Promise<Tekstblokk> =>
+  postAsJson(baseUrl, body).then((blokk: Tekstblokk) => ({ ...blokk, ...normaliser(blokk) }));
 
 export const oppdater = (id: number, body: TekstblokkRequest): Promise<Tekstblokk> =>
-  putAsJson(`${baseUrl}/${id}`, body);
+  putAsJson(`${baseUrl}/${id}`, body).then((blokk: Tekstblokk) => ({ ...blokk, ...normaliser(blokk) }));
+
+export const publiser = (id: number): Promise<Tekstblokk> =>
+  postAsJson(`${baseUrl}/${id}/publiser`).then((blokk: Tekstblokk) => ({ ...blokk, ...normaliser(blokk) }));
+
+export const hentHistorikk = (id: number): Promise<TekstblokkVersjon[]> => getAsJson(`${baseUrl}/${id}/historikk`);
 
 export const slett = (id: number): Promise<unknown> => deleteAsJson(`${baseUrl}/${id}`);
+
+export type Statusfilter = "ALLE" | "PUBLISERT" | "UTKAST";
+
+export const harStatus = (blokk: Pick<TekstblokkOversikt, "status">, filter: Statusfilter): boolean =>
+  filter === "ALLE" || blokk.status === filter;
 
 export const matcherSoek = (blokk: TekstblokkOversikt, soek: string): boolean => {
   const ord = soek
@@ -56,12 +116,24 @@ export const matcherSoek = (blokk: TekstblokkOversikt, soek: string): boolean =>
     .filter(Boolean);
   if (ord.length === 0) return true;
 
-  // Vi søker bevisst kun i tittel og tags – ikke i innhold (fagønske).
+  // Søket dekker tittel og tags, ikke innholdet.
   const soekbareFelt = [blokk.tittel.toLowerCase(), ...blokk.tags.map((tag) => tag.toLowerCase())];
   // Hvert søkeord må matche minst ett felt (tittel eller en tag). Slik gir "USA avslag"
   // treff på blokker som har både "usa" og "avslag" i tittel/tags.
   return ord.every((o) => soekbareFelt.some((felt) => felt.includes(o)));
 };
+
+// Avgrensningen er støyreduksjon, ikke sikkerhet: en tom avgrensning gjelder alle, og en
+// tom kontekstverdi (admin, som ikke står i en sak) filtrerer ingenting bort.
+const passerAvgrensning = (avgrensning: string[], kontekstverdi?: string): boolean =>
+  avgrensning.length === 0 || !kontekstverdi || avgrensning.includes(kontekstverdi);
+
+export const gjelderKontekst = (
+  blokk: Pick<TekstblokkOversikt, "sakstyper" | "behandlingstemaer">,
+  sakstype?: string,
+  behandlingstema?: string,
+): boolean =>
+  passerAvgrensning(blokk.sakstyper, sakstype) && passerAvgrensning(blokk.behandlingstemaer, behandlingstema);
 
 export const tellTags = (blokker: TekstblokkOversikt[]): Array<[string, number]> => {
   // Grupper case-insensitivt, men behold første skrivemåte vi ser, slik at

@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import * as Nav from "../../../navFrontend";
 
 import { useFiltrerteTekstblokker, useTekstblokker } from "../../../services/api/tekstblokker";
-import { tellTags, TekstblokkOversikt, TekstblokkType } from "../../../services/modules/tekstblokker";
+import { Statusfilter, tellTags, TekstblokkOversikt, TekstblokkType } from "../../../services/modules/tekstblokker";
+import TekstblokkPubliserBekreftelse from "./tekstblokkPubliserBekreftelse";
 import TekstblokkRedigeringModal from "./tekstblokkRedigeringModal";
 import TekstblokkSlettBekreftelse from "./tekstblokkSlettBekreftelse";
 import TekstblokkerFilter from "./tekstblokkerFilter";
@@ -21,17 +22,30 @@ function TekstblokkerSide() {
   const [soek, setSoek] = useState("");
   const [valgteTags, setValgteTags] = useState<string[]>([]);
   const [modal, setModal] = useState<ModalTilstand>({ type: "lukket" });
+  const [statusfilter, setStatusfilter] = useState<Statusfilter>("ALLE");
   const [slettBlokk, setSlettBlokk] = useState<TekstblokkOversikt | null>(null);
+  const [publiserBlokk, setPubliserBlokk] = useState<TekstblokkOversikt | null>(null);
   const [utvidedeIder, setUtvidedeIder] = useState<Set<number>>(new Set());
+  // Historikken vises i den utvidede raden, så valget hører sammen med utvidedeIder: lukkes
+  // raden, faller historikkvalget bort og neste åpning viser forhåndsvisningen.
+  const [historikkId, setHistorikkId] = useState<number | null>(null);
 
-  const { data: blokker = [], isLoading, error } = useTekstblokker(type);
+  // Admin ber eksplisitt om utkast – api-et leverer dem kun hit, aldri til Send brev-søket.
+  const { data: blokker = [], isLoading, error } = useTekstblokker(type, true, true);
 
   // Tags er ett felles vokabular på tvers av tekstblokker og brevmaler, så forslagene i
   // modalen tar med begge typer. Hentes først når modalen åpnes.
   const motsattType: TekstblokkType = type === "TEKSTBLOKK" ? "BREVMAL" : "TEKSTBLOKK";
-  const { data: blokkerAvMotsattType = [] } = useTekstblokker(motsattType, modal.type !== "lukket");
+  const { data: blokkerAvMotsattType = [] } = useTekstblokker(motsattType, modal.type !== "lukket", true);
 
-  const { tagAntall, synlige } = useFiltrerteTekstblokker(blokker, soek, valgteTags);
+  const { tagAntall, synlige } = useFiltrerteTekstblokker(
+    blokker,
+    soek,
+    valgteTags,
+    undefined,
+    undefined,
+    statusfilter,
+  );
   // Ikke tagAntall: det telles over blokkene som matcher søket, og hører hjemme i
   // filteret over lista – ikke i forslagene.
   const forslagTags = useMemo(
@@ -43,6 +57,7 @@ function TekstblokkerSide() {
 
   const toggleAlle = () => {
     setUtvidedeIder(alleErUtvidet ? new Set() : new Set(synlige.map((b) => b.id)));
+    if (alleErUtvidet) setHistorikkId(null);
   };
 
   const toggleRad = (id: number) => {
@@ -52,12 +67,20 @@ function TekstblokkerSide() {
       else ny.add(id);
       return ny;
     });
+    if (utvidedeIder.has(id) && historikkId === id) setHistorikkId(null);
+  };
+
+  // Historikken vises kun i en åpen rad, så knappen åpner raden om den er lukket.
+  const toggleHistorikk = (id: number) => {
+    setHistorikkId(historikkId === id ? null : id);
+    setUtvidedeIder((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
   };
 
   const byttType = (nyType: TekstblokkType) => {
     setType(nyType);
     setValgteTags([]);
     setUtvidedeIder(new Set());
+    setHistorikkId(null);
   };
 
   return (
@@ -81,6 +104,8 @@ function TekstblokkerSide() {
         valgteTags={valgteTags}
         setValgteTags={setValgteTags}
         tilgjengeligeTags={tagAntall}
+        statusfilter={statusfilter}
+        setStatusfilter={setStatusfilter}
       />
 
       {isLoading && (
@@ -108,9 +133,12 @@ function TekstblokkerSide() {
         <TekstblokkerListe
           blokker={synlige}
           utvidedeIder={utvidedeIder}
+          historikkId={historikkId}
           onToggleUtvidet={toggleRad}
+          onToggleHistorikk={toggleHistorikk}
           onRediger={(id) => setModal({ type: "rediger", id })}
           onSlett={setSlettBlokk}
+          onPubliser={setPubliserBlokk}
         />
       )}
 
@@ -124,6 +152,8 @@ function TekstblokkerSide() {
       )}
 
       <TekstblokkSlettBekreftelse blokk={slettBlokk} onLukk={() => setSlettBlokk(null)} />
+
+      <TekstblokkPubliserBekreftelse blokk={publiserBlokk} onLukk={() => setPubliserBlokk(null)} />
     </div>
   );
 }
