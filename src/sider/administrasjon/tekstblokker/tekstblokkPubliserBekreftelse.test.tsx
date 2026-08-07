@@ -27,6 +27,7 @@ const blokk: TekstblokkOversikt = {
   type: "TEKSTBLOKK",
   tags: [],
   sakstyper: [],
+  sakstemaer: [],
   behandlingstemaer: [],
   status: "UTKAST",
   endretDato: "2026-01-01T00:00:00Z",

@@ -21,6 +21,13 @@ const mocks = vi.hoisted(() => ({
   opprett: vi.fn(),
   oppdater: vi.fn(),
   opprettFeil: vi.fn((): Error | null => null),
+  // Uten et tre faller Kontekstavgrensning tilbake på hele kodeverket. Det er standard
+  // her, så testene under kan velge fritt; kaskaden testes for seg med et eget tre.
+  kombinasjonstre: vi.fn(() => ({ data: undefined, isLoading: false }) as { data?: unknown; isLoading: boolean }),
+}));
+
+vi.mock("../../../services/api/kombinasjonstre", () => ({
+  useKombinasjonstre: () => mocks.kombinasjonstre(),
 }));
 
 vi.mock("../../../services/api/tekstblokker", () => ({
@@ -82,6 +89,7 @@ const lagret = (avgrensning: Partial<Tekstblokk> = {}): Tekstblokk => ({
   type: "TEKSTBLOKK",
   tags: [],
   sakstyper: [],
+  sakstemaer: [],
   behandlingstemaer: [],
   status: "PUBLISERT",
   registrertDato: "2026-01-01T00:00:00Z",
@@ -254,6 +262,9 @@ describe("TekstblokkRedigeringModal – kontekstavgrensning", () => {
     vi.clearAllMocks();
     vi.mocked(useFeatureToggle).mockReturnValue(false);
     mockKatalog({ data: undefined });
+    // clearAllMocks nullstiller kall, ikke implementasjoner: uten dette lekker treet fra
+    // kaskadetesten under til testene som forventer hele kodeverket.
+    mocks.kombinasjonstre.mockReturnValue({ data: undefined, isLoading: false });
   });
 
   it("er tomme på en ny tekstblokk og sendes som tomme lister", async () => {
@@ -266,7 +277,7 @@ describe("TekstblokkRedigeringModal – kontekstavgrensning", () => {
 
     expect(screen.queryByRole("button", { name: /EU\/EØS-land/ })).toBeNull();
     expect(mocks.opprett).toHaveBeenCalledWith(
-      expect.objectContaining({ sakstyper: [], behandlingstemaer: [] }),
+      expect.objectContaining({ sakstyper: [], sakstemaer: [], behandlingstemaer: [] }),
       expect.anything(),
     );
   });
@@ -288,7 +299,7 @@ describe("TekstblokkRedigeringModal – kontekstavgrensning", () => {
 
     visModal();
 
-    const utvidelse = screen.getByRole("button", { name: "Avgrens til sakstype/behandlingstema" });
+    const utvidelse = screen.getByRole("button", { name: "Avgrens til sakstype/sakstema/behandlingstema" });
     expect(utvidelse.getAttribute("aria-expanded")).toBe("false");
   });
 
@@ -297,7 +308,7 @@ describe("TekstblokkRedigeringModal – kontekstavgrensning", () => {
 
     visModal(7);
 
-    const utvidelse = screen.getByRole("button", { name: "Avgrens til sakstype/behandlingstema" });
+    const utvidelse = screen.getByRole("button", { name: "Avgrens til sakstype/sakstema/behandlingstema" });
     expect(utvidelse.getAttribute("aria-expanded")).toBe("true");
   });
 
@@ -305,11 +316,41 @@ describe("TekstblokkRedigeringModal – kontekstavgrensning", () => {
     mocks.tekstblokk.mockReturnValue({ data: lagret(), isLoading: false });
 
     visModal(7);
-    await userEvent.click(screen.getByRole("button", { name: "Avgrens til sakstype/behandlingstema" }));
+    await userEvent.click(screen.getByRole("button", { name: "Avgrens til sakstype/sakstema/behandlingstema" }));
 
     expect(
-      screen.getByRole("button", { name: "Avgrens til sakstype/behandlingstema" }).getAttribute("aria-expanded"),
+      screen
+        .getByRole("button", { name: "Avgrens til sakstype/sakstema/behandlingstema" })
+        .getAttribute("aria-expanded"),
     ).toBe("true");
+  });
+
+  // Vert-komponenten i kontekstavgrensning.test beviser at kaskaden virker mot EN forelder.
+  // Denne beviser at det ryddede resultatet er det modalen faktisk lagrer.
+  it("lagrer det kaskaden ryddet bort, ikke den umulige kombinasjonen", async () => {
+    mocks.kombinasjonstre.mockReturnValue({
+      data: [
+        { sakstype: "EU_EOS", sakstemaer: [{ sakstema: "UNNTAK", behandlingstemaer: ["UTSENDT_ARBEIDSTAKER"] }] },
+        { sakstype: "FTRL", sakstemaer: [{ sakstema: "TRYGDEAVGIFT", behandlingstemaer: ["ARBEID_KUN_NORGE"] }] },
+      ],
+      isLoading: false,
+    });
+    mocks.tekstblokk.mockReturnValue({
+      data: lagret({ sakstemaer: ["TRYGDEAVGIFT"], behandlingstemaer: ["ARBEID_KUN_NORGE"] }),
+      isLoading: false,
+    });
+
+    visModal(7);
+    await velg("Gjelder sakstype", "EU/EØS-land");
+    await userEvent.click(screen.getByRole("button", { name: "Lagre endringer" }));
+
+    expect(mocks.oppdater).toHaveBeenCalledWith(
+      {
+        id: 7,
+        body: expect.objectContaining({ sakstyper: ["EU_EOS"], sakstemaer: [], behandlingstemaer: [] }),
+      },
+      expect.anything(),
+    );
   });
 
   it("sender endret avgrensning i requesten", async () => {
@@ -325,6 +366,7 @@ describe("TekstblokkRedigeringModal – kontekstavgrensning", () => {
         id: 7,
         body: expect.objectContaining({
           sakstyper: ["EU_EOS", "TRYGDEAVTALE"],
+          sakstemaer: [],
           behandlingstemaer: ["ARBEID_KUN_NORGE"],
         }),
       },

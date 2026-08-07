@@ -11,6 +11,7 @@ import {
   leggTilTag,
   matcherSoek,
   publiser,
+  Sakskontekst,
   tellTags,
   tellTagsMedValgte,
   TekstblokkOversikt,
@@ -26,7 +27,7 @@ vi.mock("../utils", () => ({
   deleteAsJson: vi.fn(),
 }));
 
-type Kontekstavgrensning = Pick<TekstblokkOversikt, "sakstyper" | "behandlingstemaer">;
+type Kontekstavgrensning = Pick<TekstblokkOversikt, "sakstyper" | "sakstemaer" | "behandlingstemaer">;
 
 const blokk = (
   tittel: string,
@@ -112,21 +113,32 @@ describe("publiser og hentHistorikk", () => {
     expect(blokk).toMatchObject({ status: "PUBLISERT", sakstyper: [], behandlingstemaer: [] });
   });
 
-  it("hentHistorikk henter versjonene for blokken slik api-et leverer dem", async () => {
+  // Versjonene diffes felt for felt i historikkvisningen, så et felt api-et utelater
+  // ville blitt dereferert som undefined der. Normaliseringen hører hjemme på api-grensen,
+  // som for de andre endepunktene.
+  it("hentHistorikk normaliserer avgrensningen api-et utelater", async () => {
     const versjon = {
       versjon: 1,
       endringstype: "OPPRETTET",
       tags: ["usa"],
       sakstyper: ["EU_EOS"],
       behandlingstemaer: [],
-      status: "PUBLISERT",
     };
     vi.mocked(getAsJson).mockResolvedValue([versjon]);
 
     const versjoner = await hentHistorikk(7);
 
     expect(getAsJson).toHaveBeenCalledWith(expect.stringContaining("brev/tekstblokker/7/historikk"));
-    expect(versjoner).toEqual([versjon]);
+    expect(versjoner).toEqual([{ ...versjon, sakstemaer: [] }]);
+  });
+
+  // Versjoner har ingen status; normaliseringen skal ikke dikte opp feltet.
+  it("hentHistorikk legger ikke på status", async () => {
+    vi.mocked(getAsJson).mockResolvedValue([{ versjon: 1, endringstype: "OPPRETTET", tags: [] }]);
+
+    const [versjon] = await hentHistorikk(7);
+
+    expect(versjon).not.toHaveProperty("status");
   });
 });
 
@@ -265,51 +277,77 @@ describe("harAlleTags", () => {
 });
 
 describe("gjelderKontekst", () => {
-  const uavgrenset: Kontekstavgrensning = { sakstyper: [], behandlingstemaer: [] };
-  const kunEuEos: Kontekstavgrensning = { sakstyper: ["EU_EOS"], behandlingstemaer: [] };
-  const kunUtsendt: Kontekstavgrensning = { sakstyper: [], behandlingstemaer: ["UTSENDT_ARBEIDSTAKER"] };
-  const begge: Kontekstavgrensning = { sakstyper: ["EU_EOS"], behandlingstemaer: ["UTSENDT_ARBEIDSTAKER"] };
+  const tom = { sakstyper: [], sakstemaer: [], behandlingstemaer: [] };
+  const uavgrenset: Kontekstavgrensning = tom;
+  const kunEuEos: Kontekstavgrensning = { ...tom, sakstyper: ["EU_EOS"] };
+  const kunLovvalg: Kontekstavgrensning = { ...tom, sakstemaer: ["MEDLEMSKAP_LOVVALG"] };
+  const kunUtsendt: Kontekstavgrensning = { ...tom, behandlingstemaer: ["UTSENDT_ARBEIDSTAKER"] };
+  const alle: Kontekstavgrensning = {
+    sakstyper: ["EU_EOS"],
+    sakstemaer: ["MEDLEMSKAP_LOVVALG"],
+    behandlingstemaer: ["UTSENDT_ARBEIDSTAKER"],
+  };
+
+  const euEosLovvalgUtsendt: Sakskontekst = {
+    sakstype: "EU_EOS",
+    sakstema: "MEDLEMSKAP_LOVVALG",
+    behandlingstema: "UTSENDT_ARBEIDSTAKER",
+  };
+  const ftrlAvgiftPensjonist: Sakskontekst = {
+    sakstype: "FTRL",
+    sakstema: "TRYGDEAVGIFT",
+    behandlingstema: "PENSJONIST",
+  };
 
   it("uavgrenset blokk gjelder alltid", () => {
-    expect(gjelderKontekst(uavgrenset, "EU_EOS", "UTSENDT_ARBEIDSTAKER")).toBe(true);
-    expect(gjelderKontekst(uavgrenset, "FTRL", "PENSJONIST")).toBe(true);
+    expect(gjelderKontekst(uavgrenset, euEosLovvalgUtsendt)).toBe(true);
+    expect(gjelderKontekst(uavgrenset, ftrlAvgiftPensjonist)).toBe(true);
     expect(gjelderKontekst(uavgrenset)).toBe(true);
   });
 
   it("tom kontekst filtrerer ingenting bort (admin uten sak)", () => {
-    expect(gjelderKontekst(begge)).toBe(true);
-    expect(gjelderKontekst(begge, "", "")).toBe(true);
+    expect(gjelderKontekst(alle)).toBe(true);
+    expect(gjelderKontekst(alle, { sakstype: "", sakstema: "", behandlingstema: "" })).toBe(true);
   });
 
   it("avgrensning på sakstype treffer kun sin sakstype", () => {
-    expect(gjelderKontekst(kunEuEos, "EU_EOS", "PENSJONIST")).toBe(true);
-    expect(gjelderKontekst(kunEuEos, "FTRL", "PENSJONIST")).toBe(false);
+    expect(gjelderKontekst(kunEuEos, { ...ftrlAvgiftPensjonist, sakstype: "EU_EOS" })).toBe(true);
+    expect(gjelderKontekst(kunEuEos, ftrlAvgiftPensjonist)).toBe(false);
+  });
+
+  it("avgrensning på sakstema treffer kun sitt sakstema", () => {
+    expect(gjelderKontekst(kunLovvalg, { ...ftrlAvgiftPensjonist, sakstema: "MEDLEMSKAP_LOVVALG" })).toBe(true);
+    expect(gjelderKontekst(kunLovvalg, ftrlAvgiftPensjonist)).toBe(false);
   });
 
   it("avgrensning på behandlingstema treffer kun sitt behandlingstema", () => {
-    expect(gjelderKontekst(kunUtsendt, "FTRL", "UTSENDT_ARBEIDSTAKER")).toBe(true);
-    expect(gjelderKontekst(kunUtsendt, "FTRL", "PENSJONIST")).toBe(false);
+    expect(gjelderKontekst(kunUtsendt, { ...ftrlAvgiftPensjonist, behandlingstema: "UTSENDT_ARBEIDSTAKER" })).toBe(
+      true,
+    );
+    expect(gjelderKontekst(kunUtsendt, ftrlAvgiftPensjonist)).toBe(false);
   });
 
-  it("begge avgrensningene må passere samtidig", () => {
-    expect(gjelderKontekst(begge, "EU_EOS", "UTSENDT_ARBEIDSTAKER")).toBe(true);
-    expect(gjelderKontekst(begge, "EU_EOS", "PENSJONIST")).toBe(false);
-    expect(gjelderKontekst(begge, "FTRL", "UTSENDT_ARBEIDSTAKER")).toBe(false);
-    expect(gjelderKontekst(begge, "FTRL", "PENSJONIST")).toBe(false);
+  it("alle tre avgrensningene må passere samtidig", () => {
+    expect(gjelderKontekst(alle, euEosLovvalgUtsendt)).toBe(true);
+    expect(gjelderKontekst(alle, { ...euEosLovvalgUtsendt, behandlingstema: "PENSJONIST" })).toBe(false);
+    expect(gjelderKontekst(alle, { ...euEosLovvalgUtsendt, sakstema: "TRYGDEAVGIFT" })).toBe(false);
+    expect(gjelderKontekst(alle, { ...euEosLovvalgUtsendt, sakstype: "FTRL" })).toBe(false);
   });
 
-  it("en avgrensning ignoreres når den andre delen av konteksten mangler", () => {
-    expect(gjelderKontekst(begge, "EU_EOS")).toBe(true);
-    expect(gjelderKontekst(begge, "FTRL")).toBe(false);
-    expect(gjelderKontekst(begge, "", "UTSENDT_ARBEIDSTAKER")).toBe(true);
-    expect(gjelderKontekst(begge, "", "PENSJONIST")).toBe(false);
+  it("en avgrensning ignoreres når den delen av konteksten mangler", () => {
+    expect(gjelderKontekst(alle, { sakstype: "EU_EOS" })).toBe(true);
+    expect(gjelderKontekst(alle, { sakstype: "FTRL" })).toBe(false);
+    expect(gjelderKontekst(alle, { sakstema: "MEDLEMSKAP_LOVVALG" })).toBe(true);
+    expect(gjelderKontekst(alle, { sakstema: "TRYGDEAVGIFT" })).toBe(false);
+    expect(gjelderKontekst(alle, { behandlingstema: "UTSENDT_ARBEIDSTAKER" })).toBe(true);
+    expect(gjelderKontekst(alle, { behandlingstema: "PENSJONIST" })).toBe(false);
   });
 
   it("flere verdier i avgrensningen virker som ELLER", () => {
-    const flere: Kontekstavgrensning = { sakstyper: ["EU_EOS", "TRYGDEAVTALE"], behandlingstemaer: [] };
-    expect(gjelderKontekst(flere, "EU_EOS")).toBe(true);
-    expect(gjelderKontekst(flere, "TRYGDEAVTALE")).toBe(true);
-    expect(gjelderKontekst(flere, "FTRL")).toBe(false);
+    const flere: Kontekstavgrensning = { ...tom, sakstyper: ["EU_EOS", "TRYGDEAVTALE"] };
+    expect(gjelderKontekst(flere, { sakstype: "EU_EOS" })).toBe(true);
+    expect(gjelderKontekst(flere, { sakstype: "TRYGDEAVTALE" })).toBe(true);
+    expect(gjelderKontekst(flere, { sakstype: "FTRL" })).toBe(false);
   });
 });
 

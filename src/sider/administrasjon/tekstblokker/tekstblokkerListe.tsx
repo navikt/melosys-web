@@ -4,7 +4,7 @@ import * as Nav from "../../../navFrontend";
 import TekstblokkForhandsvisning from "../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning";
 import { TekstblokkOversikt } from "../../../services/modules/tekstblokker";
 import { formatterDatoTilNorsk } from "../../../utils/dato";
-import { termForBehandlingstema, termForSakstype } from "./kontekstavgrensning";
+import { termForBehandlingstema, termForSakstema, termForSakstype } from "./kontekstavgrensning";
 import TekstblokkHistorikk from "./tekstblokkHistorikk";
 
 // Kolonnen skal kunne leses på et blikk; resten samles i én «+N»-tag som åpner raden.
@@ -12,6 +12,7 @@ const MAKS_SYNLIGE_TERMER = 1;
 
 const gjelderTermer = (blokk: TekstblokkOversikt): Array<{ noekkel: string; term: string }> => [
   ...blokk.sakstyper.map((kode) => ({ noekkel: `sakstype-${kode}`, term: termForSakstype(kode) })),
+  ...blokk.sakstemaer.map((kode) => ({ noekkel: `sakstema-${kode}`, term: termForSakstema(kode) })),
   ...blokk.behandlingstemaer.map((kode) => ({
     noekkel: `behandlingstema-${kode}`,
     term: termForBehandlingstema(kode),

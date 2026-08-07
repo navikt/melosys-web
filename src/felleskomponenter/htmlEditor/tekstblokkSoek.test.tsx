@@ -20,17 +20,28 @@ vi.mock("../../services/api/tekstblokker", async (importOriginal) => ({
   useTekstblokker: vi.fn(),
 }));
 
-const blokk = (id: number, tittel: string, sakstyper: string[], behandlingstemaer: string[]): TekstblokkOversikt =>
-  tekstblokkOversikt({ id, tittel, sakstyper, behandlingstemaer });
+const blokk = (
+  id: number,
+  tittel: string,
+  avgrensning: Partial<Pick<TekstblokkOversikt, "sakstyper" | "sakstemaer" | "behandlingstemaer">> = {},
+): TekstblokkOversikt =>
+  tekstblokkOversikt({
+    id,
+    tittel,
+    sakstyper: avgrensning.sakstyper ?? [],
+    sakstemaer: avgrensning.sakstemaer ?? [],
+    behandlingstemaer: avgrensning.behandlingstemaer ?? [],
+  });
 
 const blokker = [
-  blokk(1, "Gjelder alle saker", [], []),
-  blokk(2, "Bare EU/EØS", ["EU_EOS"], []),
-  blokk(3, "Bare pensjonist", [], ["PENSJONIST"]),
+  blokk(1, "Gjelder alle saker"),
+  blokk(2, "Bare EU/EØS", { sakstyper: ["EU_EOS"] }),
+  blokk(3, "Bare lovvalg", { sakstemaer: ["MEDLEMSKAP_LOVVALG"] }),
+  blokk(4, "Bare pensjonist", { behandlingstemaer: ["PENSJONIST"] }),
 ];
 
-const sakskontekst = (sakstype: string, behandlingstema: string) => ({
-  fagsaker: { data: { sakstype: { kode: sakstype } } },
+const sakskontekst = (sakstype: string, sakstema: string, behandlingstema: string) => ({
+  fagsaker: { data: { sakstype: { kode: sakstype }, sakstema: { kode: sakstema } } },
   behandlinger: { data: { oppsummering: { behandlingstema: { kode: behandlingstema } } } },
 });
 
@@ -49,12 +60,22 @@ describe("TekstblokkSoek – kontekstavgrensning", () => {
   });
 
   it("skjuler blokker som er avgrenset til en annen kontekst", async () => {
-    await aapneSoek(sakskontekst("EU_EOS", "UTSENDT_ARBEIDSTAKER"));
+    await aapneSoek(sakskontekst("EU_EOS", "MEDLEMSKAP_LOVVALG", "UTSENDT_ARBEIDSTAKER"));
 
     expect(screen.getByText("Gjelder alle saker")).toBeDefined();
     expect(screen.getByText("Bare EU/EØS")).toBeDefined();
+    expect(screen.getByText("Bare lovvalg")).toBeDefined();
     expect(screen.queryByText("Bare pensjonist")).toBeNull();
-    expect(screen.getByText("2 tekstblokker")).toBeDefined();
+    expect(screen.getByText("3 tekstblokker")).toBeDefined();
+  });
+
+  it("avgrenser ogsaa paa sakstema", async () => {
+    await aapneSoek(sakskontekst("EU_EOS", "TRYGDEAVGIFT", "UTSENDT_ARBEIDSTAKER"));
+
+    expect(screen.getByText("Gjelder alle saker")).toBeDefined();
+    expect(screen.getByText("Bare EU/EØS")).toBeDefined();
+    expect(screen.queryByText("Bare lovvalg")).toBeNull();
+    expect(screen.queryByText("Bare pensjonist")).toBeNull();
   });
 
   it("viser alt når konteksten mangler (ingen sak, f.eks. i admin)", async () => {
@@ -62,18 +83,21 @@ describe("TekstblokkSoek – kontekstavgrensning", () => {
 
     expect(screen.getByText("Gjelder alle saker")).toBeDefined();
     expect(screen.getByText("Bare EU/EØS")).toBeDefined();
+    expect(screen.getByText("Bare lovvalg")).toBeDefined();
     expect(screen.getByText("Bare pensjonist")).toBeDefined();
   });
 
   it("sier fra når avgrensningen alene tømmer lista, og «Vis alle» viser resten", async () => {
     vi.mocked(useTekstblokker).mockReturnValue({
-      data: [blokk(2, "Bare EU/EØS", ["EU_EOS"], [])],
+      data: [blokk(2, "Bare EU/EØS", { sakstyper: ["EU_EOS"] })],
       isLoading: false,
     } as ReturnType<typeof useTekstblokker>);
 
-    await aapneSoek(sakskontekst("FTRL", "PENSJONIST"));
+    await aapneSoek(sakskontekst("FTRL", "TRYGDEAVGIFT", "PENSJONIST"));
 
-    expect(screen.getByText("Ingen tekstblokker gjelder denne saken (sakstype/behandlingstema).")).toBeDefined();
+    expect(
+      screen.getByText("Ingen tekstblokker gjelder denne saken (sakstype/sakstema/behandlingstema)."),
+    ).toBeDefined();
     expect(screen.queryByText(/Prøv et annet søkeord/)).toBeNull();
 
     await userEvent.click(screen.getByRole("button", { name: "Vis alle" }));
@@ -84,11 +108,11 @@ describe("TekstblokkSoek – kontekstavgrensning", () => {
 
   // Andre blokker gjelder fortsatt saken – det er bare søketreffene som ligger utenfor.
   it("tilbyr «Vis alle» sammen med søkerådet når søket bare treffer utenfor konteksten", async () => {
-    await aapneSoek(sakskontekst("FTRL", "PENSJONIST"));
+    await aapneSoek(sakskontekst("FTRL", "TRYGDEAVGIFT", "PENSJONIST"));
     await userEvent.type(screen.getByRole("searchbox", { name: "Søk på tittel eller tag" }), "EU/EØS");
 
     expect(
-      screen.getByText("Treffene for filtrene dine gjelder ikke denne saken (sakstype/behandlingstema)."),
+      screen.getByText("Treffene for filtrene dine gjelder ikke denne saken (sakstype/sakstema/behandlingstema)."),
     ).toBeDefined();
     expect(screen.queryByText(/Ingen tekstblokker gjelder denne saken/)).toBeNull();
     expect(screen.getByText(/Prøv et annet søkeord/)).toBeDefined();
@@ -99,7 +123,7 @@ describe("TekstblokkSoek – kontekstavgrensning", () => {
   });
 
   it("beholder søketeksten i tomtilstanden når søket er det som tømmer lista", async () => {
-    await aapneSoek(sakskontekst("EU_EOS", "UTSENDT_ARBEIDSTAKER"));
+    await aapneSoek(sakskontekst("EU_EOS", "MEDLEMSKAP_LOVVALG", "UTSENDT_ARBEIDSTAKER"));
     await userEvent.type(screen.getByRole("searchbox", { name: "Søk på tittel eller tag" }), "finnesikke");
 
     expect(screen.getByText(/Prøv et annet søkeord/)).toBeDefined();
@@ -167,7 +191,7 @@ describe("TekstblokkSoek – statusfilter", () => {
   // Api-et skal alt ha filtrert bort utkast; dette er klientsidevernet mot en regresjon der.
   it("viser ikke utkast selv om api-et skulle levere dem", async () => {
     vi.mocked(useTekstblokker).mockReturnValue({
-      data: [blokk(1, "Gjelder alle saker", [], []), { ...blokk(9, "Uferdig utkast", [], []), status: "UTKAST" }],
+      data: [blokk(1, "Gjelder alle saker"), { ...blokk(9, "Uferdig utkast"), status: "UTKAST" }],
       isLoading: false,
     } as ReturnType<typeof useTekstblokker>);
 
@@ -182,11 +206,11 @@ describe("TekstblokkSoek – statusfilter", () => {
     // sakstype/behandlingstema eller tilby en «Vis alle» som ikke kan hjelpe:
     // statusfilteret består uansett.
     vi.mocked(useTekstblokker).mockReturnValue({
-      data: [{ ...blokk(9, "Uferdig utkast", [], []), status: "UTKAST" }],
+      data: [{ ...blokk(9, "Uferdig utkast"), status: "UTKAST" }],
       isLoading: false,
     } as ReturnType<typeof useTekstblokker>);
 
-    await aapneSoek(sakskontekst("FTRL", "PENSJONIST"));
+    await aapneSoek(sakskontekst("FTRL", "TRYGDEAVGIFT", "PENSJONIST"));
 
     expect(screen.getByText("Fant ingen tekstblokker")).toBeDefined();
     expect(screen.queryByText(/gjelder denne saken/)).toBeNull();

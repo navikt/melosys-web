@@ -38,14 +38,8 @@ function TekstblokkerSide() {
   const motsattType: TekstblokkType = type === "TEKSTBLOKK" ? "BREVMAL" : "TEKSTBLOKK";
   const { data: blokkerAvMotsattType = [] } = useTekstblokker(motsattType, modal.type !== "lukket", true);
 
-  const { tagAntall, synlige } = useFiltrerteTekstblokker(
-    blokker,
-    soek,
-    valgteTags,
-    undefined,
-    undefined,
-    statusfilter,
-  );
+  // Admin staar ikke i en sak, saa ingen kontekst avgrenser lista.
+  const { tagAntall, synlige } = useFiltrerteTekstblokker(blokker, soek, valgteTags, {}, statusfilter);
   // Ikke tagAntall: det telles over blokkene som matcher søket, og hører hjemme i
   // filteret over lista – ikke i forslagene.
   const forslagTags = useMemo(

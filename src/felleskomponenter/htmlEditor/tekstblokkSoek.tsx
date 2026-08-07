@@ -87,6 +87,7 @@ function TekstblokkSoekIntern({
   // Konteksten leses her i stedet for å sendes som props, så alle saksflyt-editorene
   // avgrenses likt. Utenfor en sak (f.eks. i admin) er kodene "" og filtrerer ingenting.
   const sakstype: string = useSelector(fagsakSelectors.SakstypeKodeSelector);
+  const sakstema: string = useSelector(fagsakSelectors.SakstemaKodeSelector);
   const behandlingstema: string = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
 
   const { data: blokker = [], isLoading } = useTekstblokker(aktivType, aapen);
@@ -99,8 +100,7 @@ function TekstblokkSoekIntern({
     blokker,
     soek,
     valgteTags,
-    ignorerKontekst ? undefined : sakstype,
-    ignorerKontekst ? undefined : behandlingstema,
+    ignorerKontekst ? {} : { sakstype, sakstema, behandlingstema },
     // Api-et skal alt ha filtrert bort utkast; filteret her er belte i tillegg til seler.
     "PUBLISERT",
   );
@@ -268,8 +268,8 @@ function TekstblokkSoekIntern({
                 {kontekstSkjulerTreff && (
                   <BodyShort size="small">
                     {harAktivtFilter
-                      ? "Treffene for filtrene dine gjelder ikke denne saken (sakstype/behandlingstema)."
-                      : `Ingen ${typeOrd} gjelder denne saken (sakstype/behandlingstema).`}
+                      ? "Treffene for filtrene dine gjelder ikke denne saken (sakstype/sakstema/behandlingstema)."
+                      : `Ingen ${typeOrd} gjelder denne saken (sakstype/sakstema/behandlingstema).`}
                   </BodyShort>
                 )}
                 {/* Rådet gjelder bare når det faktisk er et filter å endre på – tømmer

@@ -15,6 +15,7 @@ export interface TekstblokkOversikt {
   tags: string[];
   // Kodeverdier (EU_EOS, UTSENDT_ARBEIDSTAKER …). Tom liste betyr «gjelder alle».
   sakstyper: string[];
+  sakstemaer: string[];
   behandlingstemaer: string[];
   status: TekstblokkStatus;
   endretDato: string;
@@ -29,6 +30,7 @@ export interface Tekstblokk {
   type: TekstblokkType;
   tags: string[];
   sakstyper: string[];
+  sakstemaer: string[];
   behandlingstemaer: string[];
   status: TekstblokkStatus;
   registrertDato: string;
@@ -43,6 +45,7 @@ export interface TekstblokkRequest {
   type: TekstblokkType;
   tags: string[];
   sakstyper: string[];
+  sakstemaer: string[];
   behandlingstemaer: string[];
   status?: TekstblokkStatus;
 }
@@ -58,20 +61,29 @@ export interface TekstblokkVersjon {
   innhold: string;
   tags: string[];
   sakstyper: string[];
+  sakstemaer: string[];
   behandlingstemaer: string[];
   status: TekstblokkStatus;
 }
 
 const baseUrl = `${API_BASE_URL}${TEKSTBLOKKER}`;
 
-type Normaliserbar = { sakstyper?: string[]; behandlingstemaer?: string[]; status?: TekstblokkStatus };
-type Normalisert = Pick<TekstblokkOversikt, "sakstyper" | "behandlingstemaer" | "status">;
+type Avgrensbar = { sakstyper?: string[]; sakstemaer?: string[]; behandlingstemaer?: string[] };
+type Avgrenset = Pick<TekstblokkOversikt, "sakstyper" | "sakstemaer" | "behandlingstemaer">;
+type Normaliserbar = Avgrensbar & { status?: TekstblokkStatus };
+type Normalisert = Avgrenset & Pick<TekstblokkOversikt, "status">;
 
 // Et api som ikke leverer avgrensning eller status utelater feltene. Normaliseringen skjer her,
 // på api-grensen, slik at alle konsumenter kan regne med lister og en status.
-const normaliser = (blokk: Normaliserbar): Normalisert => ({
+// Skilt fordi versjoner har avgrensning, men ingen status.
+const normaliserAvgrensning = (blokk: Avgrensbar): Avgrenset => ({
   sakstyper: blokk.sakstyper ?? [],
+  sakstemaer: blokk.sakstemaer ?? [],
   behandlingstemaer: blokk.behandlingstemaer ?? [],
+});
+
+const normaliser = (blokk: Normaliserbar): Normalisert => ({
+  ...normaliserAvgrensning(blokk),
   status: blokk.status ?? "PUBLISERT",
 });
 
@@ -100,7 +112,10 @@ export const oppdater = (id: number, body: TekstblokkRequest): Promise<Tekstblok
 export const publiser = (id: number): Promise<Tekstblokk> =>
   postAsJson(`${baseUrl}/${id}/publiser`).then((blokk: Tekstblokk) => ({ ...blokk, ...normaliser(blokk) }));
 
-export const hentHistorikk = (id: number): Promise<TekstblokkVersjon[]> => getAsJson(`${baseUrl}/${id}/historikk`);
+export const hentHistorikk = (id: number): Promise<TekstblokkVersjon[]> =>
+  getAsJson(`${baseUrl}/${id}/historikk`).then((versjoner: TekstblokkVersjon[]) =>
+    versjoner.map((versjon) => ({ ...versjon, ...normaliserAvgrensning(versjon) })),
+  );
 
 export const slett = (id: number): Promise<unknown> => deleteAsJson(`${baseUrl}/${id}`);
 
@@ -128,12 +143,24 @@ export const matcherSoek = (blokk: TekstblokkOversikt, soek: string): boolean =>
 const passerAvgrensning = (avgrensning: string[], kontekstverdi?: string): boolean =>
   avgrensning.length === 0 || !kontekstverdi || avgrensning.includes(kontekstverdi);
 
+/**
+ * Konteksten som en tekstblokk avgrenses mot. Objekt og ikke tre posisjonelle strenger:
+ * dimensjonene har samme type, så en ombytting ville typesjekket fint og gitt feil
+ * filtrering i stillhet.
+ */
+export interface Sakskontekst {
+  sakstype?: string;
+  sakstema?: string;
+  behandlingstema?: string;
+}
+
 export const gjelderKontekst = (
-  blokk: Pick<TekstblokkOversikt, "sakstyper" | "behandlingstemaer">,
-  sakstype?: string,
-  behandlingstema?: string,
+  blokk: Pick<TekstblokkOversikt, "sakstyper" | "sakstemaer" | "behandlingstemaer">,
+  { sakstype, sakstema, behandlingstema }: Sakskontekst = {},
 ): boolean =>
-  passerAvgrensning(blokk.sakstyper, sakstype) && passerAvgrensning(blokk.behandlingstemaer, behandlingstema);
+  passerAvgrensning(blokk.sakstyper, sakstype) &&
+  passerAvgrensning(blokk.sakstemaer, sakstema) &&
+  passerAvgrensning(blokk.behandlingstemaer, behandlingstema);
 
 export const tellTags = (blokker: TekstblokkOversikt[]): Array<[string, number]> => {
   // Grupper case-insensitivt, men behold første skrivemåte vi ser, slik at

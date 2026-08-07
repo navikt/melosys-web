@@ -52,6 +52,7 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
   const [innhold, setInnhold] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [sakstyper, setSakstyper] = useState<string[]>([]);
+  const [sakstemaer, setSakstemaer] = useState<string[]>([]);
   const [behandlingstemaer, setBehandlingstemaer] = useState<string[]>([]);
   // En tag som er skrevet, men ikke lagt til med Enter eller "Legg til"-knappen.
   const [tagUtkast, setTagUtkast] = useState("");
@@ -71,9 +72,14 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
       setInnhold(eksisterende.data.innhold);
       setTags(eksisterende.data.tags);
       setSakstyper(eksisterende.data.sakstyper);
+      setSakstemaer(eksisterende.data.sakstemaer);
       setBehandlingstemaer(eksisterende.data.behandlingstemaer);
       // En lagret avgrensning må være synlig med en gang, ellers ser blokken ut til å gjelde alle.
-      if (eksisterende.data.sakstyper.length > 0 || eksisterende.data.behandlingstemaer.length > 0)
+      if (
+        eksisterende.data.sakstyper.length > 0 ||
+        eksisterende.data.sakstemaer.length > 0 ||
+        eksisterende.data.behandlingstemaer.length > 0
+      )
         setAvgrensningApen(true);
     }
   }, [eksisterende.data]);
@@ -102,6 +108,7 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
       type,
       tags: alleTags,
       sakstyper,
+      sakstemaer,
       behandlingstemaer,
     };
 
@@ -146,17 +153,25 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
             />
 
             <ReadMore
-              header="Avgrens til sakstype/behandlingstema"
+              header="Avgrens til sakstype/sakstema/behandlingstema"
               size="small"
               open={avgrensningApen}
               onClick={() => setAvgrensningApen(!avgrensningApen)}
             >
-              <Kontekstavgrensning
-                sakstyper={sakstyper}
-                setSakstyper={setSakstyper}
-                behandlingstemaer={behandlingstemaer}
-                setBehandlingstemaer={setBehandlingstemaer}
-              />
+              {/* Monteres foerst naar utvidelsen aapnes: ReadMore rendrer alltid children,
+                  bare skjult. Uten dette ville kombinasjonstreet hentes ved hver
+                  modalaapning, og et varsel om at det feilet ligge usynlig i det
+                  sammenslaatte omraadet. */}
+              {avgrensningApen && (
+                <Kontekstavgrensning
+                  sakstyper={sakstyper}
+                  setSakstyper={setSakstyper}
+                  sakstemaer={sakstemaer}
+                  setSakstemaer={setSakstemaer}
+                  behandlingstemaer={behandlingstemaer}
+                  setBehandlingstemaer={setBehandlingstemaer}
+                />
+              )}
             </ReadMore>
 
             <div className="tekstblokker__modal-editor">

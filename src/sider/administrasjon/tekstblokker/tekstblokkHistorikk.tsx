@@ -4,7 +4,7 @@ import * as Nav from "../../../navFrontend";
 import TekstblokkForhandsvisning from "../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning";
 import { useTekstblokkHistorikk } from "../../../services/api/tekstblokker";
 import { TekstblokkVersjon } from "../../../services/modules/tekstblokker";
-import { termForBehandlingstema, termForSakstype } from "./kontekstavgrensning";
+import { termForBehandlingstema, termForSakstema, termForSakstype } from "./kontekstavgrensning";
 import { labelForEndringstype, labelForStatus } from "./labels";
 
 // gyldigFra/gyldigTil er LocalDateTime fra api-et – allerede norsk tid, så ingen soneomregning.
@@ -51,11 +51,13 @@ const endredeFelter = (versjon: TekstblokkVersjon, forrige?: TekstblokkVersjon):
     endringer.push(medDetaljer("tags", [listediff(versjon.tags, forrige.tags, (tag) => tag)]));
   if (
     !likeLister(versjon.sakstyper, forrige.sakstyper) ||
+    !likeLister(versjon.sakstemaer, forrige.sakstemaer) ||
     !likeLister(versjon.behandlingstemaer, forrige.behandlingstemaer)
   )
     endringer.push(
       medDetaljer("avgrensning", [
         listediff(versjon.sakstyper, forrige.sakstyper, termForSakstype),
+        listediff(versjon.sakstemaer, forrige.sakstemaer, termForSakstema),
         listediff(versjon.behandlingstemaer, forrige.behandlingstemaer, termForBehandlingstema),
       ]),
     );
