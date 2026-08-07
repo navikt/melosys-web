@@ -5,9 +5,12 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 import MKV from "../../../melosyskodeverk";
 import { useKombinasjonstre } from "../../../services/api/kombinasjonstre";
 import {
-  alleKoderITre,
+  Avgrensning,
   behandlingstemaerFor,
-  beholdLovlige,
+  Nivaa,
+  Ryddenivaa,
+  Ryddet,
+  ryddNedover,
   sakstemaerFor,
   sakstyperITre,
 } from "../../../services/modules/lovligekombinasjoner/kombinasjonstre";
@@ -46,6 +49,23 @@ const begrensTil = (opsjoner: Opsjon[], lovligeKoder: string[]): Opsjon[] => {
 const toggle = (koder: string[], kode: string, valgt: boolean): string[] =>
   valgt ? [...koder, kode] : koder.filter((k) => k !== kode);
 
+// Feltet admin endret, ikke feltet valget forsvant fra: det er det første som forklarer det andre.
+const UTLOESER: Record<Nivaa, string> = { sakstype: "sakstypen", sakstema: "sakstemaet" };
+
+const ALLE_NAA: Record<Ryddenivaa, string> = {
+  sakstema: "alle sakstemaer",
+  behandlingstema: "alle behandlingstemaer",
+};
+
+// Et tømt felt betyr «alle», så ryddingen gjør tekstblokken bredere enn før. Det er den
+// konsekvensen admin må se, ikke bare hvilken kode som forsvant.
+const ryddemelding = (endret: Nivaa, { fjernet, toemte }: Pick<Ryddet, "fjernet" | "toemte">): string => {
+  const termer = [...fjernet.sakstemaer.map(termForSakstema), ...fjernet.behandlingstemaer.map(termForBehandlingstema)];
+  const fjernetSetning = `Fjernet fra avgrensningen fordi det ikke er mulig sammen med ${UTLOESER[endret]}: ${termer.join(", ")}.`;
+  if (toemte.length === 0) return fjernetSetning;
+  return `${fjernetSetning} Tekstblokken gjelder nå ${toemte.map((nivaa) => ALLE_NAA[nivaa]).join(" og ")}.`;
+};
+
 interface Props {
   sakstyper: string[];
   setSakstyper: (koder: string[]) => void;
@@ -64,15 +84,15 @@ function Kontekstavgrensning({
   setBehandlingstemaer,
 }: Props) {
   const { data, isLoading } = useKombinasjonstre();
-  // Valg kaskaden har fjernet. Uten dette forsvinner en chip mens admin ser et annet felt,
-  // og oppryddingen blir like usynlig som feiltilstanden den finnes for å hindre.
-  const [fjernet, setFjernet] = useState<string[]>([]);
+  // Uten denne forsvinner en chip mens admin ser et annet felt, og oppryddingen blir like
+  // usynlig som feiltilstanden den finnes for å hindre.
+  const [ryddingsmelding, setRyddingsmelding] = useState<string | null>(null);
 
-  const tre = useMemo(() => data ?? [], [data]);
+  // Ikke `data ?? []`: et svar som ikke er en liste ville nådd flatMap og kastet.
+  const tre = useMemo(() => (Array.isArray(data) ? data : []), [data]);
   // Et tomt tre er like ubrukelig som ingen tre: uten grener er det ingenting å kaskadere
   // etter. Begge tilfellene faller tilbake på hele kodeverket, og begge skal si fra.
   const harTre = tre.length > 0;
-  const kjenteKoder = useMemo(() => alleKoderITre(tre), [tre]);
 
   const sakstypeValg = useMemo(
     () => (harTre ? begrensTil(sakstypeOpsjoner, sakstyperITre(tre)) : sakstypeOpsjoner),
@@ -96,34 +116,20 @@ function Kontekstavgrensning({
 
   // Når et valg lenger opp snevres inn, ryddes valgene under. Uten dette ville en
   // avgrensning bli stående på en kombinasjon som nå er umulig – usynlig for admin,
-  // fordi koden ikke lenger står i nedtrekket.
-  const endreSakstyper = (nye: string[]) => {
-    setSakstyper(nye);
-    if (!harTre) return;
-    const nyeSakstemaer = beholdLovlige(sakstemaer, sakstemaerFor(tre, nye), kjenteKoder);
-    const nyeBehandlingstemaer = beholdLovlige(
-      behandlingstemaer,
-      behandlingstemaerFor(tre, nye, nyeSakstemaer),
-      kjenteKoder,
-    );
-    setSakstemaer(nyeSakstemaer);
-    setBehandlingstemaer(nyeBehandlingstemaer);
-    setFjernet([
-      ...sakstemaer.filter((k) => !nyeSakstemaer.includes(k)).map(termForSakstema),
-      ...behandlingstemaer.filter((k) => !nyeBehandlingstemaer.includes(k)).map(termForBehandlingstema),
-    ]);
+  // fordi koden ikke lenger står i nedtrekket. Uten tre er ryddNedover en identitet.
+  const endre = (endret: Nivaa, neste: Avgrensning) => {
+    const { avgrensning, fjernet, toemte } = ryddNedover(tre, endret, neste);
+    setSakstyper(avgrensning.sakstyper);
+    setSakstemaer(avgrensning.sakstemaer);
+    setBehandlingstemaer(avgrensning.behandlingstemaer);
+    const antallFjernet = fjernet.sakstemaer.length + fjernet.behandlingstemaer.length;
+    setRyddingsmelding(antallFjernet > 0 ? ryddemelding(endret, { fjernet, toemte }) : null);
   };
 
-  const endreSakstemaer = (nye: string[]) => {
-    setSakstemaer(nye);
-    if (!harTre) return;
-    const nyeBehandlingstemaer = beholdLovlige(
-      behandlingstemaer,
-      behandlingstemaerFor(tre, sakstyper, nye),
-      kjenteKoder,
-    );
-    setBehandlingstemaer(nyeBehandlingstemaer);
-    setFjernet(behandlingstemaer.filter((k) => !nyeBehandlingstemaer.includes(k)).map(termForBehandlingstema));
+  // Nederste nivå: ingenting å rydde under, men meldingen beskriver ikke lenger valget.
+  const endreBehandlingstemaer = (nye: string[]) => {
+    setBehandlingstemaer(nye);
+    setRyddingsmelding(null);
   };
 
   // Nedtrekkene ville vist hele kodeverket mens treet lastes, og et valg tatt i det
@@ -148,9 +154,9 @@ function Kontekstavgrensning({
           Klarte ikke å hente lovlige kombinasjoner, så listene er ikke begrenset. Avgrensningen kan fortsatt lagres.
         </Alert>
       )}
-      {fjernet.length > 0 && (
+      {ryddingsmelding && (
         <Alert variant="info" size="small" inline>
-          Fjernet fra avgrensningen fordi det ikke er mulig sammen med sakstypen: {fjernet.join(", ")}.
+          {ryddingsmelding}
         </Alert>
       )}
       <Combobox
@@ -160,7 +166,9 @@ function Kontekstavgrensning({
         isMultiSelect
         options={sakstypeValg}
         selectedOptions={valgteOpsjoner(sakstypeOpsjoner, sakstyper)}
-        onToggleSelected={(verdi, valgt) => endreSakstyper(toggle(sakstyper, verdi, valgt))}
+        onToggleSelected={(verdi, valgt) =>
+          endre("sakstype", { sakstyper: toggle(sakstyper, verdi, valgt), sakstemaer, behandlingstemaer })
+        }
         placeholder="Velg sakstype…"
       />
       <Combobox
@@ -170,7 +178,9 @@ function Kontekstavgrensning({
         isMultiSelect
         options={sakstemaValg}
         selectedOptions={valgteOpsjoner(sakstemaOpsjoner, sakstemaer)}
-        onToggleSelected={(verdi, valgt) => endreSakstemaer(toggle(sakstemaer, verdi, valgt))}
+        onToggleSelected={(verdi, valgt) =>
+          endre("sakstema", { sakstyper, sakstemaer: toggle(sakstemaer, verdi, valgt), behandlingstemaer })
+        }
         placeholder="Velg sakstema…"
       />
       <Combobox
@@ -180,7 +190,7 @@ function Kontekstavgrensning({
         isMultiSelect
         options={behandlingstemaValg}
         selectedOptions={valgteOpsjoner(behandlingstemaOpsjoner, behandlingstemaer)}
-        onToggleSelected={(verdi, valgt) => setBehandlingstemaer(toggle(behandlingstemaer, verdi, valgt))}
+        onToggleSelected={(verdi, valgt) => endreBehandlingstemaer(toggle(behandlingstemaer, verdi, valgt))}
         placeholder="Velg behandlingstema…"
       />
     </div>

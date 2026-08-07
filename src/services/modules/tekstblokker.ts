@@ -68,20 +68,22 @@ export interface TekstblokkVersjon {
 
 const baseUrl = `${API_BASE_URL}${TEKSTBLOKKER}`;
 
-type Normaliserbar = {
-  sakstyper?: string[];
-  sakstemaer?: string[];
-  behandlingstemaer?: string[];
-  status?: TekstblokkStatus;
-};
-type Normalisert = Pick<TekstblokkOversikt, "sakstyper" | "sakstemaer" | "behandlingstemaer" | "status">;
+type Avgrensbar = { sakstyper?: string[]; sakstemaer?: string[]; behandlingstemaer?: string[] };
+type Avgrenset = Pick<TekstblokkOversikt, "sakstyper" | "sakstemaer" | "behandlingstemaer">;
+type Normaliserbar = Avgrensbar & { status?: TekstblokkStatus };
+type Normalisert = Avgrenset & Pick<TekstblokkOversikt, "status">;
 
 // Et api som ikke leverer avgrensning eller status utelater feltene. Normaliseringen skjer her,
 // på api-grensen, slik at alle konsumenter kan regne med lister og en status.
-const normaliser = (blokk: Normaliserbar): Normalisert => ({
+// Skilt fordi versjoner har avgrensning, men ingen status.
+const normaliserAvgrensning = (blokk: Avgrensbar): Avgrenset => ({
   sakstyper: blokk.sakstyper ?? [],
   sakstemaer: blokk.sakstemaer ?? [],
   behandlingstemaer: blokk.behandlingstemaer ?? [],
+});
+
+const normaliser = (blokk: Normaliserbar): Normalisert => ({
+  ...normaliserAvgrensning(blokk),
   status: blokk.status ?? "PUBLISERT",
 });
 
@@ -110,7 +112,10 @@ export const oppdater = (id: number, body: TekstblokkRequest): Promise<Tekstblok
 export const publiser = (id: number): Promise<Tekstblokk> =>
   postAsJson(`${baseUrl}/${id}/publiser`).then((blokk: Tekstblokk) => ({ ...blokk, ...normaliser(blokk) }));
 
-export const hentHistorikk = (id: number): Promise<TekstblokkVersjon[]> => getAsJson(`${baseUrl}/${id}/historikk`);
+export const hentHistorikk = (id: number): Promise<TekstblokkVersjon[]> =>
+  getAsJson(`${baseUrl}/${id}/historikk`).then((versjoner: TekstblokkVersjon[]) =>
+    versjoner.map((versjon) => ({ ...versjon, ...normaliserAvgrensning(versjon) })),
+  );
 
 export const slett = (id: number): Promise<unknown> => deleteAsJson(`${baseUrl}/${id}`);
 

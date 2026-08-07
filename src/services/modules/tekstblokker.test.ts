@@ -113,21 +113,32 @@ describe("publiser og hentHistorikk", () => {
     expect(blokk).toMatchObject({ status: "PUBLISERT", sakstyper: [], behandlingstemaer: [] });
   });
 
-  it("hentHistorikk henter versjonene for blokken slik api-et leverer dem", async () => {
+  // Versjonene diffes felt for felt i historikkvisningen, så et felt api-et utelater
+  // ville blitt dereferert som undefined der. Normaliseringen hører hjemme på api-grensen,
+  // som for de andre endepunktene.
+  it("hentHistorikk normaliserer avgrensningen api-et utelater", async () => {
     const versjon = {
       versjon: 1,
       endringstype: "OPPRETTET",
       tags: ["usa"],
       sakstyper: ["EU_EOS"],
       behandlingstemaer: [],
-      status: "PUBLISERT",
     };
     vi.mocked(getAsJson).mockResolvedValue([versjon]);
 
     const versjoner = await hentHistorikk(7);
 
     expect(getAsJson).toHaveBeenCalledWith(expect.stringContaining("brev/tekstblokker/7/historikk"));
-    expect(versjoner).toEqual([versjon]);
+    expect(versjoner).toEqual([{ ...versjon, sakstemaer: [] }]);
+  });
+
+  // Versjoner har ingen status; normaliseringen skal ikke dikte opp feltet.
+  it("hentHistorikk legger ikke på status", async () => {
+    vi.mocked(getAsJson).mockResolvedValue([{ versjon: 1, endringstype: "OPPRETTET", tags: [] }]);
+
+    const [versjon] = await hentHistorikk(7);
+
+    expect(versjon).not.toHaveProperty("status");
   });
 });
 

@@ -125,6 +125,36 @@ describe("Kontekstavgrensning – kaskade", () => {
     expect(screen.getByText(/Trygdeavgift, Arbeid kun i Norge/)).toBeDefined();
   });
 
+  // Ryddingen ser ut som en innsnevring, men et tømt felt betyr «alle»: avgrensningen ble
+  // bredere, og det er konsekvensen admin må se.
+  it("sier fra når et felt ble tømt og dermed gjelder alle", async () => {
+    render(<Vert start={{ sakstemaer: ["TRYGDEAVGIFT"], behandlingstemaer: ["ARBEID_KUN_NORGE"] }} />);
+
+    await velg("Gjelder sakstype", "EU/EØS-land");
+
+    expect(screen.getByText(/gjelder nå alle sakstemaer og alle behandlingstemaer/)).toBeDefined();
+  });
+
+  it("navngir feltet admin faktisk endret, ikke sakstypen uansett", async () => {
+    render(<Vert start={{ behandlingstemaer: ["ARBEID_KUN_NORGE"] }} />);
+
+    await velg("Gjelder sakstema", "Medlemskap og lovvalg");
+
+    expect(screen.getByText(/ikke er mulig sammen med sakstemaet/)).toBeDefined();
+  });
+
+  // Meldingen beskrev en fjerning admin allerede har rettet opp.
+  it("fjerner meldingen når admin velger behandlingstema på nytt", async () => {
+    render(<Vert start={{ sakstemaer: ["TRYGDEAVGIFT"], behandlingstemaer: ["ARBEID_KUN_NORGE"] }} />);
+
+    await velg("Gjelder sakstype", "EU/EØS-land");
+    expect(screen.queryByText(/Fjernet fra avgrensningen/)).not.toBeNull();
+
+    await velg("Gjelder behandlingstema", "Utsendt arbeidstaker / skip / direkte til artikkel 16");
+
+    expect(screen.queryByText(/Fjernet fra avgrensningen/)).toBeNull();
+  });
+
   it("rydder bort behandlingstema som ikke lenger er lovlig når sakstemaet endres", async () => {
     render(<Vert start={{ behandlingstemaer: ["ARBEID_KUN_NORGE"] }} />);
 

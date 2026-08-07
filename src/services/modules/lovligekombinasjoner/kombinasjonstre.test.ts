@@ -4,6 +4,7 @@ import {
   alleKoderITre,
   behandlingstemaerFor,
   beholdLovlige,
+  ryddNedover,
   sakstemaerFor,
   sakstyperITre,
   SakstypeNode,
@@ -106,6 +107,65 @@ describe("beholdLovlige", () => {
   // stille bare fordi admin åpnet skjemaet.
   it("beholder koder som ikke finnes noe sted i treet", () => {
     expect(beholdLovlige(["UTGAATT_KODE"], behandlingstemaerFor(tre, ["FTRL"], []), kjente)).toEqual(["UTGAATT_KODE"]);
+  });
+});
+
+describe("ryddNedover", () => {
+  it("rydder sakstema og behandlingstema når sakstypen endres", () => {
+    const ryddet = ryddNedover(tre, "sakstype", {
+      sakstyper: ["FTRL"],
+      sakstemaer: ["UNNTAK"],
+      behandlingstemaer: ["ANMODNING_OM_UNNTAK_HOVEDREGEL"],
+    });
+
+    expect(ryddet.avgrensning).toEqual({ sakstyper: ["FTRL"], sakstemaer: [], behandlingstemaer: [] });
+    expect(ryddet.fjernet).toEqual({
+      sakstemaer: ["UNNTAK"],
+      behandlingstemaer: ["ANMODNING_OM_UNNTAK_HOVEDREGEL"],
+    });
+  });
+
+  it("rører ikke sakstemaene når det er sakstemaet som ble endret", () => {
+    const ryddet = ryddNedover(tre, "sakstema", {
+      sakstyper: [],
+      sakstemaer: ["TRYGDEAVGIFT"],
+      behandlingstemaer: ["PENSJONIST"],
+    });
+
+    expect(ryddet.avgrensning.sakstemaer).toEqual(["TRYGDEAVGIFT"]);
+    expect(ryddet.fjernet).toEqual({ sakstemaer: [], behandlingstemaer: ["PENSJONIST"] });
+  });
+
+  // Et tømt nivå betyr «alle», altså en utvidelse. Det må skilles fra en delvis rydding.
+  it("melder fra om nivåer som ble tømt, men ikke om nivåer som beholdt noe", () => {
+    const toemt = ryddNedover(tre, "sakstype", {
+      sakstyper: ["FTRL"],
+      sakstemaer: ["UNNTAK"],
+      behandlingstemaer: ["ANMODNING_OM_UNNTAK_HOVEDREGEL"],
+    });
+    expect(toemt.toemte).toEqual(["sakstema", "behandlingstema"]);
+
+    const delvis = ryddNedover(tre, "sakstype", {
+      sakstyper: ["FTRL"],
+      sakstemaer: ["MEDLEMSKAP_LOVVALG", "UNNTAK"],
+      behandlingstemaer: [],
+    });
+    expect(delvis.avgrensning.sakstemaer).toEqual(["MEDLEMSKAP_LOVVALG"]);
+    expect(delvis.toemte).toEqual([]);
+  });
+
+  it("er en identitet uten tre, slik at kallere slipper egen sjekk", () => {
+    const avgrensning = {
+      sakstyper: ["EU_EOS"],
+      sakstemaer: ["UNNTAK"],
+      behandlingstemaer: ["ARBEID_KUN_NORGE"],
+    };
+
+    const ryddet = ryddNedover([], "sakstype", avgrensning);
+
+    expect(ryddet.avgrensning).toEqual(avgrensning);
+    expect(ryddet.fjernet).toEqual({ sakstemaer: [], behandlingstemaer: [] });
+    expect(ryddet.toemte).toEqual([]);
   });
 });
 

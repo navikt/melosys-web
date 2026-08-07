@@ -22,6 +22,10 @@ export interface SakstypeNode {
  * (avgrensning av tekstblokker i admin), hvor ett kall per kombinasjon ville blitt N*M.
  * Skal ikke brukes til å avgjøre hva som er lovlig i én konkret sak – til det finnes
  * hentSakstemaer/hentBehandlingstemaer.
+ *
+ * Treet er heller ikke matchingsregelen: passerKontekst i tekstblokker.ts matcher hver
+ * dimensjon uavhengig mot sakens verdier, så en avgrensning uten sti i treet gir ingen
+ * falske treff – den treffer ingenting. Treet er utfyllingshjelp, ikke en brevregel.
  */
 export const hentKombinasjonstre = (): Promise<SakstypeNode[]> =>
   getAsJson(`${API_BASE_URL}${SAKSBEHANDLING}/kombinasjoner/tre`);
@@ -79,3 +83,56 @@ export const alleKoderITre = (tre: SakstypeNode[]): Set<string> =>
   new Set(
     tre.flatMap((node) => [node.sakstype, ...node.sakstemaer.flatMap((s) => [s.sakstema, ...s.behandlingstemaer])]),
   );
+
+export interface Avgrensning {
+  sakstyper: string[];
+  sakstemaer: string[];
+  behandlingstemaer: string[];
+}
+
+/** Nivået admin endret. Bestemmer hvor langt ned kaskaden må rydde. */
+export type Nivaa = "sakstype" | "sakstema";
+
+export type Ryddenivaa = "sakstema" | "behandlingstema";
+
+export interface Ryddet {
+  avgrensning: Avgrensning;
+  // Skilt per nivå fordi visningsnavnene ligger i hvert sitt kodeverk.
+  fjernet: { sakstemaer: string[]; behandlingstemaer: string[] };
+  // Nivåer som gikk fra en avgrensning til tom. Skilles ut fordi et tomt nivå betyr
+  // «alle»: konsekvensen er en utvidelse, ikke innsnevringen ryddingen ser ut som.
+  toemte: Ryddenivaa[];
+}
+
+/**
+ * Rydder valgene under nivået som ble endret, og sier fra om hva som forsvant.
+ *
+ * Med et tomt tre er dette en identitet: `beholdLovlige` beholder alt treet ikke kjenner,
+ * og et tomt tre kjenner ingenting. Kallere trenger derfor ingen egen sjekk.
+ */
+export const ryddNedover = (tre: SakstypeNode[], endret: Nivaa, avgrensning: Avgrensning): Ryddet => {
+  const kjenteKoder = alleKoderITre(tre);
+  const { sakstyper, sakstemaer, behandlingstemaer } = avgrensning;
+
+  const nyeSakstemaer =
+    endret === "sakstype" ? beholdLovlige(sakstemaer, sakstemaerFor(tre, sakstyper), kjenteKoder) : sakstemaer;
+  const nyeBehandlingstemaer = beholdLovlige(
+    behandlingstemaer,
+    behandlingstemaerFor(tre, sakstyper, nyeSakstemaer),
+    kjenteKoder,
+  );
+
+  const toemt = (foer: string[], etter: string[]): boolean => foer.length > 0 && etter.length === 0;
+
+  return {
+    avgrensning: { sakstyper, sakstemaer: nyeSakstemaer, behandlingstemaer: nyeBehandlingstemaer },
+    fjernet: {
+      sakstemaer: sakstemaer.filter((kode) => !nyeSakstemaer.includes(kode)),
+      behandlingstemaer: behandlingstemaer.filter((kode) => !nyeBehandlingstemaer.includes(kode)),
+    },
+    toemte: [
+      ...(toemt(sakstemaer, nyeSakstemaer) ? (["sakstema"] as const) : []),
+      ...(toemt(behandlingstemaer, nyeBehandlingstemaer) ? (["behandlingstema"] as const) : []),
+    ],
+  };
+};
