@@ -49,6 +49,15 @@ describe("TekstblokkerListe – avgrensning", () => {
     expect(gjelderCelle().textContent).toBe("EU/EØS-land");
   });
 
+  it("tar sakstema med i «Gjelder», mellom sakstype og behandlingstema", () => {
+    visListe([blokk({ sakstyper: ["EU_EOS"], sakstemaer: ["UNNTAK"], behandlingstemaer: ["ARBEID_KUN_NORGE"] })], {
+      utvidedeIder: new Set([1]),
+    });
+
+    expect(screen.getByText("Gjelder:")).toBeDefined();
+    expect(screen.getByText("Unntak")).toBeDefined();
+  });
+
   it("viser «Alle» når blokken ikke er avgrenset", () => {
     visListe([blokk()]);
 

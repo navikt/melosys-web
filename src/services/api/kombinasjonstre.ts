@@ -6,14 +6,15 @@ export const kombinasjonstreKeys = {
   tre: ["lovligekombinasjoner", "tre"] as const,
 };
 
-// Treet er hardkodet i backend og endrer seg kun ved deploy, så det er trygt å holde
-// lenge i cache. Ett kall dekker hele kaskaden i admin.
-const TRE_STALE_TIME = 60 * 60_000;
+// Treet er hardkodet i backend og kan per definisjon ikke endre seg før neste deploy, så
+// en refetch ville aldri gitt noe nytt. gcTime følger med: uten den kastes treet ut av
+// cachen etter fem minutter, og hentes på nytt ved neste modalåpning.
+const FOR_ALLTID = Infinity;
 
-export const useKombinasjonstre = (enabled = true) =>
+export const useKombinasjonstre = () =>
   useQuery<SakstypeNode[]>({
     queryKey: kombinasjonstreKeys.tre,
     queryFn: hentKombinasjonstre,
-    enabled,
-    staleTime: TRE_STALE_TIME,
+    staleTime: FOR_ALLTID,
+    gcTime: FOR_ALLTID,
   });

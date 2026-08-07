@@ -100,9 +100,7 @@ function TekstblokkSoekIntern({
     blokker,
     soek,
     valgteTags,
-    ignorerKontekst ? undefined : sakstype,
-    ignorerKontekst ? undefined : sakstema,
-    ignorerKontekst ? undefined : behandlingstema,
+    ignorerKontekst ? {} : { sakstype, sakstema, behandlingstema },
     // Api-et skal alt ha filtrert bort utkast; filteret her er belte i tillegg til seler.
     "PUBLISERT",
   );

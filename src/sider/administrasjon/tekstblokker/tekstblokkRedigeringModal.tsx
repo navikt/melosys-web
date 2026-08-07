@@ -158,14 +158,20 @@ function TekstblokkRedigeringModal({ redigerId, type, forslagTags, onLukk }: Pro
               open={avgrensningApen}
               onClick={() => setAvgrensningApen(!avgrensningApen)}
             >
-              <Kontekstavgrensning
-                sakstyper={sakstyper}
-                setSakstyper={setSakstyper}
-                sakstemaer={sakstemaer}
-                setSakstemaer={setSakstemaer}
-                behandlingstemaer={behandlingstemaer}
-                setBehandlingstemaer={setBehandlingstemaer}
-              />
+              {/* Monteres foerst naar utvidelsen aapnes: ReadMore rendrer alltid children,
+                  bare skjult. Uten dette ville kombinasjonstreet hentes ved hver
+                  modalaapning, og et varsel om at det feilet ligge usynlig i det
+                  sammenslaatte omraadet. */}
+              {avgrensningApen && (
+                <Kontekstavgrensning
+                  sakstyper={sakstyper}
+                  setSakstyper={setSakstyper}
+                  sakstemaer={sakstemaer}
+                  setSakstemaer={setSakstemaer}
+                  behandlingstemaer={behandlingstemaer}
+                  setBehandlingstemaer={setBehandlingstemaer}
+                />
+              )}
             </ReadMore>
 
             <div className="tekstblokker__modal-editor">

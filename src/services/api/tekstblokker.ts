@@ -7,6 +7,7 @@ import {
   harAlleTags,
   harStatus,
   matcherSoek,
+  Sakskontekst,
   Statusfilter,
   tellTagsMedValgte,
   Tekstblokk,
@@ -117,19 +118,19 @@ export const useFiltrerteTekstblokker = (
   blokker: TekstblokkOversikt[],
   soek: string,
   valgteTags: string[],
-  sakstype?: string,
-  sakstema?: string,
-  behandlingstema?: string,
+  // Tom kontekst er admin, som ikke står i en sak og derfor ikke skal avgrenses.
+  kontekst: Sakskontekst = {},
   // "ALLE" er admin, der utkast skal vises; saksbehandlerflaten sender "PUBLISERT" som klientsidevern.
   statusfilter: Statusfilter = "ALLE",
 ): FiltrerteTekstblokker => {
+  const { sakstype, sakstema, behandlingstema } = kontekst;
   // Ett filterpass: kontekstavgrensningen legges oppå det samme utvalget tomtilstanden teller.
   const matchende = useMemo(
     () => blokker.filter((b) => matcherFiltre(b, soek, valgteTags, statusfilter)),
     [blokker, soek, valgteTags, statusfilter],
   );
   const synlige = useMemo(
-    () => matchende.filter((b) => gjelderKontekst(b, sakstype, sakstema, behandlingstema)),
+    () => matchende.filter((b) => gjelderKontekst(b, { sakstype, sakstema, behandlingstema })),
     [matchende, sakstype, sakstema, behandlingstema],
   );
   const antallUtenKontekst = matchende.length;

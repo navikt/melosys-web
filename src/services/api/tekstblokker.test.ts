@@ -2,7 +2,7 @@ import { renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { useFiltrerteTekstblokker } from "./tekstblokker";
-import { Statusfilter, TekstblokkOversikt, TekstblokkStatus } from "../modules/tekstblokker";
+import { Sakskontekst, Statusfilter, TekstblokkOversikt, TekstblokkStatus } from "../modules/tekstblokker";
 import { tekstblokkOversikt } from "../modules/tekstblokkTestdata";
 
 const blokk = (
@@ -30,15 +30,8 @@ const utsendt = blokk(4, "Kun utsendt arbeidstaker", ["felles"], { behandlingste
 
 const blokker = [alle, euEos, lovvalg, utsendt];
 
-interface Kontekst {
-  sakstype?: string;
-  sakstema?: string;
-  behandlingstema?: string;
-}
-
-const filtrer = (soek: string, valgteTags: string[], { sakstype, sakstema, behandlingstema }: Kontekst = {}) =>
-  renderHook(() => useFiltrerteTekstblokker(blokker, soek, valgteTags, sakstype, sakstema, behandlingstema)).result
-    .current;
+const filtrer = (soek: string, valgteTags: string[], kontekst: Sakskontekst = {}) =>
+  renderHook(() => useFiltrerteTekstblokker(blokker, soek, valgteTags, kontekst)).result.current;
 
 const titler = (synlige: TekstblokkOversikt[]) => synlige.map((b) => b.tittel);
 
@@ -128,7 +121,13 @@ describe("useFiltrerteTekstblokker – antall uten kontekst", () => {
   it("holder statusfilteret utenfor: utkast teller aldri som skjult av konteksten", () => {
     const utkast = blokk(9, "Uferdig", [], {}, "UTKAST");
     const { antallUtenKontekst } = renderHook(() =>
-      useFiltrerteTekstblokker([utkast], "", [], "FTRL", "TRYGDEAVGIFT", "PENSJONIST", "PUBLISERT"),
+      useFiltrerteTekstblokker(
+        [utkast],
+        "",
+        [],
+        { sakstype: "FTRL", sakstema: "TRYGDEAVGIFT", behandlingstema: "PENSJONIST" },
+        "PUBLISERT",
+      ),
     ).result.current;
 
     expect(antallUtenKontekst).toBe(0);
@@ -140,9 +139,7 @@ describe("useFiltrerteTekstblokker med statusfilter", () => {
   const utkast = blokk(2, "Utkast blokk", ["felles", "nytt"], {}, "UTKAST");
 
   const filtrerStatus = (statusfilter: Statusfilter) =>
-    renderHook(() =>
-      useFiltrerteTekstblokker([publisert, utkast], "", [], undefined, undefined, undefined, statusfilter),
-    ).result.current;
+    renderHook(() => useFiltrerteTekstblokker([publisert, utkast], "", [], {}, statusfilter)).result.current;
 
   it("viser alt som standard", () => {
     expect(titler(filtrerStatus("ALLE").synlige)).toEqual(["Publisert blokk", "Utkast blokk"]);

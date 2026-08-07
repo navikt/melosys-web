@@ -7,44 +7,34 @@ import Kontekstavgrensning from "./kontekstavgrensning";
 import { SakstypeNode } from "../../../services/modules/lovligekombinasjoner/kombinasjonstre";
 
 const mocks = vi.hoisted(() => ({
-  kombinasjonstre: vi.fn(() => ({ data: undefined, isError: false }) as { data?: unknown; isError: boolean }),
+  kombinasjonstre: vi.fn(() => ({ data: undefined, isLoading: false }) as { data?: unknown; isLoading: boolean }),
 }));
 
 vi.mock("../../../services/api/kombinasjonstre", () => ({
   useKombinasjonstre: () => mocks.kombinasjonstre(),
 }));
 
-const kode = (k: string, term: string) => ({ kode: k, term });
-
-// Et lite tre med ekte koder, så visningsnavnene under kommer fra kodeverket.
+// Treet leverer rene koder; visningsnavnene under kommer fra kodeverket.
 const tre: SakstypeNode[] = [
   {
-    sakstype: kode("EU_EOS", "EU/EØS-land"),
-    sakstemaer: [
-      {
-        sakstema: kode("MEDLEMSKAP_LOVVALG", "Medlemskap og lovvalg"),
-        behandlingstemaer: [kode("UTSENDT_ARBEIDSTAKER", "Utsendt arbeidstaker")],
-      },
-    ],
+    sakstype: "EU_EOS",
+    sakstemaer: [{ sakstema: "MEDLEMSKAP_LOVVALG", behandlingstemaer: ["UTSENDT_ARBEIDSTAKER"] }],
   },
   {
-    sakstype: kode("FTRL", "Utenfor avtaleland"),
-    sakstemaer: [
-      {
-        sakstema: kode("TRYGDEAVGIFT", "Trygdeavgift"),
-        behandlingstemaer: [kode("ARBEID_KUN_NORGE", "Arbeid kun i Norge")],
-      },
-    ],
+    sakstype: "FTRL",
+    sakstemaer: [{ sakstema: "TRYGDEAVGIFT", behandlingstemaer: ["ARBEID_KUN_NORGE"] }],
   },
 ];
 
+interface Startvalg {
+  sakstyper?: string[];
+  sakstemaer?: string[];
+  behandlingstemaer?: string[];
+}
+
 // Ekte state, ikke spioner: kaskaden rydder i valgene under, og det ryddede resultatet
 // må faktisk tilbake i komponenten for at nedtrekkene skal oppdatere seg.
-function Vert({
-  start = {},
-}: {
-  start?: { sakstyper?: string[]; sakstemaer?: string[]; behandlingstemaer?: string[] };
-}) {
+function Vert({ start = {} }: { start?: Startvalg }) {
   const [sakstyper, setSakstyper] = useState<string[]>(start.sakstyper ?? []);
   const [sakstemaer, setSakstemaer] = useState<string[]>(start.sakstemaer ?? []);
   const [behandlingstemaer, setBehandlingstemaer] = useState<string[]>(start.behandlingstemaer ?? []);
@@ -88,10 +78,10 @@ const valg = () => JSON.parse(screen.getByTestId("valg").textContent ?? "{}");
 describe("Kontekstavgrensning – kaskade", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.kombinasjonstre.mockReturnValue({ data: tre, isError: false });
+    mocks.kombinasjonstre.mockReturnValue({ data: tre, isLoading: false });
   });
 
-  it("viser alle sakstemaer og behandlingstemaer i treet når ingenting er valgt", async () => {
+  it("viser alle sakstemaer i treet når ingenting er valgt", async () => {
     render(<Vert />);
 
     await aapne("Gjelder sakstema");
@@ -127,6 +117,14 @@ describe("Kontekstavgrensning – kaskade", () => {
     expect(valg()).toEqual({ sakstyper: ["EU_EOS"], sakstemaer: [], behandlingstemaer: [] });
   });
 
+  it("sier fra om hva kaskaden fjernet, slik at ryddingen ikke skjer i stillhet", async () => {
+    render(<Vert start={{ sakstemaer: ["TRYGDEAVGIFT"], behandlingstemaer: ["ARBEID_KUN_NORGE"] }} />);
+
+    await velg("Gjelder sakstype", "EU/EØS-land");
+
+    expect(screen.getByText(/Trygdeavgift, Arbeid kun i Norge/)).toBeDefined();
+  });
+
   it("rydder bort behandlingstema som ikke lenger er lovlig når sakstemaet endres", async () => {
     render(<Vert start={{ behandlingstemaer: ["ARBEID_KUN_NORGE"] }} />);
 
@@ -148,12 +146,26 @@ describe("Kontekstavgrensning – kaskade", () => {
   });
 });
 
-describe("Kontekstavgrensning uten kombinasjonstre", () => {
+describe("Kontekstavgrensning uten brukbart kombinasjonstre", () => {
   beforeEach(() => vi.clearAllMocks());
 
+  // Feltene må ikke vises mens treet lastes: et valg tatt i det vinduet ville sluppet
+  // unna oppryddingen, som er nettopp feiltilstanden kaskaden finnes for å hindre.
+  it("viser ingen felter mens treet lastes", () => {
+    mocks.kombinasjonstre.mockReturnValue({ data: undefined, isLoading: true });
+
+    render(<Vert />);
+
+    expect(screen.queryByRole("combobox", { name: "Gjelder sakstype" })).toBeNull();
+    expect(screen.queryByText(/Klarte ikke å hente/)).toBeNull();
+  });
+
   // Avgrensningen er støyreduksjon: den skal kunne settes selv om kaskaden er utilgjengelig.
-  it("faller tilbake på hele kodeverket og sier fra når treet ikke kan hentes", async () => {
-    mocks.kombinasjonstre.mockReturnValue({ data: undefined, isError: true });
+  it.each([
+    ["feilet henting", undefined],
+    ["tomt tre fra api-et", []],
+  ])("faller tilbake på hele kodeverket og sier fra ved %s", async (_navn, data) => {
+    mocks.kombinasjonstre.mockReturnValue({ data, isLoading: false });
 
     render(<Vert />);
 
@@ -164,7 +176,7 @@ describe("Kontekstavgrensning uten kombinasjonstre", () => {
   });
 
   it("rydder ikke i valgene når kaskaden mangler", async () => {
-    mocks.kombinasjonstre.mockReturnValue({ data: undefined, isError: true });
+    mocks.kombinasjonstre.mockReturnValue({ data: undefined, isLoading: false });
 
     render(<Vert start={{ behandlingstemaer: ["ARBEID_KUN_NORGE"] }} />);
 

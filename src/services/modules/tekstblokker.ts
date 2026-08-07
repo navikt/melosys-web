@@ -138,11 +138,20 @@ export const matcherSoek = (blokk: TekstblokkOversikt, soek: string): boolean =>
 const passerAvgrensning = (avgrensning: string[], kontekstverdi?: string): boolean =>
   avgrensning.length === 0 || !kontekstverdi || avgrensning.includes(kontekstverdi);
 
+/**
+ * Konteksten som en tekstblokk avgrenses mot. Objekt og ikke tre posisjonelle strenger:
+ * dimensjonene har samme type, så en ombytting ville typesjekket fint og gitt feil
+ * filtrering i stillhet.
+ */
+export interface Sakskontekst {
+  sakstype?: string;
+  sakstema?: string;
+  behandlingstema?: string;
+}
+
 export const gjelderKontekst = (
   blokk: Pick<TekstblokkOversikt, "sakstyper" | "sakstemaer" | "behandlingstemaer">,
-  sakstype?: string,
-  sakstema?: string,
-  behandlingstema?: string,
+  { sakstype, sakstema, behandlingstema }: Sakskontekst = {},
 ): boolean =>
   passerAvgrensning(blokk.sakstyper, sakstype) &&
   passerAvgrensning(blokk.sakstemaer, sakstema) &&
