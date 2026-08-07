@@ -88,8 +88,8 @@ function Kontekstavgrensning({
   // usynlig som feiltilstanden den finnes for å hindre.
   const [ryddingsmelding, setRyddingsmelding] = useState<string | null>(null);
 
-  // Ikke `data ?? []`: et svar som ikke er en liste ville nådd flatMap og kastet.
-  const tre = useMemo(() => (Array.isArray(data) ? data : []), [data]);
+  // Alltid en liste: hentKombinasjonstre normaliserer formen på api-grensen.
+  const tre = useMemo(() => data ?? [], [data]);
   // Et tomt tre er like ubrukelig som ingen tre: uten grener er det ingenting å kaskadere
   // etter. Begge tilfellene faller tilbake på hele kodeverket, og begge skal si fra.
   const harTre = tre.length > 0;

@@ -28,7 +28,12 @@ export interface SakstypeNode {
  * falske treff – den treffer ingenting. Treet er utfyllingshjelp, ikke en brevregel.
  */
 export const hentKombinasjonstre = (): Promise<SakstypeNode[]> =>
-  getAsJson(`${API_BASE_URL}${SAKSBEHANDLING}/kombinasjoner/tre`);
+  // Et svar som ikke er en liste blir et tomt tre, og behandles da som «ingen kaskade»
+  // med varsel – samme utfall som en feilet henting. Sjekken hoerer hjemme her, paa
+  // api-grensen, slik at invarianten gjelder enhver konsument og ikke bare den foerste.
+  getAsJson(`${API_BASE_URL}${SAKSBEHANDLING}/kombinasjoner/tre`).then((tre: SakstypeNode[]) =>
+    Array.isArray(tre) ? tre : [],
+  );
 
 // Tomt valg betyr «ingen avgrensning», og skal derfor ikke filtrere bort noe.
 const passerValg = (valgte: string[], kode: string): boolean => valgte.length === 0 || valgte.includes(kode);

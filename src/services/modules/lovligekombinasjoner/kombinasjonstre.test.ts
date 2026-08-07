@@ -1,5 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { getAsJson } from "../../utils";
 import {
   alleKoderITre,
   behandlingstemaerFor,
@@ -7,8 +8,11 @@ import {
   ryddNedover,
   sakstemaerFor,
   sakstyperITre,
+  hentKombinasjonstre,
   SakstypeNode,
 } from "./kombinasjonstre";
+
+vi.mock("../../utils", () => ({ getAsJson: vi.fn() }));
 
 // Et miniatyrtre med de trekkene som betyr noe for kaskaden: samme sakstema under to
 // sakstyper, og et behandlingstema som bare finnes under den ene av dem.
@@ -177,5 +181,28 @@ describe("alleKoderITre", () => {
     expect(koderITre.has("TRYGDEAVGIFT")).toBe(true);
     expect(koderITre.has("YRKESAKTIV")).toBe(true);
     expect(koderITre.has("FINNES_IKKE")).toBe(false);
+  });
+});
+
+describe("hentKombinasjonstre", () => {
+  beforeEach(() => vi.mocked(getAsJson).mockReset());
+
+  it("leverer treet slik api-et gir det", async () => {
+    vi.mocked(getAsJson).mockResolvedValue(tre);
+
+    await expect(hentKombinasjonstre()).resolves.toEqual(tre);
+    expect(getAsJson).toHaveBeenCalledWith(expect.stringContaining("saksbehandling/kombinasjoner/tre"));
+  });
+
+  // Et svar som ikke er en liste ville naadd flatMap i utledningene og kastet. Tomt tre
+  // gir i stedet samme utfall som en feilet henting: ingen kaskade, og varsel til admin.
+  it.each([
+    ["et objekt", {}],
+    ["null", null],
+    ["en streng", "noe rart"],
+  ])("gjoer %s om til et tomt tre", async (_navn, svar) => {
+    vi.mocked(getAsJson).mockResolvedValue(svar);
+
+    await expect(hentKombinasjonstre()).resolves.toEqual([]);
   });
 });
