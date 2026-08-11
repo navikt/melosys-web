@@ -27,6 +27,10 @@ describe("kodekombinasjoner", () => {
     expect(new Set(koder).size).toBe(koder.length);
   });
 
+  it("unntaksbestemmelser inneholder art. 11(3)(b)", () => {
+    expect(unntaksbestemmelser.map((k) => k.kode)).toContain("FO_883_2004_ART11_3B");
+  });
+
   it("unntaksbestemmelser er sortert alfabetisk på kode", () => {
     const koder = unntaksbestemmelser.map((k) => k.kode);
     const sortert = [...koder].sort((a, b) => a.localeCompare(b));
