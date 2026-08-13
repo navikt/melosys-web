@@ -141,6 +141,7 @@ export function VurderingVideresend({
                 description="Denne teksten legges ved i SED A008"
                 placeholder="Skriv inn ytterligere informasjon..."
                 readOnly={!redigerbart}
+                maxLength={500}
               />
             </Nav.Column>
           </Nav.Row>
