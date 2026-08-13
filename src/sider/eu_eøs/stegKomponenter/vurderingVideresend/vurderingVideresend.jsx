@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getFormValues, reduxForm } from "redux-form";
-import { connect } from "react-redux";
+import { getFormValues, isValid, reduxForm } from "redux-form";
+import { connect, useSelector } from "react-redux";
 import PT from "prop-types";
 import * as EKV from "eessi-kodeverk";
 
@@ -42,6 +42,7 @@ export function VurderingVideresend({
   resetFeiletRespons,
 }) {
   const isA008Cdm44Enabled = useFeatureToggle(MELOSYS_CDM_4_4);
+  const formIsValid = useSelector(isValid(KV.Form.VURDERING_VIDERESEND));
 
   const pdfDokumenter = [
     {
@@ -186,7 +187,7 @@ export function VurderingVideresend({
             <Mui.StegKnapper
               bekreftKnappProps={{
                 loading: videresendPending,
-                disabled: !redigerbart,
+                disabled: !redigerbart || !formIsValid,
               }}
               bekreftTekst="Videresend søknad"
               tilbakeKnappProps={{
