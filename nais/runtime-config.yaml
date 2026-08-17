@@ -70,8 +70,11 @@ data:
 
       location = /melosys/health/is-ready {
         access_log off;
-        default_type text/plain;
-        return 200 "ready\n";
+        try_files /index.html =503;
+      }
+
+      location = /index.html {
+        add_header Cache-Control "no-store" always;
       }
 
       location /melosys/assets/ {
@@ -79,8 +82,6 @@ data:
       }
 
       location /melosys/ {
-        add_header Cache-Control "no-store";
-        expires 0;
         try_files $uri /index.html;
       }
 
