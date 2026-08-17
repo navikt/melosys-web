@@ -6,15 +6,20 @@ metadata:
   labels:
     team: teammelosys
   annotations:
-    nais.io/read-only-file-system: "false"
-    nais.io/run-as-user: "1069"
-    nais.io/run-as-group: "1069"
+    nais.io/run-as-user: "65532"
+    nais.io/run-as-group: "65532"
 spec:
   image: {{image}}
   port: 3000
   filesFrom:
     - configmap: {{APP_NAME}}-runtime-config
       mountPath: /etc/nginx/conf.d
+    - emptyDir:
+        medium: Memory
+      mountPath: /run
+    - emptyDir:
+        medium: Disk
+      mountPath: /var/lib/nginx/tmp
   replicas:
     min: 2
     max: 2
@@ -29,7 +34,6 @@ spec:
     timeout: 10
   resources:
     limits:
-      cpu: 500m
       memory: 512Mi
     requests:
       cpu: 100m
