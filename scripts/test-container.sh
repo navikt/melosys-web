@@ -31,15 +31,18 @@ trap cleanup EXIT
 
 download_deploy() {
   local asset
+  local asset_id
   local expected_sha
 
   case "$(uname -s)" in
     Darwin)
       asset="deploy-darwin"
+      asset_id="503645626"
       expected_sha="f96132d70d641a005b9b05e3a937dafcc213d8c53757de44b87d5c8d21d8ad89"
       ;;
     Linux)
       asset="deploy-linux"
+      asset_id="503645574"
       expected_sha="f13a29e0267160d6759c84e410e0b35b364a811dec95d05a79281a32adf5a227"
       ;;
     *)
@@ -50,7 +53,8 @@ download_deploy() {
 
   DEPLOY="${CONFIG_DIR}/nais-deploy"
   curl --fail --silent --show-error --location \
-    "https://github.com/nais/deploy/releases/download/v2/${asset}" \
+    --header "Accept: application/octet-stream" \
+    "https://api.github.com/repos/nais/deploy/releases/assets/${asset_id}" \
     --output "${DEPLOY}"
 
   if command -v sha256sum >/dev/null; then
