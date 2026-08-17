@@ -73,6 +73,7 @@
     "start:q1": "node generate-local-config.mjs .q1.env && pnpm start:js",
     "start:q2": "node generate-local-config.mjs .q2.env && pnpm start:js",
     "build": "tsc && vite build",
+    "test:container": "bash scripts/test-container.sh",
     "eslint": "eslint src",
     "eslint:staged": "echo '{\"*.{js,jsx,ts,tsx}\": \"eslint\"}' | lint-staged --config -",
     "prettier:write": "prettier --write .",
