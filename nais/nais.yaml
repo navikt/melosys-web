@@ -12,6 +12,9 @@ metadata:
 spec:
   image: {{image}}
   port: 3000
+  filesFrom:
+    - configmap: {{APP_NAME}}-runtime-config
+      mountPath: /etc/nginx/conf.d
   replicas:
     min: 2
     max: 2

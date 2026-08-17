@@ -1,5 +1,6 @@
 {
   "APP_NAME": "melosys-web-q1",
+  "FRONTEND_APP_NAME": "Melosys-q1",
   "APP_URL_TRYGDEAVTALE": "http://melosys-trygdeavtale-q1.teammelosys",
   "APP_URL_FAKTURERINGSKOMPONENTEN": "https://faktureringskomponenten-q1.intern.dev.nav.no",
   "APP_URL_MELOSYS": "http://melosys-q1.teammelosys",
@@ -10,5 +11,10 @@
   "APP_NAME_TRYGDEAVTALE_API": "melosys-trygdeavtale-q1",
   "APP_NAME_FAKTURERINGSKOMPONENTEN_API": "faktureringskomponenten-q1",
   "ENVIRONMENT_NAME": "q1",
+  "AZURE_APP_TENANT_ID": "966ac572-f5b7-4bbe-aa88-c76419c0f851",
+  "AZURE_CLIENT_ID": "824e77bf-142c-4bd9-b4e2-5291ca58a99d",
+  "AZURE_CLIENT_NAME": "melosys-web-q1",
+  "CLUSTER_NAME": "dev-fss",
+  "FAKTURERINGSKOMPONENTEN_CLUSTER": "dev-gcp",
   "TENANT_URL":"trygdeetaten.no"
 }
