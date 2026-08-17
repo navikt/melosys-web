@@ -57,10 +57,16 @@ download_deploy() {
     "https://api.github.com/repos/nais/deploy/releases/assets/${asset_id}" \
     --output "${DEPLOY}"
 
-  if command -v sha256sum >/dev/null; then
-    echo "${expected_sha}  ${DEPLOY}" | sha256sum --check --status
+  local actual_sha
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    actual_sha="$(shasum --algorithm 256 "${DEPLOY}" | cut -d' ' -f1)"
   else
-    echo "${expected_sha}  ${DEPLOY}" | shasum --algorithm 256 --check --status
+    actual_sha="$(sha256sum "${DEPLOY}" | cut -d' ' -f1)"
+  fi
+
+  if [[ "${actual_sha}" != "${expected_sha}" ]]; then
+    echo "Uventet checksum for ${asset}" >&2
+    exit 1
   fi
 
   chmod +x "${DEPLOY}"
