@@ -1,12 +1,2 @@
 .idea
 node_modules
-.git
-.github
-.local.env
-.prod.env
-.q1.env
-.q2.env
-env-config.js
-generate-config.sh
-nais
-tests

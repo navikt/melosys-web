@@ -6,6 +6,7 @@ metadata:
   labels:
     team: teammelosys
   annotations:
+    nais.io/read-only-file-system: "false"
     nais.io/run-as-user: "65532"
     nais.io/run-as-group: "65532"
 spec:
@@ -14,12 +15,6 @@ spec:
   filesFrom:
     - configmap: {{APP_NAME}}-runtime-config
       mountPath: /etc/nginx/conf.d
-    - emptyDir:
-        medium: Memory
-      mountPath: /run
-    - emptyDir:
-        medium: Disk
-      mountPath: /var/lib/nginx/tmp
   replicas:
     min: 2
     max: 2
@@ -34,10 +29,15 @@ spec:
     timeout: 10
   resources:
     limits:
+      cpu: 500m
       memory: 512Mi
     requests:
       cpu: 100m
       memory: 256Mi
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: nodejs
   azure:
     application:
       enabled: true
@@ -73,12 +73,3 @@ spec:
     - "{{this}}"
     {{/each}}
   {{/if}}
-  env:
-    - name: APP_URL_MELOSYS
-      value: {{APP_URL_MELOSYS}}
-    - name: APP_URL_TRYGDEAVTALE
-      value: {{APP_URL_TRYGDEAVTALE}}
-    - name: APP_URL_FAKTURERINGSKOMPONENTEN
-      value: {{APP_URL_FAKTURERINGSKOMPONENTEN}}
-    - name: ENVIRONMENT_NAME
-      value: {{ENVIRONMENT_NAME}}

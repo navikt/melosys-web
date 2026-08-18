@@ -6,12 +6,15 @@ metadata:
   labels:
     team: teammelosys
   annotations:
+    # Sørger for at podene rulles når denne ConfigMap-en endres uten at imaget endres.
     reloader.stakater.com/match: "true"
 data:
+  # Tidligere nais/proxy.nginx. Chainguard-imaget har ingen templatemotor, så
+  # variablene fylles inn av nais deploy fra vars-*.json i stedet for envsubst.
   default.conf: |-
     server {
       root /usr/share/nginx/html;
-      listen 3000;
+      listen       3000;
       include /etc/nginx/mime.types;
       proxy_http_version 1.1;
 
@@ -29,52 +32,41 @@ data:
         proxy_pass "{{APP_URL_MELOSYS}}/api/";
       }
 
-      location /trygdeavtale-flyt/ {
+      location  /trygdeavtale-flyt/ {
         proxy_set_header X-Forwarded-Host $host;
         proxy_set_header X-Forwarded-Server $host;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_pass "{{APP_URL_TRYGDEAVTALE}}/flyt/";
       }
 
-      location /faktureringskomponenten/ {
+      location  /faktureringskomponenten/ {
         proxy_set_header X-Forwarded-Host $host;
         proxy_set_header X-Forwarded-Server $host;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_pass "{{APP_URL_FAKTURERINGSKOMPONENTEN}}/";
       }
 
-      location /graphql/ {
+      location  /graphql/ {
         proxy_set_header X-Forwarded-Host $host;
         proxy_set_header X-Forwarded-Server $host;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_pass "{{APP_URL_MELOSYS}}/graphql/";
       }
 
+      # env-config.js lå tidligere i /usr/share/nginx/html og ble generert ved
+      # oppstart. Nå kommer den fra denne ConfigMap-en.
       location = /env-config.js {
         alias /etc/nginx/conf.d/env-config.js;
-        add_header Cache-Control "no-store";
+        add_header Cache-Control 'no-store';
+        add_header Cache-Control 'no-cache';
         expires 0;
       }
 
-      location = /melosys/env-config.js {
-        alias /etc/nginx/conf.d/env-config.js;
-        add_header Cache-Control "no-store";
+      location /melosys/env-config.js {
+        add_header Cache-Control 'no-store';
+        add_header Cache-Control 'no-cache';
         expires 0;
-      }
-
-      location = /melosys/health/is-alive {
-        access_log off;
-        default_type text/plain;
-        return 200 "alive\n";
-      }
-
-      location = /melosys/health/is-ready {
-        access_log off;
-        try_files /index.html =503;
-      }
-
-      location = /index.html {
-        add_header Cache-Control "no-store" always;
+        try_files $uri /env-config.js;
       }
 
       location /melosys/assets/ {
@@ -82,14 +74,21 @@ data:
       }
 
       location /melosys/ {
+        add_header Cache-Control 'no-store';
+        add_header Cache-Control 'no-cache';
+        expires 0;
         try_files $uri /index.html;
       }
 
       location = / {
-        return 301 https://$host/melosys/;
+        rewrite ^.+ https://$host/melosys/ permanent;
       }
     }
 
+  # Tidligere generert av generate-config.sh fra .prod.env/.q1.env/.q2.env.
+  # Alt her er synlig i nettleseren og må derfor ikke inneholde hemmeligheter.
+  # NB: APP_NAME er frontendens visningsnavn. Det heter FRONTEND_APP_NAME i
+  # vars-*.json fordi {{APP_NAME}} allerede er navnet på nais-applikasjonen.
   env-config.js: |-
     const envConfig = {
       APP_NAME: "{{FRONTEND_APP_NAME}}",
