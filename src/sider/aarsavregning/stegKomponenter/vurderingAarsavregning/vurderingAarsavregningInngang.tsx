@@ -352,7 +352,9 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
               >
                 <Nav.VStack align="start">
                   <Nav.Heading level="2" className="aarsavregning_seksjon_heading">
-                    Innbetalt trygdeavgift
+                    {erÅrsavregningEøsPensjonistToggleEnabled
+                      ? "Innbetalt trygdeavgift"
+                      : "Trygdeavgift fra Avgiftssystemet"}
                   </Nav.Heading>
                   <Nav.RadioGroup
                     key={`innbetaltTrygdeavgiftRadioGroup ${valgtÅr || initieltÅr || ""}`}

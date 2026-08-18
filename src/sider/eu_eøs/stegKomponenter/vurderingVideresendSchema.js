@@ -1,6 +1,9 @@
 import { object, string, bool } from "yup";
 
-import { DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN } from "../../../kodeverk/feilmeldinger";
+import {
+  DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN,
+  DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN,
+} from "../../../kodeverk/feilmeldinger";
 
 const VELG_MOTTAKERINSTITUSJON = { melding: "Velg mottakerinstitusjon" };
 
@@ -10,7 +13,7 @@ export const vurdering_videresend = object().shape({
     is: true,
     then: (schema) => schema.required(VELG_MOTTAKERINSTITUSJON),
   }),
-  ytterligereInformasjonSed: string().nullable(),
+  ytterligereInformasjonSed: string().nullable().max(500, DU_KAN_IKKE_SKRIVE_MER_ENN_500_TEGN),
   orienteringsbrevFritekst: string().nullable().max(4000, DU_KAN_IKKE_SKRIVE_MER_ENN_4000_TEGN),
 });
 
