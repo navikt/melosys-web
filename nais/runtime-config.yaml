@@ -6,11 +6,8 @@ metadata:
   labels:
     team: teammelosys
   annotations:
-    # Sørger for at podene rulles når denne ConfigMap-en endres uten at imaget endres.
     reloader.stakater.com/match: "true"
 data:
-  # Tidligere nais/proxy.nginx. Chainguard-imaget har ingen templatemotor, så
-  # variablene fylles inn av nais deploy fra vars-*.json i stedet for envsubst.
   default.conf: |-
     server {
       root /usr/share/nginx/html;
@@ -53,8 +50,6 @@ data:
         proxy_pass "{{APP_URL_MELOSYS}}/graphql/";
       }
 
-      # env-config.js lå tidligere i /usr/share/nginx/html og ble generert ved
-      # oppstart. Nå kommer den fra denne ConfigMap-en.
       location = /env-config.js {
         alias /etc/nginx/conf.d/env-config.js;
         add_header Cache-Control 'no-store';
@@ -85,12 +80,6 @@ data:
       }
     }
 
-  # Tidligere generert av generate-config.sh fra .prod.env ved oppstart.
-  # Alt her er synlig i nettleseren og må derfor ikke inneholde hemmeligheter.
-  # NB: APP_NAME er frontendens visningsnavn. Det heter FRONTEND_APP_NAME i
-  # vars-*.json fordi {{APP_NAME}} allerede er navnet på nais-applikasjonen.
-  # Lokal utvikling bruker fortsatt .local.env/.q1.env/.q2.env via
-  # generate-local-config.mjs, og er ikke berørt av denne filen.
   env-config.js: |-
     const envConfig = {
       APP_NAME: "{{FRONTEND_APP_NAME}}",

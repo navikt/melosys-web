@@ -14,13 +14,9 @@ spec:
   filesFrom:
     - configmap: {{APP_NAME}}-runtime-config
       mountPath: /etc/nginx/conf.d
-    # Rotfilsystemet er skrivebeskyttet (Nais-standard). Nginx trenger å skrive
-    # to steder: pid-fila i /run og temp-filer i /var/lib/nginx/tmp.
     - emptyDir:
         medium: Memory
       mountPath: /run
-    # Disk, ikke Memory: her havner store request-body-er og proxy-buffere, og
-    # et Memory-volum ville telt mot minnegrensa på 512Mi.
     - emptyDir:
         medium: Disk
       mountPath: /var/lib/nginx/tmp
