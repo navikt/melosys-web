@@ -1,9 +1,16 @@
 import { Chips, Search, Tabs } from "@navikt/ds-react";
 import { useMemo, useState } from "react";
 
-import { TekstblokkType, toggleITegnliste } from "../../../services/modules/tekstblokker";
+import * as Nav from "../../../navFrontend";
+import { erTagValgt, Statusfilter, TekstblokkType, toggleITagliste } from "../../../services/modules/tekstblokker";
 
 const MAKS_TAGS_KOMPAKT = 15;
+
+const STATUSVALG: Array<[Statusfilter, string]> = [
+  ["ALLE", "Alle"],
+  ["PUBLISERT", "Publiserte"],
+  ["UTKAST", "Utkast"],
+];
 
 interface Props {
   type: TekstblokkType;
@@ -13,9 +20,21 @@ interface Props {
   valgteTags: string[];
   setValgteTags: (tags: string[]) => void;
   tilgjengeligeTags: Array<[string, number]>;
+  statusfilter: Statusfilter;
+  setStatusfilter: (statusfilter: Statusfilter) => void;
 }
 
-function TekstblokkerFilter({ type, setType, soek, setSoek, valgteTags, setValgteTags, tilgjengeligeTags }: Props) {
+function TekstblokkerFilter({
+  type,
+  setType,
+  soek,
+  setSoek,
+  valgteTags,
+  setValgteTags,
+  tilgjengeligeTags,
+  statusfilter,
+  setStatusfilter,
+}: Props) {
   const [visAlleTags, setVisAlleTags] = useState(false);
 
   // Vis de mest brukte tagene i kompakt modus, men hold valgte tags alltid synlige.
@@ -23,7 +42,7 @@ function TekstblokkerFilter({ type, setType, soek, setSoek, valgteTags, setValgt
     if (visAlleTags) return tilgjengeligeTags;
     const topp = tilgjengeligeTags.slice(0, MAKS_TAGS_KOMPAKT);
     const valgteUtenfor = tilgjengeligeTags.filter(
-      ([tag]) => valgteTags.includes(tag) && !topp.some(([t]) => t === tag),
+      ([tag]) => erTagValgt(valgteTags, tag) && !topp.some(([t]) => t === tag),
     );
     return [...topp, ...valgteUtenfor];
   }, [tilgjengeligeTags, visAlleTags, valgteTags]);
@@ -41,20 +60,32 @@ function TekstblokkerFilter({ type, setType, soek, setSoek, valgteTags, setValgt
       <Search
         label="Søk i tekstblokker"
         hideLabel
-        placeholder="Søk på tittel, innhold eller tag…"
+        placeholder="Søk på tittel eller tag…"
         size="small"
         value={soek}
         onChange={setSoek}
         variant="simple"
       />
 
+      {/* Status står for seg selv med egen ledetekst, så den ikke leses som enda en tag. */}
+      <div className="tekstblokker__statusfilter">
+        <Nav.BodyShort size="small">Status:</Nav.BodyShort>
+        <Chips size="small">
+          {STATUSVALG.map(([verdi, label]) => (
+            <Chips.Toggle key={verdi} selected={statusfilter === verdi} onClick={() => setStatusfilter(verdi)}>
+              {label}
+            </Chips.Toggle>
+          ))}
+        </Chips>
+      </div>
+
       {tilgjengeligeTags.length > 0 && (
         <Chips size="small">
           {synligeTags.map(([tag, antall]) => (
             <Chips.Toggle
               key={tag}
-              selected={valgteTags.includes(tag)}
-              onClick={() => setValgteTags(toggleITegnliste(valgteTags, tag))}
+              selected={erTagValgt(valgteTags, tag)}
+              onClick={() => setValgteTags(toggleITagliste(valgteTags, tag))}
             >
               {`${tag} (${antall})`}
             </Chips.Toggle>

@@ -273,6 +273,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       <Nav.Row>
         <Nav.Column xs="4">
           <Nav.Select
+            className="aarVelger"
             label="År"
             id="aarVelger"
             value={valgtÅr || initieltÅr || ""}
@@ -343,10 +344,21 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
 
           {(valgtÅr || initieltÅr) &&
             (!erÅrsavregningEøsPensjonistToggleEnabled || harTidligereTrygdeavgiftsgrunnlag) && (
-              <Nav.HStack>
-                <Nav.VStack>
+              <Nav.Box
+                className={`innbetaltTrygdeavgiftPanel${
+                  harInnbetaltTrygdeavgift ? " innbetaltTrygdeavgiftPanel_medInput" : ""
+                }`}
+                background="surface-subtle"
+              >
+                <Nav.VStack align="start">
+                  <Nav.Heading level="2" className="aarsavregning_seksjon_heading">
+                    {erÅrsavregningEøsPensjonistToggleEnabled
+                      ? "Innbetalt trygdeavgift"
+                      : "Trygdeavgift fra Avgiftssystemet"}
+                  </Nav.Heading>
                   <Nav.RadioGroup
                     key={`innbetaltTrygdeavgiftRadioGroup ${valgtÅr || initieltÅr || ""}`}
+                    className="innbetaltTrygdeavgiftRadioGroup"
                     onChange={håndterHarInnbetaltTrygdeavgift}
                     legend={trygdeavgiftAvvikLabelHjelpetekst}
                     value={harInnbetaltTrygdeavgift}
@@ -358,7 +370,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                     </Nav.HStack>
                   </Nav.RadioGroup>
                 </Nav.VStack>
-              </Nav.HStack>
+              </Nav.Box>
             )}
 
           {!harInnbetaltTrygdeavgiftIsPending &&

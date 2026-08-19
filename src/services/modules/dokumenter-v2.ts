@@ -167,7 +167,6 @@ export interface OpprettBrevReqDto {
   manglerFritekst?: string | null;
   fritekstTittel?: string | null;
   fritekst?: string | null;
-  skalViseStandardTekstOmOpplysninger?: boolean | null;
   kontaktpersonNavn?: string | null;
   kopiMottakere?: KopiMottaker[];
   skalViseStandardTekstOmkontaktopplysninger?: boolean | null;

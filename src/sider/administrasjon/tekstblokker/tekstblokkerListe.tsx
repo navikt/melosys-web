@@ -1,19 +1,47 @@
-import { PencilIcon, TrashIcon } from "@navikt/aksel-icons";
+import { ClockDashedIcon, CheckmarkCircleIcon, PencilIcon, TrashIcon } from "@navikt/aksel-icons";
 
 import * as Nav from "../../../navFrontend";
 import TekstblokkForhandsvisning from "../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning";
 import { TekstblokkOversikt } from "../../../services/modules/tekstblokker";
 import { formatterDatoTilNorsk } from "../../../utils/dato";
+import { termForBehandlingstema, termForSakstema, termForSakstype } from "./kontekstavgrensning";
+import TekstblokkHistorikk from "./tekstblokkHistorikk";
+
+// Kolonnen skal kunne leses på et blikk; resten samles i én «+N»-tag som åpner raden.
+const MAKS_SYNLIGE_TERMER = 1;
+
+const gjelderTermer = (blokk: TekstblokkOversikt): Array<{ noekkel: string; term: string }> => [
+  ...blokk.sakstyper.map((kode) => ({ noekkel: `sakstype-${kode}`, term: termForSakstype(kode) })),
+  ...blokk.sakstemaer.map((kode) => ({ noekkel: `sakstema-${kode}`, term: termForSakstema(kode) })),
+  ...blokk.behandlingstemaer.map((kode) => ({
+    noekkel: `behandlingstema-${kode}`,
+    term: termForBehandlingstema(kode),
+  })),
+];
 
 interface Props {
   blokker: TekstblokkOversikt[];
   utvidedeIder: Set<number>;
+  // Historikken deler den utvidbare raden med forhåndsvisningen, så bare én av dem vises av
+  // gangen. Valget bor sammen med utvidedeIder, så de to ikke kan komme ut av takt.
+  historikkId: number | null;
   onToggleUtvidet: (id: number) => void;
+  onToggleHistorikk: (id: number) => void;
   onRediger: (id: number) => void;
   onSlett: (blokk: TekstblokkOversikt) => void;
+  onPubliser: (blokk: TekstblokkOversikt) => void;
 }
 
-function TekstblokkerListe({ blokker, utvidedeIder, onToggleUtvidet, onRediger, onSlett }: Props) {
+function TekstblokkerListe({
+  blokker,
+  utvidedeIder,
+  historikkId,
+  onToggleUtvidet,
+  onToggleHistorikk,
+  onRediger,
+  onSlett,
+  onPubliser,
+}: Props) {
   if (blokker.length === 0) {
     return (
       <div className="tekstblokker__tom">
@@ -29,6 +57,7 @@ function TekstblokkerListe({ blokker, utvidedeIder, onToggleUtvidet, onRediger, 
           <Nav.Table.HeaderCell scope="col" aria-label="Utvid" />
           <Nav.Table.HeaderCell scope="col">Tittel</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Tags</Nav.Table.HeaderCell>
+          <Nav.Table.HeaderCell scope="col">Gjelder</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Sist endret</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Av</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col" aria-label="Handlinger" />
@@ -40,9 +69,12 @@ function TekstblokkerListe({ blokker, utvidedeIder, onToggleUtvidet, onRediger, 
             key={blokk.id}
             blokk={blokk}
             utvidet={utvidedeIder.has(blokk.id)}
+            visHistorikk={historikkId === blokk.id}
             onToggleUtvidet={onToggleUtvidet}
+            onToggleHistorikk={onToggleHistorikk}
             onRediger={onRediger}
             onSlett={onSlett}
+            onPubliser={onPubliser}
           />
         ))}
       </Nav.Table.Body>
@@ -53,12 +85,27 @@ function TekstblokkerListe({ blokker, utvidedeIder, onToggleUtvidet, onRediger, 
 interface RadProps {
   blokk: TekstblokkOversikt;
   utvidet: boolean;
+  visHistorikk: boolean;
   onToggleUtvidet: (id: number) => void;
+  onToggleHistorikk: (id: number) => void;
   onRediger: (id: number) => void;
   onSlett: (blokk: TekstblokkOversikt) => void;
+  onPubliser: (blokk: TekstblokkOversikt) => void;
 }
 
-function TekstblokkerListeRad({ blokk, utvidet, onToggleUtvidet, onRediger, onSlett }: RadProps) {
+function TekstblokkerListeRad({
+  blokk,
+  utvidet,
+  visHistorikk,
+  onToggleUtvidet,
+  onToggleHistorikk,
+  onRediger,
+  onSlett,
+  onPubliser,
+}: RadProps) {
+  const termer = gjelderTermer(blokk);
+  const skjulteTermer = termer.slice(MAKS_SYNLIGE_TERMER).map(({ term }) => term);
+
   return (
     <Nav.Table.ExpandableRow
       open={utvidet}
@@ -66,14 +113,33 @@ function TekstblokkerListeRad({ blokk, utvidet, onToggleUtvidet, onRediger, onSl
       togglePlacement="left"
       content={
         <div className="tekstblokker__rad-forhandsvisning">
-          <TekstblokkForhandsvisning html={blokk.innhold} />
+          {termer.length > 0 && (
+            <div className="tekstblokker__rad-gjelder">
+              <Nav.BodyShort size="small" textColor="subtle">
+                Gjelder:
+              </Nav.BodyShort>
+              {termer.map(({ noekkel, term }) => (
+                <Nav.Tag key={noekkel} size="xsmall" variant="info">
+                  {term}
+                </Nav.Tag>
+              ))}
+            </div>
+          )}
+          {visHistorikk ? <TekstblokkHistorikk id={blokk.id} /> : <TekstblokkForhandsvisning html={blokk.innhold} />}
         </div>
       }
     >
       <Nav.Table.DataCell>
-        <button type="button" className="tekstblokker__rad-tittel" onClick={() => onRediger(blokk.id)}>
-          {blokk.tittel}
-        </button>
+        <div className="tekstblokker__rad-tittel-celle">
+          <button type="button" className="tekstblokker__rad-tittel" onClick={() => onRediger(blokk.id)}>
+            {blokk.tittel}
+          </button>
+          {blokk.status === "UTKAST" && (
+            <Nav.Tag size="xsmall" variant="warning">
+              Utkast
+            </Nav.Tag>
+          )}
+        </div>
       </Nav.Table.DataCell>
       <Nav.Table.DataCell>
         <div className="tekstblokker__rad-tags">
@@ -84,10 +150,63 @@ function TekstblokkerListeRad({ blokk, utvidet, onToggleUtvidet, onRediger, onSl
           ))}
         </div>
       </Nav.Table.DataCell>
+      {/* Avgrensningen står i egen kolonne, ikke skilt fra tagene på farge alene (WCAG 1.4.1). */}
+      <Nav.Table.DataCell>
+        <div className="tekstblokker__rad-tags">
+          {termer.slice(0, MAKS_SYNLIGE_TERMER).map(({ noekkel, term }) => (
+            <Nav.Tag key={noekkel} size="xsmall" variant="info">
+              {term}
+            </Nav.Tag>
+          ))}
+          {skjulteTermer.length > 0 && (
+            <button
+              type="button"
+              className="tekstblokker__gjelder-mer"
+              title={skjulteTermer.join(", ")}
+              aria-label={skjulteTermer.join(", ")}
+              // stopPropagation: raden skal ikke også reagere på klikket om den senere gjøres klikkbar.
+              // Knappen åpner bare: på en åpen rad står termene allerede der, og et klikk som
+              // lukket dem ville tatt bort nettopp det brukeren ba om å få se.
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!utvidet) onToggleUtvidet(blokk.id);
+              }}
+            >
+              <Nav.Tag size="xsmall" variant="info">
+                {`+${skjulteTermer.length}`}
+              </Nav.Tag>
+            </button>
+          )}
+          {termer.length === 0 && (
+            <Nav.BodyShort size="small" textColor="subtle">
+              Alle
+            </Nav.BodyShort>
+          )}
+        </div>
+      </Nav.Table.DataCell>
       <Nav.Table.DataCell>{formatterDatoTilNorsk(blokk.endretDato, true)}</Nav.Table.DataCell>
-      <Nav.Table.DataCell>{blokk.endretAv}</Nav.Table.DataCell>
+      <Nav.Table.DataCell>{blokk.endretAvNavn ?? blokk.endretAv}</Nav.Table.DataCell>
       <Nav.Table.DataCell>
         <div className="tekstblokker__rad-handlinger">
+          {blokk.status === "UTKAST" && (
+            <Nav.Button
+              size="xsmall"
+              variant="tertiary"
+              icon={<CheckmarkCircleIcon aria-hidden />}
+              onClick={() => onPubliser(blokk)}
+            >
+              Publiser
+            </Nav.Button>
+          )}
+          <Nav.Button
+            size="xsmall"
+            variant="tertiary"
+            icon={<ClockDashedIcon aria-hidden />}
+            aria-pressed={visHistorikk}
+            onClick={() => onToggleHistorikk(blokk.id)}
+          >
+            Historikk
+          </Nav.Button>
           <Nav.Button
             size="xsmall"
             variant="tertiary"

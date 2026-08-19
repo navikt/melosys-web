@@ -13,7 +13,7 @@ jobs:
       IMAGE: europe-north1-docker.pkg.dev/nais-management-233d/teammelosys/melosys-web:${{ github.sha }}
     runs-on: ubuntu-latest-8-cores
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
       - name: Login to NAIS registry
@@ -38,7 +38,7 @@ jobs:
       - name: Get commit message
         run: echo "COMMIT_MSG=$(git log --format=%s -n 1)" >> $GITHUB_ENV
       - name: Slack Notification
-        uses: rtCamp/action-slack-notify@v2
+        uses: rtCamp/action-slack-notify@v2.4.0
         env:
           SLACK_COLOR: "${{ job.status == 'success' && 'good' || 'danger' }}"
           SLACK_USERNAME: Github Actions

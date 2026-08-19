@@ -1,7 +1,24 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Grunnlagsopplysninger } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { Beregningsforklaring } from "../../../../../services/modules/trygdeavgift";
+import { MedlemskapsperiodeForAvgift } from "../../../../../services/modules/types/periodeTyper";
 import { BeregnetTrygdeavgiftDetaljer } from "./beregnetTrygdeavgiftDetaljer";
+
+const useFeatureToggleMock = vi.fn((): boolean | undefined => false);
+vi.mock("../../../../../featuretoggle", () => ({
+  useFeatureToggle: () => useFeatureToggleMock(),
+}));
+
+// Testdata bruker alltid MEDLEMSKAPSPERIODE for avgiftspliktigperioder[0] (se createMockData),
+// men Avgiftspliktigperiode er en diskriminert union der trygdedekning ikke finnes på
+// HelseutgiftdekkesperiodeForAvgift. Denne hjelperen lar oss sette feltet uten å måtte
+// gjøre en runtime type-sjekk i hver test. Brukes kun av bakoverkompatibilitetstestene
+// under — se kommentar der for opprydding.
+function settTrygdedekningPaaMedlemskapsperiode(grunnlag: Grunnlagsopplysninger, trygdedekning: string): void {
+  (grunnlag.trygdeavgiftsgrunnlag.avgiftspliktigperioder[0] as MedlemskapsperiodeForAvgift).trygdedekning =
+    trygdedekning;
+}
 
 vi.mock("../../../../../utils", () => {
   let uuidCounter = 0;
@@ -47,6 +64,24 @@ vi.mock("../../../../../melosyskodeverk", () => ({
 describe("BeregnetTrygdeavgiftDetaljer", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    useFeatureToggleMock.mockReturnValue(false);
+  });
+
+  const lagBeregningsforklaring = (): Beregningsforklaring => ({
+    aar: 2023,
+    inntektsgruppe: "SAMLET",
+    valgtRegel: "ORDINÆR",
+    aarsak: "BEREGNET",
+    inntektsgrunnlag: [],
+    ekskluderteInntekter: [],
+    sumAarligInntekt: 500000,
+    minstebeloep: 54000,
+    inntektOverMinstebeloep: 446000,
+    maksimalAvgift25Prosent: 111500,
+    ordinaerAvgift: 41000,
+    ordinaerAvgiftPoster: [{ inntektskilde: "INNTEKT_FRA_UTLANDET", grunnlag: 500000, sats: 8.2, beloep: 41000 }],
+    fastsattAvgift: 41000,
+    fastsattAvgiftPerMaaned: 3416,
   });
 
   const createMockData = (): Grunnlagsopplysninger => ({
@@ -91,6 +126,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
           inntektPerMd: 41667,
           avgiftssats: 8.2,
           avgiftPerMd: 3417,
+          trygdedekning: "FULL",
         },
       ],
       totalInntekt: 500000,
@@ -152,6 +188,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
             inntektPerMd: 41667,
             avgiftssats: 8.2,
             avgiftPerMd: 3417,
+            trygdedekning: "FULL",
           },
           {
             fom: "2021-01-01",
@@ -161,6 +198,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
             inntektPerMd: 41667,
             avgiftssats: 8.2,
             avgiftPerMd: 3417,
+            trygdedekning: "FULL",
           },
           {
             fom: "2022-01-01",
@@ -170,6 +208,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
             inntektPerMd: 41667,
             avgiftssats: 8.2,
             avgiftPerMd: 3417,
+            trygdedekning: "FULL",
           },
         ],
         totalInntekt: 1500000,
@@ -197,15 +236,34 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     expect(screen.getByText(/Beregnet etter 25 %-regelen/)).toBeInTheDocument();
   });
 
-  it("viser '**' i Sats-kolonne og fotnote ved inntekt under minstebeløpet", () => {
+  it("viser '**' i Sats-kolonne og fotnote ved inntekt under minstebeløpet (når ikke alle perioder er minstebeløp)", () => {
     const grunnlag = createMockData();
-    grunnlag.avgift.trygdeavgiftsperioder[0].beregningsregel = "MINSTEBELØP";
-    grunnlag.avgift.trygdeavgiftsperioder[0].avgiftssats = null;
+    grunnlag.avgift.trygdeavgiftsperioder = [
+      {
+        fom: "2023-01-01",
+        tom: "2023-06-30",
+        inntektskildetype: "ARBEID",
+        arbeidsgiversavgiftBetales: true,
+        inntektPerMd: 41667,
+        avgiftssats: 8.2,
+        avgiftPerMd: 3417,
+      },
+      {
+        fom: "2023-07-01",
+        tom: "2023-12-31",
+        inntektskildetype: "ARBEID",
+        arbeidsgiversavgiftBetales: true,
+        inntektPerMd: 5000,
+        avgiftssats: null,
+        avgiftPerMd: 0,
+        beregningsregel: "MINSTEBELØP",
+      },
+    ];
 
     render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
 
     const rows = screen.getAllByRole("row");
-    expect(rows[1]).toHaveTextContent("**");
+    expect(rows[2]).toHaveTextContent("**");
     expect(screen.getByText(/Inntekten er under minstebeløpet/)).toBeInTheDocument();
   });
 
@@ -238,11 +296,135 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     expect(screen.getByText("Pensjonsdel")).toBeInTheDocument();
   });
 
+  // Testene under dekker den midlertidige overlapp-fallbacken i komponenten
+  // (hentDekningFraOverlappendeAvgiftspliktigperiode, MELOSYS-7988). Fjern disse to
+  // testene og settTrygdedekningPaaMedlemskapsperiode-hjelperen over sammen med
+  // fallbacken når backend-feltet er bekreftet tilgjengelig i alle miljøer.
+  it("faller tilbake til overlappende avgiftspliktigperiode når API-et ikke sender trygdedekning på trygdeavgiftsperioden (bakoverkompatibilitet)", () => {
+    const grunnlag = createMockData();
+    // Simulerer en eldre backend som ennå ikke sender trygdedekning direkte på trygdeavgiftsperioden.
+    delete grunnlag.avgift.trygdeavgiftsperioder[0].trygdedekning;
+    settTrygdedekningPaaMedlemskapsperiode(grunnlag, "FULL");
+
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+
+    expect(screen.getByText("FULL")).toBeInTheDocument();
+  });
+
+  it("bruker trygdedekning direkte fra API-et fremfor overlapp-fallback når begge finnes", () => {
+    const grunnlag = createMockData();
+    grunnlag.avgift.trygdeavgiftsperioder[0].trygdedekning = "DIREKTE_FRA_API";
+    settTrygdedekningPaaMedlemskapsperiode(grunnlag, "FRA_OVERLAPP_FALLBACK");
+
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+
+    expect(screen.getByText("DIREKTE_FRA_API")).toBeInTheDocument();
+    expect(screen.queryByText("FRA_OVERLAPP_FALLBACK")).not.toBeInTheDocument();
+  });
+
   it("viser ikke fotnote-seksjon ved ordinær beregning", () => {
     render(<BeregnetTrygdeavgiftDetaljer grunnlag={createMockData()} medlemskapsTypeErPliktig={true} />);
 
     expect(screen.queryByText(/Beregnet etter 25 %-regelen/)).not.toBeInTheDocument();
     expect(screen.queryByText(/Inntekten er under minstebeløpet/)).not.toBeInTheDocument();
     expect(screen.queryByText(/Mer enn en inntekt/)).not.toBeInTheDocument();
+  });
+
+  describe("Beregningsforklaring-kort", () => {
+    it("rendrer kortet når toggelen er på og beregningsforklaringer er ikke-tom", () => {
+      useFeatureToggleMock.mockReturnValue(true);
+
+      render(
+        <BeregnetTrygdeavgiftDetaljer
+          grunnlag={createMockData()}
+          medlemskapsTypeErPliktig={true}
+          beregningsforklaringer={[lagBeregningsforklaring()]}
+        />,
+      );
+
+      expect(screen.getByRole("region", { name: "Beregningsforklaring for trygdeavgift" })).toBeInTheDocument();
+    });
+
+    it("rendrer ikke kortet når toggelen er av selv om beregningsforklaringer er ikke-tom", () => {
+      useFeatureToggleMock.mockReturnValue(false);
+
+      render(
+        <BeregnetTrygdeavgiftDetaljer
+          grunnlag={createMockData()}
+          medlemskapsTypeErPliktig={true}
+          beregningsforklaringer={[lagBeregningsforklaring()]}
+        />,
+      );
+
+      expect(screen.queryByRole("region", { name: "Beregningsforklaring for trygdeavgift" })).not.toBeInTheDocument();
+    });
+
+    it("rendrer ikke kortet når toggelen er på men beregningsforklaringer er tom", () => {
+      useFeatureToggleMock.mockReturnValue(true);
+
+      render(
+        <BeregnetTrygdeavgiftDetaljer
+          grunnlag={createMockData()}
+          medlemskapsTypeErPliktig={true}
+          beregningsforklaringer={[]}
+        />,
+      );
+
+      expect(screen.queryByRole("region", { name: "Beregningsforklaring for trygdeavgift" })).not.toBeInTheDocument();
+    });
+
+    it("rendrer ikke kortet når beregningsforklaringer ikke er gitt", () => {
+      useFeatureToggleMock.mockReturnValue(true);
+
+      render(<BeregnetTrygdeavgiftDetaljer grunnlag={createMockData()} medlemskapsTypeErPliktig={true} />);
+
+      expect(screen.queryByRole("region", { name: "Beregningsforklaring for trygdeavgift" })).not.toBeInTheDocument();
+    });
+  });
+
+  it("viser Alert i stedet for tabell når alle perioder er under minstebeløpet", () => {
+    const grunnlag = createMockData();
+    grunnlag.avgift.trygdeavgiftsperioder[0].beregningsregel = "MINSTEBELØP";
+    grunnlag.avgift.trygdeavgiftsperioder[0].avgiftssats = null;
+    grunnlag.avgift.trygdeavgiftsperioder[0].avgiftPerMd = 0;
+
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+
+    expect(screen.getByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet.")).toBeInTheDocument();
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
+  });
+
+  it("viser tabell med '**' når noen men ikke alle perioder er under minstebeløpet", () => {
+    const grunnlag = createMockData();
+    grunnlag.avgift.trygdeavgiftsperioder = [
+      {
+        fom: "2023-01-01",
+        tom: "2023-06-30",
+        inntektskildetype: "ARBEID",
+        arbeidsgiversavgiftBetales: true,
+        inntektPerMd: 41667,
+        avgiftssats: 8.2,
+        avgiftPerMd: 3417,
+        beregningsregel: undefined,
+      },
+      {
+        fom: "2023-07-01",
+        tom: "2023-12-31",
+        inntektskildetype: "ARBEID",
+        arbeidsgiversavgiftBetales: true,
+        inntektPerMd: 5000,
+        avgiftssats: null,
+        avgiftPerMd: 0,
+        beregningsregel: "MINSTEBELØP",
+      },
+    ];
+
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+
+    expect(
+      screen.queryByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet."),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("table")).toBeInTheDocument();
+    expect(screen.getByText(/Inntekten er under minstebeløpet/)).toBeInTheDocument();
   });
 });

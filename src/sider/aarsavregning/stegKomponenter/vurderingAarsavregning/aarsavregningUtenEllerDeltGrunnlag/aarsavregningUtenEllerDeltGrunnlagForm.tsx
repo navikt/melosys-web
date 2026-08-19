@@ -15,6 +15,7 @@ import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { Beregningsforklaring } from "../../../../../services/modules/trygdeavgift";
 import * as PeriodeAdapter from "../../../../../services/modules/aarsavregning/periodeApiAdapter";
 import type {
   BasePeriode,
@@ -107,6 +108,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(
     initiellData.aarsavregningResponse,
   );
+  const [beregningsforklaringer, setBeregningsforklaringer] = useState<Beregningsforklaring[]>([]);
   const [previousFormState, setPreviousFormState] = useState<ReturnType<typeof mapFormState> | null>(null);
   const [debouncedBeregningPagaar, setDebouncedBeregningPagaar] = useState(false);
   const [arrayValideringsfeil, setArrayValideringsfeil] = useState<string | undefined>(undefined);
@@ -313,10 +315,11 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         erEøsPensjonist: erHelseutgift,
         setFeilmelding,
         setAarsavregningResponse,
+        setBeregningsforklaringer,
       });
       setBeregningPaagar(false);
     },
-    [medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse],
+    [medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse, setBeregningsforklaringer],
   );
   const debouncedBeregning = useCallback(() => {
     setDebouncedBeregningPagaar(false);
@@ -913,12 +916,14 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   return (
     <div className="vurderingAarsavregning">
       {harInnbetaltTrygdeavgift && (
-        <InnbetaltTrygdeavgiftInput
-          control={control}
-          redigerbart={skjemaErRedigerbart}
-          erNyAarsavregning={Boolean(tidligereAarsavregningInnbetaltTrygdeavgift)}
-          harTidligereTrygdeavgiftsgrunnlag={harTidligereTrygdeavgiftsgrunnlag}
-        />
+        <Nav.Box className="innbetaltTrygdeavgiftInputPanel" background="surface-subtle">
+          <InnbetaltTrygdeavgiftInput
+            control={control}
+            redigerbart={skjemaErRedigerbart}
+            erNyAarsavregning={Boolean(tidligereAarsavregningInnbetaltTrygdeavgift)}
+            harTidligereTrygdeavgiftsgrunnlag={harTidligereTrygdeavgiftsgrunnlag}
+          />
+        </Nav.Box>
       )}
 
       <EndeligAvgiftValgRadioGroup
@@ -1027,6 +1032,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                   <BeregnetTrygdeavgiftDetaljer
                     grunnlag={aarsavregningResponse.nyttTrygdeavgiftsGrunnlag}
                     medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
+                    beregningsforklaringer={beregningsforklaringer}
                   />
                 </Nav.ExpansionCard.Content>
               </Nav.ExpansionCard>

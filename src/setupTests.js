@@ -71,6 +71,12 @@ global.frontendlogger = {
   error: vi.fn(),
 };
 
+// jsdom implementerer ingen geometri for Range. Quill kaller den ved focus()
+// (scrollSelectionIntoView), så uten denne stuben kaster editor-testene.
+const tomtRektangel = { top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0, x: 0, y: 0, toJSON: () => ({}) };
+Range.prototype.getBoundingClientRect = () => tomtRektangel;
+Range.prototype.getClientRects = () => Object.assign([], { item: () => null });
+
 // Mocker localStorage
 global.localStorage = {
   removeItem: vi.fn(),

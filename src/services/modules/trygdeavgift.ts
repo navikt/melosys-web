@@ -25,6 +25,52 @@ export interface TrygdeavgiftMottakerDto {
 
 export type Beregningsregel = "ORDINÆR" | "TJUEFEM_PROSENT_REGEL" | "MINSTEBELØP";
 
+export type Beregningsinntektsgruppe = "SAMLET" | "HELSEDEL" | "PENSJONSDEL" | "MISJONAER";
+
+export type BeregningsforklaringAarsak = "BEREGNET" | "INNTEKT_UNDER_MINSTEBELØP" | "INGEN_INNTEKT";
+
+export interface Inntektspost {
+  inntektskilde: string;
+  fom: string;
+  tom: string;
+  maanedsbeloep: number;
+  antallMaaneder: number;
+  sumBeloep: number;
+}
+
+export interface EkskludertInntektspost {
+  inntektskilde: string;
+  fom: string;
+  tom: string;
+  sumBeloep: number;
+  aarsak: string;
+}
+
+export interface OrdinaerAvgiftspost {
+  inntektskilde: string;
+  grunnlag: number;
+  /** Prosentsats, f.eks. 7.7 for 7,7 %. */
+  sats: number;
+  beloep: number;
+}
+
+export interface Beregningsforklaring {
+  aar: number;
+  inntektsgruppe: Beregningsinntektsgruppe;
+  valgtRegel: Beregningsregel;
+  aarsak: BeregningsforklaringAarsak;
+  inntektsgrunnlag: Inntektspost[];
+  ekskluderteInntekter: EkskludertInntektspost[];
+  sumAarligInntekt: number;
+  minstebeloep: number;
+  inntektOverMinstebeloep: number | null;
+  maksimalAvgift25Prosent: number | null;
+  ordinaerAvgift: number;
+  ordinaerAvgiftPoster: OrdinaerAvgiftspost[];
+  fastsattAvgift: number;
+  fastsattAvgiftPerMaaned: number;
+}
+
 export interface Trygdeavgiftsperiode {
   fom: string;
   tom: string;
@@ -40,6 +86,7 @@ export interface Trygdeavgiftsperiode {
 export interface BeregnetTrygdeavgift {
   trygdeavgiftsperioder: Trygdeavgiftsperiode[];
   trygdeavgiftsgrunnlag: TrygdeavgiftsgrunnlagDto;
+  beregningsforklaringer?: Beregningsforklaring[];
 }
 
 export interface Fakturamottaker {

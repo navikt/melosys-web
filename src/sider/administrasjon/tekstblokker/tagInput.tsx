@@ -1,45 +1,57 @@
 import { Chips, Label } from "@navikt/ds-react";
-import { useState } from "react";
+import { useRef } from "react";
 
 import * as Nav from "../../../navFrontend";
+import { leggTilTag } from "../../../services/modules/tekstblokker";
 
 interface Props {
   verdier: string[];
   setVerdier: (verdier: string[]) => void;
   forslag?: string[];
+  // Utkastet eies av forelderen slik at en tag som er skrevet, men ikke lagt til,
+  // kan tas med ved lagring i stedet for å gå tapt.
+  utkast: string;
+  setUtkast: (utkast: string) => void;
 }
 
-function TagInput({ verdier, setVerdier, forslag = [] }: Props) {
-  const [utkast, setUtkast] = useState("");
+function TagInput({ verdier, setVerdier, forslag = [], utkast, setUtkast }: Props) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Nav.TextField forwarder ikke ref, så vi finner input-feltet via containeren.
+  const fokuserFelt = () => containerRef.current?.querySelector("input")?.focus();
 
   const leggTil = (raa: string) => {
-    const ny = raa.trim().toLowerCase();
-    if (!ny || verdier.includes(ny)) {
-      setUtkast("");
-      return;
-    }
-    setVerdier([...verdier, ny]);
+    setVerdier(leggTilTag(verdier, raa));
     setUtkast("");
+  };
+
+  // Fra knapp og forslag: behold fokus i feltet, så neste tag kan skrives med én gang.
+  const leggTilOgFokuser = (raa: string) => {
+    leggTil(raa);
+    fokuserFelt();
   };
 
   const fjern = (tag: string) => setVerdier(verdier.filter((t) => t !== tag));
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Kun komma/Enter legger til. Mellomrom skal kunne være del av en tag.
+    // Backspace med tomt felt gjør bevisst ingenting – tidligere slettet det tags utilsiktet.
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
       leggTil(utkast);
-    } else if (e.key === "Backspace" && utkast === "" && verdier.length > 0) {
-      fjern(verdier[verdier.length - 1]);
     }
   };
 
   const utkastNormalisert = utkast.trim().toLowerCase();
   const matchendeForslag = forslag
-    .filter((tag) => !verdier.includes(tag) && tag.includes(utkastNormalisert))
+    .filter(
+      (tag) =>
+        !verdier.some((v) => v.toLowerCase() === tag.toLowerCase()) && tag.toLowerCase().includes(utkastNormalisert),
+    )
     .slice(0, 6);
 
   return (
-    <div className="tekstblokker__tagInput">
+    <div className="tekstblokker__tagInput" ref={containerRef}>
       <Label size="small">Tags</Label>
       <div className="tekstblokker__tagInput-chips">
         {verdier.length === 0 && <span className="tekstblokker__tagInput-tom">Ingen tags lagt til</span>}
@@ -51,20 +63,38 @@ function TagInput({ verdier, setVerdier, forslag = [] }: Props) {
           ))}
         </Chips>
       </div>
-      <Nav.TextField
-        label="Legg til tag"
-        hideLabel
-        size="small"
-        placeholder="Skriv en tag og trykk Enter…"
-        value={utkast}
-        onChange={(e) => setUtkast(e.target.value)}
-        onKeyDown={handleKeyDown}
-        onBlur={() => leggTil(utkast)}
-      />
+      <div className="tekstblokker__tagInput-rad">
+        <Nav.TextField
+          label="Legg til tag"
+          hideLabel
+          size="small"
+          placeholder="Skriv en tag…"
+          value={utkast}
+          onChange={(e) => setUtkast(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+        <Nav.Button
+          size="small"
+          variant="secondary"
+          type="button"
+          disabled={!utkast.trim()}
+          onClick={() => leggTilOgFokuser(utkast)}
+        >
+          Legg til
+        </Nav.Button>
+      </div>
       {utkastNormalisert && matchendeForslag.length > 0 && (
         <Chips size="small">
           {matchendeForslag.map((tag) => (
-            <Chips.Toggle key={tag} selected={false} onClick={() => leggTil(tag)}>
+            <Chips.Toggle
+              key={tag}
+              selected={false}
+              aria-label={`Legg til taggen ${tag}`}
+              // preventDefault holder fokus i tekstfeltet gjennom hele klikket, så
+              // markøren ikke flakker ut og inn igjen når forslaget velges.
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => leggTilOgFokuser(tag)}
+            >
               {tag}
             </Chips.Toggle>
           ))}

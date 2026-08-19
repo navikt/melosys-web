@@ -1,5 +1,3 @@
-import { BodyShort } from "@navikt/ds-react";
-
 import * as Nav from "../../../navFrontend";
 import { useSlettTekstblokk } from "../../../services/api/tekstblokker";
 import { TekstblokkOversikt } from "../../../services/modules/tekstblokker";
@@ -20,9 +18,9 @@ function TekstblokkSlettBekreftelse({ blokk, onLukk }: Props) {
   return (
     <Nav.Modal open onClose={onLukk} aria-label="Bekreft sletting" width="small">
       <Nav.Modal.Header>
-        <BodyShort weight="semibold" size="medium">
+        <Nav.Heading size="small" level="1">
           Slette {labelForType(blokk.type)}?
-        </BodyShort>
+        </Nav.Heading>
       </Nav.Modal.Header>
       <Nav.Modal.Body>
         <Nav.BodyLong>

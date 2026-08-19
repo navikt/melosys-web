@@ -7,6 +7,7 @@ import ValgAlternativer from "./valgAlternativer";
 import BrevFelt from "./brevFelt";
 import { SendBrevFormValues } from "./types";
 import { Felt, ValgAlternativ } from "../../../services/modules/dokumenter-v2";
+import { Betingelse, PlaceholderVerdi } from "../../../services/modules/placeholdere";
 
 import "./brevValg.less";
 
@@ -16,6 +17,10 @@ interface BrevValgProps {
   redigerbart: boolean;
   changeField: (felt: string, data: any) => void;
   finnValgAlternativ: (felt: Api.DokumenterV2.Felt) => Api.DokumenterV2.ValgAlternativ | undefined;
+  placeholderVerdier?: PlaceholderVerdi[];
+  gyldigeNokler?: string[];
+  gyldigeBetingelsesNokler?: string[];
+  betingelser?: Betingelse[];
 }
 
 // For tittel-feltet for fritekstbrev ønsker vi å fjerne margin under for å unngå ekstra avstand til input-feltet (som ikke har noen label)
@@ -41,7 +46,17 @@ function erFritekstFelt(
   return false;
 }
 
-function BrevValg({ formValues, width, redigerbart, changeField, finnValgAlternativ }: BrevValgProps) {
+function BrevValg({
+  formValues,
+  width,
+  redigerbart,
+  changeField,
+  finnValgAlternativ,
+  placeholderVerdier,
+  gyldigeNokler,
+  gyldigeBetingelsesNokler,
+  betingelser,
+}: BrevValgProps) {
   const skalViseBrevFelt = (felt: Api.DokumenterV2.Felt) => {
     // For utenlandsk trygdemyndighet skal vi kun vise selve valget (ingen ekstra BrevFelt)
     if (felt.kode === "UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER") return false;
@@ -68,7 +83,16 @@ function BrevValg({ formValues, width, redigerbart, changeField, finnValgAlterna
             </Nav.Row>
           )}
           {skalViseBrevFelt(felt) && (
-            <BrevFelt felt={felt} visFeltBeskrivelse={felt.valg === null} width={width} redigerbart={redigerbart} />
+            <BrevFelt
+              felt={felt}
+              visFeltBeskrivelse={felt.valg === null}
+              width={width}
+              redigerbart={redigerbart}
+              placeholderVerdier={placeholderVerdier}
+              gyldigeNokler={gyldigeNokler}
+              gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
+              betingelser={betingelser}
+            />
           )}
         </Fragment>
       ))}

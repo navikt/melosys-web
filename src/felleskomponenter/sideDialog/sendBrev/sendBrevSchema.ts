@@ -163,15 +163,10 @@ const send_brev = object({
       const errors: ErrorsMap = {};
 
       if (erInnhentingAvInntektsopplysninger) {
-        const standardNode = value?.STANDARDTEKST_INNTEKTSOPPLYSNINGER;
-        const valgtStandardtekst = Boolean(standardNode?.valg) || Boolean((standardNode as Felt)?.feltVerdi);
+        // Etter MELOSYS-8158 vises periode-avsnittet alltid (styrt av datoer), så standardtekst-
+        // sjekkboksen er fjernet. Fritekst er nå et valgfritt tillegg; vi krever kun innhold når
+        // fritekst faktisk er valgt.
         const valgtFritekst = value?.FRITEKST?.valg === "FRITEKST";
-
-        if (!valgtStandardtekst && !valgtFritekst) {
-          if (!errors["FRITEKST"]) errors["FRITEKST"] = {};
-          errors["FRITEKST"].valg = STANDARDTEKST_ELLER_FRITEKST_MANGLER;
-          harFeil = true;
-        }
 
         if (valgtFritekst && !StringUtils.harStrengInnhold(value?.FRITEKST?.feltVerdi)) {
           if (!errors["FRITEKST"]) errors["FRITEKST"] = {};

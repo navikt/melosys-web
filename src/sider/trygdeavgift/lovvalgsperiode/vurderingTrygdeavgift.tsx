@@ -36,10 +36,7 @@ import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 import { useFeatureToggle } from "../../../featuretoggle";
-import {
-  MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
-  MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
-} from "../../../featuretoggle/toggleNavn";
+import { MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER } from "../../../featuretoggle/toggleNavn";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { lovvalgsperioderSelectors } from "../../../ducks/lovvalgsperioder";
 import { harPerioderFraTidligereÅr } from "../../../services/modules/medlemavfolketrygden/medlemskapsperioder";
@@ -62,10 +59,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const lovvalgsperiode = useSelector(lovvalgsperioderSelectors.PeriodeSelector);
   const tidligereLovvalgsperioder = useSelector(lovvalgsperioderSelectors.LovvalgsperioderSelector);
   const lovvalgsperioderStatus = useSelector(lovvalgsperioderSelectors.LovvalgsperioderStatusSelector);
-  const erEøsFaktureringAvTrygdeavgiftToggleEnabled =
-    useFeatureToggle(MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT) ?? false;
-
-  const erEuEøs = sakstype === MKV.Koder.sakstyper.EU_EOS && erEøsFaktureringAvTrygdeavgiftToggleEnabled;
+  const erEuEøs = sakstype === MKV.Koder.sakstyper.EU_EOS;
 
   const skalIkkeViseTidligerePerioderToggle =
     useFeatureToggle(MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER) ?? false;
@@ -165,7 +159,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     !erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder) && !erÅpenSluttDato;
 
   useEffect(() => {
-    if (erEøsFaktureringAvTrygdeavgiftToggleEnabled && erEuEøs) {
+    if (erEuEøs) {
       const harEksisterendeVerdier =
         formValues.skatteforholdsperioder?.some((s: Skatteforhold) => s.skatteplikttype) ||
         formValues.inntektskilder?.some((i: Inntektskilde) => i.bruttoInntekt);
@@ -401,6 +395,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
           <TrygdeavgiftsperioderTabell
             lagrePending={lagrePending}
             perioder={lagretTrygdeavgift?.trygdeavgiftsperioder}
+            beregningsforklaringer={lagretTrygdeavgift?.beregningsforklaringer}
           />
         </>
       )}

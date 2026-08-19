@@ -76,15 +76,11 @@ class VesentligVirksomhet extends Steg {
     const innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift =
       !propsLight.generiskStegRedigerbart && behandlingAvsluttetFørNyEndringEØS_11_3_b;
 
-    if (propsLight.eøsFaktureringAvTrygdeavgiftToggleEnabled) {
-      if (innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift) {
-        return STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK;
-      }
-
-      return STEG.VURDERING_PERIODE;
+    if (innsynsmodusSkalIkkeViseEndringerFraFaktureringAvTrygdeavgift) {
+      return STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK;
     }
 
-    return STEG.ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK;
+    return STEG.VURDERING_PERIODE;
   };
 }
 

@@ -35,8 +35,6 @@ import { BOOLSK_STRING } from "../../../../constants";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import VurderingArbeidTjenestepersonEllerFlyVedtakSchema from "./vurderingArbeidTjenestepersonEllerFlyVedtakSchema";
-import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT } from "../../../../featuretoggle/toggleNavn";
 
 function InformertMyndighetVelger({ redigerbart, oppdaterData, slettData, informertMyndighetFakta }) {
   useEffect(() => {
@@ -76,13 +74,13 @@ const art11_5_ErValgt = (formValues) =>
 const art11_3B_ErValgt = (formValues) =>
   formValues.lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3B;
 
-const skalSendeSed = (formValues, toggleEnabledPensjonistEøs) => {
+const skalSendeSed = (formValues) => {
   const { kreverMottakerinstitusjon } = formValues;
 
   if (art11_5_ErValgt(formValues)) {
     return kreverMottakerinstitusjon;
   }
-  if (toggleEnabledPensjonistEøs && art11_3B_ErValgt(formValues)) {
+  if (art11_3B_ErValgt(formValues)) {
     return formValues.informerUtenlandskTrygdemyndighet;
   }
   return art11_3B_ErValgt(formValues);
@@ -122,7 +120,6 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
   fattVedtak,
   selvstendigArbeid,
 }) {
-  const toggleEnabledPensjonistEøs = useFeatureToggle(MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT);
   const vedtakErPending = useSelector(vedtakSelectors.ErPendingSelector);
   let oppdaterFørKontroll = true;
 
@@ -161,7 +158,7 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
     },
   ];
 
-  if (skalSendeSed(formValues, toggleEnabledPensjonistEøs)) {
+  if (skalSendeSed(formValues)) {
     pdfDokumenter = [
       ...pdfDokumenter,
       {
@@ -300,7 +297,7 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
         </Nav.Row>
       )}
 
-      {visMottakerinstitusjonvelgerFlervalg && toggleEnabledPensjonistEøs && redigerbart && (
+      {visMottakerinstitusjonvelgerFlervalg && redigerbart && (
         <Nav.Row>
           <Nav.Column xs="6">
             <Skjema.RadioGroup
@@ -328,7 +325,7 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
           </Nav.Column>
         </Nav.Row>
       )}
-      {redigerbart && skalSendeSed(formValues, toggleEnabledPensjonistEøs) && (
+      {redigerbart && skalSendeSed(formValues) && (
         <Nav.Row className="fritekstSed">
           <Nav.Column xs="8">
             <Skjema.Textarea
