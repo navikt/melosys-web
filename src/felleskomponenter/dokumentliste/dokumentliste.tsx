@@ -59,13 +59,14 @@ function Dokumentliste({ behandlingID, dokumenter, validateOnClick, label, class
     }
 
     if (fileURL) {
-      await apnePdfINyFane(
-        fileURL,
-        (dokument as BrevDokumentMetadataType).dokumentData.produserbardokument
-          .toLowerCase()
-          .replace(/_/g, " ")
-          .replace(/^./, (c: any) => c.toUpperCase()),
-      );
+      const tittel = isSed(dokument)
+        ? (dokument.dokumentNavn ?? `SED ${dokument.sedType}`)
+        : dokument.dokumentData.produserbardokument
+            .toLowerCase()
+            .replace(/_/g, " ")
+            .replace(/^./, (c: string) => c.toUpperCase());
+
+      await apnePdfINyFane(fileURL, tittel);
       setFeilmelding(null);
     }
   };

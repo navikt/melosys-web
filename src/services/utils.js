@@ -277,6 +277,7 @@ export const apnePdfINyFane = async (url, title) => {
   win.document.body.style.margin = "0";
   win.document.body.innerHTML = `
     <iframe
+      title="${title}"
       src="${blobUrl}"
       style="width:100vw;height:100vh;border:none;"
     ></iframe>
