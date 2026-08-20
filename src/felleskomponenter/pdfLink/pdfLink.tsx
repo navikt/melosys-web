@@ -25,7 +25,7 @@ function PdfLink({ journalpostID, dokumentID, tittel }: PdfLinkProps) {
       aria-label="Åpnes i ny fane"
       onClick={(event) => {
         event.preventDefault();
-        apnePdfINyFane(lagPdfUrl(journalpostID, dokumentID));
+        apnePdfINyFane(lagPdfUrl(journalpostID, dokumentID), tittel);
       }}
     >
       {`${tittel} `}
