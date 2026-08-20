@@ -139,6 +139,7 @@ type MottatteOpplysningerData =
         mottarYtelserNorge: boolean | null;
         mottarYtelserUtlandet: boolean | null;
       };
+      arbeidsgiverOgArbeidstakerHarUlikPeriode: boolean;
       utenlandsoppdraget: {
         erUtsendelseForOppdragIUtlandet: boolean | null;
         erAnsattForOppdragIUtlandet: boolean | null;
