@@ -188,36 +188,8 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
       </div>
     </div>
     <div class="row">
-      <div class="col col-xs-12">
-        <div class="melosys-textfield  navds-form-field navds-form-field--small navds-text-field--disabled navds-form-field--disabled">
-          <label
-            for="333"
-            class="navds-form-field__label navds-label navds-label--small"
-          >
-            Postboks
-          </label>
-          <input
-            meta="[object Object]"
-            disabled
-            id="333"
-            class="navds-text-field__input navds-body-short navds-body-short--small"
-            type="text"
-            value
-            name="333"
-          >
-          <div
-            class="navds-form-field__error"
-            id="333"
-            aria-relevant="additions removals"
-            aria-live="polite"
-          >
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
       <div class="col col-xs-6">
-        <div class="melosys-textfield  navds-form-field navds-form-field--small navds-text-field--disabled navds-form-field--disabled">
+        <div class="melosys-textfield  navds-form-field navds-form-field--small">
           <label
             for="333"
             class="navds-form-field__label navds-label navds-label--small"
@@ -226,7 +198,6 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
           </label>
           <input
             meta="[object Object]"
-            disabled
             id="333"
             class="navds-text-field__input navds-body-short navds-body-short--small"
             type="text"
