@@ -79,7 +79,7 @@ jobs:
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-fss
-          RESOURCE: nais/nais.yaml
+          RESOURCE: nais/runtime-config.yaml,nais/nais.yaml
           IMAGE: ${{ needs.build.outputs.image }}
           VARS: nais/vars-q2.json
           TELEMETRY: ${{ needs.build.outputs.telemetry }}

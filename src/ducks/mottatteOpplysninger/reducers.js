@@ -173,6 +173,7 @@ export default function reducer(state = initialState, action = {}) {
         innretningLandkode: null,
         territorialfarvann: arbeidsstedSkip.territorialfarvann || null,
         innretningstype: null,
+        yrke: arbeidsstedSkip.yrke || null,
       });
 
       const maritimtArbeid = [
