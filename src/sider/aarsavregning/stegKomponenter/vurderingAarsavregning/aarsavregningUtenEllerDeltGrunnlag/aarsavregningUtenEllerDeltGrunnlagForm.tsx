@@ -196,6 +196,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const erDeltGrunnlag =
     harInnbetaltTrygdeavgift && !!initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
 
+  // "Uten grunnlag" = verken tidligere grunnlag i Melosys eller delt grunnlag fra Avgiftssystemet.
+  // Kun i dette tilfellet skal "Legg til periode"-knappen og uten-grunnlag-spacing brukes.
+  const erUtenGrunnlag = !harTidligereTrygdeavgiftsgrunnlag && !erDeltGrunnlag;
+
   const harLaasteMedlemskapsperioder =
     !!initiellData.aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder &&
     initiellData.aarsavregningResponse.sisteGjeldendeAvgiftspliktigperioder.length > 0;
@@ -962,7 +966,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
               />
             )}
 
-            <div className={`perioder${!harTidligereTrygdeavgiftsgrunnlag ? " perioder--uten-grunnlag" : ""}`}>
+            <div className={`perioder${erUtenGrunnlag ? " perioder--uten-grunnlag" : ""}`}>
               {medlemskapsperioderFields.map((field, index: number) => (
                 <AvgiftspliktigperiodeSkjema
                   key={field.id}
@@ -979,7 +983,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                   trygdedekninger={erHelseutgift ? [] : trygdedekninger}
                   setValue={setValue}
                   erDeltGrunnlag={erDeltGrunnlag}
-                  erUtenGrunnlag={!harTidligereTrygdeavgiftsgrunnlag}
+                  erUtenGrunnlag={erUtenGrunnlag}
                   periodeType={periodeType}
                 />
               ))}
