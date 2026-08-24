@@ -691,6 +691,7 @@ Stegvelger.propTypes = {
   lagreAllData: PT.func.isRequired,
   hentMedlemsPerioder: PT.func.isRequired,
   mottatteOpplysningerFeilmeldinger: PT.object.isRequired,
+  arbeidsgiverOgArbeidstakerHarUlikPeriode: PT.bool.isRequired,
   hentAnmodningsperioder: PT.func.isRequired,
   anmodningsperioder: PT.array.isRequired,
   anmodningErSendtUtland: PT.bool.isRequired,

@@ -230,7 +230,7 @@ export const PeriodeSelector = createSelector(
 
 export const ArbeidsgiverOgArbeidstakerHarUlikPeriodeSelector = createSelector(
   (state) => MottatteOpplysningerDataSelector(state),
-  (mottatteOpplysninger) => mottatteOpplysninger.arbeidsgiverOgArbeidstakerHarUlikPeriode,
+  (mottatteOpplysninger) => mottatteOpplysninger.arbeidsgiverOgArbeidstakerHarUlikPeriode === true,
 );
 
 export const PeriodeFomSelector = createSelector(
