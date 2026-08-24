@@ -73,6 +73,7 @@ export interface PeriodeElementerProps {
   trygdedekninger?: string[];
   setValue: (name: string, value: unknown, options?: { shouldValidate?: boolean; shouldDirty?: boolean }) => void;
   erDeltGrunnlag?: boolean;
+  erUtenGrunnlag?: boolean;
   periodeType?: AarsavregningsPeriodeType;
   skjulBostedLand?: boolean;
 }
@@ -91,6 +92,7 @@ export function AvgiftspliktigperiodeSkjema({
   trygdedekninger = [],
   setValue,
   erDeltGrunnlag = false,
+  erUtenGrunnlag = false,
   periodeType,
   skjulBostedLand = false,
 }: PeriodeElementerProps) {
@@ -210,7 +212,7 @@ export function AvgiftspliktigperiodeSkjema({
           </Nav.Column>
         )}
       </Nav.Row>
-      {medlemskapsperioder.length === index + 1 && (!erPliktigBestemmelse || erDeltGrunnlag) && (
+      {medlemskapsperioder.length === index + 1 && !erUtenGrunnlag && (!erPliktigBestemmelse || erDeltGrunnlag) && (
         <div className="legg-til__rad">
           <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add} disabled={!redigerbart || !visLeggTil}>
             Legg til periode

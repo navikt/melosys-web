@@ -335,11 +335,16 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           )}
 
           {aarsavregningResponse && harTidligereTrygdeavgiftsgrunnlag === false && (
-            <Nav.Alert variant="info" className="alertstripe_feilmelding">
-              <Nav.BodyLong size="small">
-                Det er ingen informasjon om forskuddsvis fakturert trygdeavgift i Melosys.
-              </Nav.BodyLong>
-            </Nav.Alert>
+            <Nav.Box className="tidligereGrunnlag tidligereGrunnlag_ingenInfo" background="surface-subtle">
+              <Nav.Heading level="2" className="aarsavregning_seksjon_heading">
+                Tidligere grunnlag
+              </Nav.Heading>
+              <Nav.Alert variant="info">
+                <Nav.BodyLong size="small">
+                  Det er ingen informasjon om forskuddsvis fakturert trygdeavgift i Melosys.
+                </Nav.BodyLong>
+              </Nav.Alert>
+            </Nav.Box>
           )}
 
           {(valgtÅr || initieltÅr) &&
