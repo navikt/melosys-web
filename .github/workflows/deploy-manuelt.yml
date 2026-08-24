@@ -93,7 +93,7 @@ jobs:
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: ${{github.event.inputs.environment == 'prod' && 'prod-fss' || 'dev-fss' }}
-          RESOURCE: nais/nais.yaml
+          RESOURCE: nais/runtime-config.yaml,nais/nais.yaml
           IMAGE: ${{ env.IMAGE }}
           VARS: nais/vars-${{github.event.inputs.environment}}.json
       - name: Get commit message
