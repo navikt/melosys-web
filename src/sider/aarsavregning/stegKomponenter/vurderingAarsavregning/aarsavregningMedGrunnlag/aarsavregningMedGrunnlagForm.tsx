@@ -103,7 +103,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const erEøsPensjonistToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
 
   const periodeType = initiellData.periodeType;
-  const erHelseutgift = periodeType === "HELSEUTGIFTDEKKESPERIODE";
 
   const { innvilgetMedlemskapsperioder, medlemskapstypeErPliktig } = initiellData;
   const sisteGjeldendeAvgiftspliktigperioder = aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder;
@@ -667,18 +666,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const maxDate =
     initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 11, 31, 23, 59, 59, 999) : undefined;
 
-  const skalViseLeggTilForFtrl =
-    erEøsPensjonistToggleEnabled === true
-      ? endeligAvgiftValg !== MANUELL_ENDELIG_AVGIFT && !erHelseutgift
-      : !erHelseutgift;
-
-  const skalViseLeggTilForEøsPensjonister =
-    erEøsPensjonistToggleEnabled === true
-      ? endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET
-      : !erHelseutgift;
-
-  const skalViseLeggTil = erHelseutgift ? skalViseLeggTilForEøsPensjonister : skalViseLeggTilForFtrl;
-
   return (
     <>
       <EndeligAvgiftValgRadioGroup
@@ -686,8 +673,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
         redigerbart={redigerbart}
         handleEndeligAvgiftValgChange={handleEndeligAvgiftValgChange}
         endeligAvgiftValg={endeligAvgiftValg}
-        endretPeriodeFraAvgiftssystemetValg={true}
-        harInnbetaltTrygdeavgift={aarsavregningResponse?.harInnbetaltTrygdeavgift}
       />
 
       {(endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
@@ -724,7 +709,6 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
                     remove={slettMedlemskapsperiode}
                     formValues={formValues}
                     handleLeggTil={leggTilDefaultMedlemskapsperiode}
-                    visLeggTil={skalViseLeggTil}
                     maxDate={maxDate}
                     minDate={minDate}
                     trygdedekninger={erHelseutgiftDekkesPeriode ? [] : trygdedekninger}

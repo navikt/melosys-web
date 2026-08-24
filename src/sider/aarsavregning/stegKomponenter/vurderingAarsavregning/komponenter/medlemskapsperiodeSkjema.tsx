@@ -67,7 +67,6 @@ export interface PeriodeElementerProps {
   formValues: FormValuesProps;
   handleLeggTil: () => void;
   index: number;
-  visLeggTil: boolean;
   maxDate?: Date;
   minDate?: Date;
   trygdedekninger?: string[];
@@ -85,7 +84,6 @@ export function AvgiftspliktigperiodeSkjema({
   formValues,
   handleLeggTil,
   index,
-  visLeggTil,
   maxDate,
   minDate,
   trygdedekninger = [],
@@ -210,10 +208,11 @@ export function AvgiftspliktigperiodeSkjema({
           </Nav.Column>
         )}
       </Nav.Row>
+
       {medlemskapsperioder.length === index + 1 && (!erPliktigBestemmelse || erDeltGrunnlag) && (
         <div className="legg-til__rad">
-          <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add} disabled={!redigerbart || !visLeggTil}>
-            Legg til periode
+          <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add} disabled={!redigerbart}>
+            Legg til periode fra avgiftssystemet
           </Mui.Lenkeknapp>
         </div>
       )}

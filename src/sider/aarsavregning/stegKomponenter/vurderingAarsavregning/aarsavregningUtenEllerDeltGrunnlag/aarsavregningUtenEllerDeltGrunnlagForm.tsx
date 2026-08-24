@@ -901,18 +901,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const maxDate =
     initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 11, 31, 23, 59, 59, 999) : undefined;
 
-  const skalViseLeggTilForFtrl =
-    erEøsPensjonistToggleEnabled === true
-      ? endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET && !erHelseutgift
-      : !erHelseutgift;
-
-  const skalViseLeggTilForEøsPensjonister =
-    erEøsPensjonistToggleEnabled === true
-      ? endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET
-      : !erHelseutgift;
-
-  const skalViseLeggTil = erHelseutgift ? skalViseLeggTilForEøsPensjonister : skalViseLeggTilForFtrl;
-
   return (
     <div className="vurderingAarsavregning">
       {harInnbetaltTrygdeavgift && (
@@ -931,9 +919,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         redigerbart={skjemaErRedigerbart}
         handleEndeligAvgiftValgChange={handleEndeligAvgiftValgChange}
         endeligAvgiftValg={endeligAvgiftValg}
-        endretPeriodeFraAvgiftssystemetValg={erDeltGrunnlag}
-        harInnbetaltTrygdeavgift={harInnbetaltTrygdeavgift}
-        harTidligereTrygdeavgiftsgrunnlag={harTidligereTrygdeavgiftsgrunnlag}
       />
 
       {(endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
@@ -969,7 +954,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                 remove={slettMedlemskapsperiode}
                 formValues={formValues}
                 handleLeggTil={leggTilDefaultMedlemskapsperiode}
-                visLeggTil={skalViseLeggTil}
                 maxDate={maxDate}
                 minDate={minDate}
                 trygdedekninger={erHelseutgift ? [] : trygdedekninger}
