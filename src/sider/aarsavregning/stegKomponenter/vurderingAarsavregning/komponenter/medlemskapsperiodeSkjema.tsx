@@ -100,7 +100,6 @@ export function AvgiftspliktigperiodeSkjema({
 
   const medlemskapsperioder = formValues.avgiftspliktigperioder as MedlemskapsperiodeFieldProps[];
   const erPeriodeFraGrunnlag = !medlemskapsperioder[index]?.redigerbar;
-  const kanViseSletteKolonne = redigerbart && medlemskapsperioder.length > 1;
   const tilOgMedDatoForrigePeriode =
     medlemskapsperioder[index - 1] !== undefined
       ? Utils.dato.norskStringTilDate(medlemskapsperioder[index - 1]?.tomDato)
@@ -124,6 +123,9 @@ export function AvgiftspliktigperiodeSkjema({
 
   const gjeldendePeriodeForRad = medlemskapsperioder[index];
   const erDennePeriodenSlettbar = kanPeriodeSlettes(gjeldendePeriodeForRad, medlemskapsperioder);
+
+  const kanViseSletteKolonne =
+    redigerbart && medlemskapsperioder.length > 1 && !erPeriodeFraGrunnlag && erDennePeriodenSlettbar;
 
   useEffect(() => {
     if (!erHelseutgift && trygdedekninger?.length === 1) {
@@ -201,12 +203,7 @@ export function AvgiftspliktigperiodeSkjema({
         )}
         {kanViseSletteKolonne && (
           <Nav.Column className={index === 0 ? "slett__knapp slett__first" : "slett__knapp"}>
-            <Mui.IkonKnapp
-              ikon={Ikoner.Bin}
-              onClick={() => remove(index)}
-              ariaLabel="Slett periode"
-              disabled={!redigerbart || erPeriodeFraGrunnlag || !erDennePeriodenSlettbar}
-            />
+            <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={() => remove(index)} ariaLabel="Slett periode" />
           </Nav.Column>
         )}
       </Nav.Row>
