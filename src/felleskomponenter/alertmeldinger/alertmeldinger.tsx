@@ -57,6 +57,14 @@ export function NyVurderingMelding() {
   );
 }
 
+export function UlikPeriodeMelding() {
+  return (
+    <Nav.Alert variant="warning" className="ulikPeriodeMelding">
+      Arbeidsgiver og arbeidstaker har oppgitt ulike perioder for utenlandsoppdraget.
+    </Nav.Alert>
+  );
+}
+
 interface StandardMeldingOverstProps {
   variant: "error" | "warning" | "info" | "success";
   actionEtterSynlighet: () => void;

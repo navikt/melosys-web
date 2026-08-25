@@ -8,6 +8,7 @@ import {
   IngenFlytMelding,
   NyVurderingMelding,
   StandardMeldingOverst,
+  UlikPeriodeMelding,
 } from "./alertmeldinger";
 
 // Mock icons
@@ -124,6 +125,16 @@ describe("Alertmeldinger", () => {
 
       expect(
         screen.getByText(/Du har startet en ny behandling av en sak der tidligere behandling er avsluttet/),
+      ).toBeInTheDocument();
+    });
+  });
+
+  describe("UlikPeriodeMelding", () => {
+    it("viser varsel ved ulike perioder", () => {
+      render(<UlikPeriodeMelding />);
+
+      expect(
+        screen.getByText("Arbeidsgiver og arbeidstaker har oppgitt ulike perioder for utenlandsoppdraget."),
       ).toBeInTheDocument();
     });
   });
