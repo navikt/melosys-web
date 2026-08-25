@@ -289,6 +289,7 @@ function Saksopplysninger({
           label="Ytterligere informasjon til SED (valgfri)"
           onChange={ytterligereInfoTextAreaOnChange}
           value={ytterligereInfoFritekst}
+          maxLength={500}
         />
       </Nav.Column>
     </Nav.Row>
