@@ -21,7 +21,9 @@
 
 # misc
 .claude
-.opencode
+.opencode/*
+!.opencode/specs/
+!.opencode/specs/*.md
 .serena
 .idea
 !.idea/runConfigurations/

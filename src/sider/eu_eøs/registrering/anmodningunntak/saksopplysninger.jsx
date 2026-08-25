@@ -426,7 +426,8 @@ function Saksopplysninger({
                     bekreftKnappProps={{
                       loading: registreringPending,
                       onClick: () => submitRegistrering(),
-                      disabled: !redigerbart || begrunnelseFritekst.length > 255,
+                      disabled:
+                        !redigerbart || begrunnelseFritekst.length > 255 || ytterligereInfoFritekst.length > 500,
                     }}
                     bekreftTekst="Bekreft og send"
                   />
