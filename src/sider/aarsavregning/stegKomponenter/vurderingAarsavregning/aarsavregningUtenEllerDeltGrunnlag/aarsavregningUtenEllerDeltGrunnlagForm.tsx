@@ -196,9 +196,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const erDeltGrunnlag =
     harInnbetaltTrygdeavgift && !!initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
 
-  // "Uten grunnlag" = verken tidligere grunnlag i Melosys eller delt grunnlag fra Avgiftssystemet.
-  // Kun i dette tilfellet skal "Legg til periode"-knappen og uten-grunnlag-spacing brukes.
-  const erUtenGrunnlag = !harTidligereTrygdeavgiftsgrunnlag && !erDeltGrunnlag;
+  const erUtenGrunnlag = !harTidligereTrygdeavgiftsgrunnlag;
 
   const harLaasteMedlemskapsperioder =
     !!initiellData.aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder &&

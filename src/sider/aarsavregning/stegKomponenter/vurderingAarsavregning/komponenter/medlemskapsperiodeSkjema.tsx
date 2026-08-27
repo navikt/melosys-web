@@ -123,7 +123,6 @@ export function AvgiftspliktigperiodeSkjema({
   })();
 
   const kunEnTrygdedekning = trygdedekninger?.length === 1;
-
   const gjeldendePeriodeForRad = medlemskapsperioder[index];
   const erDennePeriodenSlettbar = kanPeriodeSlettes(gjeldendePeriodeForRad, medlemskapsperioder);
 
