@@ -350,15 +350,15 @@ export class AarsavregningPage extends BehandlingPage {
       await expect(jaRadio).toBeChecked();
     }
 
-    // Vent på at "Beregn endelig trygdeavgift" radioknappen vises
+    // Vent på at "Beregn trygdeavgiften" radioknappen vises
     // Dette kan ta litt tid pga React re-rendering
-    const beregnEndeligRadio = await finnRadioknapp("Beregn endelig trygdeavgift", this.page, 15000);
+    const beregnEndeligRadio = await finnRadioknapp("Beregn trygdeavgiften", this.page, 15000);
 
-    // Sjekk om "Beregn endelig trygdeavgift" allerede er valgt
+    // Sjekk om "Beregn trygdeavgiften" allerede er valgt
     const beregnIsChecked = await beregnEndeligRadio.isChecked();
 
     if (!beregnIsChecked) {
-      // Velg "Beregn endelig trygdeavgift" for å vise medlemskapsperiode-skjemaet
+      // Velg "Beregn trygdeavgiften" for å vise medlemskapsperiode-skjemaet
       await beregnEndeligRadio.check();
     }
 

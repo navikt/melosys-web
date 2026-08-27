@@ -45,13 +45,13 @@ export function EndeligAvgiftValgRadioGroup({
       >
         <Nav.HStack gap="4" align="center">
           <Nav.Radio value={OPPLYSNINGER_ENDRET} className={endeligAvgiftValg === OPPLYSNINGER_ENDRET ? "checked" : ""}>
-            Beregn endelig trygdeavgift
+            Beregn trygdeavgiften
           </Nav.Radio>
           <Nav.Radio
             value={MANUELL_ENDELIG_AVGIFT}
             className={endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT ? "checked" : ""}
           >
-            Oppgi endelig beregnet trygdeavgift
+            Oppgi beløp for beregnet trygdeavgift
           </Nav.Radio>
           {erPensjonistEØSToggleEnabled &&
             endretPeriodeFraAvgiftssystemetValg &&
