@@ -23,7 +23,7 @@ import { formSelectors } from "../../../../ducks/form";
 
 import "./arbeidssteder.less";
 
-const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS } = MKV.Koder.mottatteopplysningertyper;
+const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS, SØKNAD_A1_YRKESAKTIVE_EØS } = MKV.Koder.mottatteopplysningertyper;
 const { YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
 
 type FlattArbeidssted = KV.Form.ArbeidsstedFly | KV.Form.ArbeidsstedOffshore | KV.Form.ArbeidsstedSkip;
@@ -66,7 +66,9 @@ function Arbeidssteder({ redigerbart, visArbeidsforholdRolleEtiketter, behandlin
   const soknadsform = useSelector(formSelectors.SoknadFormValuesSelector) as KV.Form.SoknadFormData;
   const mottatteOpplysningerType = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector);
 
-  const erSoknadFraAltinn = mottatteOpplysningerType === SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS;
+  const visArbeidsstedPaaLandSporsmal = [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS, SØKNAD_A1_YRKESAKTIVE_EØS].includes(
+    mottatteOpplysningerType,
+  );
   const flereLandUkjentHvilke = soknadsform?.soknadsland?.flereLandUkjentHvilke;
   const erHjemmekontor = soknadsform?.arbeidPaaLand?.erHjemmekontor;
   const erFastArbeidssted = soknadsform?.arbeidPaaLand?.erFastArbeidssted;
@@ -77,11 +79,13 @@ function Arbeidssteder({ redigerbart, visArbeidsforholdRolleEtiketter, behandlin
       <EditerbartElementListe
         redigerbart={redigerbart}
         feltNavn="arbeidPaaLand.fysiskeArbeidssteder"
-        redigererPreElementerKomponent={erSoknadFraAltinn ? Land.RedigererPreElementer : undefined}
-        redigeringUtfortPreElementerKomponent={erSoknadFraAltinn ? Land.RedigeringUtfortPreElementer : undefined}
+        redigererPreElementerKomponent={visArbeidsstedPaaLandSporsmal ? Land.RedigererPreElementer : undefined}
+        redigeringUtfortPreElementerKomponent={
+          visArbeidsstedPaaLandSporsmal ? Land.RedigeringUtfortPreElementer : undefined
+        }
         redigererKomponent={Land.Redigerer}
         redigeringUtfortKomponent={Land.RedigeringUtfort}
-        ingenDataKomponent={erSoknadFraAltinn ? Land.IngenData : undefined}
+        ingenDataKomponent={visArbeidsstedPaaLandSporsmal ? Land.IngenData : undefined}
         leggTilTekst="Legg til nytt arbeidssted på land"
         hentDefaultElement={() => fysiskArbeidsstedDefaultElement}
         tittelTekst={KV.Menypunkter.Arbeidssteder.undertitler.arbeidsstedLand}
