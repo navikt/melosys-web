@@ -16,12 +16,14 @@ import EditerbartElementListe from "../editerbartElementListe";
 import RepresentantIUtlandet from "./representantIUtlandet";
 import { Status } from "../editerbartElement";
 
-import MKV, { MKVUtils } from "../../../../melosyskodeverk";
+import MKV from "../../../../melosyskodeverk";
 
+import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { formSelectors } from "../../../../ducks/form";
 
 import "./arbeidssteder.less";
 
+const { SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS, SØKNAD_A1_YRKESAKTIVE_EØS } = MKV.Koder.mottatteopplysningertyper;
 const { YRKESAKTIV } = MKV.Koder.behandlinger.behandlingstema;
 
 type FlattArbeidssted = KV.Form.ArbeidsstedFly | KV.Form.ArbeidsstedOffshore | KV.Form.ArbeidsstedSkip;
@@ -62,8 +64,11 @@ function Arbeidssteder({ redigerbart, visArbeidsforholdRolleEtiketter, behandlin
     dispatch(change(KV.Form.SOKNAD, "arbeidPaaLand.erHjemmekontor", null));
   };
   const soknadsform = useSelector(formSelectors.SoknadFormValuesSelector) as KV.Form.SoknadFormData;
+  const mottatteOpplysningerType = useSelector(mottatteOpplysningerSelectors.MottatteOpplysningerTypeSelector);
 
-  const visArbeidsstedPaaLandSporsmal = MKVUtils.erUtsendt(behandlingstema);
+  const visArbeidsstedPaaLandSporsmal = [SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS, SØKNAD_A1_YRKESAKTIVE_EØS].includes(
+    mottatteOpplysningerType,
+  );
   const flereLandUkjentHvilke = soknadsform?.soknadsland?.flereLandUkjentHvilke;
   const erHjemmekontor = soknadsform?.arbeidPaaLand?.erHjemmekontor;
   const erFastArbeidssted = soknadsform?.arbeidPaaLand?.erFastArbeidssted;

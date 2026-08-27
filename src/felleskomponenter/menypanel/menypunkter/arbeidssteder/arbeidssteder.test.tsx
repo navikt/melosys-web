@@ -12,11 +12,6 @@ describe("Arbeidssteder", () => {
     behandlingstema: "",
   };
 
-  const utsendtProps = {
-    ...props,
-    behandlingstema: MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER,
-  };
-
   const reduxStore = (flereLandUkjentHvilke = false, mottatteOpplysningerType = "") => ({
     form: {
       [KV.Form.SOKNAD]: {
@@ -57,7 +52,7 @@ describe("Arbeidssteder", () => {
   describe("Arbeidssteder på land", () => {
     const WrappedArbeidssteder = reduxForm({ form: KV.Form.SOKNAD })(Arbeidssteder as any);
 
-    it("rendrer arbeidsstedspørsmål ikke når behandlingstema ikke er utsendt", () => {
+    it("rendrer ikke arbeidsstedspørsmål for andre mottatteopplysningstyper", () => {
       // @ts-expect-error generisk beskrivelse
       renderWithProviders(<WrappedArbeidssteder {...props} />, { preloadedState: reduxStore(false) });
 
@@ -68,10 +63,13 @@ describe("Arbeidssteder", () => {
       expect(screen.queryByText("Nei")).toBeNull();
     });
 
-    it("rendrer arbeidsstedspørsmål når behandlingstema er utsendt arbeidstaker", () => {
+    it.each([
+      MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_UTSENDTE_ARBEIDSTAKERE_EØS,
+      MKV.Koder.mottatteopplysningertyper.SØKNAD_A1_YRKESAKTIVE_EØS,
+    ])("rendrer arbeidsstedspørsmål for mottatteopplysningstype %s", (mottatteOpplysningerType) => {
       // @ts-expect-error generisk beskrivelse
-      renderWithProviders(<WrappedArbeidssteder {...utsendtProps} />, {
-        preloadedState: reduxStore(false),
+      renderWithProviders(<WrappedArbeidssteder {...props} />, {
+        preloadedState: reduxStore(false, mottatteOpplysningerType),
       });
 
       const arbeidsstedPåLand = screen.getByText("Arbeidssted på land");
