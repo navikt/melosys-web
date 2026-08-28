@@ -36,6 +36,19 @@
     }
   }
 
+  .perioder--uten-grunnlag {
+    margin-bottom: 1.5rem;
+  }
+
+  // Gir luft under skatteforhold-feilmeldingen (padding kollapser ikke ut av containeren).
+  .skatteforhold_feilmelding_luft {
+    padding-bottom: 1.5rem;
+
+    .alertstripe_feilmelding {
+      margin-bottom: 0;
+    }
+  }
+
   .nyVurderingMelding {
     margin-bottom: 1.5rem;
   }
@@ -130,12 +143,21 @@
   }
 
   .innbetaltTrygdeavgiftInputPanel {
-    padding: 0 1.5rem 1.5rem;
+    padding: 1.5rem;
     margin-bottom: 1.5rem;
+
+    .aarsavregning_seksjon_heading {
+      margin-bottom: 0.5rem;
+    }
 
     .navds-form-field {
       margin-bottom: 0;
     }
+  }
+
+  .endeligAvgiftValg_boks {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
   }
 
   .endeligAvgiftValg_radio_group {
@@ -214,6 +236,12 @@
     .periode_tabell {
       margin-bottom: 1.5rem;
       overflow: auto;
+    }
+  }
+
+  .tidligereGrunnlag_ingenInfo {
+    .aarsavregning_seksjon_heading {
+      margin-bottom: 0.5rem;
     }
   }
 }
