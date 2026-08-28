@@ -713,7 +713,9 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
               ))}
 
             {endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET && medlemskapsperioderFields && (
-              <div className="perioder">
+              <div
+                className={`perioder${!redigerbart || beregningPaagar || !skalViseLeggTil ? " perioder--med-bunnmargin" : ""}`}
+              >
                 {medlemskapsperioderFields.map((field, index: number) => (
                   <AvgiftspliktigperiodeSkjema
                     key={field.id}

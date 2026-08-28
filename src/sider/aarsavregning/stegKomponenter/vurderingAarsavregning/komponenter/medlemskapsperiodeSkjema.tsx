@@ -209,13 +209,17 @@ export function AvgiftspliktigperiodeSkjema({
           </Nav.Column>
         )}
       </Nav.Row>
-      {medlemskapsperioder.length === index + 1 && !erUtenGrunnlag && (!erPliktigBestemmelse || erDeltGrunnlag) && (
-        <div className="legg-til__rad">
-          <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add} disabled={!redigerbart || !visLeggTil}>
-            Legg til periode
-          </Mui.Lenkeknapp>
-        </div>
-      )}
+      {medlemskapsperioder.length === index + 1 &&
+        !erUtenGrunnlag &&
+        (!erPliktigBestemmelse || erDeltGrunnlag) &&
+        redigerbart &&
+        visLeggTil && (
+          <div className="legg-til__rad">
+            <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add}>
+              Legg til periode
+            </Mui.Lenkeknapp>
+          </div>
+        )}
     </>
   );
 }

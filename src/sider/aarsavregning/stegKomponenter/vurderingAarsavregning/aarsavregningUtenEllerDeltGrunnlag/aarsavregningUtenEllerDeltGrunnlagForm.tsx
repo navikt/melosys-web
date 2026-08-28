@@ -966,7 +966,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
               />
             )}
 
-            <div className={`perioder${erUtenGrunnlag ? " perioder--uten-grunnlag" : ""}`}>
+            <div
+              className={`perioder${erUtenGrunnlag || !skjemaErRedigerbart || !skalViseLeggTil ? " perioder--med-bunnmargin" : ""}`}
+            >
               {medlemskapsperioderFields.map((field, index: number) => (
                 <AvgiftspliktigperiodeSkjema
                   key={field.id}

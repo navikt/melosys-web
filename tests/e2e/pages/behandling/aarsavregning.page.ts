@@ -136,6 +136,9 @@ export class AarsavregningPage extends BehandlingPage {
     const perioder = this.page.locator(".medlemskapsperiode__rad");
     const antallFør = await perioder.count();
 
+    // Vent på at knappen er synlig (den rendres betinget/asynkront)
+    await this.ventPåLeggTilPeriodeKnapp();
+
     const knapp = await finnKnapp(UI_TEXTS.BUTTONS.LEGG_TIL_PERIODE, this.page);
     await knapp.click();
 
