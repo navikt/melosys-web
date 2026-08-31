@@ -43,7 +43,8 @@ const medDetaljer = (felt: string, differ: Listediff[]): string => {
 };
 
 const endredeFelter = (versjon: TekstblokkVersjon, forrige?: TekstblokkVersjon): string[] => {
-  if (!forrige) return [];
+  // Første versjon har ingenting å sammenlignes med – «Opprettet» er hele historien.
+  if (!forrige || versjon.endringstype === "OPPRETTET") return [];
   const endringer: string[] = [];
   if (versjon.tittel !== forrige.tittel) endringer.push("tittel");
   if (versjon.innhold !== forrige.innhold) endringer.push("innhold");
@@ -87,7 +88,9 @@ function TekstblokkHistorikk({ id }: Props) {
     return <Nav.BodyShort size="small">Ingen versjonshistorikk registrert for denne blokken.</Nav.BodyShort>;
   }
 
-  const nyesteForst = [...versjoner].reverse();
+  // Api-et leverer eldste først (TekstblokkHistorikkService sorterer på revisjonstidspunkt).
+  // Vi sorterer likevel eksplisitt, så visningen ikke hviler på en implisitt kontrakt.
+  const nyesteForst = [...versjoner].sort((a, b) => b.versjon - a.versjon);
   // Neste rad er den eldre versjonen, siden lista står nyeste først.
   const rader = nyesteForst.map((versjon, indeks) => ({
     versjon,

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
@@ -246,6 +246,24 @@ describe("TekstblokkerListe – historikk", () => {
     visHistorikk([versjon(1, "OPPRETTET"), versjon(2, "ENDRET", { innhold: "<p>Ny tekst</p>" })]);
 
     expect(screen.getByText("Endret: innhold")).toBeDefined();
+  });
+
+  it("sorterer på versjonsnummer uavhengig av rekkefølgen fra api-et", () => {
+    visHistorikk([versjon(2, "ENDRET", { status: "PUBLISERT" }), versjon(1, "OPPRETTET", { status: "UTKAST" })]);
+
+    expect(screen.getByText("Endret: status (Utkast → Publisert)")).toBeDefined();
+    const historikktabell = screen.getByRole("columnheader", { name: "Versjon" }).closest("table")!;
+    const versjonsnumre = within(historikktabell)
+      .getAllByRole("row")
+      .slice(1)
+      .map((rad) => rad.querySelectorAll("td")[1].textContent);
+    expect(versjonsnumre).toEqual(["2", "1"]);
+  });
+
+  it("sier ingenting om statusendring på den opprettede versjonen", () => {
+    visHistorikk([versjon(2, "ENDRET", { status: "PUBLISERT" }), versjon(1, "OPPRETTET", { status: "UTKAST" })]);
+
+    expect(screen.queryByText(/Publisert → Utkast/)).toBeNull();
   });
 
   it("melder fra om historikkvalget i stedet for å styre det selv", async () => {
