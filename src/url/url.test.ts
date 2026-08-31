@@ -69,6 +69,30 @@ describe("url", () => {
       expect(url).toContain("/FTRL/aarsavregning/");
     });
 
+    it("MELOSYS-8163: EU_EOS/tjenesteperson-behandling med behandlingstype årsavregning returnerer aarsavregning-url uansett toggle", () => {
+      const urlUtenToggle = lagUrl(
+        "MEL-1",
+        1,
+        EU_EOS,
+        MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+        MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
+      );
+      expect(urlUtenToggle).toContain("/EU_EOS/aarsavregning/");
+
+      const urlMedToggle = lagUrl(
+        "MEL-1",
+        1,
+        EU_EOS,
+        MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+        MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
+        false,
+        true,
+      );
+      expect(urlMedToggle).toContain("/EU_EOS/aarsavregning/");
+    });
+
     it("Sakstype TRYGDEAVTALE med støttet behandlingstemaKode returnerer url", () => {
       const url = lagUrlFraSakstypeOgBehandlingstema(
         "MEL-1",

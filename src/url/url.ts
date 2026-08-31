@@ -160,14 +160,6 @@ export const skalViseIngenFlyt = (
   erPensjonsistToggleEnabled?: boolean,
   erPensjonistToggleEnabled_EØS?: boolean,
 ) => {
-  // Årsavregning EØS offentlig tjenesteperson
-  if (
-    behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY &&
-    behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING
-  ) {
-    return true;
-  }
-
   if (
     sakstype === EU_EOS &&
     sakstema === TRYGDEAVGIFT &&

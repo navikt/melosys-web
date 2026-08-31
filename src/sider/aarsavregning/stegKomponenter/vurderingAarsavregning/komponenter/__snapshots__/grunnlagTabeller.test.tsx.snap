@@ -2,10 +2,7 @@
 
 exports[`TidligereGrunnlagsoversikt > renders correctly with complete data 1`] = `
 
-<div
-  data-test
-  id="333"
->
+<div data-testid="skatteforholdsperioder-tabell">
   Skatteforholdsperioder
 </div>
 
