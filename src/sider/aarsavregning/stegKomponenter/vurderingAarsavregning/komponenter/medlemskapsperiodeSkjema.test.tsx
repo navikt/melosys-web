@@ -4,9 +4,11 @@ describe("MedlemskapsperiodeSkjema - Legg til periode knapp visningslogikk", () 
   /**
    * Tester logikken for når "Legg til periode"-knappen skal vises.
    * Basert på koden i medlemskapsperiodeSkjema.tsx:
-   * {medlemskapsperioder.length === index + 1 && !erUtenGrunnlag && (!erPliktigBestemmelse || erDeltGrunnlag) && (
+   * {medlemskapsperioder.length === index + 1 && !erUtenGrunnlag && (!erPliktigBestemmelse || erDeltGrunnlag)
+   *   && redigerbart && visLeggTil && (
    *
    * For "uten grunnlag" (erUtenGrunnlag=true) skjules knappen alltid.
+   * Knappen skjules også helt (ikke bare utgrået) når redigerbart=false eller visLeggTil=false.
    */
 
   const pliktigeBestemmelser = ["FTRL_2_7", "FTRL_2_6"];
@@ -17,10 +19,12 @@ describe("MedlemskapsperiodeSkjema - Legg til periode knapp visningslogikk", () 
     erPliktigBestemmelse: boolean,
     erDeltGrunnlag: boolean,
     erUtenGrunnlag: boolean,
+    redigerbart = true,
+    visLeggTil = true,
   ): boolean => {
     // Logikken fra komponenten
     const erSistePeriode = antallPerioder === index + 1;
-    return erSistePeriode && !erUtenGrunnlag && (!erPliktigBestemmelse || erDeltGrunnlag);
+    return erSistePeriode && !erUtenGrunnlag && (!erPliktigBestemmelse || erDeltGrunnlag) && redigerbart && visLeggTil;
   };
 
   describe("Uten grunnlag (erUtenGrunnlag=true)", () => {
@@ -96,6 +100,21 @@ describe("MedlemskapsperiodeSkjema - Legg til periode knapp visningslogikk", () 
           `Forventet ${forventet} for: index=${index}, antall=${antallPerioder}, pliktig=${erPliktig}, deltGrunnlag=${erDeltGrunnlag}, utenGrunnlag=${erUtenGrunnlag}`,
         ).toBe(forventet);
       });
+    });
+  });
+
+  describe("Skjules helt når ikke redigerbart eller visLeggTil=false", () => {
+    it("skal IKKE vise knappen når redigerbart=false", () => {
+      // Ellers gyldig tilstand (siste periode, ikke pliktig, med grunnlag)
+      expect(skalViseKnapp(0, 1, false, false, false, false, true)).toBe(false);
+    });
+
+    it("skal IKKE vise knappen når visLeggTil=false", () => {
+      expect(skalViseKnapp(0, 1, false, false, false, true, false)).toBe(false);
+    });
+
+    it("skal vise knappen når både redigerbart og visLeggTil er true", () => {
+      expect(skalViseKnapp(0, 1, false, false, false, true, true)).toBe(true);
     });
   });
 
