@@ -359,6 +359,23 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
       expect(screen.queryByRole("region", { name: "Beregningsforklaring for trygdeavgift" })).not.toBeInTheDocument();
     });
 
+    it("beholder den ordinære inntektsgruppen når en annen gruppe fikk en særregel", () => {
+      useFeatureToggleMock.mockReturnValue(true);
+
+      render(
+        <BeregnetTrygdeavgiftDetaljer
+          grunnlag={createMockData()}
+          medlemskapsTypeErPliktig={true}
+          beregningsforklaringer={[
+            { ...lagBeregningsforklaring(), inntektsgruppe: "HELSEDEL" },
+            { ...lagBeregningsforklaring("ORDINÆR"), inntektsgruppe: "PENSJONSDEL" },
+          ]}
+        />,
+      );
+
+      expect(screen.getByText("2023 · Pensjonsdel")).toBeInTheDocument();
+    });
+
     it("rendrer ikke kortet når toggelen er av selv om beregningsforklaringer er ikke-tom", () => {
       useFeatureToggleMock.mockReturnValue(false);
 

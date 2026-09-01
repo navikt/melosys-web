@@ -121,12 +121,15 @@ export function erOrdinaerBeregning(beregningsregel?: Beregningsregel | null): b
   return !beregningsregel || beregningsregel === "ORDINÆR";
 }
 
+const SAERREGLER: Beregningsregel[] = ["TJUEFEM_PROSENT_REGEL", "MINSTEBELØP"];
+
 // Alt eller ingenting per kort: skjuler vi de ordinære gruppene hver for seg, forsvinner en
-// ordinær pensjonsdel fra et kort som står åpent for helsedelen. Ukjent regel teller som
-// særregel, så et uventet API-svar skjuler ikke kortet stille.
+// ordinær pensjonsdel fra et kort som står åpent for helsedelen. Kun de to kjente særreglene
+// åpner kortet — en ukjent regel gir en tom regel-tag og en usann tak-sammenligning i kortet,
+// og da er det bedre å ikke vise noe.
 export function forklaringerSomSkalVises(forklaringer?: Beregningsforklaring[]): Beregningsforklaring[] {
   const alle = forklaringer ?? [];
-  return alle.some((forklaring) => forklaring.valgtRegel !== "ORDINÆR") ? alle : [];
+  return alle.some((forklaring) => SAERREGLER.includes(forklaring.valgtRegel)) ? alle : [];
 }
 
 const AVGIFTSDEL_TEKST: Record<string, string> = {

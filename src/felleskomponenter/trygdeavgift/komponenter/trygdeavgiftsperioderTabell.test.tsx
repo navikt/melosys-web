@@ -331,7 +331,21 @@ describe("TrygdeavgiftsperioderTabell · beregningsforklaring", () => {
       />,
     );
     expect(screen.getByText("Beregningsforklaring")).toBeDefined();
-    expect(screen.getByText(/Pensjonsdel/)).toBeDefined();
+    // Kortets felttittel, ikke Dekning-kolonnens «Pensjonsdel» — den kan også stå i tabellen.
+    expect(screen.getByText("2025 · Pensjonsdel")).toBeDefined();
+  });
+
+  it("viser ikke kortet når regelen er ukjent for oss", () => {
+    mockUseFeatureToggle.mockReturnValue(true);
+    const ukjentRegel = { ...lagForklaring(), valgtRegel: "NY_REGEL_FRA_BACKEND" as Beregningsregel };
+    render(
+      <TrygdeavgiftsperioderTabell
+        perioder={[periode25]}
+        lagrePending={false}
+        beregningsforklaringer={[ukjentRegel]}
+      />,
+    );
+    expect(screen.queryByText("Beregningsforklaring")).toBeNull();
   });
 
   it("viser kortet og klikkbart `*` når toggle er på og forklaringer finnes", () => {
