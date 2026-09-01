@@ -124,9 +124,9 @@ export function erOrdinaerBeregning(beregningsregel?: Beregningsregel | null): b
 const SAERREGLER: Beregningsregel[] = ["TJUEFEM_PROSENT_REGEL", "MINSTEBELØP"];
 
 // Alt eller ingenting per kort: skjuler vi de ordinære gruppene hver for seg, forsvinner en
-// ordinær pensjonsdel fra et kort som står åpent for helsedelen. Kun de to kjente særreglene
-// åpner kortet — en ukjent regel gir en tom regel-tag og en usann tak-sammenligning i kortet,
-// og da er det bedre å ikke vise noe.
+// ordinær pensjonsdel fra et kort som står åpent for helsedelen. Kortet åpnes kun av de to
+// kjente særreglene. En ukjent regel åpner det ikke alene, men følger med når en kjent særregel
+// gjør det — og kortet rendrer den da med tom regel-tag og en usann tak-sammenligning.
 export function forklaringerSomSkalVises(forklaringer?: Beregningsforklaring[]): Beregningsforklaring[] {
   const alle = forklaringer ?? [];
   return alle.some((forklaring) => SAERREGLER.includes(forklaring.valgtRegel)) ? alle : [];
