@@ -5,7 +5,10 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
-import { AarsavregningListResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
+import {
+  AarsavregningListResponse,
+  AarsavregningResponse,
+} from "../../../../services/modules/aarsavregning/aarsavregning";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
@@ -22,7 +25,6 @@ import { useDispatch } from "../../../../hooks";
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Api from "../../../../services/api";
-import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
 import { BrevVedleggVisningstabellInterface } from "../../../../services/modules/dokumenter-v2";
 import * as Utils from "../../../../utils";
 import { SumArsavregningTabell } from "../vurderingAarsavregning/komponenter/sumArsavregningTabell";
@@ -32,7 +34,6 @@ import vurdering_vedtak from "./vurderingVedtakSchema";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../featuretoggle/toggleNavn";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { BEGRUNNELSE_FRITEKST_HJELPETEKST } from "../../../ikkeYrkesaktiv/stegKomponenter/vurderingVedtak/tekster";
 
 const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
