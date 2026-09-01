@@ -122,11 +122,10 @@ export function erOrdinaerBeregning(beregningsregel?: Beregningsregel | null): b
 }
 
 /**
- * Forklaringen svarer på hvorfor minstebeløpet eller 25 %-regelen slo ut. Slo ingen av dem ut,
- * er det ingenting å forklare, og hele kortet skjules. Er én inntektsgruppe truffet av en
- * særregel, vises alle gruppene — ellers mistet saksbehandleren pensjonsdelen i et kort som
- * står åpent for helsedelen. Ukjent eller manglende regel regnes som særregel, så et uventet
- * API-svar skjuler ikke kortet stille.
+ * Forklaringen svarer på hvorfor minstebeløpet eller 25 %-regelen slo ut; slo ingen av dem ut,
+ * skjules kortet. Alt eller ingenting: ellers forsvinner en ordinær pensjonsdel fra et kort som
+ * står åpent for helsedelen. Ukjent regel teller som særregel, så et uventet API-svar skjuler
+ * ikke kortet stille.
  */
 export function forklaringerSomSkalVises(forklaringer?: Beregningsforklaring[]): Beregningsforklaring[] {
   const alle = forklaringer ?? [];
