@@ -1,4 +1,4 @@
-import { XMarkIcon } from "@navikt/aksel-icons";
+import { ExternalLinkIcon, XMarkIcon } from "@navikt/aksel-icons";
 import { BodyShort, Popover, Search, Tabs, UNSAFE_Combobox as Combobox } from "@navikt/ds-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -11,12 +11,25 @@ import { TekstblokkOversikt, TekstblokkType } from "../../services/modules/tekst
 import { Betingelse, harBetingelseEllerValgTokener, PlaceholderVerdi } from "../../services/modules/placeholdere";
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER } from "../../featuretoggle/toggleNavn";
+import { BREVBIBLIOTEK } from "../../sider/tekstblokker/ruter";
+import * as Constants from "../../constants";
 import TekstblokkForhandsvisning from "./tekstblokkForhandsvisning";
+import { htmlTilRenTekst } from "./htmlTilRenTekst";
 import "./tekstblokkSoek.less";
 
+// «sett-inn» skriver til editoren under. I saksflyter uten HtmlEditor finnes ingen
+// editor å skrive til, så «bibliotek» lar brukeren slå opp og kopiere i stedet.
+export type TekstblokkSoekModus = "sett-inn" | "bibliotek";
+
 interface Props {
-  onVelg: (html: string) => void;
+  // Kreves kun i sett-inn-modus; biblioteket kopierer i stedet for å sette inn.
+  onVelg?: (html: string) => void;
   disabled?: boolean;
+  modus?: TekstblokkSoekModus;
+  // Popoveren henger under en knapp nederst i editoren, men over en knapp i topplinja.
+  placement?: "top-end" | "bottom-end";
+  knappetekst?: string;
+  overskrift?: string;
   // I Send brev (sidemenyen) kan brukeren også sette inn hele brevmaler. I selve
   // saksflytene er vedtaksbrevet allerede en mal, så da viser vi kun tekstblokker.
   visBrevmaler?: boolean;
@@ -39,33 +52,22 @@ const POPOVER_MARG = 16;
 // det hele tatt, så vi lar heller popoveren ta det meste av vinduet enn å vise en tom liste.
 const MIN_POPOVER_HOYDE = 384;
 
-function TekstblokkSoek({
-  onVelg,
-  disabled,
-  visBrevmaler = false,
-  placeholderVerdier,
-  gyldigeNokler,
-  gyldigeBetingelsesNokler,
-  betingelser,
-}: Props) {
+// Hvor lenge «Kopiert» står før knappen går tilbake, som i KopierbarTekst.
+const KOPIERT_MS = 1000;
+
+function TekstblokkSoek(props: Props) {
   const togglePaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
   if (!togglePaa) return null;
-  return (
-    <TekstblokkSoekIntern
-      onVelg={onVelg}
-      disabled={disabled}
-      visBrevmaler={visBrevmaler}
-      placeholderVerdier={placeholderVerdier}
-      gyldigeNokler={gyldigeNokler}
-      gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
-      betingelser={betingelser}
-    />
-  );
+  return <TekstblokkSoekIntern {...props} />;
 }
 
 function TekstblokkSoekIntern({
   onVelg,
   disabled,
+  modus = "sett-inn",
+  placement = "top-end",
+  knappetekst,
+  overskrift,
   visBrevmaler = false,
   placeholderVerdier,
   gyldigeNokler,
@@ -156,11 +158,14 @@ function TekstblokkSoekIntern({
       valgt ? [...forrige, verdi] : forrige.filter((t) => t.toLowerCase() !== verdi.toLowerCase()),
     );
 
-  const knappetekst = visBrevmaler ? "Legg til tekstblokker/brevmal" : "Legg til tekstblokker";
+  const erBibliotek = modus === "bibliotek";
+  const standardKnappetekst = visBrevmaler ? "Legg til tekstblokker/brevmal" : "Legg til tekstblokker";
+  const knapp = knappetekst ?? standardKnappetekst;
   const erBrevmal = visBrevmaler && aktivType === "BREVMAL";
   const typeOrd = erBrevmal ? "brevmaler" : "tekstblokker";
   const typeOrdEntall = erBrevmal ? "brevmal" : "tekstblokk";
-  const overskrift = visBrevmaler ? "Sett inn tekstblokk eller brevmal" : "Sett inn tekstblokk";
+  const standardOverskrift = visBrevmaler ? "Sett inn tekstblokk eller brevmal" : "Sett inn tekstblokk";
+  const tittel = overskrift ?? standardOverskrift;
   const harAktivtFilter = soek.trim().length > 0 || valgteTags.length > 0;
   // Kontekstavgrensningen skjuler faktisk noe: samme søk/tags/status gir treff uten den. Da
   // hjelper «Vis alle», også når søket er med på å tømme lista.
@@ -176,14 +181,14 @@ function TekstblokkSoekIntern({
           disabled={disabled}
           type="button"
         >
-          {knappetekst}
+          {knapp}
         </Nav.Button>
       </div>
       <Popover
         open={aapen}
         onClose={lukk}
         anchorEl={ankerRef.current}
-        placement="top-end"
+        placement={placement}
         arrow={false}
         className="tekstblokkSoek__popover"
       >
@@ -194,16 +199,31 @@ function TekstblokkSoekIntern({
           <div className="tekstblokkSoek__topp">
             <div className="tekstblokkSoek__header">
               <Nav.Heading size="xsmall" level="2">
-                {overskrift}
+                {tittel}
               </Nav.Heading>
-              <Nav.Button
-                variant="tertiary-neutral"
-                size="small"
-                type="button"
-                icon={<XMarkIcon aria-hidden />}
-                onClick={lukk}
-                title="Lukk"
-              />
+              <div className="tekstblokkSoek__header-knapper">
+                {/* Popoveren er trang for lengre blokker. Lenken gir hele biblioteket i
+                    ny fane, så saken brukeren står i ikke går tapt. */}
+                {erBibliotek && (
+                  <Nav.Link
+                    href={`${Constants.URL_BASENAME}${BREVBIBLIOTEK}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="tekstblokkSoek__bibliotekLenke"
+                  >
+                    Åpne biblioteket
+                    <ExternalLinkIcon aria-hidden />
+                  </Nav.Link>
+                )}
+                <Nav.Button
+                  variant="tertiary-neutral"
+                  size="small"
+                  type="button"
+                  icon={<XMarkIcon aria-hidden />}
+                  onClick={lukk}
+                  title="Lukk"
+                />
+              </div>
             </div>
 
             {visBrevmaler && (
@@ -288,12 +308,13 @@ function TekstblokkSoekIntern({
               <TekstblokkRad
                 key={blokk.id}
                 blokk={blokk}
+                modus={modus}
                 placeholderVerdier={placeholderVerdier}
                 gyldigeNokler={gyldigeNokler}
                 gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
                 betingelser={betingelser}
                 onVelg={(html) => {
-                  onVelg(html);
+                  onVelg?.(html);
                   lukk();
                 }}
               />
@@ -320,15 +341,19 @@ function TekstblokkSoekIntern({
 interface RadProps {
   blokk: TekstblokkOversikt;
   onVelg: (html: string) => void;
+  modus: TekstblokkSoekModus;
   placeholderVerdier?: PlaceholderVerdi[];
   gyldigeNokler?: string[];
   gyldigeBetingelsesNokler?: string[];
   betingelser?: Betingelse[];
 }
 
+type Kopistatus = "klar" | "kopiert" | "feilet";
+
 function TekstblokkRad({
   blokk,
   onVelg,
+  modus,
   placeholderVerdier,
   gyldigeNokler,
   gyldigeBetingelsesNokler,
@@ -336,6 +361,26 @@ function TekstblokkRad({
 }: RadProps) {
   // Innhold er skjult som standard – vises kun når brukeren ber om det.
   const [visInnhold, setVisInnhold] = useState(false);
+  const [kopistatus, setKopistatus] = useState<Kopistatus>("klar");
+
+  useEffect(() => {
+    if (kopistatus === "klar") return undefined;
+    const timer = setTimeout(() => setKopistatus("klar"), KOPIERT_MS);
+    return () => clearTimeout(timer);
+  }, [kopistatus]);
+
+  // Utklippstavla kan avvises av nettleseren (manglende tillatelse, usikker kontekst).
+  // Da må brukeren få vite det – ellers tror hen at teksten ligger klar.
+  const kopier = async () => {
+    try {
+      await navigator.clipboard.writeText(htmlTilRenTekst(blokk.innhold));
+      setKopistatus("kopiert");
+    } catch {
+      setKopistatus("feilet");
+    }
+  };
+
+  const kopitekst = { klar: "Kopier til utklippstavle", kopiert: "Kopiert", feilet: "Kunne ikke kopiere" }[kopistatus];
 
   // Uten noen av de tre løser ikke editoren tokener ved innsetting, og saksflyten har heller
   // ingen sendevarsel som fanger dem opp senere.
@@ -372,11 +417,23 @@ function TekstblokkRad({
           <Nav.Button size="xsmall" variant="tertiary" type="button" onClick={() => setVisInnhold(!visInnhold)}>
             {visInnhold ? "Skjul innhold" : "Vis innhold"}
           </Nav.Button>
-          <Nav.Button size="xsmall" variant="primary" type="button" onClick={() => onVelg(blokk.innhold)}>
-            Sett inn
-          </Nav.Button>
+          {modus === "bibliotek" ? (
+            // Popoveren lukkes ikke: den som slår opp vil gjerne kopiere flere blokker.
+            <Nav.Button size="xsmall" variant="secondary" type="button" onClick={kopier}>
+              {kopitekst}
+            </Nav.Button>
+          ) : (
+            <Nav.Button size="xsmall" variant="primary" type="button" onClick={() => onVelg(blokk.innhold)}>
+              Sett inn
+            </Nav.Button>
+          )}
         </div>
       </div>
+      {/* Statusen står utenfor knappen, ellers ville skjermleseren lest hele teksten på nytt. */}
+      <span role="status" aria-live="polite" className="navds-sr-only">
+        {kopistatus === "kopiert" && `${blokk.tittel} er kopiert til utklippstavlen`}
+        {kopistatus === "feilet" && `Kunne ikke kopiere ${blokk.tittel} til utklippstavlen`}
+      </span>
       {visInnhold && (
         <div className="tekstblokkSoek__forhandsvisning tekstblokkSoek__forhandsvisning--full">
           <TekstblokkForhandsvisning
