@@ -13,6 +13,7 @@ import {
   FormaterSats,
   Beregningsforklaringer,
   erUnderMinstebeløp,
+  forklaringerMedSærregel,
   MINSTEBELØP_ALERT_TEKST,
 } from "./beregningsforklaring";
 import { BeregningsforklaringKort } from "./beregningsforklaringKort";
@@ -32,8 +33,8 @@ function TrygdeavgiftsperioderTabell({
   beregningsforklaringer?: Beregningsforklaring[];
 }) {
   const erBeregningsforklaringEnabled = useFeatureToggle(VIS_TRYGDEAVGIFT_BEREGNINGSFORKLARING) === true;
-  const harForklaringer = Boolean(beregningsforklaringer && beregningsforklaringer.length > 0);
-  const skalViseBeregningsforklaring = erBeregningsforklaringEnabled && harForklaringer;
+  const forklaringer = forklaringerMedSærregel(beregningsforklaringer);
+  const skalViseBeregningsforklaring = erBeregningsforklaringEnabled && forklaringer.length > 0;
 
   const [grunnlagÅpent, setGrunnlagÅpent] = useState(false);
   const [scrollTilFelt, setScrollTilFelt] = useState<string | null>(null);
@@ -54,7 +55,7 @@ function TrygdeavgiftsperioderTabell({
 
   const sortertePerioder = [...perioder].sort(Utils.dato.sorterEtterISOFomDato);
   const alleUnderMinstebeløp = sortertePerioder.length > 0 && sortertePerioder.every(erUnderMinstebeløp);
-  const forklaringerForKoblinger = skalViseBeregningsforklaring ? beregningsforklaringer : undefined;
+  const forklaringerForKoblinger = skalViseBeregningsforklaring ? forklaringer : undefined;
 
   return (
     <BeregningsforklaringKortProvider value={skalViseBeregningsforklaring ? åpneGrunnlag : undefined}>
@@ -111,7 +112,7 @@ function TrygdeavgiftsperioderTabell({
             <Beregningsforklaringer perioder={sortertePerioder} forklaringer={forklaringerForKoblinger} />
             {skalViseBeregningsforklaring && (
               <BeregningsforklaringKort
-                forklaringer={beregningsforklaringer!}
+                forklaringer={forklaringer}
                 open={grunnlagÅpent}
                 onToggle={håndterGrunnlagToggle}
                 scrollTilFelt={scrollTilFelt}

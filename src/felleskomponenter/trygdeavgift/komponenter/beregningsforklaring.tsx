@@ -121,6 +121,14 @@ export function erOrdinaerBeregning(beregningsregel?: Beregningsregel | null): b
   return !beregningsregel || beregningsregel === "ORDINÆR";
 }
 
+/**
+ * Forklaringen svarer på hvorfor minstebeløpet eller 25 %-regelen slo ut. Ordinær beregning
+ * har ikke det spørsmålet, så de forklaringene vises ikke.
+ */
+export function forklaringerMedSærregel(forklaringer?: Beregningsforklaring[]): Beregningsforklaring[] {
+  return (forklaringer ?? []).filter((forklaring) => !erOrdinaerBeregning(forklaring.valgtRegel));
+}
+
 const AVGIFTSDEL_TEKST: Record<string, string> = {
   HELSE: "Helsedel",
   PENSJON: "Pensjonsdel",

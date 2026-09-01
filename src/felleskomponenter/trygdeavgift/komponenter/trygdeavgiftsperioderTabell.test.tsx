@@ -50,7 +50,7 @@ vi.mock("../../../featuretoggle", () => ({
 }));
 
 import TrygdeavgiftsperioderTabell from "./trygdeavgiftsperioderTabell";
-import { Beregningsforklaring, Trygdeavgiftsperiode } from "../../../services/modules/trygdeavgift";
+import { Beregningsforklaring, Beregningsregel, Trygdeavgiftsperiode } from "../../../services/modules/trygdeavgift";
 
 beforeEach(() => {
   mockUseFeatureToggle.mockReturnValue(false);
@@ -239,10 +239,10 @@ describe("TrygdeavgiftsperioderTabell", () => {
   });
 });
 
-const lagForklaring = (): Beregningsforklaring => ({
+const lagForklaring = (valgtRegel: Beregningsregel = "TJUEFEM_PROSENT_REGEL"): Beregningsforklaring => ({
   aar: 2025,
   inntektsgruppe: "SAMLET",
-  valgtRegel: "TJUEFEM_PROSENT_REGEL",
+  valgtRegel,
   aarsak: "BEREGNET",
   inntektsgrunnlag: [
     {
@@ -296,6 +296,23 @@ describe("TrygdeavgiftsperioderTabell · beregningsforklaring", () => {
   it("viser ikke beregningsforklaring-kortet når forklaringer er undefined", () => {
     mockUseFeatureToggle.mockReturnValue(true);
     render(<TrygdeavgiftsperioderTabell perioder={[periode25]} lagrePending={false} />);
+    expect(screen.queryByText("Beregningsforklaring")).toBeNull();
+  });
+
+  it("viser ikke kortet når beregningen er ordinær", () => {
+    mockUseFeatureToggle.mockReturnValue(true);
+    const periodeOrdinaer = lagPeriode("2025-01-01", "2025-12-31", {
+      avgiftssats: 7.7,
+      avgiftPerMd: 706,
+      beregningsregel: "ORDINÆR",
+    });
+    render(
+      <TrygdeavgiftsperioderTabell
+        perioder={[periodeOrdinaer]}
+        lagrePending={false}
+        beregningsforklaringer={[lagForklaring("ORDINÆR")]}
+      />,
+    );
     expect(screen.queryByText("Beregningsforklaring")).toBeNull();
   });
 
