@@ -281,3 +281,31 @@ describe("TekstblokkerListe – historikk", () => {
     expect(screen.queryByRole("columnheader", { name: "Versjon" })).toBeNull();
   });
 });
+
+describe("TekstblokkerListe – lesemodus", () => {
+  it("utelater handlingene helt, i stedet for å vise knapper som ikke kan brukes", () => {
+    visListe([blokk({ status: "UTKAST" })], { kanRedigere: false });
+
+    expect(screen.queryByRole("button", { name: "Rediger" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Slett" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Historikk" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Publiser" })).toBeNull();
+    expect(screen.queryByRole("columnheader", { name: "Handlinger" })).toBeNull();
+  });
+
+  it("viser tittelen som tekst, ikke som en lenke til redigering", () => {
+    visListe([blokk()], { kanRedigere: false });
+
+    expect(screen.getByText("Om utsending")).toBeDefined();
+    expect(screen.queryByRole("button", { name: "Om utsending" })).toBeNull();
+  });
+
+  it("lar raden utvides så innholdet fortsatt kan leses", async () => {
+    const onToggleUtvidet = vi.fn();
+    visListe([blokk()], { kanRedigere: false, onToggleUtvidet });
+
+    await userEvent.click(screen.getByRole("button", { name: "Vis mer" }));
+
+    expect(onToggleUtvidet).toHaveBeenCalledWith(1);
+  });
+});

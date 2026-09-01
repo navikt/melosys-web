@@ -17,7 +17,13 @@ import "./tekstblokker.less";
 
 type ModalTilstand = { type: "lukket" } | { type: "ny" } | { type: "rediger"; id: number };
 
-function TekstblokkerSide() {
+interface Props {
+  // Admin får redigering; lesevisningen på /brevbibliotek deler alt annet, men er
+  // skrivebeskyttet og ser bare publiserte blokker.
+  kanRedigere?: boolean;
+}
+
+function TekstblokkerSide({ kanRedigere = true }: Props) {
   const [type, setType] = useState<TekstblokkType>("TEKSTBLOKK");
   const [soek, setSoek] = useState("");
   const [valgteTags, setValgteTags] = useState<string[]>([]);
@@ -30,16 +36,24 @@ function TekstblokkerSide() {
   // raden, faller historikkvalget bort og neste åpning viser forhåndsvisningen.
   const [historikkId, setHistorikkId] = useState<number | null>(null);
 
-  // Admin ber eksplisitt om utkast – api-et leverer dem kun hit, aldri til Send brev-søket.
-  const { data: blokker = [], isLoading, error } = useTekstblokker(type, true, true);
+  // Admin ber eksplisitt om utkast – api-et leverer dem kun hit, aldri til Send brev-søket
+  // eller lesevisningen.
+  const { data: blokker = [], isLoading, error } = useTekstblokker(type, true, kanRedigere);
 
   // Tags er ett felles vokabular på tvers av tekstblokker og brevmaler, så forslagene i
   // modalen tar med begge typer. Hentes først når modalen åpnes.
   const motsattType: TekstblokkType = type === "TEKSTBLOKK" ? "BREVMAL" : "TEKSTBLOKK";
   const { data: blokkerAvMotsattType = [] } = useTekstblokker(motsattType, modal.type !== "lukket", true);
 
-  // Admin staar ikke i en sak, saa ingen kontekst avgrenser lista.
-  const { tagAntall, synlige } = useFiltrerteTekstblokker(blokker, soek, valgteTags, {}, statusfilter);
+  // Admin staar ikke i en sak, saa ingen kontekst avgrenser lista. Uten redigeringstilgang
+  // er kun publiserte blokker hentet, og statusvalget er da ikke brukerens å ta.
+  const { tagAntall, synlige } = useFiltrerteTekstblokker(
+    blokker,
+    soek,
+    valgteTags,
+    {},
+    kanRedigere ? statusfilter : "PUBLISERT",
+  );
   // Ikke tagAntall: det telles over blokkene som matcher søket, og hører hjemme i
   // filteret over lista – ikke i forslagene.
   const forslagTags = useMemo(
@@ -81,14 +95,23 @@ function TekstblokkerSide() {
     <div className="tekstblokker">
       <div className="tekstblokker__header">
         <Nav.Heading size="large" level="1">
-          Tekstblokker og brevmaler
+          Brev- og tekstbibliotek
         </Nav.Heading>
-        <Nav.Button variant="primary" icon={<PlusIcon aria-hidden />} onClick={() => setModal({ type: "ny" })}>
-          Ny {labelForType(type)}
-        </Nav.Button>
+        {kanRedigere && (
+          <Nav.Button variant="primary" icon={<PlusIcon aria-hidden />} onClick={() => setModal({ type: "ny" })}>
+            Ny {labelForType(type)}
+          </Nav.Button>
+        )}
       </div>
 
-      <PlaceholderKatalog />
+      {!kanRedigere && (
+        <Nav.BodyShort className="tekstblokker__ingress" textColor="subtle">
+          Her ser du alle publiserte tekstblokker og brevmaler. Visningen er skrivebeskyttet – endringer gjøres i
+          administrasjonen.
+        </Nav.BodyShort>
+      )}
+
+      {kanRedigere && <PlaceholderKatalog />}
 
       <TekstblokkerFilter
         type={type}
@@ -98,6 +121,7 @@ function TekstblokkerSide() {
         valgteTags={valgteTags}
         setValgteTags={setValgteTags}
         tilgjengeligeTags={tagAntall}
+        visStatusfilter={kanRedigere}
         statusfilter={statusfilter}
         setStatusfilter={setStatusfilter}
       />
@@ -129,6 +153,7 @@ function TekstblokkerSide() {
           utvidedeIder={utvidedeIder}
           historikkId={historikkId}
           onToggleUtvidet={toggleRad}
+          kanRedigere={kanRedigere}
           onToggleHistorikk={toggleHistorikk}
           onRediger={(id) => setModal({ type: "rediger", id })}
           onSlett={setSlettBlokk}
@@ -136,18 +161,22 @@ function TekstblokkerSide() {
         />
       )}
 
-      {modal.type !== "lukket" && (
-        <TekstblokkRedigeringModal
-          redigerId={modal.type === "rediger" ? modal.id : null}
-          type={type}
-          forslagTags={forslagTags}
-          onLukk={() => setModal({ type: "lukket" })}
-        />
+      {kanRedigere && (
+        <>
+          {modal.type !== "lukket" && (
+            <TekstblokkRedigeringModal
+              redigerId={modal.type === "rediger" ? modal.id : null}
+              type={type}
+              forslagTags={forslagTags}
+              onLukk={() => setModal({ type: "lukket" })}
+            />
+          )}
+
+          <TekstblokkSlettBekreftelse blokk={slettBlokk} onLukk={() => setSlettBlokk(null)} />
+
+          <TekstblokkPubliserBekreftelse blokk={publiserBlokk} onLukk={() => setPubliserBlokk(null)} />
+        </>
       )}
-
-      <TekstblokkSlettBekreftelse blokk={slettBlokk} onLukk={() => setSlettBlokk(null)} />
-
-      <TekstblokkPubliserBekreftelse blokk={publiserBlokk} onLukk={() => setPubliserBlokk(null)} />
     </div>
   );
 }

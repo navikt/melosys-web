@@ -16,6 +16,10 @@
     gap: 1rem;
   }
 
+  &__ingress {
+    max-width: 60ch;
+  }
+
   &__filter {
     display: flex;
     flex-direction: column;
@@ -71,6 +75,11 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+  }
+
+  // Lesevisningen har ingen redigering å lenke til, så tittelen står som ren tekst.
+  &__rad-tittel-tekst {
+    font-weight: var(--a-font-weight-bold);
   }
 
   &__statusfilter {
