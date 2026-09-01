@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 import TekstblokkerSide from "./tekstblokkerSide";
-import { tekstblokkOversikt } from "../../../services/modules/tekstblokkTestdata";
+import { tekstblokkOversikt } from "../../services/modules/tekstblokkTestdata";
 
 // Siden eier utvidelsen og historikkvalget; alt annet på flaten er kulisser her.
 vi.mock("./placeholderKatalog", () => ({ default: () => null }));
@@ -11,16 +11,16 @@ vi.mock("./tekstblokkerFilter", () => ({ default: () => null }));
 vi.mock("./tekstblokkRedigeringModal", () => ({ default: () => null }));
 vi.mock("./tekstblokkSlettBekreftelse", () => ({ default: () => null }));
 vi.mock("./tekstblokkPubliserBekreftelse", () => ({ default: () => null }));
-vi.mock("../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning", () => ({
+vi.mock("../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning", () => ({
   default: () => <div>Forhåndsvisning</div>,
 }));
 vi.mock("./tekstblokkHistorikk", () => ({ default: () => <div>Historikktabell</div> }));
 
 const blokker = [tekstblokkOversikt({ id: 1, tittel: "Om utsending" })];
 
-vi.mock("../../../services/api/tekstblokker", async () => {
-  const faktisk = await vi.importActual<typeof import("../../../services/api/tekstblokker")>(
-    "../../../services/api/tekstblokker",
+vi.mock("../../services/api/tekstblokker", async () => {
+  const faktisk = await vi.importActual<typeof import("../../services/api/tekstblokker")>(
+    "../../services/api/tekstblokker",
   );
   return {
     ...faktisk,

@@ -5,7 +5,7 @@ import { MELOSYS_TEKSTBLOKKER } from "../../featuretoggle/toggleNavn";
 import UkjentSide from "../ukjentSide";
 import AdministrasjonSidemeny from "./administrasjonSidemeny";
 import OversiktSide from "./oversikt/oversiktSide";
-import TekstblokkerSide from "./tekstblokker/tekstblokkerSide";
+import TekstblokkerSide from "../tekstblokker/tekstblokkerSide";
 import { ADMIN_BASE, ADMIN_TEKSTBLOKKER } from "./ruter";
 
 import "./administrasjon.less";

@@ -1,6 +1,6 @@
-import * as Nav from "../../../navFrontend";
-import { usePubliserTekstblokk } from "../../../services/api/tekstblokker";
-import { TekstblokkOversikt } from "../../../services/modules/tekstblokker";
+import * as Nav from "../../navFrontend";
+import { usePubliserTekstblokk } from "../../services/api/tekstblokker";
+import { TekstblokkOversikt } from "../../services/modules/tekstblokker";
 import { labelForType } from "./labels";
 
 interface Props {

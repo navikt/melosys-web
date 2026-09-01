@@ -2,8 +2,8 @@ import { useMemo, useState } from "react";
 import { Alert, BodyShort, Loader, UNSAFE_Combobox as Combobox } from "@navikt/ds-react";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
-import MKV from "../../../melosyskodeverk";
-import { useKombinasjonstre } from "../../../services/api/kombinasjonstre";
+import MKV from "../../melosyskodeverk";
+import { useKombinasjonstre } from "../../services/api/kombinasjonstre";
 import {
   Avgrensning,
   behandlingstemaerFor,
@@ -13,7 +13,7 @@ import {
   ryddNedover,
   sakstemaerFor,
   sakstyperITre,
-} from "../../../services/modules/lovligekombinasjoner/kombinasjonstre";
+} from "../../services/modules/lovligekombinasjoner/kombinasjonstre";
 
 interface Opsjon {
   label: string;

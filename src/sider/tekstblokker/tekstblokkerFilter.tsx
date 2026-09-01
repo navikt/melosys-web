@@ -1,8 +1,8 @@
 import { Chips, Search, Tabs } from "@navikt/ds-react";
 import { useMemo, useState } from "react";
 
-import * as Nav from "../../../navFrontend";
-import { erTagValgt, Statusfilter, TekstblokkType, toggleITagliste } from "../../../services/modules/tekstblokker";
+import * as Nav from "../../navFrontend";
+import { erTagValgt, Statusfilter, TekstblokkType, toggleITagliste } from "../../services/modules/tekstblokker";
 
 const MAKS_TAGS_KOMPAKT = 15;
 

@@ -1,9 +1,9 @@
 import { ClockDashedIcon, CheckmarkCircleIcon, PencilIcon, TrashIcon } from "@navikt/aksel-icons";
 
-import * as Nav from "../../../navFrontend";
-import TekstblokkForhandsvisning from "../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning";
-import { TekstblokkOversikt } from "../../../services/modules/tekstblokker";
-import { formatterDatoTilNorsk } from "../../../utils/dato";
+import * as Nav from "../../navFrontend";
+import TekstblokkForhandsvisning from "../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning";
+import { TekstblokkOversikt } from "../../services/modules/tekstblokker";
+import { formatterDatoTilNorsk } from "../../utils/dato";
 import { termForBehandlingstema, termForSakstema, termForSakstype } from "./kontekstavgrensning";
 import TekstblokkHistorikk from "./tekstblokkHistorikk";
 

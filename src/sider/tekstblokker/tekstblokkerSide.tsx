@@ -1,10 +1,10 @@
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from "@navikt/aksel-icons";
 import { useMemo, useState } from "react";
 
-import * as Nav from "../../../navFrontend";
+import * as Nav from "../../navFrontend";
 
-import { useFiltrerteTekstblokker, useTekstblokker } from "../../../services/api/tekstblokker";
-import { Statusfilter, tellTags, TekstblokkOversikt, TekstblokkType } from "../../../services/modules/tekstblokker";
+import { useFiltrerteTekstblokker, useTekstblokker } from "../../services/api/tekstblokker";
+import { Statusfilter, tellTags, TekstblokkOversikt, TekstblokkType } from "../../services/modules/tekstblokker";
 import TekstblokkPubliserBekreftelse from "./tekstblokkPubliserBekreftelse";
 import TekstblokkRedigeringModal from "./tekstblokkRedigeringModal";
 import TekstblokkSlettBekreftelse from "./tekstblokkSlettBekreftelse";

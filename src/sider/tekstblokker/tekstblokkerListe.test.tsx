@@ -3,16 +3,16 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 import TekstblokkerListe from "./tekstblokkerListe";
-import { useTekstblokkHistorikk } from "../../../services/api/tekstblokker";
-import { TekstblokkOversikt, TekstblokkVersjon } from "../../../services/modules/tekstblokker";
-import { tekstblokkOversikt } from "../../../services/modules/tekstblokkTestdata";
+import { useTekstblokkHistorikk } from "../../services/api/tekstblokker";
+import { TekstblokkOversikt, TekstblokkVersjon } from "../../services/modules/tekstblokker";
+import { tekstblokkOversikt } from "../../services/modules/tekstblokkTestdata";
 
 // Forhåndsvisningen i den utvidbare raden trenger redux; her handler det om selve raden.
-vi.mock("../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning", () => ({
+vi.mock("../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning", () => ({
   default: () => null,
 }));
 
-vi.mock("../../../services/api/tekstblokker", () => ({
+vi.mock("../../services/api/tekstblokker", () => ({
   useTekstblokkHistorikk: vi.fn(() => ({ data: [], isLoading: false, error: null })),
 }));
 

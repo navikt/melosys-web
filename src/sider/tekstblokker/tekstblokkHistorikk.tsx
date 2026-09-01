@@ -1,9 +1,9 @@
 import moment from "moment";
 
-import * as Nav from "../../../navFrontend";
-import TekstblokkForhandsvisning from "../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning";
-import { useTekstblokkHistorikk } from "../../../services/api/tekstblokker";
-import { TekstblokkVersjon } from "../../../services/modules/tekstblokker";
+import * as Nav from "../../navFrontend";
+import TekstblokkForhandsvisning from "../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning";
+import { useTekstblokkHistorikk } from "../../services/api/tekstblokker";
+import { TekstblokkVersjon } from "../../services/modules/tekstblokker";
 import { termForBehandlingstema, termForSakstema, termForSakstype } from "./kontekstavgrensning";
 import { labelForEndringstype, labelForStatus } from "./labels";
 
