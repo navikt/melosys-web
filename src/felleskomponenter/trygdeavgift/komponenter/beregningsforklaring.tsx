@@ -122,11 +122,15 @@ export function erOrdinaerBeregning(beregningsregel?: Beregningsregel | null): b
 }
 
 /**
- * Forklaringen svarer på hvorfor minstebeløpet eller 25 %-regelen slo ut. Ordinær beregning
- * har ikke det spørsmålet, så de forklaringene vises ikke.
+ * Forklaringen svarer på hvorfor minstebeløpet eller 25 %-regelen slo ut. Slo ingen av dem ut,
+ * er det ingenting å forklare, og hele kortet skjules. Er én inntektsgruppe truffet av en
+ * særregel, vises alle gruppene — ellers mistet saksbehandleren pensjonsdelen i et kort som
+ * står åpent for helsedelen. Ukjent eller manglende regel regnes som særregel, så et uventet
+ * API-svar skjuler ikke kortet stille.
  */
-export function forklaringerMedSærregel(forklaringer?: Beregningsforklaring[]): Beregningsforklaring[] {
-  return (forklaringer ?? []).filter((forklaring) => !erOrdinaerBeregning(forklaring.valgtRegel));
+export function forklaringerSomSkalVises(forklaringer?: Beregningsforklaring[]): Beregningsforklaring[] {
+  const alle = forklaringer ?? [];
+  return alle.some((forklaring) => forklaring.valgtRegel !== "ORDINÆR") ? alle : [];
 }
 
 const AVGIFTSDEL_TEKST: Record<string, string> = {

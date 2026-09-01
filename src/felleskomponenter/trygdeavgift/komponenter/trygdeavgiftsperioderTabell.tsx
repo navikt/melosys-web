@@ -13,7 +13,7 @@ import {
   FormaterSats,
   Beregningsforklaringer,
   erUnderMinstebeløp,
-  forklaringerMedSærregel,
+  forklaringerSomSkalVises,
   MINSTEBELØP_ALERT_TEKST,
 } from "./beregningsforklaring";
 import { BeregningsforklaringKort } from "./beregningsforklaringKort";
@@ -33,7 +33,7 @@ function TrygdeavgiftsperioderTabell({
   beregningsforklaringer?: Beregningsforklaring[];
 }) {
   const erBeregningsforklaringEnabled = useFeatureToggle(VIS_TRYGDEAVGIFT_BEREGNINGSFORKLARING) === true;
-  const forklaringer = forklaringerMedSærregel(beregningsforklaringer);
+  const forklaringer = forklaringerSomSkalVises(beregningsforklaringer);
   const skalViseBeregningsforklaring = erBeregningsforklaringEnabled && forklaringer.length > 0;
 
   const [grunnlagÅpent, setGrunnlagÅpent] = useState(false);

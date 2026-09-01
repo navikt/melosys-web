@@ -316,6 +316,24 @@ describe("TrygdeavgiftsperioderTabell · beregningsforklaring", () => {
     expect(screen.queryByText("Beregningsforklaring")).toBeNull();
   });
 
+  it("beholder den ordinære inntektsgruppen når en annen gruppe fikk en særregel", () => {
+    mockUseFeatureToggle.mockReturnValue(true);
+    const helsedel: Beregningsforklaring = { ...lagForklaring(), inntektsgruppe: "HELSEDEL" };
+    const pensjonsdel: Beregningsforklaring = {
+      ...lagForklaring("ORDINÆR"),
+      inntektsgruppe: "PENSJONSDEL",
+    };
+    render(
+      <TrygdeavgiftsperioderTabell
+        perioder={[periode25]}
+        lagrePending={false}
+        beregningsforklaringer={[helsedel, pensjonsdel]}
+      />,
+    );
+    expect(screen.getByText("Beregningsforklaring")).toBeDefined();
+    expect(screen.getByText(/Pensjonsdel/)).toBeDefined();
+  });
+
   it("viser kortet og klikkbart `*` når toggle er på og forklaringer finnes", () => {
     mockUseFeatureToggle.mockReturnValue(true);
     render(
