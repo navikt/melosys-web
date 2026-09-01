@@ -104,13 +104,6 @@ function TekstblokkerSide({ kanRedigere = true }: Props) {
         )}
       </div>
 
-      {!kanRedigere && (
-        <Nav.BodyShort className="tekstblokker__ingress" textColor="subtle">
-          Her ser du alle publiserte tekstblokker og brevmaler. Visningen er skrivebeskyttet – endringer gjøres i
-          administrasjonen.
-        </Nav.BodyShort>
-      )}
-
       {kanRedigere && <PlaceholderKatalog />}
 
       <TekstblokkerFilter
