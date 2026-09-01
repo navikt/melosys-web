@@ -14,18 +14,21 @@ function TekstblokkSlettBekreftelse({ blokk, onLukk }: Props) {
   if (!blokk) return null;
 
   const handleSlett = () => slett.mutate(blokk.id, { onSuccess: onLukk });
+  const typeLabel = labelForType(blokk.type);
 
   return (
     <Nav.Modal open onClose={onLukk} aria-label="Bekreft sletting" width="small">
       <Nav.Modal.Header>
         <Nav.Heading size="small" level="1">
-          Slette {labelForType(blokk.type)}?
+          Slette {typeLabel}?
         </Nav.Heading>
       </Nav.Modal.Header>
       <Nav.Modal.Body>
         <Nav.BodyLong>
-          Du er i ferd med å slette <strong>{blokk.tittel}</strong>. Dette kan ikke angres, og blokken vil ikke lenger
-          være tilgjengelig i Send brev.
+          Er du sikker på at du vil slette «<strong>{blokk.tittel}</strong>»? <br />
+          <br />
+          {typeLabel.charAt(0).toUpperCase() + typeLabel.slice(1) + "en"} blir permanent slettet og kan ikke
+          gjenopprettes.
         </Nav.BodyLong>
         {slett.error && (
           <Nav.Alert variant="error" size="small" style={{ marginTop: "0.75rem" }}>

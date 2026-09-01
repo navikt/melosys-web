@@ -216,7 +216,7 @@ function TekstblokkSoekIntern({
                     rel="noopener noreferrer"
                     className="tekstblokkSoek__bibliotekLenke"
                   >
-                    Åpne biblioteket
+                    Vis alle brevmaler og tekstblokker
                     <ExternalLinkIcon aria-hidden />
                   </Nav.Link>
                 )}
