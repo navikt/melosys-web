@@ -31,6 +31,8 @@ import "./vurderingVedtak.less";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../featuretoggle/toggleNavn";
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import { BEGRUNNELSE_FRITEKST_HJELPETEKST } from "../../../ikkeYrkesaktiv/stegKomponenter/vurderingVedtak/tekster";
 
 const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
@@ -478,22 +480,29 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           onChange={setHarBekreftetFullmaktForTrygdeavgift}
         />
       ) : null}
+      <Nav.Row className={"margin-top--2rem"}>
+        <Nav.BodyLong as="div" weight="semibold" size="small">
+          <LabelMedHjelpetekst label="Fritekst til innledning" />
+        </Nav.BodyLong>
+        <Forms.HtmlEditor
+          name="innledningFritekst"
+          control={control}
+          className="fritekst_editor"
+          disabled={!redigerbart}
+        />
+      </Nav.Row>
 
-      <Forms.HtmlEditor
-        name="innledningFritekst"
-        control={control}
-        className="fritekst_editor"
-        disabled={!redigerbart}
-        label="Fritekst til innledning"
-      />
-
-      <Forms.HtmlEditor
-        name="begrunnelseFritekst"
-        control={control}
-        className="fritekst_editor"
-        disabled={!redigerbart}
-        label={`Fritekst til begrunnelse${kreverBegrunnelse ? " (Obligatorisk)" : ""}`}
-      />
+      <Nav.Row className="margin-top--2rem">
+        <Nav.BodyLong as="div" weight="semibold" size="small">
+          <LabelMedHjelpetekst label={`Fritekst til begrunnelse${kreverBegrunnelse ? " (Obligatorisk)" : ""}`} />
+        </Nav.BodyLong>
+        <Forms.HtmlEditor
+          name="begrunnelseFritekst"
+          control={control}
+          className="fritekst_editor"
+          disabled={!redigerbart}
+        />
+      </Nav.Row>
 
       {formIsValid &&
         redigerbart &&
@@ -513,6 +522,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           loading: vedtakPending || fritekstPending,
           type: "submit",
         }}
+        className={"margin-top--2rem"}
         bekreftTekst="Fatt vedtak"
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart || vedtakPending, type: "button" }}
       />
