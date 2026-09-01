@@ -121,12 +121,9 @@ export function erOrdinaerBeregning(beregningsregel?: Beregningsregel | null): b
   return !beregningsregel || beregningsregel === "ORDINÆR";
 }
 
-/**
- * Forklaringen svarer på hvorfor minstebeløpet eller 25 %-regelen slo ut; slo ingen av dem ut,
- * skjules kortet. Alt eller ingenting: ellers forsvinner en ordinær pensjonsdel fra et kort som
- * står åpent for helsedelen. Ukjent regel teller som særregel, så et uventet API-svar skjuler
- * ikke kortet stille.
- */
+// Alt eller ingenting per kort: skjuler vi de ordinære gruppene hver for seg, forsvinner en
+// ordinær pensjonsdel fra et kort som står åpent for helsedelen. Ukjent regel teller som
+// særregel, så et uventet API-svar skjuler ikke kortet stille.
 export function forklaringerSomSkalVises(forklaringer?: Beregningsforklaring[]): Beregningsforklaring[] {
   const alle = forklaringer ?? [];
   return alle.some((forklaring) => forklaring.valgtRegel !== "ORDINÆR") ? alle : [];
