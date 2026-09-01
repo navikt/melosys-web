@@ -2,14 +2,14 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import PlaceholderKatalog from "./placeholderKatalog";
-import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
-import { useBetingelseKatalog, usePlaceholderKatalog } from "../../../services/api/placeholdere";
+import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
+import { useBetingelseKatalog, usePlaceholderKatalog } from "../../services/api/placeholdere";
 
-vi.mock("../../../featuretoggle/useFeatureToggle", () => ({
+vi.mock("../../featuretoggle/useFeatureToggle", () => ({
   default: vi.fn(),
 }));
 
-vi.mock("../../../services/api/placeholdere", () => ({
+vi.mock("../../services/api/placeholdere", () => ({
   usePlaceholderKatalog: vi.fn(),
   useBetingelseKatalog: vi.fn(),
 }));

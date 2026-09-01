@@ -3,15 +3,15 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import TekstblokkRedigeringModal from "./tekstblokkRedigeringModal";
-import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
-import { useBetingelseKatalog, usePlaceholderKatalog } from "../../../services/api/placeholdere";
-import { Tekstblokk } from "../../../services/modules/tekstblokker";
+import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
+import { useBetingelseKatalog, usePlaceholderKatalog } from "../../services/api/placeholdere";
+import { Tekstblokk } from "../../services/modules/tekstblokker";
 
-vi.mock("../../../featuretoggle/useFeatureToggle", () => ({
+vi.mock("../../featuretoggle/useFeatureToggle", () => ({
   default: vi.fn(),
 }));
 
-vi.mock("../../../services/api/placeholdere", () => ({
+vi.mock("../../services/api/placeholdere", () => ({
   usePlaceholderKatalog: vi.fn(),
   useBetingelseKatalog: vi.fn(),
 }));
@@ -26,18 +26,18 @@ const mocks = vi.hoisted(() => ({
   kombinasjonstre: vi.fn(() => ({ data: undefined, isLoading: false }) as { data?: unknown; isLoading: boolean }),
 }));
 
-vi.mock("../../../services/api/kombinasjonstre", () => ({
+vi.mock("../../services/api/kombinasjonstre", () => ({
   useKombinasjonstre: () => mocks.kombinasjonstre(),
 }));
 
-vi.mock("../../../services/api/tekstblokker", () => ({
+vi.mock("../../services/api/tekstblokker", () => ({
   useTekstblokk: () => mocks.tekstblokk(),
   useOpprettTekstblokk: () => ({ mutate: mocks.opprett, isPending: false, error: mocks.opprettFeil() }),
   useOppdaterTekstblokk: () => ({ mutate: mocks.oppdater, isPending: false, error: null }),
 }));
 
 // Editoren stubbes: her handler det om katalogen, nøklene og requesten – ikke om Quill.
-vi.mock("../../../felleskomponenter/htmlEditor/htmlEditor", () => ({
+vi.mock("../../felleskomponenter/htmlEditor/htmlEditor", () => ({
   default: ({
     gyldigeNokler,
     gyldigeBetingelsesNokler,

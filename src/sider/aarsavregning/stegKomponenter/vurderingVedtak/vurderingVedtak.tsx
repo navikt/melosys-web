@@ -5,7 +5,10 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
-import { AarsavregningListResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
+import {
+  AarsavregningListResponse,
+  AarsavregningResponse,
+} from "../../../../services/modules/aarsavregning/aarsavregning";
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
 import { behandlingsresultatSelectors } from "../../../../ducks/behandlingsresultat";
 import { fagsakSelectors } from "../../../../ducks/fagsaker";
@@ -22,7 +25,6 @@ import { useDispatch } from "../../../../hooks";
 import MKV from "../../../../melosyskodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Api from "../../../../services/api";
-import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
 import { BrevVedleggVisningstabellInterface } from "../../../../services/modules/dokumenter-v2";
 import * as Utils from "../../../../utils";
 import { SumArsavregningTabell } from "../vurderingAarsavregning/komponenter/sumArsavregningTabell";
@@ -31,6 +33,7 @@ import "./vurderingVedtak.less";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../featuretoggle/toggleNavn";
+import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
 
 const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
@@ -478,22 +481,29 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           onChange={setHarBekreftetFullmaktForTrygdeavgift}
         />
       ) : null}
+      <Nav.Row className={"margin-top--2rem"}>
+        <Nav.BodyLong as="div" weight="semibold" size="small">
+          <LabelMedHjelpetekst label="Fritekst til innledning" />
+        </Nav.BodyLong>
+        <Forms.HtmlEditor
+          name="innledningFritekst"
+          control={control}
+          className="fritekst_editor"
+          disabled={!redigerbart}
+        />
+      </Nav.Row>
 
-      <Forms.HtmlEditor
-        name="innledningFritekst"
-        control={control}
-        className="fritekst_editor"
-        disabled={!redigerbart}
-        label="Fritekst til innledning"
-      />
-
-      <Forms.HtmlEditor
-        name="begrunnelseFritekst"
-        control={control}
-        className="fritekst_editor"
-        disabled={!redigerbart}
-        label={`Fritekst til begrunnelse${kreverBegrunnelse ? " (Obligatorisk)" : ""}`}
-      />
+      <Nav.Row className="margin-top--2rem">
+        <Nav.BodyLong as="div" weight="semibold" size="small">
+          <LabelMedHjelpetekst label={`Fritekst til begrunnelse${kreverBegrunnelse ? " (Obligatorisk)" : ""}`} />
+        </Nav.BodyLong>
+        <Forms.HtmlEditor
+          name="begrunnelseFritekst"
+          control={control}
+          className="fritekst_editor"
+          disabled={!redigerbart}
+        />
+      </Nav.Row>
 
       {formIsValid &&
         redigerbart &&
@@ -513,6 +523,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           loading: vedtakPending || fritekstPending,
           type: "submit",
         }}
+        className={"margin-top--2rem"}
         bekreftTekst="Fatt vedtak"
         tilbakeKnappProps={{ onClick: tilbake, disabled: !redigerbart || vedtakPending, type: "button" }}
       />

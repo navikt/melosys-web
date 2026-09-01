@@ -1,10 +1,10 @@
 import { BodyShort, Heading, ReadMore } from "@navikt/ds-react";
 
-import * as Nav from "../../../navFrontend";
-import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
-import { MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggle/toggleNavn";
-import { useBetingelseKatalog, usePlaceholderKatalog } from "../../../services/api/placeholdere";
-import { BetingelseBeskrivelse, PlaceholderBeskrivelse } from "../../../services/modules/placeholdere";
+import * as Nav from "../../navFrontend";
+import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
+import { MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../featuretoggle/toggleNavn";
+import { useBetingelseKatalog, usePlaceholderKatalog } from "../../services/api/placeholdere";
+import { BetingelseBeskrivelse, PlaceholderBeskrivelse } from "../../services/modules/placeholdere";
 import { termForSakstype } from "./kontekstavgrensning";
 
 interface Props {

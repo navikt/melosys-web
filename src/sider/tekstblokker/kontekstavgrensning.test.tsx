@@ -4,13 +4,13 @@ import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 
 import Kontekstavgrensning from "./kontekstavgrensning";
-import { SakstypeNode } from "../../../services/modules/lovligekombinasjoner/kombinasjonstre";
+import { SakstypeNode } from "../../services/modules/lovligekombinasjoner/kombinasjonstre";
 
 const mocks = vi.hoisted(() => ({
   kombinasjonstre: vi.fn(() => ({ data: undefined, isLoading: false }) as { data?: unknown; isLoading: boolean }),
 }));
 
-vi.mock("../../../services/api/kombinasjonstre", () => ({
+vi.mock("../../services/api/kombinasjonstre", () => ({
   useKombinasjonstre: () => mocks.kombinasjonstre(),
 }));
 

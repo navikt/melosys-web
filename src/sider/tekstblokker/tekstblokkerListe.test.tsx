@@ -1,18 +1,18 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 import TekstblokkerListe from "./tekstblokkerListe";
-import { useTekstblokkHistorikk } from "../../../services/api/tekstblokker";
-import { TekstblokkOversikt, TekstblokkVersjon } from "../../../services/modules/tekstblokker";
-import { tekstblokkOversikt } from "../../../services/modules/tekstblokkTestdata";
+import { useTekstblokkHistorikk } from "../../services/api/tekstblokker";
+import { TekstblokkOversikt, TekstblokkVersjon } from "../../services/modules/tekstblokker";
+import { tekstblokkOversikt } from "../../services/modules/tekstblokkTestdata";
 
 // Forhåndsvisningen i den utvidbare raden trenger redux; her handler det om selve raden.
-vi.mock("../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning", () => ({
+vi.mock("../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning", () => ({
   default: () => null,
 }));
 
-vi.mock("../../../services/api/tekstblokker", () => ({
+vi.mock("../../services/api/tekstblokker", () => ({
   useTekstblokkHistorikk: vi.fn(() => ({ data: [], isLoading: false, error: null })),
 }));
 
@@ -248,6 +248,24 @@ describe("TekstblokkerListe – historikk", () => {
     expect(screen.getByText("Endret: innhold")).toBeDefined();
   });
 
+  it("sorterer på versjonsnummer uavhengig av rekkefølgen fra api-et", () => {
+    visHistorikk([versjon(2, "ENDRET", { status: "PUBLISERT" }), versjon(1, "OPPRETTET", { status: "UTKAST" })]);
+
+    expect(screen.getByText("Endret: status (Utkast → Publisert)")).toBeDefined();
+    const historikktabell = screen.getByRole("columnheader", { name: "Versjon" }).closest("table")!;
+    const versjonsnumre = within(historikktabell)
+      .getAllByRole("row")
+      .slice(1)
+      .map((rad) => rad.querySelectorAll("td")[1].textContent);
+    expect(versjonsnumre).toEqual(["2", "1"]);
+  });
+
+  it("sier ingenting om statusendring på den opprettede versjonen", () => {
+    visHistorikk([versjon(2, "ENDRET", { status: "PUBLISERT" }), versjon(1, "OPPRETTET", { status: "UTKAST" })]);
+
+    expect(screen.queryByText(/Publisert → Utkast/)).toBeNull();
+  });
+
   it("melder fra om historikkvalget i stedet for å styre det selv", async () => {
     const onToggleHistorikk = vi.fn();
 
@@ -261,5 +279,33 @@ describe("TekstblokkerListe – historikk", () => {
     visListe([blokk()], { utvidedeIder: new Set([1]) });
 
     expect(screen.queryByRole("columnheader", { name: "Versjon" })).toBeNull();
+  });
+});
+
+describe("TekstblokkerListe – lesemodus", () => {
+  it("utelater handlingene helt, i stedet for å vise knapper som ikke kan brukes", () => {
+    visListe([blokk({ status: "UTKAST" })], { kanRedigere: false });
+
+    expect(screen.queryByRole("button", { name: "Rediger" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Slett" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Historikk" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Publiser" })).toBeNull();
+    expect(screen.queryByRole("columnheader", { name: "Handlinger" })).toBeNull();
+  });
+
+  it("viser tittelen som tekst, ikke som en lenke til redigering", () => {
+    visListe([blokk()], { kanRedigere: false });
+
+    expect(screen.getByText("Om utsending")).toBeDefined();
+    expect(screen.queryByRole("button", { name: "Om utsending" })).toBeNull();
+  });
+
+  it("lar raden utvides så innholdet fortsatt kan leses", async () => {
+    const onToggleUtvidet = vi.fn();
+    visListe([blokk()], { kanRedigere: false, onToggleUtvidet });
+
+    await userEvent.click(screen.getByRole("button", { name: "Vis mer" }));
+
+    expect(onToggleUtvidet).toHaveBeenCalledWith(1);
   });
 });

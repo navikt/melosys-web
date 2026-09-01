@@ -7,6 +7,7 @@ import * as Nav from "../../../navFrontend";
 import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
 import { MELOSYS_ADMINISTRASJON } from "../../../featuretoggle/toggleNavn";
 import { ADMIN_BASE } from "../../administrasjon/ruter";
+import BrevbibliotekKnapp from "./brevbibliotekKnapp";
 
 import "./topplinje.less";
 import { HolidayDecor } from "../../../felleskomponenter/høytidOgMorro/holidayDecor";
@@ -43,13 +44,16 @@ function Topplinje(props) {
         <HolidayDecor slot="brand" />
       </div>
       <HolidayDecor slot="center" />
-      {visAdmin && (
-        <nav className="topplinje__meny" aria-label="Administrasjon">
+      {/* Menyen rommer flere verktøy med hver sin toggle, så den rendres uansett og lar
+          hvert punkt gate seg selv. */}
+      <nav className="topplinje__meny" aria-label="Verktøy">
+        <BrevbibliotekKnapp />
+        {visAdmin && (
           <NavLink to={ADMIN_BASE} className="topplinje__menylenke">
             Admin
           </NavLink>
-        </nav>
-      )}
+        )}
+      </nav>
       <div className="topplinje__saksbehandler">
         <div className="dropdown">
           <HolidayDecor slot="user" />
