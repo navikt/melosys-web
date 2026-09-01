@@ -276,7 +276,9 @@ describe("TekstblokkSoek – bibliotekmodus", () => {
   it("lenker til hele biblioteket i ny fane, så saken ikke går tapt", async () => {
     await aapneBiblioteket();
 
-    const lenke = screen.getByRole("link", { name: /Åpne biblioteket/ });
+    // Velges på rolle, ikke ordlyd: det testen sikrer er destinasjonen og at saken
+    // ikke forlates, og teksten på lenken skal kunne endres uten å velte testen.
+    const lenke = screen.getByRole("link");
     expect(lenke.getAttribute("href")).toBe("/melosys/brevbibliotek");
     expect(lenke.getAttribute("target")).toBe("_blank");
     expect(lenke.getAttribute("rel")).toContain("noopener");
