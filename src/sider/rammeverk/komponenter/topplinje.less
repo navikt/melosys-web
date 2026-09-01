@@ -108,8 +108,31 @@
 .topplinje__meny {
   display: flex;
   align-items: center;
+  gap: 0.25rem;
   margin-left: auto;
   padding-right: 0.5rem;
+}
+
+// Tekstblokksøket har en tertiær knapp med mørk tekst, som forsvinner mot den mørke
+// topplinja. Her skal den se ut som de andre menypunktene.
+.topplinje__bibliotek {
+  .navds-button--tertiary {
+    color: #fff;
+    font-size: 0.95rem;
+    padding: 0.5rem 0.85rem;
+    border-radius: 4px;
+
+    &:hover,
+    &:focus-visible {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      outline: none;
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 2px #fff;
+    }
+  }
 }
 
 .topplinje__menylenke {
