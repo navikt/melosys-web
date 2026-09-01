@@ -115,7 +115,10 @@
 
 // Tekstblokksøket har en tertiær knapp med mørk tekst, som forsvinner mot den mørke
 // topplinja. Her skal den se ut som de andre menypunktene.
-.topplinje__bibliotek {
+//
+// Selektoren må stoppe ved verktøylinja: popoveren rendres som søsken inne i samme
+// wrapper, og en bredere regel ville gitt knappene inni den hvit tekst på hvit bakgrunn.
+.topplinje__bibliotek .tekstblokkSoek__verktoylinje {
   .navds-button--tertiary {
     color: #fff;
     font-size: 0.95rem;

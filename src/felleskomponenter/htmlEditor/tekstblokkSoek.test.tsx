@@ -287,4 +287,35 @@ describe("TekstblokkSoek – bibliotekmodus", () => {
 
     expect(screen.getByRole("button", { name: "Lukk" })).toBeDefined();
   });
+
+  // Knappen er posisjonert absolutt inne i editoren, som har en posisjonert forelder å
+  // henge seg på. Utenfor editoren finnes ingen slik forelder, og den samme regelen
+  // ville trukket knappen ut av flyten og opp over toppen av siden – usynlig, uten at
+  // noe annet feiler.
+  it("posisjonerer seg ikke som om den lå i en editor", () => {
+    renderWithProviders(<TekstblokkSoek modus="bibliotek" knappetekst="Brev- og tekstbibliotek" />, {
+      preloadedState: sakskontekst("EU_EOS", "MEDLEMSKAP_LOVVALG", "UTSENDT_ARBEIDSTAKER"),
+    });
+
+    const verktoylinje = screen.getByRole("button", { name: "Brev- og tekstbibliotek" }).parentElement;
+    expect(verktoylinje?.className).toContain("tekstblokkSoek__verktoylinje");
+    expect(verktoylinje?.className).not.toContain("--iEditor");
+  });
+});
+
+describe("TekstblokkSoek – plassering i editoren", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+    vi.mocked(useTekstblokker).mockReturnValue({ data: blokker, isLoading: false } as ReturnType<
+      typeof useTekstblokker
+    >);
+  });
+
+  it("beholder den absolutte plasseringen som stiller knappen på linje med editorens label", () => {
+    renderWithProviders(<TekstblokkSoek onVelg={vi.fn()} />, { preloadedState: {} });
+
+    const verktoylinje = screen.getByRole("button", { name: "Legg til tekstblokker" }).parentElement;
+    expect(verktoylinje?.className).toContain("tekstblokkSoek__verktoylinje--iEditor");
+  });
 });

@@ -173,7 +173,12 @@ function TekstblokkSoekIntern({
 
   return (
     <>
-      <div className="tekstblokkSoek__verktoylinje" ref={ankerRef}>
+      {/* Bare editoren gir knappen en posisjonert forelder å henge seg på. Andre steder
+          må den følge vanlig flyt, ellers havner den utenfor skjermen. */}
+      <div
+        className={`tekstblokkSoek__verktoylinje${erBibliotek ? "" : " tekstblokkSoek__verktoylinje--iEditor"}`}
+        ref={ankerRef}
+      >
         <Nav.Button
           variant="tertiary"
           size="small"
@@ -418,8 +423,10 @@ function TekstblokkRad({
             {visInnhold ? "Skjul innhold" : "Vis innhold"}
           </Nav.Button>
           {modus === "bibliotek" ? (
+            // Samme vekt som «Sett inn»: det er handlingen raden finnes for, uansett
+            // om den skriver til editoren eller til utklippstavla.
             // Popoveren lukkes ikke: den som slår opp vil gjerne kopiere flere blokker.
-            <Nav.Button size="xsmall" variant="secondary" type="button" onClick={kopier}>
+            <Nav.Button size="xsmall" variant="primary" type="button" onClick={kopier}>
               {kopitekst}
             </Nav.Button>
           ) : (
