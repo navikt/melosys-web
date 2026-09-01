@@ -294,11 +294,6 @@ export default function reducer(state = initialState, action = {}) {
             fom: formatterDatoTilISO(dokument.soknadsperiodeFom, null),
             tom: formatterDatoTilISO(dokument.soknadsperiodeTom, null),
           },
-          /**
-           * Utledet av melosys-api og finnes ikke i skjemaverdiene. Må bevares eksplisitt,
-           * ellers forsvinner varselet om avvikende perioder ved første oppdatering av state.
-           */
-          arbeidsgiverOgArbeidstakerHarUlikPeriode: state.data.data?.arbeidsgiverOgArbeidstakerHarUlikPeriode,
           selvstendigArbeid: {
             erSelvstendig: Utils._isNil(dokument.erSelvstendig) ? null : dokument.erSelvstendig,
             selvstendigForetak: dokument.selvstendigForetak.map((foretak) => ({

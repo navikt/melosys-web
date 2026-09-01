@@ -127,19 +127,6 @@ describe("mottatteOpplysninger reducer", () => {
   });
 
   it("Oppdaterer mottatteOpplysninger ved action.type OPPDATER_MOTTATTE_OPPLYSNINGER", () => {
-    /**
-     * arbeidsgiverOgArbeidstakerHarUlikPeriode er utledet av melosys-api og finnes ikke i
-     * skjemaverdiene. Den ligger derfor kun i eksisterende state, og skal bevares av reduceren.
-     */
-    const eksisterendeState: any = {
-      ...initialState,
-      data: {
-        data: {
-          arbeidsgiverOgArbeidstakerHarUlikPeriode: true,
-        },
-      },
-    };
-
     const action: MockAction = {
       type: Types.OPPDATER_MOTTATTE_OPPLYSNINGER,
       dokument: {
@@ -510,7 +497,6 @@ describe("mottatteOpplysninger reducer", () => {
             fom: "2011-11-11",
             tom: "2011-11-11",
           },
-          arbeidsgiverOgArbeidstakerHarUlikPeriode: true,
           representantIUtlandet: {
             representantNavn: "Representant I Danmark",
             adresselinjer: ["Adresselinje 1", "Adresselinje 2"],
@@ -553,7 +539,7 @@ describe("mottatteOpplysninger reducer", () => {
       },
     };
 
-    const nextState = reducer(eksisterendeState, action);
+    const nextState = reducer(initialState, action);
 
     expect(nextState).toEqual(expectedState);
   });
