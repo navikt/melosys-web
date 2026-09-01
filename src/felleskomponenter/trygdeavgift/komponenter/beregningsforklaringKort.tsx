@@ -11,6 +11,7 @@ import {
   Inntektspost,
   EkskludertInntektspost,
   OrdinaerAvgiftspost,
+  OrdinaerAvgiftPerDel,
 } from "../../../services/modules/trygdeavgift";
 import { feltId } from "./beregningsforklaringKortContext";
 
@@ -216,10 +217,49 @@ function OrdinaerAvgiftUtregning({
   );
 }
 
+function sammenligningstegn(venstre: number, hoeyre: number): string {
+  return venstre > hoeyre ? ">" : "≤";
+}
+
+/**
+ * Delbeløpene som faktisk ble sammenlignet med taket. Sammenligningstegnet utledes pr. rad, slik
+ * at teksten ikke kan påstå noe annet enn tallene ved siden av.
+ */
+function AvgiftPerDelSammenligning({
+  deler,
+  maksimalAvgift25Prosent,
+}: {
+  deler: OrdinaerAvgiftPerDel[];
+  maksimalAvgift25Prosent: number;
+}) {
+  return (
+    <div className="beregningsforklaring-kort-underseksjon">
+      <Nav.BodyShort size="small" className="beregningsforklaring-kort-underseksjon-tittel">
+        Hver avgiftsdel målt mot taket
+      </Nav.BodyShort>
+      {deler.map((del) => (
+        <div className="beregningsforklaring-kort-rad" key={del.inntektsgruppe}>
+          <Nav.BodyShort size="small">{visInntektsgruppe(del.inntektsgruppe)}</Nav.BodyShort>
+          <Nav.BodyShort size="small" className="beregningsforklaring-kort-rad-verdi">
+            <strong>{kr(del.ordinaerAvgift)}</strong> {sammenligningstegn(del.ordinaerAvgift, maksimalAvgift25Prosent)}{" "}
+            {kr(maksimalAvgift25Prosent)}
+          </Nav.BodyShort>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function MaksgrenseSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
   if (forklaring.inntektOverMinstebeloep === null || forklaring.maksimalAvgift25Prosent === null) return null;
 
+  const maksimalAvgift = forklaring.maksimalAvgift25Prosent;
   const begrenset = forklaring.valgtRegel === "TJUEFEM_PROSENT_REGEL";
+  const deler = forklaring.ordinaerAvgiftPerDel ?? [];
+  // Merknadene utledes av tallene, ikke av at backend antas å ha valgt riktig gren: står det «→
+  // ordinær beregning brukes» fordi ingen del overstiger taket, må begge delene faktisk stemme.
+  const alleDelerUnderTaket = deler.length > 0 && deler.every((del) => del.ordinaerAvgift <= maksimalAvgift);
+  const summenOverstigerTaket = forklaring.ordinaerAvgift > maksimalAvgift;
   return (
     <div className="beregningsforklaring-kort-steg">
       <div className="beregningsforklaring-kort-steg-tittel">
@@ -239,20 +279,29 @@ function MaksgrenseSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
           </Nav.BodyShort>
         </div>
         <div className="beregningsforklaring-kort-formel">
-          Maks avgift = 25 % × {kr(forklaring.inntektOverMinstebeloep)} ={" "}
-          <strong>{kr(forklaring.maksimalAvgift25Prosent)}</strong>
+          Maks avgift = 25 % × {kr(forklaring.inntektOverMinstebeloep)} = <strong>{kr(maksimalAvgift)}</strong>
         </div>
         <OrdinaerAvgiftUtregning linjer={forklaring.ordinaerAvgiftPoster} ordinaerAvgift={forklaring.ordinaerAvgift} />
+        {deler.length > 0 && <AvgiftPerDelSammenligning deler={deler} maksimalAvgift25Prosent={maksimalAvgift} />}
       </div>
       {begrenset ? (
         <Nav.Alert variant="success" size="small" className="beregningsforklaring-kort-merknad">
-          Ordinær avgift {kr(forklaring.ordinaerAvgift)} &gt; 25 %-tak {kr(forklaring.maksimalAvgift25Prosent)} → 25
-          %-regelen brukes. Avgiften begrenses til {kr(forklaring.maksimalAvgift25Prosent)}.
+          Ordinær avgift {kr(forklaring.ordinaerAvgift)} &gt; 25 %-tak {kr(maksimalAvgift)} → 25 %-regelen brukes.
+          Avgiften begrenses til {kr(maksimalAvgift)}.
+        </Nav.Alert>
+      ) : alleDelerUnderTaket ? (
+        <Nav.Alert variant="info" size="small" className="beregningsforklaring-kort-merknad">
+          Hver avgiftsdel måles mot taket for seg, og ingen av dem overstiger {kr(maksimalAvgift)} → ordinær beregning
+          brukes. Summen av delene, {kr(forklaring.ordinaerAvgift)}, måles ikke mot taket.
+        </Nav.Alert>
+      ) : summenOverstigerTaket ? (
+        <Nav.Alert variant="info" size="small" className="beregningsforklaring-kort-merknad">
+          Ordinær avgift {kr(forklaring.ordinaerAvgift)} &gt; 25 %-tak {kr(maksimalAvgift)}, men avgiften ble ikke
+          begrenset. Taket ble målt mot hver avgiftsdel for seg, og delbeløpene mangler i denne forklaringen.
         </Nav.Alert>
       ) : (
         <Nav.Alert variant="info" size="small" className="beregningsforklaring-kort-merknad">
-          Ordinær avgift {kr(forklaring.ordinaerAvgift)} ≤ 25 %-tak {kr(forklaring.maksimalAvgift25Prosent)} → ordinær
-          beregning brukes.
+          Ordinær avgift {kr(forklaring.ordinaerAvgift)} ≤ 25 %-tak {kr(maksimalAvgift)} → ordinær beregning brukes.
         </Nav.Alert>
       )}
     </div>

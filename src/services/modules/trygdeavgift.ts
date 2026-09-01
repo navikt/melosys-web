@@ -54,6 +54,11 @@ export interface OrdinaerAvgiftspost {
   beloep: number;
 }
 
+export interface OrdinaerAvgiftPerDel {
+  inntektsgruppe: Beregningsinntektsgruppe;
+  ordinaerAvgift: number;
+}
+
 export interface Beregningsforklaring {
   aar: number;
   inntektsgruppe: Beregningsinntektsgruppe;
@@ -67,6 +72,12 @@ export interface Beregningsforklaring {
   maksimalAvgift25Prosent: number | null;
   ordinaerAvgift: number;
   ordinaerAvgiftPoster: OrdinaerAvgiftspost[];
+  /**
+   * Beløpene som faktisk ble sammenlignet med `maksimalAvgift25Prosent`. Utfylt kun for
+   * frivillig medlemskap når ingen avgiftsdel overstiger taket – da er `ordinaerAvgift`
+   * summen av delene, og summen ble aldri sammenlignet med taket. Ellers tom liste.
+   */
+  ordinaerAvgiftPerDel?: OrdinaerAvgiftPerDel[];
   fastsattAvgift: number;
   fastsattAvgiftPerMaaned: number;
 }
