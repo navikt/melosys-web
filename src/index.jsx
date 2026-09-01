@@ -1,3 +1,8 @@
+// Må stå før alt som drar inn appkoden: schemaene i ducks/form bygges på modulnivå og
+// bruker de egendefinerte yup-metodene, så de må være registrert først. Importeres et
+// slikt schema indirekte av App-treet, feiler det ellers med "erIkkeBlank is not a function".
+import "./setupYup";
+
 import { createRoot } from "react-dom/client";
 import { Provider as ReduxProvider } from "react-redux";
 import { ApolloProvider } from "@apollo/client";
@@ -6,7 +11,6 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import App from "./App";
 import AppErrorBoundary from "./felleskomponenter/appErrorBoundary/appErrorBoundary";
 
-import "./setupYup";
 import "./index.less";
 import "@navikt/ds-css";
 
