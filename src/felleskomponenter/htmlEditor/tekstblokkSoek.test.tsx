@@ -218,3 +218,106 @@ describe("TekstblokkSoek – statusfilter", () => {
     expect(screen.queryByText(/Prøv et annet søkeord/)).toBeNull();
   });
 });
+
+describe("TekstblokkSoek – bibliotekmodus", () => {
+  const skrivTekst = vi.fn();
+
+  const aapneBiblioteket = async () => {
+    renderWithProviders(<TekstblokkSoek modus="bibliotek" knappetekst="Brev- og tekstbibliotek" />, {
+      preloadedState: sakskontekst("EU_EOS", "MEDLEMSKAP_LOVVALG", "UTSENDT_ARBEIDSTAKER"),
+    });
+    await userEvent.click(screen.getByRole("button", { name: "Brev- og tekstbibliotek" }));
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+    vi.mocked(useTekstblokker).mockReturnValue({
+      data: [{ ...blokk(1, "Om utsending"), innhold: "<p>Du er <strong>utsendt</strong></p><p>Hilsen Nav</p>" }],
+      isLoading: false,
+    } as ReturnType<typeof useTekstblokker>);
+    skrivTekst.mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", {
+      value: { writeText: skrivTekst },
+      configurable: true,
+    });
+  });
+
+  it("tilbyr kopiering i stedet for innsetting, siden det ikke finnes en editor å skrive til", async () => {
+    await aapneBiblioteket();
+
+    expect(screen.getByRole("button", { name: "Kopier til utklippstavle" })).toBeDefined();
+    expect(screen.queryByRole("button", { name: "Sett inn" })).toBeNull();
+  });
+
+  it("kopierer blokken som ren tekst, med avsnittene beholdt som linjeskift", async () => {
+    await aapneBiblioteket();
+    await userEvent.click(screen.getByRole("button", { name: "Kopier til utklippstavle" }));
+
+    expect(skrivTekst).toHaveBeenCalledWith("Du er utsendt\n\nHilsen Nav");
+  });
+
+  it("bekrefter kopieringen, men lar popoveren stå så flere blokker kan kopieres", async () => {
+    await aapneBiblioteket();
+    await userEvent.click(screen.getByRole("button", { name: "Kopier til utklippstavle" }));
+
+    expect(screen.getByRole("button", { name: "Kopiert" })).toBeDefined();
+    expect(screen.getByText("Om utsending")).toBeDefined();
+  });
+
+  it("sier fra når nettleseren nekter tilgang til utklippstavla", async () => {
+    skrivTekst.mockRejectedValue(new Error("Nektet"));
+    await aapneBiblioteket();
+    await userEvent.click(screen.getByRole("button", { name: "Kopier til utklippstavle" }));
+
+    expect(screen.getByRole("button", { name: "Kunne ikke kopiere" })).toBeDefined();
+  });
+
+  it("lenker til hele biblioteket i ny fane, så saken ikke går tapt", async () => {
+    await aapneBiblioteket();
+
+    // Velges på rolle, ikke ordlyd: det testen sikrer er destinasjonen og at saken
+    // ikke forlates, og teksten på lenken skal kunne endres uten å velte testen.
+    const lenke = screen.getByRole("link");
+    expect(lenke.getAttribute("href")).toBe("/melosys/brevbibliotek");
+    expect(lenke.getAttribute("target")).toBe("_blank");
+    expect(lenke.getAttribute("rel")).toContain("noopener");
+  });
+
+  it("beholder lukkeknappen ved siden av lenken", async () => {
+    await aapneBiblioteket();
+
+    expect(screen.getByRole("button", { name: "Lukk" })).toBeDefined();
+  });
+
+  // Knappen er posisjonert absolutt inne i editoren, som har en posisjonert forelder å
+  // henge seg på. Utenfor editoren finnes ingen slik forelder, og den samme regelen
+  // ville trukket knappen ut av flyten og opp over toppen av siden – usynlig, uten at
+  // noe annet feiler.
+  it("posisjonerer seg ikke som om den lå i en editor", () => {
+    renderWithProviders(<TekstblokkSoek modus="bibliotek" knappetekst="Brev- og tekstbibliotek" />, {
+      preloadedState: sakskontekst("EU_EOS", "MEDLEMSKAP_LOVVALG", "UTSENDT_ARBEIDSTAKER"),
+    });
+
+    const verktoylinje = screen.getByRole("button", { name: "Brev- og tekstbibliotek" }).parentElement;
+    expect(verktoylinje?.className).toContain("tekstblokkSoek__verktoylinje");
+    expect(verktoylinje?.className).not.toContain("--iEditor");
+  });
+});
+
+describe("TekstblokkSoek – plassering i editoren", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(useFeatureToggle).mockReturnValue(true);
+    vi.mocked(useTekstblokker).mockReturnValue({ data: blokker, isLoading: false } as ReturnType<
+      typeof useTekstblokker
+    >);
+  });
+
+  it("beholder den absolutte plasseringen som stiller knappen på linje med editorens label", () => {
+    renderWithProviders(<TekstblokkSoek onVelg={vi.fn()} />, { preloadedState: {} });
+
+    const verktoylinje = screen.getByRole("button", { name: "Legg til tekstblokker" }).parentElement;
+    expect(verktoylinje?.className).toContain("tekstblokkSoek__verktoylinje--iEditor");
+  });
+});

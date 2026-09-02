@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 import TekstblokkerFilter from "./tekstblokkerFilter";
-import { Statusfilter } from "../../../services/modules/tekstblokker";
+import { Statusfilter } from "../../services/modules/tekstblokker";
 
 const visFilter = (statusfilter: Statusfilter, setStatusfilter = vi.fn()) => {
   render(

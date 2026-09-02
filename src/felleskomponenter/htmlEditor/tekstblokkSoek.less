@@ -1,8 +1,15 @@
 .tekstblokkSoek {
   &__verktoylinje {
-    // Posisjonert absolutt i forhold til .htmlEditor (som har position: relative)
-    // slik at knappen havner på samme høyde som den eksterne LabelMedHjelpetekst
-    // i BrevFelt (label er en søsken-div rett over .htmlEditor).
+    display: flex;
+    align-items: center;
+  }
+
+  // Kun i editoren: posisjonert absolutt i forhold til .htmlEditor (som har
+  // position: relative) slik at knappen havner på samme høyde som den eksterne
+  // LabelMedHjelpetekst i BrevFelt (label er en søsken-div rett over .htmlEditor).
+  // Utenfor editoren finnes ingen slik forelder, og knappen ville blitt trukket ut
+  // av flyten og havnet over toppen av siden.
+  &__verktoylinje--iEditor {
     position: absolute;
     top: -1.75rem;
     right: 0;
@@ -41,6 +48,21 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+  }
+
+  &__header-knapper {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+  }
+
+  &__bibliotekLenke {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap;
+    font-size: var(--a-font-size-small);
   }
 
   &__faner {

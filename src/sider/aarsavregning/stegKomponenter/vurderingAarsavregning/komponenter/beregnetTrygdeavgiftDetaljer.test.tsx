@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Grunnlagsopplysninger } from "../../../../../services/modules/aarsavregning/aarsavregning";
-import { Beregningsforklaring } from "../../../../../services/modules/trygdeavgift";
+import { Beregningsforklaring, Beregningsregel } from "../../../../../services/modules/trygdeavgift";
 import { MedlemskapsperiodeForAvgift } from "../../../../../services/modules/types/periodeTyper";
 import { BeregnetTrygdeavgiftDetaljer } from "./beregnetTrygdeavgiftDetaljer";
 
@@ -67,10 +67,10 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     useFeatureToggleMock.mockReturnValue(false);
   });
 
-  const lagBeregningsforklaring = (): Beregningsforklaring => ({
+  const lagBeregningsforklaring = (valgtRegel: Beregningsregel = "TJUEFEM_PROSENT_REGEL"): Beregningsforklaring => ({
     aar: 2023,
     inntektsgruppe: "SAMLET",
-    valgtRegel: "ORDINÆR",
+    valgtRegel,
     aarsak: "BEREGNET",
     inntektsgrunnlag: [],
     ekskluderteInntekter: [],
@@ -343,6 +343,37 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
       );
 
       expect(screen.getByRole("region", { name: "Beregningsforklaring for trygdeavgift" })).toBeInTheDocument();
+    });
+
+    it("rendrer ikke kortet når beregningen er ordinær", () => {
+      useFeatureToggleMock.mockReturnValue(true);
+
+      render(
+        <BeregnetTrygdeavgiftDetaljer
+          grunnlag={createMockData()}
+          medlemskapsTypeErPliktig={true}
+          beregningsforklaringer={[lagBeregningsforklaring("ORDINÆR")]}
+        />,
+      );
+
+      expect(screen.queryByRole("region", { name: "Beregningsforklaring for trygdeavgift" })).not.toBeInTheDocument();
+    });
+
+    it("beholder den ordinære inntektsgruppen når en annen gruppe fikk en særregel", () => {
+      useFeatureToggleMock.mockReturnValue(true);
+
+      render(
+        <BeregnetTrygdeavgiftDetaljer
+          grunnlag={createMockData()}
+          medlemskapsTypeErPliktig={true}
+          beregningsforklaringer={[
+            { ...lagBeregningsforklaring(), inntektsgruppe: "HELSEDEL" },
+            { ...lagBeregningsforklaring("ORDINÆR"), inntektsgruppe: "PENSJONSDEL" },
+          ]}
+        />,
+      );
+
+      expect(screen.getByText("2023 · Pensjonsdel")).toBeInTheDocument();
     });
 
     it("rendrer ikke kortet når toggelen er av selv om beregningsforklaringer er ikke-tom", () => {

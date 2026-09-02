@@ -16,7 +16,7 @@ function AdministrasjonSidemeny() {
 
   const valg: MenyValg[] = [
     { tittel: "Oversikt", sti: ADMIN_BASE, exact: true, synlig: true },
-    { tittel: "Tekstblokker", sti: ADMIN_TEKSTBLOKKER, synlig: Boolean(visTekstblokker) },
+    { tittel: "Brev- og tekstbibliotek", sti: ADMIN_TEKSTBLOKKER, synlig: Boolean(visTekstblokker) },
   ];
 
   return (

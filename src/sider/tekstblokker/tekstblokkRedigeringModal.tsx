@@ -1,20 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ReadMore } from "@navikt/ds-react";
 
-import * as Nav from "../../../navFrontend";
-import HtmlEditor from "../../../felleskomponenter/htmlEditor/htmlEditor";
-import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
-import { MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../../featuretoggle/toggleNavn";
-import { isApiError } from "../../../services";
-import { useBetingelseKatalog, usePlaceholderKatalog } from "../../../services/api/placeholdere";
-import { useOppdaterTekstblokk, useOpprettTekstblokk, useTekstblokk } from "../../../services/api/tekstblokker";
-import { finnSakstypeKonflikter } from "../../../services/modules/placeholdere";
-import {
-  leggTilTag,
-  TekstblokkRequest,
-  TekstblokkStatus,
-  TekstblokkType,
-} from "../../../services/modules/tekstblokker";
+import * as Nav from "../../navFrontend";
+import HtmlEditor from "../../felleskomponenter/htmlEditor/htmlEditor";
+import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
+import { MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../featuretoggle/toggleNavn";
+import { isApiError } from "../../services";
+import { useBetingelseKatalog, usePlaceholderKatalog } from "../../services/api/placeholdere";
+import { useOppdaterTekstblokk, useOpprettTekstblokk, useTekstblokk } from "../../services/api/tekstblokker";
+import { finnSakstypeKonflikter } from "../../services/modules/placeholdere";
+import { leggTilTag, TekstblokkRequest, TekstblokkStatus, TekstblokkType } from "../../services/modules/tekstblokker";
 import Kontekstavgrensning, { termForSakstype } from "./kontekstavgrensning";
 import { PlaceholderKatalogTabell, PlaceholderValgHjelpetekst } from "./placeholderKatalog";
 import TagInput from "./tagInput";

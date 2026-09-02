@@ -1,8 +1,8 @@
 import { Chips, Search, Tabs } from "@navikt/ds-react";
 import { useMemo, useState } from "react";
 
-import * as Nav from "../../../navFrontend";
-import { erTagValgt, Statusfilter, TekstblokkType, toggleITagliste } from "../../../services/modules/tekstblokker";
+import * as Nav from "../../navFrontend";
+import { erTagValgt, Statusfilter, TekstblokkType, toggleITagliste } from "../../services/modules/tekstblokker";
 
 const MAKS_TAGS_KOMPAKT = 15;
 
@@ -20,8 +20,11 @@ interface Props {
   valgteTags: string[];
   setValgteTags: (tags: string[]) => void;
   tilgjengeligeTags: Array<[string, number]>;
-  statusfilter: Statusfilter;
-  setStatusfilter: (statusfilter: Statusfilter) => void;
+  // Lesevisningen henter kun publiserte blokker, så et statusfilter der ville vært et
+  // valg uten virkning.
+  visStatusfilter?: boolean;
+  statusfilter?: Statusfilter;
+  setStatusfilter?: (statusfilter: Statusfilter) => void;
 }
 
 function TekstblokkerFilter({
@@ -32,6 +35,7 @@ function TekstblokkerFilter({
   valgteTags,
   setValgteTags,
   tilgjengeligeTags,
+  visStatusfilter = true,
   statusfilter,
   setStatusfilter,
 }: Props) {
@@ -68,16 +72,18 @@ function TekstblokkerFilter({
       />
 
       {/* Status står for seg selv med egen ledetekst, så den ikke leses som enda en tag. */}
-      <div className="tekstblokker__statusfilter">
-        <Nav.BodyShort size="small">Status:</Nav.BodyShort>
-        <Chips size="small">
-          {STATUSVALG.map(([verdi, label]) => (
-            <Chips.Toggle key={verdi} selected={statusfilter === verdi} onClick={() => setStatusfilter(verdi)}>
-              {label}
-            </Chips.Toggle>
-          ))}
-        </Chips>
-      </div>
+      {visStatusfilter && (
+        <div className="tekstblokker__statusfilter">
+          <Nav.BodyShort size="small">Status:</Nav.BodyShort>
+          <Chips size="small">
+            {STATUSVALG.map(([verdi, label]) => (
+              <Chips.Toggle key={verdi} selected={statusfilter === verdi} onClick={() => setStatusfilter?.(verdi)}>
+                {label}
+              </Chips.Toggle>
+            ))}
+          </Chips>
+        </div>
+      )}
 
       {tilgjengeligeTags.length > 0 && (
         <Chips size="small">

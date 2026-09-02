@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import TekstblokkPubliserBekreftelse from "./tekstblokkPubliserBekreftelse";
-import { TekstblokkOversikt } from "../../../services/modules/tekstblokker";
+import { TekstblokkOversikt } from "../../services/modules/tekstblokker";
 
 const mocks = vi.hoisted(() => ({
   mutate: vi.fn(),
@@ -11,7 +11,7 @@ const mocks = vi.hoisted(() => ({
   feil: vi.fn((): Error | null => null),
 }));
 
-vi.mock("../../../services/api/tekstblokker", () => ({
+vi.mock("../../services/api/tekstblokker", () => ({
   usePubliserTekstblokk: () => ({
     mutate: mocks.mutate,
     reset: mocks.reset,
