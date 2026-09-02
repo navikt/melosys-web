@@ -139,7 +139,6 @@ type MottatteOpplysningerData =
         mottarYtelserNorge: boolean | null;
         mottarYtelserUtlandet: boolean | null;
       };
-      arbeidsgiverOgArbeidstakerHarUlikPeriode: boolean;
       utenlandsoppdraget: {
         erUtsendelseForOppdragIUtlandet: boolean | null;
         erAnsattForOppdragIUtlandet: boolean | null;
@@ -248,6 +247,7 @@ export interface MottatteOpplysningerResDto {
   mottaksdato: string | null;
   data: MottatteOpplysningerData;
   type: string;
+  arbeidsgiverOgArbeidstakerHarUlikPeriode: boolean;
 }
 interface Personopplysninger {
   medfolgendeFamilie: MedfolgendeBarn;
