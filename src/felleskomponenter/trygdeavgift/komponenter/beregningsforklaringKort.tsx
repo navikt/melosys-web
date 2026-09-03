@@ -243,18 +243,67 @@ function AvgiftPerDelSammenligning({
   );
 }
 
+/**
+ * Hver merknad sier kun det tallene den står ved kan bære: enten stammer ulikheten i teksten fra
+ * sammenligningen som velger grenen, eller så påstår teksten ingen ulikhet. Det er derfor
+ * `valgtRegel` alene aldri avgjør ordlyden – står den i strid med delbeløpene som vises rett over,
+ * sier merknaden fra i stedet for å velge én av dem.
+ */
+function maksgrenseMerknad(
+  forklaring: Beregningsforklaring,
+  maksimalAvgift: number,
+  deler: OrdinaerAvgiftPerDel[],
+): { variant: "success" | "info" | "warning"; tekst: string } {
+  const begrenset = forklaring.valgtRegel === "TJUEFEM_PROSENT_REGEL";
+  const alleDelerUnderTaket = deler.length > 0 && deler.every((del) => del.ordinaerAvgift <= maksimalAvgift);
+  const enDelOverstigerTaket = deler.some((del) => del.ordinaerAvgift > maksimalAvgift);
+  const tak = kr(maksimalAvgift);
+  const sum = kr(forklaring.ordinaerAvgift);
+
+  if (begrenset && alleDelerUnderTaket) {
+    return {
+      variant: "warning",
+      tekst: `Ingen avgiftsdel overstiger 25 %-taket ${tak}, men avgiften ble likevel begrenset. Forklaringen og beløpene henger ikke sammen.`,
+    };
+  }
+  if (begrenset && enDelOverstigerTaket) {
+    return { variant: "success", tekst: `25 %-regelen brukes. Avgiften begrenses til ${tak}.` };
+  }
+  if (begrenset) {
+    const tegn = sammenligningstegn(forklaring.ordinaerAvgift, maksimalAvgift);
+    return {
+      variant: "success",
+      tekst: `Ordinær avgift ${sum} ${tegn} 25 %-tak ${tak} → 25 %-regelen brukes. Avgiften begrenses til ${tak}.`,
+    };
+  }
+  if (alleDelerUnderTaket) {
+    return {
+      variant: "info",
+      tekst: `Hver avgiftsdel måles mot taket for seg, og ingen av dem overstiger ${tak} → ordinær beregning brukes. Summen av delene, ${sum}, måles ikke mot taket.`,
+    };
+  }
+  if (enDelOverstigerTaket) {
+    return {
+      variant: "warning",
+      tekst: `Minst én avgiftsdel overstiger 25 %-taket ${tak}, men avgiften ble ikke begrenset. Forklaringen og beløpene henger ikke sammen.`,
+    };
+  }
+  // Herfra er deler tom: de fire grenene over dekker enhver utfylt liste.
+  if (forklaring.ordinaerAvgift > maksimalAvgift) {
+    return {
+      variant: "info",
+      tekst: `Ordinær avgift ${sum} > 25 %-tak ${tak}, men avgiften ble ikke begrenset. Taket ble målt mot hver avgiftsdel for seg, og delbeløpene mangler i denne forklaringen.`,
+    };
+  }
+  return { variant: "info", tekst: `Ordinær avgift ${sum} ≤ 25 %-tak ${tak} → ordinær beregning brukes.` };
+}
+
 function MaksgrenseSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
   if (forklaring.inntektOverMinstebeloep === null || forklaring.maksimalAvgift25Prosent === null) return null;
 
   const maksimalAvgift = forklaring.maksimalAvgift25Prosent;
-  const begrenset = forklaring.valgtRegel === "TJUEFEM_PROSENT_REGEL";
   const deler = forklaring.ordinaerAvgiftPerDel ?? [];
-  // Merknaden utledes av tallene, ikke av valgtRegel: den skal ikke kunne motsi delbeløpene som
-  // vises rett over den. De to del-grenene dekker enhver utfylt liste, så «delbeløpene mangler»
-  // nedenfor nås kun når lista faktisk er tom.
-  const alleDelerUnderTaket = deler.length > 0 && deler.every((del) => del.ordinaerAvgift <= maksimalAvgift);
-  const enDelOverstigerTaket = deler.some((del) => del.ordinaerAvgift > maksimalAvgift);
-  const summenOverstigerTaket = forklaring.ordinaerAvgift > maksimalAvgift;
+  const merknad = maksgrenseMerknad(forklaring, maksimalAvgift, deler);
   return (
     <div className="beregningsforklaring-kort-steg">
       <div className="beregningsforklaring-kort-steg-tittel">
@@ -279,31 +328,9 @@ function MaksgrenseSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
         <OrdinaerAvgiftUtregning linjer={forklaring.ordinaerAvgiftPoster} ordinaerAvgift={forklaring.ordinaerAvgift} />
         {deler.length > 0 && <AvgiftPerDelSammenligning deler={deler} maksimalAvgift25Prosent={maksimalAvgift} />}
       </div>
-      {begrenset ? (
-        <Nav.Alert variant="success" size="small" className="beregningsforklaring-kort-merknad">
-          Ordinær avgift {kr(forklaring.ordinaerAvgift)} &gt; 25 %-tak {kr(maksimalAvgift)} → 25 %-regelen brukes.
-          Avgiften begrenses til {kr(maksimalAvgift)}.
-        </Nav.Alert>
-      ) : alleDelerUnderTaket ? (
-        <Nav.Alert variant="info" size="small" className="beregningsforklaring-kort-merknad">
-          Hver avgiftsdel måles mot taket for seg, og ingen av dem overstiger {kr(maksimalAvgift)} → ordinær beregning
-          brukes. Summen av delene, {kr(forklaring.ordinaerAvgift)}, måles ikke mot taket.
-        </Nav.Alert>
-      ) : enDelOverstigerTaket ? (
-        <Nav.Alert variant="warning" size="small" className="beregningsforklaring-kort-merknad">
-          Minst én avgiftsdel overstiger 25 %-taket {kr(maksimalAvgift)}, men avgiften ble ikke begrenset. Kontroller
-          beregningen.
-        </Nav.Alert>
-      ) : summenOverstigerTaket ? (
-        <Nav.Alert variant="info" size="small" className="beregningsforklaring-kort-merknad">
-          Ordinær avgift {kr(forklaring.ordinaerAvgift)} &gt; 25 %-tak {kr(maksimalAvgift)}, men avgiften ble ikke
-          begrenset. Taket ble målt mot hver avgiftsdel for seg, og delbeløpene mangler i denne forklaringen.
-        </Nav.Alert>
-      ) : (
-        <Nav.Alert variant="info" size="small" className="beregningsforklaring-kort-merknad">
-          Ordinær avgift {kr(forklaring.ordinaerAvgift)} ≤ 25 %-tak {kr(maksimalAvgift)} → ordinær beregning brukes.
-        </Nav.Alert>
-      )}
+      <Nav.Alert variant={merknad.variant} size="small" className="beregningsforklaring-kort-merknad">
+        {merknad.tekst}
+      </Nav.Alert>
     </div>
   );
 }

@@ -303,21 +303,6 @@ describe("BeregningsforklaringKort", () => {
     expect(screen.queryByText(/Ordinær avgift 339600 kr ≤/)).toBeNull();
   });
 
-  it("påstår ikke at ingen del overstiger taket når et delbeløp faktisk gjør det", () => {
-    const delOverTaket: Beregningsforklaring = {
-      ...lagForklaringMedAvgiftPerDel(),
-      ordinaerAvgiftPerDel: [
-        { inntektsgruppe: "HELSEDEL", ordinaerAvgift: 39600 },
-        { inntektsgruppe: "PENSJONSDEL", ordinaerAvgift: 300000 },
-      ],
-    };
-    const { container } = render(
-      <BeregningsforklaringKort forklaringer={[delOverTaket]} open onToggle={noop} scrollTilFelt={null} />,
-    );
-    expect(container.textContent).toContain("300000 kr > 275087 kr");
-    expect(screen.queryByText(/ingen av dem overstiger/)).toBeNull();
-  });
-
   it("sier ikke at delbeløpene mangler når de nettopp ble vist over merknaden", () => {
     const delOverTaket: Beregningsforklaring = {
       ...lagForklaringMedAvgiftPerDel(),
@@ -348,17 +333,63 @@ describe("BeregningsforklaringKort", () => {
     expect(screen.getByText(/ingen av dem overstiger 275087 kr/)).toBeDefined();
   });
 
-  it("viser at avgiften ble begrenset når 25 %-regelen slo ut, også med delbeløp i svaret", () => {
-    const begrenset: Beregningsforklaring = {
+  it("måler ikke summen mot taket når 25 %-regelen slo ut og delbeløpene er med", () => {
+    const begrensetMedDelOverTaket: Beregningsforklaring = {
+      ...lagForklaringMedAvgiftPerDel(),
+      valgtRegel: "TJUEFEM_PROSENT_REGEL",
+      ordinaerAvgiftPerDel: [
+        { inntektsgruppe: "HELSEDEL", ordinaerAvgift: 39600 },
+        { inntektsgruppe: "PENSJONSDEL", ordinaerAvgift: 300000 },
+      ],
+      fastsattAvgift: 275087,
+    };
+    const { container } = render(
+      <BeregningsforklaringKort forklaringer={[begrensetMedDelOverTaket]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    expect(container.textContent).toContain("300000 kr > 275087 kr");
+    expect(container.textContent).toContain("25 %-regelen brukes. Avgiften begrenses til 275087 kr.");
+    expect(container.textContent).not.toContain("339600 kr > 25 %-tak");
+    expect(screen.queryByText(/ordinær beregning brukes/)).toBeNull();
+  });
+
+  it("melder fra når avgiften ble begrenset selv om ingen avgiftsdel overstiger taket", () => {
+    const begrensetUtenDelOverTaket: Beregningsforklaring = {
       ...lagForklaringMedAvgiftPerDel(),
       valgtRegel: "TJUEFEM_PROSENT_REGEL",
       fastsattAvgift: 275087,
     };
     const { container } = render(
-      <BeregningsforklaringKort forklaringer={[begrenset]} open onToggle={noop} scrollTilFelt={null} />,
+      <BeregningsforklaringKort forklaringer={[begrensetUtenDelOverTaket]} open onToggle={noop} scrollTilFelt={null} />,
     );
-    expect(container.textContent).toContain("Avgiften begrenses til 275087 kr");
-    expect(screen.queryByText(/ordinær beregning brukes/)).toBeNull();
+    expect(container.textContent).toContain(
+      "Ingen avgiftsdel overstiger 25 %-taket 275087 kr, men avgiften ble likevel begrenset.",
+    );
+    expect(container.textContent).not.toContain("339600 kr > 25 %-tak");
+  });
+
+  it("hardkoder ikke ulikheten i 25 %-merknaden når delbeløp mangler", () => {
+    const begrensetUnderTaket: Beregningsforklaring = {
+      ...lagForklaringMedAvgiftPerDel(),
+      valgtRegel: "TJUEFEM_PROSENT_REGEL",
+      ordinaerAvgift: 100000,
+      ordinaerAvgiftPerDel: undefined,
+    };
+    const { container } = render(
+      <BeregningsforklaringKort forklaringer={[begrensetUnderTaket]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    expect(container.textContent).toContain("Ordinær avgift 100000 kr ≤ 25 %-tak 275087 kr → 25 %-regelen brukes.");
+  });
+
+  it("regner en avgiftsdel som er nøyaktig lik taket som under taket", () => {
+    const delLikTaket: Beregningsforklaring = {
+      ...lagForklaringMedAvgiftPerDel(),
+      ordinaerAvgiftPerDel: [{ inntektsgruppe: "HELSEDEL", ordinaerAvgift: 275087 }],
+    };
+    const { container } = render(
+      <BeregningsforklaringKort forklaringer={[delLikTaket]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    expect(container.textContent).toContain("275087 kr ≤ 275087 kr");
+    expect(container.textContent).toContain("ingen av dem overstiger 275087 kr");
   });
 
   it("hevder ikke at ordinær beregning ble valgt fordi summen er under taket, når backend ikke sender delbeløp", () => {

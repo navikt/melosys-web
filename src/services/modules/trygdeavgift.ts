@@ -77,6 +77,8 @@ export interface Beregningsforklaring {
    * helse- og pensjonsdelen hver for seg mot taket, aldri summen, så `ordinaerAvgift` kan være
    * større enn taket uten at taket slo inn. Backend fyller lista kun når ingen del overstiger
    * taket; kortet stoler ikke på det, men utleder merknaden av delbeløpene det faktisk viser.
+   * Valgfri fordi api-svar fra før feltet fantes mangler det helt – ellers sendes alltid en liste,
+   * tom eller utfylt.
    */
   ordinaerAvgiftPerDel?: OrdinaerAvgiftPerDel[];
   fastsattAvgift: number;
