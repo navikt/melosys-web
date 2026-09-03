@@ -185,11 +185,9 @@ describe("BeregningsforklaringKort", () => {
     expect(screen.getByText(/Inntekt som inngår i vurderingen/)).toBeDefined();
     expect(screen.getByText(/Sjekk mot minstebeløpet/)).toBeDefined();
     expect(screen.getByText(/25 %-regelen \(maksgrense\)/)).toBeDefined();
-    // Inntektsgruppe oversatt til norsk
     expect(screen.getByText(/Samlet inntekt/)).toBeDefined();
-    // Fastsatt avgift / 25 %-tak vises (beløpet forekommer flere steder)
+    // 2587 kr er både 25 %-taket og fastsatt avgift, og finnes derfor flere steder.
     expect(screen.getAllByText("2587 kr").length).toBeGreaterThan(0);
-    // Over minstebeløp → suksessmerknad om at avgift skal beregnes
     expect(screen.getByText(/inntekten er over minstebeløpet/)).toBeDefined();
   });
 
@@ -197,9 +195,7 @@ describe("BeregningsforklaringKort", () => {
     render(
       <BeregningsforklaringKort forklaringer={[lag25ProsentForklaring()]} open onToggle={noop} scrollTilFelt={null} />,
     );
-    // Utregningslinjen: grunnlag × sats med prosent formatert norsk
     expect(screen.getByText(/7,7 %/)).toBeDefined();
-    // Eksplisitt "Ordinær avgift"-underseksjon + sumrad
     expect(screen.getByText("Ordinær avgift")).toBeDefined();
     expect(screen.getByText(/Sum ordinær avgift/)).toBeDefined();
   });
@@ -233,7 +229,6 @@ describe("BeregningsforklaringKort", () => {
       />,
     );
     expect(screen.getByText(/Sjekk mot minstebeløpet/)).toBeDefined();
-    // Steg 3 skal ikke vises når maksimalAvgift25Prosent er null
     expect(screen.queryByText(/25 %-regelen \(maksgrense\)/)).toBeNull();
     expect(screen.getByText(/inntekten er under minstebeløpet/)).toBeDefined();
   });
@@ -260,7 +255,6 @@ describe("BeregningsforklaringKort", () => {
         scrollTilFelt={null}
       />,
     );
-    // Inntektsposten vises fortsatt (ekskludert), men minstebeløp-sjekken er utelatt
     expect(screen.getByText("NÆRINGSINNTEKT_FRA_NORGE")).toBeDefined();
     expect(screen.queryByText(/Sjekk mot minstebeløpet/)).toBeNull();
     expect(screen.queryByText(/Minstebeløpet avkortes ikke/)).toBeNull();
@@ -289,7 +283,6 @@ describe("BeregningsforklaringKort", () => {
       ],
     };
     render(<BeregningsforklaringKort forklaringer={[forklaring]} open onToggle={noop} scrollTilFelt={null} />);
-    // Desimalen rundes ikke til heltall, og vises med norsk desimalkomma.
     expect(screen.getByText(/50000 kr × 1,97 mnd =/)).toBeDefined();
   });
 

@@ -221,10 +221,6 @@ function sammenligningstegn(venstre: number, hoeyre: number): string {
   return venstre > hoeyre ? ">" : "≤";
 }
 
-/**
- * Delbeløpene som faktisk ble sammenlignet med taket. Sammenligningstegnet utledes pr. rad, slik
- * at teksten ikke kan påstå noe annet enn tallene ved siden av.
- */
 function AvgiftPerDelSammenligning({
   deler,
   maksimalAvgift25Prosent,
@@ -349,7 +345,6 @@ export function BeregningsforklaringKort({
   scrollTilFelt,
 }: {
   forklaringer: Beregningsforklaring[];
-  /** Styrt åpen/lukket-tilstand fra tabellen. */
   open: boolean;
   onToggle: (open: boolean) => void;
   /** feltId som det skal scrolles til når kortet åpnes via en `*`/`**`-lenke. */
@@ -357,7 +352,6 @@ export function BeregningsforklaringKort({
 }) {
   const innholdRef = useRef<HTMLDivElement>(null);
 
-  // Scroll til riktig felt når kortet er åpent og et felt er valgt.
   useEffect(() => {
     if (!open || !scrollTilFelt) return;
     // getElementById unngår avhengighet av CSS.escape (kan mangle i enkelte test-/runtime-miljø);
