@@ -249,9 +249,11 @@ function MaksgrenseSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
   const maksimalAvgift = forklaring.maksimalAvgift25Prosent;
   const begrenset = forklaring.valgtRegel === "TJUEFEM_PROSENT_REGEL";
   const deler = forklaring.ordinaerAvgiftPerDel ?? [];
-  // Merknaden utledes av tallene, ikke av valgtRegel: påstanden «ingen av dem overstiger taket»
-  // skal ikke kunne motsi delbeløpene som vises rett over den.
+  // Merknaden utledes av tallene, ikke av valgtRegel: den skal ikke kunne motsi delbeløpene som
+  // vises rett over den. De to del-grenene dekker enhver utfylt liste, så «delbeløpene mangler»
+  // nedenfor nås kun når lista faktisk er tom.
   const alleDelerUnderTaket = deler.length > 0 && deler.every((del) => del.ordinaerAvgift <= maksimalAvgift);
+  const enDelOverstigerTaket = deler.some((del) => del.ordinaerAvgift > maksimalAvgift);
   const summenOverstigerTaket = forklaring.ordinaerAvgift > maksimalAvgift;
   return (
     <div className="beregningsforklaring-kort-steg">
@@ -286,6 +288,11 @@ function MaksgrenseSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
         <Nav.Alert variant="info" size="small" className="beregningsforklaring-kort-merknad">
           Hver avgiftsdel måles mot taket for seg, og ingen av dem overstiger {kr(maksimalAvgift)} → ordinær beregning
           brukes. Summen av delene, {kr(forklaring.ordinaerAvgift)}, måles ikke mot taket.
+        </Nav.Alert>
+      ) : enDelOverstigerTaket ? (
+        <Nav.Alert variant="warning" size="small" className="beregningsforklaring-kort-merknad">
+          Minst én avgiftsdel overstiger 25 %-taket {kr(maksimalAvgift)}, men avgiften ble ikke begrenset. Kontroller
+          beregningen.
         </Nav.Alert>
       ) : summenOverstigerTaket ? (
         <Nav.Alert variant="info" size="small" className="beregningsforklaring-kort-merknad">

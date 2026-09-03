@@ -318,6 +318,22 @@ describe("BeregningsforklaringKort", () => {
     expect(screen.queryByText(/ingen av dem overstiger/)).toBeNull();
   });
 
+  it("sier ikke at delbeløpene mangler når de nettopp ble vist over merknaden", () => {
+    const delOverTaket: Beregningsforklaring = {
+      ...lagForklaringMedAvgiftPerDel(),
+      ordinaerAvgiftPerDel: [
+        { inntektsgruppe: "HELSEDEL", ordinaerAvgift: 39600 },
+        { inntektsgruppe: "PENSJONSDEL", ordinaerAvgift: 300000 },
+      ],
+    };
+    const { container } = render(
+      <BeregningsforklaringKort forklaringer={[delOverTaket]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    expect(container.textContent).toContain("300000 kr > 275087 kr");
+    expect(container.textContent).not.toContain("delbeløpene mangler");
+    expect(container.textContent).toContain("Minst én avgiftsdel overstiger 25 %-taket 275087 kr");
+  });
+
   it("navngir ikke en avgiftsdel som mangler når bare én del har avgift", () => {
     const kunHelsedel: Beregningsforklaring = {
       ...lagForklaringMedAvgiftPerDel(),
@@ -355,7 +371,8 @@ describe("BeregningsforklaringKort", () => {
     );
     expect(screen.queryByText(/Hver avgiftsdel målt mot taket/)).toBeNull();
     expect(container.textContent).toContain(
-      "Ordinær avgift 339600 kr > 25 %-tak 275087 kr, men avgiften ble ikke begrenset.",
+      "Ordinær avgift 339600 kr > 25 %-tak 275087 kr, men avgiften ble ikke begrenset. Taket ble målt mot hver " +
+        "avgiftsdel for seg, og delbeløpene mangler i denne forklaringen.",
     );
   });
 
