@@ -73,9 +73,9 @@ export interface Beregningsforklaring {
   ordinaerAvgift: number;
   ordinaerAvgiftPoster: OrdinaerAvgiftspost[];
   /**
-   * Beløpene som faktisk ble sammenlignet med `maksimalAvgift25Prosent`. Utfylt kun for
-   * frivillig medlemskap når ingen avgiftsdel overstiger taket – da er `ordinaerAvgift`
-   * summen av delene, og summen ble aldri sammenlignet med taket. Ellers tom liste.
+   * Beløpene som ble sammenlignet med `maksimalAvgift25Prosent`. Ved frivillig medlemskap måles
+   * helse- og pensjonsdelen hver for seg mot taket, aldri summen, så `ordinaerAvgift` kan være
+   * større enn taket uten at taket slo inn. Backend fyller lista kun når ingen del overstiger taket.
    */
   ordinaerAvgiftPerDel?: OrdinaerAvgiftPerDel[];
   fastsattAvgift: number;

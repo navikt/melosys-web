@@ -51,10 +51,7 @@ function visProsent(sats: number): string {
   return `${String(sats).replace(".", ",")} %`;
 }
 
-/**
- * Antall måneder kan være desimal (f.eks. 1,97 når en periode ikke dekker hele måneder).
- * Vises på norsk format med inntil 2 desimaler – heltall vises uten desimaler (12 → «12»).
- */
+/** Antall måneder kan være desimal (1,97 når perioden ikke dekker hele måneder). */
 function visAntallMaaneder(antallMaaneder: number): string {
   return antallMaaneder.toLocaleString("nb-NO", { maximumFractionDigits: 2 });
 }
@@ -135,8 +132,8 @@ function Inntektsposter({
 }
 
 function MinstebeloepSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
-  // Bruk backendens avgjørelse i stedet for å re-utlede: backend behandler
-  // inntekt == minstebeløp som UNDER (avgift beregnes kun når inntekt > minstebeløp).
+  // Leses av årsaken, ikke av en ny tallsammenligning: backend regner inntekt lik
+  // minstebeløpet som under (avgift beregnes kun når inntekten er større).
   const over = forklaring.aarsak !== "INNTEKT_UNDER_MINSTEBELØP";
   return (
     <div className="beregningsforklaring-kort-steg">
@@ -183,7 +180,7 @@ function OrdinaerAvgiftUtregning({
   linjer: OrdinaerAvgiftspost[];
   ordinaerAvgift: number;
 }) {
-  // Uten linjer (eldre svar/ingen utregning) faller vi tilbake til kun totalen.
+  // Eldre backend-svar mangler linjene; da er totalen alt vi kan vise.
   if (linjer.length === 0) {
     return (
       <div className="beregningsforklaring-kort-rad">
@@ -252,8 +249,8 @@ function MaksgrenseSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
   const maksimalAvgift = forklaring.maksimalAvgift25Prosent;
   const begrenset = forklaring.valgtRegel === "TJUEFEM_PROSENT_REGEL";
   const deler = forklaring.ordinaerAvgiftPerDel ?? [];
-  // Merknadene utledes av tallene, ikke av at backend antas å ha valgt riktig gren: står det «→
-  // ordinær beregning brukes» fordi ingen del overstiger taket, må begge delene faktisk stemme.
+  // Merknaden utledes av tallene, ikke av valgtRegel: påstanden «ingen av dem overstiger taket»
+  // skal ikke kunne motsi delbeløpene som vises rett over den.
   const alleDelerUnderTaket = deler.length > 0 && deler.every((del) => del.ordinaerAvgift <= maksimalAvgift);
   const summenOverstigerTaket = forklaring.ordinaerAvgift > maksimalAvgift;
   return (
@@ -321,8 +318,7 @@ function Forklaringsfelt({ forklaring }: { forklaring: Beregningsforklaring }) {
         ekskluderteInntekter={forklaring.ekskluderteInntekter}
         sumAarligInntekt={forklaring.sumAarligInntekt}
       />
-      {/* Når all inntekt er skattepliktig (ekskludert) er det ingen inntekt i vurderingen,
-          og minstebeløpssjekken er meningsløs (0 kr mot minstebeløpet). Da hopper vi over den. */}
+      {/* All inntekt ekskludert gir 0 kr i vurderingen – da sier minstebeløpssjekken ingenting. */}
       {forklaring.inntektsgrunnlag.length > 0 && <MinstebeloepSjekk forklaring={forklaring} />}
       <MaksgrenseSjekk forklaring={forklaring} />
       <div className="beregningsforklaring-kort-resultat">
@@ -347,15 +343,15 @@ export function BeregningsforklaringKort({
   forklaringer: Beregningsforklaring[];
   open: boolean;
   onToggle: (open: boolean) => void;
-  /** feltId som det skal scrolles til når kortet åpnes via en `*`/`**`-lenke. */
+  /** Element-id fra `feltId`, satt når kortet åpnes fra en `*`/`**`-lenke i tabellen. */
   scrollTilFelt: string | null;
 }) {
   const innholdRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open || !scrollTilFelt) return;
-    // getElementById unngår avhengighet av CSS.escape (kan mangle i enkelte test-/runtime-miljø);
-    // containment-sjekken sikrer at vi kun reagerer på felt inni dette kortet.
+    // getElementById fremfor querySelector: unngår CSS.escape, som mangler i enkelte testmiljø.
+    // Flere kort kan vise samme felt-id, så containment-sjekken holder scrollen i dette kortet.
     const el = document.getElementById(scrollTilFelt);
     if (!el || !innholdRef.current?.contains(el)) return;
     el.scrollIntoView({ behavior: "smooth", block: "center" });
