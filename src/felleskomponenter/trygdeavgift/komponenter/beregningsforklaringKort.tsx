@@ -269,11 +269,16 @@ function maksgrenseMerknad(
   if (begrenset && enDelOverstigerTaket) {
     return { variant: "success", tekst: `25 %-regelen brukes. Avgiften begrenses til ${tak}.` };
   }
-  if (begrenset) {
-    const tegn = sammenligningstegn(forklaring.ordinaerAvgift, maksimalAvgift);
+  if (begrenset && forklaring.ordinaerAvgift > maksimalAvgift) {
     return {
       variant: "success",
-      tekst: `Ordinær avgift ${sum} ${tegn} 25 %-tak ${tak} → 25 %-regelen brukes. Avgiften begrenses til ${tak}.`,
+      tekst: `Ordinær avgift ${sum} > 25 %-tak ${tak} → 25 %-regelen brukes. Avgiften begrenses til ${tak}.`,
+    };
+  }
+  if (begrenset) {
+    return {
+      variant: "warning",
+      tekst: `Ordinær avgift ${sum} overstiger ikke 25 %-taket ${tak}, men avgiften ble likevel begrenset. Forklaringen og beløpene henger ikke sammen.`,
     };
   }
   if (alleDelerUnderTaket) {
@@ -288,7 +293,7 @@ function maksgrenseMerknad(
       tekst: `Minst én avgiftsdel overstiger 25 %-taket ${tak}, men avgiften ble ikke begrenset. Forklaringen og beløpene henger ikke sammen.`,
     };
   }
-  // Herfra er deler tom: de fire grenene over dekker enhver utfylt liste.
+  // Herfra er deler tom: begrenset er avklart over, og del-grenene dekker enhver utfylt liste.
   if (forklaring.ordinaerAvgift > maksimalAvgift) {
     return {
       variant: "info",
