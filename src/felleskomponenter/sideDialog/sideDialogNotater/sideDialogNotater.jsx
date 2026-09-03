@@ -27,7 +27,7 @@ const lagNotatOverskrift = (behandlingstype, behandlingstema) => {
   return `${behandlingstypeString} - ${behandlingstemaString}`;
 };
 
-function SideDialogNotater({ saksnummer, redigerbart }) {
+function SideDialogNotater({ saksnummer, behandlingID, redigerbart }) {
   const [notater, setNotater] = useState([]);
   const [leggTilNotatDialogSynlig, setLeggTilNotatDialogSynlig] = useState(false);
   const [nyttNotatTekst, setNyttNotatTekst] = useState("");
@@ -84,7 +84,12 @@ function SideDialogNotater({ saksnummer, redigerbart }) {
     setNyttNotatFeilmelding("");
 
     try {
-      const nyttNotat = await Api.Fagsaker.notater.opprett(saksnummer, { tekst: nyttNotatTekst });
+      // behandlingId angir hvilken behandling notatet gjelder, slik at det havner på riktig behandling
+      // når saken har flere aktive (f.eks. ny vurdering og årsavregning samtidig).
+      const nyttNotat = await Api.Fagsaker.notater.opprett(saksnummer, {
+        tekst: nyttNotatTekst,
+        ...(behandlingID !== undefined && behandlingID !== null && { behandlingId: behandlingID }),
+      });
 
       leggTilNotatState(nyttNotat);
       skjulLeggTilNotatDialog();
@@ -162,6 +167,7 @@ function SideDialogNotater({ saksnummer, redigerbart }) {
 
 SideDialogNotater.propTypes = {
   saksnummer: PT.string.isRequired,
+  behandlingID: PT.number,
   redigerbart: PT.bool.isRequired,
 };
 

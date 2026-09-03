@@ -65,7 +65,7 @@ export function FaneViser({
     case "besvarsed":
       return <SideDialogBesvarSed behandlingID={behandlingID} />;
     case "notat":
-      return <SideDialogNotater saksnummer={saksnummer} redigerbart={redigerbart} />;
+      return <SideDialogNotater saksnummer={saksnummer} behandlingID={behandlingID} redigerbart={redigerbart} />;
     default:
       throw new Error("Navn er en påkrevd prop");
   }
