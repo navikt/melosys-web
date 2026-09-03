@@ -67,7 +67,6 @@ export interface PeriodeElementerProps {
   formValues: FormValuesProps;
   handleLeggTil: () => void;
   index: number;
-  /** Styres av svaret på "Avviker innbetalt trygdeavgift fra tidligere beregnet avgift?" */
   visLeggTil: boolean;
   maxDate?: Date;
   minDate?: Date;

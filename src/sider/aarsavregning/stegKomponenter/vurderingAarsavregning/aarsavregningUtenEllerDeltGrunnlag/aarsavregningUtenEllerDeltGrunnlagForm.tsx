@@ -905,8 +905,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const maxDate =
     initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 11, 31, 23, 59, 59, 999) : undefined;
 
-  // Perioder fra avgiftssystemet kan kun legges til når det er svart "Ja" på
-  // "Avviker innbetalt trygdeavgift fra tidligere beregnet avgift?"
   const skalViseLeggTil = Boolean(harInnbetaltTrygdeavgift);
 
   return (
