@@ -1,8 +1,8 @@
 import { Chips, Label } from "@navikt/ds-react";
 import { useRef } from "react";
 
-import * as Nav from "../../../navFrontend";
-import { leggTilTag } from "../../../services/modules/tekstblokker";
+import * as Nav from "../../navFrontend";
+import { leggTilTag } from "../../services/modules/tekstblokker";
 
 interface Props {
   verdier: string[];

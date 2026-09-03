@@ -18,6 +18,8 @@ import UkjentSide from "./sider/ukjentSide";
 import EøsPensjonist from "./sider/eu_eøs/pensjonist/saksbehandling";
 import AdministrasjonSide from "./sider/administrasjon/administrasjonSide";
 import { ADMIN_BASE } from "./sider/administrasjon/ruter";
+import BrevbibliotekSide from "./sider/tekstblokker/brevbibliotekSide";
+import { BREVBIBLIOTEK } from "./sider/tekstblokker/ruter";
 import useFeatureToggle from "./featuretoggle/useFeatureToggle";
 import { MELOSYS_ADMINISTRASJON } from "./featuretoggle/toggleNavn";
 
@@ -26,7 +28,8 @@ import ErrorBoundary from "./felleskomponenter/errorBoundary";
 
 function AdministrasjonRute(props) {
   const togglePaa = useFeatureToggle(MELOSYS_ADMINISTRASJON);
-  if (togglePaa === false) return <UkjentSide />;
+  // UkjentSide logger og viser stien, så den må få location videre.
+  if (togglePaa === false) return <UkjentSide location={props.location} />;
   if (togglePaa === undefined) return null;
   return <AdministrasjonSide {...props} />;
 }
@@ -116,6 +119,9 @@ function Routing() {
             render={(props) => <VurderUtpeking {...props} {...fellesHandlers} />}
           />
           <Route path={ADMIN_BASE} render={(props) => <AdministrasjonRute {...props} />} />
+          {/* Biblioteket er et oppslagsverk for saksbehandlere, ikke en admin-flate,
+              så det gates på melosys.tekstblokker alene. */}
+          <Route path={BREVBIBLIOTEK} render={() => <BrevbibliotekSide />} />
           <Route
             path="/:sakstype/unntaksregistrering/:saksnr"
             render={(props) => <Unntaksregistrering {...props} {...fellesHandlers} />}

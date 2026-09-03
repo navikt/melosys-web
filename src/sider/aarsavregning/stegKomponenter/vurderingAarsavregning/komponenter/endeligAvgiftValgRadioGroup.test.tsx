@@ -24,8 +24,13 @@ describe("EndeligAvgiftValgRadioGroup", () => {
 
   it("rendrer begge radioknapper", () => {
     render(<EndeligAvgiftValgRadioGroup {...defaultProps} />);
-    expect(screen.getByText("Beregn endelig trygdeavgift")).toBeDefined();
-    expect(screen.getByText("Oppgi endelig beregnet trygdeavgift")).toBeDefined();
+    expect(screen.getByText("Beregn trygdeavgiften")).toBeDefined();
+    expect(screen.getByText("Oppgi beløp for beregnet trygdeavgift")).toBeDefined();
+  });
+
+  it("rendrer ikke valget for periode fra avgiftssystemet", () => {
+    render(<EndeligAvgiftValgRadioGroup {...defaultProps} />);
+    expect(screen.queryByText("Beregn trygdeavgift med periode fra avgiftssystemet")).toBeNull();
   });
 
   it("markerer valgt radioknapp via checked-klassen", () => {
@@ -35,7 +40,7 @@ describe("EndeligAvgiftValgRadioGroup", () => {
         endeligAvgiftValg={MKV.Koder.endeligAvgiftValg.MANUELL_ENDELIG_AVGIFT}
       />,
     );
-    const valgtRadio = screen.getByText("Oppgi endelig beregnet trygdeavgift");
+    const valgtRadio = screen.getByText("Oppgi beløp for beregnet trygdeavgift");
     expect(valgtRadio.getAttribute("data-value")).toBe(MKV.Koder.endeligAvgiftValg.MANUELL_ENDELIG_AVGIFT);
   });
 

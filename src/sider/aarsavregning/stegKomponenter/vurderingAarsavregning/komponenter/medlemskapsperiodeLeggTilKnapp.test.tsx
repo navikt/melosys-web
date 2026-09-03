@@ -44,6 +44,7 @@ const lagProps = (overstyr: Record<string, unknown> = {}) => ({
   } as any,
   handleLeggTil: vi.fn(),
   index: 0,
+  visLeggTil: true,
   setValue: vi.fn(),
   trygdedekninger: [],
   ...overstyr,
@@ -55,15 +56,19 @@ describe("AvgiftspliktigperiodeSkjema - Legg til periode-knapp", () => {
     expect(screen.getByRole("button", { name: LEGG_TIL_TEKST })).toBeDefined();
   });
 
-  it("aktiverer knappen kun basert på redigerbart, uavhengig av valg", () => {
-    render(<AvgiftspliktigperiodeSkjema {...lagProps({ redigerbart: true })} />);
-    expect(screen.getByRole("button", { name: LEGG_TIL_TEKST })).not.toHaveProperty("disabled", true);
+  it("viser knappen når det er svart Ja på avviksspørsmålet", () => {
+    render(<AvgiftspliktigperiodeSkjema {...lagProps({ visLeggTil: true })} />);
+    expect(screen.getByRole("button", { name: LEGG_TIL_TEKST })).toBeDefined();
   });
 
-  it("deaktiverer knappen når skjemaet ikke er redigerbart", () => {
+  it("skjuler knappen når det ikke er svart Ja på avviksspørsmålet", () => {
+    render(<AvgiftspliktigperiodeSkjema {...lagProps({ visLeggTil: false })} />);
+    expect(screen.queryByRole("button", { name: LEGG_TIL_TEKST })).toBeNull();
+  });
+
+  it("skjuler knappen når skjemaet ikke er redigerbart", () => {
     render(<AvgiftspliktigperiodeSkjema {...lagProps({ redigerbart: false })} />);
-    const knapp = screen.getByRole("button", { name: LEGG_TIL_TEKST }) as HTMLButtonElement;
-    expect(knapp.disabled).toBe(true);
+    expect(screen.queryByRole("button", { name: LEGG_TIL_TEKST })).toBeNull();
   });
 
   it("kaller handleLeggTil når knappen klikkes", () => {

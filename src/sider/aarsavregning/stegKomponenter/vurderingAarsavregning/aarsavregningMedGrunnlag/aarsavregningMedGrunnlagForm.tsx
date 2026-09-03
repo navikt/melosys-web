@@ -666,6 +666,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const maxDate =
     initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 11, 31, 23, 59, 59, 999) : undefined;
 
+  // Perioder fra avgiftssystemet kan kun legges til når det er svart "Ja" på
+  // "Avviker innbetalt trygdeavgift fra tidligere beregnet avgift?"
+  const skalViseLeggTil = Boolean(aarsavregningResponse?.harInnbetaltTrygdeavgift);
+
   return (
     <>
       <EndeligAvgiftValgRadioGroup
@@ -698,7 +702,9 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
               ))}
 
             {endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET && medlemskapsperioderFields && (
-              <div className="perioder">
+              <div
+                className={`perioder${!redigerbart || beregningPaagar || !skalViseLeggTil ? " perioder--med-bunnmargin" : ""}`}
+              >
                 {medlemskapsperioderFields.map((field, index: number) => (
                   <AvgiftspliktigperiodeSkjema
                     key={field.id}
@@ -709,6 +715,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
                     remove={slettMedlemskapsperiode}
                     formValues={formValues}
                     handleLeggTil={leggTilDefaultMedlemskapsperiode}
+                    visLeggTil={skalViseLeggTil}
                     maxDate={maxDate}
                     minDate={minDate}
                     trygdedekninger={erHelseutgiftDekkesPeriode ? [] : trygdedekninger}

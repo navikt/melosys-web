@@ -34,7 +34,7 @@ import { kontrollOperations, kontrollSelectors } from "../../ducks/kontroll";
 
 import MottatteOpplysningerFeilmeldinger from "../mottatteOpplysningerFeilmeldinger";
 import { Feilmeldinger } from "../feilmeldinger";
-import { Innsynsmelding, NyVurderingMelding, StatsborgerskapFeil } from "../alertmeldinger";
+import { Innsynsmelding, NyVurderingMelding, StatsborgerskapFeil, UlikPeriodeMelding } from "../alertmeldinger";
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.less";
 
@@ -631,7 +631,7 @@ class Stegvelger extends Component {
 
   render() {
     const { visMottatteOpplysningerFeilmeldinger, aktivtStegNummer, aktuelleSteg } = this.state;
-    const { redigerbart, oppsummering } = this.props;
+    const { redigerbart, oppsummering, arbeidsgiverOgArbeidstakerHarUlikPeriode } = this.props;
     const visFeilmeldinger =
       this.erVedtakSteg(aktivtStegNummer) || aktuelleSteg[aktivtStegNummer]?.id === STEG.ARTIKKEL_16_ANMODNING;
     const inngangStegErAktivt = this.erInngangsteg(aktivtStegNummer);
@@ -643,6 +643,7 @@ class Stegvelger extends Component {
         {!redigerbart && <Innsynsmelding />}
         {visFeilmeldinger && <Feilmeldinger />}
         {erNyVurdering && redigerbart && inngangStegErAktivt && <NyVurderingMelding />}
+        {arbeidsgiverOgArbeidstakerHarUlikPeriode && <UlikPeriodeMelding />}
         {aktuelleSteg.map((item) => (
           <StegFane id={item.id} key={item.id} faneData={item} />
         ))}
@@ -690,6 +691,7 @@ Stegvelger.propTypes = {
   lagreAllData: PT.func.isRequired,
   hentMedlemsPerioder: PT.func.isRequired,
   mottatteOpplysningerFeilmeldinger: PT.object.isRequired,
+  arbeidsgiverOgArbeidstakerHarUlikPeriode: PT.bool.isRequired,
   hentAnmodningsperioder: PT.func.isRequired,
   anmodningsperioder: PT.array.isRequired,
   anmodningErSendtUtland: PT.bool.isRequired,
@@ -809,6 +811,8 @@ const mapStateToProps = (state) => ({
     avklartefaktaSelectors.AvklarteVirksomheterIkkeNaeringsdrivendeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
+  arbeidsgiverOgArbeidstakerHarUlikPeriode:
+    mottatteOpplysningerSelectors.ArbeidsgiverOgArbeidstakerHarUlikPeriodeSelector(state),
   generiskStegRedigerbart: redigerbartSelectors.GeneriskStegRedigerbartSelector(state),
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
   erIDirekteTilArtikkel16Flyt: flytSelectors.ErIDirekteTilArtikkel16FlytSelector(state),

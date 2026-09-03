@@ -1,9 +1,9 @@
 import { ClockDashedIcon, CheckmarkCircleIcon, PencilIcon, TrashIcon } from "@navikt/aksel-icons";
 
-import * as Nav from "../../../navFrontend";
-import TekstblokkForhandsvisning from "../../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning";
-import { TekstblokkOversikt } from "../../../services/modules/tekstblokker";
-import { formatterDatoTilNorsk } from "../../../utils/dato";
+import * as Nav from "../../navFrontend";
+import TekstblokkForhandsvisning from "../../felleskomponenter/htmlEditor/tekstblokkForhandsvisning";
+import { TekstblokkOversikt } from "../../services/modules/tekstblokker";
+import { formatterDatoTilNorsk } from "../../utils/dato";
 import { termForBehandlingstema, termForSakstema, termForSakstype } from "./kontekstavgrensning";
 import TekstblokkHistorikk from "./tekstblokkHistorikk";
 
@@ -24,12 +24,15 @@ interface Props {
   utvidedeIder: Set<number>;
   // Historikken deler den utvidbare raden med forhåndsvisningen, så bare én av dem vises av
   // gangen. Valget bor sammen med utvidedeIder, så de to ikke kan komme ut av takt.
-  historikkId: number | null;
+  historikkId?: number | null;
   onToggleUtvidet: (id: number) => void;
-  onToggleHistorikk: (id: number) => void;
-  onRediger: (id: number) => void;
-  onSlett: (blokk: TekstblokkOversikt) => void;
-  onPubliser: (blokk: TekstblokkOversikt) => void;
+  // Handlingene finnes kun i admin. I lesevisningen er de utelatt, ikke bare deaktivert:
+  // en knapp som ikke kan brukes er verre enn ingen knapp.
+  kanRedigere?: boolean;
+  onToggleHistorikk?: (id: number) => void;
+  onRediger?: (id: number) => void;
+  onSlett?: (blokk: TekstblokkOversikt) => void;
+  onPubliser?: (blokk: TekstblokkOversikt) => void;
 }
 
 function TekstblokkerListe({
@@ -37,6 +40,7 @@ function TekstblokkerListe({
   utvidedeIder,
   historikkId,
   onToggleUtvidet,
+  kanRedigere = true,
   onToggleHistorikk,
   onRediger,
   onSlett,
@@ -60,7 +64,7 @@ function TekstblokkerListe({
           <Nav.Table.HeaderCell scope="col">Gjelder</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Sist endret</Nav.Table.HeaderCell>
           <Nav.Table.HeaderCell scope="col">Av</Nav.Table.HeaderCell>
-          <Nav.Table.HeaderCell scope="col" aria-label="Handlinger" />
+          {kanRedigere && <Nav.Table.HeaderCell scope="col" aria-label="Handlinger" />}
         </Nav.Table.Row>
       </Nav.Table.Header>
       <Nav.Table.Body>
@@ -71,6 +75,7 @@ function TekstblokkerListe({
             utvidet={utvidedeIder.has(blokk.id)}
             visHistorikk={historikkId === blokk.id}
             onToggleUtvidet={onToggleUtvidet}
+            kanRedigere={kanRedigere}
             onToggleHistorikk={onToggleHistorikk}
             onRediger={onRediger}
             onSlett={onSlett}
@@ -87,10 +92,11 @@ interface RadProps {
   utvidet: boolean;
   visHistorikk: boolean;
   onToggleUtvidet: (id: number) => void;
-  onToggleHistorikk: (id: number) => void;
-  onRediger: (id: number) => void;
-  onSlett: (blokk: TekstblokkOversikt) => void;
-  onPubliser: (blokk: TekstblokkOversikt) => void;
+  kanRedigere?: boolean;
+  onToggleHistorikk?: (id: number) => void;
+  onRediger?: (id: number) => void;
+  onSlett?: (blokk: TekstblokkOversikt) => void;
+  onPubliser?: (blokk: TekstblokkOversikt) => void;
 }
 
 function TekstblokkerListeRad({
@@ -98,6 +104,7 @@ function TekstblokkerListeRad({
   utvidet,
   visHistorikk,
   onToggleUtvidet,
+  kanRedigere = true,
   onToggleHistorikk,
   onRediger,
   onSlett,
@@ -131,9 +138,14 @@ function TekstblokkerListeRad({
     >
       <Nav.Table.DataCell>
         <div className="tekstblokker__rad-tittel-celle">
-          <button type="button" className="tekstblokker__rad-tittel" onClick={() => onRediger(blokk.id)}>
-            {blokk.tittel}
-          </button>
+          {/* Uten redigeringstilgang ville tittelknappen lovet en handling som ikke finnes. */}
+          {kanRedigere ? (
+            <button type="button" className="tekstblokker__rad-tittel" onClick={() => onRediger?.(blokk.id)}>
+              {blokk.tittel}
+            </button>
+          ) : (
+            <span className="tekstblokker__rad-tittel-tekst">{blokk.tittel}</span>
+          )}
           {blokk.status === "UTKAST" && (
             <Nav.Tag size="xsmall" variant="warning">
               Utkast
@@ -186,45 +198,47 @@ function TekstblokkerListeRad({
       </Nav.Table.DataCell>
       <Nav.Table.DataCell>{formatterDatoTilNorsk(blokk.endretDato, true)}</Nav.Table.DataCell>
       <Nav.Table.DataCell>{blokk.endretAvNavn ?? blokk.endretAv}</Nav.Table.DataCell>
-      <Nav.Table.DataCell>
-        <div className="tekstblokker__rad-handlinger">
-          {blokk.status === "UTKAST" && (
+      {kanRedigere && (
+        <Nav.Table.DataCell>
+          <div className="tekstblokker__rad-handlinger">
+            {blokk.status === "UTKAST" && (
+              <Nav.Button
+                size="xsmall"
+                variant="tertiary"
+                icon={<CheckmarkCircleIcon aria-hidden />}
+                onClick={() => onPubliser?.(blokk)}
+              >
+                Publiser
+              </Nav.Button>
+            )}
             <Nav.Button
               size="xsmall"
               variant="tertiary"
-              icon={<CheckmarkCircleIcon aria-hidden />}
-              onClick={() => onPubliser(blokk)}
+              icon={<ClockDashedIcon aria-hidden />}
+              aria-pressed={visHistorikk}
+              onClick={() => onToggleHistorikk?.(blokk.id)}
             >
-              Publiser
+              Historikk
             </Nav.Button>
-          )}
-          <Nav.Button
-            size="xsmall"
-            variant="tertiary"
-            icon={<ClockDashedIcon aria-hidden />}
-            aria-pressed={visHistorikk}
-            onClick={() => onToggleHistorikk(blokk.id)}
-          >
-            Historikk
-          </Nav.Button>
-          <Nav.Button
-            size="xsmall"
-            variant="tertiary"
-            icon={<PencilIcon aria-hidden />}
-            onClick={() => onRediger(blokk.id)}
-          >
-            Rediger
-          </Nav.Button>
-          <Nav.Button
-            size="xsmall"
-            variant="tertiary-neutral"
-            icon={<TrashIcon aria-hidden />}
-            onClick={() => onSlett(blokk)}
-          >
-            Slett
-          </Nav.Button>
-        </div>
-      </Nav.Table.DataCell>
+            <Nav.Button
+              size="xsmall"
+              variant="tertiary"
+              icon={<PencilIcon aria-hidden />}
+              onClick={() => onRediger?.(blokk.id)}
+            >
+              Rediger
+            </Nav.Button>
+            <Nav.Button
+              size="xsmall"
+              variant="tertiary-neutral"
+              icon={<TrashIcon aria-hidden />}
+              onClick={() => onSlett?.(blokk)}
+            >
+              Slett
+            </Nav.Button>
+          </div>
+        </Nav.Table.DataCell>
+      )}
     </Nav.Table.ExpandableRow>
   );
 }

@@ -228,6 +228,11 @@ export const PeriodeSelector = createSelector(
   (mottatteOpplysninger) => mottatteOpplysninger.periode || {},
 );
 
+export const ArbeidsgiverOgArbeidstakerHarUlikPeriodeSelector = createSelector(
+  (state) => MottatteOpplysningerSelector(state),
+  (mottatteOpplysninger) => mottatteOpplysninger.arbeidsgiverOgArbeidstakerHarUlikPeriode === true,
+);
+
 export const PeriodeFomSelector = createSelector(
   (state) => PeriodeSelector(state),
   (soknadsperiode) => soknadsperiode.fom,

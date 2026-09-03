@@ -74,12 +74,13 @@ function PlaceholderUtdatertVarsel({ utdaterte, uopploste, uutfylte, onSendLikev
         )}
         {uutfylte.length > 0 && (
           <>
-            <Nav.BodyLong>Ikke utfylt — disse feltene står igjen i brevet slik de er:</Nav.BodyLong>
+            <Nav.BodyShort>Det er fortsatt plassholdere i brevet:</Nav.BodyShort>
             <Nav.List>
               {uutfylte.map((felt) => (
                 <Nav.List.Item key={felt}>{felt}</Nav.List.Item>
               ))}
             </Nav.List>
+            <Nav.BodyShort>Vurder å fylle ut eller fjerne feltene før sending.</Nav.BodyShort>
           </>
         )}
       </Nav.Modal.Body>

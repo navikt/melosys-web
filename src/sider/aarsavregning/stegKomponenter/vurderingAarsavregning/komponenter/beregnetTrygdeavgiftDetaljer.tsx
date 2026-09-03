@@ -7,6 +7,7 @@ import {
   formaterInntektskilde,
   Beregningsforklaringer,
   erUnderMinstebeløp,
+  forklaringerSomSkalVises,
   MINSTEBELØP_ALERT_TEKST,
 } from "../../../../../felleskomponenter/trygdeavgift/komponenter/beregningsforklaring";
 import { BeregningsforklaringKort } from "../../../../../felleskomponenter/trygdeavgift/komponenter/beregningsforklaringKort";
@@ -47,6 +48,7 @@ export function BeregnetTrygdeavgiftDetaljer({
   beregningsforklaringer?: Beregningsforklaring[];
 }) {
   const visBeregningsforklaring = useFeatureToggle(VIS_TRYGDEAVGIFT_BEREGNINGSFORKLARING) === true;
+  const forklaringer = forklaringerSomSkalVises(beregningsforklaringer);
   const [grunnlagÅpent, setGrunnlagÅpent] = useState(false);
 
   if (!grunnlag || !grunnlag.avgift) return null;
@@ -165,9 +167,9 @@ export function BeregnetTrygdeavgiftDetaljer({
             </Nav.Table.Body>
           </Nav.Table>
           <Beregningsforklaringer perioder={detaljerListe} />
-          {visBeregningsforklaring && (beregningsforklaringer?.length ?? 0) > 0 && (
+          {visBeregningsforklaring && forklaringer.length > 0 && (
             <BeregningsforklaringKort
-              forklaringer={beregningsforklaringer!}
+              forklaringer={forklaringer}
               open={grunnlagÅpent}
               onToggle={setGrunnlagÅpent}
               scrollTilFelt={null}
