@@ -209,6 +209,7 @@ export function AvgiftspliktigperiodeSkjema({
           </Nav.Column>
         )}
       </Nav.Row>
+
       {medlemskapsperioder.length === index + 1 &&
         !erUtenGrunnlag &&
         (!erPliktigBestemmelse || erDeltGrunnlag) &&
@@ -216,7 +217,7 @@ export function AvgiftspliktigperiodeSkjema({
         visLeggTil && (
           <div className="legg-til__rad">
             <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add}>
-              Legg til periode
+              Legg til periode fra avgiftssystemet
             </Mui.Lenkeknapp>
           </div>
         )}
