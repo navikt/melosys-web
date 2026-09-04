@@ -9,10 +9,9 @@ import * as Mui from "../../../../../felleskomponenter/ui";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import "./vurderingInngangManglendeInnbetaling.less";
 import vurdering_inngang_manglende_innbetaling from "./vurderingInngangManglendeInnbetalingSchema";
-import { BOOLSK_STRING } from "../../../../../constants";
+import type { VurderingInngangManglendeInnbetaling as VurderingInngangManglendeInnbetalingValg } from "./vurderingInngangManglendeInnbetalingSchema";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import * as Utils from "../../../../../utils";
 import { inngangSteg, vedtakOpphoerSteg } from "../../stegLister/stegListeManglendeInnbetalingFlyt";
 import { FellesHandlersContext } from "../../../../../contexts";
 
@@ -23,11 +22,11 @@ interface Props {
 }
 
 type RenameMe = {
-  value: VurderingInngangManglendeInnbetaling;
+  value: VurderingInngangManglendeInnbetalingValg;
   text: ReactNode;
 };
 
-const valg = [
+const valg: RenameMe[] = [
   {
     value: "HELE_PERIODEN_OPPHØRES",
     text: (
@@ -61,36 +60,35 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
   } = useForm({
     resolver: yupResolver<FieldValues>(vurdering_inngang_manglende_innbetaling),
     mode: "all",
-    // defaultValues: {
-    //   fullstendigManglendeInnbetaling: Utils.streng.boolTilUppercaseStreng(
-    //     useSelector(oppsummertfaktaSelectors.FullstendigManglendeInnbetalingSelector),
-    //   ),
-    // } as FieldValues,
+    defaultValues: {
+      fullstendigManglendeInnbetaling: useSelector(oppsummertfaktaSelectors.ManglendeInnbetalingVurderingSelector)
+        ?.kode,
+    } as FieldValues,
   });
   const formValues = watch();
 
+  // Kun "hele perioden opphøres" skal føre til den korte opphørsflyten (VedtakOpphoer).
+  // De tre andre valgene skal alle gå videre i den ordinære flyten (Inngang).
+  const erHeleOpphørt = (value?: string) => value === "HELE_PERIODEN_OPPHØRES";
+  const nesteStegId = (value?: string) => (erHeleOpphørt(value) ? vedtakOpphoerSteg.id : inngangSteg.id);
+
   const handleChange = (value: string) => {
-    dispatch(
-      oppsummertfaktaOperations.lagreInnbetalingsstatus(behandlingID, Utils.streng.uppercaseStrengTilBool(value)),
-    );
-    oppdaterStatus(formIsValid, value === BOOLSK_STRING.SANN ? vedtakOpphoerSteg.id : inngangSteg.id);
+    dispatch(oppsummertfaktaOperations.lagreManglendeInnbetalingVurdering(behandlingID, value));
+    oppdaterStatus(formIsValid, nesteStegId(value));
   };
 
   useEffect(() => {
     if (aktivtSteg) {
-      oppdaterStatus(
-        formIsValid,
-        formValues.fullstendigManglendeInnbetaling === BOOLSK_STRING.SANN ? vedtakOpphoerSteg.id : inngangSteg.id,
-      );
+      oppdaterStatus(formIsValid, nesteStegId(formValues.fullstendigManglendeInnbetaling));
     }
   }, [formIsValid]);
 
   useEffect(() => {
     if (!behandlingOppfriskes && formIsValid) {
       dispatch(
-        oppsummertfaktaOperations.lagreInnbetalingsstatus(
+        oppsummertfaktaOperations.lagreManglendeInnbetalingVurdering(
           behandlingID,
-          Utils.streng.uppercaseStrengTilBool(formValues.fullstendigManglendeInnbetaling),
+          formValues.fullstendigManglendeInnbetaling,
         ),
       );
     }

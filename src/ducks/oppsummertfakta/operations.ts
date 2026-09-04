@@ -31,6 +31,17 @@ export function lagreInnbetalingsstatus(behandlingID: number, fullstendigManglen
   );
 }
 
+export function lagreManglendeInnbetalingVurdering(behandlingID: number, manglendeInnbetalingVurdering?: string) {
+  return doThenDispatch(
+    () => Api.Avklartefakta.lagreManglendeInnbetalingVurdering(behandlingID, manglendeInnbetalingVurdering),
+    {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+  );
+}
+
 export function lagreArbeidsland(behandlingID: number, arbeidsland: Api.Avklartefakta.Arbeidsland) {
   return doThenDispatch(() => Api.Avklartefakta.lagreArbeidsland(behandlingID, arbeidsland), {
     OK: Types.OK,

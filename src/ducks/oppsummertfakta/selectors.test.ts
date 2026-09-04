@@ -23,6 +23,16 @@ describe("oppsummertfakta selectors", () => {
     expect(selectors.FullstendigManglendeInnbetalingSelector(state)).toBe(true);
   });
 
+  it("ManglendeInnbetalingVurderingSelector returnerer verdi", () => {
+    const state = lagState({
+      manglendeInnbetalingVurdering: { kode: "HELE_PERIODEN_OPPHØRES", term: "Hele perioden skal opphøres" },
+    });
+    expect(selectors.ManglendeInnbetalingVurderingSelector(state)).toEqual({
+      kode: "HELE_PERIODEN_OPPHØRES",
+      term: "Hele perioden skal opphøres",
+    });
+  });
+
   it("IkkeYrkesaktivRelasjonSelector returnerer relasjonstype", () => {
     const state = lagState({ ikkeYrkesaktivFamilieRelasjonstype: "EKTEFELLE" });
     expect(selectors.IkkeYrkesaktivRelasjonSelector(state)).toBe("EKTEFELLE");

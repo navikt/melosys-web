@@ -26,6 +26,11 @@ export const FullstendigManglendeInnbetalingSelector = createSelector(
   (oppsummertfakta) => oppsummertfakta.fullstendigManglendeInnbetaling,
 );
 
+export const ManglendeInnbetalingVurderingSelector = createSelector(
+  OppsummertFaktaDataSelector,
+  (oppsummertfakta) => oppsummertfakta.manglendeInnbetalingVurdering,
+);
+
 export const IkkeYrkesaktivRelasjonSelector = createSelector(
   OppsummertFaktaDataSelector,
   (oppsummertfakta) => oppsummertfakta.ikkeYrkesaktivFamilieRelasjonstype,

@@ -1,4 +1,5 @@
 import * as Api from "../../services/api";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 export const OK = "oppsummertfakta/OK";
 export const FEILET = "oppsummertfakta/FEILET";
@@ -8,6 +9,7 @@ export const RESET = "oppsummertfakta/RESET";
 export interface Data {
   virksomheter?: Api.Avklartefakta.Virksomheter;
   fullstendigManglendeInnbetaling?: boolean;
+  manglendeInnbetalingVurdering?: KTObject;
   ikkeYrkesaktivFamilieRelasjonstype?: string;
   ikkeYrkesaktivOppholdstype?: string;
   arbeidssituasjonType?: string;
