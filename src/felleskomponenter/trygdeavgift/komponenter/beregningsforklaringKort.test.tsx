@@ -9,7 +9,11 @@ vi.mock("../../../navFrontend", () => {
   ExpansionCard.Content = ({ children }: any) => <div>{children}</div>;
   return {
     ExpansionCard,
-    Alert: ({ children }: any) => <div role="alert">{children}</div>,
+    Alert: ({ children, variant }: any) => (
+      <div role="alert" data-variant={variant}>
+        {children}
+      </div>
+    ),
     Tag: ({ children }: any) => <span>{children}</span>,
     BodyShort: ({ children, className }: any) => <span className={className}>{children}</span>,
     Detail: ({ children }: any) => <span>{children}</span>,
@@ -137,6 +141,48 @@ const lagForklaringAllInntektSkattepliktig = (): Beregningsforklaring => ({
 
 const noop = () => undefined;
 
+// Steg 1 og 2 har sine egne alerts, så merknaden i steg 3 er den siste – men bare når steg 3 i det
+// hele tatt rendres. Uten vakten ville en variant-assertion lese steg 1 eller 2 og passere grønt.
+const hentMerknad = (container: HTMLElement): HTMLElement => {
+  if (!container.textContent?.includes("25 %-regelen (maksgrense)")) {
+    throw new Error("Steg 3 rendres ikke for denne forklaringen, så merknaden finnes ikke.");
+  }
+  const merknader = container.querySelectorAll('[role="alert"]');
+  return merknader[merknader.length - 1] as HTMLElement;
+};
+
+// Frivillig medlemskap: helsedel og pensjonsdel måles hver for seg mot ett felles tak.
+// Ingen av dem overstiger taket, men summen (339600) gjør det.
+const lagForklaringMedAvgiftPerDel = (): Beregningsforklaring => ({
+  aar: 2025,
+  inntektsgruppe: "SAMLET",
+  valgtRegel: "ORDINÆR",
+  aarsak: "BEREGNET",
+  inntektsgrunnlag: [
+    {
+      inntektskilde: "INNTEKT_FRA_UTLANDET",
+      fom: "2025-01-01",
+      tom: "2025-12-31",
+      maanedsbeloep: 100000,
+      antallMaaneder: 12,
+      sumBeloep: 1200000,
+    },
+  ],
+  ekskluderteInntekter: [],
+  sumAarligInntekt: 1200000,
+  minstebeloep: 99650,
+  inntektOverMinstebeloep: 1100350,
+  maksimalAvgift25Prosent: 275087,
+  ordinaerAvgift: 339600,
+  ordinaerAvgiftPoster: [],
+  ordinaerAvgiftPerDel: [
+    { inntektsgruppe: "HELSEDEL", ordinaerAvgift: 81600 },
+    { inntektsgruppe: "PENSJONSDEL", ordinaerAvgift: 258000 },
+  ],
+  fastsattAvgift: 339600,
+  fastsattAvgiftPerMaaned: 28300,
+});
+
 describe("BeregningsforklaringKort", () => {
   it("returnerer null når det ikke finnes forklaringer", () => {
     const { container } = render(
@@ -153,11 +199,9 @@ describe("BeregningsforklaringKort", () => {
     expect(screen.getByText(/Inntekt som inngår i vurderingen/)).toBeDefined();
     expect(screen.getByText(/Sjekk mot minstebeløpet/)).toBeDefined();
     expect(screen.getByText(/25 %-regelen \(maksgrense\)/)).toBeDefined();
-    // Inntektsgruppe oversatt til norsk
     expect(screen.getByText(/Samlet inntekt/)).toBeDefined();
-    // Fastsatt avgift / 25 %-tak vises (beløpet forekommer flere steder)
+    // 2587 kr er både 25 %-taket og fastsatt avgift, og finnes derfor flere steder.
     expect(screen.getAllByText("2587 kr").length).toBeGreaterThan(0);
-    // Over minstebeløp → suksessmerknad om at avgift skal beregnes
     expect(screen.getByText(/inntekten er over minstebeløpet/)).toBeDefined();
   });
 
@@ -165,9 +209,7 @@ describe("BeregningsforklaringKort", () => {
     render(
       <BeregningsforklaringKort forklaringer={[lag25ProsentForklaring()]} open onToggle={noop} scrollTilFelt={null} />,
     );
-    // Utregningslinjen: grunnlag × sats med prosent formatert norsk
     expect(screen.getByText(/7,7 %/)).toBeDefined();
-    // Eksplisitt "Ordinær avgift"-underseksjon + sumrad
     expect(screen.getByText("Ordinær avgift")).toBeDefined();
     expect(screen.getByText(/Sum ordinær avgift/)).toBeDefined();
   });
@@ -201,7 +243,6 @@ describe("BeregningsforklaringKort", () => {
       />,
     );
     expect(screen.getByText(/Sjekk mot minstebeløpet/)).toBeDefined();
-    // Steg 3 skal ikke vises når maksimalAvgift25Prosent er null
     expect(screen.queryByText(/25 %-regelen \(maksgrense\)/)).toBeNull();
     expect(screen.getByText(/inntekten er under minstebeløpet/)).toBeDefined();
   });
@@ -228,7 +269,6 @@ describe("BeregningsforklaringKort", () => {
         scrollTilFelt={null}
       />,
     );
-    // Inntektsposten vises fortsatt (ekskludert), men minstebeløp-sjekken er utelatt
     expect(screen.getByText("NÆRINGSINNTEKT_FRA_NORGE")).toBeDefined();
     expect(screen.queryByText(/Sjekk mot minstebeløpet/)).toBeNull();
     expect(screen.queryByText(/Minstebeløpet avkortes ikke/)).toBeNull();
@@ -257,7 +297,195 @@ describe("BeregningsforklaringKort", () => {
       ],
     };
     render(<BeregningsforklaringKort forklaringer={[forklaring]} open onToggle={noop} scrollTilFelt={null} />);
-    // Desimalen rundes ikke til heltall, og vises med norsk desimalkomma.
     expect(screen.getByText(/50000 kr × 1,97 mnd =/)).toBeDefined();
+  });
+
+  it("viser hvert delbeløp mot taket når taket ble vurdert per avgiftsdel", () => {
+    const { container } = render(
+      <BeregningsforklaringKort
+        forklaringer={[lagForklaringMedAvgiftPerDel()]}
+        open
+        onToggle={noop}
+        scrollTilFelt={null}
+      />,
+    );
+    expect(screen.getByText(/Hver avgiftsdel målt mot taket/)).toBeDefined();
+    expect(container.textContent).toContain("81600 kr ≤ 275087 kr");
+    expect(container.textContent).toContain("258000 kr ≤ 275087 kr");
+    expect(screen.getByText(/ingen av dem overstiger 275087 kr/)).toBeDefined();
+    // Summen 339600 er større enn taket 275087, og skal ikke fremstilles som under det.
+    expect(screen.queryByText(/Ordinær avgift 339600 kr ≤/)).toBeNull();
+  });
+
+  it("sier ikke at delbeløpene mangler når de nettopp ble vist over merknaden", () => {
+    const delOverTaket: Beregningsforklaring = {
+      ...lagForklaringMedAvgiftPerDel(),
+      ordinaerAvgiftPerDel: [
+        { inntektsgruppe: "HELSEDEL", ordinaerAvgift: 39600 },
+        { inntektsgruppe: "PENSJONSDEL", ordinaerAvgift: 300000 },
+      ],
+    };
+    const { container } = render(
+      <BeregningsforklaringKort forklaringer={[delOverTaket]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    expect(container.textContent).toContain("300000 kr > 275087 kr");
+    expect(container.textContent).not.toContain("delbeløpene mangler");
+    expect(container.textContent).toContain("Minst én avgiftsdel overstiger 25 %-taket 275087 kr");
+    expect(hentMerknad(container).getAttribute("data-variant")).toBe("warning");
+  });
+
+  it("navngir ikke en avgiftsdel som mangler når bare én del har avgift", () => {
+    const kunHelsedel: Beregningsforklaring = {
+      ...lagForklaringMedAvgiftPerDel(),
+      ordinaerAvgift: 81600,
+      ordinaerAvgiftPerDel: [{ inntektsgruppe: "HELSEDEL", ordinaerAvgift: 81600 }],
+    };
+    const { container } = render(
+      <BeregningsforklaringKort forklaringer={[kunHelsedel]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    expect(container.textContent).toContain("81600 kr ≤ 275087 kr");
+    expect(container.textContent).not.toContain("Pensjonsdel");
+    expect(screen.getByText(/ingen av dem overstiger 275087 kr/)).toBeDefined();
+  });
+
+  it("måler ikke summen mot taket når 25 %-regelen slo ut og delbeløpene er med", () => {
+    const begrensetMedDelOverTaket: Beregningsforklaring = {
+      ...lagForklaringMedAvgiftPerDel(),
+      valgtRegel: "TJUEFEM_PROSENT_REGEL",
+      ordinaerAvgiftPerDel: [
+        { inntektsgruppe: "HELSEDEL", ordinaerAvgift: 39600 },
+        { inntektsgruppe: "PENSJONSDEL", ordinaerAvgift: 300000 },
+      ],
+      fastsattAvgift: 275087,
+    };
+    const { container } = render(
+      <BeregningsforklaringKort forklaringer={[begrensetMedDelOverTaket]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    expect(container.textContent).toContain("300000 kr > 275087 kr");
+    expect(container.textContent).toContain("25 %-regelen brukes. Avgiften begrenses til 275087 kr.");
+    expect(container.textContent).not.toContain("339600 kr > 25 %-tak");
+    expect(screen.queryByText(/ordinær beregning brukes/)).toBeNull();
+    expect(hentMerknad(container).getAttribute("data-variant")).toBe("success");
+  });
+
+  it("melder fra når avgiften ble begrenset selv om ingen avgiftsdel overstiger taket", () => {
+    const begrensetUtenDelOverTaket: Beregningsforklaring = {
+      ...lagForklaringMedAvgiftPerDel(),
+      valgtRegel: "TJUEFEM_PROSENT_REGEL",
+      fastsattAvgift: 275087,
+    };
+    const { container } = render(
+      <BeregningsforklaringKort forklaringer={[begrensetUtenDelOverTaket]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    expect(container.textContent).toContain(
+      "Ingen avgiftsdel overstiger 25 %-taket 275087 kr, men avgiften ble likevel begrenset.",
+    );
+    expect(container.textContent).not.toContain("339600 kr > 25 %-tak");
+    expect(hentMerknad(container).getAttribute("data-variant")).toBe("warning");
+  });
+
+  it("hevder ikke at 25 %-regelen slo ut fordi summen er under taket", () => {
+    const begrensetUnderTaket: Beregningsforklaring = {
+      ...lagForklaringMedAvgiftPerDel(),
+      valgtRegel: "TJUEFEM_PROSENT_REGEL",
+      ordinaerAvgift: 100000,
+      ordinaerAvgiftPerDel: undefined,
+    };
+    const { container } = render(
+      <BeregningsforklaringKort forklaringer={[begrensetUnderTaket]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    expect(container.textContent).toContain(
+      "Ordinær avgift 100000 kr overstiger ikke 25 %-taket 275087 kr, men avgiften ble likevel begrenset.",
+    );
+    expect(container.textContent).not.toContain("→ 25 %-regelen brukes");
+    expect(hentMerknad(container).getAttribute("data-variant")).toBe("warning");
+  });
+
+  it("skriver den vanlige 25 %-merknaden når summen faktisk overstiger taket", () => {
+    const begrensetOverTaket: Beregningsforklaring = {
+      ...lagForklaringMedAvgiftPerDel(),
+      valgtRegel: "TJUEFEM_PROSENT_REGEL",
+      ordinaerAvgiftPerDel: undefined,
+    };
+    const { container } = render(
+      <BeregningsforklaringKort forklaringer={[begrensetOverTaket]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    expect(container.textContent).toContain(
+      "Ordinær avgift 339600 kr > 25 %-tak 275087 kr → 25 %-regelen brukes. Avgiften begrenses til 275087 kr.",
+    );
+    expect(hentMerknad(container).getAttribute("data-variant")).toBe("success");
+  });
+
+  it("regner en begrenset sum som er nøyaktig lik taket som ikke over taket", () => {
+    const begrensetSumLikTaket: Beregningsforklaring = {
+      ...lagForklaringMedAvgiftPerDel(),
+      valgtRegel: "TJUEFEM_PROSENT_REGEL",
+      ordinaerAvgift: 275087,
+      ordinaerAvgiftPerDel: undefined,
+    };
+    const { container } = render(
+      <BeregningsforklaringKort forklaringer={[begrensetSumLikTaket]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    expect(container.textContent).toContain(
+      "Ordinær avgift 275087 kr overstiger ikke 25 %-taket 275087 kr, men avgiften ble likevel begrenset.",
+    );
+    expect(container.textContent).not.toContain("275087 kr > 25 %-tak");
+    expect(hentMerknad(container).getAttribute("data-variant")).toBe("warning");
+  });
+
+  it("regner en sum som er nøyaktig lik taket som under taket", () => {
+    const sumLikTaket: Beregningsforklaring = {
+      ...lagForklaringMedAvgiftPerDel(),
+      ordinaerAvgift: 275087,
+      ordinaerAvgiftPerDel: undefined,
+    };
+    const { container } = render(
+      <BeregningsforklaringKort forklaringer={[sumLikTaket]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    expect(container.textContent).toContain(
+      "Ordinær avgift 275087 kr ≤ 25 %-tak 275087 kr → ordinær beregning brukes.",
+    );
+    expect(container.textContent).not.toContain("delbeløpene mangler");
+  });
+
+  it("regner en avgiftsdel som er nøyaktig lik taket som under taket", () => {
+    const delLikTaket: Beregningsforklaring = {
+      ...lagForklaringMedAvgiftPerDel(),
+      ordinaerAvgiftPerDel: [{ inntektsgruppe: "HELSEDEL", ordinaerAvgift: 275087 }],
+    };
+    const { container } = render(
+      <BeregningsforklaringKort forklaringer={[delLikTaket]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    expect(container.textContent).toContain("275087 kr ≤ 275087 kr");
+    expect(container.textContent).toContain("ingen av dem overstiger 275087 kr");
+  });
+
+  it("hevder ikke at ordinær beregning ble valgt fordi summen er under taket, når backend ikke sender delbeløp", () => {
+    const utenDeler: Beregningsforklaring = {
+      ...lagForklaringMedAvgiftPerDel(),
+      ordinaerAvgiftPerDel: undefined,
+    };
+    const { container } = render(
+      <BeregningsforklaringKort forklaringer={[utenDeler]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    expect(screen.queryByText(/Hver avgiftsdel målt mot taket/)).toBeNull();
+    expect(container.textContent).toContain(
+      "Ordinær avgift 339600 kr > 25 %-tak 275087 kr, men avgiften ble ikke begrenset. Taket ble målt mot hver " +
+        "avgiftsdel for seg, og delbeløpene mangler i denne forklaringen.",
+    );
+  });
+
+  it("skriver den enkle merknaden når summen faktisk er under taket", () => {
+    const underTaket: Beregningsforklaring = {
+      ...lagForklaringMedAvgiftPerDel(),
+      ordinaerAvgift: 100000,
+      ordinaerAvgiftPerDel: undefined,
+    };
+    const { container } = render(
+      <BeregningsforklaringKort forklaringer={[underTaket]} open onToggle={noop} scrollTilFelt={null} />,
+    );
+    expect(container.textContent).toContain(
+      "Ordinær avgift 100000 kr ≤ 25 %-tak 275087 kr → ordinær beregning brukes.",
+    );
   });
 });
