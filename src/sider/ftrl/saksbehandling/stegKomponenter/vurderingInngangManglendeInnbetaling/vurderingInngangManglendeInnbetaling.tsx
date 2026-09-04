@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { ReactNode, useContext, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "../../../../../hooks";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -22,6 +22,32 @@ interface Props {
   oppdaterStatus: (isValid: boolean, nesteStegId?: string) => void;
 }
 
+type RenameMe = {
+  value: VurderingInngangManglendeInnbetaling;
+  text: ReactNode;
+};
+
+const valg = [
+  {
+    value: "HELE_PERIODEN_OPPHØRES",
+    text: (
+      <>
+        <b>Hele</b> perioden skal opphøres
+      </>
+    ),
+  },
+  {
+    value: "DELER_AV_PERIODEN_OPPHØRES",
+    text: (
+      <>
+        <b>Deler</b> av perioden skal opphøres
+      </>
+    ),
+  },
+  { value: "VEDTAKET_SKAL_ENDRES", text: "Vedtaket skal endres." },
+  { value: "BEHANDLINGEN_SKAL_AVSLUTTES", text: "Behandlingen skal avsluttes." },
+];
+
 export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppdaterStatus }: Props) {
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -35,11 +61,11 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
   } = useForm({
     resolver: yupResolver<FieldValues>(vurdering_inngang_manglende_innbetaling),
     mode: "all",
-    defaultValues: {
-      fullstendigManglendeInnbetaling: Utils.streng.boolTilUppercaseStreng(
-        useSelector(oppsummertfaktaSelectors.FullstendigManglendeInnbetalingSelector),
-      ),
-    } as FieldValues,
+    // defaultValues: {
+    //   fullstendigManglendeInnbetaling: Utils.streng.boolTilUppercaseStreng(
+    //     useSelector(oppsummertfaktaSelectors.FullstendigManglendeInnbetalingSelector),
+    //   ),
+    // } as FieldValues,
   });
   const formValues = watch();
 
@@ -77,14 +103,12 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
       <Nav.Heading level="1" className="stegvelgertittel">
         Manglende innbetaling
       </Nav.Heading>
-
       <div className="label__container">
         <Nav.BodyLong size="small">
           Vurder konsekvens av manglende innbetaling. Du må sjekke OeBS for å se om betaling er mottatt innen fristen.
           <br /> Hvis betaling er mottatt og du ikke skal fatte nytt vedtak kan du ferdigstille denne behandlingen.
         </Nav.BodyLong>
       </div>
-
       <Forms.RadioGroup
         legend=""
         hideLegend
@@ -94,14 +118,12 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
         readOnly={!redigerbart}
         size="medium"
       >
-        <Nav.Radio value={BOOLSK_STRING.SANN}>
-          Innbetaling mangler for <b>hele</b> medlemskapsperioden.
-        </Nav.Radio>
-        <Nav.Radio value={BOOLSK_STRING.USANN}>
-          Innbetaling mangler for <b>deler</b> av medlemskapsperioden.
-        </Nav.Radio>
+        {valg.map((valg: RenameMe) => (
+          <Nav.Radio key={valg.value} value={valg.value}>
+            {valg.text}
+          </Nav.Radio>
+        ))}
       </Forms.RadioGroup>
-
       <Mui.StegKnapper
         bekreftKnappProps={{
           onClick: bekreft,
