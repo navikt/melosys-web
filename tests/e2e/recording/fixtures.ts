@@ -17,6 +17,8 @@
  */
 
 import { test as base, expect } from "@playwright/test";
+import { promises as fs } from "fs";
+import * as path from "path";
 import { ApiRecorder } from "./recorder";
 import { shouldRecordResponses, shouldUseMockServer, getApiBaseUrl } from "../config/mode";
 import { runAxeAnalyze } from "../utils/axeUtils";
@@ -24,8 +26,40 @@ import { runAxeAnalyze } from "../utils/axeUtils";
 // Header name used to identify workers (must match mock server)
 const WORKER_ID_HEADER = "x-playwright-worker-id";
 
+// Kodedekning samles kun når E2E_COVERAGE=true (da instrumenterer vite-plugin-istanbul
+// kildekoden og eksponerer window.__coverage__). Rå istanbul-data skrives per test til
+// .nyc_output/, som `nyc report` senere aggregerer til en rapport.
+const COVERAGE_ENABLED = process.env.E2E_COVERAGE === "true";
+const NYC_OUTPUT_DIR = path.resolve(process.cwd(), ".nyc_output");
+
 // Extend the base test with recording fixture
-export const test = base.extend<{ apiRecorder: ApiRecorder | null }>({
+export const test = base.extend<{ apiRecorder: ApiRecorder | null; collectCoverage: void }>({
+  // Auto-fixture: etter hver test hentes window.__coverage__ og skrives til .nyc_output.
+  // Gjør ingenting når E2E_COVERAGE ikke er satt (da finnes ikke __coverage__ heller).
+  collectCoverage: [
+    async ({ page }, use, testInfo) => {
+      await use();
+
+      if (!COVERAGE_ENABLED) return;
+
+      try {
+        const coverage = await page.evaluate(() => (window as Window & { __coverage__?: unknown }).__coverage__);
+        if (coverage) {
+          await fs.mkdir(NYC_OUTPUT_DIR, { recursive: true });
+          const file = path.join(
+            NYC_OUTPUT_DIR,
+            `pw-${testInfo.parallelIndex}-${testInfo.testId}-${testInfo.retry}.json`,
+          );
+          await fs.writeFile(file, JSON.stringify(coverage), "utf-8");
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn(`[Coverage] Kunne ikke hente __coverage__ for "${testInfo.title}":`, error);
+      }
+    },
+    { auto: true },
+  ],
+
   // Provide an API recorder that automatically records in record mode
   apiRecorder: async ({ page, request }, use, testInfo) => {
     let recorder: ApiRecorder | null = null;
