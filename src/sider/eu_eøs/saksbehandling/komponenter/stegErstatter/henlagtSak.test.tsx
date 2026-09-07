@@ -33,6 +33,19 @@ describe("HenlagtSak", () => {
     expect(screen.getByText(props.begrunnelseFritekst)).toBeInTheDocument();
   });
 
+  it.each([
+    '<div class="ql-fritekst"><p><strong>Oppholdet</strong> er avlyst.</p><p>Årsak &amp; detaljer<br>&lt;tekst&gt;</p></div>',
+    "<p><strong>Oppholdet</strong> er avlyst.</p><p>Årsak &amp; detaljer<br>&lt;tekst&gt;</p>",
+  ])("Viser HTML-fritekst som ren tekst med linjeskift: %s", (html) => {
+    props.begrunnelseFritekst = html;
+
+    renderWithProviders(<HenlagtSak />, { preloadedState: initialState() });
+
+    const beskrivelse = screen.getByText(/Oppholdet er avlyst/);
+    expect(beskrivelse.textContent).toBe("Oppholdet er avlyst.\n\nÅrsak & detaljer\n<tekst>");
+    expect(beskrivelse.children).toHaveLength(0);
+  });
+
   it("Bruker begrunnelseKode dersom fritekst ikke er oppgitt", () => {
     renderWithProviders(<HenlagtSak />, { preloadedState: initialState() });
 
