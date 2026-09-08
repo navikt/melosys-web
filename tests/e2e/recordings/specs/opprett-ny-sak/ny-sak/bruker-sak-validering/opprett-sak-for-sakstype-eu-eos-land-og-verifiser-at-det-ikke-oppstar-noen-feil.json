@@ -6885,9 +6885,9 @@
     {
       "request": {
         "method": "GET",
-        "url": "http://localhost:3333/api/saksbehandling/behandlingstyper/kombinasjoner/?hovedpart=BRUKER&sakstype=EU_EOS&sakstema=MEDLEMSKAP_LOVVALG&behandlingstema=ARBEID_KUN_NORGE",
-        "pathname": "/api/saksbehandling/behandlingstyper/kombinasjoner/",
-        "normalizedPath": "/api/saksbehandling/behandlingstyper/kombinasjoner/",
+        "url": "http://localhost:3333/api/saksbehandling/behandlingstyper/kombinasjoner-for-ny-sak/?hovedpart=BRUKER&sakstype=EU_EOS&sakstema=MEDLEMSKAP_LOVVALG&behandlingstema=ARBEID_KUN_NORGE",
+        "pathname": "/api/saksbehandling/behandlingstyper/kombinasjoner-for-ny-sak/",
+        "normalizedPath": "/api/saksbehandling/behandlingstyper/kombinasjoner-for-ny-sak/",
         "query": {
           "hovedpart": "BRUKER",
           "sakstype": "EU_EOS",
@@ -6918,10 +6918,6 @@
           {
             "kode": "KLAGE",
             "term": "Klage"
-          },
-          {
-            "kode": "NY_VURDERING",
-            "term": "Ny vurdering"
           }
         ]
       }
