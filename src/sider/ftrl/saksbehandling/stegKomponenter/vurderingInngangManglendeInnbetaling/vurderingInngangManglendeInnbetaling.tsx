@@ -1,4 +1,4 @@
-import { ReactNode, useContext, useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "../../../../../hooks";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -13,7 +13,6 @@ import type { VurderingInngangManglendeInnbetaling as VurderingInngangManglendeI
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { inngangSteg, vedtakOpphoerSteg } from "../../stegLister/stegListeManglendeInnbetalingFlyt";
-import { FellesHandlersContext } from "../../../../../contexts";
 
 interface Props {
   bekreft: () => void;
@@ -51,7 +50,6 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
-  const { behandlingOppfriskes } = useContext(FellesHandlersContext) as any;
 
   const {
     control,
@@ -73,8 +71,17 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
   const nesteStegId = (value?: string) => (erHeleOpphørt(value) ? vedtakOpphoerSteg.id : inngangSteg.id);
 
   const handleChange = (value: string) => {
-    dispatch(oppsummertfaktaOperations.lagreManglendeInnbetalingVurdering(behandlingID, value));
     oppdaterStatus(formIsValid, nesteStegId(value));
+  };
+
+  const onBekreft = async () => {
+    await dispatch(
+      oppsummertfaktaOperations.lagreManglendeInnbetalingVurdering(
+        behandlingID,
+        formValues.fullstendigManglendeInnbetaling,
+      ),
+    );
+    bekreft();
   };
 
   useEffect(() => {
@@ -82,17 +89,6 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
       oppdaterStatus(formIsValid, nesteStegId(formValues.fullstendigManglendeInnbetaling));
     }
   }, [formIsValid]);
-
-  useEffect(() => {
-    if (!behandlingOppfriskes && formIsValid) {
-      dispatch(
-        oppsummertfaktaOperations.lagreManglendeInnbetalingVurdering(
-          behandlingID,
-          formValues.fullstendigManglendeInnbetaling,
-        ),
-      );
-    }
-  }, [behandlingOppfriskes]);
 
   if (!aktivtSteg) return null;
 
@@ -124,7 +120,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
       </Forms.RadioGroup>
       <Mui.StegKnapper
         bekreftKnappProps={{
-          onClick: bekreft,
+          onClick: onBekreft,
           disabled: !formIsValid || !redigerbart,
         }}
       />
