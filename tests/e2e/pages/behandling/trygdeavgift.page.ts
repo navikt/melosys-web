@@ -173,7 +173,9 @@ export class TrygdeavgiftPage extends StegvelgerPage {
    */
   async verifiserInfomeldingMinstebeløpSynlig(): Promise<void> {
     await expect(
-      this.page.getByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet."),
+      this.page.getByText(
+        "Trygdeavgift skal ikke betales da inntekten er under minstebeløpet i perioden som er angitt.",
+      ),
     ).toBeVisible();
   }
 
@@ -182,7 +184,9 @@ export class TrygdeavgiftPage extends StegvelgerPage {
    */
   async verifiserInfomeldingMinstebeløpIkkeSynlig(): Promise<void> {
     await expect(
-      this.page.getByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet."),
+      this.page.getByText(
+        "Trygdeavgift skal ikke betales da inntekten er under minstebeløpet i perioden som er angitt.",
+      ),
     ).not.toBeVisible();
   }
 
