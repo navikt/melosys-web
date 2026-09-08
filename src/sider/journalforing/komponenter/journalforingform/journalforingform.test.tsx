@@ -91,10 +91,9 @@ vi.mock("../../../../services/modules/lovligekombinasjoner", async () => {
         { kode: "PENSJONIST", term: PENSJONIST },
         { kode: "IKKE_YRKESAKTIV", term: IKKE_YRKESAKTIV },
       ]),
-    hentBehandlingstyper: () =>
+    hentBehandlingstyperForNySak: () =>
       Promise.resolve([
         { kode: "FØRSTEGANG", term: FØRSTEGANG },
-        { kode: "NY_VURDERING", term: NY_VURDERING },
         { kode: "HENVENDELSE", term: HENVENDELSE },
         { kode: "KLAGE", term: KLAGE },
       ]),

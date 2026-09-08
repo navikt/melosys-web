@@ -25,10 +25,10 @@ vi.mock("../../services/modules/lovligekombinasjoner", async () => {
         { kode: "YRKESAKTIV", term: "Yrkesaktiv" },
         { kode: "ANMODNING_OM_UNNTAK_HOVEDREGEL", term: "Anmodning om unntak" },
       ]),
-    hentBehandlingstyper: () =>
+    hentBehandlingstyperForNySak: () =>
       Promise.resolve([
         { kode: "FØRSTEGANG", term: "Førstegangsbehandling" },
-        { kode: "NY_VURDERING", term: "Ny vurdering" },
+        { kode: "HENVENDELSE", term: "Henvendelse" },
       ]),
   };
 });
