@@ -89,8 +89,8 @@ function Saksopplysninger({
     if (endrePeriodeFom && endrePeriodeTom) {
       kontrollerUnntaksperiode(
         behandlingID,
-        Utils.dato.formatterDatoTilISO(endrePeriodeFom),
-        Utils.dato.formatterDatoTilISO(endrePeriodeTom),
+        Utils.dato.formatterDatoTilISO(endrePeriodeFom, null),
+        Utils.dato.formatterDatoTilISO(endrePeriodeTom, null),
       );
     }
   }, [endrePeriodeFom, endrePeriodeTom]);
