@@ -29,6 +29,16 @@ export const hentBehandlingstyper = (hovedpart, sakstype, sakstema, behandlingst
   return getAsJson(`${URI_PATH}/behandlingstyper/kombinasjoner/?${params}`);
 };
 
+export const hentBehandlingstyperForNySak = (hovedpart, sakstype, sakstema, behandlingstema) => {
+  const params = QS.stringify({
+    hovedpart,
+    sakstype,
+    sakstema,
+    behandlingstema,
+  });
+  return getAsJson(`${URI_PATH}/behandlingstyper/kombinasjoner-for-ny-sak/?${params}`);
+};
+
 export const hentBehandlingstyperForEndring = (hovedpart, sakstype, sakstema, behandlingstema, saksnummer) => {
   const params = QS.stringify({
     hovedpart,

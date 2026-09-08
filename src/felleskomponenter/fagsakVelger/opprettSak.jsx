@@ -62,7 +62,6 @@ export const skalViseSoknadsperiodeOgLand = (
 
 export function OpprettSak(props) {
   const { settFeltInnhold, formValues, feltNavn } = props;
-  const { NY_VURDERING } = MKV.Koder.behandlinger.behandlingstyper;
 
   const {
     valgtSakstype,
@@ -121,20 +120,21 @@ export function OpprettSak(props) {
 
   useEffect(() => {
     if (valgtSakstype && valgtSakstema && valgtBehandlingstema) {
-      Api.LovligeKombinasjoner.hentBehandlingstyper(hovedpart, valgtSakstype, valgtSakstema, valgtBehandlingstema).then(
-        (muligeBehandlingstyper) => {
-          setBehandlingstyper(
-            muligeBehandlingstyper.filter((behandlingstype) => behandlingstype.kode !== NY_VURDERING),
+      Api.LovligeKombinasjoner.hentBehandlingstyperForNySak(
+        hovedpart,
+        valgtSakstype,
+        valgtSakstema,
+        valgtBehandlingstema,
+      ).then((muligeBehandlingstyper) => {
+        setBehandlingstyper(muligeBehandlingstyper);
+        if (muligeBehandlingstyper.map((k) => k.kode).includes(MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG)) {
+          settFeltInnhold(
+            formNavn,
+            feltNavn.opprettnysak_behandlingstype,
+            MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
           );
-          if (muligeBehandlingstyper.map((k) => k.kode).includes(MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG)) {
-            settFeltInnhold(
-              formNavn,
-              feltNavn.opprettnysak_behandlingstype,
-              MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-            );
-          }
-        },
-      );
+        }
+      });
     }
   }, [hovedpart, valgtSakstype, valgtSakstema, valgtBehandlingstema]);
 
