@@ -28,8 +28,8 @@ const BEREGNINGSREGEL_FORKLARINGER: Partial<Record<Beregningsregel, Beregningsre
   },
   MINSTEBELØP: {
     symbol: "**",
-    tekst: "Inntekten er under minstebeløpet",
-    alertTekst: "Trygdeavgift skal ikke betales da inntekten er under minstebeløpet.",
+    tekst: "Inntekten er under minstebeløpet i perioden som er angitt",
+    alertTekst: "Trygdeavgift skal ikke betales da inntekten er under minstebeløpet i perioden som er angitt.",
   },
 };
 

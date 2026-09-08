@@ -421,7 +421,9 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
 
     render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
 
-    expect(screen.getByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet i perioden som er angitt."),
+    ).toBeInTheDocument();
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
   });
 
@@ -453,7 +455,9 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
 
     expect(
-      screen.queryByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet."),
+      screen.queryByText(
+        "Trygdeavgift skal ikke betales da inntekten er under minstebeløpet i perioden som er angitt.",
+      ),
     ).not.toBeInTheDocument();
     expect(screen.getByRole("table")).toBeInTheDocument();
     expect(screen.getByText(/Inntekten er under minstebeløpet/)).toBeInTheDocument();
