@@ -36,12 +36,19 @@ const { FTRL_KAP2_2_15_ANDRE_LEDD, FTRL_KAP2_2_1 } = MKV.Koder.folketrygdloven_k
 const { PLIKTIG } = MKV.Koder.medlemskapstyper;
 const { YRKESAKTIV, PENSJONIST } = MKV.Koder.behandlinger.behandlingstema;
 
-const hentInformasjonstekst = (behandlingstype: string, medlemskapsTypeErPliktig: boolean) => {
+export const hentInformasjonstekst = (
+  behandlingstype: string,
+  medlemskapsTypeErPliktig: boolean,
+  erDelvisOpphørValgt: boolean,
+) => {
   if (medlemskapsTypeErPliktig) {
     return "Ved pliktig medlemskap foreslår Melosys alltid å innvilge hele søknadsperioden med full dekning. Juster hvis nødvendig.";
   }
   if (behandlingstype === NY_VURDERING) {
     return "Ved ny vurdering av frivillig medlemskap vises tidligere innvilgede perioder med dekning. Gjør nødvendige endringer eller legg til periode.";
+  }
+  if (erDelvisOpphørValgt) {
+    return 'Forkort perioden med resultat "Innvilget", og legg deretter til resterende periode med resultat "opphørt". Opphørsdatoen for medlemskapet blir startdatoen for den opphørte perioden.';
   }
   if (behandlingstype === MANGLENDE_INNBETALING_TRYGDEAVGIFT) {
     return "Ved manglende innbetaling vises tidligere innvilgede medlemskapsperioder med dekning. Gjør nødvendige endringer og opphør eller forkort medlemskapsperiode(r).";
@@ -90,6 +97,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const ukjentSluttdatoMedlemskapsperiode = useSelector(
     oppsummertfaktaSelectors.UkjentSluttdatoMedlemskapsperiodeSelector,
   );
+  const erDelvisOpphørValgt = useSelector(oppsummertfaktaSelectors.ErDelvisOpphørValgtSelector);
 
   const {
     control,
@@ -125,6 +133,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     soknadsperiode.tom,
     ikkeyrkesaktivOppholdstype,
     arbeidssituasjonType,
+    erDelvisOpphørValgt,
   );
 
   const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
@@ -299,7 +308,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
       </Nav.Heading>
 
       <Nav.BodyLong size="small" className="informasjonstekst">
-        {hentInformasjonstekst(behandlingstype, medlemskapsTypeErPliktig)}
+        {hentInformasjonstekst(behandlingstype, medlemskapsTypeErPliktig, erDelvisOpphørValgt)}
       </Nav.BodyLong>
 
       {ukjentSluttdatoMedlemskapsperiodeSkalVises && (

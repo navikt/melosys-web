@@ -73,8 +73,8 @@ const StarterSenereEllerSlutterFørSøknadsperioden = (
 );
 
 const IngenOpphørtePerioder = (
-  <Nav.Alert variant="warning" className="alertstripe_feilmelding">
-    Ingen periode(r) er opphørt. Hvis det er riktig kan du likevel gå videre.
+  <Nav.Alert variant="error" className="alertstripe_feilmelding">
+    Ingen periode(r) er opphørt.
   </Nav.Alert>
 );
 
@@ -193,8 +193,8 @@ function harAndrePerioderEtterOpphørtPeriode(medlemskapsperioder: Medlemskapspe
   return sortertePerioder.slice(førsteOpphørtePeriodeIndeks).some((periode) => !opphørtePerioder(periode));
 }
 
-function finnesIkkeOpphørtePerioder(medlemskapsperioder: MedlemskapsperiodeProp[], behandlingstype: string) {
-  if (!erManglendeInnbetaling(behandlingstype)) return false;
+function finnesIkkeOpphørtePerioder(medlemskapsperioder: MedlemskapsperiodeProp[], erDelvisOpphørValgt: boolean) {
+  if (!erDelvisOpphørValgt) return false;
 
   const finnesOpphørtePerioder = medlemskapsperioder.some(opphørtePerioder);
   return !finnesOpphørtePerioder;
@@ -256,6 +256,7 @@ export function finnAktivFeilmelding(
   søknadsperiodeTomDato?: string,
   ikkeyrkesaktivOppholdstype?: string,
   arbeidssituasjonType?: string,
+  erDelvisOpphørValgt?: boolean,
 ): string | undefined {
   // Sjekk feil
   const ingenMedlemskapsperioder = medlemskapsperioder?.length === undefined || medlemskapsperioder?.length === 0;
@@ -299,11 +300,11 @@ export function finnAktivFeilmelding(
     return TypeFeilmelding.PERIODE_OVERSTIGER_12_MND;
   }
 
-  // Sjekk advarsler
-  if (finnesIkkeOpphørtePerioder(medlemskapsperioder, behandlingstype)) {
+  if (finnesIkkeOpphørtePerioder(medlemskapsperioder, !!erDelvisOpphørValgt)) {
     return TypeFeilmelding.INGEN_OPPHØRTE_PERIODER;
   }
 
+  // Sjekk advarsler
   const { bestemmelse } = medlemskapsperioder[0];
   if (
     (bestemmelse === FTRL_KAP2_2_7_FJERDE_LEDD || bestemmelse === FTRL_KAP2_2_8_FJERDE_LEDD) &&
@@ -337,8 +338,8 @@ export function feilMeldingBlokkerer(type?: string): boolean {
     case TypeFeilmelding.BARE_OPPHØRTE_PERIODER:
     case TypeFeilmelding.OPPHØRT_PERIODE_FØR_ANNEN_PERIODE:
     case TypeFeilmelding.PERIODE_OVERSTIGER_12_MND:
-      return true;
     case TypeFeilmelding.INGEN_OPPHØRTE_PERIODER:
+      return true;
     case TypeFeilmelding.STARTER_SENERE_ELLER_SLUTTER_FØR_SØKNADSPERIODE:
     case TypeFeilmelding.BESTEMMELSE_FOR_FAMILIEMEDLEMMER:
     default:

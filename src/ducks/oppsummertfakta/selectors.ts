@@ -1,5 +1,6 @@
 import { createSelector, Selector } from "reselect";
 import { RootState, StateSection } from "AppTypes";
+import MKV from "../../melosyskodeverk";
 import * as Types from "./types";
 
 export const OppsummertFaktaSelector: Selector<RootState, StateSection<Types.Data>> = createSelector(
@@ -29,6 +30,12 @@ export const FullstendigManglendeInnbetalingSelector = createSelector(
 export const ManglendeInnbetalingVurderingSelector = createSelector(
   OppsummertFaktaDataSelector,
   (oppsummertfakta) => oppsummertfakta.manglendeInnbetalingVurdering,
+);
+
+export const ErDelvisOpphørValgtSelector = createSelector(
+  ManglendeInnbetalingVurderingSelector,
+  (manglendeInnbetalingVurdering) =>
+    manglendeInnbetalingVurdering?.kode === MKV.Koder.manglendeInnbetalingVurdering.DELER_AV_PERIODEN_OPPHØRES,
 );
 
 export const IkkeYrkesaktivRelasjonSelector = createSelector(

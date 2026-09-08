@@ -33,6 +33,24 @@ describe("oppsummertfakta selectors", () => {
     });
   });
 
+  it("ErDelvisOpphørValgtSelector returnerer true når DELER_AV_PERIODEN_OPPHØRES er valgt", () => {
+    const state = lagState({
+      manglendeInnbetalingVurdering: { kode: "DELER_AV_PERIODEN_OPPHØRES", term: "Deler av perioden skal opphøres" },
+    });
+    expect(selectors.ErDelvisOpphørValgtSelector(state)).toBe(true);
+  });
+
+  it("ErDelvisOpphørValgtSelector returnerer false for annen vurdering", () => {
+    const state = lagState({
+      manglendeInnbetalingVurdering: { kode: "HELE_PERIODEN_OPPHØRES", term: "Hele perioden skal opphøres" },
+    });
+    expect(selectors.ErDelvisOpphørValgtSelector(state)).toBe(false);
+  });
+
+  it("ErDelvisOpphørValgtSelector returnerer false når manglendeInnbetalingVurdering mangler", () => {
+    expect(selectors.ErDelvisOpphørValgtSelector(lagState({}))).toBe(false);
+  });
+
   it("IkkeYrkesaktivRelasjonSelector returnerer relasjonstype", () => {
     const state = lagState({ ikkeYrkesaktivFamilieRelasjonstype: "EKTEFELLE" });
     expect(selectors.IkkeYrkesaktivRelasjonSelector(state)).toBe("EKTEFELLE");
