@@ -19,16 +19,6 @@ export const hentBehandlingstemaer = (hovedpart, sakstype, sakstema, aktivBehand
   return getAsJson(`${URI_PATH}/behandlingstemaer/hent-lovlige-kombinasjoner/?${params}`);
 };
 
-export const hentBehandlingstyper = (hovedpart, sakstype, sakstema, behandlingstema) => {
-  const params = QS.stringify({
-    hovedpart,
-    sakstype,
-    sakstema,
-    behandlingstema,
-  });
-  return getAsJson(`${URI_PATH}/behandlingstyper/kombinasjoner/?${params}`);
-};
-
 export const hentBehandlingstyperForNySak = (hovedpart, sakstype, sakstema, behandlingstema) => {
   const params = QS.stringify({
     hovedpart,
