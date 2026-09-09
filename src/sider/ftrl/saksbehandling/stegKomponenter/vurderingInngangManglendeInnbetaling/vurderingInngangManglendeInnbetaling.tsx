@@ -13,6 +13,8 @@ import type { VurderingInngangManglendeInnbetaling as VurderingInngangManglendeI
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 import * as oppsummertfaktaTypes from "../../../../../ducks/oppsummertfakta/types";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
+import { modalerOperations } from "../../../../../ducks/modaler";
+import { BekreftValgTypes } from "../../../../../modals/bekreftValgTypes";
 import { inngangSteg, vedtakOpphoerSteg } from "../../stegLister/stegListeManglendeInnbetalingFlyt";
 
 interface Props {
@@ -75,7 +77,16 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
     oppdaterStatus(formIsValid, nesteStegId(value));
   };
 
+  // "Behandlingen skal avsluttes" skal ikke gå videre i den vanlige steglisten, men i stedet
+  // avslutte behandlingen på samme måte som menyvalget "Ferdigbehandlet" i behandlingsmenyen.
+  const erBehandlingenSkalAvsluttes = (value?: string) => value === "BEHANDLINGEN_SKAL_AVSLUTTES";
+
   const onBekreft = async () => {
+    if (erBehandlingenSkalAvsluttes(formValues.fullstendigManglendeInnbetaling)) {
+      dispatch(modalerOperations.visBekreftValg(BekreftValgTypes.FERDIGBEHANDLET));
+      return;
+    }
+
     const response = await dispatch(
       oppsummertfaktaOperations.lagreManglendeInnbetalingHandlingsvalg(
         behandlingID,

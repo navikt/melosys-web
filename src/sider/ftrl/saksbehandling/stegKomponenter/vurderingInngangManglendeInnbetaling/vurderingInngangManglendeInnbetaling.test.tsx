@@ -40,13 +40,26 @@ vi.mock("../../../../../ducks/behandlinger", () => ({
   behandlingerSelectors: { BehandlingIDSelector: () => 162 },
 }));
 
+vi.mock("../../../../../ducks/modaler", () => ({
+  modalerOperations: {
+    visBekreftValg: vi.fn((type: unknown) => ({ type: "VIS_BEKREFT_VALG", bekreftValgType: type })),
+  },
+}));
+
+vi.mock("../../../../../modals/bekreftValgTypes", () => ({
+  BekreftValgTypes: { FERDIGBEHANDLET: "FERDIGBEHANDLET" },
+}));
+
 import { oppsummertfaktaOperations } from "../../../../../ducks/oppsummertfakta";
+import { modalerOperations } from "../../../../../ducks/modaler";
+import { BekreftValgTypes } from "../../../../../modals/bekreftValgTypes";
 import { VurderingInngangManglendeInnbetaling } from "./vurderingInngangManglendeInnbetaling";
 
 describe("VurderingInngangManglendeInnbetaling", () => {
   beforeEach(() => {
     dispatchMock.mockClear();
     vi.mocked(oppsummertfaktaOperations.lagreManglendeInnbetalingHandlingsvalg).mockClear();
+    vi.mocked(modalerOperations.visBekreftValg).mockClear();
   });
 
   it("lagrer ikke valget bare ved å velge en radioknapp", async () => {
@@ -101,6 +114,24 @@ describe("VurderingInngangManglendeInnbetaling", () => {
       162,
       "DELER_AV_PERIODEN_OPPHØRES",
     );
+    expect(bekreft).not.toHaveBeenCalled();
+  });
+
+  it('åpner "Ferdigbehandlet"-dialogen og lagrer ikke handlingsvalg når "Behandlingen skal avsluttes" bekreftes', async () => {
+    const bekreft = vi.fn();
+    render(<VurderingInngangManglendeInnbetaling bekreft={bekreft} aktivtSteg oppdaterStatus={vi.fn()} />);
+
+    await act(async () => {
+      fireEvent.click(screen.getByText(/Behandlingen skal avsluttes/).closest("label") as HTMLLabelElement);
+    });
+    const bekreftKnapp = await screen.findByRole("button", { name: "Bekreft og fortsett" });
+    await waitFor(() => expect(bekreftKnapp).not.toBeDisabled());
+    await act(async () => {
+      fireEvent.click(bekreftKnapp);
+    });
+
+    expect(modalerOperations.visBekreftValg).toHaveBeenCalledWith(BekreftValgTypes.FERDIGBEHANDLET);
+    expect(oppsummertfaktaOperations.lagreManglendeInnbetalingHandlingsvalg).not.toHaveBeenCalled();
     expect(bekreft).not.toHaveBeenCalled();
   });
 });
