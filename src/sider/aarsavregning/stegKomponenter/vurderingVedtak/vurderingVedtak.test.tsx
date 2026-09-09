@@ -453,12 +453,12 @@ describe("MELOSYS-7114: Obligatorisk begrunnelse", () => {
 import { act, fireEvent } from "@testing-library/react";
 
 describe("MELOSYS-8163: blokkert vedtakssteg for ustøttet EØS-sakstype", () => {
-  const lagBlokkertState = (toggles: Record<string, boolean> = {}) => ({
+  const lagBlokkertState = (toggles: Record<string, boolean> = {}, redigerbart = true) => ({
     behandlinger: {
       status: "OK",
       data: {
         behandlingID: 12345,
-        redigerbart: true,
+        redigerbart,
         oppsummering: {
           behandlingstema: { kode: "ARBEID_TJENESTEPERSON_ELLER_FLY" },
         },
@@ -515,12 +515,19 @@ describe("MELOSYS-8163: blokkert vedtakssteg for ustøttet EØS-sakstype", () =>
     vi.mocked(Api.Saksflyt.Vedtak.fatt).mockResolvedValue({ data: { data: {} } } as any);
   });
 
+  // Meldingen følger sakstypen, ikke saksbehandling: også i innsyn må en deaktivert
+  // «Fatt vedtak» være forklart
   it.each([
-    { navn: "blokkert sakstype", blokkert: true },
-    { navn: "støttet sakstype", blokkert: false },
-  ])("viser den blokkerende meldingen: $blokkert ($navn)", async ({ blokkert }) => {
+    { navn: "blokkert sakstype, saksbehandling", blokkert: true, redigerbart: true },
+    { navn: "blokkert sakstype, innsyn", blokkert: true, redigerbart: false },
+    { navn: "støttet sakstype, saksbehandling", blokkert: false, redigerbart: true },
+    { navn: "støttet sakstype, innsyn", blokkert: false, redigerbart: false },
+  ])("viser den blokkerende meldingen: $blokkert ($navn)", async ({ blokkert, redigerbart }) => {
     await renderWithProvidersAsync(<VurderingVedtak {...mockProps} />, {
-      preloadedState: lagBlokkertState(blokkert ? {} : { "melosys.arsavregning.eos_tjenesteperson": true }) as any,
+      preloadedState: lagBlokkertState(
+        blokkert ? {} : { "melosys.arsavregning.eos_tjenesteperson": true },
+        redigerbart,
+      ) as any,
     });
 
     await waitFor(() => {
@@ -531,6 +538,13 @@ describe("MELOSYS-8163: blokkert vedtakssteg for ustøttet EØS-sakstype", () =>
       expect(screen.getByTestId("aarsavregning-ikke-stottet-sakstype")).toBeInTheDocument();
     } else {
       expect(screen.queryByTestId("aarsavregning-ikke-stottet-sakstype")).not.toBeInTheDocument();
+    }
+
+    const fattVedtakKnapp = screen.getByRole("button", { name: "Fatt vedtak" });
+    if (blokkert || !redigerbart) {
+      expect(fattVedtakKnapp).toBeDisabled();
+    } else {
+      expect(fattVedtakKnapp).not.toBeDisabled();
     }
   });
 
