@@ -9,7 +9,7 @@ export const RESET = "oppsummertfakta/RESET";
 export interface Data {
   virksomheter?: Api.Avklartefakta.Virksomheter;
   fullstendigManglendeInnbetaling?: boolean;
-  manglendeInnbetalingVurdering?: KTObject;
+  manglendeInnbetalingHandlingsvalg?: KTObject;
   ikkeYrkesaktivFamilieRelasjonstype?: string;
   ikkeYrkesaktivOppholdstype?: string;
   arbeidssituasjonType?: string;

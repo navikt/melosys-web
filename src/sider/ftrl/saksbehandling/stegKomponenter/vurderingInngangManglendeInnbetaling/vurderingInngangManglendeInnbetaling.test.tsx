@@ -17,14 +17,14 @@ vi.mock("../../../../../hooks", () => ({
 
 vi.mock("../../../../../ducks/oppsummertfakta", () => ({
   oppsummertfaktaOperations: {
-    lagreManglendeInnbetalingVurdering: vi.fn((behandlingID: number, verdi?: string) => ({
-      type: "LAGRE_MANGLENDE_INNBETALING_VURDERING",
+    lagreManglendeInnbetalingHandlingsvalg: vi.fn((behandlingID: number, verdi?: string) => ({
+      type: "LAGRE_MANGLENDE_INNBETALING_HANDLINGSVALG",
       behandlingID,
       verdi,
     })),
   },
   oppsummertfaktaSelectors: {
-    ManglendeInnbetalingVurderingSelector: () => undefined,
+    ManglendeInnbetalingHandlingsvalgSelector: () => undefined,
   },
 }));
 
@@ -42,7 +42,7 @@ import { VurderingInngangManglendeInnbetaling } from "./vurderingInngangManglend
 describe("VurderingInngangManglendeInnbetaling", () => {
   beforeEach(() => {
     dispatchMock.mockClear();
-    vi.mocked(oppsummertfaktaOperations.lagreManglendeInnbetalingVurdering).mockClear();
+    vi.mocked(oppsummertfaktaOperations.lagreManglendeInnbetalingHandlingsvalg).mockClear();
   });
 
   it("lagrer ikke valget bare ved å velge en radioknapp", async () => {
@@ -52,7 +52,7 @@ describe("VurderingInngangManglendeInnbetaling", () => {
       fireEvent.click(screen.getByText(/Deler/).closest("label") as HTMLLabelElement);
     });
 
-    expect(oppsummertfaktaOperations.lagreManglendeInnbetalingVurdering).not.toHaveBeenCalled();
+    expect(oppsummertfaktaOperations.lagreManglendeInnbetalingHandlingsvalg).not.toHaveBeenCalled();
     expect(dispatchMock).not.toHaveBeenCalled();
   });
 
@@ -71,7 +71,7 @@ describe("VurderingInngangManglendeInnbetaling", () => {
 
     await waitFor(() => expect(bekreft).toHaveBeenCalled());
 
-    expect(oppsummertfaktaOperations.lagreManglendeInnbetalingVurdering).toHaveBeenCalledWith(
+    expect(oppsummertfaktaOperations.lagreManglendeInnbetalingHandlingsvalg).toHaveBeenCalledWith(
       162,
       "DELER_AV_PERIODEN_OPPHØRES",
     );

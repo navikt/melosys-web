@@ -16,7 +16,7 @@ interface Oppsummering {
   virksomheter: string[];
   arbeidsland: string[];
   fullstendigManglendeInnbetaling: boolean;
-  manglendeInnbetalingVurdering?: KTObject;
+  manglendeInnbetalingHandlingsvalg?: KTObject;
   ikkeYrkesaktivFamilieRelasjonstype?: string;
   ikkeYrkesaktivOppholdstype?: string;
   arbeidssituasjonType?: string;
@@ -77,11 +77,11 @@ export const lagreInnbetalingsstatus = (
 ): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/innbetalingsstatus`, fullstendigManglendeInnbetaling);
 
-export const lagreManglendeInnbetalingVurdering = (
+export const lagreManglendeInnbetalingHandlingsvalg = (
   behandlingID: number,
-  manglendeInnbetalingVurdering?: string,
+  manglendeInnbetalingHandlingsvalg?: string,
 ): Promise<Oppsummering> =>
   postAsJson(
-    `${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/manglende-innbetaling-vurdering`,
-    manglendeInnbetalingVurdering,
+    `${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/manglende-innbetaling-handlingsvalg`,
+    manglendeInnbetalingHandlingsvalg,
   );

@@ -27,15 +27,21 @@ export const FullstendigManglendeInnbetalingSelector = createSelector(
   (oppsummertfakta) => oppsummertfakta.fullstendigManglendeInnbetaling,
 );
 
-export const ManglendeInnbetalingVurderingSelector = createSelector(
+export const ManglendeInnbetalingHandlingsvalgSelector = createSelector(
   OppsummertFaktaDataSelector,
-  (oppsummertfakta) => oppsummertfakta.manglendeInnbetalingVurdering,
+  (oppsummertfakta) => oppsummertfakta.manglendeInnbetalingHandlingsvalg,
 );
 
 export const ErDelvisOpphørValgtSelector = createSelector(
-  ManglendeInnbetalingVurderingSelector,
-  (manglendeInnbetalingVurdering) =>
-    manglendeInnbetalingVurdering?.kode === MKV.Koder.manglendeInnbetalingVurdering.DELER_AV_PERIODEN_OPPHØRES,
+  ManglendeInnbetalingHandlingsvalgSelector,
+  (manglendeInnbetalingHandlingsvalg) =>
+    manglendeInnbetalingHandlingsvalg?.kode === MKV.Koder.manglendeInnbetalingHandlingsvalg.DELER_AV_PERIODEN_OPPHØRES,
+);
+
+export const ErVedtaketSkalEndresValgtSelector = createSelector(
+  ManglendeInnbetalingHandlingsvalgSelector,
+  (manglendeInnbetalingHandlingsvalg) =>
+    manglendeInnbetalingHandlingsvalg?.kode === MKV.Koder.manglendeInnbetalingHandlingsvalg.VEDTAKET_SKAL_ENDRES,
 );
 
 export const IkkeYrkesaktivRelasjonSelector = createSelector(

@@ -59,7 +59,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
     resolver: yupResolver<FieldValues>(vurdering_inngang_manglende_innbetaling),
     mode: "all",
     defaultValues: {
-      fullstendigManglendeInnbetaling: useSelector(oppsummertfaktaSelectors.ManglendeInnbetalingVurderingSelector)
+      fullstendigManglendeInnbetaling: useSelector(oppsummertfaktaSelectors.ManglendeInnbetalingHandlingsvalgSelector)
         ?.kode,
     } as FieldValues,
   });
@@ -76,7 +76,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
 
   const onBekreft = async () => {
     await dispatch(
-      oppsummertfaktaOperations.lagreManglendeInnbetalingVurdering(
+      oppsummertfaktaOperations.lagreManglendeInnbetalingHandlingsvalg(
         behandlingID,
         formValues.fullstendigManglendeInnbetaling,
       ),

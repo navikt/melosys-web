@@ -31,9 +31,12 @@ export function lagreInnbetalingsstatus(behandlingID: number, fullstendigManglen
   );
 }
 
-export function lagreManglendeInnbetalingVurdering(behandlingID: number, manglendeInnbetalingVurdering?: string) {
+export function lagreManglendeInnbetalingHandlingsvalg(
+  behandlingID: number,
+  manglendeInnbetalingHandlingsvalg?: string,
+) {
   return doThenDispatch(
-    () => Api.Avklartefakta.lagreManglendeInnbetalingVurdering(behandlingID, manglendeInnbetalingVurdering),
+    () => Api.Avklartefakta.lagreManglendeInnbetalingHandlingsvalg(behandlingID, manglendeInnbetalingHandlingsvalg),
     {
       OK: Types.OK,
       FEILET: Types.FEILET,

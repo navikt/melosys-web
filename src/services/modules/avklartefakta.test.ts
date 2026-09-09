@@ -50,22 +50,22 @@ describe("Avklartefakta endepunkt", () => {
     expect(res).toEqual([avklartefakta]);
   });
 
-  test("POST /api/avklartefakta/:behandlingID/manglende-innbetaling-vurdering", async () => {
+  test("POST /api/avklartefakta/:behandlingID/manglende-innbetaling-handlingsvalg", async () => {
     const behandlingID = 4;
     const oppsummering = {
       virksomheter: [],
       arbeidsland: [],
       fullstendigManglendeInnbetaling: false,
-      manglendeInnbetalingVurdering: { kode: "HELE_PERIODEN_OPPHØRES", term: "Hele perioden skal opphøres" },
+      manglendeInnbetalingHandlingsvalg: { kode: "HELE_PERIODEN_OPPHØRES", term: "Hele perioden skal opphøres" },
     };
 
     mswServer.use(
-      http.post(`/api/avklartefakta/${behandlingID}/manglende-innbetaling-vurdering`, () => {
+      http.post(`/api/avklartefakta/${behandlingID}/manglende-innbetaling-handlingsvalg`, () => {
         return HttpResponse.json(oppsummering);
       }),
     );
 
-    const res = await Avklartefakta.lagreManglendeInnbetalingVurdering(behandlingID, "HELE_PERIODEN_OPPHØRES");
+    const res = await Avklartefakta.lagreManglendeInnbetalingHandlingsvalg(behandlingID, "HELE_PERIODEN_OPPHØRES");
     expect(res).toEqual(oppsummering);
   });
 });

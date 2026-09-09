@@ -23,11 +23,11 @@ describe("oppsummertfakta selectors", () => {
     expect(selectors.FullstendigManglendeInnbetalingSelector(state)).toBe(true);
   });
 
-  it("ManglendeInnbetalingVurderingSelector returnerer verdi", () => {
+  it("ManglendeInnbetalingHandlingsvalgSelector returnerer verdi", () => {
     const state = lagState({
-      manglendeInnbetalingVurdering: { kode: "HELE_PERIODEN_OPPHØRES", term: "Hele perioden skal opphøres" },
+      manglendeInnbetalingHandlingsvalg: { kode: "HELE_PERIODEN_OPPHØRES", term: "Hele perioden skal opphøres" },
     });
-    expect(selectors.ManglendeInnbetalingVurderingSelector(state)).toEqual({
+    expect(selectors.ManglendeInnbetalingHandlingsvalgSelector(state)).toEqual({
       kode: "HELE_PERIODEN_OPPHØRES",
       term: "Hele perioden skal opphøres",
     });
@@ -35,20 +35,41 @@ describe("oppsummertfakta selectors", () => {
 
   it("ErDelvisOpphørValgtSelector returnerer true når DELER_AV_PERIODEN_OPPHØRES er valgt", () => {
     const state = lagState({
-      manglendeInnbetalingVurdering: { kode: "DELER_AV_PERIODEN_OPPHØRES", term: "Deler av perioden skal opphøres" },
+      manglendeInnbetalingHandlingsvalg: {
+        kode: "DELER_AV_PERIODEN_OPPHØRES",
+        term: "Deler av perioden skal opphøres",
+      },
     });
     expect(selectors.ErDelvisOpphørValgtSelector(state)).toBe(true);
   });
 
   it("ErDelvisOpphørValgtSelector returnerer false for annen vurdering", () => {
     const state = lagState({
-      manglendeInnbetalingVurdering: { kode: "HELE_PERIODEN_OPPHØRES", term: "Hele perioden skal opphøres" },
+      manglendeInnbetalingHandlingsvalg: { kode: "HELE_PERIODEN_OPPHØRES", term: "Hele perioden skal opphøres" },
     });
     expect(selectors.ErDelvisOpphørValgtSelector(state)).toBe(false);
   });
 
-  it("ErDelvisOpphørValgtSelector returnerer false når manglendeInnbetalingVurdering mangler", () => {
+  it("ErDelvisOpphørValgtSelector returnerer false når manglendeInnbetalingHandlingsvalg mangler", () => {
     expect(selectors.ErDelvisOpphørValgtSelector(lagState({}))).toBe(false);
+  });
+
+  it("ErVedtaketSkalEndresValgtSelector returnerer true når VEDTAKET_SKAL_ENDRES er valgt", () => {
+    const state = lagState({
+      manglendeInnbetalingHandlingsvalg: { kode: "VEDTAKET_SKAL_ENDRES", term: "Vedtaket skal endres" },
+    });
+    expect(selectors.ErVedtaketSkalEndresValgtSelector(state)).toBe(true);
+  });
+
+  it("ErVedtaketSkalEndresValgtSelector returnerer false for annen vurdering", () => {
+    const state = lagState({
+      manglendeInnbetalingHandlingsvalg: { kode: "HELE_PERIODEN_OPPHØRES", term: "Hele perioden skal opphøres" },
+    });
+    expect(selectors.ErVedtaketSkalEndresValgtSelector(state)).toBe(false);
+  });
+
+  it("ErVedtaketSkalEndresValgtSelector returnerer false når manglendeInnbetalingHandlingsvalg mangler", () => {
+    expect(selectors.ErVedtaketSkalEndresValgtSelector(lagState({}))).toBe(false);
   });
 
   it("IkkeYrkesaktivRelasjonSelector returnerer relasjonstype", () => {

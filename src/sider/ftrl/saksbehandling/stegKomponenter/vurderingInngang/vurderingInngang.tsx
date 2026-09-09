@@ -52,6 +52,7 @@ export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
   const behandlingUnderOppfriskning = useSelector(BehandlingUnderOppfriskningSelector);
   const erDelvisOpphørValgt = useSelector(oppsummertfaktaSelectors.ErDelvisOpphørValgtSelector);
+  const erVedtaketSkalEndresValgt = useSelector(oppsummertfaktaSelectors.ErVedtaketSkalEndresValgtSelector);
   const feltRedigerbart = redigerbart && !erDelvisOpphørValgt;
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
@@ -137,16 +138,20 @@ export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const nyVurderingPeriodetekst =
     "Du skal kun endre søknadsperiode dersom det er mottatt informasjon om ny start og/eller sluttdato for oppholdet";
+  const vedtaketSkalEndresPeriodetekst = "Gjør eventuelle nødvendige justeringer, f.eks. forkortet sluttdato.";
 
   return (
     <div className="vurderingInngang_ftrl">
       <Nav.Heading level="1" className="stegvelgertittel">
-        Oppgi opplysninger fra søknaden
+        {erVedtaketSkalEndresValgt
+          ? "Oppgi opplysninger fra bruker/brukers fullmektig"
+          : "Oppgi opplysninger fra søknaden"}
       </Nav.Heading>
 
       <div className="label__container">
         <Nav.Heading size="xsmall">Søknadsperiode</Nav.Heading>
         {erNyVurdering && <Nav.Detail>{nyVurderingPeriodetekst}</Nav.Detail>}
+        {erVedtaketSkalEndresValgt && <Nav.Detail>{vedtaketSkalEndresPeriodetekst}</Nav.Detail>}
       </div>
 
       <div className="søknads_periode_wrapper">
