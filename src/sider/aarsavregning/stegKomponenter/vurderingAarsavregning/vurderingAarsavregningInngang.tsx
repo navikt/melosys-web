@@ -114,8 +114,8 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
    *
    * Meldingen, årsvelgeren og backend-skrivingen følger sakstypen, fordi en deaktivert årsvelger
    * uten forklaring er uforståelig i innsyn. Knappen og skjemaskjulingen følger saksbehandling.
-   * Meldingen krever i tillegg at steget er aktivt: alle steg er montert samtidig, og vedtakssteget
-   * viser den samme meldingen.
+   * Meldingen krever i tillegg at steget er aktivt: steg som er tatt i bruk forblir montert og
+   * skjules med CSS, og vedtakssteget viser den samme meldingen.
    */
   const skalBlokkereÅrsavregning = redigerbart && erÅrsavregningIkkeStøttetSakstype;
 
@@ -421,7 +421,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
         </>
       )}
 
-      {/* Alle steg er montert samtidig, så meldingen må følge aktivt steg for at testid-en skal være unik */}
+      {/* Steg som er tatt i bruk forblir montert, så meldingen må følge aktivt steg for unik testid */}
       {aktivtSteg && erÅrsavregningIkkeStøttetSakstype && (
         <Aarsavregningsmeldinger.ÅrsavregningIkkeStøttetSakstypeMelding />
       )}
