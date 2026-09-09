@@ -11,6 +11,7 @@ import "./vurderingInngangManglendeInnbetaling.less";
 import vurdering_inngang_manglende_innbetaling from "./vurderingInngangManglendeInnbetalingSchema";
 import type { VurderingInngangManglendeInnbetaling as VurderingInngangManglendeInnbetalingValg } from "./vurderingInngangManglendeInnbetalingSchema";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
+import * as oppsummertfaktaTypes from "../../../../../ducks/oppsummertfakta/types";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { inngangSteg, vedtakOpphoerSteg } from "../../stegLister/stegListeManglendeInnbetalingFlyt";
 
@@ -75,13 +76,15 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
   };
 
   const onBekreft = async () => {
-    await dispatch(
+    const response = await dispatch(
       oppsummertfaktaOperations.lagreManglendeInnbetalingHandlingsvalg(
         behandlingID,
         formValues.fullstendigManglendeInnbetaling,
       ),
     );
-    bekreft();
+    if (response.type !== oppsummertfaktaTypes.FEILET) {
+      bekreft();
+    }
   };
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 
-const dispatchMock = vi.fn(() => Promise.resolve());
+const dispatchMock = vi.fn(() => Promise.resolve({ type: "oppsummertfakta/OK" }));
 
 vi.mock("react-redux", async (importOriginal) => {
   const actual = await importOriginal<typeof import("react-redux")>();
@@ -13,6 +13,10 @@ vi.mock("react-redux", async (importOriginal) => {
 
 vi.mock("../../../../../hooks", () => ({
   useDispatch: () => dispatchMock,
+}));
+
+vi.mock("../../../../../ducks/oppsummertfakta/types", () => ({
+  FEILET: "oppsummertfakta/FEILET",
 }));
 
 vi.mock("../../../../../ducks/oppsummertfakta", () => ({
@@ -77,5 +81,26 @@ describe("VurderingInngangManglendeInnbetaling", () => {
     );
     // Lagringen må skje før navigering videre, ikke etter.
     expect(dispatchMock.mock.invocationCallOrder[0]).toBeLessThan(bekreft.mock.invocationCallOrder[0]);
+  });
+
+  it("navigerer ikke videre hvis lagringen feiler", async () => {
+    dispatchMock.mockResolvedValueOnce({ type: "oppsummertfakta/FEILET" });
+    const bekreft = vi.fn();
+    render(<VurderingInngangManglendeInnbetaling bekreft={bekreft} aktivtSteg oppdaterStatus={vi.fn()} />);
+
+    await act(async () => {
+      fireEvent.click(screen.getByText(/Deler/).closest("label") as HTMLLabelElement);
+    });
+    const bekreftKnapp = await screen.findByRole("button", { name: "Bekreft og fortsett" });
+    await waitFor(() => expect(bekreftKnapp).not.toBeDisabled());
+    await act(async () => {
+      fireEvent.click(bekreftKnapp);
+    });
+
+    expect(oppsummertfaktaOperations.lagreManglendeInnbetalingHandlingsvalg).toHaveBeenCalledWith(
+      162,
+      "DELER_AV_PERIODEN_OPPHØRES",
+    );
+    expect(bekreft).not.toHaveBeenCalled();
   });
 });
