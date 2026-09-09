@@ -21,7 +21,7 @@ vi.mock("../../../../services/api", () => ({
 const BEHANDLING_ID = 12345;
 const SAKSNUMMER = "SAK123456";
 
-const lagAarsavregningResponse = (overrides = {}) => ({
+const lagÅrsavregningResponse = (overrides = {}) => ({
   aarsavregningID: 1,
   aar: 2024,
   harInnbetaltTrygdeavgift: null,
@@ -36,8 +36,8 @@ const lagAarsavregningResponse = (overrides = {}) => ({
   ...overrides,
 });
 
-const lagAarsavregningMedGrunnlag = (overrides = {}) =>
-  lagAarsavregningResponse({
+const lagÅrsavregningMedGrunnlag = (overrides = {}) =>
+  lagÅrsavregningResponse({
     harInnbetaltTrygdeavgift: true,
     tidligereTrygdeavgiftsGrunnlagsopplysninger: {
       trygdeavgiftsgrunnlag: {
@@ -97,7 +97,7 @@ const defaultProps = {
 };
 
 const MELDING = "Melosys støtter ikke årsavregning for denne kombinasjonen av sakstype/-tema";
-const MEDGRUNNLAG_MARKOER = "Årsavregning med grunnlag må ha grunnlag";
+const MEDGRUNNLAG_MARKØR = "Årsavregning med grunnlag må ha grunnlag";
 
 describe("VurderingAarsavregningInngang — ustøttet EØS-sakstype (MELOSYS-8163)", () => {
   beforeEach(() => {
@@ -105,7 +105,7 @@ describe("VurderingAarsavregningInngang — ustøttet EØS-sakstype (MELOSYS-816
     vi.mocked(Api.Aarsavregning.hentFiltrertAarsavregningList).mockResolvedValue([
       { behandlingID: BEHANDLING_ID, aar: 2024, resultattype: { kode: "IKKE_FASTSATT" } },
     ] as any);
-    vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(lagAarsavregningResponse() as any);
+    vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(lagÅrsavregningResponse() as any);
     vi.mocked(Api.Aarsavregning.oppdaterHarInnbetaltTrygdeavgift).mockResolvedValue({
       harInnbetaltTrygdeavgift: true,
     } as any);
@@ -190,7 +190,7 @@ describe("VurderingAarsavregningInngang — ustøttet EØS-sakstype (MELOSYS-816
 
     it(`viser deaktivert «Bekreft og fortsett» uten skjema: ${blokkererSaksbehandling}`, async () => {
       // Med tidligere grunnlag rendres radiogruppa når flyten ikke er blokkert
-      vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(lagAarsavregningMedGrunnlag() as any);
+      vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(lagÅrsavregningMedGrunnlag() as any);
 
       const { container } = await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
         preloadedState: state() as any,
@@ -210,17 +210,17 @@ describe("VurderingAarsavregningInngang — ustøttet EØS-sakstype (MELOSYS-816
       // Forelderen får grunnlag, barnet en tynn respons: da rendrer barnet en feilmelding
       // som er en direkte markør på at det faktisk ble montert.
       vi.mocked(Api.Aarsavregning.hentAarsavregning)
-        .mockResolvedValueOnce(lagAarsavregningMedGrunnlag({ harInnbetaltTrygdeavgift: false }) as any)
-        .mockResolvedValue(lagAarsavregningResponse({ tidligereTrygdeavgiftsGrunnlagsopplysninger: null }) as any);
+        .mockResolvedValueOnce(lagÅrsavregningMedGrunnlag({ harInnbetaltTrygdeavgift: false }) as any)
+        .mockResolvedValue(lagÅrsavregningResponse({ tidligereTrygdeavgiftsGrunnlagsopplysninger: null }) as any);
 
       await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
         preloadedState: state() as any,
       });
 
       if (blokkererSaksbehandling) {
-        expect(screen.queryByText(MEDGRUNNLAG_MARKOER)).not.toBeInTheDocument();
+        expect(screen.queryByText(MEDGRUNNLAG_MARKØR)).not.toBeInTheDocument();
       } else {
-        expect(screen.getByText(MEDGRUNNLAG_MARKOER)).toBeInTheDocument();
+        expect(screen.getByText(MEDGRUNNLAG_MARKØR)).toBeInTheDocument();
       }
     });
   });

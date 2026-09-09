@@ -43,14 +43,14 @@ const renderMedState = (state: ReturnType<typeof lagState>) => {
 };
 
 describe("useErÅrsavregningIkkeStøttetSakstype", () => {
-  it("blokkerer EØS pensjonist (TRYGDEAVGIFT) når toggle er AV", () => {
+  it("blokkerer EØS pensjonist (TRYGDEAVGIFT) når toggle er av", () => {
     const { result } = renderMedState(
       lagState({ sakstype: "EU_EOS", sakstema: "TRYGDEAVGIFT", behandlingstema: "PENSJONIST" }),
     );
     expect(result.current).toBe(true);
   });
 
-  it("blokkerer IKKE EØS pensjonist når toggle er PÅ", () => {
+  it("blokkerer ikke EØS pensjonist når toggle er på", () => {
     const { result } = renderMedState(
       lagState({
         sakstype: "EU_EOS",
@@ -62,7 +62,7 @@ describe("useErÅrsavregningIkkeStøttetSakstype", () => {
     expect(result.current).toBe(false);
   });
 
-  it("blokkerer EØS tjenesteperson (MEDLEMSKAP_LOVVALG) når toggle er AV", () => {
+  it("blokkerer EØS tjenesteperson (MEDLEMSKAP_LOVVALG) når toggle er av", () => {
     const { result } = renderMedState(
       lagState({
         sakstype: "EU_EOS",
@@ -73,7 +73,7 @@ describe("useErÅrsavregningIkkeStøttetSakstype", () => {
     expect(result.current).toBe(true);
   });
 
-  it("blokkerer IKKE EØS tjenesteperson når toggle er PÅ", () => {
+  it("blokkerer ikke EØS tjenesteperson når toggle er på", () => {
     const { result } = renderMedState(
       lagState({
         sakstype: "EU_EOS",

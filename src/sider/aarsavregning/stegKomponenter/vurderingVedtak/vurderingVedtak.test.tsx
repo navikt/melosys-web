@@ -484,7 +484,7 @@ describe("MELOSYS-8163: blokkert vedtakssteg for ustøttet EØS-sakstype", () =>
   const mockProps = { tilbake: vi.fn(), aktivtSteg: true };
 
   // Sender inn skjemaet og venter til valideringen i handleSubmit har rukket å kjøre.
-  // waitFor duger ikke for en not.toHaveBeenCalled-assertion: den passerer på første forsøk.
+  // waitFor duger ikke for en not.toHaveBeenCalled-sjekk: den passerer på første forsøk.
   const sendInnSkjema = async (container: HTMLElement) => {
     await act(async () => {
       fireEvent.submit(container.querySelector("form") as HTMLFormElement);
@@ -495,7 +495,7 @@ describe("MELOSYS-8163: blokkert vedtakssteg for ustøttet EØS-sakstype", () =>
   };
 
   beforeEach(() => {
-    // Skjemaet må være gyldig, ellers stopper handleSubmit før onSubmit-guarden testes
+    // Skjemaet må være gyldig, ellers stopper handleSubmit før vilkåret i onSubmit testes
     vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue({
       aarsavregningID: 12345,
       aar: 2024,
@@ -585,8 +585,8 @@ describe("MELOSYS-8163: blokkert vedtakssteg for ustøttet EØS-sakstype", () =>
 
     expect(screen.getByRole("button", { name: "Fatt vedtak" })).not.toBeDisabled();
 
-    // Positiv kontroll: samme innsending når sakstypen er støttet NÅR fram til fattVedtak,
-    // så assertionen over er ikke vakuøs
+    // Positiv kontroll: samme innsending når sakstypen er støttet når fram til fattVedtak,
+    // så sjekken over kan faktisk feile
     await sendInnSkjema(container);
 
     expect(Api.Saksflyt.Vedtak.fatt).toHaveBeenCalled();

@@ -107,10 +107,10 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
    * Tilstandene for en ustøttet sakstype:
    *
    *                          | melding | «Bekreft og fortsett» | avgiftsskjema | årsvelger | skriver til backend
-   *   blokkert + redigerbart  |   ja    |  vises, deaktivert    |    skjult     | deaktivert |        nei
-   *   blokkert + innsyn       |   ja    |  kun skjemaets egen   |    vises      | deaktivert |        nei
-   *   støttet   + redigerbart |   nei   |  kun skjemaets egen   |    vises      |  aktiv     |        ja
-   *   støttet   + innsyn      |   nei   |  kun skjemaets egen   |    vises      | readOnly   |        ja
+   *   blokkert + saksbehandling |  ja   |  vises, deaktivert    |    skjult     | deaktivert |        nei
+   *   blokkert + innsyn        |  ja   |  kun skjemaets egen   |    vises      | deaktivert |        nei
+   *   støttet  + saksbehandling |  nei  |  kun skjemaets egen   |    vises      |  aktiv     |        ja
+   *   støttet  + innsyn        |  nei  |  kun skjemaets egen   |    vises      | readOnly   |        ja
    *
    * Meldingen, årsvelgeren og backend-skrivingen følger sakstypen, fordi en deaktivert årsvelger
    * uten forklaring er uforståelig i innsyn. Knappen og skjemaskjulingen følger saksbehandling.
@@ -298,7 +298,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             onChange={håndterEndringAvÅr}
             readOnly={!redigerbart}
             // Blokkerte sakstyper deaktiveres også i innsyn: readOnly stopper bare piltaster
-            // og mellomrom, mens tastatur-typeahead fortsatt ville opprettet en årsavregning
+            // og mellomrom, mens vanlig tasting i feltet fortsatt ville opprettet en årsavregning
             disabled={erÅrsavregningIkkeStøttetSakstype}
           >
             <option value="" disabled>
