@@ -515,6 +515,25 @@ describe("MELOSYS-8163: blokkert vedtakssteg for ustøttet EØS-sakstype", () =>
     vi.mocked(Api.Saksflyt.Vedtak.fatt).mockResolvedValue({ data: { data: {} } } as any);
   });
 
+  it.each([
+    { navn: "blokkert sakstype", blokkert: true },
+    { navn: "støttet sakstype", blokkert: false },
+  ])("viser den blokkerende meldingen: $blokkert ($navn)", async ({ blokkert }) => {
+    await renderWithProvidersAsync(<VurderingVedtak {...mockProps} />, {
+      preloadedState: lagBlokkertState(blokkert ? {} : { "melosys.arsavregning.eos_tjenesteperson": true }) as any,
+    });
+
+    await waitFor(() => {
+      expect(screen.getByRole("heading", { name: /Vedtak årsavregning/ })).toBeInTheDocument();
+    });
+
+    if (blokkert) {
+      expect(screen.getByTestId("aarsavregning-ikke-stottet-sakstype")).toBeInTheDocument();
+    } else {
+      expect(screen.queryByTestId("aarsavregning-ikke-stottet-sakstype")).not.toBeInTheDocument();
+    }
+  });
+
   it("deaktiverer «Fatt vedtak» når sakstypen er blokkert", async () => {
     await renderWithProvidersAsync(<VurderingVedtak {...mockProps} />, {
       preloadedState: lagBlokkertState() as any,

@@ -112,6 +112,22 @@ describe("VurderingAarsavregningInngang — ustøttet EØS-sakstype (MELOSYS-816
     vi.mocked(Api.Fagsaker.sok.send).mockResolvedValue([{ behandlingOversikter: [] }] as any);
   });
 
+  it("viser ikke meldingen når steget ikke er aktivt, så testid-en er unik i flyten", async () => {
+    await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} aktivtSteg={false} />, {
+      preloadedState: lagState({}) as any,
+    });
+
+    expect(screen.queryByTestId("aarsavregning-ikke-stottet-sakstype")).not.toBeInTheDocument();
+  });
+
+  it("blokkerer ikke et støttet behandlingstema", async () => {
+    await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
+      preloadedState: lagState({ behandlingstema: "YRKESAKTIV" }) as any,
+    });
+
+    expect(screen.queryByText(MELDING)).not.toBeInTheDocument();
+  });
+
   /*
    * Hele tilstandsrommet for blokkeringen: sakstype (blokkert/støttet) × redigerbart (saksbehandling/innsyn).
    * Se tabellen i vurderingAarsavregningInngang.tsx.
@@ -151,6 +167,9 @@ describe("VurderingAarsavregningInngang — ustøttet EØS-sakstype (MELOSYS-816
       });
 
       expect((container.querySelector("#aarVelger") as HTMLSelectElement).disabled).toBe(blokkert);
+      // Støttet sakstype i innsyn skal fortsatt være readOnly, som før.
+      // For en blokkert sakstype vinner disabled: ds-react dropper readOnly når disabled er satt.
+      expect(container.querySelector(".navds-select--readonly") !== null).toBe(!redigerbart && !blokkert);
     });
 
     it(`skriver harInnbetaltTrygdeavgift til backend: ${!blokkert}`, async () => {
