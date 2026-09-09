@@ -38,6 +38,11 @@ vi.mock("../../../../services/api", () => ({
       oppdaterFritekster: vi.fn(),
     },
   },
+  Saksflyt: {
+    Vedtak: {
+      fatt: vi.fn(),
+    },
+  },
 }));
 
 beforeEach(() => {
@@ -438,5 +443,119 @@ describe("MELOSYS-7114: Obligatorisk begrunnelse", () => {
         expect(screen.getByText(/Fritekst til begrunnelse \(Obligatorisk\)/)).toBeInTheDocument();
       });
     });
+  });
+});
+
+/**
+ * MELOSYS-8163: vedtakssteget skal ikke kunne fattes for EØS-sakstyper der årsavregning
+ * ikke er støttet ennå.
+ */
+import { act, fireEvent } from "@testing-library/react";
+
+describe("MELOSYS-8163: blokkert vedtakssteg for ustøttet EØS-sakstype", () => {
+  const lagBlokkertState = (toggles: Record<string, boolean> = {}) => ({
+    behandlinger: {
+      status: "OK",
+      data: {
+        behandlingID: 12345,
+        redigerbart: true,
+        oppsummering: {
+          behandlingstema: { kode: "ARBEID_TJENESTEPERSON_ELLER_FLY" },
+        },
+      },
+    },
+    menypanel: { status: "OK", data: { erFullmektigEndret: false } },
+    fagsaker: {
+      status: "OK",
+      data: {
+        saksnummer: "SAK123456",
+        sakstype: { kode: "EU_EOS" },
+        sakstema: { kode: "MEDLEMSKAP_LOVVALG" },
+      },
+    },
+    behandlingsresultat: {
+      status: "OK",
+      data: { innledningFritekst: "", begrunnelseFritekst: "" },
+    },
+    featureToggle: { status: "OK", data: toggles },
+    aarsavregning: { status: "OK", data: {} },
+  });
+
+  const mockProps = { tilbake: vi.fn(), aktivtSteg: true };
+
+  // Sender inn skjemaet og venter til valideringen i handleSubmit har rukket å kjøre.
+  // waitFor duger ikke for en not.toHaveBeenCalled-assertion: den passerer på første forsøk.
+  const sendInnSkjema = async (container: HTMLElement) => {
+    await act(async () => {
+      fireEvent.submit(container.querySelector("form") as HTMLFormElement);
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
+    });
+  };
+
+  beforeEach(() => {
+    // Skjemaet må være gyldig, ellers stopper handleSubmit før onSubmit-guarden testes
+    vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue({
+      aarsavregningID: 12345,
+      aar: 2024,
+      endeligAvgiftValg: BEREGNET_AVGIFT,
+      avregning: {
+        tidligereFakturertBeloep: 25000,
+        innbetaltTrygdeavgift: 30000,
+        beregnetAvgiftBelop: 28000,
+        manueltAvgiftBeloep: undefined,
+      },
+      harInnbetaltTrygdeavgift: true,
+      sisteGjeldendeAvgiftspliktigperioder: [],
+      tidligereTrygdeavgiftsGrunnlagsopplysninger: undefined,
+    } as any);
+    vi.mocked(Api.Aarsavregning.hentFiltrertAarsavregningList).mockResolvedValue([]);
+    vi.mocked(Api.Fagsaker.aktoer.hent).mockResolvedValue([]);
+    vi.mocked(Api.Saksflyt.Vedtak.fatt).mockResolvedValue({ data: { data: {} } } as any);
+  });
+
+  it("deaktiverer «Fatt vedtak» når sakstypen er blokkert", async () => {
+    await renderWithProvidersAsync(<VurderingVedtak {...mockProps} />, {
+      preloadedState: lagBlokkertState() as any,
+    });
+
+    await waitFor(() => {
+      expect(screen.getByRole("heading", { name: /Vedtak årsavregning/ })).toBeInTheDocument();
+    });
+
+    expect(screen.getByRole("button", { name: "Fatt vedtak" })).toBeDisabled();
+  });
+
+  it("fatter ikke vedtak når skjemaet sendes inn utenom knappen", async () => {
+    const { container } = await renderWithProvidersAsync(<VurderingVedtak {...mockProps} />, {
+      preloadedState: lagBlokkertState() as any,
+    });
+
+    await waitFor(() => {
+      expect(screen.getByRole("heading", { name: /Vedtak årsavregning/ })).toBeInTheDocument();
+    });
+
+    await sendInnSkjema(container);
+
+    expect(Api.Saksflyt.Vedtak.fatt).not.toHaveBeenCalled();
+  });
+
+  it("aktiverer «Fatt vedtak» og fatter vedtak når sakstypen er støttet", async () => {
+    const { container } = await renderWithProvidersAsync(<VurderingVedtak {...mockProps} />, {
+      preloadedState: lagBlokkertState({ "melosys.arsavregning.eos_tjenesteperson": true }) as any,
+    });
+
+    await waitFor(() => {
+      expect(screen.getByRole("heading", { name: /Vedtak årsavregning/ })).toBeInTheDocument();
+    });
+
+    expect(screen.getByRole("button", { name: "Fatt vedtak" })).not.toBeDisabled();
+
+    // Positiv kontroll: samme innsending når sakstypen er støttet NÅR fram til fattVedtak,
+    // så assertionen over er ikke vakuøs
+    await sendInnSkjema(container);
+
+    expect(Api.Saksflyt.Vedtak.fatt).toHaveBeenCalled();
   });
 });

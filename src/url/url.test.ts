@@ -69,28 +69,31 @@ describe("url", () => {
       expect(url).toContain("/FTRL/aarsavregning/");
     });
 
-    it("MELOSYS-8163: EU_EOS/tjenesteperson-behandling med behandlingstype årsavregning returnerer aarsavregning-url uansett toggle", () => {
-      const urlUtenToggle = lagUrl(
-        "MEL-1",
-        1,
-        EU_EOS,
-        MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
-        MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
-        MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
-      );
-      expect(urlUtenToggle).toContain("/EU_EOS/aarsavregning/");
+    it.each([MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG, MKV.Koder.sakstemaer.TRYGDEAVGIFT])(
+      "MELOSYS-8163: EU_EOS/tjenesteperson-årsavregning med sakstema %s returnerer aarsavregning-url",
+      (sakstema) => {
+        const url = lagUrl(
+          "MEL-1",
+          1,
+          EU_EOS,
+          sakstema,
+          MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+          MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
+        );
+        expect(url).toContain("/EU_EOS/aarsavregning/");
+      },
+    );
 
-      const urlMedToggle = lagUrl(
+    it("MELOSYS-8163: EU_EOS/tjenesteperson uten behandlingstype årsavregning og sakstema TRYGDEAVGIFT går fortsatt til ingen-flyt", () => {
+      const url = lagUrl(
         "MEL-1",
         1,
         EU_EOS,
-        MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG,
+        MKV.Koder.sakstemaer.TRYGDEAVGIFT,
         MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
-        MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
-        false,
-        true,
+        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
       );
-      expect(urlMedToggle).toContain("/EU_EOS/aarsavregning/");
+      expect(url).toContain("/EU_EOS/behandling/");
     });
 
     it("Sakstype TRYGDEAVTALE med støttet behandlingstemaKode returnerer url", () => {
