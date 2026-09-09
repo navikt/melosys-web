@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { change, getFormSyncErrors } from "redux-form";
 import PT from "prop-types";
-
 import MKV from "../../melosyskodeverk";
 import * as KV from "../../kodeverk";
 import * as Skjema from "../skjema";
@@ -63,6 +62,7 @@ export const skalViseSoknadsperiodeOgLand = (
 
 export function OpprettSak(props) {
   const { settFeltInnhold, formValues, feltNavn } = props;
+
   const {
     valgtSakstype,
     valgtSakstema,
@@ -120,18 +120,21 @@ export function OpprettSak(props) {
 
   useEffect(() => {
     if (valgtSakstype && valgtSakstema && valgtBehandlingstema) {
-      Api.LovligeKombinasjoner.hentBehandlingstyper(hovedpart, valgtSakstype, valgtSakstema, valgtBehandlingstema).then(
-        (muligeBehandlingstyper) => {
-          setBehandlingstyper(muligeBehandlingstyper);
-          if (muligeBehandlingstyper.map((k) => k.kode).includes(MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG)) {
-            settFeltInnhold(
-              formNavn,
-              feltNavn.opprettnysak_behandlingstype,
-              MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
-            );
-          }
-        },
-      );
+      Api.LovligeKombinasjoner.hentBehandlingstyperForNySak(
+        hovedpart,
+        valgtSakstype,
+        valgtSakstema,
+        valgtBehandlingstema,
+      ).then((muligeBehandlingstyper) => {
+        setBehandlingstyper(muligeBehandlingstyper);
+        if (muligeBehandlingstyper.map((k) => k.kode).includes(MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG)) {
+          settFeltInnhold(
+            formNavn,
+            feltNavn.opprettnysak_behandlingstype,
+            MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+          );
+        }
+      });
     }
   }, [hovedpart, valgtSakstype, valgtSakstema, valgtBehandlingstema]);
 

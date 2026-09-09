@@ -48,13 +48,8 @@ export function EnkeltArbeidsforholdUtland({ redigerbart, overordnetFeltNavn, cl
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
-        <Nav.Column xs="12">
-          <Skjema.Input label="Postboks" feltNavn={`${overordnetFeltNavn}.adresse.postboks`} disabled />
-        </Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
         <Nav.Column xs="6">
-          <Skjema.Input label="Region" feltNavn={`${overordnetFeltNavn}.adresse.region`} disabled />
+          <Skjema.Input label="Region" feltNavn={`${overordnetFeltNavn}.adresse.region`} disabled={!redigerbart} />
         </Nav.Column>
         <Nav.Column xs="6">
           <Skjema.LandVelger

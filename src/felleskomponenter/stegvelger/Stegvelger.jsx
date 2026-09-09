@@ -34,14 +34,9 @@ import { kontrollOperations, kontrollSelectors } from "../../ducks/kontroll";
 
 import MottatteOpplysningerFeilmeldinger from "../mottatteOpplysningerFeilmeldinger";
 import { Feilmeldinger } from "../feilmeldinger";
-import { Innsynsmelding, NyVurderingMelding, StatsborgerskapFeil } from "../alertmeldinger";
+import { Innsynsmelding, NyVurderingMelding, StatsborgerskapFeil, UlikPeriodeMelding } from "../alertmeldinger";
 import { AvklartefaktaStore, EnkelDataStore, StegStoreTyper, VilkaarStore } from "./StegState";
 import "./stegvelger.less";
-import { erFeatureToggleEnabled } from "../../featuretoggle";
-import {
-  MELOSYS_NORGE_ER_UTPEKT_11_3_A,
-  MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
-} from "../../featuretoggle/toggleNavn";
 
 const byggStegStores = () => ({
   [StegStoreTyper.Anmodningsperiodersvar]: new EnkelDataStore(),
@@ -501,14 +496,12 @@ class Stegvelger extends Component {
       bestemmelser: props.bestemmelser,
       soknadsperiode: props.soknadsperiode,
       harFeilmeldinger: !Utils._isEmpty(props.feilmeldinger) || !Utils._isEmpty(props.kontrollfeil),
-      norgeErUtpekt11_3AToggleEnabled: props.norgeErUtpekt11_3AToggleEnabled,
       utsendingsvilkår: props.utsendingsvilkår,
       unntaksvilkår: props.unntaksvilkår,
       behandlingOppfriskes: props.behandlingOppfriskes,
       art11_3Aeller13_3A: props.art11_3Aeller13_3A,
       art11_4_1eller13_4_1: props.art11_4_1eller13_4_1,
       art11_4_2eller13_4_2: props.art11_4_2eller13_4_2,
-      eøsFaktureringAvTrygdeavgiftToggleEnabled: props.eøsFaktureringAvTrygdeavgiftToggleEnabled,
       oppsummering: props.oppsummering,
       harTrygdeavgiftperiode,
     };
@@ -556,14 +549,13 @@ class Stegvelger extends Component {
       sakstype,
       anmodningErSendtUtland,
       oppsummering,
-      eøsFaktureringAvTrygdeavgiftToggleEnabled,
     } = this.props;
     const { aktivtStegNummer, aktuelleSteg } = this.state;
     const erVurderingPeriode = aktuelleSteg[aktivtStegNummer]?.id == STEG.VURDERING_PERIODE;
     const erArbeidTjenestepersonEllerFly =
       oppsummering.behandlingstema.kode == MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY;
 
-    const flytHarIkkeVurderingPeriode = !(eøsFaktureringAvTrygdeavgiftToggleEnabled && erArbeidTjenestepersonEllerFly);
+    const flytHarIkkeVurderingPeriode = !erArbeidTjenestepersonEllerFly;
 
     this.bytterSteg = true;
     this.stegovergangId += 1;
@@ -639,7 +631,7 @@ class Stegvelger extends Component {
 
   render() {
     const { visMottatteOpplysningerFeilmeldinger, aktivtStegNummer, aktuelleSteg } = this.state;
-    const { redigerbart, oppsummering } = this.props;
+    const { redigerbart, oppsummering, arbeidsgiverOgArbeidstakerHarUlikPeriode } = this.props;
     const visFeilmeldinger =
       this.erVedtakSteg(aktivtStegNummer) || aktuelleSteg[aktivtStegNummer]?.id === STEG.ARTIKKEL_16_ANMODNING;
     const inngangStegErAktivt = this.erInngangsteg(aktivtStegNummer);
@@ -651,6 +643,7 @@ class Stegvelger extends Component {
         {!redigerbart && <Innsynsmelding />}
         {visFeilmeldinger && <Feilmeldinger />}
         {erNyVurdering && redigerbart && inngangStegErAktivt && <NyVurderingMelding />}
+        {arbeidsgiverOgArbeidstakerHarUlikPeriode && <UlikPeriodeMelding />}
         {aktuelleSteg.map((item) => (
           <StegFane id={item.id} key={item.id} faneData={item} />
         ))}
@@ -698,6 +691,7 @@ Stegvelger.propTypes = {
   lagreAllData: PT.func.isRequired,
   hentMedlemsPerioder: PT.func.isRequired,
   mottatteOpplysningerFeilmeldinger: PT.object.isRequired,
+  arbeidsgiverOgArbeidstakerHarUlikPeriode: PT.bool.isRequired,
   hentAnmodningsperioder: PT.func.isRequired,
   anmodningsperioder: PT.array.isRequired,
   anmodningErSendtUtland: PT.bool.isRequired,
@@ -749,7 +743,6 @@ Stegvelger.propTypes = {
       felter: PT.arrayOf(PT.string).isRequired,
     }),
   ),
-  norgeErUtpekt11_3AToggleEnabled: PT.bool.isRequired,
   utsendingsvilkår: PT.object.isRequired,
   unntaksvilkår: PT.object.isRequired,
   art11_3Aeller13_3A: PT.object.isRequired,
@@ -818,6 +811,8 @@ const mapStateToProps = (state) => ({
     avklartefaktaSelectors.AvklarteVirksomheterIkkeNaeringsdrivendeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   mottatteOpplysningerFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
+  arbeidsgiverOgArbeidstakerHarUlikPeriode:
+    mottatteOpplysningerSelectors.ArbeidsgiverOgArbeidstakerHarUlikPeriodeSelector(state),
   generiskStegRedigerbart: redigerbartSelectors.GeneriskStegRedigerbartSelector(state),
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
   erIDirekteTilArtikkel16Flyt: flytSelectors.ErIDirekteTilArtikkel16FlytSelector(state),
@@ -837,8 +832,6 @@ const mapStateToProps = (state) => ({
   soknadsperiode: mottatteOpplysningerSelectors.PeriodeSelector(state),
   feilmeldinger: feiletResponsSelectors.FeilmeldingerSelector(state),
   kontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
-  norgeErUtpekt11_3AToggleEnabled: erFeatureToggleEnabled(MELOSYS_NORGE_ER_UTPEKT_11_3_A, state),
-  eøsFaktureringAvTrygdeavgiftToggleEnabled: erFeatureToggleEnabled(MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT, state),
 });
 
 /* eslint no-alert:off */

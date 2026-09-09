@@ -277,6 +277,7 @@ describe("mottatteOpplysninger reducer", () => {
             innretningLandkode: null,
             territorialfarvann: "12345",
             innretningstype: null,
+            yrke: "Kaptein",
           },
         ],
         arbeidsstedFly: [
@@ -478,6 +479,7 @@ describe("mottatteOpplysninger reducer", () => {
               innretningLandkode: null,
               territorialfarvann: "12345",
               innretningstype: null,
+              yrke: "Kaptein",
             },
           ],
           luftfartBaser: [

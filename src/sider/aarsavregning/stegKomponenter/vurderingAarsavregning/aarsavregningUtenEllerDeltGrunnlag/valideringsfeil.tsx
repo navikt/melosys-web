@@ -164,17 +164,23 @@ export function finnAktivFeilmelding({
     tomDato: Utils.dato.vaskOgFormatterTilISO(medlemskapsperiodeFomTom.tomDato)!,
   };
 
+  // Kun ferdig utfylte skatteforholdsperioder (med både fom- og tom-dato) skal valideres,
+  // slik at dekningsfeil ikke vises før brukeren faktisk har fylt inn noe.
+  const utfylteSkatteforholdsperioder = vaskedeSkatteforholdsperioder?.filter(
+    (periode) => Boolean(periode.fomDato) && Boolean(periode.tomDato),
+  );
+
   if (
-    !dekkerHeleMedlemskapsperiode(vaskedeSkatteforholdsperioder, medlemskapsperiodeFomTomIsoFormat, "skatteforhold")
+    !dekkerHeleMedlemskapsperiode(utfylteSkatteforholdsperioder, medlemskapsperiodeFomTomIsoFormat, "skatteforhold")
   ) {
     return TypeFeilmelding.SKATTEFORHOLD_DEKKER_IKKE_HELE_MEDLEMSKAPSPERIODEN;
   }
 
-  if (!ingenOverlappendePerioder(vaskedeSkatteforholdsperioder)) {
+  if (!ingenOverlappendePerioder(utfylteSkatteforholdsperioder)) {
     return TypeFeilmelding.OVERLAPPENDE_SKATTEFORHOLDSPERIODER;
   }
 
-  if (!ikkeAlleSammeSkatteforholdstyper(vaskedeSkatteforholdsperioder)) {
+  if (!ikkeAlleSammeSkatteforholdstyper(utfylteSkatteforholdsperioder)) {
     return TypeFeilmelding.LIKE_SKATTEPLIKTTYPER;
   }
 

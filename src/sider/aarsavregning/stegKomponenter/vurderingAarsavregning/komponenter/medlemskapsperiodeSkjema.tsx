@@ -73,6 +73,7 @@ export interface PeriodeElementerProps {
   trygdedekninger?: string[];
   setValue: (name: string, value: unknown, options?: { shouldValidate?: boolean; shouldDirty?: boolean }) => void;
   erDeltGrunnlag?: boolean;
+  erUtenGrunnlag?: boolean;
   periodeType?: AarsavregningsPeriodeType;
   skjulBostedLand?: boolean;
 }
@@ -91,6 +92,7 @@ export function AvgiftspliktigperiodeSkjema({
   trygdedekninger = [],
   setValue,
   erDeltGrunnlag = false,
+  erUtenGrunnlag = false,
   periodeType,
   skjulBostedLand = false,
 }: PeriodeElementerProps) {
@@ -100,7 +102,6 @@ export function AvgiftspliktigperiodeSkjema({
 
   const medlemskapsperioder = formValues.avgiftspliktigperioder as MedlemskapsperiodeFieldProps[];
   const erPeriodeFraGrunnlag = !medlemskapsperioder[index]?.redigerbar;
-  const kanViseSletteKolonne = redigerbart && medlemskapsperioder.length > 1;
   const tilOgMedDatoForrigePeriode =
     medlemskapsperioder[index - 1] !== undefined
       ? Utils.dato.norskStringTilDate(medlemskapsperioder[index - 1]?.tomDato)
@@ -124,6 +125,9 @@ export function AvgiftspliktigperiodeSkjema({
 
   const gjeldendePeriodeForRad = medlemskapsperioder[index];
   const erDennePeriodenSlettbar = kanPeriodeSlettes(gjeldendePeriodeForRad, medlemskapsperioder);
+
+  const kanViseSletteKolonne =
+    redigerbart && medlemskapsperioder.length > 1 && !erPeriodeFraGrunnlag && erDennePeriodenSlettbar;
 
   useEffect(() => {
     if (!erHelseutgift && trygdedekninger?.length === 1) {
@@ -201,22 +205,22 @@ export function AvgiftspliktigperiodeSkjema({
         )}
         {kanViseSletteKolonne && (
           <Nav.Column className={index === 0 ? "slett__knapp slett__first" : "slett__knapp"}>
-            <Mui.IkonKnapp
-              ikon={Ikoner.Bin}
-              onClick={() => remove(index)}
-              ariaLabel="Slett periode"
-              disabled={!redigerbart || erPeriodeFraGrunnlag || !erDennePeriodenSlettbar}
-            />
+            <Mui.IkonKnapp ikon={Ikoner.Bin} onClick={() => remove(index)} ariaLabel="Slett periode" />
           </Nav.Column>
         )}
       </Nav.Row>
-      {medlemskapsperioder.length === index + 1 && (!erPliktigBestemmelse || erDeltGrunnlag) && (
-        <div className="legg-til__rad">
-          <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add} disabled={!redigerbart || !visLeggTil}>
-            Legg til periode
-          </Mui.Lenkeknapp>
-        </div>
-      )}
+
+      {medlemskapsperioder.length === index + 1 &&
+        !erUtenGrunnlag &&
+        (!erPliktigBestemmelse || erDeltGrunnlag) &&
+        redigerbart &&
+        visLeggTil && (
+          <div className="legg-til__rad">
+            <Mui.Lenkeknapp onClick={handleLeggTil} ikon={Ikoner.Add}>
+              Legg til periode fra avgiftssystemet
+            </Mui.Lenkeknapp>
+          </div>
+        )}
     </>
   );
 }

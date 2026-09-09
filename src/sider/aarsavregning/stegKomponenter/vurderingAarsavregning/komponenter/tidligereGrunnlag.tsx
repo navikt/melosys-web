@@ -48,7 +48,7 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
 
   return (
     <Nav.Box className="tidligereGrunnlag" background="surface-subtle">
-      <Nav.Heading size="small" level="3">
+      <Nav.Heading level="2" className="aarsavregning_seksjon_heading">
         Tidligere grunnlag
       </Nav.Heading>
 

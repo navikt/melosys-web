@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { reduxForm } from "redux-form";
@@ -8,6 +8,8 @@ import { VurderingVideresend } from "./vurderingVideresend";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 import { STATUS } from "../../../../services";
 import { MELOSYS_CDM_4_4 } from "../../../../featuretoggle/toggleNavn";
+import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import vurderingVideresendSchema from "../vurderingVideresendSchema";
 
 const initialReduxState = {
   behandlinger: {
@@ -225,6 +227,76 @@ describe("Vurderingvideresend", () => {
       await waitFor(() => {
         expect(videresendSoknad).toHaveBeenCalledWith("SE:123", "Orienteringstekst", "", "arbeid_flere_land", []);
       });
+    });
+  });
+
+  describe("validering av tekstfeltene", () => {
+    const ValidertVurderingVideresend = reduxForm({
+      form: KV.Form.VURDERING_VIDERESEND,
+      validate: lagYupToReduxformErrorMapper(vurderingVideresendSchema),
+    })(VurderingVideresend as any);
+
+    const renderValidertSkjema = () =>
+      renderWithProviders(<ValidertVurderingVideresend {...props} />, {
+        preloadedState: reduxStateWithA008Cdm44Toggle,
+      });
+
+    const videresendKnapp = () => screen.getByRole("button", { name: /Videresend søknad/i });
+
+    it("har videresend-knappen aktiv når begge tekstfeltene er innenfor grensene", () => {
+      renderValidertSkjema();
+
+      expect(videresendKnapp()).toBeEnabled();
+    });
+
+    it("deaktiverer videresend-knappen når ytterligere informasjon er over 500 tegn", async () => {
+      renderValidertSkjema();
+
+      fireEvent.change(screen.getByRole("textbox", { name: /Ytterligere informasjon/ }), {
+        target: { value: "a".repeat(501) },
+      });
+
+      await waitFor(() => expect(videresendKnapp()).toBeDisabled());
+    });
+
+    it("deaktiverer videresend-knappen når fritekst til orienteringsbrev er over 4000 tegn", async () => {
+      renderValidertSkjema();
+
+      fireEvent.change(screen.getByRole("textbox", { name: "Fritekst til orienteringsbrev" }), {
+        target: { value: "a".repeat(4001) },
+      });
+
+      await waitFor(() => expect(videresendKnapp()).toBeDisabled());
+    });
+
+    it("viser feilmelding for ytterligere informasjon først når feltet mister fokus", async () => {
+      renderValidertSkjema();
+      const felt = screen.getByRole("textbox", { name: /Ytterligere informasjon/ });
+
+      fireEvent.focus(felt);
+      fireEvent.change(felt, { target: { value: "a".repeat(501) } });
+
+      await waitFor(() => expect(videresendKnapp()).toBeDisabled());
+      expect(screen.queryByText("Du kan ikke skrive mer enn 500 tegn")).not.toBeInTheDocument();
+
+      fireEvent.blur(felt);
+
+      expect(await screen.findByText("Du kan ikke skrive mer enn 500 tegn")).toBeInTheDocument();
+    });
+
+    it("viser feilmelding for fritekst til orienteringsbrev først når feltet mister fokus", async () => {
+      renderValidertSkjema();
+      const felt = screen.getByRole("textbox", { name: "Fritekst til orienteringsbrev" });
+
+      fireEvent.focus(felt);
+      fireEvent.change(felt, { target: { value: "a".repeat(4001) } });
+
+      await waitFor(() => expect(videresendKnapp()).toBeDisabled());
+      expect(screen.queryByText("Du kan ikke skrive mer enn 4000 tegn")).not.toBeInTheDocument();
+
+      fireEvent.blur(felt);
+
+      expect(await screen.findByText("Du kan ikke skrive mer enn 4000 tegn")).toBeInTheDocument();
     });
   });
 });

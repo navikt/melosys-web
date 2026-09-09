@@ -1,19 +1,31 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
-vi.mock("../../../navFrontend", () => ({
-  Alert: ({ children }: any) => <div role="alert">{children}</div>,
-  Table: Object.assign(({ children }: any) => <table>{children}</table>, {
-    Header: ({ children }: any) => <thead>{children}</thead>,
-    Body: ({ children }: any) => <tbody>{children}</tbody>,
-    Row: ({ children }: any) => <tr>{children}</tr>,
-    HeaderCell: ({ children }: any) => <th>{children}</th>,
-    DataCell: ({ children }: any) => <td>{children}</td>,
-  }),
-}));
+vi.mock("../../../navFrontend", () => {
+  const ExpansionCard: any = ({ children, open }: any) => <div data-grunnlag-open={String(open)}>{children}</div>;
+  ExpansionCard.Header = ({ children }: any) => <div>{children}</div>;
+  ExpansionCard.Title = ({ children }: any) => <h3>{children}</h3>;
+  ExpansionCard.Description = ({ children }: any) => <p>{children}</p>;
+  ExpansionCard.Content = ({ children }: any) => <div>{children}</div>;
+  return {
+    Alert: ({ children }: any) => <div role="alert">{children}</div>,
+    Table: Object.assign(({ children }: any) => <table>{children}</table>, {
+      Header: ({ children }: any) => <thead>{children}</thead>,
+      Body: ({ children }: any) => <tbody>{children}</tbody>,
+      Row: ({ children }: any) => <tr>{children}</tr>,
+      HeaderCell: ({ children }: any) => <th>{children}</th>,
+      DataCell: ({ children }: any) => <td>{children}</td>,
+    }),
+    ExpansionCard,
+    Tag: ({ children }: any) => <span>{children}</span>,
+    BodyShort: ({ children, className }: any) => <span className={className}>{children}</span>,
+    Detail: ({ children }: any) => <span>{children}</span>,
+  };
+});
 
 vi.mock("../../../utils", () => ({
   _uuid: () => String(Math.random()),
+  formaterTilNorskBelopUtenDesimaler: (n: number) => String(n),
   dato: {
     formatterDatoTilNorsk: (d: string) => d,
     sorterEtterISOFomDato: (a: any, b: any) => a.fom.localeCompare(b.fom),
@@ -32,8 +44,17 @@ vi.mock("../../spinner", () => ({
   Spinner: () => <span>Laster...</span>,
 }));
 
+const mockUseFeatureToggle = vi.fn(() => false);
+vi.mock("../../../featuretoggle", () => ({
+  useFeatureToggle: () => mockUseFeatureToggle(),
+}));
+
 import TrygdeavgiftsperioderTabell from "./trygdeavgiftsperioderTabell";
-import { Trygdeavgiftsperiode } from "../../../services/modules/trygdeavgift";
+import { Beregningsforklaring, Beregningsregel, Trygdeavgiftsperiode } from "../../../services/modules/trygdeavgift";
+
+beforeEach(() => {
+  mockUseFeatureToggle.mockReturnValue(false);
+});
 
 const lagPeriode = (fom: string, tom: string, overrides?: Partial<Trygdeavgiftsperiode>): Trygdeavgiftsperiode => ({
   fom,
@@ -129,7 +150,7 @@ describe("TrygdeavgiftsperioderTabell", () => {
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
     expect(screen.getByText("* Beregnet etter 25 %-regelen")).toBeDefined();
-    expect(screen.getByText("** Inntekten er under minstebeløpet")).toBeDefined();
+    expect(screen.getByText("** Inntekten er under minstebeløpet i perioden som er angitt")).toBeDefined();
   });
 
   it("viser ingen fotnoter for kun ordinære perioder", () => {
@@ -198,7 +219,9 @@ describe("TrygdeavgiftsperioderTabell", () => {
       lagPeriode("2024-07-01", "2024-12-31", { avgiftssats: null, avgiftPerMd: 0, beregningsregel: "MINSTEBELØP" }),
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
-    expect(screen.getByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet.")).toBeDefined();
+    expect(
+      screen.getByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet i perioden som er angitt."),
+    ).toBeDefined();
     expect(screen.queryByText("Trygdeperiode")).toBeNull();
   });
 
@@ -208,12 +231,147 @@ describe("TrygdeavgiftsperioderTabell", () => {
       lagPeriode("2024-07-01", "2024-12-31", { avgiftssats: 6.8, beregningsregel: "ORDINÆR" }),
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
-    expect(screen.queryByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet.")).toBeNull();
+    expect(
+      screen.queryByText(
+        "Trygdeavgift skal ikke betales da inntekten er under minstebeløpet i perioden som er angitt.",
+      ),
+    ).toBeNull();
     expect(screen.getByText("Trygdeperiode")).toBeDefined();
   });
 
   it("viser ingen infomelding når ingen perioder", () => {
     render(<TrygdeavgiftsperioderTabell perioder={[]} lagrePending={false} />);
-    expect(screen.queryByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet.")).toBeNull();
+    expect(
+      screen.queryByText(
+        "Trygdeavgift skal ikke betales da inntekten er under minstebeløpet i perioden som er angitt.",
+      ),
+    ).toBeNull();
+  });
+});
+
+const lagForklaring = (valgtRegel: Beregningsregel = "TJUEFEM_PROSENT_REGEL"): Beregningsforklaring => ({
+  aar: 2025,
+  inntektsgruppe: "SAMLET",
+  valgtRegel,
+  aarsak: "BEREGNET",
+  inntektsgrunnlag: [
+    {
+      inntektskilde: "INNTEKT_FRA_UTLANDET",
+      fom: "2025-01-01",
+      tom: "2025-12-31",
+      maanedsbeloep: 9167,
+      antallMaaneder: 12,
+      sumBeloep: 110000,
+    },
+  ],
+  ekskluderteInntekter: [],
+  sumAarligInntekt: 110000,
+  minstebeloep: 99650,
+  inntektOverMinstebeloep: 10350,
+  maksimalAvgift25Prosent: 2587,
+  ordinaerAvgift: 8470,
+  ordinaerAvgiftPoster: [{ inntektskilde: "INNTEKT_FRA_UTLANDET", grunnlag: 110000, sats: 7.7, beloep: 8470 }],
+  fastsattAvgift: 2587,
+  fastsattAvgiftPerMaaned: 215,
+});
+
+describe("TrygdeavgiftsperioderTabell · beregningsforklaring", () => {
+  const periode25 = lagPeriode("2025-01-01", "2025-12-31", {
+    avgiftssats: null,
+    avgiftPerMd: 215,
+    beregningsregel: "TJUEFEM_PROSENT_REGEL",
+  });
+
+  it("viser ikke beregningsforklaring-kortet når toggle er av", () => {
+    mockUseFeatureToggle.mockReturnValue(false);
+    render(
+      <TrygdeavgiftsperioderTabell
+        perioder={[periode25]}
+        lagrePending={false}
+        beregningsforklaringer={[lagForklaring()]}
+      />,
+    );
+    expect(screen.queryByText("Beregningsforklaring")).toBeNull();
+    // Tabellen er uendret: `*`-symbolet vises som ren tekst (ingen knapp)
+    expect(screen.getByText("*")).toBeDefined();
+    expect(screen.queryByRole("button", { name: "*" })).toBeNull();
+  });
+
+  it("viser ikke beregningsforklaring-kortet når forklaringer er tom", () => {
+    mockUseFeatureToggle.mockReturnValue(true);
+    render(<TrygdeavgiftsperioderTabell perioder={[periode25]} lagrePending={false} beregningsforklaringer={[]} />);
+    expect(screen.queryByText("Beregningsforklaring")).toBeNull();
+  });
+
+  it("viser ikke beregningsforklaring-kortet når forklaringer er undefined", () => {
+    mockUseFeatureToggle.mockReturnValue(true);
+    render(<TrygdeavgiftsperioderTabell perioder={[periode25]} lagrePending={false} />);
+    expect(screen.queryByText("Beregningsforklaring")).toBeNull();
+  });
+
+  it("viser ikke kortet når beregningen er ordinær", () => {
+    mockUseFeatureToggle.mockReturnValue(true);
+    const periodeOrdinaer = lagPeriode("2025-01-01", "2025-12-31", {
+      avgiftssats: 7.7,
+      avgiftPerMd: 706,
+      beregningsregel: "ORDINÆR",
+    });
+    render(
+      <TrygdeavgiftsperioderTabell
+        perioder={[periodeOrdinaer]}
+        lagrePending={false}
+        beregningsforklaringer={[lagForklaring("ORDINÆR")]}
+      />,
+    );
+    expect(screen.queryByText("Beregningsforklaring")).toBeNull();
+  });
+
+  it("beholder den ordinære inntektsgruppen når en annen gruppe fikk en særregel", () => {
+    mockUseFeatureToggle.mockReturnValue(true);
+    const helsedel: Beregningsforklaring = { ...lagForklaring(), inntektsgruppe: "HELSEDEL" };
+    const pensjonsdel: Beregningsforklaring = {
+      ...lagForklaring("ORDINÆR"),
+      inntektsgruppe: "PENSJONSDEL",
+    };
+    render(
+      <TrygdeavgiftsperioderTabell
+        perioder={[periode25]}
+        lagrePending={false}
+        beregningsforklaringer={[helsedel, pensjonsdel]}
+      />,
+    );
+    expect(screen.getByText("Beregningsforklaring")).toBeDefined();
+    // Kortets felttittel, ikke Dekning-kolonnens «Pensjonsdel» — den kan også stå i tabellen.
+    expect(screen.getByText("2025 · Pensjonsdel")).toBeDefined();
+  });
+
+  it("viser ikke kortet når regelen er ukjent for oss", () => {
+    mockUseFeatureToggle.mockReturnValue(true);
+    const ukjentRegel = { ...lagForklaring(), valgtRegel: "NY_REGEL_FRA_BACKEND" as Beregningsregel };
+    render(
+      <TrygdeavgiftsperioderTabell
+        perioder={[periode25]}
+        lagrePending={false}
+        beregningsforklaringer={[ukjentRegel]}
+      />,
+    );
+    expect(screen.queryByText("Beregningsforklaring")).toBeNull();
+  });
+
+  it("viser kortet og klikkbart `*` når toggle er på og forklaringer finnes", () => {
+    mockUseFeatureToggle.mockReturnValue(true);
+    render(
+      <TrygdeavgiftsperioderTabell
+        perioder={[periode25]}
+        lagrePending={false}
+        beregningsforklaringer={[lagForklaring()]}
+      />,
+    );
+    expect(screen.getByText("Beregningsforklaring")).toBeDefined();
+    // `*` er nå en knapp med Hvorfor-tooltip
+    const symbol = screen.getByRole("button", { name: "*" });
+    expect(symbol).toBeDefined();
+    // Hvorfor-lenken finnes i fotnoten
+    expect(screen.getByRole("button", { name: "Hvorfor? →" })).toBeDefined();
   });
 });

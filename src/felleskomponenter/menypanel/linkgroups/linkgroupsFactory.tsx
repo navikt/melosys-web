@@ -4,10 +4,7 @@ import { harUnntaksregistreringFlyt, skalViseIngenFlyt } from "../../../url";
 import { ContentProps, LinkGroup } from "./types";
 import LinkgroupsBuilder from "./linkgroupsBuilder";
 import LinksBuilder from "./linksBuilder";
-import {
-  MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT,
-  MELOSYS_VIS_PENSJONSOPPTJENING_POPP,
-} from "../../../featuretoggle/toggleNavn";
+import { MELOSYS_VIS_PENSJONSOPPTJENING_POPP } from "../../../featuretoggle/toggleNavn";
 import { useFeatureToggle } from "../../../featuretoggle";
 
 const {
@@ -131,10 +128,7 @@ class LinkGroupsFactory {
           fraBruker.addOmVirksomhetenINorge();
           fraBruker.addOvrigOmArbeidstaker();
         }
-        if (
-          behandlingstema === ARBEID_TJENESTEPERSON_ELLER_FLY &&
-          useFeatureToggle(MELOSYS_EØS_FAKTURERING_AV_TRYGDEAVGIFT)
-        ) {
+        if (behandlingstema === ARBEID_TJENESTEPERSON_ELLER_FLY) {
           fraRegister.addFaktureringskomponenten();
         }
         if (behandlingstype === ÅRSAVREGNING && useFeatureToggle(MELOSYS_VIS_PENSJONSOPPTJENING_POPP)) {

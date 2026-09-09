@@ -247,6 +247,7 @@ export interface MottatteOpplysningerResDto {
   mottaksdato: string | null;
   data: MottatteOpplysningerData;
   type: string;
+  arbeidsgiverOgArbeidstakerHarUlikPeriode: boolean;
 }
 interface Personopplysninger {
   medfolgendeFamilie: MedfolgendeBarn;

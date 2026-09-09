@@ -55,9 +55,8 @@ class GodkjennUtpekingNorge extends Steg {
       ];
 
       const pdfDokumenter =
-        _propsLight.norgeErUtpekt11_3AToggleEnabled &&
         _propsLight.lovvalgsbestemmelse ===
-          MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A
+        MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A
           ? pdfDokumenterNorgeErUtpekt11_3_a
           : pdfDokumenterGodkjennUtpekingNorge;
 

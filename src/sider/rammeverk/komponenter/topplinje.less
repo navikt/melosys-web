@@ -108,8 +108,38 @@
 .topplinje__meny {
   display: flex;
   align-items: center;
+  gap: 0.25rem;
   margin-left: auto;
   padding-right: 0.5rem;
+}
+
+// Tekstblokksøket har en tertiær knapp med mørk tekst, som forsvinner mot den mørke
+// topplinja. Her skal den se ut som de andre menypunktene.
+//
+// Selektoren må stoppe ved verktøylinja: popoveren rendres som søsken inne i samme
+// wrapper, og en bredere regel ville gitt knappene inni den hvit tekst på hvit bakgrunn.
+.topplinje__bibliotek .tekstblokkSoek__verktoylinje {
+  .navds-button--tertiary {
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 200 !important;
+    padding: 0.5rem 0.85rem;
+    border-radius: 4px;
+
+    &:hover,
+    &:focus-visible {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      outline: none;
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 2px #fff;
+    }
+  }
+  .navds-label {
+    font-weight: normal !important;
+  }
 }
 
 .topplinje__menylenke {
@@ -118,6 +148,9 @@
   font-size: 0.95rem;
   padding: 0.5rem 0.85rem;
   border-radius: 4px;
+  letter-spacing: 0.002em;
+  line-height: var(--a-font-line-height-medium);
+  font-weight: normal;
 
   &:hover,
   &:focus-visible {

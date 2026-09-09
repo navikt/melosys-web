@@ -7,9 +7,9 @@ exports[`TidligereGrunnlag > beregning med grunnlag snapshot test 1`] = `
     style="--__ac-box-background: var(--a-surface-subtle);"
     class="navds-box tidligereGrunnlag navds-box-bg"
   >
-    <h3 class="navds-heading navds-heading--small">
+    <h2 class="aarsavregning_seksjon_heading navds-heading navds-heading--small">
       Tidligere grunnlag
-    </h3>
+    </h2>
     <p class="navds-body-long navds-body-long--small">
       Brutto årsinntekt:
       <strong>
@@ -287,9 +287,9 @@ exports[`TidligereGrunnlag > manuell beregning snapshot test 1`] = `
     style="--__ac-box-background: var(--a-surface-subtle);"
     class="navds-box tidligereGrunnlag navds-box-bg"
   >
-    <h3 class="navds-heading navds-heading--small">
+    <h2 class="aarsavregning_seksjon_heading navds-heading navds-heading--small">
       Tidligere grunnlag
-    </h3>
+    </h2>
     <p class="navds-body-long navds-body-long--small">
       Tidligere beregnet trygdeavgift:
       <strong>

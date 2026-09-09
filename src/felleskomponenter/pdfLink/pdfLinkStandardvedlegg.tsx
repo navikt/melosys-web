@@ -19,7 +19,10 @@ function PdfLinkStandardvedlegg({ standardvedlegg, skalViseEgenFrontendTittel }:
       aria-label="Åpnes i ny fane"
       onClick={(event) => {
         event.preventDefault();
-        apnePdfINyFane(lagPdfUrl(standardvedlegg));
+        apnePdfINyFane(
+          lagPdfUrl(standardvedlegg),
+          skalViseEgenFrontendTittel ? standardvedlegg.frontendTittel : standardvedlegg.dokumentTittel,
+        );
       }}
     >
       {skalViseEgenFrontendTittel ? standardvedlegg.frontendTittel : standardvedlegg.dokumentTittel}

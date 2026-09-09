@@ -14,7 +14,7 @@ declare module "AppTypes" {
 }
 
 /**
- * window.env settes i env-config.js og blir lastet inn i index.html. env-config.js genereres i oppstartsprosessen (se package.json og Dockerfile).
+ * window.env settes i env-config.js og blir lastet inn i index.html. Ved deploy mountes filen fra Nais ConfigMap.
  */
 interface Window {
   env: {

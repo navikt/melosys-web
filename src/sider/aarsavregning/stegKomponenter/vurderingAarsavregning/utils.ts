@@ -8,7 +8,7 @@ import * as Api from "../../../../services/api";
 import * as Utils from "../../../../utils";
 import { AarsavregningResponse } from "../../../../services/modules/aarsavregning/aarsavregning";
 import type { BasePeriode } from "../../../../services/modules/types/periodeTyper";
-import { InntektskildeDto, SkatteforholdDto } from "../../../../services/modules/trygdeavgift";
+import { Beregningsforklaring, InntektskildeDto, SkatteforholdDto } from "../../../../services/modules/trygdeavgift";
 import MKV from "../../../../melosyskodeverk";
 import aarsavregningUtenEllerDeltGrunnlagSchema from "./aarsavregningUtenEllerDeltGrunnlag/aarsavregningUtenEllerDeltGrunnlagSchema";
 
@@ -74,9 +74,17 @@ export function beregnTrygdeavgiftsperioder(
     erEøsPensjonist?: boolean;
     setFeilmelding: (error: string | string[] | undefined) => void;
     setAarsavregningResponse: (response: AarsavregningResponse) => void;
+    setBeregningsforklaringer?: (forklaringer: Beregningsforklaring[]) => void;
   },
 ) {
-  const { behandlingID, medlemskapstypeErPliktig, erEøsPensjonist, setFeilmelding, setAarsavregningResponse } = options;
+  const {
+    behandlingID,
+    medlemskapstypeErPliktig,
+    erEøsPensjonist,
+    setFeilmelding,
+    setAarsavregningResponse,
+    setBeregningsforklaringer,
+  } = options;
 
   setFeilmelding(undefined);
   const erBrukerPliktigMedlemOgSkattepliktig =
@@ -105,8 +113,9 @@ export function beregnTrygdeavgiftsperioder(
     : Api.Trygdeavgift.beregnTrygdeavgiftsperioder;
 
   return beregnTrygdeavgiftsperioder(behandlingID, trygdeavgiftsgrunnlag)
-    .then(() => {
+    .then((beregnet) => {
       setFeilmelding(undefined);
+      setBeregningsforklaringer?.(beregnet?.beregningsforklaringer ?? []);
       return Api.Aarsavregning.hentAarsavregning(behandlingID).then((response: AarsavregningResponse) => {
         setAarsavregningResponse(response);
       });

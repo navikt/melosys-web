@@ -5,4 +5,24 @@
   padding: 1.5rem;
   margin-bottom: 1.5rem;
   background-color: @white;
+
+  &--uten-border {
+    border: none;
+    margin-bottom: 0;
+  }
+
+  // Fjerner containerens bunnpadding slik at feltets egen margin-bottom (fra index.less) styrer avstanden.
+  &--uten-bunnpadding {
+    padding-bottom: 0;
+  }
+
+  // Nøytraliserer feltets globale margin-bottom slik at containerens padding styrer avstanden.
+  &--flush-bottom {
+    > .navds-form-field:last-child,
+    > .navds-radio-buttons:last-child,
+    > .navds-checkboxes:last-child,
+    :last-child > .navds-form-field:last-child {
+      margin-bottom: 0;
+    }
+  }
 }

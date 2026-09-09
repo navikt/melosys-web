@@ -1,0 +1,941 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import {
+  Betingelse,
+  BetingelseBeskrivelse,
+  erBetingelsesToken,
+  erstattPlaceholdere,
+  erUkjentPlaceholder,
+  erValgToken,
+  finnSakstypeKonflikter,
+  finnUopplosteBetingelser,
+  finnUtdaterteVerdier,
+  finnUutfylteKlammer,
+  finnUutfylteTokener,
+  harBetingelseEllerValgTokener,
+  hentKatalog,
+  markeringsklasseFor,
+  PlaceholderBeskrivelse,
+  fjernMarkeringsSpans,
+  losOppBetingelser,
+  parseHvisStartToken,
+  parseValgAlternativer,
+  parseValgToken,
+  PLACEHOLDER_MARKERINGSKLASSER,
+  PlaceholderVerdi,
+} from "./placeholdere";
+import { getAsJson } from "../utils";
+
+vi.mock("../utils", () => ({ getAsJson: vi.fn() }));
+
+const verdier: PlaceholderVerdi[] = [
+  { nokkel: "saksnummer", verdi: "2024/123456" },
+  { nokkel: "dagens-dato", verdi: "30.07.2026" },
+];
+
+describe("erstattPlaceholdere", () => {
+  it("erstatter kjent nøkkel med verdi pakket i markerings-span", () => {
+    const resultat = erstattPlaceholdere("<p>Saken {saksnummer} er mottatt.</p>", verdier);
+    expect(resultat).toBe(
+      '<p>Saken <span class="placeholder-utfylt" data-placeholder="saksnummer" ' +
+        'title="Fylt inn automatisk fra saken (saksnummer)">2024/123456</span> er mottatt.</p>',
+    );
+  });
+
+  it("forklarer markeringen med en tooltip som navngir nøkkelen", () => {
+    const resultat = erstattPlaceholdere("<p>{dagens-dato}</p>", verdier);
+    expect(resultat).toContain('title="Fylt inn automatisk fra saken (dagens-dato)"');
+  });
+
+  it("escaper nøkkelen også i tooltipen", () => {
+    const resultat = erstattPlaceholdere('<p>{a"b}</p>', [{ nokkel: 'a"b', verdi: "X" }]);
+    expect(resultat).toContain('title="Fylt inn automatisk fra saken (a&quot;b)"');
+  });
+
+  it("erstatter nøkkel med luft rundt seg, som erUkjentPlaceholder regner som gyldig", () => {
+    const resultat = erstattPlaceholdere("<p>Saken { saksnummer } er mottatt.</p>", verdier);
+    expect(resultat).toContain('data-placeholder="saksnummer"');
+    expect(resultat).toContain("2024/123456");
+  });
+
+  it("lar ukjent nøkkel stå urørt", () => {
+    const html = "<p>Hei {fornavn}, saken gjelder {saksnummer}.</p>";
+    const resultat = erstattPlaceholdere(html, verdier);
+    expect(resultat).toContain("{fornavn}");
+    expect(resultat).toContain('data-placeholder="saksnummer"');
+  });
+
+  it("rører ikke tekst i klammer", () => {
+    const html = "<p>[SAKSNUMMER] og {saksnummer}</p>";
+    const resultat = erstattPlaceholdere(html, verdier);
+    expect(resultat).toContain("[SAKSNUMMER]");
+    expect(resultat).not.toContain("{saksnummer}");
+  });
+
+  it("erstatter ikke over tag-grenser", () => {
+    const html = "<p>{saks<strong>nummer}</strong></p>";
+    expect(erstattPlaceholdere(html, verdier)).toBe(html);
+  });
+
+  it("erstatter flere forekomster av samme nøkkel", () => {
+    const resultat = erstattPlaceholdere("<p>{dagens-dato} og igjen {dagens-dato}</p>", verdier);
+    expect(resultat.match(/30\.07\.2026/g)).toHaveLength(2);
+  });
+
+  it("returnerer HTML uendret ved tom verdiliste", () => {
+    const html = "<p>{saksnummer}</p>";
+    expect(erstattPlaceholdere(html, [])).toBe(html);
+  });
+
+  it("lar nøkkel med tom verdi stå urørt", () => {
+    const html = "<p>Hei {navn}.</p>";
+    expect(erstattPlaceholdere(html, [{ nokkel: "navn", verdi: "" }])).toBe(html);
+  });
+
+  it("lar valgtoken stå urørt – valget gjøres i editoren, ikke fra saksdata", () => {
+    const html = "<p>{velg:A|B} og {saksnummer}</p>";
+    const resultat = erstattPlaceholdere(html, [...verdier, { nokkel: "velg:A|B", verdi: "Skal ikke brukes" }]);
+    expect(resultat).toContain("{velg:A|B}");
+    expect(resultat).toContain("2024/123456");
+  });
+
+  it("HTML-escaper verdien før innsetting i markup", () => {
+    const resultat = erstattPlaceholdere("<p>{navn}</p>", [{ nokkel: "navn", verdi: 'A <B> & "C"' }]);
+    expect(resultat).toContain("A &lt;B&gt; &amp; &quot;C&quot;");
+    expect(resultat).not.toContain("<B>");
+  });
+});
+
+describe("parseValgToken", () => {
+  it("leser alternativene ut av et valgtoken", () => {
+    expect(parseValgToken("{velg:Bosnia-Hercegovina|Montenegro|Serbia}")).toEqual({
+      alternativer: ["Bosnia-Hercegovina", "Montenegro", "Serbia"],
+    });
+  });
+
+  it("trimmer luft rundt alternativene", () => {
+    expect(parseValgToken("{velg: A | B }")).toEqual({ alternativer: ["A", "B"] });
+  });
+
+  it("avviser ett alternativ – det er ikke noe å velge mellom", () => {
+    expect(parseValgToken("{velg:Bare denne}")).toBeNull();
+  });
+
+  it("avviser tomt alternativ som ville gitt et blankt valg", () => {
+    expect(parseValgToken("{velg:A|}")).toBeNull();
+  });
+
+  it("avviser token uten alternativer i det hele tatt", () => {
+    expect(parseValgToken("{velg:}")).toBeNull();
+  });
+
+  it("avviser vanlige nøkler", () => {
+    expect(parseValgToken("{saksnummer}")).toBeNull();
+  });
+
+  it("avviser token med tagg-tegn, som aldri kan stamme fra ett tekstelement", () => {
+    expect(parseValgToken("{velg:A|<b>B</b>}")).toBeNull();
+  });
+});
+
+describe("erValgToken", () => {
+  it("kjenner igjen et gyldig valgtoken", () => {
+    expect(erValgToken("{velg:A|B}")).toBe(true);
+  });
+
+  it("regner ugyldig valgtoken som vanlig nøkkel", () => {
+    expect(erValgToken("{velg:A}")).toBe(false);
+  });
+});
+
+describe("parseValgAlternativer", () => {
+  it("leser alternativene fra en data-valg-streng", () => {
+    expect(parseValgAlternativer("A|B|C")).toEqual(["A", "B", "C"]);
+  });
+
+  it("gir tom liste for ett alternativ", () => {
+    expect(parseValgAlternativer("A")).toEqual([]);
+  });
+
+  it("gir tom liste for tom streng (attributtet mangler eller er tomt)", () => {
+    expect(parseValgAlternativer("")).toEqual([]);
+  });
+
+  it("slår sammen like alternativer – to like knapper er ikke noe valg", () => {
+    expect(parseValgAlternativer("A|A|B")).toEqual(["A", "B"]);
+  });
+
+  it("avviser et token der alle alternativene er like", () => {
+    expect(parseValgToken("{velg:A|A}")).toBeNull();
+  });
+});
+
+describe("erUkjentPlaceholder", () => {
+  const gyldige = ["saksnummer", "dagens-dato"];
+
+  it("regner nøkkel som finnes i katalogen som gyldig", () => {
+    expect(erUkjentPlaceholder("{saksnummer}", gyldige)).toBe(false);
+  });
+
+  it("regner nøkkel som ikke finnes i katalogen som ukjent", () => {
+    expect(erUkjentPlaceholder("{sksnummer}", gyldige)).toBe(true);
+  });
+
+  it("ser bort fra luft rundt nøkkelen", () => {
+    expect(erUkjentPlaceholder("{ saksnummer }", gyldige)).toBe(false);
+  });
+
+  it("skiller på store og små bokstaver", () => {
+    expect(erUkjentPlaceholder("{Saksnummer}", gyldige)).toBe(true);
+  });
+
+  it("regner ingenting som ukjent uten liste (katalogen ikke lastet)", () => {
+    expect(erUkjentPlaceholder("{tullenokkel}", undefined)).toBe(false);
+  });
+
+  it("regner ingenting som ukjent med tom liste (henting feilet)", () => {
+    expect(erUkjentPlaceholder("{tullenokkel}", [])).toBe(false);
+  });
+
+  it("regner aldri et valgtoken som ukjent, selv om det ikke står i katalogen", () => {
+    expect(erUkjentPlaceholder("{velg:A|B}", gyldige)).toBe(false);
+  });
+
+  it("regner ugyldig valgtoken som ukjent nøkkel", () => {
+    expect(erUkjentPlaceholder("{velg:A}", gyldige)).toBe(true);
+  });
+});
+
+describe("fjernMarkeringsSpans", () => {
+  it("pakker ut uerstattet-markering som ligger lagret i innholdet", () => {
+    const html = '<p><span class="placeholder-uerstattet">{saksnummer}</span></p>';
+    expect(fjernMarkeringsSpans(html)).toBe("<p>{saksnummer}</p>");
+  });
+
+  it("pakker ut dobbeltnøstede klammemarkeringer til én ren tekst", () => {
+    const html = '<p><span class="bracketed-text"><span class="bracketed-text">[dato]</span></span></p>';
+    expect(fjernMarkeringsSpans(html)).toBe("<p>[dato]</p>");
+  });
+
+  it("gjør lagret markering erstattbar igjen i stedet for nøstet", () => {
+    const html = '<p>Saken <span class="placeholder-uerstattet">{saksnummer}</span> er mottatt.</p>';
+    const resultat = erstattPlaceholdere(fjernMarkeringsSpans(html), verdier);
+    expect(resultat).toContain('<span class="placeholder-utfylt" data-placeholder="saksnummer"');
+    expect(resultat).not.toContain("placeholder-uerstattet");
+  });
+
+  it("pakker ut ukjent-markering som ligger lagret i innholdet", () => {
+    const html = '<p><span class="placeholder-ukjent">{sksnummer}</span></p>';
+    expect(fjernMarkeringsSpans(html)).toBe("<p>{sksnummer}</p>");
+  });
+
+  it("beholder klammemarkeringen når kun placeholder-klassene skal strippes", () => {
+    const html =
+      '<p><span class="bracketed-text">[navn <strong>x</strong>]</span> ' +
+      '<span class="placeholder-uerstattet">{saksnummer}</span></p>';
+    expect(fjernMarkeringsSpans(html, PLACEHOLDER_MARKERINGSKLASSER)).toBe(
+      '<p><span class="bracketed-text">[navn <strong>x</strong>]</span> {saksnummer}</p>',
+    );
+  });
+
+  it("pakker ut et innsatt valg, så innsettingen starter fra rått token igjen", () => {
+    const html = '<p><span class="placeholder-valgt" data-valg="A|B">B</span></p>';
+    expect(fjernMarkeringsSpans(html)).toBe("<p>B</p>");
+  });
+
+  it("beholder annen markup og lar HTML uten markeringer stå urørt", () => {
+    const html = "<p>Saken <strong>{saksnummer}</strong> er mottatt.</p>";
+    expect(fjernMarkeringsSpans(html)).toBe(html);
+  });
+});
+
+describe("finnUtdaterteVerdier", () => {
+  const utfylt = (nokkel: string, verdi: string) =>
+    `<span class="placeholder-utfylt" data-placeholder="${nokkel}">${verdi}</span>`;
+
+  it("rapporterer innsatt verdi som avviker fra fersk verdi", () => {
+    const html = `<p>Saken ${utfylt("saksnummer", "MEL-21")} er mottatt.</p>`;
+    expect(finnUtdaterteVerdier(html, [{ nokkel: "saksnummer", verdi: "MEL-22" }])).toEqual([
+      { nokkel: "saksnummer", innsattVerdi: "MEL-21", ferskVerdi: "MEL-22", fortsattKandidat: false },
+    ]);
+  });
+
+  it("rapporterer ikke identiske verdier", () => {
+    const html = `<p>${utfylt("saksnummer", "2024/123456")}</p>`;
+    expect(finnUtdaterteVerdier(html, verdier)).toEqual([]);
+  });
+
+  it("rapporterer avvik som fortsatt står i kandidatlisten, flagget som mulig bevisst valg", () => {
+    // Et forhåndsvalg som senere endret seg kan bli stående i kandidatlisten – da må
+    // avviket varsles likevel, ellers går utdaterte verdier ut i brevet uten varsel.
+    const html = `<p>${utfylt("saksnummer", "MEL-21")}</p>`;
+    const ferske: PlaceholderVerdi[] = [{ nokkel: "saksnummer", verdi: "MEL-22", kandidater: ["MEL-22", "MEL-21"] }];
+
+    expect(finnUtdaterteVerdier(html, ferske)).toEqual([
+      { nokkel: "saksnummer", innsattVerdi: "MEL-21", ferskVerdi: "MEL-22", fortsattKandidat: true },
+    ]);
+  });
+
+  it("rapporterer nøkkel uten fersk verdi med tom ferskVerdi", () => {
+    const html = `<p>${utfylt("utgaatt-nokkel", "Gammel verdi")}</p>`;
+    expect(finnUtdaterteVerdier(html, verdier)).toEqual([
+      { nokkel: "utgaatt-nokkel", innsattVerdi: "Gammel verdi", ferskVerdi: "", fortsattKandidat: false },
+    ]);
+  });
+
+  it("returnerer tom liste for tom HTML", () => {
+    expect(finnUtdaterteVerdier("", verdier)).toEqual([]);
+  });
+
+  it("ignorerer markerings-span uten data-placeholder", () => {
+    const html = '<p><span class="placeholder-utfylt">MEL-21</span></p>';
+    expect(finnUtdaterteVerdier(html, [{ nokkel: "saksnummer", verdi: "MEL-22" }])).toEqual([]);
+  });
+
+  it("rapporterer samme avvik én gang selv om nøkkelen står flere steder", () => {
+    const html = `<p>${utfylt("saksnummer", "MEL-21")}</p><p>${utfylt("saksnummer", "MEL-21")}</p>`;
+    expect(finnUtdaterteVerdier(html, [{ nokkel: "saksnummer", verdi: "MEL-22" }])).toHaveLength(1);
+  });
+
+  it("rapporterer flere ulike nøkler i rekkefølgen de står i brevet", () => {
+    const html = `<p>${utfylt("saksnummer", "MEL-21")} ${utfylt("dagens-dato", "01.01.2020")}</p>`;
+    expect(finnUtdaterteVerdier(html, verdier).map(({ nokkel }) => nokkel)).toEqual(["saksnummer", "dagens-dato"]);
+  });
+});
+
+describe("parseHvisStartToken", () => {
+  it("leser nøkkelen ut av starttokenet", () => {
+    expect(parseHvisStartToken("{#hvis delvis-innvilgelse}")).toEqual({ nokkel: "delvis-innvilgelse" });
+  });
+
+  it("godtar flere mellomrom etter #hvis", () => {
+    expect(parseHvisStartToken("{#hvis  avslag}")).toEqual({ nokkel: "avslag" });
+  });
+
+  it("avviser tom nøkkel og nøkkel med mellomrom", () => {
+    expect(parseHvisStartToken("{#hvis }")).toBeNull();
+    expect(parseHvisStartToken("{#hvis to ord}")).toBeNull();
+  });
+});
+
+describe("erBetingelsesToken", () => {
+  it("kjenner igjen begge tokenformene", () => {
+    expect(erBetingelsesToken("{#hvis avslag}")).toBe(true);
+    expect(erBetingelsesToken("{/hvis}")).toBe(true);
+  });
+
+  it("er ikke et betingelsestoken for vanlige nøkler eller valg", () => {
+    expect(erBetingelsesToken("{saksnummer}")).toBe(false);
+    expect(erBetingelsesToken("{velg:A|B}")).toBe(false);
+  });
+});
+
+describe("harBetingelseEllerValgTokener", () => {
+  it("kjenner igjen både betingelses- og valgtokener", () => {
+    expect(harBetingelseEllerValgTokener("<p>{#hvis avslag}Avslag{/hvis}</p>")).toBe(true);
+    expect(harBetingelseEllerValgTokener("<p>Du får {velg:innvilget|avslag}.</p>")).toBe(true);
+  });
+
+  it("regner vanlige nøkler og klammefelt som vanlig tekst", () => {
+    expect(harBetingelseEllerValgTokener("<p>Saken {saksnummer}, [navn].</p>")).toBe(false);
+    expect(harBetingelseEllerValgTokener("<p>Ren tekst.</p>")).toBe(false);
+  });
+
+  it("leser tokenet fra DOM-en, så et &nbsp;-mellomrom teller som mellomrom", () => {
+    expect(harBetingelseEllerValgTokener("<p>{#hvis&nbsp;avslag}Avslag{/hvis}</p>")).toBe(true);
+  });
+});
+
+describe("erUkjentPlaceholder for betingelsestokener", () => {
+  it("markerer aldri reserverte betingelsestokener som ukjente", () => {
+    expect(erUkjentPlaceholder("{#hvis avslag}", ["saksnummer"])).toBe(false);
+    expect(erUkjentPlaceholder("{/hvis}", ["saksnummer"])).toBe(false);
+  });
+});
+
+describe("markeringsklasseFor for betingelsestokener", () => {
+  it("markerer en kjent betingelsesnøkkel som betingelse", () => {
+    expect(markeringsklasseFor("{#hvis avslag}", ["saksnummer"], ["avslag"])).toBe("placeholder-betingelse");
+  });
+
+  it("markerer en nøkkel som ikke finnes i betingelseskatalogen som ukjent", () => {
+    expect(markeringsklasseFor("{#hvis avslgg}", ["saksnummer"], ["avslag"])).toBe("placeholder-ukjent");
+  });
+
+  it("markerer alt som betingelse uten betingelseskatalog", () => {
+    expect(markeringsklasseFor("{#hvis avslgg}", ["saksnummer"])).toBe("placeholder-betingelse");
+    expect(markeringsklasseFor("{#hvis avslgg}", ["saksnummer"], [])).toBe("placeholder-betingelse");
+  });
+
+  it("markerer aldri {/hvis} som ukjent – den bærer ingen nøkkel", () => {
+    expect(markeringsklasseFor("{/hvis}", ["saksnummer"], ["avslag"])).toBe("placeholder-betingelse");
+  });
+
+  it("slår ikke opp vanlige nøkler i betingelseskatalogen", () => {
+    expect(markeringsklasseFor("{saksnummer}", ["saksnummer"], ["avslag"])).toBe("placeholder-uerstattet");
+    expect(markeringsklasseFor("{avslag}", ["saksnummer"], ["avslag"])).toBe("placeholder-ukjent");
+  });
+});
+
+describe("losOppBetingelser", () => {
+  const oppfylt: Betingelse[] = [{ nokkel: "avslag", oppfylt: true }];
+  const ikkeOppfylt: Betingelse[] = [{ nokkel: "avslag", oppfylt: false }];
+
+  const blokkHtml = "<p>Før</p><p>{#hvis avslag}</p><p>Betinget</p><p>{/hvis}</p><p>Etter</p>";
+
+  it("beholder blokkinnholdet og fjerner tokenavsnittene når betingelsen er oppfylt", () => {
+    expect(losOppBetingelser(blokkHtml, oppfylt)).toBe("<p>Før</p><p>Betinget</p><p>Etter</p>");
+  });
+
+  it("fjerner blokkinnholdet og tokenavsnittene når betingelsen ikke er oppfylt", () => {
+    expect(losOppBetingelser(blokkHtml, ikkeOppfylt)).toBe("<p>Før</p><p>Etter</p>");
+  });
+
+  it("beholder tekstspennet inline og fjerner bare tokenene når betingelsen er oppfylt", () => {
+    const html = "<p>Vedtaket er {#hvis avslag}avslått{/hvis} i saken.</p>";
+    expect(losOppBetingelser(html, oppfylt)).toBe("<p>Vedtaket er avslått i saken.</p>");
+  });
+
+  it("etterlater ett mellomrom på hver side av den beholdte teksten når betingelsen er oppfylt", () => {
+    const html = "<p>Vedtaket er {#hvis avslag} avslått {/hvis} i saken.</p>";
+    expect(losOppBetingelser(html, oppfylt)).toBe("<p>Vedtaket er avslått i saken.</p>");
+  });
+
+  // Tokenene står med mellomrom på hver side; uten normalisering ble det dobbelt igjen.
+  it("fjerner tekstspennet inline og etterlater ett mellomrom når betingelsen ikke er oppfylt", () => {
+    const html = "<p>Vedtaket er {#hvis avslag}avslått{/hvis} i saken.</p>";
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe("<p>Vedtaket er i saken.</p>");
+  });
+
+  // Quill skriver nbsp der et vanlig mellomrom ville kollapset.
+  it("regner nbsp foran starttokenet som mellomrom", () => {
+    const html = "<p>Vedtaket er\u00a0{#hvis avslag}avslått{/hvis} i saken.</p>";
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe("<p>Vedtaket er&nbsp;i saken.</p>");
+  });
+
+  it("beholder formatert innhold mellom tokenene i samme blokk når betingelsen er oppfylt", () => {
+    const html = "<p>Vedtaket er {#hvis avslag}<strong>avslått</strong>{/hvis} i saken.</p>";
+    expect(losOppBetingelser(html, oppfylt)).toBe("<p>Vedtaket er <strong>avslått</strong> i saken.</p>");
+  });
+
+  it("fjerner både tokenene og elementene mellom dem i samme blokk når betingelsen ikke er oppfylt", () => {
+    const html = "<p>Vedtaket er {#hvis avslag}<strong>avslått</strong> med <em>frist</em>{/hvis} i saken.</p>";
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe("<p>Vedtaket er i saken.</p>");
+  });
+
+  it("løser paret når tokenene deler blokk, men står i hver sin celle-frie tekstnode", () => {
+    const html = "<li>{#hvis avslag}Avslag <strong>gjelder</strong>{/hvis}</li>";
+    expect(losOppBetingelser(html, oppfylt)).toBe("<li>Avslag <strong>gjelder</strong></li>");
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe("<li></li>");
+  });
+
+  it("løser de gyldige parene og hopper bare over paret uten entydig omfang", () => {
+    const html =
+      "<p>{#hvis avslag}</p><p>Betinget</p><p>{/hvis}</p>" +
+      "<p>Tekst {#hvis annen} mer</p><p>Uavklart</p><p>{/hvis}</p>";
+    const betingelser: Betingelse[] = [
+      { nokkel: "avslag", oppfylt: true },
+      { nokkel: "annen", oppfylt: false },
+    ];
+
+    expect(losOppBetingelser(html, betingelser)).toBe(
+      "<p>Betinget</p><p>Tekst {#hvis annen} mer</p><p>Uavklart</p><p>{/hvis}</p>",
+    );
+  });
+
+  // Å fjerne cellene ville revet raden i stykker; tokenene blir heller stående markert.
+  it("rører ikke en tabellrad der tokenene står i hver sin celle", () => {
+    const html = "<table><tbody><tr><td>{#hvis avslag}</td><td>X</td><td>{/hvis}</td></tr></tbody></table>";
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe(html);
+    expect(losOppBetingelser(html, oppfylt)).toBe(html);
+  });
+
+  // Et listepunkt kan trygt fjernes: lista står igjen med færre punkter.
+  it("beholder innholdspunktene og fjerner tokenpunktene i en betinget punktliste", () => {
+    const html = "<ul><li>{#hvis avslag}</li><li>Ett</li><li>To</li><li>{/hvis}</li></ul>";
+    expect(losOppBetingelser(html, oppfylt)).toBe("<ul><li>Ett</li><li>To</li></ul>");
+  });
+
+  it("fjerner alle punktene i en betinget punktliste når betingelsen ikke er oppfylt", () => {
+    const html = "<ul><li>{#hvis avslag}</li><li>Betinget</li><li>{/hvis}</li></ul>";
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe("<ul></ul>");
+  });
+
+  it("rører ikke tokener som står alene i hver sin overskriftscelle", () => {
+    const html = "<table><tbody><tr><th>{#hvis avslag}</th><th>{/hvis}</th></tr></tbody></table>";
+    expect(losOppBetingelser(html, oppfylt)).toBe(html);
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe(html);
+  });
+
+  it("fjerner løse tekstnoder mellom blokkene når betingelsen ikke er oppfylt", () => {
+    const html = "<p>{#hvis avslag}</p>Løs tekst<p>Betinget</p><p>{/hvis}</p><p>Etter</p>";
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe("<p>Etter</p>");
+  });
+
+  it("løser flere inline-par i samme tekstnode uten å forskyve indeksene", () => {
+    const html = "<p>{#hvis a}A{/hvis} og {#hvis b}B{/hvis}.</p>";
+    const betingelser: Betingelse[] = [
+      { nokkel: "a", oppfylt: true },
+      { nokkel: "b", oppfylt: false },
+    ];
+    expect(losOppBetingelser(html, betingelser)).toBe("<p>A og .</p>");
+  });
+
+  it("lar alt stå urørt når nøkkelen er ukjent", () => {
+    expect(losOppBetingelser(blokkHtml, [{ nokkel: "annen", oppfylt: true }])).toBe(blokkHtml);
+  });
+
+  it("lar alt stå urørt uten betingelser (toggle av / eldre api)", () => {
+    expect(losOppBetingelser(blokkHtml, undefined)).toBe(blokkHtml);
+    expect(losOppBetingelser(blokkHtml, [])).toBe(blokkHtml);
+  });
+
+  it("rører ingenting når tokenene er ubalanserte", () => {
+    const utenSlutt = "<p>{#hvis avslag}</p><p>Betinget</p>";
+    const utenStart = "<p>Betinget</p><p>{/hvis}</p>";
+    expect(losOppBetingelser(utenSlutt, oppfylt)).toBe(utenSlutt);
+    expect(losOppBetingelser(utenStart, oppfylt)).toBe(utenStart);
+  });
+
+  // Nesting støttes ikke, og omfanget er tvetydig: begge parene står urørt og varsles, i
+  // stedet for at innhold fjernes inne i en betingelse som fortsatt vises.
+  it("rører ingen av de nestede parene, og varsler begge", () => {
+    const html = "<p>Ute {#hvis avslag}inn {#hvis frist}nær{/hvis} ut{/hvis}</p>";
+
+    expect(losOppBetingelser(html, [{ nokkel: "frist", oppfylt: true }, ...oppfylt])).toBe(html);
+    expect(finnUopplosteBetingelser(html)).toEqual(["avslag", "frist"]);
+  });
+
+  // Et misformet starttoken er usynlig for det strenge mønsteret, så resten av dokumentet
+  // er balansert og løses normalt.
+  it("løser et gyldig par selv om et annet starttoken i samme dokument har en skrivefeil", () => {
+    const html = "<p>{#hvis to ord}</p><p>{#hvis avslag}</p><p>Betinget</p><p>{/hvis}</p>";
+    expect(losOppBetingelser(html, oppfylt)).toBe("<p>{#hvis to ord}</p><p>Betinget</p>");
+  });
+
+  // Alt-eller-ingenting ved ubalanse: en overflødig {/hvis} ville ellers lukket en uoppfylt
+  // betingelse for tidlig og sluppet den skjulte teksten ut i brevet.
+  it("rører ingenting når et foreldreløst {/hvis} gjør dokumentet ubalansert", () => {
+    const html = "<p>{#hvis avslag}Avslag{/hvis} og {/hvis}</p>";
+    expect(losOppBetingelser(html, oppfylt)).toBe(html);
+  });
+
+  it("lar ikke en overflødig {/hvis} slippe ut tekst fra en uoppfylt betingelse", () => {
+    const html = "<p>{#hvis frist}Hemmelig {/hvis} mer hemmelig{/hvis}</p>";
+    const rest = losOppBetingelser(html, [{ nokkel: "frist", oppfylt: false }]);
+
+    expect(rest).toBe(html);
+    expect(rest).toContain("mer hemmelig");
+  });
+
+  it("rører ingenting når et gyldig starttoken aldri lukkes", () => {
+    const html = "<p>{#hvis avslag}</p><p>{#hvis frist}Skjult{/hvis}</p>";
+    expect(losOppBetingelser(html, [{ nokkel: "frist", oppfylt: false }, ...oppfylt])).toBe(html);
+  });
+
+  it("rører ingenting når tokenene verken deler tekstnode eller står alene i hver sin blokk", () => {
+    const html = "<p>Tekst {#hvis avslag} mer</p><p>Betinget</p><p>{/hvis}</p>";
+    expect(losOppBetingelser(html, oppfylt)).toBe(html);
+  });
+
+  it("rører ingenting når tokenblokkene har ulik forelder", () => {
+    const html = "<div><p>{#hvis avslag}</p></div><div><p>{/hvis}</p></div>";
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe(html);
+  });
+
+  it("returnerer HTML-en uendret når den ikke har betingelsestokener", () => {
+    const html = "<p>Saken {saksnummer} er mottatt.</p>";
+    expect(losOppBetingelser(html, oppfylt)).toBe(html);
+  });
+
+  it("styrer overskrifter og lister på blokknivå", () => {
+    const html = "<p>{#hvis avslag}</p><h2>Tittel</h2><ol><li>Ett</li></ol><p>{/hvis}</p>";
+    expect(losOppBetingelser(html, ikkeOppfylt)).toBe("");
+    expect(losOppBetingelser(html, oppfylt)).toBe("<h2>Tittel</h2><ol><li>Ett</li></ol>");
+  });
+});
+
+describe("finnUopplosteBetingelser", () => {
+  it("lister nøkkelen til et par som fortsatt står i teksten", () => {
+    const html = "<p>{#hvis avslag}</p><p>Betinget</p><p>{/hvis}</p>";
+    expect(finnUopplosteBetingelser(html)).toEqual(["avslag"]);
+  });
+
+  it("lister hver nøkkel én gang, i rekkefølgen de står i brevet", () => {
+    const html = "<p>{#hvis avslag}A{/hvis} {#hvis frist}B{/hvis} {#hvis avslag}C{/hvis}</p>";
+    expect(finnUopplosteBetingelser(html)).toEqual(["avslag", "frist"]);
+  });
+
+  it("finner tokener som ligger inni markerings-spans fra editoren", () => {
+    const html = '<p><span class="placeholder-betingelse">{#hvis avslag}</span></p>';
+    expect(finnUopplosteBetingelser(html)).toEqual(["avslag"]);
+  });
+
+  it("varsler om et slutt-token uten lesbart starttoken", () => {
+    expect(finnUopplosteBetingelser("<p>Tekst{/hvis}</p>")).toEqual(["{/hvis}"]);
+  });
+
+  it("tar med et foreldreløst slutt-token også når gyldige nøkler finnes", () => {
+    const html = "<p>{#hvis avslag}Avslag{/hvis} og {/hvis}</p>";
+    expect(finnUopplosteBetingelser(html)).toEqual(["avslag", "{/hvis}"]);
+  });
+
+  it("lister et misformet starttoken ordrett, uten å påstå at det står et {/hvis} i brevet", () => {
+    expect(finnUopplosteBetingelser("<p>{#hvis to ord}</p>")).toEqual(["{#hvis to ord}"]);
+  });
+
+  // Samme paringsregel som oppløsningen: bare et gyldig starttoken åpner et par. Et misformet
+  // starttoken lukkes derfor ikke av {/hvis} – begge tekstbitene står i brevet og nevnes.
+  it("melder både skrivefeilen og {/hvis} når starttokenet er misformet", () => {
+    expect(finnUopplosteBetingelser("<p>{#hvis to ord}Innhold{/hvis}</p>")).toEqual(["{/hvis}", "{#hvis to ord}"]);
+  });
+
+  it("melder fortsatt {/hvis} som foreldreløst når det står FØR eneste (misformede) start", () => {
+    expect(finnUopplosteBetingelser("<p>{/hvis} og {#hvis to ord}</p>")).toEqual(["{/hvis}", "{#hvis to ord}"]);
+  });
+
+  // Quill kan serialisere mellomrommet i tokenet som &nbsp;-entitet i HTML-strengen. DOM-en
+  // dekoder den til et hardt mellomrom, som mønsteret regner som mellomrom.
+  it("leser et gyldig betingelsestoken med &nbsp;-mellomrom som nøkkel, ikke som misformet", () => {
+    expect(finnUopplosteBetingelser("<p>{#hvis&nbsp;avslag}Innhold{/hvis}</p>")).toEqual(["avslag"]);
+    expect(erBetingelsesToken("{#hvis avslag}")).toBe(true);
+  });
+
+  it("varsler om et uavsluttet {#hvis-fragment", () => {
+    expect(finnUopplosteBetingelser("<p>{#hvis avslag</p>")).toEqual(["{#hvis"]);
+  });
+
+  // Uten <>\n-ekskludering ville mønsteret spent fra fragmentet til klammen i neste avsnitt
+  // og listet hele HTML-en imellom som «nøkkel».
+  it("lister en kort markør, ikke en HTML-blob, når en løs } står i et annet avsnitt", () => {
+    const uopploste = finnUopplosteBetingelser("<p>{#hvis avslag</p><p>et helt avsnitt til}</p>");
+
+    expect(uopploste).toEqual(["{#hvis"]);
+  });
+
+  it("varsler om {/hvis} som står før sin egen start", () => {
+    expect(finnUopplosteBetingelser("<p>{/hvis} tekst {#hvis avslag}</p>")).toEqual(["avslag", "{/hvis}"]);
+  });
+
+  it("lar ikke et misformet starttoken absorbere et fjernt {/hvis} – begge står i brevet", () => {
+    const html = "<p>{#hvis to ord}</p><p>Mye tekst imellom</p><p>{/hvis}</p>";
+    expect(finnUopplosteBetingelser(html)).toEqual(["{/hvis}", "{#hvis to ord}"]);
+  });
+
+  it("gir tom liste for tekst uten betingelsestokener", () => {
+    expect(finnUopplosteBetingelser("<p>Saken {saksnummer} er mottatt.</p>")).toEqual([]);
+    expect(finnUopplosteBetingelser("")).toEqual([]);
+  });
+});
+
+// Begge lagene leser DOM-en med samme paringsregel. Varselet skal derfor si nøyaktig det
+// oppløsningen faktisk lar stå igjen – verken mer eller mindre.
+describe("paritet mellom varsellaget og oppløsningslaget", () => {
+  const betingelser: Betingelse[] = [
+    { nokkel: "avslag", oppfylt: true },
+    { nokkel: "frist", oppfylt: false },
+  ];
+
+  const tilfeller: Array<{
+    navn: string;
+    html: string;
+    forventet: string[];
+    rest: string[];
+    borte?: string[];
+    igjen?: string[];
+  }> = [
+    {
+      navn: "gyldig par løses opp og varsles ikke",
+      html: "<p>A {#hvis avslag}B{/hvis} C</p>",
+      forventet: [],
+      rest: [],
+    },
+    {
+      navn: "par med ukjent nøkkel står igjen",
+      html: "<p>{#hvis annen}B{/hvis}</p>",
+      forventet: ["annen"],
+      rest: ["{#hvis annen}", "{/hvis}"],
+    },
+    {
+      navn: "par uten entydig omfang står igjen",
+      html: "<p>Tekst {#hvis avslag} mer</p><p>B</p><p>{/hvis}</p>",
+      forventet: ["avslag"],
+      rest: ["{#hvis avslag}", "{/hvis}"],
+    },
+    { navn: "start uten slutt", html: "<p>{#hvis avslag}B</p>", forventet: ["avslag"], rest: ["{#hvis avslag}"] },
+    {
+      navn: "misformet start",
+      html: "<p>{#hvis to ord}B</p>",
+      forventet: ["{#hvis to ord}"],
+      rest: ["{#hvis to ord}"],
+    },
+    {
+      navn: "misformet start og fjernt slutt-token",
+      html: "<p>{#hvis to ord}</p><p>B</p><p>{/hvis}</p>",
+      forventet: ["{/hvis}", "{#hvis to ord}"],
+      rest: ["{#hvis to ord}", "{/hvis}"],
+    },
+    { navn: "foreldreløst slutt-token", html: "<p>Tekst{/hvis}</p>", forventet: ["{/hvis}"], rest: ["{/hvis}"] },
+    {
+      navn: "reversert rekkefølge",
+      html: "<p>{/hvis} tekst {#hvis avslag}</p>",
+      forventet: ["avslag", "{/hvis}"],
+      rest: ["{#hvis avslag}", "{/hvis}"],
+    },
+    { navn: "uavsluttet fragment", html: "<p>{#hvis avslag</p>", forventet: ["{#hvis"], rest: ["{#hvis"] },
+    {
+      navn: "fragment som først lukkes i et annet avsnitt",
+      html: "<p>{#hvis avslag</p><p>et helt avsnitt til}</p>",
+      forventet: ["{#hvis"],
+      rest: ["{#hvis"],
+    },
+    {
+      navn: "skrivefeil ved siden av et gyldig par",
+      html: "<p>{#hvis avslag}B{/hvis} og {#hvis to ord}</p>",
+      forventet: ["{#hvis to ord}"],
+      rest: ["{#hvis to ord}"],
+    },
+    {
+      navn: "nesting: begge parene står igjen urørt",
+      html: "<p>Ute {#hvis avslag}inn {#hvis frist}nær{/hvis} ut{/hvis}</p>",
+      forventet: ["avslag", "frist"],
+      rest: ["{#hvis avslag}", "{#hvis frist}", "{/hvis}", "{/hvis}"],
+    },
+    {
+      navn: "token med &nbsp;-entitet",
+      html: "<p>{#hvis&nbsp;annen}B{/hvis}</p>",
+      forventet: ["annen"],
+      rest: ["{#hvis annen}", "{/hvis}"],
+    },
+    // Slettegrenen: uoppfylt betingelse fjerner innholdet, og ingenting skal bli stående igjen.
+    {
+      navn: "uoppfylt betingelse fjerner innholdet",
+      html: "<p>A {#hvis frist}B{/hvis} C</p>",
+      forventet: [],
+      rest: [],
+      borte: ["B"],
+      igjen: ["A", "C"],
+    },
+    {
+      navn: "uoppfylt betingelse fjerner hele blokker",
+      html: "<p>{#hvis frist}</p><p>Skjult</p><p>{/hvis}</p><p>Etter</p>",
+      forventet: [],
+      rest: [],
+      borte: ["Skjult"],
+      igjen: ["Etter"],
+    },
+  ];
+
+  // Alle betingelsesformer som står igjen, talt opp hver for seg og per tekstnode – ellers
+  // ville avsnitt smeltet sammen i selve testen og skjult hva som faktisk står hvor.
+  const gjenstaaende = (html: string): string[] => {
+    const dokument = new DOMParser().parseFromString(html, "text/html");
+    const vandrer = dokument.createTreeWalker(dokument.body, NodeFilter.SHOW_TEXT);
+    const funnet: string[] = [];
+    for (let node = vandrer.nextNode(); node !== null; node = vandrer.nextNode()) {
+      const tekst = (node.textContent ?? "").replace(/\u00a0/g, " ");
+      funnet.push(...(tekst.match(/\{#hvis[^{}\n]*\}|\{\/hvis\}|\{#hvis|\{\/hvis/g) ?? []));
+    }
+    return funnet.sort();
+  };
+
+  it.each(tilfeller)("$navn", ({ html, forventet, rest: forventetRest, borte, igjen }) => {
+    const rest = losOppBetingelser(html, betingelser);
+    // Hardt mellomrom leses som mellomrom, slik mønstrene gjør – ellers er sammenligningen ren tekst.
+    const tekst = (new DOMParser().parseFromString(rest, "text/html").body.textContent ?? "").replace(/\u00a0/g, " ");
+
+    expect(finnUopplosteBetingelser(rest)).toEqual(forventet);
+    // Alt som rapporteres står ordrett igjen i teksten – nøkler som hele starttokenet sitt.
+    forventet.forEach((post) => expect(tekst).toContain(post.startsWith("{") ? post : `{#hvis ${post}}`));
+
+    // ... og nøyaktig disse tokenene står igjen. Eksplisitt liste, ikke en utledning: en
+    // boolean ville ikke fanget at ett av to gjenstående tokener manglet i varselet.
+    expect(gjenstaaende(rest)).toEqual([...forventetRest].sort());
+
+    // Der betingelsen faktisk ble løst: innholdet skal være borte, og resten stå igjen.
+    borte?.forEach((bit) => expect(tekst).not.toContain(bit));
+    igjen?.forEach((bit) => expect(tekst).toContain(bit));
+  });
+});
+
+describe("hentKatalog – normalisering på api-grensen", () => {
+  beforeEach(() => vi.mocked(getAsJson).mockReset());
+
+  const placeholder = (nokkel: string, sakstyper: unknown[]) => ({
+    nokkel,
+    visningsnavn: nokkel,
+    beskrivelse: "",
+    eksempel: "",
+    sakstyper,
+  });
+
+  // Api-et har levert begge former; web skal tåle en revert uten å miste sakstypene.
+  it("leser sakstyper både som {kode}-objekter og som rene koder", async () => {
+    vi.mocked(getAsJson).mockResolvedValue({
+      placeholdere: [placeholder("a", [{ kode: "EU_EOS", term: "EU/EØS-land" }]), placeholder("b", ["FTRL"])],
+      betingelser: [{ nokkel: "c", visningsnavn: "C", beskrivelse: "", sakstyper: [{ kode: "TRYGDEAVTALE" }] }],
+    });
+
+    const katalog = await hentKatalog();
+
+    expect(katalog.placeholdere.map(({ sakstyper }) => sakstyper)).toEqual([["EU_EOS"], ["FTRL"]]);
+    expect(katalog.betingelser?.[0].sakstyper).toEqual(["TRYGDEAVTALE"]);
+  });
+
+  it("gir tom sakstypeliste når feltet mangler, og lar betingelsene være uleverte", async () => {
+    vi.mocked(getAsJson).mockResolvedValue({ placeholdere: [{ nokkel: "a", visningsnavn: "A" }] });
+
+    const katalog = await hentKatalog();
+
+    expect(katalog.placeholdere[0].sakstyper).toEqual([]);
+    expect(katalog.betingelser).toBeUndefined();
+  });
+});
+
+describe("finnSakstypeKonflikter", () => {
+  const katalog: PlaceholderBeskrivelse[] = [
+    {
+      nokkel: "soker-navn",
+      visningsnavn: "Søkers navn",
+      beskrivelse: "Fullt navn",
+      eksempel: "Ola Nordmann",
+      sakstyper: ["EU_EOS"],
+    },
+    {
+      nokkel: "saksnummer",
+      visningsnavn: "Saksnummer",
+      beskrivelse: "Saksnummer",
+      eksempel: "MEL-21",
+      sakstyper: [],
+    },
+  ];
+
+  const betingelseKatalog: BetingelseBeskrivelse[] = [
+    { nokkel: "avslag", visningsnavn: "Avslag", beskrivelse: "Saken er avslått", sakstyper: ["EU_EOS"] },
+  ];
+
+  it("rapporterer sakstypene placeholderen ikke dekker", () => {
+    const konflikter = finnSakstypeKonflikter("<p>{soker-navn}</p>", ["EU_EOS", "FTRL"], katalog, betingelseKatalog);
+
+    expect(konflikter).toEqual([
+      { nokkel: "soker-navn", visningsnavn: "Søkers navn", sakstyper: ["FTRL"], stottedeSakstyper: ["EU_EOS"] },
+    ]);
+  });
+
+  it("rapporterer betingelser fra hvis-tokener på samme måte", () => {
+    const konflikter = finnSakstypeKonflikter(
+      "<p>{#hvis avslag}Avslått{/hvis}</p>",
+      ["TRYGDEAVTALE"],
+      katalog,
+      betingelseKatalog,
+    );
+
+    expect(konflikter).toEqual([
+      { nokkel: "avslag", visningsnavn: "Avslag", sakstyper: ["TRYGDEAVTALE"], stottedeSakstyper: ["EU_EOS"] },
+    ]);
+  });
+
+  it("rapporterer ingenting når alle valgte sakstyper er dekket", () => {
+    expect(finnSakstypeKonflikter("<p>{soker-navn}</p>", ["EU_EOS"], katalog, betingelseKatalog)).toEqual([]);
+  });
+
+  it("rapporterer de støttede sakstypene når blokken gjelder alle", () => {
+    const konflikter = finnSakstypeKonflikter("<p>{soker-navn}</p>", [], katalog, betingelseKatalog);
+
+    expect(konflikter).toEqual([
+      { nokkel: "soker-navn", visningsnavn: "Søkers navn", sakstyper: [], stottedeSakstyper: ["EU_EOS"] },
+    ]);
+  });
+
+  it("rapporterer ingenting for en placeholder uten avgrensning når blokken gjelder alle", () => {
+    expect(finnSakstypeKonflikter("<p>{saksnummer}</p>", [], katalog, betingelseKatalog)).toEqual([]);
+  });
+
+  it("hopper over placeholdere som gjelder alle sakstyper, ukjente nøkler og valgtokener", () => {
+    const html = "<p>{saksnummer} {finnes-ikke} {velg:Ja|Nei}</p>";
+
+    expect(finnSakstypeKonflikter(html, ["FTRL"], katalog, betingelseKatalog)).toEqual([]);
+  });
+
+  it("rapporterer hver nøkkel én gang selv om den står flere steder", () => {
+    const html = "<p>{soker-navn}</p><p>{soker-navn}</p>";
+
+    expect(finnSakstypeKonflikter(html, ["FTRL"], katalog, betingelseKatalog)).toHaveLength(1);
+  });
+});
+
+describe("finnUutfylteKlammer", () => {
+  it("lister klammefelt i teksten", () => {
+    expect(finnUutfylteKlammer("<p>Hei [navn], du får [beløp].</p>")).toEqual(["[navn]", "[beløp]"]);
+  });
+
+  it("lister klammefelt som editoren har markert, uten duplikat", () => {
+    const html = '<p>Hei <span class="bracketed-text">[navn]</span> og [navn].</p>';
+    expect(finnUutfylteKlammer(html)).toEqual(["[navn]"]);
+  });
+
+  it("lister ikke tokener – de hører til finnUutfylteTokener", () => {
+    expect(finnUutfylteKlammer("<p>{saksnummer}</p>")).toEqual([]);
+  });
+
+  // Begge grenene leser dekodet tekst; ellers ville spanet og teksten gitt hver sin variant.
+  it("lister et markert klammefelt med entitet én gang, dekodet", () => {
+    expect(finnUutfylteKlammer('<p><span class="bracketed-text">[Kari &amp; Ola]</span></p>')).toEqual([
+      "[Kari & Ola]",
+    ]);
+  });
+
+  it("lister ingenting for et utfylt brev", () => {
+    const html =
+      '<p>Saken <span class="placeholder-utfylt" data-placeholder="saksnummer">MEL-21</span> er mottatt.</p>';
+    expect(finnUutfylteKlammer(html)).toEqual([]);
+    expect(finnUutfylteKlammer("")).toEqual([]);
+  });
+});
+
+describe("finnUutfylteTokener", () => {
+  it("lister uerstattede tokener og uvalgte valgtokener", () => {
+    const html = "<p>{saksnummer} {velg:Ja|Nei}</p>";
+    expect(finnUutfylteTokener(html)).toEqual(["{saksnummer}", "{velg:Ja|Nei}"]);
+  });
+
+  it("lister ikke betingelsestokener – de varsles for seg", () => {
+    expect(finnUutfylteTokener("<p>{#hvis avslag}Avslag{/hvis}</p>")).toEqual([]);
+  });
+
+  // Partisjonen mot finnUopplosteBetingelser: et misformet betingelsestoken skal varsles
+  // ett sted, ikke stå som «uutfylt felt» i tillegg.
+  it("lister ikke et misformet betingelsestoken", () => {
+    const html = "<p>{#hvis to ord}</p>";
+
+    expect(finnUutfylteTokener(html)).toEqual([]);
+    expect(finnUopplosteBetingelser(html)).toEqual(["{#hvis to ord}"]);
+  });
+
+  it("lister ikke klammefelt", () => {
+    expect(finnUutfylteTokener("<p>Hei [navn].</p>")).toEqual([]);
+  });
+
+  // Dekodingen kommer fra DOM-en, og hardt mellomrom normaliseres ved visning: to varianter
+  // av samme felt ville ellers stått som to like linjer i varselet.
+  it("viser tokenet med &nbsp;-entiteten som et vanlig mellomrom, uten duplikat", () => {
+    expect(finnUutfylteTokener("<p>{&nbsp;saksnummer&nbsp;} og { saksnummer }</p>")).toEqual(["{ saksnummer }"]);
+  });
+
+  it("viser også andre entiteter dekodet i varsellisten", () => {
+    expect(finnUutfylteTokener("<p>{Kari &amp; Ola}</p>")).toEqual(["{Kari & Ola}"]);
+  });
+
+  // Editoren ser bokstavelig «&nbsp;»-tekst som nettopp det – ingen sti skal godta den som
+  // en gyldig betingelse, ellers markerer editoren og forhåndsvisningen ulikt.
+  it("regner bokstavelig &nbsp;-tekst i et betingelsestoken som en vanlig (ukjent) nøkkel", () => {
+    expect(erBetingelsesToken("{#hvis&nbsp;avslag}")).toBe(false);
+    expect(parseHvisStartToken("{#hvis&nbsp;avslag}")).toBeNull();
+  });
+
+  // Valgtokenet er gyldig uansett: teksten er bare et alternativnavn, ikke en nøkkel som
+  // slås opp, så en bokstavelig «&nbsp;» blir stående som del av knappeteksten.
+  it("godtar bokstavelig &nbsp;-tekst inne i et alternativ, som er ren visningstekst", () => {
+    expect(parseValgToken("{velg:A&nbsp;B|C}")?.alternativer).toEqual(["A&nbsp;B", "C"]);
+  });
+});

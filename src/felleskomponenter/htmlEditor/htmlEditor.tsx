@@ -1,30 +1,24 @@
+import { ExpandIcon, ShrinkIcon } from "@navikt/aksel-icons";
+import { Label } from "@navikt/ds-react";
 import classNames from "classnames";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ReactQuill, { Quill } from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+import { MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER } from "../../featuretoggle/toggleNavn";
+import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
+import * as Nav from "../../navFrontend";
+import { Betingelse, PlaceholderVerdi } from "../../services/modules/placeholdere";
 import "./htmlEditor.less";
+import {
+  EDITOR_FORMATS,
+  fjernUgyldigeUtfylteMarkeringer,
+  fjernUgyldigeValgteMarkeringer,
+  forberedTekstblokkHtml,
+  markerUerstattedeOmrader,
+  PLACEHOLDER_FORMATS,
+} from "./placeholderMarkering";
+import { usePlaceholderValg } from "./placeholderValg";
 import TekstblokkSoek from "./tekstblokkSoek";
-
-// Registrerer egendefinert blot for tekst i klammer
-const Inline = Quill.import("blots/inline") as any;
-
-class BracketBlot extends Inline {
-  static blotName = "bracketed";
-
-  static tagName = "span";
-
-  static create() {
-    const node = super.create();
-    node.classList.add("bracketed-text");
-    return node;
-  }
-
-  static formats() {
-    return true;
-  }
-}
-
-Quill.register("formats/bracketed", BracketBlot);
 
 interface DeltaOperation {
   insert?: any;
@@ -41,7 +35,49 @@ interface TekstEditorProps {
   feil?: string | { melding: string } | null;
   className?: string;
   placeholder?: string;
+  // Vis brevmaler i tekstblokk-søket. Settes kun fra Send brev (sidemenyen);
+  // i saksflytene viser vi kun tekstblokker.
+  visBrevmaler?: boolean;
+  // Skru av innsetting av tekstblokker. Brukes i admin-modalen, der man redigerer selve
+  // tekstblokken/brevmalen – innsetting ville laget en frossen kopi av en annen blokk.
+  visTekstblokkSoek?: boolean;
+  // Lar brukeren utvide editoren forbi A4-bredden. Kun relevant der det er plass til
+  // det, altså i Send brev.
+  visBreddeToggle?: boolean;
+  // Verdier som erstatter {nokkel} ved innsetting av tekstblokk. Settes kun fra
+  // Send brev når dynamisk placeholder-togglen er på.
+  placeholderVerdier?: PlaceholderVerdi[];
+  // Nøklene fra placeholder-katalogen. Uten dem markeres alle uerstattede nøkler gult;
+  // med dem blir nøkler som ikke finnes i katalogen røde.
+  gyldigeNokler?: string[];
+  // Nøklene fra betingelseskatalogen. Uten dem markeres alle {#hvis …} som betingelse;
+  // med dem blir en nøkkel som ikke finnes rød.
+  gyldigeBetingelsesNokler?: string[];
+  // Sakens fakta som {#hvis …} løses mot ved innsetting. Settes kun fra Send brev.
+  betingelser?: Betingelse[];
 }
+
+const BREDDE_LAGRINGSNOKKEL = "melosys.htmlEditor.fullBredde";
+
+// Speiler max-width på .editor-wrapper i htmlEditor.less. Brukes til å avgjøre om
+// A4-grensen i det hele tatt gjør editoren smalere enn plassen den har.
+const BREVBREDDE_PX = 210 * (96 / 25.4) - 7 * 16;
+
+const lesLagretFullBredde = (): boolean => {
+  try {
+    return window.localStorage.getItem(BREDDE_LAGRINGSNOKKEL) === "true";
+  } catch {
+    return false;
+  }
+};
+
+const lagreFullBredde = (fullBredde: boolean) => {
+  try {
+    window.localStorage.setItem(BREDDE_LAGRINGSNOKKEL, String(fullBredde));
+  } catch {
+    /* Privat modus e.l. – valget gjelder da kun for denne økten. */
+  }
+};
 
 // Hjelpefunksjoner for å pakke inn/ut innhold med ql-fritekst div
 const wrapWithHtmlEditorDiv = (content: string): string => {
@@ -61,7 +97,26 @@ const unwrapHtmlEditorDiv = (content: string): string => {
   return match ? match[1] : content;
 };
 
-function HtmlEditor({ value, onChange, disabled, label, feil, className, placeholder }: TekstEditorProps) {
+function HtmlEditor({
+  value,
+  onChange,
+  disabled,
+  label,
+  feil,
+  className,
+  placeholder,
+  visBrevmaler,
+  visTekstblokkSoek = true,
+  visBreddeToggle = false,
+  placeholderVerdier,
+  gyldigeNokler,
+  gyldigeBetingelsesNokler,
+  betingelser,
+}: TekstEditorProps) {
+  const [fullBredde, setFullBredde] = useState(lesLagretFullBredde);
+  // Knappen har ingen hensikt der editoren uansett er smalere enn brevbredden.
+  const [harPlassTilUtvidelse, setHarPlassTilUtvidelse] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const quillRef = useRef<ReactQuill>(null);
   // Referanse for å spore om formatering pågår, for å unngå uendelig rekursjon
   const isFormattingRef = useRef(false);
@@ -71,6 +126,40 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
   const isExternalUpdateRef = useRef(false);
   // Siste kjente cursor-posisjon – brukes ved innsetting fra TekstblokkSoek
   const lastSelectionRef = useRef<{ index: number; length: number } | null>(null);
+  const dynamiskPlaceholderPaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER);
+  // Togglen er undefined til den er lastet; formatene må med uansett, ellers stripper Quill
+  // lagrede markeringer permanent. Kun en eksplisitt av-toggle fjerner dem.
+  const placeholderFormatsAktive = dynamiskPlaceholderPaa !== false;
+  // Én kilde til key-en på ReactQuill: skifter den, er Quill-instansen en annen, og handlerne
+  // i usePlaceholderValg må kobles opp på nytt.
+  const editorNokkel = String(placeholderFormatsAktive);
+  // Markering krever at verten kan levere verdier eller katalog (Send brev og admin);
+  // saksflyt-editorene får aldri placeholder-kontekst.
+  const markeringAktiv =
+    dynamiskPlaceholderPaa === true && (placeholderVerdier !== undefined || gyldigeNokler !== undefined);
+  // Med sakens verdier (Send brev) må et gjenstående betingelsestoken ryddes før sending – da varsles det.
+  const betingelseVarsel = markeringAktiv && placeholderVerdier !== undefined;
+  // Quill-handleren lever på tvers av rendringer, så den leser tilstanden via refs for å få
+  // med seg at toggle, verdier og katalog lander etterpå.
+  const markeringAktivRef = useRef(markeringAktiv);
+  const placeholderVerdierRef = useRef(placeholderVerdier);
+  const gyldigeNoklerRef = useRef(gyldigeNokler);
+  const gyldigeBetingelsesNoklerRef = useRef(gyldigeBetingelsesNokler);
+
+  const { valgPopover } = usePlaceholderValg({
+    quillRef,
+    sisteMarkering: lastSelectionRef,
+    aktiv: markeringAktiv && !disabled,
+    editorNokkel,
+    placeholderVerdier,
+  });
+
+  useEffect(() => {
+    markeringAktivRef.current = markeringAktiv;
+    placeholderVerdierRef.current = placeholderVerdier;
+    gyldigeNoklerRef.current = gyldigeNokler;
+    gyldigeBetingelsesNoklerRef.current = gyldigeBetingelsesNokler;
+  });
 
   // Synkroniserer med ekstern verdi når den endres, men bare hvis det ikke er forårsaket av vår egen onChange
   useEffect(() => {
@@ -86,10 +175,11 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
     }
   }, [value, internalValue]);
 
-  // Tillatte formater
+  // Tillatte formater. Placeholder-formatene faller bort først når togglen eksplisitt er av,
+  // så innlimt og lagret innhold beholder markeringene mens togglen laster.
   const formats = useMemo(
-    () => ["header", "bold", "italic", "underline", "indent", "list", "table", "bracketed", "break"],
-    [],
+    () => (placeholderFormatsAktive ? [...EDITOR_FORMATS, ...PLACEHOLDER_FORMATS] : EDITOR_FORMATS),
+    [placeholderFormatsAktive],
   );
 
   // Konfigurerer moduler
@@ -163,6 +253,8 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
     onChange(wrappedContent);
   };
 
+  // Togglen bytter formats og dermed Quill-instansen (se key på ReactQuill), så handlerne
+  // må kobles opp på nytt når den lander.
   useEffect(() => {
     const quill = quillRef.current?.editor;
     if (!quill) return undefined;
@@ -196,7 +288,7 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
       }
     }
 
-    // Håndterer tekst i klammer
+    // Håndterer tekst i klammer og uerstattede placeholdere
     const textChangeHandler = () => {
       if (isFormattingRef.current) return;
 
@@ -216,6 +308,17 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
 
           matchResult = bracketRegex.exec(text);
         }
+
+        if (markeringAktivRef.current) {
+          fjernUgyldigeUtfylteMarkeringer(quill, placeholderVerdierRef.current);
+          fjernUgyldigeValgteMarkeringer(quill);
+          markerUerstattedeOmrader(
+            quill,
+            gyldigeNoklerRef.current,
+            placeholderVerdierRef.current !== undefined,
+            gyldigeBetingelsesNoklerRef.current,
+          );
+        }
       } finally {
         isFormattingRef.current = false;
       }
@@ -227,6 +330,7 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
     const selectionChangeHandler = (range: any, _oldRange: any, source: string) => {
       if (!range) return;
 
+      const forrigeMarkering = lastSelectionRef.current;
       lastSelectionRef.current = { index: range.index, length: range.length };
 
       if (range.length !== 0 || source !== "user") return;
@@ -240,6 +344,19 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
         const { length } = matchResult[0];
 
         if (range.index > start && range.index < start + length) {
+          // Marker bare når brukeren kommer utenfra. Sto markøren allerede fritt inni
+          // placeholderen, har brukeren bevisst gått inn i den og skal kunne skrive og
+          // navigere uten at alt markeres på nytt ved hvert tastetrykk.
+          const heleVarMarkert = forrigeMarkering?.index === start && forrigeMarkering.length === length;
+          const stodFrittInni =
+            forrigeMarkering != null && forrigeMarkering.index > start && forrigeMarkering.index < start + length;
+          if (heleVarMarkert || stodFrittInni) return;
+
+          // "silent" undertrykker selection-change, så vi må speile markeringen i
+          // lastSelectionRef selv. Ellers tror handleSettInnTekstblokk at ingenting er
+          // markert, og limer tekstblokken inn midt i placeholderen i stedet for å
+          // erstatte den.
+          lastSelectionRef.current = { index: start, length };
           quill.setSelection(start, length, "silent");
           return;
         }
@@ -258,7 +375,33 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
       quill.off("text-change", textChangeHandler);
       quill.off("selection-change", selectionChangeHandler);
     };
-  }, []);
+  }, [markeringAktiv, placeholderFormatsAktive]);
+
+  // Katalogene lander etter at editoren er montert; uten dette blir ukjente nøkler
+  // stående gule til brukeren skriver noe.
+  useEffect(() => {
+    const quill = quillRef.current?.editor;
+    if (!quill || !markeringAktiv || !(gyldigeNokler?.length || gyldigeBetingelsesNokler?.length)) return;
+
+    isFormattingRef.current = true;
+    try {
+      markerUerstattedeOmrader(quill, gyldigeNokler, placeholderVerdier !== undefined, gyldigeBetingelsesNokler);
+    } finally {
+      isFormattingRef.current = false;
+    }
+  }, [gyldigeNokler, gyldigeBetingelsesNokler, markeringAktiv, placeholderVerdier]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!visBreddeToggle || !container) return undefined;
+
+    const oppdater = () => setHarPlassTilUtvidelse(container.clientWidth > BREVBREDDE_PX);
+    oppdater();
+
+    const observer = new ResizeObserver(oppdater);
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [visBreddeToggle]);
 
   const handleSettInnTekstblokk = (html: string) => {
     const quill = quillRef.current?.editor;
@@ -280,25 +423,65 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
     }
 
     const lengdeFor = quill.getLength();
-    quill.clipboard.dangerouslyPasteHTML(innsettingsindeks, html, "user");
+    const klarHtml = forberedTekstblokkHtml(html, placeholderVerdier, betingelser);
+    quill.clipboard.dangerouslyPasteHTML(innsettingsindeks, klarHtml, "user");
     const innsatt = quill.getLength() - lengdeFor;
 
     const nyIndeks = Math.max(0, Math.min(innsettingsindeks + innsatt, quill.getLength() - 1));
+    // "silent" emitter ingen selection-change, så refen må speiles her også. Ellers peker
+    // den fortsatt på forrige markering, og neste innsetting havner foran denne.
+    lastSelectionRef.current = { index: nyIndeks, length: 0 };
     quill.setSelection(nyIndeks, 0, "silent");
     quill.focus();
   };
 
   return (
-    <div className={classNames("htmlEditor", className)}>
-      {label && <div className="editor_label">{label}</div>}
-      <TekstblokkSoek onVelg={handleSettInnTekstblokk} disabled={disabled} />
+    <div
+      className={classNames("htmlEditor", { "htmlEditor--betingelse-varsel": betingelseVarsel }, className)}
+      ref={containerRef}
+    >
+      {label && (
+        <Label as="div" size="small" className="editor_label">
+          {label}
+        </Label>
+      )}
+      {visTekstblokkSoek && (
+        <TekstblokkSoek
+          onVelg={handleSettInnTekstblokk}
+          disabled={disabled}
+          visBrevmaler={visBrevmaler}
+          placeholderVerdier={placeholderVerdier}
+          gyldigeNokler={gyldigeNokler}
+          gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
+          betingelser={betingelser}
+        />
+      )}
       <div
         className={classNames("editor-wrapper", {
           "editor-wrapper--disabled": disabled,
           "editor-wrapper--error": !!feil,
+          "editor-wrapper--fullbredde": fullBredde,
         })}
       >
+        {visBreddeToggle && harPlassTilUtvidelse && !disabled && (
+          <Nav.Button
+            className="editor-breddeknapp"
+            variant="tertiary-neutral"
+            size="xsmall"
+            type="button"
+            icon={fullBredde ? <ShrinkIcon aria-hidden /> : <ExpandIcon aria-hidden />}
+            title={fullBredde ? "Vis editoren i brevbredde" : "Utvid editoren til full bredde"}
+            onClick={() => {
+              setFullBredde(!fullBredde);
+              lagreFullBredde(!fullBredde);
+            }}
+          />
+        )}
         <ReactQuill
+          // ReactQuill bygger editoren på nytt når formats endres, men beholder da React-
+          // instansen – og våre handlere ville blitt hengende på den forkastede Quill-en.
+          // Med key monteres alt på nytt, og effekten over kobler seg til den nye editoren.
+          key={editorNokkel}
           ref={quillRef}
           theme="snow"
           value={internalValue}
@@ -307,7 +490,11 @@ function HtmlEditor({ value, onChange, disabled, label, feil, className, placeho
           formats={formats}
           readOnly={disabled}
           placeholder={placeholder}
+          // getSemanticHTML() ville gjort punktlister om fra <ol data-list="bullet"> til
+          // <ul>, men sanitizeren i melosys-api og listestylingen i dokgen krever data-list.
+          useSemanticHTML={false}
         />
+        {valgPopover}
       </div>
       {feil && (
         // TODO Bruk av ExclamationmarkTriangleFillIcon from "@navikt/aksel-icons" ser ikke bra ut her, trolig pga

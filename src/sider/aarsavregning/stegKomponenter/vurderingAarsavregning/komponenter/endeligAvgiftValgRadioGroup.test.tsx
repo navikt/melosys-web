@@ -3,16 +3,13 @@ import { render, screen } from "@testing-library/react";
 import MKV from "../../../../../melosyskodeverk";
 
 vi.mock("../../../../../navFrontend", () => ({
+  Heading: ({ children }: any) => <h2>{children}</h2>,
   HStack: ({ children }: any) => <div>{children}</div>,
   Radio: ({ children, value }: any) => <label data-value={value}>{children}</label>,
 }));
 
 vi.mock("../../../../../felleskomponenter/forms", () => ({
   RadioGroup: ({ children, name }: any) => <div data-testid={name}>{children}</div>,
-}));
-
-vi.mock("../../../../../featuretoggle", () => ({
-  useFeatureToggle: () => true,
 }));
 
 import { EndeligAvgiftValgRadioGroup } from "./endeligAvgiftValgRadioGroup";
@@ -23,32 +20,35 @@ describe("EndeligAvgiftValgRadioGroup", () => {
     redigerbart: true,
     handleEndeligAvgiftValgChange: vi.fn(),
     endeligAvgiftValg: undefined as string | undefined,
-    endretPeriodeFraAvgiftssystemetValg: true,
-    harInnbetaltTrygdeavgift: true,
-    harTidligereTrygdeavgiftsgrunnlag: true,
   };
 
-  it("rendrer alle radioknapper", () => {
+  it("rendrer begge radioknapper", () => {
     render(<EndeligAvgiftValgRadioGroup {...defaultProps} />);
-    expect(screen.getByText("Beregn endelig trygdeavgift")).toBeDefined();
-    expect(screen.getByText("Beregn trygdeavgift med periode fra avgiftssystemet")).toBeDefined();
-    expect(screen.getByText("Oppgi endelig beregnet trygdeavgift")).toBeDefined();
+    expect(screen.getByText("Beregn trygdeavgiften")).toBeDefined();
+    expect(screen.getByText("Oppgi beløp for beregnet trygdeavgift")).toBeDefined();
   });
 
-  it("rendrer ikke radioknappen for periode fra avgiftssystemet når det ikke finnes tidligere trygdeavgiftsgrunnlag", () => {
-    render(<EndeligAvgiftValgRadioGroup {...defaultProps} harTidligereTrygdeavgiftsgrunnlag={false} />);
-    expect(screen.getByText("Beregn endelig trygdeavgift")).toBeDefined();
+  it("rendrer ikke valget for periode fra avgiftssystemet", () => {
+    render(<EndeligAvgiftValgRadioGroup {...defaultProps} />);
     expect(screen.queryByText("Beregn trygdeavgift med periode fra avgiftssystemet")).toBeNull();
-    expect(screen.getByText("Oppgi endelig beregnet trygdeavgift")).toBeDefined();
   });
 
-  it("bruker ekte MKV-kodeverdier", () => {
+  it("markerer valgt radioknapp via checked-klassen", () => {
+    render(
+      <EndeligAvgiftValgRadioGroup
+        {...defaultProps}
+        endeligAvgiftValg={MKV.Koder.endeligAvgiftValg.MANUELL_ENDELIG_AVGIFT}
+      />,
+    );
+    const valgtRadio = screen.getByText("Oppgi beløp for beregnet trygdeavgift");
+    expect(valgtRadio.getAttribute("data-value")).toBe(MKV.Koder.endeligAvgiftValg.MANUELL_ENDELIG_AVGIFT);
+  });
+
+  it("bruker ekte MKV-kodeverdier for de to radioknappene", () => {
     render(<EndeligAvgiftValgRadioGroup {...defaultProps} />);
-    const labels = screen.getAllByText(/trygdeavgift/);
-    expect(labels).toHaveLength(3);
-    // Verifiser at MKV-kodene finnes
-    expect(MKV.Koder.endeligAvgiftValg.OPPLYSNINGER_ENDRET).toBeDefined();
-    expect(MKV.Koder.endeligAvgiftValg.OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET).toBeDefined();
-    expect(MKV.Koder.endeligAvgiftValg.MANUELL_ENDELIG_AVGIFT).toBeDefined();
+    const labels = screen.getByTestId("endeligAvgiftValg").querySelectorAll("label");
+    expect(labels).toHaveLength(2);
+    expect(labels[0].getAttribute("data-value")).toBe(MKV.Koder.endeligAvgiftValg.OPPLYSNINGER_ENDRET);
+    expect(labels[1].getAttribute("data-value")).toBe(MKV.Koder.endeligAvgiftValg.MANUELL_ENDELIG_AVGIFT);
   });
 });

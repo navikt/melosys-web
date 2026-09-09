@@ -63,4 +63,20 @@ describe("vurderingVideresendSchema", () => {
     });
     expect(errors.some((e) => e.includes("4000 tegn"))).toBe(true);
   });
+
+  it("skal godta ytterligereInformasjonSed på 500 tegn", async () => {
+    const errors = await getErrors(schema, {
+      kreverMottakerinstitusjon: false,
+      ytterligereInformasjonSed: "a".repeat(500),
+    });
+    expect(errors).toEqual([]);
+  });
+
+  it("skal avvise ytterligereInformasjonSed over 500 tegn", async () => {
+    const errors = await getErrors(schema, {
+      kreverMottakerinstitusjon: false,
+      ytterligereInformasjonSed: "a".repeat(501),
+    });
+    expect(errors.some((e) => e.includes("500 tegn"))).toBe(true);
+  });
 });

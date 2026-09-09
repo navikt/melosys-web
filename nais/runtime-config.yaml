@@ -1,0 +1,104 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{APP_NAME}}-runtime-config
+  namespace: teammelosys
+  labels:
+    team: teammelosys
+  annotations:
+    reloader.stakater.com/match: "true"
+data:
+  default.conf: |-
+    server {
+      root /usr/share/nginx/html;
+      listen       3000;
+      include /etc/nginx/mime.types;
+      proxy_http_version 1.1;
+
+      location /api/ {
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass "{{APP_URL_MELOSYS}}/api/";
+      }
+
+      location /melosys/api/ {
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass "{{APP_URL_MELOSYS}}/api/";
+      }
+
+      location  /trygdeavtale-flyt/ {
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass "{{APP_URL_TRYGDEAVTALE}}/flyt/";
+      }
+
+      location  /faktureringskomponenten/ {
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass "{{APP_URL_FAKTURERINGSKOMPONENTEN}}/";
+      }
+
+      location  /graphql/ {
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass "{{APP_URL_MELOSYS}}/graphql/";
+      }
+
+      location = /env-config.js {
+        alias /etc/nginx/conf.d/env-config.js;
+        add_header Cache-Control 'no-store';
+        add_header Cache-Control 'no-cache';
+        expires 0;
+      }
+
+      location /melosys/env-config.js {
+        add_header Cache-Control 'no-store';
+        add_header Cache-Control 'no-cache';
+        expires 0;
+        try_files $uri /env-config.js;
+      }
+
+      location /melosys/assets/ {
+        alias /usr/share/nginx/html/assets/;
+      }
+
+      location /melosys/ {
+        add_header Cache-Control 'no-store';
+        add_header Cache-Control 'no-cache';
+        expires 0;
+        try_files $uri /index.html;
+      }
+
+      location = / {
+        rewrite ^.+ https://$host/melosys/ permanent;
+      }
+    }
+
+  env-config.js: |-
+    const envConfig = {
+      APP_NAME: "{{FRONTEND_APP_NAME}}",
+      API_BASE_URL: "/api/",
+      TRYGDEAVTALE_FLYT_BASE_URL: "/trygdeavtale-flyt/",
+      FAKTURERINGSKOMPONENTEN_FLYT_BASE_URL: "/faktureringskomponenten/",
+      GRAPHQL_URL: "/graphql/",
+      LOCAL_CONTEXT: "/melosys",
+      LOCAL_API_PORT: "8080",
+      AZURE_APP_TENANT_ID: "{{AZURE_APP_TENANT_ID}}",
+      AZURE_CLIENT_ID: "{{AZURE_CLIENT_ID}}",
+      AZURE_CLIENT_NAME: "{{AZURE_CLIENT_NAME}}",
+      CLUSTER: "{{CLUSTER_NAME}}",
+      FAKTURERINGSKOMPONENTEN_CLUSTER: "{{FAKTURERINGSKOMPONENTEN_CLUSTER}}",
+      FAKTURERINGSKOMPONENTEN_APP_NAME: "{{APP_NAME_FAKTURERINGSKOMPONENTEN_API}}",
+      TRYGDEAVTALE_APP_NAME: "{{APP_NAME_TRYGDEAVTALE_API}}",
+      MELOSYS_API_APP_NAME: "{{APP_NAME_API}}",
+      ENVIRONMENT: "{{ENVIRONMENT_NAME}}"
+    };
+
+    window.env = envConfig;
+    export default envConfig;

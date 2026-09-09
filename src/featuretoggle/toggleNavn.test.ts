@@ -13,6 +13,7 @@ describe("toggleNavn", () => {
   it("alleToggleNavn inkluderer kjente toggles", () => {
     expect(alleToggleNavn).toContain("melosys.pensjonist");
     expect(alleToggleNavn).toContain("melosys.arsavregning");
+    expect(alleToggleNavn).toContain("melosys.tekstblokker.dynamisk-placeholder");
   });
 
   it("eksporterte konstanter matcher verdier i alleToggleNavn", () => {

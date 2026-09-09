@@ -33,8 +33,6 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingUtpektSchema from "./vurderingUtpektSchema";
 
 import "./vurderingUtpekt.less";
-import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_NORGE_ER_UTPEKT_11_3_A } from "../../../../featuretoggle/toggleNavn";
 
 export function VurderingUtpekt({
   vurderingBegrunnelser = [],
@@ -50,8 +48,6 @@ export function VurderingUtpekt({
   behandlingstema,
   behandlingID,
 }) {
-  const erToggle11_3_A_NorgeErUtpektEnabled = useFeatureToggle(MELOSYS_NORGE_ER_UTPEKT_11_3_A);
-
   const lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt = MKV.Kodekombinasjoner.alleEØSLovvalg.filter(
     ({ kode }) =>
       kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A ||
@@ -63,8 +59,7 @@ export function VurderingUtpekt({
       kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_2B ||
       kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_3 ||
       kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_4 ||
-      (erToggle11_3_A_NorgeErUtpektEnabled &&
-        kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A),
+      kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
   );
 
   const [erBucAapen, setErBucAapen] = useState(true);

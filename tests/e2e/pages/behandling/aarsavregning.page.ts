@@ -136,6 +136,9 @@ export class AarsavregningPage extends BehandlingPage {
     const perioder = this.page.locator(".medlemskapsperiode__rad");
     const antallFør = await perioder.count();
 
+    // Vent på at knappen er synlig (den rendres betinget/asynkront)
+    await this.ventPåLeggTilPeriodeKnapp();
+
     const knapp = await finnKnapp(UI_TEXTS.BUTTONS.LEGG_TIL_PERIODE, this.page);
     await knapp.click();
 
@@ -350,15 +353,15 @@ export class AarsavregningPage extends BehandlingPage {
       await expect(jaRadio).toBeChecked();
     }
 
-    // Vent på at "Beregn endelig trygdeavgift" radioknappen vises
+    // Vent på at "Beregn trygdeavgiften" radioknappen vises
     // Dette kan ta litt tid pga React re-rendering
-    const beregnEndeligRadio = await finnRadioknapp("Beregn endelig trygdeavgift", this.page, 15000);
+    const beregnEndeligRadio = await finnRadioknapp("Beregn trygdeavgiften", this.page, 15000);
 
-    // Sjekk om "Beregn endelig trygdeavgift" allerede er valgt
+    // Sjekk om "Beregn trygdeavgiften" allerede er valgt
     const beregnIsChecked = await beregnEndeligRadio.isChecked();
 
     if (!beregnIsChecked) {
-      // Velg "Beregn endelig trygdeavgift" for å vise medlemskapsperiode-skjemaet
+      // Velg "Beregn trygdeavgiften" for å vise medlemskapsperiode-skjemaet
       await beregnEndeligRadio.check();
     }
 
@@ -384,6 +387,7 @@ export class AarsavregningPage extends BehandlingPage {
     const inputElement = allInputs[inputIndex];
     const container = inputElement.locator("..");
     const datepickerButton = await finnKnapp(UI_TEXTS.BUTTONS.ÅPNE_DATOVELGER, container);
+    await datepickerButton.evaluate((element) => element.scrollIntoView({ block: "start", inline: "nearest" }));
     await datepickerButton.click();
   }
 
@@ -409,7 +413,15 @@ export class AarsavregningPage extends BehandlingPage {
     // Finn button inne i dialog som har tekst som matcher dagen
     // Buttonene har format som "mandag 3", "tirsdag 4" osv., så vi må finne button som slutter med dagen
     const datoKnapp = dialog.getByRole("button", { name: new RegExp(`\\b${dag}$`) });
-    await datoKnapp.click();
+    try {
+      await datoKnapp.click();
+    } catch (error) {
+      if (error instanceof Error && error.message.includes("outside of the viewport")) {
+        await datoKnapp.evaluate((element) => (element as HTMLElement).click());
+        return;
+      }
+      throw error;
+    }
   }
 
   async verifiserIngenFeilmelding(tekst: string): Promise<void> {

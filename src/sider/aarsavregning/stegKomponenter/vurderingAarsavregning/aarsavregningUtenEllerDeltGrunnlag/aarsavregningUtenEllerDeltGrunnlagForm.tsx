@@ -15,6 +15,7 @@ import MKV from "../../../../../melosyskodeverk";
 import * as Nav from "../../../../../navFrontend";
 import * as Api from "../../../../../services/api";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
+import { Beregningsforklaring } from "../../../../../services/modules/trygdeavgift";
 import * as PeriodeAdapter from "../../../../../services/modules/aarsavregning/periodeApiAdapter";
 import type {
   BasePeriode,
@@ -107,6 +108,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const [aarsavregningResponse, setAarsavregningResponse] = useState<AarsavregningResponse | undefined>(
     initiellData.aarsavregningResponse,
   );
+  const [beregningsforklaringer, setBeregningsforklaringer] = useState<Beregningsforklaring[]>([]);
   const [previousFormState, setPreviousFormState] = useState<ReturnType<typeof mapFormState> | null>(null);
   const [debouncedBeregningPagaar, setDebouncedBeregningPagaar] = useState(false);
   const [arrayValideringsfeil, setArrayValideringsfeil] = useState<string | undefined>(undefined);
@@ -193,6 +195,10 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
 
   const erDeltGrunnlag =
     harInnbetaltTrygdeavgift && !!initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger;
+
+  // "Uten grunnlag" = verken tidligere grunnlag i Melosys eller delt grunnlag fra Avgiftssystemet.
+  // Kun i dette tilfellet skal "Legg til periode"-knappen og uten-grunnlag-spacing brukes.
+  const erUtenGrunnlag = !harTidligereTrygdeavgiftsgrunnlag && !erDeltGrunnlag;
 
   const harLaasteMedlemskapsperioder =
     !!initiellData.aarsavregningResponse?.sisteGjeldendeAvgiftspliktigperioder &&
@@ -313,10 +319,11 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         erEøsPensjonist: erHelseutgift,
         setFeilmelding,
         setAarsavregningResponse,
+        setBeregningsforklaringer,
       });
       setBeregningPaagar(false);
     },
-    [medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse],
+    [medlemskapstypeErPliktig, setFeilmelding, setAarsavregningResponse, setBeregningsforklaringer],
   );
   const debouncedBeregning = useCallback(() => {
     setDebouncedBeregningPagaar(false);
@@ -898,145 +905,156 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const maxDate =
     initiellData.valgtÅr !== undefined ? new Date(initiellData.valgtÅr, 11, 31, 23, 59, 59, 999) : undefined;
 
-  const skalViseLeggTilForFtrl =
-    erEøsPensjonistToggleEnabled === true
-      ? endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET && !erHelseutgift
-      : !erHelseutgift;
-
-  const skalViseLeggTilForEøsPensjonister =
-    erEøsPensjonistToggleEnabled === true
-      ? endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET
-      : !erHelseutgift;
-
-  const skalViseLeggTil = erHelseutgift ? skalViseLeggTilForEøsPensjonister : skalViseLeggTilForFtrl;
+  const skalViseLeggTil = Boolean(harInnbetaltTrygdeavgift);
 
   return (
     <div className="vurderingAarsavregning">
       {harInnbetaltTrygdeavgift && (
-        <InnbetaltTrygdeavgiftInput
-          control={control}
-          redigerbart={skjemaErRedigerbart}
-          erNyAarsavregning={Boolean(tidligereAarsavregningInnbetaltTrygdeavgift)}
-          harTidligereTrygdeavgiftsgrunnlag={harTidligereTrygdeavgiftsgrunnlag}
-        />
+        <Nav.Box className="innbetaltTrygdeavgiftInputPanel" background="surface-subtle">
+          <Nav.Heading level="2" className="aarsavregning_seksjon_heading">
+            Innbetalt trygdeavgift
+          </Nav.Heading>
+          <InnbetaltTrygdeavgiftInput
+            control={control}
+            redigerbart={skjemaErRedigerbart}
+            erNyAarsavregning={Boolean(tidligereAarsavregningInnbetaltTrygdeavgift)}
+            harTidligereTrygdeavgiftsgrunnlag={harTidligereTrygdeavgiftsgrunnlag}
+          />
+        </Nav.Box>
       )}
 
-      <EndeligAvgiftValgRadioGroup
-        control={control}
-        redigerbart={skjemaErRedigerbart}
-        handleEndeligAvgiftValgChange={handleEndeligAvgiftValgChange}
-        endeligAvgiftValg={endeligAvgiftValg}
-        endretPeriodeFraAvgiftssystemetValg={erDeltGrunnlag}
-        harInnbetaltTrygdeavgift={harInnbetaltTrygdeavgift}
-        harTidligereTrygdeavgiftsgrunnlag={harTidligereTrygdeavgiftsgrunnlag}
-      />
+      <Nav.Box className="endeligAvgiftValg_boks" background="surface-subtle">
+        <EndeligAvgiftValgRadioGroup
+          control={control}
+          redigerbart={skjemaErRedigerbart}
+          handleEndeligAvgiftValgChange={handleEndeligAvgiftValgChange}
+          endeligAvgiftValg={endeligAvgiftValg}
+        />
 
-      {(endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
-        endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) && (
-        <BorderedFormContainer>
-          <Nav.Heading className="endelige_opplysninger_heading" level="2">
-            Inntekts- og skatteopplysninger for endelig trygdeavgift
-          </Nav.Heading>
+        {(endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
+          endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) && (
+          <BorderedFormContainer className="bordered-form-container--uten-border bordered-form-container--uten-bunnpadding">
+            <Nav.Heading className="endelige_opplysninger_heading" level="2">
+              Inntekts- og skatteopplysninger for endelig trygdeavgift
+            </Nav.Heading>
 
-          {!erHelseutgift && (
-            <BestemmelseSelect
-              control={control}
-              setValue={setValue}
-              bestemmelser={initiellData.bestemmelser}
-              behandlingID={behandlingID}
-              redigerbart={skjemaErRedigerbart}
-              setTrygdedekninger={setTrygdedekninger}
-              setFeilmelding={setFeilmelding}
-              setEndrerBestemmelse={setEndrerBestemmelse}
-              lagreMedlemskapsperioderHvisGyldig={lagreMedlemskapsperioderEtterBestemmelseEndringHvisGyldig}
-              harLaasteMedlemskapsperioder={harLaasteMedlemskapsperioder}
-            />
-          )}
-
-          <div className="perioder">
-            {medlemskapsperioderFields.map((field, index: number) => (
-              <AvgiftspliktigperiodeSkjema
-                key={field.id}
-                redigerbart={skjemaErRedigerbart}
+            {!erHelseutgift && (
+              <BestemmelseSelect
                 control={control}
-                field={field}
-                index={index}
-                remove={slettMedlemskapsperiode}
-                formValues={formValues}
-                handleLeggTil={leggTilDefaultMedlemskapsperiode}
-                visLeggTil={skalViseLeggTil}
-                maxDate={maxDate}
-                minDate={minDate}
-                trygdedekninger={erHelseutgift ? [] : trygdedekninger}
                 setValue={setValue}
-                erDeltGrunnlag={erDeltGrunnlag}
-                periodeType={periodeType}
+                bestemmelser={initiellData.bestemmelser}
+                behandlingID={behandlingID}
+                redigerbart={skjemaErRedigerbart}
+                setTrygdedekninger={setTrygdedekninger}
+                setFeilmelding={setFeilmelding}
+                setEndrerBestemmelse={setEndrerBestemmelse}
+                lagreMedlemskapsperioderHvisGyldig={lagreMedlemskapsperioderEtterBestemmelseEndringHvisGyldig}
+                harLaasteMedlemskapsperioder={harLaasteMedlemskapsperioder}
               />
-            ))}
-          </div>
+            )}
 
-          <Skatteforholdsperioder
-            defaultPeriode={medlemskapsperiode}
-            formValues={formValues}
-            redigerbart={skjemaErRedigerbart}
-            remove={skattRemove}
-            append={skattAppend}
-            control={control}
-            fields={skattFields}
-            minDate={minDate}
-            maxDate={maxDate}
-          />
-          {!trygdeAvgiftSkalIkkeBetalesTilNav && (
-            <Inntektskilder
+            <div
+              className={`perioder${erUtenGrunnlag || !skjemaErRedigerbart || !skalViseLeggTil ? " perioder--med-bunnmargin" : ""}`}
+            >
+              {medlemskapsperioderFields.map((field, index: number) => (
+                <AvgiftspliktigperiodeSkjema
+                  key={field.id}
+                  redigerbart={skjemaErRedigerbart}
+                  control={control}
+                  field={field}
+                  index={index}
+                  remove={slettMedlemskapsperiode}
+                  formValues={formValues}
+                  handleLeggTil={leggTilDefaultMedlemskapsperiode}
+                  visLeggTil={skalViseLeggTil}
+                  maxDate={maxDate}
+                  minDate={minDate}
+                  trygdedekninger={erHelseutgift ? [] : trygdedekninger}
+                  setValue={setValue}
+                  erDeltGrunnlag={erDeltGrunnlag}
+                  erUtenGrunnlag={erUtenGrunnlag}
+                  periodeType={periodeType}
+                />
+              ))}
+            </div>
+
+            <Skatteforholdsperioder
               defaultPeriode={medlemskapsperiode}
               formValues={formValues}
               redigerbart={skjemaErRedigerbart}
-              update={inntektUpdate}
-              remove={inntektRemove}
-              append={inntektAppend}
+              remove={skattRemove}
+              append={skattAppend}
               control={control}
-              fields={inntektFields}
-              medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
-              skalViseErMaanedsBelopRadioGroup
-              bestemmelse={bestemmelse}
+              fields={skattFields}
               minDate={minDate}
               maxDate={maxDate}
-              erHelseutgiftDekkesPeriode={erHelseutgift}
             />
-          )}
-          {formIsValid && trygdeAvgiftSkalIkkeBetalesTilNav && (
-            <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />
-          )}
-
-          {formIsValid &&
-            !beregningPaagar &&
-            !debouncedBeregningPagaar &&
-            !feilmelding &&
-            !arrayValideringsfeil &&
-            !trygdeAvgiftSkalIkkeBetalesTilNav &&
-            aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag && (
-              <Nav.ExpansionCard
-                className="beregnetTrygdeavgiftDetaljer"
-                aria-label="trygdeavgiftdetaljer"
-                size="small"
-              >
-                <Nav.ExpansionCard.Header>
-                  <Nav.ExpansionCard.Title size="small">Vis detaljert beregning</Nav.ExpansionCard.Title>
-                </Nav.ExpansionCard.Header>
-                <Nav.ExpansionCard.Content>
-                  <BeregnetTrygdeavgiftDetaljer
-                    grunnlag={aarsavregningResponse.nyttTrygdeavgiftsGrunnlag}
-                    medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
-                  />
-                </Nav.ExpansionCard.Content>
-              </Nav.ExpansionCard>
+            {!trygdeAvgiftSkalIkkeBetalesTilNav && (
+              <Inntektskilder
+                defaultPeriode={medlemskapsperiode}
+                formValues={formValues}
+                redigerbart={skjemaErRedigerbart}
+                update={inntektUpdate}
+                remove={inntektRemove}
+                append={inntektAppend}
+                control={control}
+                fields={inntektFields}
+                medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
+                skalViseErMaanedsBelopRadioGroup
+                bestemmelse={bestemmelse}
+                minDate={minDate}
+                maxDate={maxDate}
+                erHelseutgiftDekkesPeriode={erHelseutgift}
+              />
+            )}
+            {formIsValid && trygdeAvgiftSkalIkkeBetalesTilNav && (
+              <Aarsavregningsmeldinger.TrygdeavgiftSkalIkkeBetalesTilNav />
             )}
 
-          {arrayValideringsfeil && (
-            <Feilmelding type={arrayValideringsfeil} erHelseutgiftDekkesPeriode={erHelseutgift} />
-          )}
-        </BorderedFormContainer>
-      )}
+            {formIsValid &&
+              !beregningPaagar &&
+              !debouncedBeregningPagaar &&
+              !feilmelding &&
+              !arrayValideringsfeil &&
+              !trygdeAvgiftSkalIkkeBetalesTilNav &&
+              aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag && (
+                <Nav.ExpansionCard
+                  className="beregnetTrygdeavgiftDetaljer"
+                  aria-label="trygdeavgiftdetaljer"
+                  size="small"
+                >
+                  <Nav.ExpansionCard.Header>
+                    <Nav.ExpansionCard.Title size="small">Vis detaljert beregning</Nav.ExpansionCard.Title>
+                  </Nav.ExpansionCard.Header>
+                  <Nav.ExpansionCard.Content>
+                    <BeregnetTrygdeavgiftDetaljer
+                      grunnlag={aarsavregningResponse.nyttTrygdeavgiftsGrunnlag}
+                      medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
+                      beregningsforklaringer={beregningsforklaringer}
+                    />
+                  </Nav.ExpansionCard.Content>
+                </Nav.ExpansionCard>
+              )}
+
+            {arrayValideringsfeil && (
+              <div className="skatteforhold_feilmelding_luft">
+                <Feilmelding type={arrayValideringsfeil} erHelseutgiftDekkesPeriode={erHelseutgift} />
+              </div>
+            )}
+          </BorderedFormContainer>
+        )}
+
+        {endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT && (
+          <BorderedFormContainer className="bordered-form-container--uten-border bordered-form-container--flush-bottom">
+            <ManuellAvgiftFormPart
+              control={control}
+              redigerbart={redigerbart}
+              debouncedOppdaterManueltAvgiftBeloep={debouncedOppdaterManueltAvgiftBeloep}
+              tidligereAarsavregningErManueltBeregnet={tidligereAarsavregningErManueltBeregnet}
+            />
+          </BorderedFormContainer>
+        )}
+      </Nav.Box>
 
       {/* Show SumAarsavregningTabell below bordered container when data is available */}
       {formIsValid &&
@@ -1055,17 +1073,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             tidligereAarsavregningInnbetaltTrygdeavgift={tidligereAarsavregningInnbetaltTrygdeavgift}
           />
         )}
-
-      {endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT && (
-        <BorderedFormContainer>
-          <ManuellAvgiftFormPart
-            control={control}
-            redigerbart={redigerbart}
-            debouncedOppdaterManueltAvgiftBeloep={debouncedOppdaterManueltAvgiftBeloep}
-            tidligereAarsavregningErManueltBeregnet={tidligereAarsavregningErManueltBeregnet}
-          />
-        </BorderedFormContainer>
-      )}
 
       {/* Show SumAarsavregningTabell for manual amount below bordered container when entered */}
       {endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT &&

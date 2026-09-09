@@ -15,6 +15,7 @@ import { dokumenterOperations } from "../../../../ducks/dokumenter";
 import VedleggTable from "../../../vedleggTable";
 import VedleggVelger from "../../../vedleggvelger";
 import FritekstvedleggSkjema from "./fritekstvedleggSkjema";
+import usePlaceholderKontekst from "../usePlaceholderKontekst";
 
 const FORHANDSVIS_ERROR_MESSAGE = "Det oppstod en feil da vedlegget skulle forhåndsvises";
 
@@ -63,6 +64,8 @@ function BrevVedlegg({
   standardvedlegg,
 }: BrevVedleggProps) {
   const [forhandsvisFritekstvedleggError, setForhandsvisFritekstvedleggError] = useState(false);
+  const { placeholderVerdier, gyldigeNokler, gyldigeBetingelsesNokler, betingelser } =
+    usePlaceholderKontekst(behandlingID);
 
   const lagFritekstPdfUrl = async (index: number) => {
     const data = {
@@ -183,6 +186,10 @@ function BrevVedlegg({
             resetFritekstvedlegg={resetFritekstvedlegg}
             leggTilFritekstvedlegg={leggTilFritekstvedlegg}
             width={felterWidth}
+            placeholderVerdier={placeholderVerdier}
+            gyldigeNokler={gyldigeNokler}
+            gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
+            betingelser={betingelser}
           />
         ) : (
           <Mui.Lenkeknapp disabled={!redigerbart} onClick={() => setVisFritekstvedleggSkjema(true)} ikon={Ikoner.Add}>

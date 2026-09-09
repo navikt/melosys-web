@@ -289,6 +289,7 @@ function Saksopplysninger({
           label="Ytterligere informasjon til SED (valgfri)"
           onChange={ytterligereInfoTextAreaOnChange}
           value={ytterligereInfoFritekst}
+          maxLength={500}
         />
       </Nav.Column>
     </Nav.Row>
@@ -426,7 +427,8 @@ function Saksopplysninger({
                     bekreftKnappProps={{
                       loading: registreringPending,
                       onClick: () => submitRegistrering(),
-                      disabled: !redigerbart,
+                      disabled:
+                        !redigerbart || begrunnelseFritekst.length > 255 || ytterligereInfoFritekst.length > 500,
                     }}
                     bekreftTekst="Bekreft og send"
                   />

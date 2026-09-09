@@ -11,6 +11,7 @@ import {
   VStack,
   ExpansionCard,
   BodyLong,
+  BodyShort,
   Detail,
   ErrorMessage,
 } from "@navikt/ds-react";
@@ -53,6 +54,7 @@ export {
   ConfirmationPanel,
   Heading,
   BodyLong,
+  BodyShort,
   Detail,
   ErrorMessage,
 };
