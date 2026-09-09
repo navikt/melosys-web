@@ -103,7 +103,18 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const dispatch = useDispatch();
   const erÅrsavregningEøsPensjonistToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
   const erÅrsavregningIkkeStøttetSakstype = useErÅrsavregningIkkeStøttetSakstype();
-  // Blokkeringen gjelder saksbehandling. I innsyn vises innholdet som før, uten «Bekreft og fortsett».
+  /*
+   * Tilstandene for en ustøttet sakstype:
+   *
+   *                          | melding | «Bekreft og fortsett» | avgiftsskjema | årsvelger | skriver til backend
+   *   blokkert + redigerbart  |   ja    |  vises, deaktivert    |    skjult     | deaktivert |        nei
+   *   blokkert + innsyn       |   ja    |  kun skjemaets egen   |    vises      | deaktivert |        nei
+   *   støttet   + redigerbart |   nei   |  kun skjemaets egen   |    vises      |  aktiv     |        ja
+   *   støttet   + innsyn      |   nei   |  kun skjemaets egen   |    vises      | readOnly   |        ja
+   *
+   * Meldingen og årsvelgeren følger sakstypen, fordi en deaktivert årsvelger uten forklaring
+   * er uforståelig i innsyn. Knappen og skjemaskjulingen følger saksbehandling.
+   */
   const skalBlokkereÅrsavregning = redigerbart && erÅrsavregningIkkeStøttetSakstype;
 
   /**
@@ -408,15 +419,14 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
         </>
       )}
 
+      {erÅrsavregningIkkeStøttetSakstype && <Aarsavregningsmeldinger.ÅrsavregningIkkeStøttetSakstypeMelding />}
+
       {skalBlokkereÅrsavregning && (
-        <>
-          <Aarsavregningsmeldinger.ÅrsavregningIkkeStøttetSakstypeMelding />
-          <div>
-            <Nav.Button variant="primary" disabled>
-              Bekreft og fortsett
-            </Nav.Button>
-          </div>
-        </>
+        <div>
+          <Nav.Button variant="primary" disabled>
+            Bekreft og fortsett
+          </Nav.Button>
+        </div>
       )}
     </div>
   );

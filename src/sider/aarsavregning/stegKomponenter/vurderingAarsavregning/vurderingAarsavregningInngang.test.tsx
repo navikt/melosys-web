@@ -96,6 +96,9 @@ const defaultProps = {
   aktivtSteg: true,
 };
 
+const MELDING = "Melosys støtter ikke årsavregning for denne kombinasjonen av sakstype/-tema";
+const MEDGRUNNLAG_MARKOER = "Årsavregning med grunnlag må ha grunnlag";
+
 describe("VurderingAarsavregningInngang — ustøttet EØS-sakstype (MELOSYS-8163)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -109,123 +112,97 @@ describe("VurderingAarsavregningInngang — ustøttet EØS-sakstype (MELOSYS-816
     vi.mocked(Api.Fagsaker.sok.send).mockResolvedValue([{ behandlingOversikter: [] }] as any);
   });
 
-  it("skriver ikke harInnbetaltTrygdeavgift til backend når sakstypen er blokkert", async () => {
-    await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
-      preloadedState: lagState({}) as any,
+  /*
+   * Hele tilstandsrommet for blokkeringen: sakstype (blokkert/støttet) × redigerbart (saksbehandling/innsyn).
+   * Se tabellen i vurderingAarsavregningInngang.tsx.
+   */
+  describe.each([
+    { navn: "blokkert sakstype, saksbehandling", blokkert: true, redigerbart: true },
+    { navn: "blokkert sakstype, innsyn", blokkert: true, redigerbart: false },
+    { navn: "støttet sakstype, saksbehandling", blokkert: false, redigerbart: true },
+    { navn: "støttet sakstype, innsyn", blokkert: false, redigerbart: false },
+  ])("$navn", ({ blokkert, redigerbart }) => {
+    const state = () =>
+      lagState({
+        redigerbart,
+        toggles: blokkert
+          ? { "melosys.arsavregning.eos_pensjonist": true }
+          : {
+              "melosys.arsavregning.eos_pensjonist": true,
+              "melosys.arsavregning.eos_tjenesteperson": true,
+            },
+      });
+
+    it(`viser meldingen: ${blokkert}`, async () => {
+      await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
+        preloadedState: state() as any,
+      });
+
+      if (blokkert) {
+        expect(screen.getByText(MELDING)).toBeInTheDocument();
+      } else {
+        expect(screen.queryByText(MELDING)).not.toBeInTheDocument();
+      }
     });
 
-    expect(Api.Aarsavregning.oppdaterHarInnbetaltTrygdeavgift).not.toHaveBeenCalled();
-  });
+    it(`deaktiverer årsvelgeren: ${blokkert}`, async () => {
+      const { container } = await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
+        preloadedState: state() as any,
+      });
 
-  it("skriver harInnbetaltTrygdeavgift til backend når sakstypen er støttet", async () => {
-    await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
-      preloadedState: lagState({
-        toggles: {
-          "melosys.arsavregning.eos_pensjonist": true,
-          "melosys.arsavregning.eos_tjenesteperson": true,
-        },
-      }) as any,
+      expect((container.querySelector("#aarVelger") as HTMLSelectElement).disabled).toBe(blokkert);
     });
 
-    expect(Api.Aarsavregning.oppdaterHarInnbetaltTrygdeavgift).toHaveBeenCalledWith(BEHANDLING_ID, {
-      harInnbetaltTrygdeavgift: true,
-    });
-  });
+    it(`skriver harInnbetaltTrygdeavgift til backend: ${!blokkert}`, async () => {
+      await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
+        preloadedState: state() as any,
+      });
 
-  it("deaktiverer årsvelgeren, slik at tastaturvalg ikke kan opprette en årsavregning", async () => {
-    const { container } = await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
-      preloadedState: lagState({}) as any,
-    });
-
-    const aarVelger = container.querySelector("#aarVelger") as HTMLSelectElement;
-    expect(aarVelger).toBeTruthy();
-    expect(aarVelger.disabled).toBe(true);
-  });
-
-  it("viser blokkerende melding og deaktivert «Bekreft og fortsett», og skjuler skjemaet", async () => {
-    const { container } = await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
-      preloadedState: lagState({}) as any,
+      if (blokkert) {
+        expect(Api.Aarsavregning.oppdaterHarInnbetaltTrygdeavgift).not.toHaveBeenCalled();
+      } else {
+        expect(Api.Aarsavregning.oppdaterHarInnbetaltTrygdeavgift).toHaveBeenCalledWith(BEHANDLING_ID, {
+          harInnbetaltTrygdeavgift: true,
+        });
+      }
     });
 
-    expect(
-      screen.getByText("Melosys støtter ikke årsavregning for denne kombinasjonen av sakstype/-tema"),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Bekreft og fortsett" })).toBeDisabled();
-    expect(container.querySelector(".innbetaltTrygdeavgiftRadioGroup")).not.toBeInTheDocument();
-  });
+    const blokkererSaksbehandling = blokkert && redigerbart;
 
-  it("skjuler skjemaet i blokkert flyt også når det finnes tidligere grunnlag", async () => {
-    vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(lagAarsavregningMedGrunnlag() as any);
+    it(`viser deaktivert «Bekreft og fortsett» uten skjema: ${blokkererSaksbehandling}`, async () => {
+      // Med tidligere grunnlag rendres radiogruppa når flyten ikke er blokkert
+      vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(lagAarsavregningMedGrunnlag() as any);
 
-    const { container } = await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
-      preloadedState: lagState({}) as any,
+      const { container } = await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
+        preloadedState: state() as any,
+      });
+
+      if (blokkererSaksbehandling) {
+        expect(screen.getByRole("button", { name: "Bekreft og fortsett" })).toBeDisabled();
+        expect(container.querySelector(".innbetaltTrygdeavgiftRadioGroup")).not.toBeInTheDocument();
+      } else {
+        // Kun skjemaets egen knapp — blokkeringen legger ikke til en ekstra
+        expect(screen.getAllByRole("button", { name: "Bekreft og fortsett" })).toHaveLength(1);
+        expect(container.querySelector(".innbetaltTrygdeavgiftRadioGroup")).toBeInTheDocument();
+      }
     });
 
-    expect(container.querySelector(".innbetaltTrygdeavgiftRadioGroup")).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Bekreft og fortsett" })).toBeDisabled();
-  });
+    it(`monterer avgiftsskjemaet for tidligere grunnlag: ${!blokkererSaksbehandling}`, async () => {
+      // Forelderen får grunnlag, barnet en tynn respons: da rendrer barnet en feilmelding
+      // som er en direkte markør på at det faktisk ble montert.
+      vi.mocked(Api.Aarsavregning.hentAarsavregning)
+        .mockResolvedValueOnce(lagAarsavregningMedGrunnlag({ harInnbetaltTrygdeavgift: false }) as any)
+        .mockResolvedValue(lagAarsavregningResponse({ tidligereTrygdeavgiftsGrunnlagsopplysninger: null }) as any);
 
-  it("deaktiverer årsvelgeren også i innsyn når sakstypen er blokkert", async () => {
-    const { container } = await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
-      preloadedState: lagState({ redigerbart: false }) as any,
+      await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
+        preloadedState: state() as any,
+      });
+
+      if (blokkererSaksbehandling) {
+        expect(screen.queryByText(MEDGRUNNLAG_MARKOER)).not.toBeInTheDocument();
+      } else {
+        expect(screen.getByText(MEDGRUNNLAG_MARKOER)).toBeInTheDocument();
+      }
     });
-
-    expect((container.querySelector("#aarVelger") as HTMLSelectElement).disabled).toBe(true);
-  });
-
-  // AarsavregningMedGrunnlag henter årsavregningen på nytt når den monteres, så antall kall
-  // skiller «montert» fra «ikke montert» uten å bygge opp hele skjemaets datagrunnlag.
-  it("monterer ikke skjemaet for tidligere grunnlag i blokkert flyt", async () => {
-    vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(
-      lagAarsavregningMedGrunnlag({ harInnbetaltTrygdeavgift: false }) as any,
-    );
-
-    await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
-      preloadedState: lagState({}) as any,
-    });
-
-    expect(Api.Aarsavregning.hentAarsavregning).toHaveBeenCalledTimes(1);
-  });
-
-  it("monterer skjemaet for tidligere grunnlag når sakstypen er støttet", async () => {
-    vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(
-      lagAarsavregningMedGrunnlag({ harInnbetaltTrygdeavgift: false }) as any,
-    );
-
-    await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
-      preloadedState: lagState({
-        toggles: {
-          "melosys.arsavregning.eos_pensjonist": true,
-          "melosys.arsavregning.eos_tjenesteperson": true,
-        },
-      }) as any,
-    });
-
-    expect(Api.Aarsavregning.hentAarsavregning).toHaveBeenCalledTimes(2);
-  });
-
-  it("blokkerer ikke innsyn: ingen ekstra melding eller knapp, og innholdet vises", async () => {
-    vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue(lagAarsavregningMedGrunnlag() as any);
-
-    const { container } = await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
-      preloadedState: lagState({ redigerbart: false }) as any,
-    });
-
-    expect(
-      screen.queryByText("Melosys støtter ikke årsavregning for denne kombinasjonen av sakstype/-tema"),
-    ).not.toBeInTheDocument();
-    // Kun skjemaets egen knapp skal finnes — blokkeringen legger ikke til en ekstra
-    expect(screen.getAllByRole("button", { name: "Bekreft og fortsett" })).toHaveLength(1);
-    expect(container.querySelector(".innbetaltTrygdeavgiftRadioGroup")).toBeInTheDocument();
-  });
-
-  it("blokkerer ikke en støttet sakstype", async () => {
-    await renderWithProvidersAsync(<VurderingAarsavregningInngang {...defaultProps} />, {
-      preloadedState: lagState({ behandlingstema: "YRKESAKTIV" }) as any,
-    });
-
-    expect(
-      screen.queryByText("Melosys støtter ikke årsavregning for denne kombinasjonen av sakstype/-tema"),
-    ).not.toBeInTheDocument();
   });
 });
