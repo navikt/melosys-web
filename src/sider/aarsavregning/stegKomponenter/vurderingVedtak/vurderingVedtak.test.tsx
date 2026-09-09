@@ -515,6 +515,26 @@ describe("MELOSYS-8163: blokkert vedtakssteg for ustøttet EØS-sakstype", () =>
     vi.mocked(Api.Saksflyt.Vedtak.fatt).mockResolvedValue({ data: { data: {} } } as any);
   });
 
+  // Steg som er tatt i bruk forblir montert og skjules med CSS. Etter et besøk på vedtakssteget
+  // har komponenten årsavregningen i state, så den tidlige returen på aktivtSteg er det eneste
+  // som hindrer at data-testid-en finnes to ganger når saksbehandler går tilbake.
+  it("rendrer ingenting etter at steget er forlatt, så testid-en er unik i flyten", async () => {
+    const { container, rerender } = await renderWithProvidersAsync(<VurderingVedtak {...mockProps} />, {
+      preloadedState: lagBlokkertState() as any,
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId("aarsavregning-ikke-stottet-sakstype")).toBeInTheDocument();
+    });
+
+    await act(async () => {
+      rerender(<VurderingVedtak {...mockProps} aktivtSteg={false} />);
+    });
+
+    expect(screen.queryByTestId("aarsavregning-ikke-stottet-sakstype")).not.toBeInTheDocument();
+    expect(container).toBeEmptyDOMElement();
+  });
+
   // Meldingen følger sakstypen, ikke saksbehandling: også i innsyn må en deaktivert
   // «Fatt vedtak» være forklart
   it.each([
