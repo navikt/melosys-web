@@ -284,7 +284,9 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             value={valgtÅr || initieltÅr || ""}
             onChange={håndterEndringAvÅr}
             readOnly={!redigerbart}
-            disabled={skalBlokkereÅrsavregning}
+            // Blokkerte sakstyper deaktiveres også i innsyn: readOnly stopper bare piltaster
+            // og mellomrom, mens tastatur-typeahead fortsatt ville opprettet en årsavregning
+            disabled={erÅrsavregningIkkeStøttetSakstype}
           >
             <option value="" disabled>
               Velg...

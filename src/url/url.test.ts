@@ -69,20 +69,39 @@ describe("url", () => {
       expect(url).toContain("/FTRL/aarsavregning/");
     });
 
-    it.each([MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG, MKV.Koder.sakstemaer.TRYGDEAVGIFT])(
-      "MELOSYS-8163: EU_EOS/tjenesteperson-årsavregning med sakstema %s returnerer aarsavregning-url",
-      (sakstema) => {
+    it.each([
+      [MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG, false, false],
+      [MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG, true, true],
+      [MKV.Koder.sakstemaer.TRYGDEAVGIFT, false, false],
+      [MKV.Koder.sakstemaer.TRYGDEAVGIFT, true, true],
+    ])(
+      "MELOSYS-8163: EU_EOS/tjenesteperson-årsavregning med sakstema %s returnerer aarsavregning-url (pensjonisttoggler %s/%s)",
+      (sakstema, erPensjonistToggleEnabled, erPensjonistEØSToggleEnabled) => {
         const url = lagUrl(
           "MEL-1",
           1,
           EU_EOS,
-          sakstema,
+          sakstema as string,
           MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
           MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
+          erPensjonistToggleEnabled as boolean,
+          erPensjonistEØSToggleEnabled as boolean,
         );
         expect(url).toContain("/EU_EOS/aarsavregning/");
       },
     );
+
+    it("MELOSYS-8163: FTRL/tjenesteperson-årsavregning berøres ikke av EØS-regelen", () => {
+      const url = lagUrl(
+        "MEL-1",
+        1,
+        FTRL,
+        MKV.Koder.sakstemaer.TRYGDEAVGIFT,
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+        MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
+      );
+      expect(url).toContain("/FTRL/behandling/");
+    });
 
     it("MELOSYS-8163: EU_EOS/tjenesteperson uten behandlingstype årsavregning og sakstema TRYGDEAVGIFT går fortsatt til ingen-flyt", () => {
       const url = lagUrl(
