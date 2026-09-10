@@ -146,6 +146,10 @@ interface Inntekt {
 export interface BehandlingResDto {
   behandlingID: number;
   redigerbart: boolean;
+  /** NAV-ident til saksbehandleren som har behandlingsoppgaven, eller null når oppgaven er utildelt. */
+  tilordnetIdent: string | null;
+  /** Fullt navn på tilordnetIdent, eller identen selv hvis navneoppslaget ikke ga treff. */
+  tilordnetNavn: string | null;
   saksopplysninger: {
     arbeidsforhold: Arbeidsforhold[];
     organisasjoner: Organisasjon[];

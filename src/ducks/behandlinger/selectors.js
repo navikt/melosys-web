@@ -41,6 +41,24 @@ export const OppsummeringSelector = createSelector(
   (state) => BehandlingerSelector(state).oppsummering || {},
   (oppsummering) => oppsummering,
 );
+
+/**
+ * NAV-identen som har behandlingsoppgaven, eller null når oppgaven er utildelt.
+ * @type {import('reselect').Selector<import('../../AppTypes').RootState, string | null>}
+ */
+export const TilordnetIdentSelector = createSelector(
+  (state) => BehandlingerSelector(state).tilordnetIdent ?? null,
+  (tilordnetIdent) => tilordnetIdent,
+);
+
+/**
+ * Fullt navn på tilordnet saksbehandler, med fallback til NAV-identen.
+ * @type {import('reselect').Selector<import('../../AppTypes').RootState, string | null>}
+ */
+export const TilordnetNavnSelector = createSelector(
+  (state) => BehandlingerSelector(state).tilordnetNavn ?? BehandlingerSelector(state).tilordnetIdent ?? null,
+  (tilordnetNavn) => tilordnetNavn,
+);
 export const BehandlingstypeKodeSelector = createSelector(
   (state) => OppsummeringSelector(state),
   (oppsummering) => (oppsummering.behandlingstype ? oppsummering.behandlingstype.kode : ""),
