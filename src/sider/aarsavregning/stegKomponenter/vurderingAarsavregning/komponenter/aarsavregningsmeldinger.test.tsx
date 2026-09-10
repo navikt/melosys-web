@@ -23,7 +23,7 @@ describe("Aarsavregningsmeldinger", () => {
       expect(container.firstChild).toMatchSnapshot();
     });
 
-    it("viser meldingsteksten fra MELOSYS-8163 og en stabil data-testid", () => {
+    it("viser meldingsteksten og en stabil data-testid", () => {
       const { getByTestId } = render(<Aarsavregningsmeldinger.ÅrsavregningIkkeStøttetSakstypeMelding />);
       const alert = getByTestId("aarsavregning-ikke-stottet-sakstype");
       expect(alert).toHaveTextContent("Melosys støtter ikke årsavregning for denne kombinasjonen av sakstype/-tema");

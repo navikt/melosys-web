@@ -99,7 +99,7 @@ const defaultProps = {
 const MELDING = "Melosys støtter ikke årsavregning for denne kombinasjonen av sakstype/-tema";
 const MEDGRUNNLAG_MARKØR = "Årsavregning med grunnlag må ha grunnlag";
 
-describe("VurderingAarsavregningInngang — ustøttet EØS-sakstype (MELOSYS-8163)", () => {
+describe("VurderingAarsavregningInngang — ustøttet EØS-sakstype", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(Api.Aarsavregning.hentFiltrertAarsavregningList).mockResolvedValue([

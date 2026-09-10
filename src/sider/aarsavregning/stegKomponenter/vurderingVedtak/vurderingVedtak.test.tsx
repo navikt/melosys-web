@@ -447,12 +447,12 @@ describe("MELOSYS-7114: Obligatorisk begrunnelse", () => {
 });
 
 /**
- * MELOSYS-8163: vedtakssteget skal ikke kunne fattes for EØS-sakstyper der årsavregning
+ * Vedtakssteget skal ikke kunne fattes for EØS-sakstyper der årsavregning
  * ikke er støttet ennå.
  */
 import { act, fireEvent } from "@testing-library/react";
 
-describe("MELOSYS-8163: blokkert vedtakssteg for ustøttet EØS-sakstype", () => {
+describe("Blokkert vedtakssteg for ustøttet EØS-sakstype", () => {
   const lagBlokkertState = (toggles: Record<string, boolean> = {}, redigerbart = true) => ({
     behandlinger: {
       status: "OK",

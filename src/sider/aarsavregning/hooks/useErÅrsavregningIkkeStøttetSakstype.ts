@@ -10,7 +10,7 @@ const { TRYGDEAVGIFT } = MKV.Koder.sakstemaer;
 const { PENSJONIST, ARBEID_TJENESTEPERSON_ELLER_FLY } = MKV.Koder.behandlinger.behandlingstema;
 
 /**
- * MELOSYS-8163: årsavregning for EØS pensjonist og EØS offentlig tjenesteperson/flyvende personell
+ * Årsavregning for EØS pensjonist og EØS offentlig tjenesteperson/flyvende personell
  * opprettes automatisk, men selve gjennomføringen av årsavregningsbehandlingen støttes ikke ennå.
  * Returnerer true når saksbehandler skal blokkeres fra å bekrefte årsavregningssteget eller fatte
  * årsavregningsvedtak. Blokkeringen fjernes per sakstype når respektiv toggle slås på.

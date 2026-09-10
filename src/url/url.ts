@@ -160,7 +160,7 @@ export const skalViseIngenFlyt = (
   erPensjonsistToggleEnabled?: boolean,
   erPensjonistToggleEnabled_EØS?: boolean,
 ) => {
-  // MELOSYS-8163: årsavregning for EØS offentlig tjenesteperson/flyvende personell skal inn i
+  // Årsavregning for EØS offentlig tjenesteperson/flyvende personell skal inn i
   // årsavregningsflyten uansett sakstema, der egen melding blokkerer stegene til støtte er på plass.
   if (
     sakstype === EU_EOS &&
