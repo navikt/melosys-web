@@ -7325,9 +7325,9 @@
     {
       "request": {
         "method": "GET",
-        "url": "http://localhost:3333/api/saksbehandling/behandlingstyper/kombinasjoner/?hovedpart=VIRKSOMHET&sakstype=EU_EOS&sakstema=MEDLEMSKAP_LOVVALG&behandlingstema=VIRKSOMHET",
-        "pathname": "/api/saksbehandling/behandlingstyper/kombinasjoner/",
-        "normalizedPath": "/api/saksbehandling/behandlingstyper/kombinasjoner/",
+        "url": "http://localhost:3333/api/saksbehandling/behandlingstyper/kombinasjoner-for-ny-sak/?hovedpart=VIRKSOMHET&sakstype=EU_EOS&sakstema=MEDLEMSKAP_LOVVALG&behandlingstema=VIRKSOMHET",
+        "pathname": "/api/saksbehandling/behandlingstyper/kombinasjoner-for-ny-sak/",
+        "normalizedPath": "/api/saksbehandling/behandlingstyper/kombinasjoner-for-ny-sak/",
         "query": {
           "hovedpart": "VIRKSOMHET",
           "sakstype": "EU_EOS",

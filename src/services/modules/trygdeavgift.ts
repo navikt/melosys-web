@@ -54,6 +54,11 @@ export interface OrdinaerAvgiftspost {
   beloep: number;
 }
 
+export interface OrdinaerAvgiftPerDel {
+  inntektsgruppe: Beregningsinntektsgruppe;
+  ordinaerAvgift: number;
+}
+
 export interface Beregningsforklaring {
   aar: number;
   inntektsgruppe: Beregningsinntektsgruppe;
@@ -67,6 +72,11 @@ export interface Beregningsforklaring {
   maksimalAvgift25Prosent: number | null;
   ordinaerAvgift: number;
   ordinaerAvgiftPoster: OrdinaerAvgiftspost[];
+  /**
+   * Valgfri fordi api-svar fra før feltet fantes mangler det helt – ellers sendes alltid en liste,
+   * tom eller utfylt.
+   */
+  ordinaerAvgiftPerDel?: OrdinaerAvgiftPerDel[];
   fastsattAvgift: number;
   fastsattAvgiftPerMaaned: number;
 }

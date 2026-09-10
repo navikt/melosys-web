@@ -150,7 +150,7 @@ describe("TrygdeavgiftsperioderTabell", () => {
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
     expect(screen.getByText("* Beregnet etter 25 %-regelen")).toBeDefined();
-    expect(screen.getByText("** Inntekten er under minstebeløpet")).toBeDefined();
+    expect(screen.getByText("** Inntekten er under minstebeløpet i perioden som er angitt")).toBeDefined();
   });
 
   it("viser ingen fotnoter for kun ordinære perioder", () => {
@@ -219,7 +219,9 @@ describe("TrygdeavgiftsperioderTabell", () => {
       lagPeriode("2024-07-01", "2024-12-31", { avgiftssats: null, avgiftPerMd: 0, beregningsregel: "MINSTEBELØP" }),
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
-    expect(screen.getByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet.")).toBeDefined();
+    expect(
+      screen.getByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet i perioden som er angitt."),
+    ).toBeDefined();
     expect(screen.queryByText("Trygdeperiode")).toBeNull();
   });
 
@@ -229,13 +231,21 @@ describe("TrygdeavgiftsperioderTabell", () => {
       lagPeriode("2024-07-01", "2024-12-31", { avgiftssats: 6.8, beregningsregel: "ORDINÆR" }),
     ];
     render(<TrygdeavgiftsperioderTabell perioder={perioder} lagrePending={false} />);
-    expect(screen.queryByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet.")).toBeNull();
+    expect(
+      screen.queryByText(
+        "Trygdeavgift skal ikke betales da inntekten er under minstebeløpet i perioden som er angitt.",
+      ),
+    ).toBeNull();
     expect(screen.getByText("Trygdeperiode")).toBeDefined();
   });
 
   it("viser ingen infomelding når ingen perioder", () => {
     render(<TrygdeavgiftsperioderTabell perioder={[]} lagrePending={false} />);
-    expect(screen.queryByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet.")).toBeNull();
+    expect(
+      screen.queryByText(
+        "Trygdeavgift skal ikke betales da inntekten er under minstebeløpet i perioden som er angitt.",
+      ),
+    ).toBeNull();
   });
 });
 

@@ -1,0 +1,84 @@
+name: Build and Push Image
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Custom image tag (for example, e2e-test-123 or feature-x; latest is reserved)"
+        required: true
+        type: string
+      skip_tests:
+        description: "Skip tests for faster build"
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  packages: read
+  id-token: write
+
+jobs:
+  build:
+    name: Build and Push Image
+    runs-on: ubuntu-latest-8-cores
+    steps:
+      - name: Validate image tag
+        env:
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          if [[ ! "$IMAGE_TAG" =~ ^[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}$ || "$IMAGE_TAG" == latest ]]; then
+            echo "::error::Use a valid Docker tag other than latest (1-128 letters, digits, underscores, periods or hyphens; start with a letter, digit or underscore)."
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+
+      - name: Setup node
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: "22"
+          registry-url: https://npm.pkg.github.com/
+          scope: "@navikt"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting
+        run: pnpm prettier:check
+
+      - name: Lint
+        run: pnpm eslint
+
+      - name: Test
+        if: ${{ !inputs.skip_tests }}
+        run: pnpm test --run
+
+      - name: Build
+        run: pnpm build
+
+      - name: Build and publish Docker images (multi-arch)
+        id: docker-push
+        uses: nais/docker-build-push@v0
+        with:
+          team: teammelosys
+          tag: |
+            type=raw,value=${{ inputs.image_tag }},priority=9001
+            type=raw,value=${{ github.sha }},priority=9000
+          platforms: linux/amd64,linux/arm64
+          salsa: true
+
+      - name: Output image info
+        env:
+          IMAGE: ${{ steps.docker-push.outputs.image }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          echo "Image: $IMAGE"
+          echo "Custom tag: europe-north1-docker.pkg.dev/nais-management-233d/teammelosys/melosys-web:$IMAGE_TAG"
+          echo "SHA tag: $GITHUB_SHA"

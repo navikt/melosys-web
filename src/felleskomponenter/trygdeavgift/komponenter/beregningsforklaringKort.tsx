@@ -11,6 +11,7 @@ import {
   Inntektspost,
   EkskludertInntektspost,
   OrdinaerAvgiftspost,
+  OrdinaerAvgiftPerDel,
 } from "../../../services/modules/trygdeavgift";
 import { feltId } from "./beregningsforklaringKortContext";
 
@@ -50,10 +51,7 @@ function visProsent(sats: number): string {
   return `${String(sats).replace(".", ",")} %`;
 }
 
-/**
- * Antall måneder kan være desimal (f.eks. 1,97 når en periode ikke dekker hele måneder).
- * Vises på norsk format med inntil 2 desimaler – heltall vises uten desimaler (12 → «12»).
- */
+/** Antall måneder kan være desimal (1,97 når perioden ikke dekker hele måneder). */
 function visAntallMaaneder(antallMaaneder: number): string {
   return antallMaaneder.toLocaleString("nb-NO", { maximumFractionDigits: 2 });
 }
@@ -134,8 +132,8 @@ function Inntektsposter({
 }
 
 function MinstebeloepSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
-  // Bruk backendens avgjørelse i stedet for å re-utlede: backend behandler
-  // inntekt == minstebeløp som UNDER (avgift beregnes kun når inntekt > minstebeløp).
+  // Leses av årsaken, ikke av en ny tallsammenligning: backend regner inntekt lik
+  // minstebeløpet som under (avgift beregnes kun når inntekten er større).
   const over = forklaring.aarsak !== "INNTEKT_UNDER_MINSTEBELØP";
   return (
     <div className="beregningsforklaring-kort-steg">
@@ -182,7 +180,7 @@ function OrdinaerAvgiftUtregning({
   linjer: OrdinaerAvgiftspost[];
   ordinaerAvgift: number;
 }) {
-  // Uten linjer (eldre svar/ingen utregning) faller vi tilbake til kun totalen.
+  // Eldre backend-svar mangler linjene; da er totalen alt vi kan vise.
   if (linjer.length === 0) {
     return (
       <div className="beregningsforklaring-kort-rad">
@@ -216,10 +214,101 @@ function OrdinaerAvgiftUtregning({
   );
 }
 
+function sammenligningstegn(venstre: number, hoeyre: number): string {
+  return venstre > hoeyre ? ">" : "≤";
+}
+
+function AvgiftPerDelSammenligning({
+  deler,
+  maksimalAvgift25Prosent,
+}: {
+  deler: OrdinaerAvgiftPerDel[];
+  maksimalAvgift25Prosent: number;
+}) {
+  return (
+    <div className="beregningsforklaring-kort-underseksjon">
+      <Nav.BodyShort size="small" className="beregningsforklaring-kort-underseksjon-tittel">
+        Hver avgiftsdel målt mot taket
+      </Nav.BodyShort>
+      {deler.map((del) => (
+        <div className="beregningsforklaring-kort-rad" key={del.inntektsgruppe}>
+          <Nav.BodyShort size="small">{visInntektsgruppe(del.inntektsgruppe)}</Nav.BodyShort>
+          <Nav.BodyShort size="small" className="beregningsforklaring-kort-rad-verdi">
+            <strong>{kr(del.ordinaerAvgift)}</strong> {sammenligningstegn(del.ordinaerAvgift, maksimalAvgift25Prosent)}{" "}
+            {kr(maksimalAvgift25Prosent)}
+          </Nav.BodyShort>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Hver merknad sier kun det tallene den står ved kan bære: enten stammer ulikheten i teksten fra
+ * sammenligningen som velger grenen, eller så påstår teksten ingen ulikhet. Det er derfor
+ * `valgtRegel` alene aldri avgjør ordlyden – står den i strid med delbeløpene som vises rett over,
+ * sier merknaden fra i stedet for å velge én av dem.
+ */
+function maksgrenseMerknad(
+  forklaring: Beregningsforklaring,
+  maksimalAvgift: number,
+  deler: OrdinaerAvgiftPerDel[],
+): { variant: "success" | "info" | "warning"; tekst: string } {
+  const begrenset = forklaring.valgtRegel === "TJUEFEM_PROSENT_REGEL";
+  const alleDelerUnderTaket = deler.length > 0 && deler.every((del) => del.ordinaerAvgift <= maksimalAvgift);
+  const enDelOverstigerTaket = deler.some((del) => del.ordinaerAvgift > maksimalAvgift);
+  const tak = kr(maksimalAvgift);
+  const sum = kr(forklaring.ordinaerAvgift);
+
+  if (begrenset && alleDelerUnderTaket) {
+    return {
+      variant: "warning",
+      tekst: `Ingen avgiftsdel overstiger 25 %-taket ${tak}, men avgiften ble likevel begrenset. Forklaringen og beløpene henger ikke sammen.`,
+    };
+  }
+  if (begrenset && enDelOverstigerTaket) {
+    return { variant: "success", tekst: `25 %-regelen brukes. Avgiften begrenses til ${tak}.` };
+  }
+  if (begrenset && forklaring.ordinaerAvgift > maksimalAvgift) {
+    return {
+      variant: "success",
+      tekst: `Ordinær avgift ${sum} > 25 %-tak ${tak} → 25 %-regelen brukes. Avgiften begrenses til ${tak}.`,
+    };
+  }
+  if (begrenset) {
+    return {
+      variant: "warning",
+      tekst: `Ordinær avgift ${sum} overstiger ikke 25 %-taket ${tak}, men avgiften ble likevel begrenset. Forklaringen og beløpene henger ikke sammen.`,
+    };
+  }
+  if (alleDelerUnderTaket) {
+    return {
+      variant: "info",
+      tekst: `Hver avgiftsdel måles mot taket for seg, og ingen av dem overstiger ${tak} → ordinær beregning brukes. Summen av delene, ${sum}, måles ikke mot taket.`,
+    };
+  }
+  if (enDelOverstigerTaket) {
+    return {
+      variant: "warning",
+      tekst: `Minst én avgiftsdel overstiger 25 %-taket ${tak}, men avgiften ble ikke begrenset. Forklaringen og beløpene henger ikke sammen.`,
+    };
+  }
+  // Herfra er deler tom: begrenset er avklart over, og del-grenene dekker enhver utfylt liste.
+  if (forklaring.ordinaerAvgift > maksimalAvgift) {
+    return {
+      variant: "info",
+      tekst: `Ordinær avgift ${sum} > 25 %-tak ${tak}, men avgiften ble ikke begrenset. Taket ble målt mot hver avgiftsdel for seg, og delbeløpene mangler i denne forklaringen.`,
+    };
+  }
+  return { variant: "info", tekst: `Ordinær avgift ${sum} ≤ 25 %-tak ${tak} → ordinær beregning brukes.` };
+}
+
 function MaksgrenseSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
   if (forklaring.inntektOverMinstebeloep === null || forklaring.maksimalAvgift25Prosent === null) return null;
 
-  const begrenset = forklaring.valgtRegel === "TJUEFEM_PROSENT_REGEL";
+  const maksimalAvgift = forklaring.maksimalAvgift25Prosent;
+  const deler = forklaring.ordinaerAvgiftPerDel ?? [];
+  const merknad = maksgrenseMerknad(forklaring, maksimalAvgift, deler);
   return (
     <div className="beregningsforklaring-kort-steg">
       <div className="beregningsforklaring-kort-steg-tittel">
@@ -239,22 +328,14 @@ function MaksgrenseSjekk({ forklaring }: { forklaring: Beregningsforklaring }) {
           </Nav.BodyShort>
         </div>
         <div className="beregningsforklaring-kort-formel">
-          Maks avgift = 25 % × {kr(forklaring.inntektOverMinstebeloep)} ={" "}
-          <strong>{kr(forklaring.maksimalAvgift25Prosent)}</strong>
+          Maks avgift = 25 % × {kr(forklaring.inntektOverMinstebeloep)} = <strong>{kr(maksimalAvgift)}</strong>
         </div>
         <OrdinaerAvgiftUtregning linjer={forklaring.ordinaerAvgiftPoster} ordinaerAvgift={forklaring.ordinaerAvgift} />
+        {deler.length > 0 && <AvgiftPerDelSammenligning deler={deler} maksimalAvgift25Prosent={maksimalAvgift} />}
       </div>
-      {begrenset ? (
-        <Nav.Alert variant="success" size="small" className="beregningsforklaring-kort-merknad">
-          Ordinær avgift {kr(forklaring.ordinaerAvgift)} &gt; 25 %-tak {kr(forklaring.maksimalAvgift25Prosent)} → 25
-          %-regelen brukes. Avgiften begrenses til {kr(forklaring.maksimalAvgift25Prosent)}.
-        </Nav.Alert>
-      ) : (
-        <Nav.Alert variant="info" size="small" className="beregningsforklaring-kort-merknad">
-          Ordinær avgift {kr(forklaring.ordinaerAvgift)} ≤ 25 %-tak {kr(forklaring.maksimalAvgift25Prosent)} → ordinær
-          beregning brukes.
-        </Nav.Alert>
-      )}
+      <Nav.Alert variant={merknad.variant} size="small" className="beregningsforklaring-kort-merknad">
+        {merknad.tekst}
+      </Nav.Alert>
     </div>
   );
 }
@@ -276,8 +357,7 @@ function Forklaringsfelt({ forklaring }: { forklaring: Beregningsforklaring }) {
         ekskluderteInntekter={forklaring.ekskluderteInntekter}
         sumAarligInntekt={forklaring.sumAarligInntekt}
       />
-      {/* Når all inntekt er skattepliktig (ekskludert) er det ingen inntekt i vurderingen,
-          og minstebeløpssjekken er meningsløs (0 kr mot minstebeløpet). Da hopper vi over den. */}
+      {/* All inntekt ekskludert gir 0 kr i vurderingen – da sier minstebeløpssjekken ingenting. */}
       {forklaring.inntektsgrunnlag.length > 0 && <MinstebeloepSjekk forklaring={forklaring} />}
       <MaksgrenseSjekk forklaring={forklaring} />
       <div className="beregningsforklaring-kort-resultat">
@@ -300,19 +380,17 @@ export function BeregningsforklaringKort({
   scrollTilFelt,
 }: {
   forklaringer: Beregningsforklaring[];
-  /** Styrt åpen/lukket-tilstand fra tabellen. */
   open: boolean;
   onToggle: (open: boolean) => void;
-  /** feltId som det skal scrolles til når kortet åpnes via en `*`/`**`-lenke. */
+  /** Element-id fra `feltId`, satt når kortet åpnes fra en `*`/`**`-lenke i tabellen. */
   scrollTilFelt: string | null;
 }) {
   const innholdRef = useRef<HTMLDivElement>(null);
 
-  // Scroll til riktig felt når kortet er åpent og et felt er valgt.
   useEffect(() => {
     if (!open || !scrollTilFelt) return;
-    // getElementById unngår avhengighet av CSS.escape (kan mangle i enkelte test-/runtime-miljø);
-    // containment-sjekken sikrer at vi kun reagerer på felt inni dette kortet.
+    // getElementById fremfor querySelector: unngår CSS.escape, som mangler i enkelte testmiljø.
+    // Flere kort kan vise samme felt-id, så containment-sjekken holder scrollen i dette kortet.
     const el = document.getElementById(scrollTilFelt);
     if (!el || !innholdRef.current?.contains(el)) return;
     el.scrollIntoView({ behavior: "smooth", block: "center" });
