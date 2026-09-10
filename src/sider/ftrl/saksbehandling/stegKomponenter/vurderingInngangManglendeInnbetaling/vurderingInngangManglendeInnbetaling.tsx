@@ -23,12 +23,12 @@ interface Props {
   oppdaterStatus: (isValid: boolean, nesteStegId?: string) => void;
 }
 
-type RenameMe = {
+type RadioValg = {
   value: VurderingInngangManglendeInnbetalingValg;
   text: ReactNode;
 };
 
-const valg: RenameMe[] = [
+const valg: RadioValg[] = [
   {
     value: "HELE_PERIODEN_OPPHØRES",
     text: (
@@ -126,7 +126,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
         readOnly={!redigerbart}
         size="medium"
       >
-        {valg.map((valg: RenameMe) => (
+        {valg.map((valg: RadioValg) => (
           <Nav.Radio key={valg.value} value={valg.value}>
             {valg.text}
           </Nav.Radio>
