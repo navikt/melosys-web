@@ -49,10 +49,9 @@ function EnkelStegvelger({ alleSteg }: EnkelStegvelgerProps) {
   // Optional param nesteStegId overstyrer vanlig flyt.
   const oppdaterStatus = (stegId: string) => (isSchemaValid: boolean, nesteStegId?: string) => {
     const stegIndex = aktuelleSteg.findIndex((steg) => steg.id === stegId);
-    // Skal vi kun bytte "gren" i flyten dersom nesteStegId faktisk peker på et annet steg enn det som
-    // allerede ligger der. Uten denne sjekken vil f.eks. et bytte mellom to radiovalg som begge fører til
-    // samme neste steg (samme nesteStegId) trunkere og erstatte et allerede utfylt/gyldig steg lenger ned
-    // i flyten med en fersk, ubehandlet kopi.
+    // Bytt bare "gren" når nesteStegId faktisk peker til et annet neste steg.
+    // Uten dette vil bytte mellom radiovalg som leder til samme steg kunne nullstille
+    // et steg lenger ned i flyten som allerede er fylt ut og validert.
     const gjeldendeNesteSteg = aktuelleSteg[stegIndex + 1];
     const byggerNyGren = !!nesteStegId && gjeldendeNesteSteg?.id !== nesteStegId;
     // Fjerner stegene etter steget som oppdaterer dersom vi bygger en ny gren
