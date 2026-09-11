@@ -140,8 +140,12 @@ const lagMottatteOpplysningerData = (mottatteOpplysninger, mottatteOpplysningerT
   }
 };
 
+// Verner mot hele klassen "server returnerer nøkkel klienten ikke speiler": da veksler initialValues og autolagringen kan
+// ellers gå i evig løkke med bit-identisk payload. Nullstilles i resetState (ny behandling).
+let sistSendtPayload = null;
+
 export function lagre() {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     dispatch(oppdaterState());
 
     const mottatteOpplysninger = Selectors.MottatteOpplysningerDataSelector(getState());
@@ -150,7 +154,14 @@ export function lagre() {
 
     const data = lagMottatteOpplysningerData(mottatteOpplysninger, mottatteOpplysningerType);
 
-    return dispatch(send(behandlingID, { data }));
+    const payload = JSON.stringify([behandlingID, data]);
+    if (payload === sistSendtPayload) return undefined;
+    sistSendtPayload = payload;
+
+    const resultat = await dispatch(send(behandlingID, { data }));
+    if (resultat && resultat.type === Types.FEILET) sistSendtPayload = null;
+
+    return resultat;
   };
 }
 
@@ -179,5 +190,6 @@ export function oppdaterIkkeYrkesaktivSituasjontype(ikkeYrkesaktivSituasjontype)
 }
 
 export function resetState() {
+  sistSendtPayload = null;
   return Actions.resetState();
 }

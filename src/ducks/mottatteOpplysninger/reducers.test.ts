@@ -421,6 +421,7 @@ describe("mottatteOpplysninger reducer", () => {
               navn: "Abcdef",
               orgnr: "123456789",
               selvstendigNaeringsvirksomhet: false,
+              tilhorerSammeKonsern: null,
               adresse: {
                 tilleggsnavn: null,
                 gatenavn: null,
@@ -437,6 +438,7 @@ describe("mottatteOpplysninger reducer", () => {
               navn: "fedcba",
               orgnr: "123456789",
               selvstendigNaeringsvirksomhet: true,
+              tilhorerSammeKonsern: null,
               adresse: {
                 tilleggsnavn: null,
                 gatenavn: null,
@@ -542,5 +544,59 @@ describe("mottatteOpplysninger reducer", () => {
     const nextState = reducer(initialState, action);
 
     expect(nextState).toEqual(expectedState);
+  });
+
+  describe("foretakUtland ved action.type OPPDATER_MOTTATTE_OPPLYSNINGER", () => {
+    const lagDokument = (foretak: any) => ({
+      arbeidsforholdUtland: [foretak],
+      selvstendigNaeringsvirksomhetUtland: [{ ...foretak, uuid: "sn-1", selvstendigNaeringsvirksomhet: true }],
+      arbeidsstedOffshore: [],
+      arbeidsstedSkip: [],
+      arbeidsstedFly: [],
+      arbeidPaaLand: { fysiskeArbeidssteder: [] },
+      juridiskArbeidsgiverNorge: { ekstraArbeidsgivere: [] },
+      loennOgGodtgjoerelse: {},
+      arbeidssituasjonOgOevrig: {},
+      utenlandsoppdraget: { samletUtsendingsperiode: {} },
+      oppholdsland: [],
+      soknadsland: { landkoder: [DK], flereLandUkjentHvilke: false },
+      selvstendigForetak: [],
+      medfolgendeBarn: [],
+      medfolgendeEktefelleSamboer: [],
+      representantIUtlandet: null,
+    });
+
+    it("beholder tilhorerSammeKonsern fra skjemaet", () => {
+      const action: MockAction = {
+        type: Types.OPPDATER_MOTTATTE_OPPLYSNINGER,
+        dokument: lagDokument({
+          uuid: "af-1",
+          navn: "Utenlandsk foretak",
+          orgnr: "123456789",
+          selvstendigNaeringsvirksomhet: false,
+          tilhorerSammeKonsern: true,
+        }),
+      };
+
+      const nextState = reducer(initialState, action);
+
+      expect((nextState.data as any).data.foretakUtland.map((f: any) => f.tilhorerSammeKonsern)).toEqual([true, true]);
+    });
+
+    it("setter tilhorerSammeKonsern til null når feltet mangler", () => {
+      const action: MockAction = {
+        type: Types.OPPDATER_MOTTATTE_OPPLYSNINGER,
+        dokument: lagDokument({
+          uuid: "af-1",
+          navn: "Utenlandsk foretak",
+          orgnr: "123456789",
+          selvstendigNaeringsvirksomhet: false,
+        }),
+      };
+
+      const nextState = reducer(initialState, action);
+
+      expect((nextState.data as any).data.foretakUtland.map((f: any) => f.tilhorerSammeKonsern)).toEqual([null, null]);
+    });
   });
 });
