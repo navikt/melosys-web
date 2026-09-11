@@ -69,6 +69,47 @@ describe("url", () => {
       expect(url).toContain("/FTRL/aarsavregning/");
     });
 
+    // Regelen leses før både sakstema og pensjonisttogglene, så toggleverdier gir ingen ekstra
+    // dekning her. Sakstema varieres derimot: uten regelen sender TRYGDEAVGIFT saken til ingen-flyt.
+    it.each([MKV.Koder.sakstemaer.MEDLEMSKAP_LOVVALG, MKV.Koder.sakstemaer.TRYGDEAVGIFT])(
+      "EU_EOS/tjenesteperson-årsavregning med sakstema %s returnerer aarsavregning-url",
+      (sakstema) => {
+        const url = lagUrl(
+          "MEL-1",
+          1,
+          EU_EOS,
+          sakstema,
+          MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+          MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
+        );
+        expect(url).toContain("/EU_EOS/aarsavregning/");
+      },
+    );
+
+    it("FTRL/tjenesteperson-årsavregning berøres ikke av EØS-regelen", () => {
+      const url = lagUrl(
+        "MEL-1",
+        1,
+        FTRL,
+        MKV.Koder.sakstemaer.TRYGDEAVGIFT,
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+        MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING,
+      );
+      expect(url).toContain("/FTRL/behandling/");
+    });
+
+    it("EU_EOS/tjenesteperson uten behandlingstype årsavregning og sakstema TRYGDEAVGIFT går fortsatt til ingen-flyt", () => {
+      const url = lagUrl(
+        "MEL-1",
+        1,
+        EU_EOS,
+        MKV.Koder.sakstemaer.TRYGDEAVGIFT,
+        MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY,
+        MKV.Koder.behandlinger.behandlingstyper.FØRSTEGANG,
+      );
+      expect(url).toContain("/EU_EOS/behandling/");
+    });
+
     it("Sakstype TRYGDEAVTALE med støttet behandlingstemaKode returnerer url", () => {
       const url = lagUrlFraSakstypeOgBehandlingstema(
         "MEL-1",

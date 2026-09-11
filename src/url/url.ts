@@ -160,12 +160,14 @@ export const skalViseIngenFlyt = (
   erPensjonsistToggleEnabled?: boolean,
   erPensjonistToggleEnabled_EØS?: boolean,
 ) => {
-  // Årsavregning EØS offentlig tjenesteperson
+  // Årsavregning for EØS offentlig tjenesteperson/flyvende personell skal inn i
+  // årsavregningsflyten uansett sakstema, der egen melding blokkerer stegene til støtte er på plass.
   if (
+    sakstype === EU_EOS &&
     behandlingstema === MKV.Koder.behandlinger.behandlingstema.ARBEID_TJENESTEPERSON_ELLER_FLY &&
     behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ÅRSAVREGNING
   ) {
-    return true;
+    return false;
   }
 
   if (

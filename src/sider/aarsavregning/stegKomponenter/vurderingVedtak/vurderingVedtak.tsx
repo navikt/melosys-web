@@ -34,6 +34,8 @@ import vurdering_vedtak from "./vurderingVedtakSchema";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../featuretoggle/toggleNavn";
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
+import { useErÅrsavregningIkkeStøttetSakstype } from "../../hooks/useErÅrsavregningIkkeStøttetSakstype";
+import { Aarsavregningsmeldinger } from "../vurderingAarsavregning/komponenter/aarsavregningsmeldinger";
 
 const { FASTSATT_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { FØRSTEGANGSVEDTAK } = MKV.Koder.vedtakstyper;
@@ -95,6 +97,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const erFullmektigEndret = useSelector(menypanelSelectors.MenypanelErFullmektigEndretSelector) as boolean;
   const saksnummer = useSelector(fagsakSelectors.SaksnummerSelector);
   const erÅrsavregningEøsPensjonistToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
+  const erÅrsavregningIkkeStøttetSakstype = useErÅrsavregningIkkeStøttetSakstype();
 
   const { fattVedtak } = komponentDispatch(dispatch);
 
@@ -328,7 +331,8 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     }
 
     const stegErGyldig =
-      !harFullmaktForTrygdeavgift || erDifferanseUnderMinstebeløp || harBekreftetFullmaktForTrygdeavgift;
+      !erÅrsavregningIkkeStøttetSakstype &&
+      (!harFullmaktForTrygdeavgift || erDifferanseUnderMinstebeløp || harBekreftetFullmaktForTrygdeavgift);
     if (!stegErGyldig) {
       return;
     }
@@ -407,6 +411,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
   const kanSubmitte =
     redigerbart &&
     !vedtakPending &&
+    !erÅrsavregningIkkeStøttetSakstype &&
     (!harFullmaktForTrygdeavgift || erDifferanseUnderMinstebeløp || harBekreftetFullmaktForTrygdeavgift);
 
   return (
@@ -414,6 +419,8 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       <Nav.Heading level="1" className="stegvelgertittel">
         Vedtak årsavregning {lagretAarsavregning ? lagretAarsavregning.aar : ""}
       </Nav.Heading>
+
+      {erÅrsavregningIkkeStøttetSakstype && <Aarsavregningsmeldinger.ÅrsavregningIkkeStøttetSakstypeMelding />}
 
       {redigerbart && (lagretAarsavregning?.endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT || erNyVurdering) && (
         <Nav.Alert variant="warning">
