@@ -2,6 +2,11 @@ name: Build
 
 on: pull_request
 
+# Trengs for at coverage-rapporten kan postes som PR-kommentar
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   build:
     runs-on: ubuntu-latest-8-cores
@@ -33,9 +38,29 @@ jobs:
         run: pnpm eslint
 
       - name: test
-        run: pnpm test
+        run: pnpm test:coverage
         env:
           CI: true
+
+      # Poster en dekningstabell (totalt + endrede filer) som PR-kommentar,
+      # og skriver den til job-sammendraget. Leser coverage/coverage-summary.json
+      # + coverage-final.json (vitest json/json-summary-reporterne).
+      # continue-on-error: på fork- og Dependabot-PR-er er GITHUB_TOKEN read-only, så
+      # kommentar-postingen får 403. Da skal ikke hele bygget bli rødt — kommentaren
+      # er best-effort (testfeil i steget over gjør fortsatt bygget rødt).
+      - name: Report coverage
+        if: always()
+        continue-on-error: true
+        uses: davelosert/vitest-coverage-report-action@v2
+
+      # HTML-rapporten lastes opp som artefakt for detaljert gjennomgang.
+      - name: Upload coverage HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-coverage-report
+          path: coverage/
+          retention-days: 14
 
       - name: build
         run: |
