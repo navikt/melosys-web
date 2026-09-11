@@ -1,0 +1,25 @@
+/**
+ * Vises til høyre for saksnummeret i oppsummeringen: hvem oppgaven er tildelt, og
+ * knappen for å ta den selv. Ligger i det ledige feltet på saksnummer-raden.
+ */
+.tildel-oppgave {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+
+  .tildel-oppgave__status {
+    margin-block-start: 0;
+    margin-block-end: 0;
+
+    .nokkel {
+      font-weight: 600;
+    }
+
+    dt,
+    dd {
+      display: block;
+      margin-inline-start: 0;
+    }
+  }
+}
