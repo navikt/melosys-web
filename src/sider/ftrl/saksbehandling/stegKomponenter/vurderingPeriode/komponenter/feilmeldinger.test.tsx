@@ -57,8 +57,8 @@ describe("feilMeldingBlokkerer", () => {
     expect(feilMeldingBlokkerer("PERIODE_OVERSTIGER_12_MND")).toBe(true);
   });
 
-  it("returnerer false for INGEN_OPPHØRTE_PERIODER (advarsel)", () => {
-    expect(feilMeldingBlokkerer("INGEN_OPPHØRTE_PERIODER")).toBe(false);
+  it("returnerer true for INGEN_OPPHØRTE_PERIODER (blokkerer nå for delvis opphør)", () => {
+    expect(feilMeldingBlokkerer("INGEN_OPPHØRTE_PERIODER")).toBe(true);
   });
 
   it("returnerer false for BESTEMMELSE_FOR_FAMILIEMEDLEMMER", () => {
@@ -100,6 +100,20 @@ describe("finnAktivFeilmelding", () => {
     const perioder = [lagPeriode()];
     expect(finnAktivFeilmelding(perioder, "type", "tema", false, "2024-01-01", "2024-06-01")).toBeUndefined();
   });
+
+  it("returnerer INGEN_OPPHØRTE_PERIODER når delvis opphør er valgt og ingen periode er opphørt", () => {
+    const perioder = [lagPeriode()];
+    expect(
+      finnAktivFeilmelding(perioder, "type", "tema", false, "2024-01-01", "2024-06-01", undefined, undefined, true),
+    ).toBe("INGEN_OPPHØRTE_PERIODER");
+  });
+
+  it("returnerer undefined når delvis opphør ikke er valgt, selv om ingen periode er opphørt", () => {
+    const perioder = [lagPeriode()];
+    expect(
+      finnAktivFeilmelding(perioder, "type", "tema", false, "2024-01-01", "2024-06-01", undefined, undefined, false),
+    ).toBeUndefined();
+  });
 });
 
 describe("Feilmelding", () => {
@@ -121,6 +135,13 @@ describe("Feilmelding", () => {
   it("rendrer advarsel for familiemedlemmer", () => {
     render(<Feilmelding type="BESTEMMELSE_FOR_FAMILIEMEDLEMMER" />);
     expect(screen.getByText(/forsørgerens vedtak/)).toBeDefined();
+  });
+
+  it("rendrer blokkerende feilmelding for ingen opphørte perioder", () => {
+    render(<Feilmelding type="INGEN_OPPHØRTE_PERIODER" />);
+    const element = screen.getByText(/Ingen periode\(r\) er opphørt\./);
+    expect(element).toBeDefined();
+    expect(element.getAttribute("data-variant")).toBe("error");
   });
 
   it("returnerer null for ukjent type", () => {

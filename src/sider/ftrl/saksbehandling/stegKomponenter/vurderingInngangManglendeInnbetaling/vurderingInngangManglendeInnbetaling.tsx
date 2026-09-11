@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "../../../../../hooks";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,12 +9,13 @@ import * as Mui from "../../../../../felleskomponenter/ui";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
 import "./vurderingInngangManglendeInnbetaling.less";
 import vurdering_inngang_manglende_innbetaling from "./vurderingInngangManglendeInnbetalingSchema";
-import { BOOLSK_STRING } from "../../../../../constants";
+import type { VurderingInngangManglendeInnbetaling as VurderingInngangManglendeInnbetalingValg } from "./vurderingInngangManglendeInnbetalingSchema";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
+import * as oppsummertfaktaTypes from "../../../../../ducks/oppsummertfakta/types";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
-import * as Utils from "../../../../../utils";
+import { modalerOperations } from "../../../../../ducks/modaler";
+import { BekreftValgTypes } from "../../../../../modals/bekreftValgTypes";
 import { inngangSteg, vedtakOpphoerSteg } from "../../stegLister/stegListeManglendeInnbetalingFlyt";
-import { FellesHandlersContext } from "../../../../../contexts";
 
 interface Props {
   bekreft: () => void;
@@ -22,11 +23,36 @@ interface Props {
   oppdaterStatus: (isValid: boolean, nesteStegId?: string) => void;
 }
 
+type RadioValg = {
+  value: VurderingInngangManglendeInnbetalingValg;
+  text: ReactNode;
+};
+
+const valg: RadioValg[] = [
+  {
+    value: "HELE_PERIODEN_OPPHØRES",
+    text: (
+      <>
+        <b>Hele</b> perioden skal opphøres
+      </>
+    ),
+  },
+  {
+    value: "DELER_AV_PERIODEN_OPPHØRES",
+    text: (
+      <>
+        <b>Deler</b> av perioden skal opphøres
+      </>
+    ),
+  },
+  { value: "VEDTAKET_SKAL_ENDRES", text: "Vedtaket skal endres." },
+  { value: "BEHANDLINGEN_SKAL_AVSLUTTES", text: "Behandlingen skal avsluttes." },
+];
+
 export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppdaterStatus }: Props) {
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
-  const { behandlingOppfriskes } = useContext(FellesHandlersContext) as any;
 
   const {
     control,
@@ -36,39 +62,47 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
     resolver: yupResolver<FieldValues>(vurdering_inngang_manglende_innbetaling),
     mode: "all",
     defaultValues: {
-      fullstendigManglendeInnbetaling: Utils.streng.boolTilUppercaseStreng(
-        useSelector(oppsummertfaktaSelectors.FullstendigManglendeInnbetalingSelector),
-      ),
+      fullstendigManglendeInnbetaling: useSelector(oppsummertfaktaSelectors.ManglendeInnbetalingHandlingsvalgSelector)
+        ?.kode,
     } as FieldValues,
   });
   const formValues = watch();
 
+  // Kun "hele perioden opphøres" skal føre til den korte opphørsflyten (VedtakOpphoer).
+  // De tre andre valgene skal alle gå videre i den ordinære flyten (Inngang).
+  const erHeleOpphørt = (value?: string) => value === "HELE_PERIODEN_OPPHØRES";
+  const nesteStegId = (value?: string) => (erHeleOpphørt(value) ? vedtakOpphoerSteg.id : inngangSteg.id);
+
   const handleChange = (value: string) => {
-    dispatch(
-      oppsummertfaktaOperations.lagreInnbetalingsstatus(behandlingID, Utils.streng.uppercaseStrengTilBool(value)),
+    oppdaterStatus(formIsValid, nesteStegId(value));
+  };
+
+  // "Behandlingen skal avsluttes" skal ikke gå videre i den vanlige steglisten, men i stedet
+  // avslutte behandlingen på samme måte som menyvalget "Ferdigbehandlet" i behandlingsmenyen.
+  const erBehandlingenSkalAvsluttes = (value?: string) => value === "BEHANDLINGEN_SKAL_AVSLUTTES";
+
+  const onBekreft = async () => {
+    if (erBehandlingenSkalAvsluttes(formValues.fullstendigManglendeInnbetaling)) {
+      dispatch(modalerOperations.visBekreftValg(BekreftValgTypes.FERDIGBEHANDLET));
+      return;
+    }
+
+    const response = await dispatch(
+      oppsummertfaktaOperations.lagreManglendeInnbetalingHandlingsvalg(
+        behandlingID,
+        formValues.fullstendigManglendeInnbetaling,
+      ),
     );
-    oppdaterStatus(formIsValid, value === BOOLSK_STRING.SANN ? vedtakOpphoerSteg.id : inngangSteg.id);
+    if (response.type !== oppsummertfaktaTypes.FEILET) {
+      bekreft();
+    }
   };
 
   useEffect(() => {
     if (aktivtSteg) {
-      oppdaterStatus(
-        formIsValid,
-        formValues.fullstendigManglendeInnbetaling === BOOLSK_STRING.SANN ? vedtakOpphoerSteg.id : inngangSteg.id,
-      );
+      oppdaterStatus(formIsValid, nesteStegId(formValues.fullstendigManglendeInnbetaling));
     }
   }, [formIsValid]);
-
-  useEffect(() => {
-    if (!behandlingOppfriskes && formIsValid) {
-      dispatch(
-        oppsummertfaktaOperations.lagreInnbetalingsstatus(
-          behandlingID,
-          Utils.streng.uppercaseStrengTilBool(formValues.fullstendigManglendeInnbetaling),
-        ),
-      );
-    }
-  }, [behandlingOppfriskes]);
 
   if (!aktivtSteg) return null;
 
@@ -77,14 +111,12 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
       <Nav.Heading level="1" className="stegvelgertittel">
         Manglende innbetaling
       </Nav.Heading>
-
       <div className="label__container">
         <Nav.BodyLong size="small">
           Vurder konsekvens av manglende innbetaling. Du må sjekke OeBS for å se om betaling er mottatt innen fristen.
           <br /> Hvis betaling er mottatt og du ikke skal fatte nytt vedtak kan du ferdigstille denne behandlingen.
         </Nav.BodyLong>
       </div>
-
       <Forms.RadioGroup
         legend=""
         hideLegend
@@ -94,17 +126,15 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
         readOnly={!redigerbart}
         size="medium"
       >
-        <Nav.Radio value={BOOLSK_STRING.SANN}>
-          Innbetaling mangler for <b>hele</b> medlemskapsperioden.
-        </Nav.Radio>
-        <Nav.Radio value={BOOLSK_STRING.USANN}>
-          Innbetaling mangler for <b>deler</b> av medlemskapsperioden.
-        </Nav.Radio>
+        {valg.map((valg: RadioValg) => (
+          <Nav.Radio key={valg.value} value={valg.value}>
+            {valg.text}
+          </Nav.Radio>
+        ))}
       </Forms.RadioGroup>
-
       <Mui.StegKnapper
         bekreftKnappProps={{
-          onClick: bekreft,
+          onClick: onBekreft,
           disabled: !formIsValid || !redigerbart,
         }}
       />

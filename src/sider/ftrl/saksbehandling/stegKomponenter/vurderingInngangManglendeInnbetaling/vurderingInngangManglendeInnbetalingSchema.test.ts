@@ -26,7 +26,7 @@ describe("vurderingInngangManglendeInnbetalingSchema", () => {
 
   it("should accept valid value", async () => {
     const errors = await getErrors(schema, {
-      fullstendigManglendeInnbetaling: "JA",
+      fullstendigManglendeInnbetaling: "HELE_PERIODEN_OPPHØRES",
     });
     expect(errors).toEqual([]);
   });

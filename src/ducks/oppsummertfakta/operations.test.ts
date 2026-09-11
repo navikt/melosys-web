@@ -3,6 +3,7 @@ import {
   hentOppsummertFakta,
   lagreVirksomheter,
   lagreInnbetalingsstatus,
+  lagreManglendeInnbetalingHandlingsvalg,
   lagreArbeidsland,
   lagreIkkeYrkesaktivOppholdtype,
   lagreIkkeYrkesaktivRelasjontype,
@@ -24,6 +25,10 @@ describe("oppsummertfakta operations", () => {
 
   it("lagreInnbetalingsstatus returnerer thunk", () => {
     expect(typeof lagreInnbetalingsstatus(1, true)).toBe("function");
+  });
+
+  it("lagreManglendeInnbetalingHandlingsvalg returnerer thunk", () => {
+    expect(typeof lagreManglendeInnbetalingHandlingsvalg(1, "HELE_PERIODEN_OPPHØRES")).toBe("function");
   });
 
   it("lagreArbeidsland returnerer thunk", () => {

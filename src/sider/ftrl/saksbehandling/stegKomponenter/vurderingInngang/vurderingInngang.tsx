@@ -24,7 +24,7 @@ import { navigeringOperations } from "../../../../../ducks/navigering";
 import vurderingInngangSchema from "./vurderingInngangSchema";
 import "./vurderingInngang.less";
 import { modalerOperations, modalerSelectors } from "../../../../../ducks/modaler";
-import { oppsummertfaktaOperations } from "../../../../../ducks/oppsummertfakta";
+import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
 import { BehandlingUnderOppfriskningSelector } from "../../../../../ducks/modaler/selectors";
 import * as KV from "../../../../../kodeverk";
 import { BOOLSK_STRING } from "../../../../../constants";
@@ -51,6 +51,9 @@ export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const søknadsland = useSelector(mottatteOpplysningerSelectors.SoknadslandSelector);
   const registeropplysningerHentet = useSelector(behandlingerSelectors.SisteOpplysningerHentetDatoSelector);
   const behandlingUnderOppfriskning = useSelector(BehandlingUnderOppfriskningSelector);
+  const erDelvisOpphørValgt = useSelector(oppsummertfaktaSelectors.ErDelvisOpphørValgtSelector);
+  const erVedtaketSkalEndresValgt = useSelector(oppsummertfaktaSelectors.ErVedtaketSkalEndresValgtSelector);
+  const feltRedigerbart = redigerbart && !erDelvisOpphørValgt;
   const { lagreMottatteOpplysningerOgOppfriskSaksopplysninger } = useContext(FellesHandlersContext) as any;
 
   const initialValues = {
@@ -135,22 +138,26 @@ export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props)
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
   const nyVurderingPeriodetekst =
     "Du skal kun endre søknadsperiode dersom det er mottatt informasjon om ny start og/eller sluttdato for oppholdet";
+  const vedtaketSkalEndresPeriodetekst = "Gjør eventuelle nødvendige justeringer, f.eks. forkortet sluttdato.";
 
   return (
     <div className="vurderingInngang_ftrl">
       <Nav.Heading level="1" className="stegvelgertittel">
-        Oppgi opplysninger fra søknaden
+        {erVedtaketSkalEndresValgt
+          ? "Oppgi opplysninger fra bruker/brukers fullmektig"
+          : "Oppgi opplysninger fra søknaden"}
       </Nav.Heading>
 
       <div className="label__container">
         <Nav.Heading size="xsmall">Søknadsperiode</Nav.Heading>
         {erNyVurdering && <Nav.Detail>{nyVurderingPeriodetekst}</Nav.Detail>}
+        {erVedtaketSkalEndresValgt && <Nav.Detail>{vedtaketSkalEndresPeriodetekst}</Nav.Detail>}
       </div>
 
       <div className="søknads_periode_wrapper">
         <Nav.Row className="søknads_periode">
           <Nav.Column className="fomDato">
-            <Forms.Datovelger label="Fra og med" name="fom" readOnly={!redigerbart} control={control} />
+            <Forms.Datovelger label="Fra og med" name="fom" readOnly={!feltRedigerbart} control={control} />
           </Nav.Column>
           <Nav.Column>
             <Forms.Datovelger
@@ -162,7 +169,7 @@ export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props)
               }
               name="tom"
               minDate={Utils.dato.norskStringTilDate(formValues.fom)}
-              readOnly={!redigerbart}
+              readOnly={!feltRedigerbart}
               control={control}
             />
           </Nav.Column>
@@ -183,7 +190,7 @@ export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props)
               }
               control={control}
               name="flereLandUkjentHvilke"
-              readOnly={!redigerbart}
+              readOnly={!feltRedigerbart}
             >
               <Nav.Radio value={BOOLSK_STRING.SANN} onChange={() => setValue("land", [])}>
                 Flere land, ikke kjent hvilke
@@ -195,7 +202,7 @@ export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props)
                 label=""
                 name="land"
                 className="land_multiselect"
-                redigerbart={redigerbart}
+                redigerbart={feltRedigerbart}
                 control={control}
                 options={alleLandkoder.map((kt) => ({ value: kt.kode, label: kt.term! }))}
                 aria-label={behandlingstema === YRKESAKTIV ? "Arbeidsland" : "Land"}
@@ -209,7 +216,7 @@ export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props)
               control={control}
               label="Trygdedekning"
               emptyFieldDisabled={!!formValues.trygdedekning}
-              readOnly={!redigerbart}
+              readOnly={!feltRedigerbart}
             >
               {gyldigeTrygdedekninger.map((dekning) => (
                 <option key={dekning} value={dekning}>
@@ -234,9 +241,16 @@ export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           control={control}
           label="Hent registeropplysninger for siste 5 år"
           value="Hent registeropplysninger for siste 5 år"
-          readOnly={!redigerbart}
+          readOnly={!feltRedigerbart}
         />
       </Nav.Row>
+
+      {erDelvisOpphørValgt && (
+        <Nav.Alert variant="info" className="alert">
+          Søknadsperiode, land, dekning og bestemmelse kan ikke endres når &quot;Deler av perioden skal opphøres&quot;
+          er valgt.
+        </Nav.Alert>
+      )}
 
       <Mui.StegKnapper
         bekreftKnappProps={{

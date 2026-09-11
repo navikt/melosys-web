@@ -49,4 +49,23 @@ describe("Avklartefakta endepunkt", () => {
     const res = await Avklartefakta.send(behandlingID, [avklartefakta]);
     expect(res).toEqual([avklartefakta]);
   });
+
+  test("POST /api/avklartefakta/:behandlingID/manglende-innbetaling-handlingsvalg", async () => {
+    const behandlingID = 4;
+    const oppsummering = {
+      virksomheter: [],
+      arbeidsland: [],
+      fullstendigManglendeInnbetaling: false,
+      manglendeInnbetalingHandlingsvalg: { kode: "HELE_PERIODEN_OPPHØRES", term: "Hele perioden skal opphøres" },
+    };
+
+    mswServer.use(
+      http.post(`/api/avklartefakta/${behandlingID}/manglende-innbetaling-handlingsvalg`, () => {
+        return HttpResponse.json(oppsummering);
+      }),
+    );
+
+    const res = await Avklartefakta.lagreManglendeInnbetalingHandlingsvalg(behandlingID, "HELE_PERIODEN_OPPHØRES");
+    expect(res).toEqual(oppsummering);
+  });
 });

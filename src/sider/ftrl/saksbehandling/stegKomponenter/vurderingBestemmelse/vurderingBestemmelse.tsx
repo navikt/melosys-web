@@ -51,6 +51,8 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
   const trygdedekning = useSelector(mottatteOpplysningerSelectors.TrygdedekningSelector);
   const behandlingstema = useSelector(behandlingerSelectors.BehandlingstemaKodeSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector) as boolean;
+  const erDelvisOpphørValgt = useSelector(oppsummertfaktaSelectors.ErDelvisOpphørValgtSelector);
+  const feltRedigerbart = redigerbart && !erDelvisOpphørValgt;
   const ikkeYrkesaktivOppholdType = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivOppholdSelector);
   const ikkeYrkesaktivRelasjonType = useSelector(oppsummertfaktaSelectors.IkkeYrkesaktivRelasjonSelector);
   const arbeidssituasjonType = useSelector(oppsummertfaktaSelectors.ArbeidssituasjonSelector);
@@ -398,7 +400,7 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
         kodeverkKoder={kodeverkKoderIBestemmelserNedtrekk}
         name="bestemmelser"
         tittel="Hvilken bestemmelse skal søknaden vurderes etter?"
-        redigerbart={redigerbart}
+        redigerbart={feltRedigerbart}
         valgtAlternativ={valgtBestemmelse}
         endretAlternativ={(bestemmelse) => {
           setHarSkjeddEndringer(true);
@@ -419,7 +421,7 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
             kodeverkKoder={MKV.KTObjects[FaktaTypeOverskrifter[fakta.faktaType.kode].kodeverk]}
             name={fakta.faktaType.kode}
             tittel={FaktaTypeOverskrifter[fakta.faktaType.kode].tittel}
-            redigerbart={redigerbart}
+            redigerbart={feltRedigerbart}
             valgtAlternativ={valgtAvklarteFakta.get(fakta.faktaType.kode) ?? ""}
             endretAlternativ={(avklartFakta) => {
               setHarSkjeddEndringer(true);
@@ -476,7 +478,7 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
                 ),
               );
             }}
-            redigerbart={redigerbart}
+            redigerbart={feltRedigerbart}
           />
         );
       })}
@@ -486,6 +488,12 @@ export function VurderingBestemmelse({ bekreft, tilbake, aktivtSteg, oppdaterSta
           <Nav.BodyLong size="small">
             Dekning på steg Inngang kan ikke gis i kombinasjon med denne bestemmelsen.
           </Nav.BodyLong>
+        </Nav.Alert>
+      )}
+
+      {erDelvisOpphørValgt && (
+        <Nav.Alert variant="info" className="alert">
+          Bestemmelse kan ikke endres når &quot;Deler av perioden skal opphøres&quot; er valgt.
         </Nav.Alert>
       )}
 

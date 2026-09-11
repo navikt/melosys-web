@@ -1,3 +1,5 @@
+import { KTObject } from "@navikt/melosys-kodeverk";
+
 import { deleteAsJson, getAsJson, postAsJson } from "../utils";
 import { API_BASE_URL, AVKLARTEFAKTA } from "../api-constants";
 
@@ -14,6 +16,7 @@ interface Oppsummering {
   virksomheter: string[];
   arbeidsland: string[];
   fullstendigManglendeInnbetaling: boolean;
+  manglendeInnbetalingHandlingsvalg?: KTObject;
   ikkeYrkesaktivFamilieRelasjonstype?: string;
   ikkeYrkesaktivOppholdstype?: string;
   arbeidssituasjonType?: string;
@@ -73,3 +76,12 @@ export const lagreInnbetalingsstatus = (
   fullstendigManglendeInnbetaling?: boolean,
 ): Promise<Oppsummering> =>
   postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/innbetalingsstatus`, fullstendigManglendeInnbetaling);
+
+export const lagreManglendeInnbetalingHandlingsvalg = (
+  behandlingID: number,
+  manglendeInnbetalingHandlingsvalg?: string,
+): Promise<Oppsummering> =>
+  postAsJson(
+    `${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}/manglende-innbetaling-handlingsvalg`,
+    manglendeInnbetalingHandlingsvalg,
+  );

@@ -49,15 +49,20 @@ function EnkelStegvelger({ alleSteg }: EnkelStegvelgerProps) {
   // Optional param nesteStegId overstyrer vanlig flyt.
   const oppdaterStatus = (stegId: string) => (isSchemaValid: boolean, nesteStegId?: string) => {
     const stegIndex = aktuelleSteg.findIndex((steg) => steg.id === stegId);
-    // Fjerner stegene etter steget som oppdaterer dersom nesteStegId er satt
-    const nyeSteg = (nesteStegId ? aktuelleSteg.slice(0, stegIndex + 1) : aktuelleSteg).map((steg) =>
+    // Bytt bare "gren" når nesteStegId faktisk peker til et annet neste steg.
+    // Uten dette vil bytte mellom radiovalg som leder til samme steg kunne nullstille
+    // et steg lenger ned i flyten som allerede er fylt ut og validert.
+    const gjeldendeNesteSteg = aktuelleSteg[stegIndex + 1];
+    const byggerNyGren = !!nesteStegId && gjeldendeNesteSteg?.id !== nesteStegId;
+    // Fjerner stegene etter steget som oppdaterer dersom vi bygger en ny gren
+    const nyeSteg = (byggerNyGren ? aktuelleSteg.slice(0, stegIndex + 1) : aktuelleSteg).map((steg) =>
       steg.id === stegId ? { ...steg, status: isSchemaValid ? FANE_STATUS.OK : FANE_STATUS.UBEHANDLET } : steg,
     );
     const førsteUgyldigeSteg = nyeSteg.find((steg) => steg.status === FANE_STATUS.UBEHANDLET);
 
     if (førsteUgyldigeSteg) {
       nyeSteg.length = førsteUgyldigeSteg.stegPosisjon + 1;
-    } else {
+    } else if (!nesteStegId || byggerNyGren) {
       const nesteSteg = hentNesteSteg(nyeSteg[nyeSteg.length - 1].stegPosisjon, nesteStegId);
       if (nesteSteg) nyeSteg.push(nesteSteg);
     }
