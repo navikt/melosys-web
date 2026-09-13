@@ -25,24 +25,6 @@ exports[`BeregnetTrygdeavgiftDetaljer > snapshot test 1`] = `
           Inntektskilde
         </th>
         <th
-          class="navds-table__header-cell navds-label tall_felt navds-label--small"
-          scope="col"
-        >
-          Bruttoinntekt md.
-        </th>
-        <th
-          class="navds-table__header-cell navds-label navds-label--small"
-          scope="col"
-        >
-          Betalt aga.?
-        </th>
-        <th
-          class="navds-table__header-cell navds-label navds-label--small"
-          scope="col"
-        >
-          Skattepliktig
-        </th>
-        <th
           class="navds-table__header-cell navds-label navds-label--small"
           scope="col"
         >
@@ -66,15 +48,6 @@ exports[`BeregnetTrygdeavgiftDetaljer > snapshot test 1`] = `
         </td>
         <td class="navds-table__data-cell navds-body-short navds-body-short--small">
           ARBEID
-        </td>
-        <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
-          41&nbsp;667 kr
-        </td>
-        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
-          Ikke relevant
-        </td>
-        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
-          Ja
         </td>
         <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
           8.2

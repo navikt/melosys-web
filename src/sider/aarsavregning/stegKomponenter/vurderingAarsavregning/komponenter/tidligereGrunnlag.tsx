@@ -1,11 +1,6 @@
 import * as Nav from "../../../../../navFrontend";
 import { AarsavregningResponse } from "../../../../../services/modules/aarsavregning/aarsavregning";
-import {
-  erHelseutgiftdekkesperiode,
-  erMedlemskapsperiodeEllerLovvalgsperiode,
-  erPeriodeListeHelseutgiftdekkesperiode,
-} from "../../../../../services/modules/types/periodeTyper";
-import MKV from "../../../../../melosyskodeverk";
+import { erPeriodeListeHelseutgiftdekkesperiode } from "../../../../../services/modules/types/periodeTyper";
 import { formaterTilNorskBelopUtenDesimaler } from "../../../../../utils";
 import { BeregnetTrygdeavgiftDetaljer } from "./beregnetTrygdeavgiftDetaljer";
 import { Aarsavregningsmeldinger } from "./aarsavregningsmeldinger";
@@ -26,25 +21,6 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
 
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
-
-  const erMedlemskapstypePliktig = () => {
-    const alleErHelseutgiftdekkesperioder =
-      aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.avgiftspliktigperioder?.every(
-        erHelseutgiftdekkesperiode,
-      );
-
-    if (alleErHelseutgiftdekkesperioder) {
-      return true;
-    }
-
-    return (
-      aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!.trygdeavgiftsgrunnlag.avgiftspliktigperioder?.every(
-        (periode) =>
-          erMedlemskapsperiodeEllerLovvalgsperiode(periode) &&
-          periode.medlemskapstype === MKV.Koder.medlemskapstyper.PLIKTIG,
-      ) ?? true
-    );
-  };
 
   return (
     <Nav.Box className="tidligereGrunnlag" background="surface-subtle">
@@ -99,7 +75,6 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
               {forskuddsvisFakturertTrygdeavgift && (
                 <BeregnetTrygdeavgiftDetaljer
                   grunnlag={aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger!}
-                  medlemskapsTypeErPliktig={erMedlemskapstypePliktig()}
                 />
               )}
             </Nav.ExpansionCard.Content>

@@ -20,18 +20,12 @@ import * as KV from "../../../../../kodeverk";
 import { formaterTilNorskBelopUtenDesimaler } from "../../../../../utils";
 import { erPeriodeListeHelseutgiftdekkesperiode } from "../../../../../services/modules/types/periodeTyper";
 
-const { SKATTEPLIKTIG } = MKV.Koder.skatteplikttype;
-const { MISJONÆR } = MKV.Koder.inntektskildetype;
-
 interface DetaljerInterface {
   fom: string;
   tom: string;
   inntektskildetype: string;
-  arbeidsgiversavgiftBetales: string;
-  inntektPerMd: number;
   avgiftssats: number | null;
   avgiftPerMd: number;
-  skattepliktig: string;
   dekning: string;
   beregningsregel?: Beregningsregel | null;
   harSammenslåtteInntektskilder?: boolean;
@@ -40,11 +34,9 @@ interface DetaljerInterface {
 
 export function BeregnetTrygdeavgiftDetaljer({
   grunnlag,
-  medlemskapsTypeErPliktig,
   beregningsforklaringer,
 }: {
   grunnlag: Grunnlagsopplysninger | undefined;
-  medlemskapsTypeErPliktig: boolean;
   beregningsforklaringer?: Beregningsforklaring[];
 }) {
   const visBeregningsforklaring = useFeatureToggle(VIS_TRYGDEAVGIFT_BEREGNINGSFORKLARING) === true;
@@ -77,31 +69,19 @@ export function BeregnetTrygdeavgiftDetaljer({
 
   const hentDetaljer = (data: Grunnlagsopplysninger): DetaljerInterface[] => {
     return data.avgift.trygdeavgiftsperioder
-      .map((period) => {
-        const overlappingSkatteforhold = data.trygdeavgiftsgrunnlag.skatteforholdsperioder.find(
-          (s) => new Date(s.fomDato) <= new Date(period.tom) && new Date(s.tomDato) >= new Date(period.fom),
-        );
-
-        return {
-          fom: period.fom,
-          tom: period.tom,
-          inntektskildetype: period.inntektskildetype,
-          arbeidsgiversavgiftBetales: period.arbeidsgiversavgiftBetales ? "Ja" : "Nei",
-          inntektPerMd: period.inntektPerMd,
-          avgiftssats: period.avgiftssats,
-          avgiftPerMd: period.avgiftPerMd,
-          skattepliktig:
-            overlappingSkatteforhold && overlappingSkatteforhold.skatteplikttype === SKATTEPLIKTIG ? "Ja" : "Nei",
-          dekning: period.trygdedekning ?? hentDekningFraOverlappendeAvgiftspliktigperiode(data, period),
-          beregningsregel: period.beregningsregel,
-          harSammenslåtteInntektskilder: period.harSammenslåtteInntektskilder,
-          avgiftsdel: period.avgiftsdel,
-        };
-      })
+      .map((period) => ({
+        fom: period.fom,
+        tom: period.tom,
+        inntektskildetype: period.inntektskildetype,
+        avgiftssats: period.avgiftssats,
+        avgiftPerMd: period.avgiftPerMd,
+        dekning: period.trygdedekning ?? hentDekningFraOverlappendeAvgiftspliktigperiode(data, period),
+        beregningsregel: period.beregningsregel,
+        harSammenslåtteInntektskilder: period.harSammenslåtteInntektskilder,
+        avgiftsdel: period.avgiftsdel,
+      }))
       .sort(Utils.dato.sorterEtterISOFomDato);
   };
-
-  const arbAvgBetalesKreves = (kildetype: string) => !medlemskapsTypeErPliktig && kildetype !== MISJONÆR;
 
   const detaljerListe = hentDetaljer(grunnlag);
   const alleUnderMinstebeløp = detaljerListe.length > 0 && detaljerListe.every(erUnderMinstebeløp);
@@ -118,11 +98,6 @@ export function BeregnetTrygdeavgiftDetaljer({
                 <Nav.Table.HeaderCell scope="col">Trygdeperiode</Nav.Table.HeaderCell>
                 {!erHelseutgiftDekkesPeriode && <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>}
                 <Nav.Table.HeaderCell scope="col">Inntektskilde</Nav.Table.HeaderCell>
-                <Nav.Table.HeaderCell scope="col" className="tall_felt">
-                  Bruttoinntekt md.
-                </Nav.Table.HeaderCell>
-                {!erHelseutgiftDekkesPeriode && <Nav.Table.HeaderCell scope="col">Betalt aga.?</Nav.Table.HeaderCell>}
-                <Nav.Table.HeaderCell scope="col">Skattepliktig</Nav.Table.HeaderCell>
                 <Nav.Table.HeaderCell scope="col">Sats</Nav.Table.HeaderCell>
                 <Nav.Table.HeaderCell scope="col" className="tall_felt">
                   Avgift md.
@@ -149,17 +124,6 @@ export function BeregnetTrygdeavgiftDetaljer({
                       KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, kode),
                     )}
                   </Nav.Table.DataCell>
-                  <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
-                    {formaterTilNorskBelopUtenDesimaler(detaljer.inntektPerMd)} kr
-                  </Nav.Table.DataCell>
-                  {!erHelseutgiftDekkesPeriode && (
-                    <Nav.Table.DataCell key={Utils._uuid()}>
-                      {arbAvgBetalesKreves(detaljer.inntektskildetype)
-                        ? detaljer.arbeidsgiversavgiftBetales
-                        : "Ikke relevant"}
-                    </Nav.Table.DataCell>
-                  )}
-                  <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.skattepliktig}</Nav.Table.DataCell>
                   <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
                     {formaterSats(detaljer)}
                   </Nav.Table.DataCell>
