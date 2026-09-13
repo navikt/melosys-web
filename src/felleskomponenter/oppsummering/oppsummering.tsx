@@ -21,6 +21,7 @@ import KopierbarTekst from "../kopierbarTekst";
 
 import OppsummeringVerdiPar from "./verdiPar/oppsummeringVerdiPar";
 import EndreBehandlingModal from "./endreBehandlingModal";
+import TildelOppgave from "./tildelOppgave";
 import "./oppsummering.less";
 import { useAsyncCallbackState } from "../../hooks";
 import { useFeatureToggle } from "../../featuretoggle";
@@ -272,14 +273,17 @@ function Oppsummering({
           <Nav.Column xs="12">
             <div aria-label="behandlingsinformasjon" className={classNames(className, "oppsummering")}>
               <Nav.Row className="datarad">
-                <dl className="oppsummering_verdi_par">
-                  <dt className="nokkel">Saksnummer:</dt>
-                  <dd>
-                    <KopierbarTekst className="kopier-saksnummer" hovertekst="Kopier saksnummer">
-                      {saksnummer}
-                    </KopierbarTekst>
-                  </dd>
-                </dl>
+                <div className="saksnummerlinje">
+                  <dl className="oppsummering_verdi_par">
+                    <dt className="nokkel">Saksnummer: </dt>
+                    <dd>
+                      <KopierbarTekst className="kopier-saksnummer" hovertekst="Kopier saksnummer">
+                        {saksnummer}
+                      </KopierbarTekst>
+                    </dd>
+                  </dl>
+                  <TildelOppgave />
+                </div>
               </Nav.Row>
 
               <div className="panel saksinfo">
