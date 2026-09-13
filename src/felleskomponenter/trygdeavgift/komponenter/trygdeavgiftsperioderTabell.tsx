@@ -76,7 +76,9 @@ function TrygdeavgiftsperioderTabell({
                   {!erEøsPensjonist && <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>}
                   <Nav.Table.HeaderCell scope="col">Inntektskilde</Nav.Table.HeaderCell>
                   <Nav.Table.HeaderCell scope="col">Sats</Nav.Table.HeaderCell>
-                  <Nav.Table.HeaderCell scope="col">Avgift per md.</Nav.Table.HeaderCell>
+                  <Nav.Table.HeaderCell scope="col" className="tall_felt">
+                    Avgift md.
+                  </Nav.Table.HeaderCell>
                 </Nav.Table.Row>
               </Nav.Table.Header>
               <Nav.Table.Body>
