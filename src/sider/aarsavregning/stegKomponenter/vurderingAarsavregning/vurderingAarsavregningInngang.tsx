@@ -23,6 +23,8 @@ import { TidligereGrunnlag } from "./komponenter/tidligereGrunnlag";
 import { ÅRSAVREGNING_EØS_PENSJONIST } from "../../../../featuretoggle/toggleNavn";
 import * as Utils from "../../../../utils";
 import { useFeatureToggle } from "../../../../featuretoggle";
+import { useErÅrsavregningIkkeStøttetSakstype } from "../../hooks/useErÅrsavregningIkkeStøttetSakstype";
+import { Aarsavregningsmeldinger } from "./komponenter/aarsavregningsmeldinger";
 
 const { FASTSATT_TRYGDEAVGIFT, IKKE_FASTSATT } = MKV.Koder.behandlinger.behandlingsresultattyper;
 const { MANGLENDE_INNBETALING_TRYGDEAVGIFT } = MKV.Koder.behandlinger.behandlingstyper;
@@ -100,6 +102,22 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const { oppfriskOgLastInnSaksopplysningerForAarsavregning } = useContext(FellesHandlersContext) as any;
   const dispatch = useDispatch();
   const erÅrsavregningEøsPensjonistToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
+  const erÅrsavregningIkkeStøttetSakstype = useErÅrsavregningIkkeStøttetSakstype();
+  /*
+   * Tilstandene for en ustøttet sakstype:
+   *
+   *                          | melding | «Bekreft og fortsett» | avgiftsskjema | årsvelger | skriver til backend
+   *   blokkert + saksbehandling |  ja   |  vises, deaktivert    |    skjult     | deaktivert |        nei
+   *   blokkert + innsyn        |  ja   |  kun skjemaets egen   |    vises      | deaktivert |        nei
+   *   støttet  + saksbehandling |  nei  |  kun skjemaets egen   |    vises      |  aktiv     |        ja
+   *   støttet  + innsyn        |  nei  |  kun skjemaets egen   |    vises      | readOnly   |        ja
+   *
+   * Meldingen, årsvelgeren og backend-skrivingen følger sakstypen, fordi en deaktivert årsvelger
+   * uten forklaring er uforståelig i innsyn. Knappen og skjemaskjulingen følger saksbehandling.
+   * Meldingen krever i tillegg at steget er aktivt: steg som er tatt i bruk forblir montert og
+   * skjules med CSS, og vedtakssteget viser den samme meldingen.
+   */
+  const skalBlokkereÅrsavregning = redigerbart && erÅrsavregningIkkeStøttetSakstype;
 
   /**
    * Utleder harInnbetaltTrygdeavgift når verdien er null (bakoverkompatibilitet).
@@ -151,7 +169,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
       if (!harGrunnlag) {
         // Når det ikke finnes grunnlag skal harInnbetaltTrygdeavgift alltid være true
         setHarInnbetaltTrygdeavgift(true);
-        if (res.harInnbetaltTrygdeavgift !== true) {
+        if (res.harInnbetaltTrygdeavgift !== true && !erÅrsavregningIkkeStøttetSakstype) {
           håndterHarInnbetaltTrygdeavgift(true);
         }
         return;
@@ -279,6 +297,9 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             value={valgtÅr || initieltÅr || ""}
             onChange={håndterEndringAvÅr}
             readOnly={!redigerbart}
+            // Blokkerte sakstyper deaktiveres også i innsyn: readOnly stopper bare piltaster
+            // og mellomrom, mens vanlig tasting i feltet fortsatt ville opprettet en årsavregning
+            disabled={erÅrsavregningIkkeStøttetSakstype}
           >
             <option value="" disabled>
               Velg...
@@ -347,7 +368,8 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
             </Nav.Box>
           )}
 
-          {(valgtÅr || initieltÅr) &&
+          {!skalBlokkereÅrsavregning &&
+            (valgtÅr || initieltÅr) &&
             (!erÅrsavregningEøsPensjonistToggleEnabled || harTidligereTrygdeavgiftsgrunnlag) && (
               <Nav.Box
                 className={`innbetaltTrygdeavgiftPanel${
@@ -378,12 +400,14 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
               </Nav.Box>
             )}
 
-          {!harInnbetaltTrygdeavgiftIsPending &&
+          {!skalBlokkereÅrsavregning &&
+            !harInnbetaltTrygdeavgiftIsPending &&
             harTidligereTrygdeavgiftsgrunnlag === true &&
             harInnbetaltTrygdeavgift === false && (
               <AarsavregningMedGrunnlag bekreft={bekreft} aktivtSteg={aktivtSteg} oppdaterStatus={oppdaterStatus} />
             )}
-          {!harInnbetaltTrygdeavgiftIsPending &&
+          {!skalBlokkereÅrsavregning &&
+            !harInnbetaltTrygdeavgiftIsPending &&
             (harTidligereTrygdeavgiftsgrunnlag === false || harInnbetaltTrygdeavgift) &&
             harInnbetaltTrygdeavgift != null && (
               <AarsavregningUtenEllerDeltGrunnlag
@@ -395,6 +419,19 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
               />
             )}
         </>
+      )}
+
+      {/* Steg som er tatt i bruk forblir montert, så meldingen må følge aktivt steg for unik testid */}
+      {aktivtSteg && erÅrsavregningIkkeStøttetSakstype && (
+        <Aarsavregningsmeldinger.ÅrsavregningIkkeStøttetSakstypeMelding />
+      )}
+
+      {skalBlokkereÅrsavregning && (
+        <div>
+          <Nav.Button variant="primary" disabled>
+            Bekreft og fortsett
+          </Nav.Button>
+        </div>
       )}
     </div>
   );

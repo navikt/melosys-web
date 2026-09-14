@@ -63,3 +63,43 @@ exports[`Aarsavregningsmeldinger > TrygdeavgiftSkalIkkeBetalesTilNav > matcher s
 </div>
 
 `;
+
+exports[`Aarsavregningsmeldinger > ÅrsavregningIkkeStøttetSakstypeMelding > matcher snapshot 1`] = `
+
+<div
+  data-testid="aarsavregning-ikke-stottet-sakstype"
+  class="alertstripe_feilmelding navds-alert navds-alert--warning navds-alert--small"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="none"
+    viewbox="0 0 24 24"
+    focusable="false"
+    role="img"
+    aria-labelledby="333"
+    class="navds-alert__icon"
+  >
+    <title id="333">
+      Advarsel
+    </title>
+    <path
+      fill="currentColor"
+      fill-rule="evenodd"
+      d="M12 2.25a.75.75 0 0 1 .656.387l9.527 17.25A.75.75 0 0 1 21.526 21H2.474a.75.75 0 0 1-.657-1.113l9.526-17.25A.75.75 0 0 1 12 2.25M12 8.75a.75.75 0 0 1 .75.75v4a.75.75 0 0 1-1.5 0v-4a.75.75 0 0 1 .75-.75m-1 7.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0"
+      clip-rule="evenodd"
+    >
+    </path>
+  </svg>
+  <div class="navds-alert__wrapper navds-alert__wrapper--maxwidth navds-body-long navds-body-long--small">
+    <p class="navds-body-long navds-body-long--small navds-typo--semibold">
+      Melosys støtter ikke årsavregning for denne kombinasjonen av sakstype/-tema
+    </p>
+    <p class="navds-body-long navds-body-long--small">
+      Støtte vil bli gjort tilgjengelig senere.
+    </p>
+  </div>
+</div>
+
+`;
