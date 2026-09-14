@@ -11,25 +11,43 @@ metadata:
 spec:
   image: {{image}}
   port: 3000
-  filesFrom:
-    - configmap: {{APP_NAME}}-runtime-config
-      mountPath: /etc/nginx/conf.d
-    - emptyDir:
-        medium: Memory
-      mountPath: /run
-    - emptyDir:
-        medium: Disk
-      mountPath: /var/lib/nginx/tmp
+  env:
+    - name: APP_URL_MELOSYS
+      value: "{{APP_URL_MELOSYS}}"
+    - name: APP_URL_TRYGDEAVTALE
+      value: "{{APP_URL_TRYGDEAVTALE}}"
+    - name: APP_URL_FAKTURERINGSKOMPONENTEN
+      value: "{{APP_URL_FAKTURERINGSKOMPONENTEN}}"
+    - name: FRONTEND_APP_NAME
+      value: "{{FRONTEND_APP_NAME}}"
+    - name: AZURE_APP_TENANT_ID
+      value: "{{AZURE_APP_TENANT_ID}}"
+    - name: AZURE_CLIENT_ID
+      value: "{{AZURE_CLIENT_ID}}"
+    - name: AZURE_CLIENT_NAME
+      value: "{{AZURE_CLIENT_NAME}}"
+    - name: CLUSTER_NAME
+      value: "{{CLUSTER_NAME}}"
+    - name: FAKTURERINGSKOMPONENTEN_CLUSTER
+      value: "{{FAKTURERINGSKOMPONENTEN_CLUSTER}}"
+    - name: APP_NAME_FAKTURERINGSKOMPONENTEN_API
+      value: "{{APP_NAME_FAKTURERINGSKOMPONENTEN_API}}"
+    - name: APP_NAME_TRYGDEAVTALE_API
+      value: "{{APP_NAME_TRYGDEAVTALE_API}}"
+    - name: APP_NAME_API
+      value: "{{APP_NAME_API}}"
+    - name: ENVIRONMENT_NAME
+      value: "{{ENVIRONMENT_NAME}}"
   replicas:
     min: 2
     max: 2
     cpuThresholdPercentage: 50
   liveness:
-    path: melosys/health/is-alive
+    path: internal/health/liveness
     initialDelay: 30
     timeout: 10
   readiness:
-    path: melosys/health/is-ready
+    path: internal/health/readiness
     initialDelay: 30
     timeout: 10
   resources:

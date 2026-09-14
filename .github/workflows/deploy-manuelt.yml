@@ -77,10 +77,18 @@ jobs:
           pnpm build
       - name: Prune devDependencies (for SBOM)
         run: pnpm prune --prod --ignore-scripts
+      - name: Install server dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: server
+      - name: Build server deploy artifact
+        run: pnpm build:ci
+        working-directory: server
       - name: Build and publish Docker image
         uses: nais/docker-build-push@v0
         with:
           team: teammelosys
+          docker_context: .
+          dockerfile: server/Dockerfile
           tag: ${{ github.sha }}
 
   deploy:
@@ -95,7 +103,7 @@ jobs:
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: ${{github.event.inputs.environment == 'prod' && 'prod-fss' || 'dev-fss' }}
-          RESOURCE: nais/runtime-config.yaml,nais/nais.yaml
+          RESOURCE: nais/nais.yaml
           IMAGE: ${{ env.IMAGE }}
           VARS: nais/vars-${{github.event.inputs.environment}}.json
       - name: Get commit message

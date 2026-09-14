@@ -66,11 +66,21 @@ jobs:
       - name: Prune devDependencies (for SBOM)
         run: pnpm prune --prod --ignore-scripts
 
+      - name: Install server dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: server
+
+      - name: Build server deploy artifact
+        run: pnpm build:ci
+        working-directory: server
+
       - name: Build and publish Docker images (multi-arch)
         id: docker-push
         uses: nais/docker-build-push@v0
         with:
           team: teammelosys
+          docker_context: .
+          dockerfile: server/Dockerfile
           tag: |
             type=raw,value=${{ inputs.image_tag }},priority=9001
             type=raw,value=${{ github.sha }},priority=9000

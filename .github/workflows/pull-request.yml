@@ -42,3 +42,19 @@ jobs:
           BRANCH_NAME=$GITHUB_REF
           BUILD_NUMBER="$(date "+%Y.%m.%d")-$(git rev-parse --short HEAD)"
           pnpm build
+
+      - name: Install server dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: server
+
+      - name: Lint server
+        run: pnpm lint
+        working-directory: server
+
+      - name: Check server types
+        run: pnpm check-types
+        working-directory: server
+
+      - name: Build server
+        run: pnpm build
+        working-directory: server
