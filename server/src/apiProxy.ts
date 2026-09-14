@@ -8,7 +8,6 @@ import logger from "./logger.js";
  * Proxy-ruter for backend-API-ene:
  *
  *   /api/               -> APP_URL_MELOSYS/api/
- *   /melosys/api/       -> APP_URL_MELOSYS/api/
  *   /trygdeavtale-flyt/ -> APP_URL_TRYGDEAVTALE/flyt/
  *   /faktureringskomponenten/ -> APP_URL_FAKTURERINGSKOMPONENTEN/
  *   /graphql/           -> APP_URL_MELOSYS/graphql/
@@ -18,7 +17,6 @@ import logger from "./logger.js";
  */
 export function setupApiProxy(router: Router) {
   addProxy(router, "/api", `${config.upstreams.melosysApiUrl}/api`);
-  addProxy(router, "/melosys/api", `${config.upstreams.melosysApiUrl}/api`);
   addProxy(router, "/trygdeavtale-flyt", `${config.upstreams.trygdeavtaleUrl}/flyt`);
   addProxy(router, "/faktureringskomponenten", config.upstreams.faktureringskomponentenUrl);
   addProxy(router, "/graphql", `${config.upstreams.melosysApiUrl}/graphql`);

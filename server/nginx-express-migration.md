@@ -28,15 +28,25 @@ miljøvariabel-verdier injisert i `env-config.js`.
 
 ## API-proxying (`apiProxy.ts`)
 
-Samme rutetabell som `proxy_pass`-reglene i `default.conf`:
+Samme rutetabell som `proxy_pass`-reglene i `default.conf`, med ett unntak
+(se avvik under):
 
 | Path-prefiks | Proxy-mål |
 |---|---|
 | `/api/` | `${APP_URL_MELOSYS}/api/` |
-| `/melosys/api/` | `${APP_URL_MELOSYS}/api/` |
 | `/trygdeavtale-flyt/` | `${APP_URL_TRYGDEAVTALE}/flyt/` |
 | `/faktureringskomponenten/` | `${APP_URL_FAKTURERINGSKOMPONENTEN}/` |
 | `/graphql/` | `${APP_URL_MELOSYS}/graphql/` |
+
+**Avvik fra nginx-oppsettet:** `/melosys/api/` (som pekte på samme mål som
+`/api/`) er bevisst **ikke** videreført. Verifisert ved søk i `src/` at
+React-appen kun bruker `/api/` (via `API_BASE_URL` i
+`src/services/api-constants.js`, satt til `"/api/"` i `config.ts`) — ingen
+kode i frontend refererer til `/melosys/api/`. Git-historikk viser at
+mønsteret stammer fra en gammel mock-server-oppsett fra lenge før
+nginx-migreringen, og har blitt kopiert videre gjennom hvert
+serveroppsett siden uten at behovet er bekreftet. Fjernet som en del av
+Express-migreringen for å redusere unødvendig overflate.
 
 nginx satte `X-Forwarded-Host`/`X-Forwarded-Server`/`X-Forwarded-For` på
 proxy-requestene. `http-proxy-middleware`s `xfwd: true`-opsjon gir samme
