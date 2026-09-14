@@ -5,16 +5,16 @@ import config from "./config.js";
 import logger from "./logger.js";
 
 /**
- * Gjenskaper proxy-rutene fra dagens nginx default.conf 1:1:
+ * Proxy-ruter for backend-API-ene:
  *
- *   location /api/               -> APP_URL_MELOSYS/api/
- *   location /melosys/api/       -> APP_URL_MELOSYS/api/
- *   location /trygdeavtale-flyt/ -> APP_URL_TRYGDEAVTALE/flyt/
- *   location /faktureringskomponenten/ -> APP_URL_FAKTURERINGSKOMPONENTEN/
- *   location /graphql/           -> APP_URL_MELOSYS/graphql/
+ *   /api/               -> APP_URL_MELOSYS/api/
+ *   /melosys/api/       -> APP_URL_MELOSYS/api/
+ *   /trygdeavtale-flyt/ -> APP_URL_TRYGDEAVTALE/flyt/
+ *   /faktureringskomponenten/ -> APP_URL_FAKTURERINGSKOMPONENTEN/
+ *   /graphql/           -> APP_URL_MELOSYS/graphql/
  *
- * nginx sender også med X-Forwarded-Host/-Server/-For, som
- * http-proxy-middleware sin `xfwd`-opsjon dekker tilsvarende.
+ * `xfwd: true` sørger for at X-Forwarded-Host/-Server/-For settes på
+ * requesten videre til upstream.
  */
 export function setupApiProxy(router: Router) {
   addProxy(router, "/api", `${config.upstreams.melosysApiUrl}/api`);

@@ -1,9 +1,9 @@
 /**
  * Konfigurasjon for melosys-web-serveren.
  *
- * Første iterasjon: kun parity med dagens nginx-oppsett (default.conf +
- * env-config.js i nais/runtime-config.yaml). Ingen nye funksjoner (f.eks.
- * Oasis-basert token-håndtering) er lagt til her ennå.
+ * Første iterasjon: kun parity med det tidligere oppsettet (statisk hosting,
+ * API-proxying og env-config.js). Ingen nye funksjoner (f.eks. Oasis-basert
+ * token-håndtering) er lagt til her ennå.
  */
 
 function optionalEnv(name: string, fallback = ""): string {
@@ -13,12 +13,11 @@ function optionalEnv(name: string, fallback = ""): string {
 const app = {
   host: process.env.EXPRESS_HOST ?? "0.0.0.0",
   port: Number(process.env.EXPRESS_PORT ?? "3000"),
-  // Mappen med det bygde frontend-innholdet (tilsvarer /usr/share/nginx/html)
+  // Mappen med det bygde frontend-innholdet
   staticDir: process.env.STATIC_DIR ?? "./public",
 };
 
-// URL-er som API-kall skal proxy'es videre til. Tilsvarer proxy_pass i
-// dagens nginx default.conf.
+// URL-er som API-kall skal proxy'es videre til.
 const upstreams = {
   melosysApiUrl: optionalEnv("APP_URL_MELOSYS", "http://melosys-api.melosys.docker-internal:8080"),
   trygdeavtaleUrl: optionalEnv("APP_URL_TRYGDEAVTALE", "http://melosys-trygdeavtale.melosys.docker-internal:8088"),
@@ -28,9 +27,8 @@ const upstreams = {
   ),
 };
 
-// Verdier som injiseres i /env-config.js for frontend, tilsvarer
-// env-config.js i dagens nais/runtime-config.yaml (+ LOCAL_AUTH_TOKEN som kun
-// finnes i docker-compose/e2e sin env-config.js, for å bypasse ekte
+// Verdier som injiseres i /env-config.js for frontend (+ LOCAL_AUTH_TOKEN som
+// kun finnes i docker-compose/e2e sin miljøkonfigurasjon, for å bypasse ekte
 // innlogging lokalt/i e2e-tester).
 const runtimeConfig = {
   APP_NAME: optionalEnv("FRONTEND_APP_NAME", "Melosys"),

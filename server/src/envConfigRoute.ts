@@ -3,8 +3,8 @@ import { Router } from "express";
 import config from "./config.js";
 
 /**
- * Gjenskaper /env-config.js og /melosys/env-config.js fra dagens nginx-oppsett:
- * innhold generert fra miljøvariabler, aldri cachet av nettleseren.
+ * Serverer /env-config.js og /melosys/env-config.js: innhold generert fra
+ * miljøvariabler, aldri cachet av nettleseren.
  */
 export function setupEnvConfigRoute(router: Router) {
   const respondWithEnvConfig: import("express").RequestHandler = (_request, response) => {

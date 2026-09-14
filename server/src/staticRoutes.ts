@@ -5,11 +5,11 @@ import express, { Router } from "express";
 import config from "./config.js";
 
 /**
- * Gjenskaper de resterende location-blokkene fra dagens nginx default.conf:
+ * Statisk hosting av den bygde frontend-appen:
  *
- *   location /melosys/assets/ -> statiske filer fra bygget frontend
- *   location /melosys/       -> SPA-fallback (try_files $uri /index.html), no-cache
- *   location = /             -> permanent redirect til /melosys/
+ *   /melosys/assets/ -> statiske filer fra bygget frontend (404 ved manglende fil)
+ *   /melosys/        -> SPA-fallback til index.html, no-cache
+ *   /                -> permanent redirect til /melosys/
  */
 export function setupStaticRoutes(router: Router) {
   const staticDir = path.resolve(config.app.staticDir);
@@ -18,8 +18,7 @@ export function setupStaticRoutes(router: Router) {
   router.use(
     "/melosys/assets",
     express.static(path.join(staticDir, "assets")),
-    // nginx sin `alias`-location har ingen try_files/fallback: manglende
-    // filer skal gi 404, ikke falle tilbake til SPA-en.
+    // Manglende filer under /assets skal gi 404, ikke falle tilbake til SPA-en.
     (_request, response) => {
       response.sendStatus(404);
     },
@@ -30,10 +29,9 @@ export function setupStaticRoutes(router: Router) {
   });
 
   router.use("/melosys", (request, response, next) => {
-    // Etterligner nginx: `root <staticDir>; try_files $uri /index.html;`
-    // uten alias, dvs. filoppslag skjer på staticDir + full original URI
-    // (inkl. /melosys-prefikset), som i praksis nesten alltid faller
-    // tilbake til index.html siden bygget ikke har en fysisk "melosys"-mappe.
+    // Filoppslag skjer på staticDir + full original URI (inkl. /melosys-
+    // prefikset), som i praksis nesten alltid faller tilbake til
+    // index.html siden bygget ikke har en fysisk "melosys"-mappe.
     const requestedPath = path.join(staticDir, request.baseUrl, request.path);
 
     response.setHeader("Cache-Control", "no-store, no-cache");
