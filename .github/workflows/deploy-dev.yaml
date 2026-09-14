@@ -68,7 +68,7 @@ jobs:
         #
         # Pinned to commit SHA per navikt/security-playbook guidance on pinning
         # third-party actions: https://github.com/navikt/security-playbook/blob/main/docs/08-sikker-utvikling/github.md#pin-tredjeparts-actions
-        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # ratchet:aquasecurity/trivy-action@v0.36.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
