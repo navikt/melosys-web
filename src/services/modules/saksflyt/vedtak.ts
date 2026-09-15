@@ -3,10 +3,7 @@ import { API_BASE_URL, SAKSFLYT, VEDTAK } from "../../api-constants";
 import { KopiMottaker } from "../dokumenter-v2";
 
 export type FattVedtakReqDto =
-  | FattVedtakEOSReqDto
-  | FattVedtakFTRLReqDto
-  | FattVedtakTrygdeavtaleReqDto
-  | FattVedtakÅrsavregningReqDto;
+  FattVedtakEOSReqDto | FattVedtakFTRLReqDto | FattVedtakTrygdeavtaleReqDto | FattVedtakÅrsavregningReqDto;
 
 export interface FattVedtakÅrsavregningReqDto {
   behandlingsresultatTypeKode: string;
