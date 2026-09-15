@@ -46,7 +46,6 @@ const valg: RadioValg[] = [
     ),
   },
   { value: "VEDTAKET_SKAL_ENDRES", text: "Vedtaket skal endres." },
-  { value: "BEHANDLINGEN_SKAL_AVSLUTTES", text: "Behandlingen skal avsluttes." },
 ];
 
 export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppdaterStatus }: Props) {
