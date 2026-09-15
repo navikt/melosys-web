@@ -9,10 +9,12 @@ import { setupStaticRoutes } from "./staticRoutes.js";
 
 const app = express();
 
+app.disable("x-powered-by");
 app.set("trust proxy", 1);
-app.use(logger.morganMiddleware);
 
 setupActuators(app);
+app.use(logger.morganMiddleware);
+
 setupEnvConfigRoute(app);
 setupApiProxy(app);
 // Catch-all for statiske filer + SPA-fallback, må settes opp sist.

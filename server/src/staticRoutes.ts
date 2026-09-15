@@ -13,7 +13,6 @@ import config from "./config.js";
  */
 export function setupStaticRoutes(router: Router) {
   const staticDir = path.resolve(config.app.staticDir);
-  const indexHtmlPath = path.join(staticDir, "index.html");
 
   router.use(
     "/melosys/assets",
@@ -24,22 +23,24 @@ export function setupStaticRoutes(router: Router) {
     },
   );
 
-  router.get("/", (_request, response) => {
-    response.redirect(301, "/melosys/");
+  router.get("/", (request, response) => {
+    // Behold eventuelle query-parametre (f.eks. ?code=...) i redirecten.
+    const queryString = request.url.includes("?") ? request.url.slice(request.url.indexOf("?")) : "";
+    response.redirect(301, `/melosys/${queryString}`);
   });
 
   router.use("/melosys", (request, response, next) => {
-    // Filoppslag skjer på staticDir + full original URI (inkl. /melosys-
-    // prefikset), som i praksis nesten alltid faller tilbake til
-    // index.html siden bygget ikke har en fysisk "melosys"-mappe.
-    const requestedPath = path.join(staticDir, request.baseUrl, request.path);
+    // `root`-opsjonen gjør at sendFile normaliserer stien og avviser forsøk
+    // på å bryte ut av staticDir (f.eks. via "..") i stedet for å bare
+    // slå stiene sammen selv.
+    const relativePath = path.join(request.baseUrl, request.path);
 
     response.setHeader("Cache-Control", "no-store, no-cache");
     response.setHeader("Expires", "0");
 
-    response.sendFile(requestedPath, (error) => {
+    response.sendFile(relativePath, { root: staticDir }, (error) => {
       if (error) {
-        response.sendFile(indexHtmlPath, (fallbackError) => {
+        response.sendFile("index.html", { root: staticDir }, (fallbackError) => {
           if (fallbackError) next(fallbackError);
         });
       }
