@@ -41,6 +41,30 @@ export const OppsummeringSelector = createSelector(
   (state) => BehandlingerSelector(state).oppsummering || {},
   (oppsummering) => oppsummering,
 );
+
+/** @type {import('reselect').Selector<import('../../AppTypes').RootState, string | null>} */
+export const TilordnetNavnSelector = createSelector(
+  (state) => BehandlingerSelector(state).tilordnetNavn ?? BehandlingerSelector(state).tilordnetIdent ?? null,
+  (tilordnetNavn) => tilordnetNavn,
+);
+
+/** @type {import('reselect').Selector<import('../../AppTypes').RootState, boolean>} */
+export const TilordnetMegSelector = createSelector(
+  (state) => BehandlingerSelector(state).tilordnetMeg === true,
+  (tilordnetMeg) => tilordnetMeg,
+);
+
+/** @type {import('reselect').Selector<import('../../AppTypes').RootState, boolean>} */
+export const KanTildelesSelector = createSelector(
+  (state) => BehandlingerSelector(state).kanTildeles === true,
+  (kanTildeles) => kanTildeles,
+);
+/** @type {import('reselect').Selector<import('../../AppTypes').RootState, boolean>} */
+export const TildelingTilgjengeligSelector = createSelector(
+  (state) => BehandlingerSelector(state).tildelingTilgjengelig === true,
+  (tilgjengelig) => tilgjengelig,
+);
+
 export const BehandlingstypeKodeSelector = createSelector(
   (state) => OppsummeringSelector(state),
   (oppsummering) => (oppsummering.behandlingstype ? oppsummering.behandlingstype.kode : ""),
