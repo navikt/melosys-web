@@ -75,13 +75,38 @@ jobs:
           BRANCH_NAME=$GITHUB_REF
           BUILD_NUMBER="$(date "+%Y.%m.%d")-$(git rev-parse --short HEAD)"
           pnpm build
-      - name: Prune devDependencies (for SBOM)
-        run: pnpm prune --prod --ignore-scripts
+      - name: Install server dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: server
+      - name: Build server deploy artifact
+        run: pnpm build:ci
+        working-directory: server
+      - name: Generate frontend SBOM
+        # The image only contains the server's own node_modules; the frontend npm
+        # dependencies bundled into the static JS in public/ have no on-disk trace for
+        # the image-scanning SBOM step to find. This scans package.json/pnpm-lock.yaml
+        # directly (skipping server/, which is covered by the image scan) and is merged
+        # into the image's SBOM via additional_sboms below. Same tool/version nais/attest-sign
+        # uses for the primary image SBOM, for consistency.
+        #
+        # Pinned to commit SHA per navikt/security-playbook guidance on pinning
+        # third-party actions: https://github.com/navikt/security-playbook/blob/main/docs/08-sikker-utvikling/github.md#pin-tredjeparts-actions
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          skip-dirs: 'server'
+          format: 'cyclonedx'
+          output: 'frontend-sbom.json'
+          version: 'v0.70.0'
       - name: Build and publish Docker image
         uses: nais/docker-build-push@v0
         with:
           team: teammelosys
+          docker_context: .
+          dockerfile: server/Dockerfile
           tag: ${{ github.sha }}
+          additional_sboms: frontend-sbom.json
 
   deploy:
     runs-on: ubuntu-latest-8-cores
@@ -95,7 +120,7 @@ jobs:
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: ${{github.event.inputs.environment == 'prod' && 'prod-fss' || 'dev-fss' }}
-          RESOURCE: nais/runtime-config.yaml,nais/nais.yaml
+          RESOURCE: nais/nais.yaml
           IMAGE: ${{ env.IMAGE }}
           VARS: nais/vars-${{github.event.inputs.environment}}.json
       - name: Get commit message
