@@ -202,13 +202,7 @@ exports[`TidligereGrunnlag > beregning med grunnlag snapshot test 1`] = `
                     class="navds-table__header-cell navds-label navds-label--small"
                     scope="col"
                   >
-                    Sats
-                  </th>
-                  <th
-                    class="navds-table__header-cell navds-label navds-label--small"
-                    scope="col"
-                  >
-                    Avgift md.
+                    Dekning
                   </th>
                   <th
                     class="navds-table__header-cell navds-label navds-label--small"
@@ -217,7 +211,7 @@ exports[`TidligereGrunnlag > beregning med grunnlag snapshot test 1`] = `
                     Inntektskilde
                   </th>
                   <th
-                    class="navds-table__header-cell navds-label navds-label--small"
+                    class="navds-table__header-cell navds-label tall_felt navds-label--small"
                     scope="col"
                   >
                     Bruttoinntekt md.
@@ -238,7 +232,13 @@ exports[`TidligereGrunnlag > beregning med grunnlag snapshot test 1`] = `
                     class="navds-table__header-cell navds-label navds-label--small"
                     scope="col"
                   >
-                    Dekning
+                    Sats
+                  </th>
+                  <th
+                    class="navds-table__header-cell navds-label tall_felt navds-label--small"
+                    scope="col"
+                  >
+                    Avgift md.
                   </th>
                 </tr>
               </thead>
@@ -247,11 +247,8 @@ exports[`TidligereGrunnlag > beregning med grunnlag snapshot test 1`] = `
                   <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                     01.01.2023 - 31.12.2023
                   </td>
-                  <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
-                    5.1
-                  </td>
-                  <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
-                    2&nbsp;125 kr
+                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                    Full dekning
                   </td>
                   <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                     Arbeidsinntekt
@@ -265,8 +262,11 @@ exports[`TidligereGrunnlag > beregning med grunnlag snapshot test 1`] = `
                   <td class="navds-table__data-cell navds-body-short navds-body-short--small">
                     Ja
                   </td>
-                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
-                    Full dekning
+                  <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
+                    5.1
+                  </td>
+                  <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
+                    2&nbsp;125 kr
                   </td>
                 </tr>
               </tbody>

@@ -77,7 +77,7 @@ describe("TrygdeavgiftsperioderTabell", () => {
     expect(screen.getByText("Trygdeperiode")).toBeDefined();
     expect(screen.getByText("Dekning")).toBeDefined();
     expect(screen.getByText("Sats")).toBeDefined();
-    expect(screen.getByText("Avgift per md.")).toBeDefined();
+    expect(screen.getByText("Avgift md.")).toBeDefined();
   });
 
   it("skjuler dekning-kolonne for EØS-pensjonist", () => {

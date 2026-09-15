@@ -116,13 +116,17 @@ export function BeregnetTrygdeavgiftDetaljer({
             <Nav.Table.Header className="header_row">
               <Nav.Table.Row>
                 <Nav.Table.HeaderCell scope="col">Trygdeperiode</Nav.Table.HeaderCell>
-                <Nav.Table.HeaderCell scope="col">Sats</Nav.Table.HeaderCell>
-                <Nav.Table.HeaderCell scope="col">Avgift md.</Nav.Table.HeaderCell>
+                {!erHelseutgiftDekkesPeriode && <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>}
                 <Nav.Table.HeaderCell scope="col">Inntektskilde</Nav.Table.HeaderCell>
-                <Nav.Table.HeaderCell scope="col">Bruttoinntekt md.</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col" className="tall_felt">
+                  Bruttoinntekt md.
+                </Nav.Table.HeaderCell>
                 {!erHelseutgiftDekkesPeriode && <Nav.Table.HeaderCell scope="col">Betalt aga.?</Nav.Table.HeaderCell>}
                 <Nav.Table.HeaderCell scope="col">Skattepliktig</Nav.Table.HeaderCell>
-                {!erHelseutgiftDekkesPeriode && <Nav.Table.HeaderCell scope="col">Dekning</Nav.Table.HeaderCell>}
+                <Nav.Table.HeaderCell scope="col">Sats</Nav.Table.HeaderCell>
+                <Nav.Table.HeaderCell scope="col" className="tall_felt">
+                  Avgift md.
+                </Nav.Table.HeaderCell>
               </Nav.Table.Row>
             </Nav.Table.Header>
             <Nav.Table.Body>
@@ -133,12 +137,13 @@ export function BeregnetTrygdeavgiftDetaljer({
                       detaljer.tom,
                     )}`}
                   </Nav.Table.DataCell>
-                  <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
-                    {formaterSats(detaljer)}
-                  </Nav.Table.DataCell>
-                  <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
-                    {formaterTilNorskBelopUtenDesimaler(detaljer.avgiftPerMd)} kr
-                  </Nav.Table.DataCell>
+                  {!erHelseutgiftDekkesPeriode && (
+                    <Nav.Table.DataCell key={Utils._uuid()}>
+                      {formaterDekning({ avgiftsdel: detaljer.avgiftsdel, trygdedekning: detaljer.dekning }, (kode) =>
+                        KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, kode),
+                      )}
+                    </Nav.Table.DataCell>
+                  )}
                   <Nav.Table.DataCell key={Utils._uuid()}>
                     {formaterInntektskilde(detaljer, (kode) =>
                       KV.finnTermFraListe(MKV.KTObjects.inntektskildetype, kode),
@@ -155,13 +160,12 @@ export function BeregnetTrygdeavgiftDetaljer({
                     </Nav.Table.DataCell>
                   )}
                   <Nav.Table.DataCell key={Utils._uuid()}>{detaljer.skattepliktig}</Nav.Table.DataCell>
-                  {!erHelseutgiftDekkesPeriode && (
-                    <Nav.Table.DataCell key={Utils._uuid()}>
-                      {formaterDekning({ avgiftsdel: detaljer.avgiftsdel, trygdedekning: detaljer.dekning }, (kode) =>
-                        KV.finnTermFraListe(MKV.KTObjects.trygdedekninger, kode),
-                      )}
-                    </Nav.Table.DataCell>
-                  )}
+                  <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
+                    {formaterSats(detaljer)}
+                  </Nav.Table.DataCell>
+                  <Nav.Table.DataCell key={Utils._uuid()} className="tall_felt">
+                    {formaterTilNorskBelopUtenDesimaler(detaljer.avgiftPerMd)} kr
+                  </Nav.Table.DataCell>
                 </Nav.Table.Row>
               ))}
             </Nav.Table.Body>
