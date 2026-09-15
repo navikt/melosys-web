@@ -143,6 +143,7 @@ export default function reducer(state = initialState, action = {}) {
           navn: forhold.navn || null,
           orgnr: forhold.orgnr || null,
           selvstendigNaeringsvirksomhet: false,
+          tilhorerSammeKonsern: forhold.tilhorerSammeKonsern ?? null,
           adresse: lagNullableStrukturertAdresse(forhold.adresse),
         })),
         ...dokument.selvstendigNaeringsvirksomhetUtland.map((virksomhet) => ({
@@ -150,6 +151,7 @@ export default function reducer(state = initialState, action = {}) {
           navn: virksomhet.navn || null,
           orgnr: virksomhet.orgnr || null,
           selvstendigNaeringsvirksomhet: true,
+          tilhorerSammeKonsern: virksomhet.tilhorerSammeKonsern ?? null,
           adresse: lagNullableStrukturertAdresse(virksomhet.adresse),
         })),
       ];
