@@ -1018,21 +1018,13 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
               !arrayValideringsfeil &&
               !trygdeAvgiftSkalIkkeBetalesTilNav &&
               aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag && (
-                <Nav.ExpansionCard
-                  className="beregnetTrygdeavgiftDetaljer"
-                  aria-label="trygdeavgiftdetaljer"
-                  size="small"
-                >
-                  <Nav.ExpansionCard.Header>
-                    <Nav.ExpansionCard.Title size="small">Vis detaljert beregning</Nav.ExpansionCard.Title>
-                  </Nav.ExpansionCard.Header>
-                  <Nav.ExpansionCard.Content>
-                    <BeregnetTrygdeavgiftDetaljer
-                      grunnlag={aarsavregningResponse.nyttTrygdeavgiftsGrunnlag}
-                      beregningsforklaringer={beregningsforklaringer}
-                    />
-                  </Nav.ExpansionCard.Content>
-                </Nav.ExpansionCard>
+                <>
+                  <Nav.Heading size="xsmall">Beregnet trygdeavgift</Nav.Heading>
+                  <BeregnetTrygdeavgiftDetaljer
+                    grunnlag={aarsavregningResponse.nyttTrygdeavgiftsGrunnlag}
+                    beregningsforklaringer={beregningsforklaringer}
+                  />
+                </>
               )}
 
             {arrayValideringsfeil && (
