@@ -74,10 +74,13 @@ describe("TrygdeavgiftsperioderTabell", () => {
 
   it("rendrer headere med dekning-kolonne", () => {
     render(<TrygdeavgiftsperioderTabell perioder={[]} lagrePending={false} />);
-    expect(screen.getByText("Trygdeperiode")).toBeDefined();
-    expect(screen.getByText("Dekning")).toBeDefined();
-    expect(screen.getByText("Sats")).toBeDefined();
-    expect(screen.getByText("Avgift md.")).toBeDefined();
+    expect(screen.getAllByRole("columnheader").map((celle) => celle.textContent)).toEqual([
+      "Trygdeperiode",
+      "Dekning",
+      "Inntektskilde",
+      "Sats",
+      "Avgift md.",
+    ]);
   });
 
   it("skjuler dekning-kolonne for EØS-pensjonist", () => {
