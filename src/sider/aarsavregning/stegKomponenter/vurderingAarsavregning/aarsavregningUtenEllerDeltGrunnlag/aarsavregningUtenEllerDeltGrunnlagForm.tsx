@@ -1029,7 +1029,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                   <Nav.ExpansionCard.Content>
                     <BeregnetTrygdeavgiftDetaljer
                       grunnlag={aarsavregningResponse.nyttTrygdeavgiftsGrunnlag}
-                      medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
                       beregningsforklaringer={beregningsforklaringer}
                     />
                   </Nav.ExpansionCard.Content>
