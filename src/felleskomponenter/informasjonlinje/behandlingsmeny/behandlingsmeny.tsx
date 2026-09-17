@@ -4,9 +4,12 @@ import * as Ikon from "../../../resources/images";
 import LeggBehandlingTilbake from "./leggbehandlingtilbake";
 import AvsluttSak from "./avsluttsak";
 import "./behandlingsmeny.less";
+import { useFeatureToggle } from "../../../featuretoggle";
+import { MELOSYS_TILDEL_OPPGAVE } from "../../../featuretoggle/toggleNavn";
 import { Accordion } from "@navikt/ds-react";
 
 export default function Behandlingsmeny() {
+  const tildelingAktivert = useFeatureToggle(MELOSYS_TILDEL_OPPGAVE);
   const [visBehandlingsmeny, setVisBehandlingsmeny] = useState(false);
   const toggleBehandlingsmeny = () => setVisBehandlingsmeny(!visBehandlingsmeny);
 
@@ -38,7 +41,7 @@ export default function Behandlingsmeny() {
         <div className="behandlingsmeny__meny">
           <Accordion>
             <Accordion.Item>
-              <Accordion.Header>Legg behandling tilbake</Accordion.Header>
+              <Accordion.Header>{tildelingAktivert ? "Flytt behandling" : "Legg behandling tilbake"}</Accordion.Header>
               <Accordion.Content>
                 <LeggBehandlingTilbake />
               </Accordion.Content>
