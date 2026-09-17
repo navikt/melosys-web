@@ -7,11 +7,6 @@ import * as KV from "../../../../kodeverk";
 import { VurderingArtikkel16Anmodning } from "./vurderingArtikkel16Anmodning";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 
-const mockUseFeatureToggle = vi.fn();
-vi.mock("../../../../featuretoggle", () => ({
-  useFeatureToggle: (...args: unknown[]) => mockUseFeatureToggle(...args),
-}));
-
 vi.mock("../../../../ducks/avklartefakta", async (importOriginal) => {
   const actual = (await importOriginal()) as any;
   return {
@@ -108,20 +103,12 @@ describe("VurderingArtikkel16Anmodning - TWFA checkbox", () => {
     };
   });
 
-  it("viser ikke TWFA-checkbox når CDM 4.4 er deaktivert", () => {
-    mockUseFeatureToggle.mockReturnValue(false);
-    renderWithProviders(<WrappedComponent {...props} />);
-    expect(screen.queryByText(/Rammeavtale om fjernarbeid/)).not.toBeInTheDocument();
-  });
-
-  it("viser ikke TWFA-checkbox når CDM 4.4 er aktivert men annen artikkel er valgt", () => {
-    mockUseFeatureToggle.mockReturnValue(true);
+  it("viser ikke TWFA-checkbox når ingen artikkel er valgt", () => {
     renderWithProviders(<WrappedComponent {...props} />);
     expect(screen.queryByText(/Rammeavtale om fjernarbeid/)).not.toBeInTheDocument();
   });
 
   it("viser deaktivert TWFA-checkbox når redigerbart er false og artikkel 13(1)(a) er valgt", () => {
-    mockUseFeatureToggle.mockReturnValue(true);
     renderWithProviders(<WrappedComponent {...props} redigerbart={false} />, {
       preloadedState: {
         anmodningsperioder: {
@@ -140,8 +127,7 @@ describe("VurderingArtikkel16Anmodning - TWFA checkbox", () => {
     expect(checkbox).toBeDisabled();
   });
 
-  it("viser TWFA-checkbox når CDM 4.4 er aktivert og artikkel 13(1)(a) er valgt", () => {
-    mockUseFeatureToggle.mockReturnValue(true);
+  it("viser TWFA-checkbox når artikkel 13(1)(a) er valgt uten toggle", () => {
     renderWithProviders(<WrappedComponent {...props} />, {
       preloadedState: {
         anmodningsperioder: {
@@ -160,7 +146,6 @@ describe("VurderingArtikkel16Anmodning - TWFA checkbox", () => {
   });
 
   it("kan krysse av og fjerne TWFA-avkrysning", () => {
-    mockUseFeatureToggle.mockReturnValue(true);
     renderWithProviders(<WrappedComponent {...props} />, {
       preloadedState: {
         anmodningsperioder: {
