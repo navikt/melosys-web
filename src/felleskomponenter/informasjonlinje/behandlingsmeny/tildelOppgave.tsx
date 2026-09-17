@@ -44,12 +44,6 @@ function TildelOppgave() {
     setFeilmelding(null);
   };
 
-  // Lukking mens kallet pågår ville skjult utfallet: feilmeldingen ville blitt satt på en
-  // lukket dialog, og brukeren ville ikke visst om overtakelsen gikk gjennom.
-  const lukkHvisIkkeLagrer = () => {
-    if (!lagrer) lukk();
-  };
-
   const tildel = async () => {
     setLagrer(true);
     setFeilmelding(null);
@@ -94,7 +88,17 @@ function TildelOppgave() {
       />
 
       {visBekreftelse && (
-        <Nav.Modal open onClose={lukkHvisIkkeLagrer} aria-label="Bekreft tildeling av oppgave" width="small">
+        <Nav.Modal
+          open
+          // Lukking må stoppes mens kallet pågår, ellers settes feilmeldingen på en lukket
+          // dialog og brukeren får aldri vite om overtakelsen gikk gjennom. Det er
+          // onBeforeClose som avgjør: onClose er den native close-eventen på <dialog>, og
+          // fyrer først etter at dialogen er lukket.
+          onBeforeClose={() => !lagrer}
+          onClose={lukk}
+          aria-label="Bekreft tildeling av oppgave"
+          width="small"
+        >
           <Nav.Modal.Header>
             <Nav.Heading size="small" level="1">
               {DIALOGTITTEL}?

@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import { screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
@@ -155,7 +155,17 @@ describe("TildelOppgave", () => {
     expect(hentBehandling).toHaveBeenCalledOnce();
   });
 
-  it("lar seg ikke lukke mens tildelingen pågår", async () => {
+  // Aksel stopper Esc og X-knappen kun når onBeforeClose() gir false; onClose er den native
+  // close-eventen og fyrer etter at dialogen er lukket. Vi sjekker derfor at cancel-eventen
+  // faktisk blir avbrutt, ikke bare at dialogen står i DOM-en: jsdom lukker uansett ikke
+  // <dialog> på Esc, så en slik sjekk ville passert også uten rettingen.
+  const avfyrCancel = () => {
+    const cancel = new Event("cancel", { cancelable: true });
+    fireEvent(screen.getByRole("dialog"), cancel);
+    return cancel.defaultPrevented;
+  };
+
+  it("avbryter lukking mens tildelingen pågår", async () => {
     const bruker = userEvent.setup();
     let fullfør: () => void = () => {};
     tildel.mockImplementation(() => new Promise<void>((resolve) => (fullfør = resolve)));
@@ -164,10 +174,18 @@ describe("TildelOppgave", () => {
     await bruker.click(screen.getByRole("button", { name: KNAPP }));
     await bruker.click(screen.getByRole("button", { name: "Ja, legg i mine oppgaver" }));
 
-    await bruker.keyboard("{Escape}");
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(avfyrCancel()).toBe(true);
 
     fullfør();
+  });
+
+  it("lar dialogen lukkes når ingenting pågår", async () => {
+    const bruker = userEvent.setup();
+    render({ tilordnetNavn: null, tilordnetMeg: false, kanTildeles: true });
+
+    await bruker.click(screen.getByRole("button", { name: KNAPP }));
+
+    expect(avfyrCancel()).toBe(false);
   });
 
   it("beholder dialogen og viser feil når oppfriskningen feiler etter vellykket tildeling", async () => {
