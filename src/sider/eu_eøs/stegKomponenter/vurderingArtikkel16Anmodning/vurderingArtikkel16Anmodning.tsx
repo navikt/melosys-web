@@ -26,8 +26,6 @@ import {
 import * as Mui from "../../../../felleskomponenter/ui";
 import VedleggTable from "../../../../felleskomponenter/vedleggTable";
 import VedleggVelger from "../../../../felleskomponenter/vedleggvelger";
-import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_CDM_4_4 } from "../../../../featuretoggle/toggleNavn";
 import { useIsMounted, useDispatch } from "../../../../hooks";
 import * as KV from "../../../../kodeverk";
 import MKV, { MKVUtils } from "../../../../melosyskodeverk";
@@ -114,7 +112,6 @@ export function VurderingArtikkel16Anmodning({
 }: Props & PropsFromRedux & InjectedFormProps<FormValuesProps, Props & PropsFromRedux>) {
   const dispatch = useDispatch();
   const isMounted = useIsMounted();
-  const isCdm44Enabled = useFeatureToggle(MELOSYS_CDM_4_4);
   const [lovvalgFeilmelding, setLovvalgFeilmelding] = useState<string | undefined>(undefined);
   const [begrunnelseFeilmelding, setBegrunnelseFeilmelding] = useState<string | undefined>(undefined);
   const [fritekstFeilmelding, setFritekstFeilmelding] = useState<string | undefined>(undefined);
@@ -144,7 +141,6 @@ export function VurderingArtikkel16Anmodning({
   const feltNavnFraBestemmelse =
     lovvalgsbestemmelse === KONV_EFTA_STORBRITANNIA_ART18_1 ? "art18_1_anmodning" : "art16_1_anmodning";
   const erTWFARelevant =
-    isCdm44Enabled &&
     unntakFraBestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A;
 
   useEffect(() => {

@@ -22,8 +22,6 @@ import { avklartefaktaSelectors } from "../../../../ducks/avklartefakta";
 import { dokumenterSelectors } from "../../../../ducks/dokumenter";
 import { feiletResponsOperations } from "../../../../ducks/feiletRespons";
 import { mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
-import { useFeatureToggle } from "../../../../featuretoggle";
-import { MELOSYS_CDM_4_4 } from "../../../../featuretoggle/toggleNavn";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingVideresendSchema from "../vurderingVideresendSchema";
@@ -41,7 +39,6 @@ export function VurderingVideresend({
   tilbake,
   resetFeiletRespons,
 }) {
-  const isA008Cdm44Enabled = useFeatureToggle(MELOSYS_CDM_4_4);
   const formIsValid = useSelector(isValid(KV.Form.VURDERING_VIDERESEND));
 
   const pdfDokumenter = [
@@ -55,8 +52,8 @@ export function VurderingVideresend({
     {
       sedType: EKV.Koder.sedtyper.A008,
       sedData: {
-        fritekst: isA008Cdm44Enabled ? formValues.ytterligereInformasjonSed : undefined,
-        a008Formaal: isA008Cdm44Enabled ? "arbeid_flere_land" : undefined,
+        fritekst: formValues.ytterligereInformasjonSed,
+        a008Formaal: "arbeid_flere_land",
       },
     },
   ];
@@ -88,8 +85,8 @@ export function VurderingVideresend({
     await props.videresendSoknad(
       values.mottakerinstitusjon,
       values.orienteringsbrevFritekst,
-      isA008Cdm44Enabled ? values.ytterligereInformasjonSed : null,
-      isA008Cdm44Enabled ? "arbeid_flere_land" : null,
+      values.ytterligereInformasjonSed,
+      "arbeid_flere_land",
       vedlegg,
     );
 
@@ -105,7 +102,7 @@ export function VurderingVideresend({
         <Nav.Heading level="1" className="stegvelgertittel">
           Videresending av søknad
         </Nav.Heading>
-        {isA008Cdm44Enabled && redigerbart && flereLandUkjentHvilke && (
+        {redigerbart && flereLandUkjentHvilke && (
           <Nav.Row>
             <Nav.Column xs="8">
               <Nav.Alert variant="warning" className="videresendSoknad__warning">
@@ -133,20 +130,18 @@ export function VurderingVideresend({
             />
           </Nav.Column>
         </Nav.Row>
-        {isA008Cdm44Enabled && (
-          <Nav.Row>
-            <Nav.Column xs="8">
-              <Skjema.Textarea
-                feltNavn="ytterligereInformasjonSed"
-                label="Ytterligere informasjon (valgfritt)"
-                description="Denne teksten legges ved i SED A008"
-                placeholder="Skriv inn ytterligere informasjon..."
-                readOnly={!redigerbart}
-                maxLength={500}
-              />
-            </Nav.Column>
-          </Nav.Row>
-        )}
+        <Nav.Row>
+          <Nav.Column xs="8">
+            <Skjema.Textarea
+              feltNavn="ytterligereInformasjonSed"
+              label="Ytterligere informasjon (valgfritt)"
+              description="Denne teksten legges ved i SED A008"
+              placeholder="Skriv inn ytterligere informasjon..."
+              readOnly={!redigerbart}
+              maxLength={500}
+            />
+          </Nav.Column>
+        </Nav.Row>
         <Nav.Row className="mottakerinstitusjoner">
           <Nav.Column xs="8">
             <Mottakerinstitusjonvelger
