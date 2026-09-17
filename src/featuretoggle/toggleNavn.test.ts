@@ -9,8 +9,8 @@ import {
 } from "./toggleNavn";
 
 describe("toggleNavn", () => {
-  it("alleToggleNavn inneholder 16 toggles", () => {
-    expect(alleToggleNavn).toHaveLength(16);
+  it("alleToggleNavn inneholder bare unike toggles", () => {
+    expect(new Set(alleToggleNavn).size).toBe(alleToggleNavn.length);
   });
 
   it("FEATURE_TOGGLE er definert", () => {
