@@ -127,7 +127,7 @@ describe("VurderingArtikkel16Anmodning - TWFA checkbox", () => {
     expect(checkbox).toBeDisabled();
   });
 
-  it("viser TWFA-checkbox når artikkel 13(1)(a) er valgt uten toggle", () => {
+  it("viser TWFA-checkbox når artikkel 13(1)(a) er valgt", () => {
     renderWithProviders(<WrappedComponent {...props} />, {
       preloadedState: {
         anmodningsperioder: {

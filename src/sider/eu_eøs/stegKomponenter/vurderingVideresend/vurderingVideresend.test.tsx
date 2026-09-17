@@ -59,7 +59,7 @@ describe("Vurderingvideresend", () => {
     expect(getByRole("textbox", { name: "Fritekst til orienteringsbrev" })).toBeInTheDocument();
   });
 
-  it("viser ytterligere informasjon tekstfelt uten toggle", () => {
+  it("viser ytterligere informasjon tekstfelt", () => {
     const { getByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
       preloadedState: initialReduxState,
     });
@@ -110,7 +110,7 @@ describe("Vurderingvideresend", () => {
   });
 
   describe("videresendSoknad kall", () => {
-    it("sender ytterligereInformasjonSed og a008Formaal uten toggle", async () => {
+    it("sender ytterligereInformasjonSed og a008Formaal", async () => {
       const videresendSoknad = vi.fn().mockResolvedValue(undefined);
       const user = userEvent.setup();
 
