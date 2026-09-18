@@ -1,6 +1,8 @@
 # Deploy til nais
-Frontend deployes i en nginx-container. `runtime-config.yaml` definerer proxy til Melosys-API.
-ConfigMap-en må deployes sammen med applikasjonen: `RESOURCE=nais/runtime-config.yaml,nais/nais.yaml`.
+Frontend deployes som en Node/Express-container. Proxying til Melosys-API og
+øvrige backends, samt runtime-konfigurasjon til frontend-appen, er
+implementert i `server/`-koden og styres via miljøvariabler satt i `nais.yaml`
+(fylt ut fra `vars-*.json`).
 
 ## Automatisk deploy
 Melosys-web deployer automatisk til dev ved push på `master`-branch
@@ -14,5 +16,5 @@ Husk også å bytte ut variabler som `INGRESSES` og `APP_NAME` med faktiske verd
 
 Sett ønsket cluster med `kubectl config use-context dev-fss`.
 
-Etter app.yaml er konfigurert kjører man videre kommandoen `kubectl apply -f runtime-config.yaml -f nais.yaml`.
+Etter nais.yaml er konfigurert kjører man videre kommandoen `kubectl apply -f nais.yaml`.
 Melosys-web blir nå deployet til ønsket cluster og namespace i nais.
