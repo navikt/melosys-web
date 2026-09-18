@@ -421,8 +421,7 @@ describe("kombinasjoner av mottaker og brevmal – korrekte feltfeil og de match
       "Du må velge minst én av standardtekst eller fritekst";
     const innledningValgKode =
       (valgtBrev.felter?.find((f: any) => f.kode === "INNLEDNING_FRITEKST")?.valg?.valgAlternativer?.[0]?.kode as
-        | string
-        | undefined) || "FRITEKST";
+        string | undefined) || "FRITEKST";
 
     // 3) Fyll inn MANGLER_FRITEKST -> ingen feil igjen
     values = {
@@ -527,8 +526,7 @@ describe("kombinasjoner av mottaker og brevmal – korrekte feltfeil og de match
       unwrapMelding(feilEtter?.INNLEDNING_FRITEKST?.valg) === "Du må velge minst én av standardtekst eller fritekst";
     const innledningValgKode =
       (valgtBrev.felter?.find((f: any) => f.kode === "INNLEDNING_FRITEKST")?.valg?.valgAlternativer?.[0]?.kode as
-        | string
-        | undefined) || "FRITEKST";
+        string | undefined) || "FRITEKST";
 
     // 3) Fyll inn MANGLER_FRITEKST -> ingen feil igjen
     values = {

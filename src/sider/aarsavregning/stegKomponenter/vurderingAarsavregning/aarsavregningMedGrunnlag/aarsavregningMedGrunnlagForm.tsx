@@ -550,19 +550,19 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
     () =>
       Boolean(
         (formIsValid || nyVurderingHarFjernetAvgiftspliktigperiode) &&
-          (endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
-            endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) &&
-          (aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag || nyVurderingHarFjernetAvgiftspliktigperiode) &&
-          !feilmelding &&
-          !arrayValideringsfeil &&
-          !lagreMedlemskapsperioderPaagar,
+        (endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
+          endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) &&
+        (aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag || nyVurderingHarFjernetAvgiftspliktigperiode) &&
+        !feilmelding &&
+        !arrayValideringsfeil &&
+        !lagreMedlemskapsperioderPaagar,
       ) ||
       Boolean(
         endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT &&
-          aarsavregningResponse?.avregning?.manueltAvgiftBeloep !== undefined &&
-          aarsavregningResponse?.avregning?.manueltAvgiftBeloep !== null &&
-          formIsValid &&
-          !feilmelding,
+        aarsavregningResponse?.avregning?.manueltAvgiftBeloep !== undefined &&
+        aarsavregningResponse?.avregning?.manueltAvgiftBeloep !== null &&
+        formIsValid &&
+        !feilmelding,
       ),
     [
       endeligAvgiftValg,

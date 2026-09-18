@@ -6,8 +6,10 @@ import * as Utils from "../../../utils";
 
 import "../skjema.less";
 
-interface SelectWrappedComponentBaseProps
-  extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "size" | "multiple"> {
+interface SelectWrappedComponentBaseProps extends Omit<
+  React.SelectHTMLAttributes<HTMLSelectElement>,
+  "size" | "multiple"
+> {
   emptyFieldDisabled?: boolean;
   label?: string | React.ReactElement;
   children?: React.ReactNode;
