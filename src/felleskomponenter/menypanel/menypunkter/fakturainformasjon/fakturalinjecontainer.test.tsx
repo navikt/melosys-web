@@ -5,6 +5,15 @@ vi.mock("../../../kopierbarTekst", () => ({
   default: ({ children }: any) => <span>{children}</span>,
 }));
 
+vi.mock("../../../labelMedHjelpetekst", () => ({
+  default: ({ label, hjelpetekst }: any) => (
+    <div>
+      <span>{label}</span>
+      {hjelpetekst && <span>{hjelpetekst}</span>}
+    </div>
+  ),
+}));
+
 vi.mock("../../../../utils", () => ({
   _uuid: () => String(Math.random()),
   _isEmpty: (val: any) => !val || val.length === 0,
@@ -49,5 +58,46 @@ describe("FakturaLinjeContainer", () => {
     expect(screen.getByText("1000 kr")).toBeDefined();
     expect(screen.getAllByText("3000 kr")).toHaveLength(2);
     expect(screen.getByText("Totalt")).toBeDefined();
+  });
+
+  it("viser lagret beskrivelse uten forbehold", () => {
+    const faktura = {
+      eksternFakturaNummer: "F-1",
+      fakturaLinje: [],
+      beskrivelse: "Trygdeavgift 1. kvartal 2024",
+      beskrivelseErUtledet: false,
+    } as any;
+    render(<FakturaLinjeContainer faktura={faktura} />);
+    expect(screen.getByText(/Trygdeavgift 1. kvartal 2024/)).toBeDefined();
+    expect(screen.queryByText(/gjenskapt av Melosys/)).toBeNull();
+  });
+
+  it("tar forbehold når beskrivelsen er utledet", () => {
+    const faktura = {
+      eksternFakturaNummer: "F-1",
+      fakturaLinje: [],
+      beskrivelse: "Trygdeavgift 1. kvartal 2024",
+      beskrivelseErUtledet: true,
+    } as any;
+    render(<FakturaLinjeContainer faktura={faktura} />);
+    expect(screen.getByText(/gjenskapt av Melosys/)).toBeDefined();
+  });
+
+  it("sier fra når beskrivelsen ikke kan utledes", () => {
+    const faktura = {
+      eksternFakturaNummer: "F-1",
+      fakturaLinje: [],
+      beskrivelse: null,
+      beskrivelseErUtledet: true,
+    } as any;
+    render(<FakturaLinjeContainer faktura={faktura} />);
+    expect(screen.getByText(/Beskrivelse: ikke lagret/)).toBeDefined();
+    expect(screen.getByText(/ikke lagret hvilken tekst som ble sendt til OeBS/)).toBeDefined();
+  });
+
+  it("viser ingen beskrivelse når faktureringskomponenten ikke sender feltet", () => {
+    const faktura = { eksternFakturaNummer: "F-1", fakturaLinje: [] } as any;
+    render(<FakturaLinjeContainer faktura={faktura} />);
+    expect(screen.queryByText(/Beskrivelse:/)).toBeNull();
   });
 });
