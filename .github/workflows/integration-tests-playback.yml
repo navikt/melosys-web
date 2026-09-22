@@ -87,3 +87,105 @@ jobs:
           name: test-artifacts
           path: tests/e2e/artifacts/
           retention-days: 7
+
+  # Instrumentert dekningskjøring (enhet + e2e). Kjører KUN på manuell dispatch
+  # (workflow_dispatch) — ikke på PR-er (holder PR-gaten rask) og ikke på hver master-merge
+  # (unngår ~45 min instrumentert kjøring for en rapport ingen leser). Kjør den når du vil
+  # vite hvor dekningen står. Enhetstestene gir coverage/; E2E_COVERAGE=true instrumenterer
+  # dev-serveren og fixturen skriver window.__coverage__ til .nyc_output. Begge er
+  # istanbul-format, så nyc slår dem sammen til én kombinert rapport (union). Testfeil
+  # blokkerer ikke (informativ jobb).
+  coverage:
+    name: Coverage (unit + e2e, playback)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest-8-cores
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.3
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: "22"
+          registry-url: https://npm.pkg.github.com/
+          scope: "@navikt"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm install --frozen-lockfile
+
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "version=$(pnpm list @playwright/test --depth=0 --json | jq -r '.[0].devDependencies["@playwright/test"].version')" >> $GITHUB_OUTPUT
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v5
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+
+      - name: Install Playwright browsers (if not cached)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install only system dependencies (if browsers were cached)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Run unit tests with coverage
+        continue-on-error: true
+        run: pnpm test:coverage
+        env:
+          CI: true
+
+      - name: Run E2E with coverage (playback)
+        continue-on-error: true
+        run: pnpm test:e2e:coverage
+        env:
+          CI: true
+
+      - name: Generate E2E coverage report
+        if: always()
+        run: pnpm coverage:e2e:report
+
+      - name: Generate combined coverage report (unit + e2e)
+        if: always()
+        run: pnpm coverage:combined:report
+
+      - name: Coverage summary (combined + e2e)
+        if: always()
+        run: |
+          node -e '
+            const fs = require("fs");
+            const read = (p) => { try { return require(p).total; } catch { return null; } };
+            const rows = (t) => ["Lines","Statements","Functions","Branches"]
+              .map((k) => { const m = t[k.toLowerCase()]; return `| ${k} | ${m.pct}% | ${m.covered}/${m.total} |`; });
+            const section = (title, t) => t
+              ? [title, "", "| Metrikk | Dekning | Dekket/Total |", "|---|---|---|", ...rows(t), ""].join("\n")
+              : `${title}\n\n_Ingen data funnet._\n`;
+            const combined = read("./coverage-combined/coverage-summary.json");
+            const e2e = read("./coverage-e2e/coverage-summary.json");
+            const md = [
+              section("## 🧩 Kombinert kodedekning (enhet + e2e)", combined),
+              section("## 🎭 E2E-kodedekning (kun playback)", e2e),
+            ].join("\n");
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, md + "\n");
+          '
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: coverage-report
+          path: |
+            coverage-combined/
+            coverage-e2e/
+          retention-days: 14
