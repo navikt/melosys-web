@@ -663,7 +663,7 @@ function SendBrev({
 
   const sendBrevAktiveringskravOppfylt = Boolean(mottakerErValgt && brevtypeErValgt);
 
-  const knappErDisabled =
+  const sendOgLagreErDisabled =
     !redigerbart ||
     !sendBrevAktiveringskravOppfylt ||
     !!formValues?.valgtMottaker?.feilmelding ||
@@ -771,7 +771,7 @@ function SendBrev({
         )}
         <Nav.Button
           variant="primary"
-          disabled={knappErDisabled || kopiTilBrukerManglerAdresse}
+          disabled={sendOgLagreErDisabled || kopiTilBrukerManglerAdresse}
           className="brevknapp"
           onClick={() => void sendBrev()}
           loading={sendBrevSpinner}
@@ -780,7 +780,7 @@ function SendBrev({
         </Nav.Button>
         <Nav.Button
           variant="secondary"
-          disabled={knappErDisabled}
+          disabled={sendOgLagreErDisabled}
           className="brevknapp"
           onClick={lagreUtkast}
           loading={lagreUtkastSpinner}
