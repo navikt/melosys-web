@@ -670,12 +670,14 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
   return (
     <>
-      <EndeligAvgiftValgRadioGroup
-        control={control}
-        redigerbart={redigerbart}
-        handleEndeligAvgiftValgChange={handleEndeligAvgiftValgChange}
-        endeligAvgiftValg={endeligAvgiftValg}
-      />
+      {!nyVurderingHarFjernetAvgiftspliktigperiode && (
+        <EndeligAvgiftValgRadioGroup
+          control={control}
+          redigerbart={redigerbart}
+          handleEndeligAvgiftValgChange={handleEndeligAvgiftValgChange}
+          endeligAvgiftValg={endeligAvgiftValg}
+        />
+      )}
 
       {(endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
         endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET) &&
