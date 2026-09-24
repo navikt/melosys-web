@@ -234,6 +234,7 @@ describe("VurderingPerioder autolagring", () => {
     server.kall = [];
     server.pågående = 0;
     server.maksSamtidige = 0;
+    server.nesteId = 5000;
     server.forsinkelse = () => 0;
   });
 
@@ -372,6 +373,19 @@ describe("VurderingPerioder autolagring", () => {
 
     expect(server.kall.filter((k) => k.type === "OPPRETT")).toHaveLength(1);
     expect([...server.perioder.keys()]).toEqual([1, 2, 3]);
+    expect(screen.queryByRole("combobox", { name: "Resultat periode 4" })).not.toBeInTheDocument();
+  });
+
+  it("sender ingen DELETE når en ny rad som ikke er lagret, slettes", async () => {
+    await renderSteg();
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "Legg til periode" }));
+    });
+    await slettRad(4);
+    await kjørFerdig();
+
+    expect(server.kall.filter((k) => k.type !== "OPPDATER")).toHaveLength(0);
     expect(screen.queryByRole("combobox", { name: "Resultat periode 4" })).not.toBeInTheDocument();
   });
 
