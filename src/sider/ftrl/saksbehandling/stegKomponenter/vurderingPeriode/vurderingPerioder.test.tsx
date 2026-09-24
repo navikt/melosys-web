@@ -61,7 +61,7 @@ const dispatchMock = vi.fn((action: any): Promise<any> => {
   }
   if (action.type === "SLETT") {
     server.kall.push(action);
-    return svarEtter(0, () => {
+    return svarEtter(server.forsinkelse(-1, action), () => {
       server.perioder.delete(action.periodeId);
       return { type: "medlemskapsperioder/OK_SLETT", data: { id: action.periodeId } };
     });
@@ -198,6 +198,23 @@ const velgResultat = (radNr: number, verdi: string) =>
 const oppdateringerFor = (periodeId: number) =>
   server.kall.filter((k) => k.type === "OPPDATER" && k.periodeId === periodeId);
 
+const leggTilUtfyltRad = async () => {
+  await act(async () => {
+    fireEvent.click(screen.getByRole("button", { name: "Legg til periode" }));
+  });
+  const [fom, tom] = screen.getAllByRole("textbox").slice(6);
+  await act(async () => {
+    fireEvent.change(fom, { target: { value: "24.09.2026" } });
+    fireEvent.change(tom, { target: { value: "31.12.2026" } });
+    fireEvent.change(dekning(4), { target: { value: FTRL_2_9_FØRSTE_LEDD_B_PENSJON } });
+  });
+  await velgResultat(4, AVSLAATT);
+};
+const slettRad = (radNr: number) =>
+  act(async () => {
+    fireEvent.click(screen.getAllByRole("button", { name: "Slett periode" })[radNr - 1]);
+  });
+
 // Rendrer steget og venter til lagringen som starter når steget blir gyldig, er ferdig.
 const renderSteg = async () => {
   render(<VurderingPerioder bekreft={vi.fn()} tilbake={vi.fn()} aktivtSteg oppdaterStatus={vi.fn()} />);
@@ -313,16 +330,7 @@ describe("VurderingPerioder autolagring", () => {
     await renderSteg();
     server.forsinkelse = (_kallNr, action) => (action.type === "OPPRETT" ? 1500 : 0);
 
-    await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: "Legg til periode" }));
-    });
-    const [fom, tom] = screen.getAllByRole("textbox").slice(6);
-    await act(async () => {
-      fireEvent.change(fom, { target: { value: "24.09.2026" } });
-      fireEvent.change(tom, { target: { value: "31.12.2026" } });
-      fireEvent.change(dekning(4), { target: { value: FTRL_2_9_FØRSTE_LEDD_B_PENSJON } });
-    });
-    await velgResultat(4, AVSLAATT);
+    await leggTilUtfyltRad();
     await vent(1000); // runden startet ved 500 ms, POST for den nye raden pågår
     await act(async () => {
       fireEvent.change(dekning(4), { target: { value: FTRL_2_9_FØRSTE_LEDD_A_HELSE } });
@@ -337,13 +345,11 @@ describe("VurderingPerioder autolagring", () => {
 
   it("skriver svarene til riktige rader når en rad slettes mens lagringen pågår", async () => {
     await renderSteg();
-    server.forsinkelse = () => 1500;
+    server.forsinkelse = (_kallNr, action) => (action.type === "SLETT" ? 0 : 1500);
 
     await velgResultat(3, AVSLAATT);
     await vent(600); // PUT for periode 1 pågår
-    await act(async () => {
-      fireEvent.click(screen.getAllByRole("button", { name: "Slett periode" })[1]);
-    });
+    await slettRad(2);
     await kjørFerdig();
 
     expect(screen.queryByRole("combobox", { name: "Resultat periode 3" })).not.toBeInTheDocument();
@@ -353,6 +359,33 @@ describe("VurderingPerioder autolagring", () => {
     expect(server.perioder.get(3)?.innvilgelsesResultat).toBe(AVSLAATT);
     const indeksSlett = server.kall.findIndex((k) => k.type === "SLETT");
     expect(server.kall.slice(indeksSlett).some((k) => k.periodeId === 2 && k.type === "OPPDATER")).toBe(false);
+  });
+
+  it("sletter perioden i databasen når en ny rad slettes mens POST-en for den pågår", async () => {
+    await renderSteg();
+    server.forsinkelse = (_kallNr, action) => (action.type === "OPPRETT" ? 1500 : 0);
+
+    await leggTilUtfyltRad();
+    await vent(600); // runden startet ved 500 ms, POST for den nye raden pågår
+    await slettRad(4);
+    await kjørFerdig();
+
+    expect(server.kall.filter((k) => k.type === "OPPRETT")).toHaveLength(1);
+    expect([...server.perioder.keys()]).toEqual([1, 2, 3]);
+    expect(screen.queryByRole("combobox", { name: "Resultat periode 4" })).not.toBeInTheDocument();
+  });
+
+  it("fjerner riktig rad når to slettinger får svar i en annen rekkefølge", async () => {
+    await renderSteg();
+    server.forsinkelse = (_kallNr, action) => (action.periodeId === 1 ? 200 : 1000);
+
+    await slettRad(1);
+    await slettRad(2); // periode 2 står på rad 1 når svaret for den kommer
+    await kjørFerdig();
+
+    expect([...server.perioder.keys()]).toEqual([3]);
+    expect(screen.queryByRole("combobox", { name: "Resultat periode 2" })).not.toBeInTheDocument();
+    expect(rad(1)).toEqual({ trygdedekning: FTRL_2_9_FØRSTE_LEDD_C_HELSE_PENSJON, innvilgelsesResultat: INNVILGET });
   });
 
   it("setter sluttdato 10 år frem og lagrer alle periodene når ukjent sluttdato velges", async () => {

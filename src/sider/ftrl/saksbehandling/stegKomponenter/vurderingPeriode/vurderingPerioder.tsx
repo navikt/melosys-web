@@ -144,6 +144,8 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   // Økes ved hver endring. Et svar skrives bare inn i skjemaet hvis ingen endring er gjort etter at runden startet.
   const endringer = useRef(0);
   const lagringskø = useRef<Promise<void>>(Promise.resolve());
+  // Id-en fra POST, per uuid. Brukes når en ny rad slettes mens POST-en for den pågår.
+  const opprettedeIder = useRef(new Map<MedlemskapsperiodeProp["periodeId"], number>());
 
   useEffect(() => {
     if (aktivtSteg) {
@@ -222,6 +224,10 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
           ),
         ));
 
+    if (medlemskapsperiode.ny && !kallFeilet(response)) {
+      opprettedeIder.current.set(medlemskapsperiode.periodeId, response.data.id);
+    }
+
     // Raden kan ha flyttet seg eller være slettet mens kallet pågikk.
     const index = finnRad(medlemskapsperiode.periodeId);
     if (index === -1) return;
@@ -290,6 +296,15 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
 
     if (medlemskapsperiode.ny) {
       remove(index);
+      // Slett perioden etter at lagringen er ferdig, hvis en POST rakk å opprette den.
+      lagringskø.current = lagringskø.current
+        .catch(() => undefined)
+        .then(async () => {
+          const id = opprettedeIder.current.get(medlemskapsperiode.periodeId);
+          if (id !== undefined) {
+            await dispatch(medlemskapsperioderOperations.slettMedlemskapsperiode(behandlingID, id));
+          }
+        });
     } else {
       const response = await dispatch(
         medlemskapsperioderOperations.slettMedlemskapsperiode(behandlingID, medlemskapsperiode.periodeId),
