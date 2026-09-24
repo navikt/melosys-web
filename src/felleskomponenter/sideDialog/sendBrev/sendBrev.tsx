@@ -26,7 +26,12 @@ import { behandlingerOperations } from "../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { formSelectors } from "../../../ducks/form";
 
-import BrevMottaker, { erAnnenOrganisasjon, erNorskMyndighet, skalViseBrevmalvalg } from "./brevMottaker/brevMottaker";
+import BrevMottaker, {
+  erAnnenOrganisasjon,
+  erBruker,
+  erNorskMyndighet,
+  skalViseBrevmalvalg,
+} from "./brevMottaker/brevMottaker";
 import BrevMottakereTabell from "./brevMottaker/brevMottakereTabell";
 import Brevutkast from "./brevutkast/brevutkast";
 import BrevValgMedPlaceholdere from "./brevValgMedPlaceholdere";
@@ -666,6 +671,10 @@ function SendBrev({
     Boolean(muligeMottakereFeil) ||
     spinnerAktiv;
 
+  const kopiTilBrukerManglerAdresse = Boolean(
+    formValues.kopiTilBruker && tilgjengeligeMottakere.find((mottaker) => erBruker(mottaker.rolle))?.feilmelding,
+  );
+
   return (
     <div className="send_brev">
       <Brevutkast
@@ -728,6 +737,7 @@ function SendBrev({
               muligeMottakere={muligeMottakere}
               muligeMottakereNorskMyndighet={muligeMottakereNorskMyndighet}
               redigerbart={redigerbart}
+              kopiTilBrukerManglerAdresse={kopiTilBrukerManglerAdresse}
               saksbehandlerNrToIdent={finnSaksbehandlerIdentForDobbelSignatur()}
               brevVedlegg={{
                 fritekstvedlegg,
@@ -761,7 +771,7 @@ function SendBrev({
         )}
         <Nav.Button
           variant="primary"
-          disabled={knappErDisabled}
+          disabled={knappErDisabled || kopiTilBrukerManglerAdresse}
           className="brevknapp"
           onClick={() => void sendBrev()}
           loading={sendBrevSpinner}
