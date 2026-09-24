@@ -3,6 +3,7 @@ import { vi } from "vitest";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import SendBrev from "./sendBrev";
 import * as Api from "../../../services/api";
+import { FeilmeldingProps } from "../../../services/modules/dokumenter-v2";
 
 const brevType = {
   type: { kode: "MANGELBREV_ARBEIDSGIVER", term: "Mangelbrev" },
@@ -18,7 +19,7 @@ const arbeidsgiverMottaker = {
   trygdemyndighet: null,
 };
 
-const lagBrukerMottaker = (feilmelding?: { tittel: string }) => ({
+const lagBrukerMottaker = (feilmelding?: FeilmeldingProps) => ({
   uuid: "mottaker-uuid",
   type: "Bruker eller brukers fullmektig",
   rolle: "BRUKER",
@@ -46,7 +47,16 @@ vi.mock("../../../utils", async () => ({
 
 vi.mock("./brevValgMedPlaceholdere", () => ({ default: () => <div>BrevValg Mock</div> }));
 vi.mock("./brevutkast/brevutkast", () => ({ default: () => <div>Brevutkast Mock</div> }));
-vi.mock("./brevMottaker/brevMottakereTabell", () => ({ default: () => <div>BrevMottakereTabell Mock</div> }));
+vi.mock("./brevMottaker/brevMottakereTabell", () => ({
+  default: ({ kopimottakerFeilmelding }: { kopimottakerFeilmelding?: FeilmeldingProps }) => (
+    <div>
+      {kopimottakerFeilmelding?.tittel}
+      {kopimottakerFeilmelding?.underpunkter?.map((item) => (
+        <div key={item.underpunkt}>{item.underpunkt}</div>
+      ))}
+    </div>
+  ),
+}));
 vi.mock("./brevMottaker/brevMottaker", async () => ({
   ...(await vi.importActual<Record<string, unknown>>("./brevMottaker/brevMottaker")),
   default: () => <div>BrevMottaker Mock</div>,
@@ -73,7 +83,7 @@ const renderSendBrev = (kopiTilBruker: boolean) =>
     },
   });
 
-const mockTilgjengeligeMaler = (brukerFeilmelding?: { tittel: string }) =>
+const mockTilgjengeligeMaler = (brukerFeilmelding?: FeilmeldingProps) =>
   vi.mocked(Api.DokumenterV2.hentTilgjengeligeMaler).mockResolvedValue([
     { mottaker: arbeidsgiverMottaker, brevTyper: [brevType] },
     { mottaker: lagBrukerMottaker(brukerFeilmelding), brevTyper: [] },
@@ -84,21 +94,27 @@ describe("SendBrev – kopi til bruker/brukers fullmektig", () => {
     vi.clearAllMocks();
   });
 
-  it("deaktiverer Send brev, men ikke Lagre utkast, når kopimottaker mangler gyldig adresse", async () => {
-    mockTilgjengeligeMaler({ tittel: "Ingen gyldig adresse funnet" });
+  it("deaktiverer Send brev, men ikke Lagre utkast, og viser feilen fra kopimottakeren", async () => {
+    mockTilgjengeligeMaler({
+      tittel: "Ingen gyldig adresse funnet",
+      underpunkter: [{ underpunkt: "Bruker må registrere en adresse." }],
+    });
 
     renderSendBrev(true);
 
     await waitFor(() => expect(screen.getByRole("button", { name: "Lagre utkast" })).toBeEnabled());
     expect(screen.getByRole("button", { name: "Send brev" })).toBeDisabled();
+    expect(screen.getByText("Ingen gyldig adresse funnet")).toBeVisible();
+    expect(screen.getByText("Bruker må registrere en adresse.")).toBeVisible();
   });
 
-  it("lar Send brev være aktiv når kopi ikke er valgt", async () => {
-    mockTilgjengeligeMaler({ tittel: "Ingen gyldig adresse funnet" });
+  it("ignorerer kopimottakerens feil når kopi ikke er valgt", async () => {
+    mockTilgjengeligeMaler({ tittel: "En feil fra backend" });
 
     renderSendBrev(false);
 
     await waitFor(() => expect(screen.getByRole("button", { name: "Send brev" })).toBeEnabled());
+    expect(screen.queryByText("En feil fra backend")).not.toBeInTheDocument();
   });
 
   it("lar Send brev være aktiv når kopimottaker har gyldig adresse", async () => {

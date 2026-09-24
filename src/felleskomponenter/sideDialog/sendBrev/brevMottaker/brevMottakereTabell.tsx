@@ -51,7 +51,7 @@ interface BrevMottakereTabellProps {
   muligeMottakereNorskMyndighet?: Api.DokumenterV2.MuligMottaker[];
   formIsValid: boolean;
   redigerbart: boolean;
-  kopiTilBrukerManglerAdresse?: boolean;
+  kopimottakerFeilmelding?: FeilmeldingProps;
   brevVedlegg: VedleggSubsetProps;
   saksbehandlerNrToIdent?: string | null;
 }
@@ -63,7 +63,7 @@ function BrevMottakereTabell({
   formValues,
   formIsValid,
   redigerbart,
-  kopiTilBrukerManglerAdresse,
+  kopimottakerFeilmelding,
   brevVedlegg,
   saksbehandlerNrToIdent,
 }: BrevMottakereTabellProps & PropsFromRedux) {
@@ -180,9 +180,18 @@ function BrevMottakereTabell({
         />
       )}
 
-      {kopiTilBrukerManglerAdresse && (
+      {kopimottakerFeilmelding && (
         <Nav.Alert variant="error" className="alertstripe_feil">
-          Bruker/brukers fullmektig mangler en gyldig adresse.
+          <Nav.BodyLong weight="semibold" size="small">
+            {kopimottakerFeilmelding.tittel}
+          </Nav.BodyLong>
+          {!Utils._isEmpty(kopimottakerFeilmelding.underpunkter) && (
+            <ul>
+              {kopimottakerFeilmelding.underpunkter?.map((item) => (
+                <li key={item.underpunkt}>{item.underpunkt}</li>
+              ))}
+            </ul>
+          )}
         </Nav.Alert>
       )}
 

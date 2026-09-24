@@ -16,6 +16,7 @@ import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
 import {
+  FeilmeldingProps,
   FysiskDokument,
   BrevVedleggInterface,
   BrevVedleggVisningstabellInterface,
@@ -671,9 +672,10 @@ function SendBrev({
     Boolean(muligeMottakereFeil) ||
     spinnerAktiv;
 
-  const kopiTilBrukerManglerAdresse = Boolean(
-    formValues.kopiTilBruker && tilgjengeligeMottakere.find((mottaker) => erBruker(mottaker.rolle))?.feilmelding,
-  );
+  const kopimottakerFeilmelding: FeilmeldingProps | undefined = formValues.kopiTilBruker
+    ? tilgjengeligeMottakere.find((mottaker) => erBruker(mottaker.rolle))?.feilmelding
+    : undefined;
+  const sendBrevErDisabled = sendOgLagreErDisabled || Boolean(kopimottakerFeilmelding);
 
   return (
     <div className="send_brev">
@@ -737,7 +739,7 @@ function SendBrev({
               muligeMottakere={muligeMottakere}
               muligeMottakereNorskMyndighet={muligeMottakereNorskMyndighet}
               redigerbart={redigerbart}
-              kopiTilBrukerManglerAdresse={kopiTilBrukerManglerAdresse}
+              kopimottakerFeilmelding={kopimottakerFeilmelding}
               saksbehandlerNrToIdent={finnSaksbehandlerIdentForDobbelSignatur()}
               brevVedlegg={{
                 fritekstvedlegg,
@@ -771,7 +773,7 @@ function SendBrev({
         )}
         <Nav.Button
           variant="primary"
-          disabled={sendOgLagreErDisabled || kopiTilBrukerManglerAdresse}
+          disabled={sendBrevErDisabled}
           className="brevknapp"
           onClick={() => void sendBrev()}
           loading={sendBrevSpinner}
