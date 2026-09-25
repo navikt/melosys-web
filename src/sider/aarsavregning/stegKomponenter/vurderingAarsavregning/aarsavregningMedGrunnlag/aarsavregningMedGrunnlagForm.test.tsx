@@ -57,9 +57,11 @@ describe("aarsavregningMedGrunnlagForm validering", () => {
 const renderSkjema = ({
   sisteGjeldendeAvgiftspliktigperioder,
   redigerbart = true,
+  endeligAvgiftValg = OPPLYSNINGER_ENDRET,
 }: {
   sisteGjeldendeAvgiftspliktigperioder: Avgiftspliktigperiode[];
   redigerbart?: boolean;
+  endeligAvgiftValg?: string;
 }) => {
   const store = configureStore({
     reducer: {
@@ -94,7 +96,7 @@ const renderSkjema = ({
           aarsavregningResponse: {
             aarsavregningID: 456,
             aar: 2024,
-            endeligAvgiftValg: OPPLYSNINGER_ENDRET,
+            endeligAvgiftValg,
             sisteGjeldendeAvgiftspliktigperioder,
             nyttTrygdeavgiftsGrunnlag: undefined,
             tidligereTrygdeavgiftsGrunnlagsopplysninger: {
@@ -117,7 +119,7 @@ const renderSkjema = ({
           formDefaultValues: {
             skatteforholdsperioder: [],
             inntektskilder: [],
-            endeligAvgiftValg: OPPLYSNINGER_ENDRET,
+            endeligAvgiftValg,
             manueltAvgiftBeloep: "",
           },
           innvilgetMedlemskapsperioder: [],
@@ -152,6 +154,12 @@ describe("AarsavregningMedGrunnlagForm ny vurdering uten avgiftspliktige periode
 
     expect(screen.queryByRole("radio", { name: "Beregn trygdeavgiften" })).not.toBeInTheDocument();
     expect(screen.queryByRole("radio", { name: "Oppgi beløp for beregnet trygdeavgift" })).not.toBeInTheDocument();
+  });
+
+  it("skal la saksbehandler bytte til beregnet avgift når et manuelt valg er arvet", () => {
+    renderSkjema({ sisteGjeldendeAvgiftspliktigperioder: [], endeligAvgiftValg: MANUELL_ENDELIG_AVGIFT });
+
+    expect(screen.getByRole("radio", { name: "Beregn trygdeavgiften" })).toBeInTheDocument();
   });
 
   it("skal vise valget mellom beregnet og manuell avgift når året har avgiftspliktige perioder", () => {

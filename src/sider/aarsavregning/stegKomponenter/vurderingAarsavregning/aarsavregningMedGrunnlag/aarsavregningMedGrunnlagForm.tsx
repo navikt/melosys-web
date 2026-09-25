@@ -658,6 +658,12 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
   const trygdeAvgiftSkalIkkeBetalesTilNav =
     medlemskapstypeErPliktig && erBrukerSkattepliktigIHelePerioden(skatteforholdsperioder);
 
+  // Et arvet manuelt valg må kunne byttes til beregnet, så radioknappene skjules bare når beregnet er valgt
+  const skalSkjuleEndeligAvgiftValg =
+    nyVurderingHarFjernetAvgiftspliktigperiode &&
+    (endeligAvgiftValg === OPPLYSNINGER_ENDRET ||
+      endeligAvgiftValg === OPPLYSNINGER_ENDRET_MED_PERIODE_FRA_AVGIFTSSYSTEMET);
+
   const tidligereAarsavregningErManueltBeregnet = Boolean(
     aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep,
   );
@@ -670,7 +676,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
 
   return (
     <>
-      {!nyVurderingHarFjernetAvgiftspliktigperiode && (
+      {!skalSkjuleEndeligAvgiftValg && (
         <EndeligAvgiftValgRadioGroup
           control={control}
           redigerbart={redigerbart}
