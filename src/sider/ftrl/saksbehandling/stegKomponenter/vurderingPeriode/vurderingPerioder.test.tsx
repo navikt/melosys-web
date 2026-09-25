@@ -32,6 +32,7 @@ const server = {
   maksSamtidige: 0,
   nesteId: 5000,
   forsinkelse: (() => 0) as (kallNr: number, action: Kall) => number,
+  feiler: (() => false) as (kallNr: number, action: Kall) => boolean,
 };
 
 const tilstand = {
@@ -53,6 +54,9 @@ const dispatchMock = vi.fn((action: any): Promise<any> => {
     server.maksSamtidige = Math.max(server.maksSamtidige, server.pågående);
     return svarEtter(server.forsinkelse(kallNr, action), () => {
       server.pågående -= 1;
+      if (server.feiler(kallNr, action)) {
+        return { type: "medlemskapsperioder/FEILET", data: { message: "Lagring feilet" } };
+      }
       const id = action.type === "OPPRETT" ? (server.nesteId += 1) : action.periodeId;
       const periode = { ...action.request, id };
       server.perioder.set(id, periode);
@@ -236,6 +240,7 @@ describe("VurderingPerioder autolagring", () => {
     server.maksSamtidige = 0;
     server.nesteId = 5000;
     server.forsinkelse = () => 0;
+    server.feiler = () => false;
   });
 
   afterEach(() => {
@@ -325,6 +330,21 @@ describe("VurderingPerioder autolagring", () => {
     expect(server.maksSamtidige).toBe(1);
     expect(server.perioder.get(3)?.innvilgelsesResultat).toBe(INNVILGET);
     expect(resultat(3).value).toBe(INNVILGET);
+  });
+
+  it("lagrer et valg gjort mens et kall som feiler, pågår", async () => {
+    await renderSteg();
+    server.forsinkelse = () => 1500;
+    server.feiler = (kallNr) => kallNr === 0;
+
+    await velgResultat(3, AVSLAATT);
+    await vent(1000); // runden startet ved 500 ms, PUT for periode 1 pågår og vil feile
+    await velgResultat(3, INNVILGET);
+    await kjørFerdig();
+
+    expect(server.perioder.get(3)?.innvilgelsesResultat).toBe(INNVILGET);
+    expect(resultat(3).value).toBe(INNVILGET);
+    expect(screen.queryByText("Lagring feilet")).not.toBeInTheDocument();
   });
 
   it("sender bare én POST for en ny rad som endres mens POST-en pågår", async () => {
