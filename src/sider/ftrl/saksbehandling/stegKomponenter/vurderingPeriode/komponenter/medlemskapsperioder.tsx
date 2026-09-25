@@ -4,7 +4,7 @@ import * as Ikoner from "../../../../../../resources/images";
 import * as Nav from "../../../../../../navFrontend";
 import * as Mui from "../../../../../../felleskomponenter/ui";
 
-import { FieldArrayProps, MedlemskapsperiodeProp } from "./types";
+import { FieldArrayProps } from "./types";
 import "./medlemskapsperioder.less";
 import * as KV from "../../../../../../kodeverk";
 import MKV from "../../../../../../melosyskodeverk";
@@ -24,8 +24,7 @@ export interface PeriodeElementerProps {
   watch: UseFormWatch<any> | undefined;
   fields: FieldArrayWithId<FieldArrayProps, "medlemskapsperioder">[];
   handleSlett: (index: number) => void;
-  handleChange: (medlemskapsperiode: MedlemskapsperiodeProp[], isValid: boolean, index: number) => void;
-  formIsValid: boolean;
+  handleChange: () => void;
   handleLeggTil: () => void;
   visLeggTil: boolean;
   ukjentSluttdato?: boolean;
@@ -39,7 +38,6 @@ export function Medlemskapsperioder({
   fields,
   control,
   handleSlett,
-  formIsValid,
   handleChange,
   handleLeggTil,
   visLeggTil,
@@ -108,14 +106,7 @@ export function Medlemskapsperioder({
                   name={`medlemskapsperioder[${index}].fomDato`}
                   aria-label={`Fra og med periode ${index + 1}`}
                   readOnly={!redigerbart}
-                  onChange={(value) => {
-                    const oppdatertPeriode = { ...field, fomDato: value };
-                    handleChange(
-                      [...fields.slice(0, index), oppdatertPeriode, ...fields.slice(index + 1)],
-                      formIsValid,
-                      index,
-                    );
-                  }}
+                  onChange={handleChange}
                 />
               </Nav.Column>
               <Nav.Column className="dato">
@@ -125,14 +116,7 @@ export function Medlemskapsperioder({
                   name={`medlemskapsperioder[${index}].tomDato`}
                   aria-label={`Til og med periode ${index + 1}`}
                   readOnly={!redigerbart || ukjentSluttdato}
-                  onChange={(value) => {
-                    const oppdatertPeriode = { ...field, tomDato: value };
-                    handleChange(
-                      [...fields.slice(0, index), oppdatertPeriode, ...fields.slice(index + 1)],
-                      formIsValid,
-                      index,
-                    );
-                  }}
+                  onChange={handleChange}
                 />
               </Nav.Column>
               <Nav.Column className="trygdedekning">
@@ -148,14 +132,7 @@ export function Medlemskapsperioder({
                       control={control}
                       readOnly={!redigerbart}
                       emptyFieldDisabled={!!field.trygdedekning}
-                      onChange={(value) => {
-                        const oppdatertPeriode = { ...field, trygdedekning: value };
-                        handleChange(
-                          [...fields.slice(0, index), oppdatertPeriode, ...fields.slice(index + 1)],
-                          formIsValid,
-                          index,
-                        );
-                      }}
+                      onChange={handleChange}
                     >
                       {filtrerteDekninger.map((dekning) => (
                         <option key={dekning} value={dekning}>
@@ -179,14 +156,7 @@ export function Medlemskapsperioder({
                       control={control}
                       readOnly={!redigerbart}
                       emptyFieldDisabled={!!field.innvilgelsesResultat}
-                      onChange={(value) => {
-                        const oppdatertPeriode = { ...field, innvilgelsesResultat: value };
-                        handleChange(
-                          [...fields.slice(0, index), oppdatertPeriode, ...fields.slice(index + 1)],
-                          formIsValid,
-                          index,
-                        );
-                      }}
+                      onChange={handleChange}
                     >
                       {filtrerteResultater.map((resultat) => (
                         <option key={resultat} value={resultat}>
