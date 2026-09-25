@@ -62,6 +62,14 @@ export interface Faktura {
   periodeTil: string;
   eksternFakturaStatus: FakturaTilbakemelding[];
   eksternFakturaNummer?: string;
+  erKreditnota?: boolean;
+  // Hodebeskrivelsen slik den sendes til OeBS. Null når den ikke er lagret og ikke kan utledes.
+  beskrivelse?: string | null;
+  beskrivelseErUtledet?: boolean;
+  // Del av kontrakten mot faktureringskomponenten, men ikke tatt i bruk i UI ennå
+  artikkel?: string;
+  krediteringFakturaRef?: string | null;
+  totalbelop?: number;
 }
 
 export interface FakturaLinje {
@@ -71,6 +79,9 @@ export interface FakturaLinje {
   belop: number;
   antall: number;
   enhetsprisPerManed: number;
+  // Del av kontrakten mot faktureringskomponenten, men ikke tatt i bruk i UI ennå
+  avregningForrigeBeloep?: number | null;
+  avregningNyttBeloep?: number | null;
 }
 
 export interface FakturaTilbakemelding {
