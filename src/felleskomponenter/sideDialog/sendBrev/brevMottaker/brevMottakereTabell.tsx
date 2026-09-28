@@ -5,6 +5,7 @@ import { connect, ConnectedProps } from "react-redux";
 
 import * as Api from "../../../../services/api";
 import * as KV from "../../../../kodeverk";
+import * as Nav from "../../../../navFrontend";
 import * as Skjema from "../../../skjema";
 import * as Utils from "../../../../utils";
 
@@ -50,6 +51,7 @@ interface BrevMottakereTabellProps {
   muligeMottakereNorskMyndighet?: Api.DokumenterV2.MuligMottaker[];
   formIsValid: boolean;
   redigerbart: boolean;
+  kopimottakerFeilmelding?: FeilmeldingProps;
   brevVedlegg: VedleggSubsetProps;
   saksbehandlerNrToIdent?: string | null;
 }
@@ -61,6 +63,7 @@ function BrevMottakereTabell({
   formValues,
   formIsValid,
   redigerbart,
+  kopimottakerFeilmelding,
   brevVedlegg,
   saksbehandlerNrToIdent,
 }: BrevMottakereTabellProps & PropsFromRedux) {
@@ -175,6 +178,21 @@ function BrevMottakereTabell({
           feltNavn="kopiTilBruker"
           label="Send kopi til bruker/brukers fullmektig"
         />
+      )}
+
+      {kopimottakerFeilmelding && (
+        <Nav.Alert variant="error" className="alertstripe_feil">
+          <Nav.BodyLong weight="semibold" size="small">
+            {kopimottakerFeilmelding.tittel}
+          </Nav.BodyLong>
+          {!Utils._isEmpty(kopimottakerFeilmelding.underpunkter) && (
+            <ul>
+              {kopimottakerFeilmelding.underpunkter?.map((item) => (
+                <li key={item.underpunkt}>{item.underpunkt}</li>
+              ))}
+            </ul>
+          )}
+        </Nav.Alert>
       )}
 
       {muligeMottakere && (

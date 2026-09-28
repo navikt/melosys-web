@@ -16,6 +16,7 @@ import * as Nav from "../../../navFrontend";
 import * as Skjema from "../../skjema";
 import * as Utils from "../../../utils";
 import {
+  FeilmeldingProps,
   FysiskDokument,
   BrevVedleggInterface,
   BrevVedleggVisningstabellInterface,
@@ -26,7 +27,12 @@ import { behandlingerOperations } from "../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
 import { formSelectors } from "../../../ducks/form";
 
-import BrevMottaker, { erAnnenOrganisasjon, erNorskMyndighet, skalViseBrevmalvalg } from "./brevMottaker/brevMottaker";
+import BrevMottaker, {
+  erAnnenOrganisasjon,
+  erBruker,
+  erNorskMyndighet,
+  skalViseBrevmalvalg,
+} from "./brevMottaker/brevMottaker";
 import BrevMottakereTabell from "./brevMottaker/brevMottakereTabell";
 import Brevutkast from "./brevutkast/brevutkast";
 import BrevValgMedPlaceholdere from "./brevValgMedPlaceholdere";
@@ -657,13 +663,18 @@ function SendBrev({
 
   const sendBrevAktiveringskravOppfylt = Boolean(mottakerErValgt && brevtypeErValgt);
 
-  const knappErDisabled =
+  const sendOgLagreErDisabled =
     !redigerbart ||
     !sendBrevAktiveringskravOppfylt ||
     !!formValues?.valgtMottaker?.feilmelding ||
     visFritekstvedleggSkjema ||
     Boolean(muligeMottakereFeil) ||
     spinnerAktiv;
+
+  const kopimottakerFeilmelding: FeilmeldingProps | undefined = formValues.kopiTilBruker
+    ? tilgjengeligeMottakere.find((mottaker) => erBruker(mottaker.rolle))?.feilmelding
+    : undefined;
+  const sendBrevErDisabled = sendOgLagreErDisabled || Boolean(kopimottakerFeilmelding);
 
   return (
     <div className="send_brev">
@@ -727,6 +738,7 @@ function SendBrev({
               muligeMottakere={muligeMottakere}
               muligeMottakereNorskMyndighet={muligeMottakereNorskMyndighet}
               redigerbart={redigerbart}
+              kopimottakerFeilmelding={kopimottakerFeilmelding}
               saksbehandlerNrToIdent={finnSaksbehandlerIdentForDobbelSignatur()}
               brevVedlegg={{
                 fritekstvedlegg,
@@ -760,7 +772,7 @@ function SendBrev({
         )}
         <Nav.Button
           variant="primary"
-          disabled={knappErDisabled}
+          disabled={sendBrevErDisabled}
           className="brevknapp"
           onClick={() => void sendBrev()}
           loading={sendBrevSpinner}
@@ -769,7 +781,7 @@ function SendBrev({
         </Nav.Button>
         <Nav.Button
           variant="secondary"
-          disabled={knappErDisabled}
+          disabled={sendOgLagreErDisabled}
           className="brevknapp"
           onClick={lagreUtkast}
           loading={lagreUtkastSpinner}
