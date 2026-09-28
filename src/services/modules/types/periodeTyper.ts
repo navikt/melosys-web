@@ -46,9 +46,7 @@ export interface LovvalgsperiodeForAvgift extends BasePeriode {
 
 // Discriminated union
 export type Avgiftspliktigperiode =
-  | MedlemskapsperiodeForAvgift
-  | HelseutgiftdekkesperiodeForAvgift
-  | LovvalgsperiodeForAvgift;
+  MedlemskapsperiodeForAvgift | HelseutgiftdekkesperiodeForAvgift | LovvalgsperiodeForAvgift;
 
 // Type guard hjelpefunksjoner
 export const erMedlemskapsperiode = (periode: Avgiftspliktigperiode): periode is MedlemskapsperiodeForAvgift => {
