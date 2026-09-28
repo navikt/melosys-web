@@ -568,7 +568,13 @@ function SendBrev({
           resetFormOgFritekstvedleggState();
         }, 3000);
       })
-      .catch(() => setFeil("Brevet er ikke sendt. Det skjedde en feil."))
+      .catch((error) =>
+        setFeil(
+          error?.status === 400 && error.body?.message
+            ? `Brevet er ikke sendt. ${error.body.message}`
+            : "Brevet er ikke sendt. Det skjedde en feil.",
+        ),
+      )
       .finally(() => setSendBrevSpinner(false));
   };
 
