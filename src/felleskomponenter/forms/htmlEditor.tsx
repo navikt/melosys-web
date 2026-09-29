@@ -3,9 +3,8 @@ import HtmlEditor from "../htmlEditor";
 import { getErrorMessage } from "./misc/mapFeilmelding";
 import { ReactHookFormControllerProps } from "./misc/reacthookProps";
 
-interface HtmlEditorProps<
-  TFieldValues extends FieldValues = FieldValues,
-> extends ReactHookFormControllerProps<TFieldValues> {
+interface HtmlEditorProps<TFieldValues extends FieldValues = FieldValues>
+  extends ReactHookFormControllerProps<TFieldValues> {
   className?: string;
   placeholder?: string;
   disabled?: boolean;
