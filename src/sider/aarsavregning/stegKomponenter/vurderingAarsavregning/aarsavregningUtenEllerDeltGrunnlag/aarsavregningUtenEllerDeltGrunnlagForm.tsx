@@ -790,9 +790,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     ) {
       return Boolean(
         formIsValid &&
-          aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag &&
-          feilmelding === undefined &&
-          arrayValideringsfeil === undefined,
+        aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag &&
+        feilmelding === undefined &&
+        arrayValideringsfeil === undefined,
       );
     }
     if (endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT) {

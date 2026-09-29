@@ -259,12 +259,12 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const forrigeÅrsavregningErManueltBeregnet = Boolean(
     aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
       null &&
-      aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
-        undefined,
+    aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
+      undefined,
   );
   const forrigeÅrsavregningHarInnbetaltTrygdeavgift = Boolean(
     aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereInnbetaltTrygdeavgift !== null &&
-      aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereInnbetaltTrygdeavgift !== undefined,
+    aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereInnbetaltTrygdeavgift !== undefined,
   );
 
   const sisteMuligeÅr = new Date().getFullYear() - 1;
