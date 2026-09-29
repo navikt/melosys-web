@@ -12,7 +12,7 @@ export const PORTS = {
   /** Real API server port (melosys-api) */
   API: 8080,
   /** Mock API server port (used in playback mode) */
-  MOCK_API: 8081,
+  MOCK_API: Number(process.env.E2E_MOCK_API_PORT ?? 8081),
 } as const;
 
 /** Timeout values in milliseconds */
