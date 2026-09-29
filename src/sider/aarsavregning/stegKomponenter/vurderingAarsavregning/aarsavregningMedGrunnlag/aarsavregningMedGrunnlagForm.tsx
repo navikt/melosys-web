@@ -807,6 +807,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
           <SumArsavregningTabell
             nyTrygdeavgift={aarsavregningResponse.avregning.beregnetAvgiftBelop}
             tidligereTrygdeavgift={aarsavregningResponse.avregning.tidligereFakturertBeloep}
+            tidligereInnbetaltTrygdeavgift={aarsavregningResponse.avregning.innbetaltTrygdeavgift}
+            tidligereAarsavregningInnbetaltTrygdeavgift={
+              aarsavregningResponse.avregning.tilbakelagtInnbetaltTrygdeavgift
+            }
             harGrunnlagIMelosys
           />
         )}
@@ -830,6 +834,10 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
             harGrunnlagIMelosys={true}
             nyTrygdeavgift={Number(manueltAvgiftBeloep)}
             tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
+            tidligereInnbetaltTrygdeavgift={aarsavregningResponse?.avregning?.innbetaltTrygdeavgift}
+            tidligereAarsavregningInnbetaltTrygdeavgift={
+              aarsavregningResponse?.avregning?.tilbakelagtInnbetaltTrygdeavgift
+            }
           />
         )}
 

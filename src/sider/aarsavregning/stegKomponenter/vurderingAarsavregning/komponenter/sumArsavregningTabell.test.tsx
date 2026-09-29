@@ -107,6 +107,22 @@ describe("SumArsavregningTabell - Toggle Disabled", () => {
     expect(within(differanseRow!).getByText("25 000 kr")).toBeInTheDocument();
   });
 
+  it("viser beløp til fakturering fra backend i stedet for summen av radene", () => {
+    render(
+      <SumArsavregningTabell
+        harGrunnlagIMelosys={true}
+        nyTrygdeavgift={50000}
+        tidligereTrygdeavgift={20000}
+        tidligereInnbetaltTrygdeavgift={10000}
+        tidligereAarsavregningInnbetaltTrygdeavgift={5000}
+        tilFaktureringBeloep={12345}
+      />,
+    );
+    // Lokal utregning ville gitt 25 000; backendens beløp vises
+    const differanseRow = screen.getByText("Differanse").closest("tr");
+    expect(within(differanseRow!).getByText("12 345 kr")).toBeInTheDocument();
+  });
+
   it("håndterer negativ differanse med unicode-minus", () => {
     render(<SumArsavregningTabell nyTrygdeavgift={10000} tidligereTrygdeavgift={15000} harGrunnlagIMelosys={true} />);
     // 10000 - 15000 - 0 + 0 = -5000

@@ -12,12 +12,15 @@ export function SumArsavregningTabell({
   tidligereInnbetaltTrygdeavgift,
   tidligereAarsavregningInnbetaltTrygdeavgift,
   harGrunnlagIMelosys,
+  tilFaktureringBeloep,
 }: {
   nyTrygdeavgift?: number;
   tidligereTrygdeavgift?: number;
   tidligereInnbetaltTrygdeavgift?: number;
   tidligereAarsavregningInnbetaltTrygdeavgift?: number;
   harGrunnlagIMelosys: boolean;
+  /** Beløp til fakturering fra backend. Brukes i stedet for summen av radene. */
+  tilFaktureringBeloep?: number;
 }) {
   const erÅrsavregningEøsPensjonistToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
 
@@ -28,7 +31,10 @@ export function SumArsavregningTabell({
     ? !skalViseInnbetaltTrygdeavgift && (harGrunnlagIMelosys || tidligereTrygdeavgift) !== undefined
     : harGrunnlagIMelosys || tidligereTrygdeavgift !== undefined;
 
-  const sumTilFakturaEllerRefusjon = erÅrsavregningEøsPensjonistToggleEnabled
+  // TODO MELOSYS-8052: Med ÅRSAVREGNING_EØS_PENSJONIST på erstatter innbetalt tidligere beregnet avgift her, mens
+  // backend (Årsavregning.beregnTilFaktureringsBeloep) trekker fra begge. Funksjonaliteten er ikke ferdig avklart, og
+  // togglen er av i prod. Formelen må samordnes med backend før togglen slås på.
+  const lokalSumTilFakturaEllerRefusjon = erÅrsavregningEøsPensjonistToggleEnabled
     ? beregnSumTilFakturaEllerRefusjon(
         nyTrygdeavgift,
         skalViseTidligereBeregnetTrygdeavgift ? tidligereTrygdeavgift : 0,
@@ -41,6 +47,7 @@ export function SumArsavregningTabell({
         tidligereInnbetaltTrygdeavgift,
         tidligereAarsavregningInnbetaltTrygdeavgift,
       );
+  const sumTilFakturaEllerRefusjon = tilFaktureringBeloep ?? lokalSumTilFakturaEllerRefusjon;
 
   const innbetaltTrygdeavgiftLabel = erÅrsavregningEøsPensjonistToggleEnabled
     ? "Innbetalt trygdeavgift"
