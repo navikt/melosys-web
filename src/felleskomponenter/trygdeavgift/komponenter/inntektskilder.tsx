@@ -115,7 +115,13 @@ export function Inntektskilder({
     if (settesDefaultArbAvgBetales(kildetype)) {
       defaultArbAvgBetales = kildetype === ARBEIDSINNTEKT_FRA_NORGE ? BOOLSK_STRING.SANN : BOOLSK_STRING.USANN;
     }
-    update(index, { ...formValues.inntektskilder[index], kildetype, arbAvgBetales: defaultArbAvgBetales });
+    const inntektskilde = formValues.inntektskilder[index];
+    update(index, {
+      ...inntektskilde,
+      kildetype,
+      arbAvgBetales: defaultArbAvgBetales,
+      erMaanedsbelop: inntektskilde.erMaanedsbelop ?? BOOLSK_STRING.SANN,
+    });
   };
 
   const handleEndreArbAvgBetales = (index: number, arbAvgBetales: string) => {
