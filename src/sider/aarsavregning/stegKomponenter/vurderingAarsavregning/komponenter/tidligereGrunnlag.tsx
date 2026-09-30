@@ -15,8 +15,8 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
   const erManueltBeregnet = Boolean(
     aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
       null &&
-      aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
-        undefined,
+    aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
+      undefined,
   );
 
   const forskuddsvisFakturertTrygdeavgift =

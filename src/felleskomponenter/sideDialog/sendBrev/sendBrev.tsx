@@ -144,8 +144,7 @@ function SendBrev({
 
   // Hent ferske verdier direkte fra store i hooks under
   const currentValues = useSelector((state: RootState) => getFormValues(KV.Form.SEND_BREV)(state)) as
-    | SendBrevFormValues
-    | undefined;
+    SendBrevFormValues | undefined;
 
   // Hvis bruker allerede har forsøkt å sende, sørg for at showFieldErrors ikke blir skrudd av ved mal-endring
   useEffect(() => {

@@ -214,9 +214,9 @@ function AvsluttSak() {
   const skalViseAnnullerSak = () => {
     return Boolean(
       redigerbart &&
-        [FTRL, EU_EOS].includes(sakstype) &&
-        [MEDLEMSKAP_LOVVALG, TRYGDEAVGIFT].includes(sakstema) &&
-        [NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype),
+      [FTRL, EU_EOS].includes(sakstype) &&
+      [MEDLEMSKAP_LOVVALG, TRYGDEAVGIFT].includes(sakstema) &&
+      [NY_VURDERING, MANGLENDE_INNBETALING_TRYGDEAVGIFT].includes(behandlingstype),
     );
   };
 
