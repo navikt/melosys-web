@@ -1071,7 +1071,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             nyTrygdeavgift={aarsavregningResponse?.avregning?.beregnetAvgiftBelop}
             tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
             tidligereInnbetaltTrygdeavgift={aarsavregningResponse?.avregning?.innbetaltTrygdeavgift}
-            tidligereAarsavregningInnbetaltTrygdeavgift={tilbakelagtInnbetaltTrygdeavgift}
+            tilbakelagtInnbetaltTrygdeavgift={tilbakelagtInnbetaltTrygdeavgift}
           />
         )}
 
@@ -1085,7 +1085,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             nyTrygdeavgift={Number(manueltAvgiftBeloep)}
             tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
             tidligereInnbetaltTrygdeavgift={innbetaltTrygdeavgift ? Number(innbetaltTrygdeavgift) : undefined}
-            tidligereAarsavregningInnbetaltTrygdeavgift={tilbakelagtInnbetaltTrygdeavgift}
+            tilbakelagtInnbetaltTrygdeavgift={tilbakelagtInnbetaltTrygdeavgift}
           />
         )}
 

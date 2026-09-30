@@ -10,14 +10,14 @@ export function SumArsavregningTabell({
   nyTrygdeavgift,
   tidligereTrygdeavgift,
   tidligereInnbetaltTrygdeavgift,
-  tidligereAarsavregningInnbetaltTrygdeavgift,
+  tilbakelagtInnbetaltTrygdeavgift,
   harGrunnlagIMelosys,
   tilFaktureringBeloep,
 }: {
   nyTrygdeavgift?: number;
   tidligereTrygdeavgift?: number;
   tidligereInnbetaltTrygdeavgift?: number;
-  tidligereAarsavregningInnbetaltTrygdeavgift?: number;
+  tilbakelagtInnbetaltTrygdeavgift?: number;
   harGrunnlagIMelosys: boolean;
   /** Beløp til fakturering fra backend. Brukes i stedet for summen av radene. */
   tilFaktureringBeloep?: number;
@@ -39,13 +39,13 @@ export function SumArsavregningTabell({
         nyTrygdeavgift,
         skalViseTidligereBeregnetTrygdeavgift ? tidligereTrygdeavgift : 0,
         skalViseInnbetaltTrygdeavgift ? tidligereInnbetaltTrygdeavgift : 0,
-        tidligereAarsavregningInnbetaltTrygdeavgift,
+        tilbakelagtInnbetaltTrygdeavgift,
       )
     : beregnSumTilFakturaEllerRefusjon(
         nyTrygdeavgift,
         tidligereTrygdeavgift,
         tidligereInnbetaltTrygdeavgift,
-        tidligereAarsavregningInnbetaltTrygdeavgift,
+        tilbakelagtInnbetaltTrygdeavgift,
       );
   const sumTilFakturaEllerRefusjon = tilFaktureringBeloep ?? lokalSumTilFakturaEllerRefusjon;
 
@@ -53,7 +53,7 @@ export function SumArsavregningTabell({
     ? "Innbetalt trygdeavgift"
     : "Trygdeavgift fra Avgiftssystemet";
 
-  const tidligereAarsavregningInnbetaltTrygdeavgiftLabel = erÅrsavregningEøsPensjonistToggleEnabled
+  const tilbakelagtInnbetaltTrygdeavgiftLabel = erÅrsavregningEøsPensjonistToggleEnabled
     ? "Tidligere innbetalt trygdeavgift"
     : "Tidligere trygdeavgift fra Avgiftssystemet";
 
@@ -79,16 +79,15 @@ export function SumArsavregningTabell({
               </Nav.Table.DataCell>
             </Nav.Table.Row>
           )}
-          {tidligereAarsavregningInnbetaltTrygdeavgift !== undefined &&
-            tidligereAarsavregningInnbetaltTrygdeavgift !== null && (
-              <Nav.Table.Row>
-                <Nav.Table.DataCell scope="col">+</Nav.Table.DataCell>
-                <Nav.Table.DataCell scope="col">{tidligereAarsavregningInnbetaltTrygdeavgiftLabel}</Nav.Table.DataCell>
-                <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-                  {formaterTilNorskBelop(tidligereAarsavregningInnbetaltTrygdeavgift || 0)} kr
-                </Nav.Table.DataCell>
-              </Nav.Table.Row>
-            )}
+          {tilbakelagtInnbetaltTrygdeavgift !== undefined && tilbakelagtInnbetaltTrygdeavgift !== null && (
+            <Nav.Table.Row>
+              <Nav.Table.DataCell scope="col">+</Nav.Table.DataCell>
+              <Nav.Table.DataCell scope="col">{tilbakelagtInnbetaltTrygdeavgiftLabel}</Nav.Table.DataCell>
+              <Nav.Table.DataCell align="right" key={Utils._uuid()}>
+                {formaterTilNorskBelop(tilbakelagtInnbetaltTrygdeavgift || 0)} kr
+              </Nav.Table.DataCell>
+            </Nav.Table.Row>
+          )}
           {skalViseInnbetaltTrygdeavgift && (
             <Nav.Table.Row>
               <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>

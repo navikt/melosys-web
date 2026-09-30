@@ -443,7 +443,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           tidligereTrygdeavgift={tidligereTrygdeavgift}
           tidligereInnbetaltTrygdeavgift={innbetaltTrygdeavgift}
           harGrunnlagIMelosys={tidligereTrygdeavgift !== null || lagretAarsavregning?.harInnbetaltTrygdeavgift === true}
-          tidligereAarsavregningInnbetaltTrygdeavgift={tilbakelagtInnbetaltTrygdeavgift}
+          tilbakelagtInnbetaltTrygdeavgift={tilbakelagtInnbetaltTrygdeavgift}
           tilFaktureringBeloep={tilFaktureringBeloep}
         />
       ) : (
