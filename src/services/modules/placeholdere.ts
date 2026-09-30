@@ -368,7 +368,7 @@ const losOppInline = (par: Par, oppfylt: boolean, dokument: Document) => {
 const losOppBlokk = ({ fra, til }: { fra: Element; til: Element }, oppfylt: boolean) => {
   if (!oppfylt) {
     // nextSibling, ikke nextElementSibling: løs tekst mellom blokkene hører til grenen.
-    for (let mellom = fra.nextSibling; mellom !== null && mellom !== til; ) {
+    for (let mellom = fra.nextSibling; mellom !== null && mellom !== til;) {
       const neste = mellom.nextSibling;
       mellom.remove();
       mellom = neste;
