@@ -206,7 +206,7 @@ describe("VurderingVedtak", () => {
     expect(await screen.findByText(/Kreditnota på 1\s?234,00 kr/)).toBeInTheDocument();
   });
 
-  it("skjuler beløp og deaktiverer «Fatt vedtak» når backend ikke har regnet ut beløp til fakturering", async () => {
+  it("skjuler beløp, viser melding og deaktiverer «Fatt vedtak» når backend ikke har regnet ut beløp til fakturering", async () => {
     const respons = await Api.Aarsavregning.hentAarsavregning(12345);
     vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue({
       ...respons,
@@ -227,6 +227,7 @@ describe("VurderingVedtak", () => {
     expect(screen.queryByText("Differanse")).not.toBeInTheDocument();
     expect(screen.queryByText(/Kreditnota på|Faktura på/)).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Fatt vedtak" })).toBeDisabled();
+    expect(screen.getByText(/Beløpet til fakturering er ikke beregnet/)).toBeInTheDocument();
   });
 });
 

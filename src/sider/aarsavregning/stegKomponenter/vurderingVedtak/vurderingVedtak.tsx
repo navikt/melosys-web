@@ -437,7 +437,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         </Nav.Alert>
       )}
 
-      {harBeloepTilFakturering && (
+      {harBeloepTilFakturering ? (
         <SumArsavregningTabell
           nyTrygdeavgift={nyTrygdeavgift}
           tidligereTrygdeavgift={tidligereTrygdeavgift}
@@ -446,6 +446,13 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
           tidligereAarsavregningInnbetaltTrygdeavgift={tilbakelagtInnbetaltTrygdeavgift}
           tilFaktureringBeloep={tilFaktureringBeloep}
         />
+      ) : (
+        redigerbart && (
+          <Nav.Alert variant="warning">
+            Beløpet til fakturering er ikke beregnet. Gå tilbake til årsavregningen og beregn eller lagre endelig avgift
+            på nytt.
+          </Nav.Alert>
+        )
       )}
 
       <Forms.Checkbox
