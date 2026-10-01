@@ -449,8 +449,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       ) : (
         redigerbart && (
           <Nav.Alert variant="warning">
-            Beløpet til fakturering er ikke beregnet. Gå tilbake til årsavregningen og beregn eller lagre endelig avgift
-            på nytt.
+            Faktureringsbeløp mangler. Gå til første steg og beregn eller oppgi endelig avgift.
           </Nav.Alert>
         )
       )}
