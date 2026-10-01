@@ -382,7 +382,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     return rader;
   };
 
-  // TODO MELOSYS-8052: Samme unntak som i SumArsavregningTabell. Differansen under kommer fra backend, som trekker fra
+  // TODO MELOSYS-8235: Samme unntak som i SumArsavregningTabell. Differansen under kommer fra backend, som trekker fra
   // tidligere fakturert også når innbetalt er oppgitt, så radene summerer ikke til differansen med togglen på.
   // Togglen er av i prod; samordne med backend før den slås på.
   const tidligereTrygdeavgift =
