@@ -116,22 +116,4 @@ describe("VurderingInngangManglendeInnbetaling", () => {
     );
     expect(bekreft).not.toHaveBeenCalled();
   });
-
-  it('åpner "Ferdigbehandlet"-dialogen og lagrer ikke handlingsvalg når "Behandlingen skal avsluttes" bekreftes', async () => {
-    const bekreft = vi.fn();
-    render(<VurderingInngangManglendeInnbetaling bekreft={bekreft} aktivtSteg oppdaterStatus={vi.fn()} />);
-
-    await act(async () => {
-      fireEvent.click(screen.getByText(/Behandlingen skal avsluttes/).closest("label") as HTMLLabelElement);
-    });
-    const bekreftKnapp = await screen.findByRole("button", { name: "Bekreft og fortsett" });
-    await waitFor(() => expect(bekreftKnapp).not.toBeDisabled());
-    await act(async () => {
-      fireEvent.click(bekreftKnapp);
-    });
-
-    expect(modalerOperations.visBekreftValg).toHaveBeenCalledWith(BekreftValgTypes.FERDIGBEHANDLET);
-    expect(oppsummertfaktaOperations.lagreManglendeInnbetalingHandlingsvalg).not.toHaveBeenCalled();
-    expect(bekreft).not.toHaveBeenCalled();
-  });
 });

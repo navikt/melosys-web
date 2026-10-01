@@ -7,7 +7,6 @@ const vurderingManglendeInnbetalingValg = [
   "HELE_PERIODEN_OPPHØRES",
   "DELER_AV_PERIODEN_OPPHØRES",
   "VEDTAKET_SKAL_ENDRES",
-  "BEHANDLINGEN_SKAL_AVSLUTTES",
 ] as const;
 
 export type VurderingInngangManglendeInnbetaling = (typeof vurderingManglendeInnbetalingValg)[number];

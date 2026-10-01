@@ -146,6 +146,11 @@ interface Inntekt {
 export interface BehandlingResDto {
   behandlingID: number;
   redigerbart: boolean;
+  tilordnetIdent: string | null;
+  tilordnetNavn: string | null;
+  tilordnetMeg: boolean;
+  kanTildeles: boolean;
+  tildelingTilgjengelig: boolean;
   saksopplysninger: {
     arbeidsforhold: Arbeidsforhold[];
     organisasjoner: Organisasjon[];

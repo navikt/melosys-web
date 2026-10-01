@@ -16,4 +16,19 @@ function TrygdeavgiftSkalIkkeBetalesTilNav() {
   );
 }
 
-export const Aarsavregningsmeldinger = { TrygdeavgiftErIkkeForskuddsvisFakturert, TrygdeavgiftSkalIkkeBetalesTilNav };
+function ÅrsavregningIkkeStøttetSakstypeMelding() {
+  return (
+    <Nav.Alert variant="warning" className="alertstripe_feilmelding" data-testid="aarsavregning-ikke-stottet-sakstype">
+      <Nav.BodyLong size="small" weight="semibold">
+        Melosys støtter ikke årsavregning for denne kombinasjonen av sakstype/-tema
+      </Nav.BodyLong>
+      <Nav.BodyLong size="small">Støtte vil bli gjort tilgjengelig senere.</Nav.BodyLong>
+    </Nav.Alert>
+  );
+}
+
+export const Aarsavregningsmeldinger = {
+  TrygdeavgiftErIkkeForskuddsvisFakturert,
+  TrygdeavgiftSkalIkkeBetalesTilNav,
+  ÅrsavregningIkkeStøttetSakstypeMelding,
+};

@@ -790,9 +790,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     ) {
       return Boolean(
         formIsValid &&
-          aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag &&
-          feilmelding === undefined &&
-          arrayValideringsfeil === undefined,
+        aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag &&
+        feilmelding === undefined &&
+        arrayValideringsfeil === undefined,
       );
     }
     if (endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT) {
@@ -1029,7 +1029,6 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
                   <Nav.ExpansionCard.Content>
                     <BeregnetTrygdeavgiftDetaljer
                       grunnlag={aarsavregningResponse.nyttTrygdeavgiftsGrunnlag}
-                      medlemskapsTypeErPliktig={medlemskapstypeErPliktig}
                       beregningsforklaringer={beregningsforklaringer}
                     />
                   </Nav.ExpansionCard.Content>

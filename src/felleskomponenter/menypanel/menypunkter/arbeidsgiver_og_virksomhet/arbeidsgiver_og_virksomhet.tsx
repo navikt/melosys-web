@@ -28,9 +28,9 @@ const arbeidsforholdUtlandHarData = (
 ): boolean =>
   Boolean(
     element.navn ||
-      element.orgnr ||
-      Utils._isBoolean(element.selvstendigNaeringsvirksomhet) ||
-      (element.adresse ? Utils.adresse.erStrukturertAdresseObjektTomt(element.adresse) : false),
+    element.orgnr ||
+    Utils._isBoolean(element.selvstendigNaeringsvirksomhet) ||
+    (element.adresse ? Utils.adresse.erStrukturertAdresseObjektTomt(element.adresse) : false),
   );
 
 const soknadFormValueSelector = formValueSelector<KV.Form.SoknadFormData>(KV.Form.SOKNAD);

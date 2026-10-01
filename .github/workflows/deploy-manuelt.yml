@@ -50,9 +50,9 @@ jobs:
         uses: pnpm/action-setup@v5
 
       - name: Setup node
-        uses: actions/setup-node@v6.4.0
+        uses: actions/setup-node@v7.0.0
         with:
-          node-version: '22.11.0'
+          node-version: '22.23.2'
           registry-url: https://npm.pkg.github.com/
           scope: '@navikt'
           cache: 'pnpm'
@@ -117,7 +117,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: deploy to ${{github.event.inputs.environment}}
-        uses: nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@v3
         env:
           CLUSTER: ${{github.event.inputs.environment == 'prod' && 'prod-fss' || 'dev-fss' }}
           RESOURCE: nais/nais.yaml

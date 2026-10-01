@@ -135,7 +135,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
   });
 
   it("does not render when grunnlag is undefined", () => {
-    const { container } = render(<BeregnetTrygdeavgiftDetaljer grunnlag={undefined} medlemskapsTypeErPliktig={true} />);
+    const { container } = render(<BeregnetTrygdeavgiftDetaljer grunnlag={undefined} />);
 
     expect(container.firstChild).toBeNull();
   });
@@ -146,18 +146,26 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
       avgift: undefined,
     } as any;
 
-    const { container } = render(
-      <BeregnetTrygdeavgiftDetaljer grunnlag={grunnlagUtenAvgift} medlemskapsTypeErPliktig={true} />,
-    );
+    const { container } = render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlagUtenAvgift} />);
 
     expect(container.firstChild).toBeNull();
   });
   it("snapshot test", () => {
-    const { container } = render(
-      <BeregnetTrygdeavgiftDetaljer grunnlag={createMockData()} medlemskapsTypeErPliktig={true} />,
-    );
+    const { container } = render(<BeregnetTrygdeavgiftDetaljer grunnlag={createMockData()} />);
 
     expect(container.firstChild).toMatchSnapshot();
+  });
+
+  it("viser kolonnene i avtalt rekkefølge", () => {
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={createMockData()} />);
+
+    expect(screen.getAllByRole("columnheader").map((celle) => celle.textContent)).toEqual([
+      "Trygdeperiode",
+      "Dekning",
+      "Inntektskilde",
+      "Sats",
+      "Avgift md.",
+    ]);
   });
 
   it("sorterer perioder i stigende rekkefølge etter fom-dato", () => {
@@ -216,7 +224,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
       },
     };
 
-    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlagMedFlerePerioder} medlemskapsTypeErPliktig={true} />);
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlagMedFlerePerioder} />);
 
     const rows = screen.getAllByRole("row");
     expect(rows[1]).toHaveTextContent("01.01.2021");
@@ -229,7 +237,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     grunnlag.avgift.trygdeavgiftsperioder[0].beregningsregel = "TJUEFEM_PROSENT_REGEL";
     grunnlag.avgift.trygdeavgiftsperioder[0].avgiftssats = null;
 
-    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} />);
 
     const rows = screen.getAllByRole("row");
     expect(rows[1]).toHaveTextContent("*");
@@ -260,7 +268,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
       },
     ];
 
-    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} />);
 
     const rows = screen.getAllByRole("row");
     expect(rows[2]).toHaveTextContent("**");
@@ -271,7 +279,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     const grunnlag = createMockData();
     grunnlag.avgift.trygdeavgiftsperioder[0].harSammenslåtteInntektskilder = true;
 
-    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} />);
 
     const rows = screen.getAllByRole("row");
     expect(rows[1]).toHaveTextContent("***");
@@ -282,7 +290,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     const grunnlag = createMockData();
     grunnlag.avgift.trygdeavgiftsperioder[0].avgiftsdel = "HELSE";
 
-    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={false} />);
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} />);
 
     expect(screen.getByText("Helsedel")).toBeInTheDocument();
   });
@@ -291,7 +299,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     const grunnlag = createMockData();
     grunnlag.avgift.trygdeavgiftsperioder[0].avgiftsdel = "PENSJON";
 
-    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={false} />);
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} />);
 
     expect(screen.getByText("Pensjonsdel")).toBeInTheDocument();
   });
@@ -306,7 +314,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     delete grunnlag.avgift.trygdeavgiftsperioder[0].trygdedekning;
     settTrygdedekningPaaMedlemskapsperiode(grunnlag, "FULL");
 
-    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} />);
 
     expect(screen.getByText("FULL")).toBeInTheDocument();
   });
@@ -316,14 +324,14 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     grunnlag.avgift.trygdeavgiftsperioder[0].trygdedekning = "DIREKTE_FRA_API";
     settTrygdedekningPaaMedlemskapsperiode(grunnlag, "FRA_OVERLAPP_FALLBACK");
 
-    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} />);
 
     expect(screen.getByText("DIREKTE_FRA_API")).toBeInTheDocument();
     expect(screen.queryByText("FRA_OVERLAPP_FALLBACK")).not.toBeInTheDocument();
   });
 
   it("viser ikke fotnote-seksjon ved ordinær beregning", () => {
-    render(<BeregnetTrygdeavgiftDetaljer grunnlag={createMockData()} medlemskapsTypeErPliktig={true} />);
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={createMockData()} />);
 
     expect(screen.queryByText(/Beregnet etter 25 %-regelen/)).not.toBeInTheDocument();
     expect(screen.queryByText(/Inntekten er under minstebeløpet/)).not.toBeInTheDocument();
@@ -337,7 +345,6 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
       render(
         <BeregnetTrygdeavgiftDetaljer
           grunnlag={createMockData()}
-          medlemskapsTypeErPliktig={true}
           beregningsforklaringer={[lagBeregningsforklaring()]}
         />,
       );
@@ -351,7 +358,6 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
       render(
         <BeregnetTrygdeavgiftDetaljer
           grunnlag={createMockData()}
-          medlemskapsTypeErPliktig={true}
           beregningsforklaringer={[lagBeregningsforklaring("ORDINÆR")]}
         />,
       );
@@ -365,7 +371,6 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
       render(
         <BeregnetTrygdeavgiftDetaljer
           grunnlag={createMockData()}
-          medlemskapsTypeErPliktig={true}
           beregningsforklaringer={[
             { ...lagBeregningsforklaring(), inntektsgruppe: "HELSEDEL" },
             { ...lagBeregningsforklaring("ORDINÆR"), inntektsgruppe: "PENSJONSDEL" },
@@ -382,7 +387,6 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
       render(
         <BeregnetTrygdeavgiftDetaljer
           grunnlag={createMockData()}
-          medlemskapsTypeErPliktig={true}
           beregningsforklaringer={[lagBeregningsforklaring()]}
         />,
       );
@@ -393,13 +397,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     it("rendrer ikke kortet når toggelen er på men beregningsforklaringer er tom", () => {
       useFeatureToggleMock.mockReturnValue(true);
 
-      render(
-        <BeregnetTrygdeavgiftDetaljer
-          grunnlag={createMockData()}
-          medlemskapsTypeErPliktig={true}
-          beregningsforklaringer={[]}
-        />,
-      );
+      render(<BeregnetTrygdeavgiftDetaljer grunnlag={createMockData()} beregningsforklaringer={[]} />);
 
       expect(screen.queryByRole("region", { name: "Beregningsforklaring for trygdeavgift" })).not.toBeInTheDocument();
     });
@@ -407,7 +405,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     it("rendrer ikke kortet når beregningsforklaringer ikke er gitt", () => {
       useFeatureToggleMock.mockReturnValue(true);
 
-      render(<BeregnetTrygdeavgiftDetaljer grunnlag={createMockData()} medlemskapsTypeErPliktig={true} />);
+      render(<BeregnetTrygdeavgiftDetaljer grunnlag={createMockData()} />);
 
       expect(screen.queryByRole("region", { name: "Beregningsforklaring for trygdeavgift" })).not.toBeInTheDocument();
     });
@@ -419,7 +417,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
     grunnlag.avgift.trygdeavgiftsperioder[0].avgiftssats = null;
     grunnlag.avgift.trygdeavgiftsperioder[0].avgiftPerMd = 0;
 
-    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} />);
 
     expect(
       screen.getByText("Trygdeavgift skal ikke betales da inntekten er under minstebeløpet i perioden som er angitt."),
@@ -452,7 +450,7 @@ describe("BeregnetTrygdeavgiftDetaljer", () => {
       },
     ];
 
-    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} medlemskapsTypeErPliktig={true} />);
+    render(<BeregnetTrygdeavgiftDetaljer grunnlag={grunnlag} />);
 
     expect(
       screen.queryByText(

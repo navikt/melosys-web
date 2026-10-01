@@ -16,13 +16,7 @@ exports[`BeregnetTrygdeavgiftDetaljer > snapshot test 1`] = `
           class="navds-table__header-cell navds-label navds-label--small"
           scope="col"
         >
-          Sats
-        </th>
-        <th
-          class="navds-table__header-cell navds-label navds-label--small"
-          scope="col"
-        >
-          Avgift md.
+          Dekning
         </th>
         <th
           class="navds-table__header-cell navds-label navds-label--small"
@@ -34,25 +28,13 @@ exports[`BeregnetTrygdeavgiftDetaljer > snapshot test 1`] = `
           class="navds-table__header-cell navds-label navds-label--small"
           scope="col"
         >
-          Bruttoinntekt md.
+          Sats
         </th>
         <th
-          class="navds-table__header-cell navds-label navds-label--small"
+          class="navds-table__header-cell navds-label tall_felt navds-label--small"
           scope="col"
         >
-          Betalt aga.?
-        </th>
-        <th
-          class="navds-table__header-cell navds-label navds-label--small"
-          scope="col"
-        >
-          Skattepliktig
-        </th>
-        <th
-          class="navds-table__header-cell navds-label navds-label--small"
-          scope="col"
-        >
-          Dekning
+          Avgift md.
         </th>
       </tr>
     </thead>
@@ -61,26 +43,17 @@ exports[`BeregnetTrygdeavgiftDetaljer > snapshot test 1`] = `
         <td class="navds-table__data-cell navds-body-short navds-body-short--small">
           01.01.2023 - 31.12.2023
         </td>
-        <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
-          8.2
-        </td>
-        <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
-          3&nbsp;417 kr
+        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          FULL
         </td>
         <td class="navds-table__data-cell navds-body-short navds-body-short--small">
           ARBEID
         </td>
         <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
-          41&nbsp;667 kr
+          8.2
         </td>
-        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
-          Ikke relevant
-        </td>
-        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
-          Ja
-        </td>
-        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
-          FULL
+        <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
+          3&nbsp;417 kr
         </td>
       </tr>
     </tbody>

@@ -6,8 +6,6 @@ import { reduxForm } from "redux-form";
 import * as KV from "../../../../kodeverk";
 import { VurderingVideresend } from "./vurderingVideresend";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
-import { STATUS } from "../../../../services";
-import { MELOSYS_CDM_4_4 } from "../../../../featuretoggle/toggleNavn";
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingVideresendSchema from "../vurderingVideresendSchema";
 
@@ -28,16 +26,6 @@ const initialReduxState = {
   dokumenter: {
     data: {
       dokumentOversikt: [],
-    },
-  },
-};
-
-const reduxStateWithA008Cdm44Toggle = {
-  ...initialReduxState,
-  featureToggle: {
-    status: STATUS.OK,
-    data: {
-      [MELOSYS_CDM_4_4]: true,
     },
   },
 };
@@ -71,18 +59,11 @@ describe("Vurderingvideresend", () => {
     expect(getByRole("textbox", { name: "Fritekst til orienteringsbrev" })).toBeInTheDocument();
   });
 
-  it("viser ytterligere informasjon tekstfelt når toggle er på", () => {
+  it("viser ytterligere informasjon tekstfelt", () => {
     const { getByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
-      preloadedState: reduxStateWithA008Cdm44Toggle,
-    });
-    expect(getByRole("textbox", { name: /Ytterligere informasjon/ })).toBeInTheDocument();
-  });
-
-  it("viser ikke ytterligere informasjon tekstfelt når toggle er av", () => {
-    const { queryByRole } = renderWithProviders(<WrappedVurderingVideresend {...props} />, {
       preloadedState: initialReduxState,
     });
-    expect(queryByRole("textbox", { name: /Ytterligere informasjon/ })).not.toBeInTheDocument();
+    expect(getByRole("textbox", { name: /Ytterligere informasjon/ })).toBeInTheDocument();
   });
 
   it("viser en dokumentliste med forventet innhold", () => {
@@ -129,7 +110,7 @@ describe("Vurderingvideresend", () => {
   });
 
   describe("videresendSoknad kall", () => {
-    it("sender ytterligereInformasjonSed og a008Formaal når toggle er på", async () => {
+    it("sender ytterligereInformasjonSed og a008Formaal", async () => {
       const videresendSoknad = vi.fn().mockResolvedValue(undefined);
       const user = userEvent.setup();
 
@@ -150,7 +131,7 @@ describe("Vurderingvideresend", () => {
       renderWithProviders(
         <WrappedVurderingVideresend {...props} videresendSoknad={videresendSoknad} handleSubmit={handleSubmit} />,
         {
-          preloadedState: reduxStateWithA008Cdm44Toggle,
+          preloadedState: initialReduxState,
         },
       );
 
@@ -167,38 +148,7 @@ describe("Vurderingvideresend", () => {
       });
     });
 
-    it("sender null for ytterligereInformasjonSed og a008Formaal når toggle er av", async () => {
-      const videresendSoknad = vi.fn().mockResolvedValue(undefined);
-      const user = userEvent.setup();
-
-      const handleSubmit = (submitFn: any) => (e: any) => {
-        e?.preventDefault?.();
-        return submitFn(
-          {
-            mottakerinstitusjon: "SE:123",
-            orienteringsbrevFritekst: "Orienteringstekst",
-            ytterligereInformasjonSed: "Dette skal ignoreres",
-          },
-          vi.fn(),
-          { videresendSoknad },
-        );
-      };
-
-      renderWithProviders(
-        <WrappedVurderingVideresend {...props} videresendSoknad={videresendSoknad} handleSubmit={handleSubmit} />,
-        {
-          preloadedState: initialReduxState,
-        },
-      );
-
-      await user.click(screen.getByRole("button", { name: /Videresend søknad/i }));
-
-      await waitFor(() => {
-        expect(videresendSoknad).toHaveBeenCalledWith("SE:123", "Orienteringstekst", null, null, []);
-      });
-    });
-
-    it("sender tom streng som ytterligereInformasjonSed når feltet er tomt og toggle er på", async () => {
+    it("sender tom streng som ytterligereInformasjonSed når feltet er tomt", async () => {
       const videresendSoknad = vi.fn().mockResolvedValue(undefined);
       const user = userEvent.setup();
 
@@ -218,7 +168,7 @@ describe("Vurderingvideresend", () => {
       renderWithProviders(
         <WrappedVurderingVideresend {...props} videresendSoknad={videresendSoknad} handleSubmit={handleSubmit} />,
         {
-          preloadedState: reduxStateWithA008Cdm44Toggle,
+          preloadedState: initialReduxState,
         },
       );
 
@@ -238,7 +188,7 @@ describe("Vurderingvideresend", () => {
 
     const renderValidertSkjema = () =>
       renderWithProviders(<ValidertVurderingVideresend {...props} />, {
-        preloadedState: reduxStateWithA008Cdm44Toggle,
+        preloadedState: initialReduxState,
       });
 
     const videresendKnapp = () => screen.getByRole("button", { name: /Videresend søknad/i });

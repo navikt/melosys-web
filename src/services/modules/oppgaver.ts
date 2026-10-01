@@ -13,6 +13,11 @@ export interface TilbakeleggOppgaveReqDto {
   venterPaaDokumentasjon: boolean;
 }
 
+export interface TildelOppgaveReqDto {
+  behandlingID: number;
+  forventetTilordnetIdent: string | null;
+}
+
 export interface SokOppgaveReqDto {
   personIdent: string | null;
   orgnr: string | null;
@@ -34,6 +39,9 @@ export const sendPlukk = (data: PlukkOppgaveReqDto) => postAsJson(`${API_BASE_UR
 
 export const tilbakelegg = (data: TilbakeleggOppgaveReqDto) =>
   postAsJson(`${API_BASE_URL}${OPPGAVER}/tilbakelegg`, data);
+
+export const tildel = (data: TildelOppgaveReqDto): Promise<void> =>
+  postAsJson(`${API_BASE_URL}${OPPGAVER}/tildel`, data);
 
 export const sok = (data: SokOppgaveReqDto): Promise<Array<SokOppgaveResDto>> =>
   postAsJson(`${API_BASE_URL}${OPPGAVER}/sok`, data);

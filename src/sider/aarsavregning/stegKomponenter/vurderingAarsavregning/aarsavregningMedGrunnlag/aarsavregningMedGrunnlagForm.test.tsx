@@ -54,75 +54,89 @@ describe("aarsavregningMedGrunnlagForm validering", () => {
   });
 });
 
+const renderSkjema = ({
+  sisteGjeldendeAvgiftspliktigperioder,
+  redigerbart = true,
+  endeligAvgiftValg = OPPLYSNINGER_ENDRET,
+}: {
+  sisteGjeldendeAvgiftspliktigperioder: Avgiftspliktigperiode[];
+  redigerbart?: boolean;
+  endeligAvgiftValg?: string;
+}) => {
+  const store = configureStore({
+    reducer: {
+      behandlinger: behandlingerReducer,
+      behandlingsresultat: behandlingsresultatReducer,
+    } as const,
+    preloadedState: {
+      behandlinger: {
+        data: {
+          behandlingID: 123,
+          redigerbart,
+        },
+        status: "OK",
+      },
+      behandlingsresultat: {
+        data: {
+          aarsavregningID: 456,
+        },
+        status: "OK",
+      },
+    },
+  });
+
+  const oppdaterStatus = vi.fn();
+
+  render(
+    <Provider store={store}>
+      <AarsavregningMedGrunnlagForm
+        bekreft={vi.fn()}
+        oppdaterStatus={oppdaterStatus}
+        initiellData={{
+          aarsavregningResponse: {
+            aarsavregningID: 456,
+            aar: 2024,
+            endeligAvgiftValg,
+            sisteGjeldendeAvgiftspliktigperioder,
+            nyttTrygdeavgiftsGrunnlag: undefined,
+            tidligereTrygdeavgiftsGrunnlagsopplysninger: {
+              trygdeavgiftsgrunnlag: {
+                avgiftspliktigperioder: [],
+                skatteforholdsperioder: [],
+                inntektskperioder: [],
+              },
+              avgift: {
+                trygdeavgiftsperioder: [],
+                totalInntekt: 0,
+                totalAvgift: 0,
+              },
+            },
+            avregning: {
+              beregnetAvgiftBelop: 12000,
+              tidligereFakturertBeloep: 8000,
+            },
+          },
+          formDefaultValues: {
+            skatteforholdsperioder: [],
+            inntektskilder: [],
+            endeligAvgiftValg,
+            manueltAvgiftBeloep: "",
+          },
+          innvilgetMedlemskapsperioder: [],
+          medlemskapstypeErPliktig: false,
+          forrigeÅrsavregningErManueltBeregnet: false,
+          valgtÅr: 2024,
+        }}
+      />
+    </Provider>,
+  );
+
+  return { oppdaterStatus };
+};
+
 describe("AarsavregningMedGrunnlagForm ny vurdering uten avgiftspliktige perioder", () => {
   it("skal skjule skjemaet, markere steget som gyldig og vise sumtabellen", async () => {
-    const store = configureStore({
-      reducer: {
-        behandlinger: behandlingerReducer,
-        behandlingsresultat: behandlingsresultatReducer,
-      } as const,
-      preloadedState: {
-        behandlinger: {
-          data: {
-            behandlingID: 123,
-            redigerbart: true,
-          },
-          status: "OK",
-        },
-        behandlingsresultat: {
-          data: {
-            aarsavregningID: 456,
-          },
-          status: "OK",
-        },
-      },
-    });
-
-    const oppdaterStatus = vi.fn();
-
-    render(
-      <Provider store={store}>
-        <AarsavregningMedGrunnlagForm
-          bekreft={vi.fn()}
-          oppdaterStatus={oppdaterStatus}
-          initiellData={{
-            aarsavregningResponse: {
-              aarsavregningID: 456,
-              aar: 2024,
-              endeligAvgiftValg: OPPLYSNINGER_ENDRET,
-              sisteGjeldendeAvgiftspliktigperioder: [],
-              nyttTrygdeavgiftsGrunnlag: undefined,
-              tidligereTrygdeavgiftsGrunnlagsopplysninger: {
-                trygdeavgiftsgrunnlag: {
-                  avgiftspliktigperioder: [],
-                  skatteforholdsperioder: [],
-                  inntektskperioder: [],
-                },
-                avgift: {
-                  trygdeavgiftsperioder: [],
-                  totalInntekt: 0,
-                  totalAvgift: 0,
-                },
-              },
-              avregning: {
-                beregnetAvgiftBelop: 12000,
-                tidligereFakturertBeloep: 8000,
-              },
-            },
-            formDefaultValues: {
-              skatteforholdsperioder: [],
-              inntektskilder: [],
-              endeligAvgiftValg: OPPLYSNINGER_ENDRET,
-              manueltAvgiftBeloep: "",
-            },
-            innvilgetMedlemskapsperioder: [],
-            medlemskapstypeErPliktig: false,
-            forrigeÅrsavregningErManueltBeregnet: false,
-            valgtÅr: 2024,
-          }}
-        />
-      </Provider>,
-    );
+    const { oppdaterStatus } = renderSkjema({ sisteGjeldendeAvgiftspliktigperioder: [] });
 
     expect(screen.queryByText("Inntekts- og skatteopplysninger for endelig trygdeavgift")).not.toBeInTheDocument();
 
@@ -133,6 +147,40 @@ describe("AarsavregningMedGrunnlagForm ny vurdering uten avgiftspliktige periode
     expect(screen.getByRole("cell", { name: "Endelig beregnet trygdeavgift" })).toBeInTheDocument();
     expect(screen.getByText("Tidligere beregnet trygdeavgift")).toBeInTheDocument();
     expect(screen.getByText("Differanse")).toBeInTheDocument();
+  });
+
+  it("skal ikke la saksbehandler velge manuell endelig avgift", () => {
+    renderSkjema({ sisteGjeldendeAvgiftspliktigperioder: [] });
+
+    expect(screen.queryByRole("radio", { name: "Beregn trygdeavgiften" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("radio", { name: "Oppgi beløp for beregnet trygdeavgift" })).not.toBeInTheDocument();
+  });
+
+  it("skal la saksbehandler bytte til beregnet avgift når et manuelt valg er arvet", () => {
+    renderSkjema({ sisteGjeldendeAvgiftspliktigperioder: [], endeligAvgiftValg: MANUELL_ENDELIG_AVGIFT });
+
+    expect(screen.getByRole("radio", { name: "Beregn trygdeavgiften" })).toBeInTheDocument();
+  });
+
+  it("skal vise valget mellom beregnet og manuell avgift når året har avgiftspliktige perioder", () => {
+    renderSkjema({
+      sisteGjeldendeAvgiftspliktigperioder: [
+        {
+          type: "MEDLEMSKAPSPERIODE",
+          id: 1,
+          fomDato: "2024-01-01",
+          tomDato: "2024-12-31",
+          bestemmelse: "FTRL_2_7",
+          innvilgelsesResultat: "INNVILGET",
+          trygdedekning: "FULL_DEKNING",
+          medlemskapstype: "PLIKTIG",
+        },
+      ],
+      redigerbart: false,
+    });
+
+    expect(screen.getByRole("radio", { name: "Beregn trygdeavgiften" })).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "Oppgi beløp for beregnet trygdeavgift" })).toBeInTheDocument();
   });
 });
 

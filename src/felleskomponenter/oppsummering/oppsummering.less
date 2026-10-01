@@ -7,6 +7,16 @@
     padding-left: 20px;
   }
 
+  // Flex ligger på denne wrapperen og ikke på .row, som er en float-basert
+  // clearfix-rad der ::before/::after ellers ville blitt flex-items.
+  .saksnummerlinje {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    padding-inline-end: 1rem;
+  }
+
   .saksinfo {
     margin-top: 12px;
     margin-bottom: 16px;

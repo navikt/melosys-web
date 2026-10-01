@@ -30,3 +30,16 @@ export function oppdaterBehandling() {
     dispatch(hentBehandling(behandlingID));
   };
 }
+
+/**
+ * Som oppdaterBehandling, men kaster hvis oppfriskningen feiler, slik at kalleren
+ * kan si fra til brukeren. Krever at kalleren håndterer feilen.
+ */
+export function oppfriskBehandling() {
+  return async (dispatch, getState) => {
+    const behandlingID = Selectors.BehandlingIDSelector(getState());
+    const behandling = await Api.Behandlinger.behandling.hentBehandling(behandlingID);
+    dispatch({ type: Types.OK, data: behandling });
+    return behandling;
+  };
+}

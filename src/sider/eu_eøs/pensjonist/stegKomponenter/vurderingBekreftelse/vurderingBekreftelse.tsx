@@ -28,6 +28,7 @@ import { RootState } from "AppTypes";
 import { Action } from "redux";
 import { vedtakOperations } from "../../../../../ducks/vedtak";
 import { mottatteOpplysningerSelectors } from "../../../../../ducks/mottatteOpplysninger";
+import { helseutgiftDekkesPeriodeSelector } from "../../../../../ducks/helseutgiftdekkesperiode";
 
 const { FULLMEKTIG } = MKV.Koder.aktoersroller;
 const { TRYGDEAVGIFT_BETALES_TIL_NAV, TRYGDEAVGIFT_BETALES_TIL_NAV_OG_SKATT } = MKV.Koder.trygdeavgiftmottaker;
@@ -103,6 +104,20 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
     trygdeavgiftMottaker?.kode === TRYGDEAVGIFT_BETALES_TIL_NAV_OG_SKATT;
 
   const erRedigerbarBetalingsvalg = erFørstegang && erPensjonist && redigerbart;
+
+  const helseutgiftDekkesPeriodeData = useSelector(
+    helseutgiftDekkesPeriodeSelector.HelseutgiftDekkesPeriodeSelector,
+  ).data;
+  const foersteHelseutgiftDekkesPeriode = Array.isArray(helseutgiftDekkesPeriodeData)
+    ? helseutgiftDekkesPeriodeData[0]
+    : undefined;
+  const helseutgiftDekkesPeriode = {
+    fom: foersteHelseutgiftDekkesPeriode?.fomDato ?? "",
+    tom: foersteHelseutgiftDekkesPeriode?.tomDato ?? "",
+  };
+
+  const harHelseutgiftDekkesPeriodeFraTidligereÅr =
+    new Date(helseutgiftDekkesPeriode.fom).getFullYear() < new Date().getFullYear();
 
   const stegErGyldig = Utils._isEmpty(feilmeldinger) && Utils._isEmpty(kontrollfeil);
   let oppdaterFørKontroll = true;
@@ -261,7 +276,9 @@ function VurderingBekreftelse({ tilbake, aktivtSteg }: Props) {
       <Nav.Heading level="1" className="stegvelgertittel">
         Bekreft opplysninger
       </Nav.Heading>
-      <Nav.BodyLong size="small">{trygdeavgiftMottaker?.term} </Nav.BodyLong>
+      {!harHelseutgiftDekkesPeriodeFraTidligereÅr && (
+        <Nav.BodyLong size="small">{trygdeavgiftMottaker?.term}</Nav.BodyLong>
+      )}
       {mottakerErNav && (
         <Nav.HStack className="betalingsvalg">
           <Betalingsvalg

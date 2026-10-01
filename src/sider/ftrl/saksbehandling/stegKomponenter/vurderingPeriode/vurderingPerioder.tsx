@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { useDispatch } from "../../../../../hooks";
@@ -102,6 +102,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   const {
     control,
     watch,
+    getValues,
     formState: { isValid: formIsValid },
     trigger,
   } = useForm({
@@ -137,6 +138,14 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   );
 
   const stegErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);
+  // Lagringen leser gyldigheten når runden starter, ikke fra renderen da endringen skjedde.
+  const stegErGyldigRef = useRef(stegErGyldig);
+  stegErGyldigRef.current = stegErGyldig;
+  // Økes ved hver endring. Et svar skrives bare inn i skjemaet hvis ingen endring er gjort etter at runden startet.
+  const endringer = useRef(0);
+  const lagringskø = useRef<Promise<void>>(Promise.resolve());
+  // Id-en fra POST, per uuid. Brukes når en ny rad slettes mens POST-en for den pågår.
+  const opprettedeIder = useRef(new Map<MedlemskapsperiodeProp["periodeId"], number>());
 
   useEffect(() => {
     if (aktivtSteg) {
@@ -188,19 +197,12 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
     });
   };
 
-  const lagreUkjentSluttdatoMedlemskapsperiode = async (ukjentSluttdato: boolean) => {
-    if (ukjentSluttdato) {
-      const lagretPerioder = mapUkjentSluttdatoMedlemskapsperiode(formValues.medlemskapsperioder);
-      resetMedlemskapsperioder(lagretPerioder);
+  const hentPerioder = () => getValues("medlemskapsperioder") as MedlemskapsperiodeProp[];
 
-      await trigger("medlemskapsperioder");
-      await debouncedLagreMedlemskapsperioder(lagretPerioder, true, undefined);
-    }
+  const finnRad = (periodeId: MedlemskapsperiodeProp["periodeId"]) =>
+    hentPerioder().findIndex((periode) => periode.periodeId === periodeId);
 
-    dispatch(oppsummertfaktaOperations.lagreUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato));
-  };
-
-  const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, index: number) => {
+  const lagreMedlemskapsperiode = async (medlemskapsperiode: MedlemskapsperiodeProp, endringerVedStart: number) => {
     const periodeRequest = {
       fomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.fomDato, "") as string,
       tomDato: Utils.dato.formatterDatoTilISO(medlemskapsperiode.tomDato, "") as string,
@@ -222,31 +224,67 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
           ),
         ));
 
+    if (medlemskapsperiode.ny && !kallFeilet(response)) {
+      opprettedeIder.current.set(medlemskapsperiode.periodeId, response.data.id);
+    }
+
+    // Raden kan ha flyttet seg eller være slettet mens kallet pågikk.
+    const index = finnRad(medlemskapsperiode.periodeId);
+    if (index === -1) return;
+    const rad = hentPerioder()[index];
+
     if (kallFeilet(response)) {
-      update(index, { ...formValues.medlemskapsperioder[index], feil: mapFeil(response) });
-    } else {
+      update(index, { ...rad, feil: mapFeil(response) });
+    } else if (endringer.current === endringerVedStart) {
       update(index, mapTilMedlemskapsperiodeProps(response.data));
+    } else if (medlemskapsperiode.ny) {
+      // Saksbehandler har endret noe etter at runden startet. Neste runde lagrer endringen, men trenger id-en.
+      update(index, { ...rad, periodeId: response.data.id, ny: false });
     }
   };
 
-  const debouncedLagreMedlemskapsperioder = useCallback(
-    Utils._debounce(
-      async (medlemskapsperioder: MedlemskapsperiodeProp[], isValid: boolean, overskrevetIndex: number | undefined) => {
-        if (isValid) {
-          for (const periode of medlemskapsperioder) {
-            const index = overskrevetIndex !== undefined ? overskrevetIndex : medlemskapsperioder.indexOf(periode);
-            await lagreMedlemskapsperiode(periode, index);
-          }
-        }
-      },
-      500,
-    ),
+  const lagreMedlemskapsperioder = async () => {
+    if (!stegErGyldigRef.current) return;
+    const endringerVedStart = endringer.current;
+    const perioder = hentPerioder().map((periode) => ({ ...periode }));
+    for (const periode of perioder) {
+      if (finnRad(periode.periodeId) !== -1) {
+        await lagreMedlemskapsperiode(periode, endringerVedStart);
+      }
+    }
+  };
+  const lagreMedlemskapsperioderRef = useRef(lagreMedlemskapsperioder);
+  lagreMedlemskapsperioderRef.current = lagreMedlemskapsperioder;
+
+  // Rundene legges i kø, så to runder aldri sender kall samtidig.
+  const debouncedLagreMedlemskapsperioder = useMemo(
+    () =>
+      Utils._debounce(() => {
+        lagringskø.current = lagringskø.current
+          .catch(() => undefined)
+          .then(() => lagreMedlemskapsperioderRef.current());
+      }, 500),
     [],
   );
 
+  const handleChange = () => {
+    endringer.current += 1;
+    debouncedLagreMedlemskapsperioder();
+  };
+
+  const lagreUkjentSluttdatoMedlemskapsperiode = async (ukjentSluttdato: boolean) => {
+    if (ukjentSluttdato) {
+      resetMedlemskapsperioder(mapUkjentSluttdatoMedlemskapsperiode(hentPerioder()));
+      await trigger("medlemskapsperioder");
+      handleChange();
+    }
+
+    dispatch(oppsummertfaktaOperations.lagreUkjentSluttdatoMedlemskapsperiode(behandlingID, ukjentSluttdato));
+  };
+
   useEffect(() => {
     if (redigerbart && aktivtSteg) {
-      debouncedLagreMedlemskapsperioder(formValues.medlemskapsperioder, stegErGyldig, undefined);
+      debouncedLagreMedlemskapsperioder();
     }
     return () => debouncedLagreMedlemskapsperioder.cancel();
   }, [stegErGyldig]);
@@ -254,18 +292,29 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
   if (!aktivtSteg || !formValues) return null;
 
   const handleSlett = async (index: number) => {
-    const medlemskapsperiode = formValues.medlemskapsperioder[index];
+    const medlemskapsperiode = hentPerioder()[index];
 
     if (medlemskapsperiode.ny) {
       remove(index);
+      // Slett perioden etter at lagringen er ferdig, hvis en POST rakk å opprette den.
+      lagringskø.current = lagringskø.current
+        .catch(() => undefined)
+        .then(async () => {
+          const id = opprettedeIder.current.get(medlemskapsperiode.periodeId);
+          if (id !== undefined) {
+            await dispatch(medlemskapsperioderOperations.slettMedlemskapsperiode(behandlingID, id));
+          }
+        });
     } else {
       const response = await dispatch(
         medlemskapsperioderOperations.slettMedlemskapsperiode(behandlingID, medlemskapsperiode.periodeId),
       );
+      const indexEtterKall = finnRad(medlemskapsperiode.periodeId);
+      if (indexEtterKall === -1) return;
       if (kallFeilet(response)) {
-        update(index, { ...medlemskapsperiode, feil: mapFeil(response) });
+        update(indexEtterKall, { ...hentPerioder()[indexEtterKall], feil: mapFeil(response) });
       } else {
-        remove(index);
+        remove(indexEtterKall);
       }
     }
   };
@@ -328,8 +377,7 @@ export function VurderingPerioder({ bekreft, tilbake, aktivtSteg, oppdaterStatus
         watch={watch}
         handleSlett={handleSlett}
         redigerbart={redigerbart}
-        formIsValid={stegErGyldig}
-        handleChange={debouncedLagreMedlemskapsperioder}
+        handleChange={handleChange}
         handleLeggTil={handleLeggTil}
         visLeggTil={visLeggTilNyPeriode}
         ukjentSluttdato={ukjentSluttdatoMedlemskapsperiode}
