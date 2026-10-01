@@ -570,7 +570,7 @@ function SendBrev({
       })
       .catch((error) =>
         setFeil(
-          error?.status === 400 && error.body?.message
+          error?.status === 400 && error.body?.message?.startsWith("Ingen gyldig adresse funnet.")
             ? `Brevet er ikke sendt. ${error.body.message}`
             : "Brevet er ikke sendt. Det skjedde en feil.",
         ),

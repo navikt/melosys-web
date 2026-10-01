@@ -38,6 +38,7 @@ vi.mock("../../../services/api", () => ({
       kopiMottakere: [{ mottakerNavn: "Bruker", dokumentNavn: "Kopi", rolle: "BRUKER", aktørId: "aktørId" }],
       fasteMottakere: [],
     }),
+    opprettBrev: vi.fn(),
     konverterMuligMottakerTilKopiMottaker: vi.fn((m) => m),
   },
   Brevutkast: {
@@ -127,5 +128,25 @@ describe("SendBrev – kopi til bruker/brukers fullmektig", () => {
 
     expect(screen.getByRole("checkbox", { name: "Send kopi til bruker/brukers fullmektig" })).toBeChecked();
     await waitFor(() => expect(screen.getByRole("button", { name: "Send brev" })).toBeEnabled());
+  });
+
+  it.each([
+    [
+      "Ingen gyldig adresse funnet. Bruker må registrere adresse.",
+      "Brevet er ikke sendt. Ingen gyldig adresse funnet. Bruker må registrere adresse.",
+    ],
+    ["Ugyldig JSON-skjema: #/mottaker/adresselinjer", "Brevet er ikke sendt. Det skjedde en feil."],
+  ])("viser riktig feilmelding for avvist brev: %s", async (backendMelding, forventetMelding) => {
+    mockTilgjengeligeMaler();
+    vi.mocked(Api.DokumenterV2.opprettBrev).mockRejectedValueOnce({
+      status: 400,
+      body: { message: backendMelding },
+    });
+
+    renderSendBrev();
+    await userEvent.click(await screen.findByRole("button", { name: "Send brev" }));
+
+    expect(await screen.findByText(forventetMelding)).toBeVisible();
+    expect(screen.queryByText(/Ugyldig JSON-skjema/)).not.toBeInTheDocument();
   });
 });
