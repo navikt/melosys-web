@@ -172,8 +172,8 @@ importers:
         specifier: ^22.18.5
         version: 22.18.5
       '@types/oracledb':
-        specifier: ^6.10.0
-        version: 6.10.0
+        specifier: ^7.0.3
+        version: 7.0.3
       '@types/qs':
         specifier: ^6.15.1
         version: 6.15.1
@@ -265,8 +265,8 @@ importers:
         specifier: ^4.1.5
         version: 4.1.5
       oracledb:
-        specifier: ^6.7.0
-        version: 6.10.0
+        specifier: ^7.0.1
+        version: 7.0.1
       prettier:
         specifier: ^3.9.8
         version: 3.9.8
@@ -1900,8 +1900,8 @@ packages:
   '@types/node@22.18.5':
     resolution: {integrity: sha512-g9BpPfJvxYBXUWI9bV37j6d6LTMNQ88hPwdWWUeYZnMhlo66FIg9gCc1/DZb15QylJSKwOZjwrckvOTWpOiChg==}
 
-  '@types/oracledb@6.10.0':
-    resolution: {integrity: sha512-dRaEYKRkJhSSM/uKrscE7zXC5D75JSkBgdye5kSxzTRwrMAUI5V675cD3fqCdMuSOiGo2K9Ng3CjjRI4rzeuAg==}
+  '@types/oracledb@7.0.3':
+    resolution: {integrity: sha512-dH4zGmD0b5k62O3BqWRM/qRD41pSKNeQOuPu4FDzvbn8d4DAkLWeLYkPObjvuMJsZNPL4ceSuMiPcOpKyjvhCg==}
 
   '@types/parse-json@4.0.2':
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
@@ -4112,8 +4112,8 @@ packages:
     resolution: {integrity: sha512-5b6Y85tPxZZ7QytO+BQzysW31HJku27cRIlkbAXaNx+BdcVi+LlRFmVXzeF6a7JCwJpyw5c4b+YSVImQIrBpuQ==}
     engines: {node: '>=10'}
 
-  oracledb@6.10.0:
-    resolution: {integrity: sha512-kGUumXmrEWbSpBuKJyb9Ip3rXcNgKK6grunI3/cLPzrRvboZ6ZoLi9JQ+z6M/RIG924tY8BLflihL4CKKQAYMA==}
+  oracledb@7.0.1:
+    resolution: {integrity: sha512-xlM0Ceh6A5stQLAdEfKf3pgCSkbOjQLo2ZPEi3+kXklz+KbZD3fLi/nsTSbQeZZNFBSFDNxdn1Ek3+bxG40M8w==}
     engines: {node: '>=14.17'}
 
   outvariant@1.4.3:
@@ -7317,7 +7317,7 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/oracledb@6.10.0':
+  '@types/oracledb@7.0.3':
     dependencies:
       '@types/node': 22.18.5
 
@@ -9919,7 +9919,7 @@ snapshots:
       strip-ansi: 6.0.1
       wcwidth: 1.0.1
 
-  oracledb@6.10.0: {}
+  oracledb@7.0.1: {}
 
   outvariant@1.4.3: {}
 
