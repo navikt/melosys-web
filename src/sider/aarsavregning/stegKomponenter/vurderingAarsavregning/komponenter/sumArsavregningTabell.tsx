@@ -31,7 +31,7 @@ export function SumArsavregningTabell({
     ? !skalViseInnbetaltTrygdeavgift && (harGrunnlagIMelosys || tidligereTrygdeavgift) !== undefined
     : harGrunnlagIMelosys || tidligereTrygdeavgift !== undefined;
 
-  // TODO MELOSYS-8052: Med ÅRSAVREGNING_EØS_PENSJONIST på erstatter innbetalt tidligere beregnet avgift her, mens
+  // TODO MELOSYS-8235: Med ÅRSAVREGNING_EØS_PENSJONIST på erstatter innbetalt tidligere beregnet avgift her, mens
   // backend (Årsavregning.beregnTilFaktureringsBeloep) trekker fra begge. Funksjonaliteten er ikke ferdig avklart, og
   // togglen er av i prod. Formelen må samordnes med backend før togglen slås på.
   const lokalSumTilFakturaEllerRefusjon = erÅrsavregningEøsPensjonistToggleEnabled
