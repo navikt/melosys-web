@@ -69,6 +69,8 @@ describe("VurderingVedtak", () => {
         innbetaltTrygdeavgift: 30000,
         beregnetAvgiftBelop: 28000,
         manueltAvgiftBeloep: undefined,
+        tilbakelagtInnbetaltTrygdeavgift: 27000,
+        tilFaktureringBeloep: 0,
       },
       harInnbetaltTrygdeavgift: true,
       sisteGjeldendeAvgiftspliktigperioder: [],
@@ -183,6 +185,50 @@ describe("VurderingVedtak", () => {
 
     expect(container).toMatchSnapshot();
   });
+
+  it("viser beløpet backend har regnet ut", async () => {
+    const respons = await Api.Aarsavregning.hentAarsavregning(12345);
+    vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue({
+      ...respons,
+      avregning: { ...respons.avregning, tilFaktureringBeloep: -1234 },
+    });
+
+    await renderWithProvidersAsync(<VurderingVedtak tilbake={vi.fn()} aktivtSteg={true} />, {
+      preloadedState: {
+        behandlinger: { status: "OK", data: { behandlingID: 12345, redigerbart: true } },
+        menypanel: { status: "OK", data: { erFullmektigEndret: false } },
+        fagsaker: { status: "OK", data: { saksnummer: "SAK123456" } },
+        behandlingsresultat: { status: "OK", data: {} },
+        aarsavregning: { status: "OK", data: {} },
+      },
+    });
+
+    expect(await screen.findByText(/Kreditnota på 1\s?234,00 kr/)).toBeInTheDocument();
+  });
+
+  it("skjuler beløp, viser melding og deaktiverer «Fatt vedtak» når backend ikke har regnet ut beløp til fakturering", async () => {
+    const respons = await Api.Aarsavregning.hentAarsavregning(12345);
+    vi.mocked(Api.Aarsavregning.hentAarsavregning).mockResolvedValue({
+      ...respons,
+      avregning: { ...respons.avregning, tilFaktureringBeloep: undefined },
+    });
+
+    await renderWithProvidersAsync(<VurderingVedtak tilbake={vi.fn()} aktivtSteg={true} />, {
+      preloadedState: {
+        behandlinger: { status: "OK", data: { behandlingID: 12345, redigerbart: true } },
+        menypanel: { status: "OK", data: { erFullmektigEndret: false } },
+        fagsaker: { status: "OK", data: { saksnummer: "SAK123456" } },
+        behandlingsresultat: { status: "OK", data: {} },
+        aarsavregning: { status: "OK", data: {} },
+      },
+    });
+
+    expect(await screen.findByRole("heading", { name: /Vedtak årsavregning 2024/ })).toBeInTheDocument();
+    expect(screen.queryByText("Differanse")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Kreditnota på|Faktura på/)).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Fatt vedtak" })).toBeDisabled();
+    expect(screen.getByText(/Beløpet til fakturering er ikke beregnet/)).toBeInTheDocument();
+  });
 });
 
 /**
@@ -248,6 +294,7 @@ describe("MELOSYS-7114: Obligatorisk begrunnelse", () => {
       innbetaltTrygdeavgift: undefined,
       beregnetAvgiftBelop: 28000,
       manueltAvgiftBeloep: undefined,
+      tilFaktureringBeloep: 3000,
     },
     harInnbetaltTrygdeavgift: false,
     sisteGjeldendeAvgiftspliktigperioder: [],
@@ -505,6 +552,7 @@ describe("Blokkert vedtakssteg for ustøttet EØS-sakstype", () => {
         innbetaltTrygdeavgift: 30000,
         beregnetAvgiftBelop: 28000,
         manueltAvgiftBeloep: undefined,
+        tilFaktureringBeloep: -27000,
       },
       harInnbetaltTrygdeavgift: true,
       sisteGjeldendeAvgiftspliktigperioder: [],

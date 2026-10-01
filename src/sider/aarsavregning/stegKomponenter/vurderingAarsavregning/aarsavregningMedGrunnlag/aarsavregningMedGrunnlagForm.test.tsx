@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { render, renderHook, screen, waitFor } from "@testing-library/react";
+import { render, renderHook, screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { useForm } from "react-hook-form";
 import { Provider } from "react-redux";
@@ -58,10 +58,14 @@ const renderSkjema = ({
   sisteGjeldendeAvgiftspliktigperioder,
   redigerbart = true,
   endeligAvgiftValg = OPPLYSNINGER_ENDRET,
+  innbetaltTrygdeavgift,
+  tilbakelagtInnbetaltTrygdeavgift,
 }: {
   sisteGjeldendeAvgiftspliktigperioder: Avgiftspliktigperiode[];
   redigerbart?: boolean;
   endeligAvgiftValg?: string;
+  innbetaltTrygdeavgift?: number;
+  tilbakelagtInnbetaltTrygdeavgift?: number;
 }) => {
   const store = configureStore({
     reducer: {
@@ -114,6 +118,8 @@ const renderSkjema = ({
             avregning: {
               beregnetAvgiftBelop: 12000,
               tidligereFakturertBeloep: 8000,
+              innbetaltTrygdeavgift,
+              tilbakelagtInnbetaltTrygdeavgift,
             },
           },
           formDefaultValues: {
@@ -147,6 +153,22 @@ describe("AarsavregningMedGrunnlagForm ny vurdering uten avgiftspliktige periode
     expect(screen.getByRole("cell", { name: "Endelig beregnet trygdeavgift" })).toBeInTheDocument();
     expect(screen.getByText("Tidligere beregnet trygdeavgift")).toBeInTheDocument();
     expect(screen.getByText("Differanse")).toBeInTheDocument();
+  });
+
+  it("skal trekke fra innbetalt og legge tilbake det backend har lagt tilbake, slik backend regner", async () => {
+    renderSkjema({
+      sisteGjeldendeAvgiftspliktigperioder: [],
+      innbetaltTrygdeavgift: 300,
+      tilbakelagtInnbetaltTrygdeavgift: 300,
+    });
+
+    const tilbakelagt = await screen.findByText("Tidligere trygdeavgift fra Avgiftssystemet");
+    expect(within(tilbakelagt.closest("tr")!).getByText(/300/)).toBeInTheDocument();
+    const innbetalt = screen.getByText("Trygdeavgift fra Avgiftssystemet");
+    expect(within(innbetalt.closest("tr")!).getByText(/300/)).toBeInTheDocument();
+    // 12 000 − 8 000 − 300 + 300
+    const differanse = screen.getByText("Differanse");
+    expect(within(differanse.closest("tr")!).getByText(/4\s?000/)).toBeInTheDocument();
   });
 
   it("skal ikke la saksbehandler velge manuell endelig avgift", () => {

@@ -10,14 +10,17 @@ export function SumArsavregningTabell({
   nyTrygdeavgift,
   tidligereTrygdeavgift,
   tidligereInnbetaltTrygdeavgift,
-  tidligereAarsavregningInnbetaltTrygdeavgift,
+  tilbakelagtInnbetaltTrygdeavgift,
   harGrunnlagIMelosys,
+  tilFaktureringBeloep,
 }: {
   nyTrygdeavgift?: number;
   tidligereTrygdeavgift?: number;
   tidligereInnbetaltTrygdeavgift?: number;
-  tidligereAarsavregningInnbetaltTrygdeavgift?: number;
+  tilbakelagtInnbetaltTrygdeavgift?: number;
   harGrunnlagIMelosys: boolean;
+  /** Beløp til fakturering fra backend. Brukes i stedet for summen av radene. */
+  tilFaktureringBeloep?: number;
 }) {
   const erÅrsavregningEøsPensjonistToggleEnabled = useFeatureToggle(ÅRSAVREGNING_EØS_PENSJONIST);
 
@@ -28,25 +31,29 @@ export function SumArsavregningTabell({
     ? !skalViseInnbetaltTrygdeavgift && (harGrunnlagIMelosys || tidligereTrygdeavgift) !== undefined
     : harGrunnlagIMelosys || tidligereTrygdeavgift !== undefined;
 
-  const sumTilFakturaEllerRefusjon = erÅrsavregningEøsPensjonistToggleEnabled
+  // TODO MELOSYS-8235: Med ÅRSAVREGNING_EØS_PENSJONIST på erstatter innbetalt tidligere beregnet avgift her, mens
+  // backend (Årsavregning.beregnTilFaktureringsBeloep) trekker fra begge. Funksjonaliteten er ikke ferdig avklart, og
+  // togglen er av i prod. Formelen må samordnes med backend før togglen slås på.
+  const lokalSumTilFakturaEllerRefusjon = erÅrsavregningEøsPensjonistToggleEnabled
     ? beregnSumTilFakturaEllerRefusjon(
         nyTrygdeavgift,
         skalViseTidligereBeregnetTrygdeavgift ? tidligereTrygdeavgift : 0,
         skalViseInnbetaltTrygdeavgift ? tidligereInnbetaltTrygdeavgift : 0,
-        tidligereAarsavregningInnbetaltTrygdeavgift,
+        tilbakelagtInnbetaltTrygdeavgift,
       )
     : beregnSumTilFakturaEllerRefusjon(
         nyTrygdeavgift,
         tidligereTrygdeavgift,
         tidligereInnbetaltTrygdeavgift,
-        tidligereAarsavregningInnbetaltTrygdeavgift,
+        tilbakelagtInnbetaltTrygdeavgift,
       );
+  const sumTilFakturaEllerRefusjon = tilFaktureringBeloep ?? lokalSumTilFakturaEllerRefusjon;
 
   const innbetaltTrygdeavgiftLabel = erÅrsavregningEøsPensjonistToggleEnabled
     ? "Innbetalt trygdeavgift"
     : "Trygdeavgift fra Avgiftssystemet";
 
-  const tidligereAarsavregningInnbetaltTrygdeavgiftLabel = erÅrsavregningEøsPensjonistToggleEnabled
+  const tilbakelagtInnbetaltTrygdeavgiftLabel = erÅrsavregningEøsPensjonistToggleEnabled
     ? "Tidligere innbetalt trygdeavgift"
     : "Tidligere trygdeavgift fra Avgiftssystemet";
 
@@ -72,16 +79,15 @@ export function SumArsavregningTabell({
               </Nav.Table.DataCell>
             </Nav.Table.Row>
           )}
-          {tidligereAarsavregningInnbetaltTrygdeavgift !== undefined &&
-            tidligereAarsavregningInnbetaltTrygdeavgift !== null && (
-              <Nav.Table.Row>
-                <Nav.Table.DataCell scope="col">+</Nav.Table.DataCell>
-                <Nav.Table.DataCell scope="col">{tidligereAarsavregningInnbetaltTrygdeavgiftLabel}</Nav.Table.DataCell>
-                <Nav.Table.DataCell align="right" key={Utils._uuid()}>
-                  {formaterTilNorskBelop(tidligereAarsavregningInnbetaltTrygdeavgift || 0)} kr
-                </Nav.Table.DataCell>
-              </Nav.Table.Row>
-            )}
+          {tilbakelagtInnbetaltTrygdeavgift !== undefined && tilbakelagtInnbetaltTrygdeavgift !== null && (
+            <Nav.Table.Row>
+              <Nav.Table.DataCell scope="col">+</Nav.Table.DataCell>
+              <Nav.Table.DataCell scope="col">{tilbakelagtInnbetaltTrygdeavgiftLabel}</Nav.Table.DataCell>
+              <Nav.Table.DataCell align="right" key={Utils._uuid()}>
+                {formaterTilNorskBelop(tilbakelagtInnbetaltTrygdeavgift || 0)} kr
+              </Nav.Table.DataCell>
+            </Nav.Table.Row>
+          )}
           {skalViseInnbetaltTrygdeavgift && (
             <Nav.Table.Row>
               <Nav.Table.DataCell scope="col">-</Nav.Table.DataCell>
