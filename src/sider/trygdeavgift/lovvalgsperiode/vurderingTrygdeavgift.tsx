@@ -129,10 +129,13 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
   const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
 
+  const innvilgedeLovvalgsperioder = tidligereLovvalgsperioder.filter(
+    (periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
+  );
   const skalIkkeBeregneForelopigTrygdeavgift =
     skalIkkeViseTidligerePerioderToggle &&
-    tidligereLovvalgsperioder.length > 0 &&
-    tidligereLovvalgsperioder.every((periode) => new Date(periode.tomDato).getFullYear() < new Date().getFullYear());
+    innvilgedeLovvalgsperioder.length > 0 &&
+    innvilgedeLovvalgsperioder.every((periode) => new Date(periode.tomDato).getFullYear() < new Date().getFullYear());
 
   const skalViseSkatteforholdOgInntektsperioder =
     !skalIkkeViseTidligerePerioderToggle ||
