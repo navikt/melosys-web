@@ -276,25 +276,49 @@ describe("VurderingTrygdeavgift (lovvalgsperiode)", () => {
         store.dispatch({ type: LovvalgsperiodeTypes.OK, data: [createMockLovvalgsperiode(overrides)] });
       });
 
-    it("beregner på nytt med forkortede perioder når steget åpnes", async () => {
-      vi.mocked(Api.Trygdeavgift.hentBeregnetTrygdeavgift).mockResolvedValue(
-        lagretGrunnlag("2024-01-01", "2024-12-31") as any,
-      );
-      const { store, rerender } = renderComponent({}, { aktivtSteg: false });
+    const renderOgEndrePeriode = async (stateOverrides: CreateStateOptions = {}) => {
+      const { store, rerender } = renderComponent(stateOverrides, { aktivtSteg: false });
       await waitFor(() => expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled());
       await act(async () => {});
-      const antallHentingerFørEndring = vi.mocked(Api.Trygdeavgift.hentBeregnetTrygdeavgift).mock.calls.length;
 
       endreLovvalgsperiode(store, { tomDato: "2024-06-30" });
       rerender(<VurderingTrygdeavgift {...defaultProps} aktivtSteg />);
+    };
 
-      await waitFor(() => expect(Api.Trygdeavgift.beregnTrygdeavgiftsperioder).toHaveBeenCalled());
-      const [, payload] = vi.mocked(Api.Trygdeavgift.beregnTrygdeavgiftsperioder).mock.calls.at(-1)!;
-      expect(payload.skatteforholdsperioder).toEqual([
-        { fomDato: "2024-01-01", tomDato: "2024-06-30", skatteplikttype: "IKKE_SKATTEPLIKTIG" },
-      ]);
-      expect(payload.inntektskilder[0]).toMatchObject({ fomDato: "2024-01-01", tomDato: "2024-06-30" });
-      expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalledTimes(antallHentingerFørEndring);
+    it("tømmer skjemaet og beregningen når perioden forkortes, som i FTRL", async () => {
+      vi.mocked(Api.Trygdeavgift.hentBeregnetTrygdeavgift).mockResolvedValue({
+        ...lagretGrunnlag("2024-01-01", "2024-12-31"),
+        trygdeavgiftsperioder: [
+          {
+            fom: "2024-01-01",
+            tom: "2024-12-31",
+            trygdedekning: "FULL_DEKNING_EOSFO",
+            inntektskildetype: "ARBEIDSINNTEKT",
+            avgiftssats: 7.7,
+            avgiftPerMd: 3850,
+            beregningsregel: "ORDINÆR",
+          },
+        ],
+      } as any);
+
+      await renderOgEndrePeriode();
+
+      await waitFor(() => expect(defaultProps.oppdaterStatus).toHaveBeenLastCalledWith(false));
+      await act(() => new Promise((resolve) => setTimeout(resolve, 600)));
+      expect(Api.Trygdeavgift.beregnTrygdeavgiftsperioder).not.toHaveBeenCalled();
+      expect(Api.Trygdeavgift.hentOpprinneligTrygdeavgiftsgrunnlag).not.toHaveBeenCalled();
+      expect(screen.queryByTestId("trygdeavgiftstabell")).not.toBeInTheDocument();
+      expect(screen.queryByText(/kan ikke starte før eller slutte etter/)).not.toBeInTheDocument();
+    });
+
+    it("henter opprinnelig grunnlag ved ny vurdering når perioden endres, som i FTRL", async () => {
+      vi.mocked(Api.Trygdeavgift.hentBeregnetTrygdeavgift).mockResolvedValue(
+        lagretGrunnlag("2024-01-01", "2024-12-31") as any,
+      );
+
+      await renderOgEndrePeriode({ behandlingstype: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING });
+
+      await waitFor(() => expect(Api.Trygdeavgift.hentOpprinneligTrygdeavgiftsgrunnlag).toHaveBeenCalledTimes(1));
     });
 
     it("endrer ikke skjemaet når lovvalgsperioden hentes på nytt med samme datoer", async () => {

@@ -33,7 +33,6 @@ import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../../service
 import { erOrdinaerBeregning } from "../../../felleskomponenter/trygdeavgift/komponenter/beregningsforklaring";
 import "./vurderingTrygdeavgift.less";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
-import { Periodegrenser, tilpassPerioderTilNyeGrenser } from "./tilpassPerioder";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 import { useFeatureToggle } from "../../../featuretoggle";
@@ -78,17 +77,15 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     (periode) => periode.avgiftPerMd === 0 && erOrdinaerBeregning(periode.beregningsregel),
   );
 
-  const justerFom = (fom?: string) =>
-    skalIkkeViseTidligerePerioderToggle ? Utils.dato.justerDatoHvisTidligereÅr(fom) : fom;
+  const formattedDefaultPeriode = () => {
+    const justertFom = skalIkkeViseTidligerePerioderToggle
+      ? Utils.dato.justerDatoHvisTidligereÅr(lovvalgsperiode?.fom)
+      : lovvalgsperiode?.fom;
 
-  const formattedDefaultPeriode = () => ({
-    fomDato: Utils.dato.formatterDatoTilNorsk(justerFom(lovvalgsperiode?.fom)),
-    tomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.tom),
-  });
-
-  const finnPeriodegrenser = (periode?: { fom?: string; tom?: string }): Periodegrenser | undefined => {
-    const fom = justerFom(periode?.fom);
-    return fom && periode?.tom && fom <= periode.tom ? { fom, tom: periode.tom } : undefined;
+    return {
+      fomDato: Utils.dato.formatterDatoTilNorsk(justertFom),
+      tomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.tom),
+    };
   };
 
   const forrigeLovvalgsperiode = useRef(lovvalgsperiode);
@@ -164,17 +161,8 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const skalViseInntektskilder =
     !erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder) && !erÅpenSluttDato;
 
-  const tilpassSkjemaperioder = (forrige: Periodegrenser, nye: Periodegrenser) => {
-    const skatteforholdsperioder = tilpassPerioderTilNyeGrenser(formValues.skatteforholdsperioder, forrige, nye);
-    const inntektskilder = tilpassPerioderTilNyeGrenser(formValues.inntektskilder, forrige, nye);
-    resetSkatteforholdsperioder(skatteforholdsperioder.length ? skatteforholdsperioder : [formattedDefaultPeriode()]);
-    resetInntektskilder(
-      inntektskilder.length ? inntektskilder : [{ ...formattedDefaultPeriode(), erMaanedsbelop: BOOLSK_STRING.SANN }],
-    );
-  };
-
   useEffect(() => {
-    const forrigeGrenser = finnPeriodegrenser(forrigeLovvalgsperiode.current);
+    const forrige = forrigeLovvalgsperiode.current;
     forrigeLovvalgsperiode.current = lovvalgsperiode;
 
     if (erEuEøs) {
@@ -183,11 +171,16 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         formValues.inntektskilder?.some((i: Inntektskilde) => i.bruttoInntekt);
 
       if (harEksisterendeVerdier) {
-        const nyeGrenser = finnPeriodegrenser(lovvalgsperiode);
-        const grenserErEndret = forrigeGrenser?.fom !== nyeGrenser?.fom || forrigeGrenser?.tom !== nyeGrenser?.tom;
+        const erEndret = forrige?.fom !== lovvalgsperiode?.fom || forrige?.tom !== lovvalgsperiode?.tom;
 
-        if (redigerbart && forrigeGrenser && nyeGrenser && grenserErEndret) {
-          tilpassSkjemaperioder(forrigeGrenser, nyeGrenser);
+        // Som FTRL, der API-et tømmer grunnlaget når perioden endres.
+        if (redigerbart && erEndret) {
+          setTrygdeavgift(undefined);
+          if (erNyVurderingEllerManglendeInnbetaling) {
+            hentOpprinneligTrygdeavgiftsgrunnlag();
+          } else {
+            håndterLagretTrygdeavgiftsgrunnlag({ skatteforholdsperioder: [], inntektskilder: [] });
+          }
           setHarEndretLovvalgsperiode(true);
         }
         return;
