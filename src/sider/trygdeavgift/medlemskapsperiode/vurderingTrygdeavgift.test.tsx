@@ -223,6 +223,47 @@ describe("VurderingTrygdeavgift", () => {
       await waitFor(() => expect(defaultProps.oppdaterStatus).toHaveBeenLastCalledWith(true));
       expect(screen.queryByText(/kan ikke starte før eller slutte etter/)).not.toBeInTheDocument();
     });
+
+    it("skjuler ikke en lagret beregning selv om feltene er skjult", async () => {
+      vi.mocked(useFeatureToggle).mockImplementation(
+        (toggle) => toggle === MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
+      );
+      vi.mocked(Api.Trygdeavgift.hentBeregnetTrygdeavgift).mockResolvedValue(
+        createMockBeregnetTrygdeavgift({
+          trygdeavgiftsperioder: [
+            {
+              fom: `${iFjor}-01-01`,
+              tom: `${iFjor}-12-31`,
+              trygdedekning: "FULL_DEKNING",
+              inntektskildetype: "ARBEIDSINNTEKT",
+              avgiftssats: 7.7,
+              avgiftPerMd: 3850,
+              beregningsregel: "ORDINÆR",
+            },
+          ],
+          trygdeavgiftsgrunnlag: {
+            skatteforholdsperioder: [
+              { fomDato: `${iFjor}-01-01`, tomDato: `${iFjor}-12-31`, skatteplikttype: "IKKE_SKATTEPLIKTIG" },
+            ],
+            inntektskilder: [],
+          },
+        }) as any,
+      );
+
+      renderComponent({
+        medlemskapsperioder: [
+          createMockMedlemskapsperiode({ fomDato: `${iFjor}-01-01`, tomDato: `${iFjor}-12-31` }),
+          createMockMedlemskapsperiode({
+            id: 2,
+            fomDato: `${iÅr}-01-01`,
+            tomDato: `${iÅr}-12-31`,
+            innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.OPPHØRT,
+          }),
+        ],
+      });
+
+      expect(await screen.findByTestId("trygdeavgiftstabell")).toBeInTheDocument();
+    });
   });
 
   describe("API-kall", () => {
