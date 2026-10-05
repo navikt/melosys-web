@@ -67,11 +67,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const [lagrePending, setLagrePending] = useState(false);
   const [harEndretLovvalgsperiode, setHarEndretLovvalgsperiode] = useState<boolean | undefined>(undefined);
-  const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
-    () => Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID),
-    undefined,
-    [behandlingID, lovvalgsperioderStatus === STATUS.OK],
-  );
+  const [lagretTrygdeavgift, setTrygdeavgift] = useState<BeregnetTrygdeavgift>();
 
   const ingenTrygdeavgiftÅVise = lagretTrygdeavgift?.trygdeavgiftsperioder.every(
     (periode) => periode.avgiftPerMd === 0 && erOrdinaerBeregning(periode.beregningsregel),
@@ -121,6 +117,12 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   } = useFieldArray({ control: control as any, name: "inntektskilder" }) as any;
   const formValues = watch();
 
+  const aktivFeilmeldingType = finnAktivFeilmeldingEuEøs(
+    formValues?.inntektskilder,
+    formValues?.skatteforholdsperioder,
+    lovvalgsperiode,
+  );
+
   const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
 
   const innvilgedeLovvalgsperioder = tidligereLovvalgsperioder.filter(
@@ -135,10 +137,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     !skalIkkeViseTidligerePerioderToggle ||
     (trygdeavgiftErIkkeTom && !redigerbart) ||
     !skalIkkeBeregneForelopigTrygdeavgift;
-
-  const aktivFeilmeldingType = skalViseSkatteforholdOgInntektsperioder
-    ? finnAktivFeilmeldingEuEøs(formValues?.inntektskilder, formValues?.skatteforholdsperioder, lovvalgsperiode)
-    : undefined;
 
   const harLovvalgsperiodeFraTidligereÅr = harPerioderFraTidligereÅr(
     tidligereLovvalgsperioder as Avgiftspliktigperiode[],
@@ -165,7 +163,42 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
         formValues.skatteforholdsperioder?.some((s: Skatteforhold) => s.skatteplikttype) ||
         formValues.inntektskilder?.some((i: Inntektskilde) => i.bruttoInntekt);
 
-      if (harEksisterendeVerdier) {
+      const erEksisterendeVerdierFeil =
+        lovvalgsperiode?.fom &&
+        lovvalgsperiode?.tom &&
+        [...formValues.skatteforholdsperioder, ...formValues.inntektskilder].some(
+          (periode) =>
+            Utils.dato.formatterDatoTilISO(periode.fomDato, null) !== lovvalgsperiode.fom ||
+            Utils.dato.formatterDatoTilISO(periode.tomDato, null) !== lovvalgsperiode.tom,
+        );
+
+      if (harEksisterendeVerdier && erEksisterendeVerdierFeil && redigerbart) {
+        const periode = formattedDefaultPeriode();
+
+        setLagrePending(true);
+        Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID)
+          .then(() => {
+            resetSkatteforholdsperioder(
+              formValues.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
+                ...skatteforhold,
+                ...periode,
+              })),
+            );
+            resetInntektskilder(
+              formValues.inntektskilder.map((inntektskilde: Inntektskilde) => ({ ...inntektskilde, ...periode })),
+            );
+            setTrygdeavgift(undefined);
+            setFeil(undefined);
+            setHarEndretLovvalgsperiode(true);
+          })
+          .catch((error) => setFeil(mapFeilmelding(error)))
+          .finally(() => {
+            setLagrePending(false);
+          });
+        return;
+      }
+
+      if (harEksisterendeVerdier && !erEksisterendeVerdierFeil) {
         return;
       }
     }
@@ -390,7 +423,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
       <Feilmelding type={aktivFeilmeldingType} />
 
-      {skalViseSkatteforholdOgInntektsperioder && trygdeavgiftErIkkeTom && !ingenTrygdeavgiftÅVise && stegErGyldig && (
+      {trygdeavgiftErIkkeTom && !ingenTrygdeavgiftÅVise && stegErGyldig && (
         <>
           <Nav.Heading size="xsmall">Foreløpig beregnet trygdeavgift</Nav.Heading>
           <TrygdeavgiftsperioderTabell
