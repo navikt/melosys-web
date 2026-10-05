@@ -121,12 +121,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   } = useFieldArray({ control: control as any, name: "inntektskilder" }) as any;
   const formValues = watch();
 
-  const aktivFeilmeldingType = finnAktivFeilmeldingEuEøs(
-    formValues?.inntektskilder,
-    formValues?.skatteforholdsperioder,
-    lovvalgsperiode,
-  );
-
   const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
 
   const innvilgedeLovvalgsperioder = tidligereLovvalgsperioder.filter(
@@ -141,6 +135,10 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     !skalIkkeViseTidligerePerioderToggle ||
     (trygdeavgiftErIkkeTom && !redigerbart) ||
     !skalIkkeBeregneForelopigTrygdeavgift;
+
+  const aktivFeilmeldingType = skalViseSkatteforholdOgInntektsperioder
+    ? finnAktivFeilmeldingEuEøs(formValues?.inntektskilder, formValues?.skatteforholdsperioder, lovvalgsperiode)
+    : undefined;
 
   const harLovvalgsperiodeFraTidligereÅr = harPerioderFraTidligereÅr(
     tidligereLovvalgsperioder as Avgiftspliktigperiode[],
@@ -392,7 +390,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
       <Feilmelding type={aktivFeilmeldingType} />
 
-      {trygdeavgiftErIkkeTom && !ingenTrygdeavgiftÅVise && stegErGyldig && (
+      {skalViseSkatteforholdOgInntektsperioder && trygdeavgiftErIkkeTom && !ingenTrygdeavgiftÅVise && stegErGyldig && (
         <>
           <Nav.Heading size="xsmall">Foreløpig beregnet trygdeavgift</Nav.Heading>
           <TrygdeavgiftsperioderTabell
