@@ -1,4 +1,4 @@
-// Legger Dependabot-PR-er i merge queue. dependabot-automerge.yml kopierer fila inn i en
+// Legger Dependabot-PR-er i merge queue. Dependabot-workflowen kopierer fila inn i en
 // utsjekk av navikt/automerge-dependabot og kjører den der.
 //
 // Utvalget er det samme som actionen bruker: findMergeablePRs og applyFilters importeres
