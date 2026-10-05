@@ -72,6 +72,9 @@ describe("MottatteOpplysninger operations", () => {
   let initialState: TestState;
 
   beforeEach(() => {
+    // nullstiller memoet av sist sendte payload mellom testene
+    operations.resetState();
+
     initialState = {
       form: {
         [KV.Form.SOKNAD]: {
@@ -201,6 +204,41 @@ describe("MottatteOpplysninger operations", () => {
       const finalState = store.getState();
       expect(finalState.mottatteOpplysninger.data).toEqual({});
       expect(finalState.mottatteOpplysninger.status).toBe("OK");
+    });
+
+    it("sender ikke på nytt når payloaden er uendret", async () => {
+      let antallPost = 0;
+      mswServer.use(
+        http.post("/api/mottatteopplysninger/:behandlingId", async ({ request }) => {
+          antallPost += 1;
+          const body = (await request.json()) as any;
+          return HttpResponse.json({ ...body, type: initialState.mottatteOpplysninger.data.type });
+        }),
+      );
+
+      const store = createTestStore(initialState);
+      await store.dispatch(operations.lagre() as any);
+      await store.dispatch(operations.lagre() as any);
+
+      expect(antallPost).toBe(1);
+    });
+
+    it("sender på nytt når payloaden er endret", async () => {
+      let antallPost = 0;
+      mswServer.use(
+        http.post("/api/mottatteopplysninger/:behandlingId", async ({ request }) => {
+          antallPost += 1;
+          const body = (await request.json()) as any;
+          return HttpResponse.json({ ...body, type: initialState.mottatteOpplysninger.data.type });
+        }),
+      );
+
+      const store = createTestStore(initialState);
+      await store.dispatch(operations.lagre() as any);
+      store.dispatch(operations.oppdaterPeriode({ fom: "2026-01-01", tom: "2026-12-31" }) as any);
+      await store.dispatch(operations.lagre() as any);
+
+      expect(antallPost).toBe(2);
     });
 
     it("lager FEILET ved feil i api-kall", async () => {
