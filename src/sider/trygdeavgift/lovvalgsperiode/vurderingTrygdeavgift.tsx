@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FieldValue, useFieldArray, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import * as Mui from "../../../felleskomponenter/ui";
@@ -33,6 +33,7 @@ import { BeregnetTrygdeavgift, TrygdeavgiftsgrunnlagDto } from "../../../service
 import { erOrdinaerBeregning } from "../../../felleskomponenter/trygdeavgift/komponenter/beregningsforklaring";
 import "./vurderingTrygdeavgift.less";
 import vurderingTrygdeavgiftSchema from "./vurderingTrygdeavgiftSchema";
+import { Periodegrenser, tilpassPerioderTilNyeGrenser } from "./tilpassPerioder";
 
 import { erBrukerSkattepliktigIHelePerioden } from "../../aarsavregning/stegKomponenter/vurderingAarsavregning/utils";
 import { useFeatureToggle } from "../../../featuretoggle";
@@ -67,22 +68,30 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const [feil, setFeil] = useState<string | undefined>(undefined);
   const [lagrePending, setLagrePending] = useState(false);
   const [harEndretLovvalgsperiode, setHarEndretLovvalgsperiode] = useState<boolean | undefined>(undefined);
-  const [lagretTrygdeavgift, setTrygdeavgift] = useState<BeregnetTrygdeavgift>();
+  const [lagretTrygdeavgift, setTrygdeavgift] = useAsyncCallbackState(
+    () => Api.Trygdeavgift.hentBeregnetTrygdeavgift(behandlingID),
+    undefined,
+    [behandlingID, lovvalgsperioderStatus === STATUS.OK],
+  );
 
   const ingenTrygdeavgiftÅVise = lagretTrygdeavgift?.trygdeavgiftsperioder.every(
     (periode) => periode.avgiftPerMd === 0 && erOrdinaerBeregning(periode.beregningsregel),
   );
 
-  const formattedDefaultPeriode = () => {
-    const justertFom = skalIkkeViseTidligerePerioderToggle
-      ? Utils.dato.justerDatoHvisTidligereÅr(lovvalgsperiode?.fom)
-      : lovvalgsperiode?.fom;
+  const justerFom = (fom?: string) =>
+    skalIkkeViseTidligerePerioderToggle ? Utils.dato.justerDatoHvisTidligereÅr(fom) : fom;
 
-    return {
-      fomDato: Utils.dato.formatterDatoTilNorsk(justertFom),
-      tomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.tom),
-    };
+  const formattedDefaultPeriode = () => ({
+    fomDato: Utils.dato.formatterDatoTilNorsk(justerFom(lovvalgsperiode?.fom)),
+    tomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperiode?.tom),
+  });
+
+  const finnPeriodegrenser = (periode?: { fom?: string; tom?: string }): Periodegrenser | undefined => {
+    const fom = justerFom(periode?.fom);
+    return fom && periode?.tom && fom <= periode.tom ? { fom, tom: periode.tom } : undefined;
   };
+
+  const forrigeLovvalgsperiode = useRef(lovvalgsperiode);
 
   const erÅpenSluttDato = !lovvalgsperiode?.tom;
   const erNyVurderingEllerManglendeInnbetaling =
@@ -117,12 +126,6 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   } = useFieldArray({ control: control as any, name: "inntektskilder" }) as any;
   const formValues = watch();
 
-  const aktivFeilmeldingType = finnAktivFeilmeldingEuEøs(
-    formValues?.inntektskilder,
-    formValues?.skatteforholdsperioder,
-    lovvalgsperiode,
-  );
-
   const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
 
   const innvilgedeLovvalgsperioder = tidligereLovvalgsperioder.filter(
@@ -137,6 +140,10 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
     !skalIkkeViseTidligerePerioderToggle ||
     (trygdeavgiftErIkkeTom && !redigerbart) ||
     !skalIkkeBeregneForelopigTrygdeavgift;
+
+  const aktivFeilmeldingType = skalViseSkatteforholdOgInntektsperioder
+    ? finnAktivFeilmeldingEuEøs(formValues?.inntektskilder, formValues?.skatteforholdsperioder, lovvalgsperiode)
+    : undefined;
 
   const harLovvalgsperiodeFraTidligereÅr = harPerioderFraTidligereÅr(
     tidligereLovvalgsperioder as Avgiftspliktigperiode[],
@@ -157,48 +164,32 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   const skalViseInntektskilder =
     !erBrukerSkattepliktigIHelePerioden(formValues.skatteforholdsperioder) && !erÅpenSluttDato;
 
+  const tilpassSkjemaperioder = (forrige: Periodegrenser, nye: Periodegrenser) => {
+    const skatteforholdsperioder = tilpassPerioderTilNyeGrenser(formValues.skatteforholdsperioder, forrige, nye);
+    const inntektskilder = tilpassPerioderTilNyeGrenser(formValues.inntektskilder, forrige, nye);
+    resetSkatteforholdsperioder(skatteforholdsperioder.length ? skatteforholdsperioder : [formattedDefaultPeriode()]);
+    resetInntektskilder(
+      inntektskilder.length ? inntektskilder : [{ ...formattedDefaultPeriode(), erMaanedsbelop: BOOLSK_STRING.SANN }],
+    );
+  };
+
   useEffect(() => {
+    const forrigeGrenser = finnPeriodegrenser(forrigeLovvalgsperiode.current);
+    forrigeLovvalgsperiode.current = lovvalgsperiode;
+
     if (erEuEøs) {
       const harEksisterendeVerdier =
         formValues.skatteforholdsperioder?.some((s: Skatteforhold) => s.skatteplikttype) ||
         formValues.inntektskilder?.some((i: Inntektskilde) => i.bruttoInntekt);
 
-      const erEksisterendeVerdierFeil =
-        lovvalgsperiode?.fom &&
-        lovvalgsperiode?.tom &&
-        [...formValues.skatteforholdsperioder, ...formValues.inntektskilder].some(
-          (periode) =>
-            Utils.dato.formatterDatoTilISO(periode.fomDato, null) !== lovvalgsperiode.fom ||
-            Utils.dato.formatterDatoTilISO(periode.tomDato, null) !== lovvalgsperiode.tom,
-        );
+      if (harEksisterendeVerdier) {
+        const nyeGrenser = finnPeriodegrenser(lovvalgsperiode);
+        const grenserErEndret = forrigeGrenser?.fom !== nyeGrenser?.fom || forrigeGrenser?.tom !== nyeGrenser?.tom;
 
-      if (harEksisterendeVerdier && erEksisterendeVerdierFeil && redigerbart) {
-        const periode = formattedDefaultPeriode();
-
-        setLagrePending(true);
-        Api.Trygdeavgift.slettTrygdeavgiftsperioder(behandlingID)
-          .then(() => {
-            resetSkatteforholdsperioder(
-              formValues.skatteforholdsperioder.map((skatteforhold: Skatteforhold) => ({
-                ...skatteforhold,
-                ...periode,
-              })),
-            );
-            resetInntektskilder(
-              formValues.inntektskilder.map((inntektskilde: Inntektskilde) => ({ ...inntektskilde, ...periode })),
-            );
-            setTrygdeavgift(undefined);
-            setFeil(undefined);
-            setHarEndretLovvalgsperiode(true);
-          })
-          .catch((error) => setFeil(mapFeilmelding(error)))
-          .finally(() => {
-            setLagrePending(false);
-          });
-        return;
-      }
-
-      if (harEksisterendeVerdier && !erEksisterendeVerdierFeil) {
+        if (redigerbart && forrigeGrenser && nyeGrenser && grenserErEndret) {
+          tilpassSkjemaperioder(forrigeGrenser, nyeGrenser);
+          setHarEndretLovvalgsperiode(true);
+        }
         return;
       }
     }
@@ -423,7 +414,7 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
 
       <Feilmelding type={aktivFeilmeldingType} />
 
-      {trygdeavgiftErIkkeTom && !ingenTrygdeavgiftÅVise && stegErGyldig && (
+      {skalViseSkatteforholdOgInntektsperioder && trygdeavgiftErIkkeTom && !ingenTrygdeavgiftÅVise && stegErGyldig && (
         <>
           <Nav.Heading size="xsmall">Foreløpig beregnet trygdeavgift</Nav.Heading>
           <TrygdeavgiftsperioderTabell

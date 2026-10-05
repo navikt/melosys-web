@@ -182,6 +182,49 @@ describe("VurderingTrygdeavgift", () => {
     });
   });
 
+  describe("manglende innbetaling når inneværende år er opphørt", () => {
+    const iFjor = new Date().getFullYear() - 1;
+    const iÅr = iFjor + 1;
+
+    it("viser ikke periodefeil fra det skjulte opprinnelige grunnlaget", async () => {
+      vi.mocked(useFeatureToggle).mockImplementation(
+        (toggle) => toggle === MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
+      );
+      vi.mocked(Api.Trygdeavgift.hentOpprinneligTrygdeavgiftsgrunnlag).mockResolvedValue({
+        skatteforholdsperioder: [
+          { fomDato: `${iFjor}-01-01`, tomDato: `${iÅr}-12-31`, skatteplikttype: "IKKE_SKATTEPLIKTIG" },
+        ],
+        inntektskilder: [
+          {
+            type: "ARBEIDSINNTEKT",
+            arbeidsgiversavgiftBetales: false,
+            avgiftspliktigInntekt: 50000,
+            fomDato: `${iFjor}-01-01`,
+            tomDato: `${iÅr}-12-31`,
+            erMaanedsbelop: true,
+          },
+        ],
+      });
+
+      renderComponent({
+        behandlingstype: MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT,
+        medlemskapsperioder: [
+          createMockMedlemskapsperiode({ fomDato: `${iFjor}-01-01`, tomDato: `${iFjor}-12-31` }),
+          createMockMedlemskapsperiode({
+            id: 2,
+            fomDato: `${iÅr}-01-01`,
+            tomDato: `${iÅr}-12-31`,
+            innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.OPPHØRT,
+          }),
+        ],
+      });
+
+      await waitFor(() => expect(Api.Trygdeavgift.hentOpprinneligTrygdeavgiftsgrunnlag).toHaveBeenCalled());
+      await waitFor(() => expect(defaultProps.oppdaterStatus).toHaveBeenLastCalledWith(true));
+      expect(screen.queryByText(/kan ikke starte før eller slutte etter/)).not.toBeInTheDocument();
+    });
+  });
+
   describe("API-kall", () => {
     it("henter opprinnelig trygdeavgiftsgrunnlag ved ny vurdering når skatteforholdsperioder er tom", async () => {
       renderComponent({
