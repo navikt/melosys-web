@@ -31,6 +31,7 @@ import {
 } from "./tekster";
 import { BrevMottakereTabell } from "./mottakertabell/brevMottakereTabell";
 import { Lovvalgsperiode } from "./lovvalgsperiode";
+import { utledVedtakstype } from "./utledVedtakstype";
 import vurderingVedtakSchema from "./vurderingVedtakSchema";
 import "./vurderingVedtak.less";
 
@@ -115,7 +116,7 @@ export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
     await dispatch(
       kontrollOperations.kontrollerFerdigbehandling({
         behandlingID,
-        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        vedtakstype: utledVedtakstype(vedtakstype, behandlingstype),
         skalRegisteropplysningerOppdateres: false,
       }),
     );
@@ -170,7 +171,7 @@ export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
     dispatch(
       vedtakOperations.fatt(behandlingID, {
         behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        vedtakstype: utledVedtakstype(vedtakstype, behandlingstype),
       }),
     );
 
