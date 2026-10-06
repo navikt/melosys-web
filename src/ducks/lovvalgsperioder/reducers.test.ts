@@ -35,9 +35,9 @@ describe("lovvalgsperioder reducer", () => {
     it("lar ENDRE_PERIODE beholde bestemmelsen", () => {
       const next = reducer(etterFeil(), {
         type: Types.ENDRE_PERIODE,
-        data: { fomDato: "2027-01-01", tomDato: "2027-06-30" },
+        data: { fomDato: "2027-02-01", tomDato: "2027-06-30" },
       });
-      expect(next.data).toEqual([{ ...perioder[0], tomDato: "2027-06-30" }]);
+      expect(next.data).toEqual([{ ...perioder[0], fomDato: "2027-02-01", tomDato: "2027-06-30" }]);
     });
 
     it("OK fjerner feilen", () => {
