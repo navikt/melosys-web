@@ -28,7 +28,6 @@ import * as Api from "../../../../services/api";
 import { BrevVedleggVisningstabellInterface } from "../../../../services/modules/dokumenter-v2";
 import * as Utils from "../../../../utils";
 import { SumArsavregningTabell } from "../vurderingAarsavregning/komponenter/sumArsavregningTabell";
-import { beregnSumTilFakturaEllerRefusjon } from "../vurderingAarsavregning/utils";
 import "./vurderingVedtak.less";
 import vurdering_vedtak from "./vurderingVedtakSchema";
 import { useFeatureToggle } from "../../../../featuretoggle";
@@ -383,6 +382,9 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
     return rader;
   };
 
+  // TODO MELOSYS-8235: Samme unntak som i SumArsavregningTabell. Differansen under kommer fra backend, som trekker fra
+  // tidligere fakturert også når innbetalt er oppgitt, så radene summerer ikke til differansen med togglen på.
+  // Togglen er av i prod; samordne med backend før den slås på.
   const tidligereTrygdeavgift =
     lagretAarsavregning?.harInnbetaltTrygdeavgift && erÅrsavregningEøsPensjonistToggleEnabled
       ? 0
@@ -394,15 +396,11 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
       ? lagretAarsavregning?.avregning?.manueltAvgiftBeloep
       : lagretAarsavregning?.avregning?.beregnetAvgiftBelop;
 
-  const tidligereInnbetaltTrygdeavgift =
-    lagretAarsavregning?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereInnbetaltTrygdeavgift;
+  const tilbakelagtInnbetaltTrygdeavgift = lagretAarsavregning?.avregning?.tilbakelagtInnbetaltTrygdeavgift;
 
-  const sumTilFakturaEllerRefusjon = beregnSumTilFakturaEllerRefusjon(
-    nyTrygdeavgift,
-    tidligereTrygdeavgift,
-    innbetaltTrygdeavgift,
-    tidligereInnbetaltTrygdeavgift,
-  );
+  const tilFaktureringBeloep = lagretAarsavregning?.avregning?.tilFaktureringBeloep;
+  const harBeloepTilFakturering = typeof tilFaktureringBeloep === "number";
+  const sumTilFakturaEllerRefusjon = tilFaktureringBeloep ?? 0;
   const erDifferanseUnderMinstebeløp = Math.abs(sumTilFakturaEllerRefusjon) < MINSTEBELOP_FAKTURERING_ELLER_REFUSJON;
   const erNullKroner = sumTilFakturaEllerRefusjon === 0;
   const skalFaktureres = sumTilFakturaEllerRefusjon > 0;
@@ -410,6 +408,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
 
   const kanSubmitte =
     redigerbart &&
+    harBeloepTilFakturering &&
     !vedtakPending &&
     !erÅrsavregningIkkeStøttetSakstype &&
     (!harFullmaktForTrygdeavgift || erDifferanseUnderMinstebeløp || harBekreftetFullmaktForTrygdeavgift);
@@ -438,13 +437,22 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         </Nav.Alert>
       )}
 
-      <SumArsavregningTabell
-        nyTrygdeavgift={nyTrygdeavgift}
-        tidligereTrygdeavgift={tidligereTrygdeavgift}
-        tidligereInnbetaltTrygdeavgift={innbetaltTrygdeavgift}
-        harGrunnlagIMelosys={tidligereTrygdeavgift !== null || lagretAarsavregning?.harInnbetaltTrygdeavgift === true}
-        tidligereAarsavregningInnbetaltTrygdeavgift={tidligereInnbetaltTrygdeavgift}
-      />
+      {harBeloepTilFakturering ? (
+        <SumArsavregningTabell
+          nyTrygdeavgift={nyTrygdeavgift}
+          tidligereTrygdeavgift={tidligereTrygdeavgift}
+          tidligereInnbetaltTrygdeavgift={innbetaltTrygdeavgift}
+          harGrunnlagIMelosys={tidligereTrygdeavgift !== null || lagretAarsavregning?.harInnbetaltTrygdeavgift === true}
+          tilbakelagtInnbetaltTrygdeavgift={tilbakelagtInnbetaltTrygdeavgift}
+          tilFaktureringBeloep={tilFaktureringBeloep}
+        />
+      ) : (
+        redigerbart && (
+          <Nav.Alert variant="warning">
+            Faktureringsbeløp mangler. Gå til første steg og beregn eller oppgi endelig avgift.
+          </Nav.Alert>
+        )
+      )}
 
       <Forms.Checkbox
         name="skjoennsfastsattInntekt"
@@ -462,7 +470,7 @@ export function VurderingVedtak({ tilbake, aktivtSteg }: Props) {
         }}
       />
 
-      {fakturaMottaker ? (
+      {fakturaMottaker && harBeloepTilFakturering ? (
         <Nav.Row className="trygdeavgift">
           <Nav.Column xs="12">
             <Nav.BodyLong size="small" className="info">
