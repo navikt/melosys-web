@@ -25,7 +25,7 @@ export default function reducer(state = initialState, action = {}) {
       // Periodene blir stående: neste lagring sender dem, ikke feilsvaret (MELOSYS-8338).
       return { ...state, status: STATUS.ERROR, feil: action.data };
     case Types.HENT_FEILET:
-      // Periodene i storen kan være fra forrige behandling. Tom liste: lagre() sender ingenting.
+      // Periodene i storen kan være fra forrige behandling. lagre() sender ingenting så lenge listen er tom.
       return { ...state, status: STATUS.ERROR, data: [], feil: action.data };
     case Types.OK:
       return {
