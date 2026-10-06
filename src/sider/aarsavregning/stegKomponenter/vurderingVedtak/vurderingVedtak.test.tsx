@@ -227,7 +227,7 @@ describe("VurderingVedtak", () => {
     expect(screen.queryByText("Differanse")).not.toBeInTheDocument();
     expect(screen.queryByText(/Kreditnota på|Faktura på/)).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Fatt vedtak" })).toBeDisabled();
-    expect(screen.getByText(/Beløpet til fakturering er ikke beregnet/)).toBeInTheDocument();
+    expect(screen.getByText(/Faktureringsbeløp mangler/)).toBeInTheDocument();
   });
 });
 
