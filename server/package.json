@@ -1,0 +1,38 @@
+{
+  "name": "melosys-web-server",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Node/Express-server som erstatter nginx for statisk hosting, runtime-konfigurasjon og API-proxying av melosys-web",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "build:ci": "tsc && rm -rf build && mkdir -p build && cp -r dist build/dist && find build/dist -name '*.test.js' -delete && rm -rf build/dist/testUtils && cp package.json build/package.json && cp pnpm-lock.yaml build/pnpm-lock.yaml && cd build && pnpm install --prod --frozen-lockfile --ignore-workspace && cp -r ../../build public",
+    "dev": "tsc && node dist/index.js",
+    "start": "node dist/index.js",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "test": "tsx --test src/*.test.ts"
+  },
+  "author": "NAV",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.2.1",
+    "http-proxy-middleware": "^4.2.0",
+    "morgan": "^1.12.1",
+    "winston": "^3.19.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/express": "^5.0.6",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^22.20.2",
+    "eslint": "^10.10.0",
+    "globals": "^17.12.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.70.0"
+  },
+  "packageManager": "pnpm@10.20.0"
+}

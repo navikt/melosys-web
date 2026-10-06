@@ -107,6 +107,9 @@ export default tseslint.config(
       "generate-local-config.js",
       "example/**",
       "src/graphql/generated/**",
+      // server/ er en egen, isolert pnpm-workspace med sin egen
+      // eslint.config.mjs/tsconfig.json - lintes separat, ikke herfra.
+      "server/**",
     ],
   },
 );

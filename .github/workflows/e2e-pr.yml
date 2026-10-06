@@ -101,15 +101,20 @@ jobs:
       # Bare bygg; formatering, lint og tester kjører i pull-request.yml («build»).
       - name: Build
         run: pnpm build
-      # Dockerfile kopierer node_modules for SBOM; samme innhold som i deploy-dev.
-      - name: Prune devDependencies
-        run: pnpm prune --prod --ignore-scripts
+      - name: Install server dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: server
+      - name: Build server deploy artifact
+        run: pnpm build:ci
+        working-directory: server
       # Bare <merge-sha>, aldri latest: da ville PR-koden gått til alle andre
       # repoers e2e-kjøringer. nais/docker-build-push legger i tillegg på en dato-tag.
       - name: Build and push Docker image
         uses: nais/docker-build-push@v0
         with:
           team: teammelosys
+          docker_context: .
+          dockerfile: server/Dockerfile
           tag: |
             type=raw,value=${{ github.sha }},priority=9000
           platforms: linux/amd64
