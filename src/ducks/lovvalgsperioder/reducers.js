@@ -22,12 +22,14 @@ export default function reducer(state = initialState, action = {}) {
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };
     case Types.FEILET:
-      return { ...state, status: STATUS.ERROR, data: action.data };
+      // Periodene blir stående: neste lagring sender dem, ikke feilsvaret (MELOSYS-8338).
+      return { ...state, status: STATUS.ERROR, feil: action.data };
     case Types.OK:
       return {
         ...state,
         status: STATUS.OK,
         data: action.data,
+        feil: undefined,
       };
     case Types.RESET:
       return { ...initialState };
