@@ -4,21 +4,22 @@ exports[`Soknadsperiode > snapshot test 1`] = `
 
 <div>
   <div class="soknadsperiode">
-    <p class="soknadsperiode__etikett navds-body-long navds-body-long--small">
+    <p class="soknadsperiode__etikett aksel-body-long aksel-body-long--small">
       Tittel
     </p>
     <div class="periode__container">
-      <p class="periode navds-body-long navds-body-long--small navds-typo--semibold">
+      <p class="periode aksel-body-long aksel-body-long--small aksel-typo--semibold">
         01.01.2023 - 01.04.2023
       </p>
       <div>
         <button
+          data-variant="tertiary"
           type="button"
           aria-label="Rediger"
           title="Rediger"
-          class="ikon-knapp navds-button navds-button--tertiary navds-button--small navds-button--icon-only"
+          class="ikon-knapp aksel-button aksel-button--small aksel-button--icon-only"
         >
-          <span class="navds-button__icon">
+          <span class="aksel-button__icon">
             <svg
               width="24"
               height="24"

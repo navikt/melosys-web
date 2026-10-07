@@ -5,26 +5,26 @@ exports[`SideDialog > snapshot test 1`] = `
 <div>
   <div class="dialog">
     <aside>
-      <div class="navds-tabs navds-tabs--small">
+      <div class="aksel-tabs aksel-tabs--small">
         <nav>
-          <div class="navds-tabs__tablist-wrapper">
+          <div class="aksel-tabs__tablist-wrapper">
             <div
-              class="navds-tabs__tablist"
+              class="aksel-tabs__tablist"
               role="tablist"
               aria-orientation="horizontal"
             >
               <button
-                class="navds-tabs__tab navds-tabs__tab--small navds-tabs__tab-icon--left"
-                role="tab"
+                class="aksel-tabs__tab aksel-tabs__tab--small aksel-tabs__tab-icon--left"
                 type="button"
+                id="333"
+                aria-controls="tabs-_r_0_--tabpanel-dokumenter"
+                tabindex="0"
                 aria-selected="true"
                 data-state="active"
-                tabindex="0"
-                aria-controls="tabs-_r_0_--tabpanel-dokumenter"
-                id="333"
-                data-index="0"
+                role="tab"
+                data-aksel-tab
               >
-                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--small">
+                <span class="aksel-tabs__tab-inner aksel-body-short aksel-body-short--small">
                   <span aria-hidden="true">
                   </span>
                   <span>
@@ -33,17 +33,17 @@ exports[`SideDialog > snapshot test 1`] = `
                 </span>
               </button>
               <button
-                class="navds-tabs__tab navds-tabs__tab--small navds-tabs__tab-icon--left"
-                role="tab"
+                class="aksel-tabs__tab aksel-tabs__tab--small aksel-tabs__tab-icon--left"
                 type="button"
+                id="333"
+                aria-controls="tabs-_r_0_--tabpanel-notat"
+                tabindex="-1"
                 aria-selected="false"
                 data-state="inactive"
-                tabindex="-1"
-                aria-controls="tabs-_r_0_--tabpanel-notat"
-                id="333"
-                data-index="1"
+                role="tab"
+                data-aksel-tab
               >
-                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--small">
+                <span class="aksel-tabs__tab-inner aksel-body-short aksel-body-short--small">
                   <span aria-hidden="true">
                   </span>
                   <span>
@@ -52,17 +52,17 @@ exports[`SideDialog > snapshot test 1`] = `
                 </span>
               </button>
               <button
-                class="navds-tabs__tab navds-tabs__tab--small navds-tabs__tab-icon--left"
-                role="tab"
+                class="aksel-tabs__tab aksel-tabs__tab--small aksel-tabs__tab-icon--left"
                 type="button"
+                id="333"
+                aria-controls="tabs-_r_0_--tabpanel-brevbestilling"
+                tabindex="-1"
                 aria-selected="false"
                 data-state="inactive"
-                tabindex="-1"
-                aria-controls="tabs-_r_0_--tabpanel-brevbestilling"
-                id="333"
-                data-index="2"
+                role="tab"
+                data-aksel-tab
               >
-                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--small">
+                <span class="aksel-tabs__tab-inner aksel-body-short aksel-body-short--small">
                   <span aria-hidden="true">
                   </span>
                   <span>
@@ -71,17 +71,17 @@ exports[`SideDialog > snapshot test 1`] = `
                 </span>
               </button>
               <button
-                class="navds-tabs__tab navds-tabs__tab--small navds-tabs__tab-icon--left"
-                role="tab"
+                class="aksel-tabs__tab aksel-tabs__tab--small aksel-tabs__tab-icon--left"
                 type="button"
+                id="333"
+                aria-controls="tabs-_r_0_--tabpanel-sedbestilling"
+                tabindex="-1"
                 aria-selected="false"
                 data-state="inactive"
-                tabindex="-1"
-                aria-controls="tabs-_r_0_--tabpanel-sedbestilling"
-                id="333"
-                data-index="3"
+                role="tab"
+                data-aksel-tab
               >
-                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--small">
+                <span class="aksel-tabs__tab-inner aksel-body-short aksel-body-short--small">
                   <span aria-hidden="true">
                   </span>
                   <span>
@@ -90,17 +90,17 @@ exports[`SideDialog > snapshot test 1`] = `
                 </span>
               </button>
               <button
-                class="navds-tabs__tab navds-tabs__tab--small navds-tabs__tab-icon--left"
-                role="tab"
+                class="aksel-tabs__tab aksel-tabs__tab--small aksel-tabs__tab-icon--left"
                 type="button"
+                id="333"
+                aria-controls="tabs-_r_0_--tabpanel-besvarsed"
+                tabindex="-1"
                 aria-selected="false"
                 data-state="inactive"
-                tabindex="-1"
-                aria-controls="tabs-_r_0_--tabpanel-besvarsed"
-                id="333"
-                data-index="4"
+                role="tab"
+                data-aksel-tab
               >
-                <span class="navds-tabs__tab-inner navds-body-short navds-body-short--small">
+                <span class="aksel-tabs__tab-inner aksel-body-short aksel-body-short--small">
                   <span aria-hidden="true">
                   </span>
                   <span>
@@ -112,7 +112,7 @@ exports[`SideDialog > snapshot test 1`] = `
           </div>
         </nav>
         <div
-          class="navds-tabs__tabpanel"
+          class="aksel-tabs__tabpanel"
           role="tabpanel"
           tabindex="0"
           aria-labelledby="333"
@@ -125,40 +125,50 @@ exports[`SideDialog > snapshot test 1`] = `
             <div class="sideDialogDokumenter">
               <table
                 aria-label="Liste over dokumenter knyttet til saken"
-                class="navds-table navds-table--small"
+                class="aksel-table aksel-table--small"
               >
-                <thead class="navds-table__header">
-                  <tr class="navds-table__row navds-table__row--shade-on-hover">
+                <thead class="aksel-table__header">
+                  <tr
+                    class="aksel-table__row aksel-table__row--shade-on-hover"
+                    data-interactive="false"
+                  >
                     <th
-                      class="navds-table__header-cell navds-label navds-label--small"
+                      class="aksel-table__header-cell aksel-label aksel-label--small"
                       aria-label="Mottaksretning"
                     >
                     </th>
-                    <th class="navds-table__header-cell navds-label navds-label--small">
+                    <th class="aksel-table__header-cell aksel-label aksel-label--small">
                       Dokument
                     </th>
-                    <th class="navds-table__header-cell navds-label navds-label--small">
+                    <th class="aksel-table__header-cell aksel-label aksel-label--small">
                       Avsender/mottaker
                     </th>
-                    <th class="navds-table__header-cell navds-label navds-label--small">
+                    <th class="aksel-table__header-cell aksel-label aksel-label--small">
                       Dato
                     </th>
                   </tr>
                 </thead>
-                <tbody class="navds-table__body">
-                  <tr class="navds-table__row navds-table__row--shade-on-hover">
-                    <td class="navds-table__data-cell mottaksretning navds-body-short navds-body-short--small">
-                      <span class="navds-tag navds-tag--info navds-tag--small navds-tag--outline navds-tag--info navds-body-short navds-body-short--small">
+                <tbody class="aksel-table__body">
+                  <tr
+                    class="aksel-table__row aksel-table__row--shade-on-hover"
+                    data-interactive="false"
+                  >
+                    <td class="aksel-table__data-cell mottaksretning aksel-body-short aksel-body-short--small">
+                      <span
+                        data-color="info"
+                        data-variant="outline"
+                        class="aksel-tag aksel-tag--small aksel-body-short aksel-body-short--small"
+                      >
                         inn
                       </span>
                     </td>
-                    <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                    <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                       <span>
                         <a
                           href="#"
                           title="Åpnes i ny fane"
                           aria-label="Åpnes i ny fane"
-                          class="navds-link navds-link--action"
+                          class="aksel-link"
                         >
                           tittel
                           <svg
@@ -179,10 +189,10 @@ exports[`SideDialog > snapshot test 1`] = `
                         </a>
                       </span>
                     </td>
-                    <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                    <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                       avsendernavn
                     </td>
-                    <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                    <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                     </td>
                   </tr>
                 </tbody>
@@ -191,7 +201,7 @@ exports[`SideDialog > snapshot test 1`] = `
           </div>
         </div>
         <div
-          class="navds-tabs__tabpanel"
+          class="aksel-tabs__tabpanel"
           role="tabpanel"
           tabindex="0"
           aria-labelledby="333"
@@ -201,7 +211,7 @@ exports[`SideDialog > snapshot test 1`] = `
         >
         </div>
         <div
-          class="navds-tabs__tabpanel"
+          class="aksel-tabs__tabpanel"
           role="tabpanel"
           tabindex="0"
           aria-labelledby="333"
@@ -211,7 +221,7 @@ exports[`SideDialog > snapshot test 1`] = `
         >
         </div>
         <div
-          class="navds-tabs__tabpanel"
+          class="aksel-tabs__tabpanel"
           role="tabpanel"
           tabindex="0"
           aria-labelledby="333"
@@ -221,7 +231,7 @@ exports[`SideDialog > snapshot test 1`] = `
         >
         </div>
         <div
-          class="navds-tabs__tabpanel"
+          class="aksel-tabs__tabpanel"
           role="tabpanel"
           tabindex="0"
           aria-labelledby="333"

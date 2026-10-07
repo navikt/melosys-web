@@ -8,7 +8,7 @@ exports[`ArbeidsgivereNorge > snapshot test 1`] = `
       <div class="undertittel">
         <h3
           id="333"
-          class="undertittel__navUndertittel navds-heading navds-heading--xsmall"
+          class="undertittel__navUndertittel aksel-heading aksel-heading--xsmall"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -101,11 +101,11 @@ exports[`ArbeidsgivereNorge > snapshot test 1`] = `
           <div class="col col-xs-6">
             <p
               style="margin-top: 0.5em;"
-              class="navds-body-long navds-body-long--small navds-typo--semibold"
+              class="aksel-body-long aksel-body-long--small aksel-typo--semibold"
             >
               Org.nr. juridisk enhet
             </p>
-            <p class="navds-body-long navds-body-long--small">
+            <p class="aksel-body-long aksel-body-long--small">
               123
             </p>
           </div>
@@ -116,7 +116,7 @@ exports[`ArbeidsgivereNorge > snapshot test 1`] = `
       <div class="undertittel">
         <h3
           id="333"
-          class="undertittel--understrek undertittel__navUndertittel navds-heading navds-heading--xsmall"
+          class="undertittel--understrek undertittel__navUndertittel aksel-heading aksel-heading--xsmall"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

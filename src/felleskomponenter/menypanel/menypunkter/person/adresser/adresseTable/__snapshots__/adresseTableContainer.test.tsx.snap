@@ -4,26 +4,32 @@ exports[`AdresseTableContainer > snapshot test 1`] = `
 
 <div>
   <div class="adresseTable menypanel__table-wrapper">
-    <table class="navds-table navds-table--small menypanel__table">
-      <thead class="navds-table__header">
-        <tr class="navds-table__row navds-table__row--shade-on-hover">
-          <th class="navds-table__header-cell navds-label fixed-width  navds-label--small">
+    <table class="aksel-table aksel-table--small menypanel__table">
+      <thead class="aksel-table__header">
+        <tr
+          class="aksel-table__row aksel-table__row--shade-on-hover"
+          data-interactive="false"
+        >
+          <th class="aksel-table__header-cell aksel-label fixed-width  aksel-label--small">
             Bostedsadresse
           </th>
-          <th class="navds-table__header-cell navds-label navds-label--small">
+          <th class="aksel-table__header-cell aksel-label aksel-label--small">
             Register
           </th>
-          <th class="navds-table__header-cell navds-label navds-label--small">
+          <th class="aksel-table__header-cell aksel-label aksel-label--small">
             Kilde
           </th>
-          <th class="navds-table__header-cell navds-label fixed-width navds-label--small">
+          <th class="aksel-table__header-cell aksel-label fixed-width aksel-label--small">
             Gyldig f.o.m.
           </th>
         </tr>
       </thead>
-      <tbody class="navds-table__body">
-        <tr class="navds-table__row navds-table__row--shade-on-hover">
-          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+      <tbody class="aksel-table__body">
+        <tr
+          class="aksel-table__row aksel-table__row--shade-on-hover"
+          data-interactive="false"
+        >
+          <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
             <address>
               <div>
                 Co Yo 1
@@ -41,13 +47,13 @@ exports[`AdresseTableContainer > snapshot test 1`] = `
               </div>
             </address>
           </td>
-          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
             FREG
           </td>
-          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
             Folkeregisteret
           </td>
-          <td class="navds-table__data-cell gyldig-label navds-body-short navds-body-short--small">
+          <td class="aksel-table__data-cell gyldig-label aksel-body-short aksel-body-short--small">
             16.06.1995
           </td>
         </tr>
@@ -86,26 +92,32 @@ exports[`AdresseTableContainer > snapshot test historisk åpnet 1`] = `
 
 <div>
   <div class="adresseTable menypanel__table-wrapper">
-    <table class="navds-table navds-table--small menypanel__table">
-      <thead class="navds-table__header">
-        <tr class="navds-table__row navds-table__row--shade-on-hover">
-          <th class="navds-table__header-cell navds-label fixed-width  navds-label--small">
+    <table class="aksel-table aksel-table--small menypanel__table">
+      <thead class="aksel-table__header">
+        <tr
+          class="aksel-table__row aksel-table__row--shade-on-hover"
+          data-interactive="false"
+        >
+          <th class="aksel-table__header-cell aksel-label fixed-width  aksel-label--small">
             Bostedsadresse
           </th>
-          <th class="navds-table__header-cell navds-label navds-label--small">
+          <th class="aksel-table__header-cell aksel-label aksel-label--small">
             Register
           </th>
-          <th class="navds-table__header-cell navds-label navds-label--small">
+          <th class="aksel-table__header-cell aksel-label aksel-label--small">
             Kilde
           </th>
-          <th class="navds-table__header-cell navds-label fixed-width navds-label--small">
+          <th class="aksel-table__header-cell aksel-label fixed-width aksel-label--small">
             Gyldig f.o.m.
           </th>
         </tr>
       </thead>
-      <tbody class="navds-table__body">
-        <tr class="navds-table__row navds-table__row--shade-on-hover">
-          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+      <tbody class="aksel-table__body">
+        <tr
+          class="aksel-table__row aksel-table__row--shade-on-hover"
+          data-interactive="false"
+        >
+          <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
             <address>
               <div>
                 Co Yo 1
@@ -123,13 +135,13 @@ exports[`AdresseTableContainer > snapshot test historisk åpnet 1`] = `
               </div>
             </address>
           </td>
-          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
             FREG
           </td>
-          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
             Folkeregisteret
           </td>
-          <td class="navds-table__data-cell gyldig-label navds-body-short navds-body-short--small">
+          <td class="aksel-table__data-cell gyldig-label aksel-body-short aksel-body-short--small">
             16.06.1995
           </td>
         </tr>
@@ -137,26 +149,32 @@ exports[`AdresseTableContainer > snapshot test historisk åpnet 1`] = `
     </table>
   </div>
   <div class="adresseTable menypanel__table-wrapper">
-    <table class="navds-table navds-table--small menypanel__table">
-      <thead class="navds-table__header">
-        <tr class="navds-table__row navds-table__row--shade-on-hover">
-          <th class="navds-table__header-cell navds-label fixed-width transparent navds-label--small">
+    <table class="aksel-table aksel-table--small menypanel__table">
+      <thead class="aksel-table__header">
+        <tr
+          class="aksel-table__row aksel-table__row--shade-on-hover"
+          data-interactive="false"
+        >
+          <th class="aksel-table__header-cell aksel-label fixed-width transparent aksel-label--small">
             Bostedsadresse
           </th>
-          <th class="navds-table__header-cell navds-label transparent navds-label--small">
+          <th class="aksel-table__header-cell aksel-label transparent aksel-label--small">
             Register
           </th>
-          <th class="navds-table__header-cell navds-label transparent navds-label--small">
+          <th class="aksel-table__header-cell aksel-label transparent aksel-label--small">
             Kilde
           </th>
-          <th class="navds-table__header-cell navds-label fixed-width navds-label--small">
+          <th class="aksel-table__header-cell aksel-label fixed-width aksel-label--small">
             Gyldig f.o.m. - t.o.m.
           </th>
         </tr>
       </thead>
-      <tbody class="navds-table__body">
-        <tr class="navds-table__row navds-table__row--shade-on-hover">
-          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+      <tbody class="aksel-table__body">
+        <tr
+          class="aksel-table__row aksel-table__row--shade-on-hover"
+          data-interactive="false"
+        >
+          <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
             <address>
               <div>
               </div>
@@ -173,13 +191,13 @@ exports[`AdresseTableContainer > snapshot test historisk åpnet 1`] = `
               </div>
             </address>
           </td>
-          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
             FREG
           </td>
-          <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+          <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
             Folkeregisteret
           </td>
-          <td class="navds-table__data-cell historisk-label navds-body-short navds-body-short--small">
+          <td class="aksel-table__data-cell historisk-label aksel-body-short aksel-body-short--small">
             12.09.1957 -
           </td>
         </tr>

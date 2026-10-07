@@ -501,8 +501,8 @@ function HtmlEditor({
         //  versjonsforskjell på komponentene fra @navikt/ds-react og vår aksel-icons versjon.
         // Aligning av versjoner kan løse dette, men bør testes som en egen sak. I mellomtiden brukes inline SVG som er
         // lik ExclamationmarkTriangleFillIcon fra vår versjon av @navikt/ds-react her
-        <div className="navds-form-field__error" aria-relevant="additions removals" aria-live="polite">
-          <p className="navds-error-message navds-label navds-label--small navds-error-message--show-icon">
+        <div className="aksel-form-field__error" aria-relevant="additions removals" aria-live="polite">
+          <p className="aksel-error-message aksel-label aksel-label--small aksel-error-message--show-icon">
             <svg
               viewBox="0 0 17 16"
               fill="none"

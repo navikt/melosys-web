@@ -6,7 +6,7 @@ exports[`undertittel > snapshot test 1`] = `
   <div class="undertittel">
     <h3
       id="333"
-      class="undertittel__navUndertittel navds-heading navds-heading--xsmall"
+      class="undertittel__navUndertittel aksel-heading aksel-heading--xsmall"
     >
       <svg
         contentscripttype="text/ecmascript"

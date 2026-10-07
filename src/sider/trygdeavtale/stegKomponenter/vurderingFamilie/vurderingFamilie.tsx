@@ -179,7 +179,7 @@ function VurderingFamilie({
                           id={Utils._uuid()}
                           name={`barn.${barn.uuid}.innvilget`}
                         >
-                          <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
+                          <Stack gap="space-24" direction={{ xs: "column", sm: "row" }} wrap={false}>
                             <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
                             <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
                           </Stack>
@@ -230,7 +230,7 @@ function VurderingFamilie({
                     id={Utils._uuid()}
                     name="ektefelle.innvilget"
                   >
-                    <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
+                    <Stack gap="space-24" direction={{ xs: "column", sm: "row" }} wrap={false}>
                       <Nav.Radio value={BOOLSK_STRING.SANN}>Ja</Nav.Radio>
                       <Nav.Radio value={BOOLSK_STRING.USANN}>Nei</Nav.Radio>
                     </Stack>

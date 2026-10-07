@@ -86,7 +86,7 @@ describe("KnyttTilSak", () => {
 
     expect(screen.getByText("Tidligere behandling er avsluttet.")).toBeInTheDocument();
     expect(screen.getByText("Velg hva du vil gjøre med dokumentet")).toBeInTheDocument();
-    const radiogruppe = screen.getByRole("group");
+    const radiogruppe = screen.getByRole("radiogroup");
     expect(radiogruppe).toBeInTheDocument();
     expect(within(radiogruppe).queryAllByRole("radio")).toHaveLength(2);
     expect(within(radiogruppe).getByLabelText("Opprett ny behandling")).toBeInTheDocument();
@@ -178,7 +178,7 @@ describe("KnyttTilSak", () => {
     await waitFor(() => expect(mocks.hentBehandlingstyperForKnyttTilSak).toHaveBeenCalled());
     expect(screen.getByText("Behandlingstype")).toBeInTheDocument();
 
-    const behandlingstypeGroup = screen.getByRole("group", { name: "Behandlingstype" });
+    const behandlingstypeGroup = screen.getByRole("radiogroup", { name: "Behandlingstype" });
     const radioButtons = within(behandlingstypeGroup).getAllByRole("radio");
     expect(radioButtons).toHaveLength(1);
     expect(within(behandlingstypeGroup).getByLabelText("Årsavregning")).toBeInTheDocument();
@@ -394,7 +394,7 @@ describe("KnyttTilSak", () => {
         // Låseikonet legger "Skrivebeskyttet" i label-teksten, derfor regex
         const behandlingstemaSelect = screen.getByLabelText(/Behandlingstema/);
         expect(behandlingstemaSelect).not.toBeDisabled();
-        expect(behandlingstemaSelect.closest(".navds-form-field")).toHaveClass("navds-form-field--readonly");
+        expect(behandlingstemaSelect.closest(".aksel-form-field")).toHaveClass("aksel-form-field--readonly");
       });
     });
 
@@ -412,7 +412,7 @@ describe("KnyttTilSak", () => {
       await waitFor(() => {
         const behandlingstemaSelect = screen.getByLabelText("Behandlingstema");
         expect(behandlingstemaSelect).not.toBeDisabled();
-        expect(behandlingstemaSelect.closest(".navds-form-field")).not.toHaveClass("navds-form-field--readonly");
+        expect(behandlingstemaSelect.closest(".aksel-form-field")).not.toHaveClass("aksel-form-field--readonly");
       });
     });
 
@@ -450,7 +450,7 @@ describe("KnyttTilSak", () => {
         // Låseikonet legger "Skrivebeskyttet" i label-teksten, derfor regex
         const behandlingstemaSelect = screen.getByLabelText(/Behandlingstema/);
         expect(behandlingstemaSelect).not.toBeDisabled();
-        expect(behandlingstemaSelect.closest(".navds-form-field")).toHaveClass("navds-form-field--readonly");
+        expect(behandlingstemaSelect.closest(".aksel-form-field")).toHaveClass("aksel-form-field--readonly");
         expect(
           screen.getByText(/Du kan ikke endre behandlingstema når saken har en tilknyttet fakturaserie eller/),
         ).toBeInTheDocument();

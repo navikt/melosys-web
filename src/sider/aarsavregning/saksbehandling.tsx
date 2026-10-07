@@ -130,7 +130,7 @@ function Saksbehandling({ match, location }: Props) {
         <div className="aarsavregning_saksbehandling">
           <HGrid
             columns={panelExpanded ? "minmax(0, 7fr) minmax(0, 5fr)" : "minmax(0, 1fr) 3rem"}
-            gap="4"
+            gap="space-16"
             className="hgrid"
           >
             <div>

@@ -4,7 +4,7 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
 
 <div>
   <div class="vurderingForretningssted">
-    <h1 class="stegvelgertittel navds-heading navds-heading--medium">
+    <h1 class="stegvelgertittel aksel-heading aksel-heading--medium">
       Vurdering av artikkel 13 nr. 1 bokstav b
     </h1>
     <fieldset class="fieldset forretningssteder">
@@ -17,10 +17,10 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
             NAV
           </legend>
           <div>
-            <div class="melosys-textfield landliste__linje__input navds-form-field navds-form-field--small">
+            <div class="melosys-textfield landliste__linje__input aksel-form-field aksel-form-field--small">
               <label
                 for="333"
-                class="navds-form-field__label navds-label navds-label--small"
+                class="aksel-form-field__label aksel-label aksel-label--small"
               >
                 Har forretningssted i
               </label>
@@ -28,12 +28,12 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
                 list="333"
                 bredde="fullbredde"
                 id="333"
-                class="navds-text-field__input navds-body-short navds-body-short--small"
+                class="aksel-text-field__input aksel-body-short aksel-body-short--small"
                 type="text"
                 value
               >
               <div
-                class="navds-form-field__error"
+                class="aksel-form-field__error"
                 id="333"
                 aria-relevant="additions removals"
                 aria-live="polite"
@@ -228,18 +228,18 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
         </fieldset>
       </div>
     </fieldset>
-    <div class="navds-form-field navds-form-field--small">
+    <div class="aksel-form-field aksel-form-field--small">
       <label
         for="333"
-        class="navds-form-field__label navds-label navds-label--small"
+        class="aksel-form-field__label aksel-label aksel-label--small"
       >
         Velg...
       </label>
-      <div class="navds-select__container">
+      <div class="aksel-select__container">
         <select
           name="333"
           id="333"
-          class="navds-select__input navds-body-short navds-body-short--small"
+          class="aksel-select__input aksel-body-short aksel-body-short--small"
         >
           <option value>
             Velg artikkel
@@ -268,7 +268,7 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
           viewbox="0 0 24 24"
           focusable="false"
           role="img"
-          class="navds-select__chevron"
+          class="aksel-select__chevron"
           aria-hidden="true"
         >
           <path
@@ -281,7 +281,7 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
         </svg>
       </div>
       <div
-        class="navds-form-field__error"
+        class="aksel-form-field__error"
         id="333"
         aria-relevant="additions removals"
         aria-live="polite"
@@ -291,57 +291,48 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
     <div class="enkeltAvklartfakta__skjemafelt">
       <div class="row">
         <div class="col col-xs-12">
-          <fieldset class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small">
-            <legend class="navds-fieldset__legend navds-label navds-label--small">
+          <fieldset
+            role="radiogroup"
+            aria-labelledby="333"
+            class="aksel-radio-group aksel-radio-group--small aksel-fieldset aksel-fieldset--small"
+          >
+            <legend
+              id="333"
+              class="aksel-fieldset__legend aksel-label aksel-label--small"
+            >
               Landet søkeren skal omfattes i:
             </legend>
-            <div class="navds-radio-buttons">
-              <div class="navds-radio navds-radio--small">
+            <div class="aksel-radio-buttons">
+              <div class="aksel-radio aksel-radio--small">
                 <input
                   id="333"
-                  aria-labelledby="333"
-                  class="navds-radio__input"
+                  class="aksel-radio__input"
+                  data-standalone="false"
                   type="radio"
                   value="TRUE"
                   name="333"
                 >
                 <label
                   for="333"
-                  class="navds-radio__label"
+                  class="aksel-radio__label aksel-body-short aksel-body-short--small"
                 >
-                  <span class="navds-radio__content">
-                    <span
-                      id="333"
-                      aria-hidden="true"
-                      class="navds-body-short navds-body-short--small"
-                    >
-                      Norge
-                    </span>
-                  </span>
+                  Norge
                 </label>
               </div>
-              <div class="navds-radio navds-radio--small">
+              <div class="aksel-radio aksel-radio--small">
                 <input
                   id="333"
-                  aria-labelledby="333"
-                  class="navds-radio__input"
+                  class="aksel-radio__input"
+                  data-standalone="false"
                   type="radio"
                   value="FALSE"
                   name="333"
                 >
                 <label
                   for="333"
-                  class="navds-radio__label"
+                  class="aksel-radio__label aksel-body-short aksel-body-short--small"
                 >
-                  <span class="navds-radio__content">
-                    <span
-                      id="333"
-                      aria-hidden="true"
-                      class="navds-body-short navds-body-short--small"
-                    >
-                      Annet
-                    </span>
-                  </span>
+                  Annet
                 </label>
               </div>
             </div>
@@ -349,7 +340,7 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
               id="333"
               aria-relevant="additions removals"
               aria-live="polite"
-              class="navds-fieldset__error"
+              class="aksel-fieldset__error"
             >
             </div>
           </fieldset>
@@ -358,15 +349,19 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
     </div>
     <div class="stegKnapper">
       <button
-        class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small navds-button--disabled"
+        data-variant="primary"
+        class="stegKnapper__bekreft aksel-button aksel-button--small aksel-button--disabled"
         disabled
       >
-        <span class="navds-label navds-label--small">
+        <span class="aksel-label aksel-label--small">
           Bekreft og fortsett
         </span>
       </button>
-      <button class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small">
-        <span class="navds-button__icon">
+      <button
+        data-variant="tertiary"
+        class="stegKnapper__tilbake aksel-button aksel-button--small"
+      >
+        <span class="aksel-button__icon">
           <svg
             width="16"
             height="14"
@@ -383,7 +378,7 @@ exports[`VurderingForretningssted > snapshot test 1`] = `
             </path>
           </svg>
         </span>
-        <span class="navds-label navds-label--small">
+        <span class="aksel-label aksel-label--small">
           Tilbake
         </span>
       </button>

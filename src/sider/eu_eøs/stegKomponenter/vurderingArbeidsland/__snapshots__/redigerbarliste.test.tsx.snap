@@ -9,8 +9,11 @@ exports[`Redigerbarliste > snapshot test 1`] = `
         term
       </div>
       <div class="col col-xs-6">
-        <button class="navds-button navds-button--secondary navds-button--small">
-          <span class="navds-button__icon">
+        <button
+          data-variant="secondary"
+          class="aksel-button aksel-button--small"
+        >
+          <span class="aksel-button__icon">
             <svg
               contentscripttype="text/ecmascript"
               zoomandpan="magnify"
@@ -34,7 +37,7 @@ exports[`Redigerbarliste > snapshot test 1`] = `
               </path>
             </svg>
           </span>
-          <span class="navds-label navds-label--small">
+          <span class="aksel-label aksel-label--small">
             Fjern
           </span>
         </button>

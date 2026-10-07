@@ -58,7 +58,7 @@ export function SumArsavregningTabell({
     : "Tidligere trygdeavgift fra Avgiftssystemet";
 
   return (
-    <Nav.Box className="sumArsavregningTabell" background="surface-subtle">
+    <Nav.Box className="sumArsavregningTabell" background="neutral-soft">
       <Nav.Table size="small" width={500} className="periode_tabell">
         <Nav.Table.Body>
           <Nav.Table.Row>

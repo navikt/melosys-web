@@ -20,7 +20,6 @@ interface SelectWrappedComponentBaseProps extends Omit<
   error?: React.ReactNode;
   readonly?: boolean;
   errorId?: string;
-  htmlSize?: number;
   id?: string;
 }
 
@@ -41,7 +40,6 @@ function SelectWrappedComponent({
   className,
   readonly,
   errorId,
-  htmlSize,
   ...rest
 }: SelectWrappedComponentProps) {
   const { touched, active } = meta;
@@ -67,7 +65,6 @@ function SelectWrappedComponent({
       className={className ?? ""}
       readOnly={readonly ?? false}
       errorId={errorId}
-      htmlSize={htmlSize}
       {...inputProps}
     >
       <option disabled={emptyFieldDisabled} value="">

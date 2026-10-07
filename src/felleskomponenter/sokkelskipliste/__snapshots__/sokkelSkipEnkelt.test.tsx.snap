@@ -8,39 +8,38 @@ exports[`SokkelSkipEnkelt > snapshot test 1`] = `
       Dunfjæder
     </div>
     <div class="col col-xs-2">
-      <fieldset class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small">
-        <legend class="navds-fieldset__legend navds-sr-only navds-label navds-label--small">
+      <fieldset
+        role="radiogroup"
+        aria-labelledby="333"
+        class="aksel-radio-group aksel-radio-group--small aksel-fieldset aksel-fieldset--small"
+      >
+        <legend
+          id="333"
+          class="aksel-fieldset__legend aksel-label aksel-typo--visually-hidden aksel-label--small"
+        >
         </legend>
-        <div class="navds-radio-buttons">
-          <div class="navds-radio navds-radio--small">
+        <div class="aksel-radio-buttons">
+          <div class="aksel-radio aksel-radio--small">
             <input
               id="333"
-              aria-labelledby="333"
-              class="navds-radio__input"
+              class="aksel-radio__input"
+              data-standalone="false"
               type="radio"
               value="SOKKEL"
               name="333"
             >
             <label
               for="333"
-              class="navds-radio__label"
+              class="aksel-radio__label aksel-body-short aksel-body-short--small"
             >
-              <span class="navds-radio__content">
-                <span
-                  id="333"
-                  aria-hidden="true"
-                  class="navds-body-short navds-body-short--small"
-                >
-                  Sokkel
-                </span>
-              </span>
+              Sokkel
             </label>
           </div>
-          <div class="navds-radio navds-radio--small">
+          <div class="aksel-radio aksel-radio--small">
             <input
               id="333"
-              aria-labelledby="333"
-              class="navds-radio__input"
+              class="aksel-radio__input"
+              data-standalone="false"
               type="radio"
               value="SKIP"
               checked
@@ -48,17 +47,9 @@ exports[`SokkelSkipEnkelt > snapshot test 1`] = `
             >
             <label
               for="333"
-              class="navds-radio__label"
+              class="aksel-radio__label aksel-body-short aksel-body-short--small"
             >
-              <span class="navds-radio__content">
-                <span
-                  id="333"
-                  aria-hidden="true"
-                  class="navds-body-short navds-body-short--small"
-                >
-                  Skip
-                </span>
-              </span>
+              Skip
             </label>
           </div>
         </div>
@@ -66,24 +57,31 @@ exports[`SokkelSkipEnkelt > snapshot test 1`] = `
           id="333"
           aria-relevant="additions removals"
           aria-live="polite"
-          class="navds-fieldset__error"
+          class="aksel-fieldset__error"
         >
         </div>
       </fieldset>
     </div>
     <div class="col col-xs-4">
-      <p class="arbeidsland_label navds-body-long navds-body-long--small navds-typo--semibold">
+      <p class="arbeidsland_label aksel-body-long aksel-body-long--small aksel-typo--semibold">
         Velg arbeidsland
       </p>
-      <fieldset class="navds-radio-group navds-radio-group--small navds-fieldset navds-fieldset--small">
-        <legend class="navds-fieldset__legend navds-sr-only navds-label navds-label--small">
+      <fieldset
+        role="radiogroup"
+        aria-labelledby="333"
+        class="aksel-radio-group aksel-radio-group--small aksel-fieldset aksel-fieldset--small"
+      >
+        <legend
+          id="333"
+          class="aksel-fieldset__legend aksel-label aksel-typo--visually-hidden aksel-label--small"
+        >
         </legend>
-        <div class="navds-radio-buttons">
-          <div class="navds-radio navds-radio--small">
+        <div class="aksel-radio-buttons">
+          <div class="aksel-radio aksel-radio--small">
             <input
               id="333"
-              aria-labelledby="333"
-              class="navds-radio__input"
+              class="aksel-radio__input"
+              data-standalone="false"
               type="radio"
               value="Flaggland"
               checked
@@ -91,65 +89,41 @@ exports[`SokkelSkipEnkelt > snapshot test 1`] = `
             >
             <label
               for="333"
-              class="navds-radio__label"
+              class="aksel-radio__label aksel-body-short aksel-body-short--small"
             >
-              <span class="navds-radio__content">
-                <span
-                  id="333"
-                  aria-hidden="true"
-                  class="navds-body-short navds-body-short--small"
-                >
-                  Storbritannia - Flaggland
-                </span>
-              </span>
+              Storbritannia - Flaggland
             </label>
           </div>
-          <div class="navds-radio navds-radio--small">
+          <div class="aksel-radio aksel-radio--small">
             <input
               id="333"
-              aria-labelledby="333"
-              class="navds-radio__input"
+              class="aksel-radio__input"
+              data-standalone="false"
               type="radio"
               value="Sokkelland"
               name="333"
             >
             <label
               for="333"
-              class="navds-radio__label"
+              class="aksel-radio__label aksel-body-short aksel-body-short--small"
             >
-              <span class="navds-radio__content">
-                <span
-                  id="333"
-                  aria-hidden="true"
-                  class="navds-body-short navds-body-short--small"
-                >
-                  Storbritannia - Sokkelland
-                </span>
-              </span>
+              Storbritannia - Sokkelland
             </label>
           </div>
-          <div class="navds-radio navds-radio--small">
+          <div class="aksel-radio aksel-radio--small">
             <input
               id="333"
-              aria-labelledby="333"
-              class="navds-radio__input"
+              class="aksel-radio__input"
+              data-standalone="false"
               type="radio"
               value="Territorialfarvannsland"
               name="333"
             >
             <label
               for="333"
-              class="navds-radio__label"
+              class="aksel-radio__label aksel-body-short aksel-body-short--small"
             >
-              <span class="navds-radio__content">
-                <span
-                  id="333"
-                  aria-hidden="true"
-                  class="navds-body-short navds-body-short--small"
-                >
-                  Storbritannia - Territorialfarvannsland
-                </span>
-              </span>
+              Storbritannia - Territorialfarvannsland
             </label>
           </div>
         </div>
@@ -157,7 +131,7 @@ exports[`SokkelSkipEnkelt > snapshot test 1`] = `
           id="333"
           aria-relevant="additions removals"
           aria-live="polite"
-          class="navds-fieldset__error"
+          class="aksel-fieldset__error"
         >
         </div>
       </fieldset>
