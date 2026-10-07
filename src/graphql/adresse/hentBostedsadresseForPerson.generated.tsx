@@ -1,9 +1,10 @@
 import * as Types from '../generated/types';
 
 import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client/react';
+import * as ApolloReactHooks from '@apollo/client/react';
 
-const defaultOptions =  {}
+const defaultOptions =  {} as const;
 export type HentBostedsadresseForPersonQueryVariables = Types.Exact<{
   ident: Types.Scalars['String'];
 }>;
@@ -74,14 +75,14 @@ export const HentBostedsadresseForPersonDocument = gql`
  *   },
  * });
  */
-export function useHentBostedsadresseForPersonQuery(baseOptions: Apollo.QueryHookOptions<HentBostedsadresseForPersonQuery, HentBostedsadresseForPersonQueryVariables>) {
+export function useHentBostedsadresseForPersonQuery(baseOptions: ApolloReactHooks.QueryHookOptions<HentBostedsadresseForPersonQuery, HentBostedsadresseForPersonQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<HentBostedsadresseForPersonQuery, HentBostedsadresseForPersonQueryVariables>(HentBostedsadresseForPersonDocument, options);
+        return ApolloReactHooks.useQuery<HentBostedsadresseForPersonQuery, HentBostedsadresseForPersonQueryVariables>(HentBostedsadresseForPersonDocument, options);
       }
-export function useHentBostedsadresseForPersonLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HentBostedsadresseForPersonQuery, HentBostedsadresseForPersonQueryVariables>) {
+export function useHentBostedsadresseForPersonLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HentBostedsadresseForPersonQuery, HentBostedsadresseForPersonQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<HentBostedsadresseForPersonQuery, HentBostedsadresseForPersonQueryVariables>(HentBostedsadresseForPersonDocument, options);
+          return ApolloReactHooks.useLazyQuery<HentBostedsadresseForPersonQuery, HentBostedsadresseForPersonQueryVariables>(HentBostedsadresseForPersonDocument, options);
         }
 export type HentBostedsadresseForPersonQueryHookResult = ReturnType<typeof useHentBostedsadresseForPersonQuery>;
 export type HentBostedsadresseForPersonLazyQueryHookResult = ReturnType<typeof useHentBostedsadresseForPersonLazyQuery>;
-export type HentBostedsadresseForPersonQueryResult = Apollo.QueryResult<HentBostedsadresseForPersonQuery, HentBostedsadresseForPersonQueryVariables>;
+export type HentBostedsadresseForPersonQueryResult = ApolloReactCommon.QueryResult<HentBostedsadresseForPersonQuery, HentBostedsadresseForPersonQueryVariables>;

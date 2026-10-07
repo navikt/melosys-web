@@ -11,6 +11,8 @@ config:
 
   preResolveTypes: false # This can affect how types are generated
   skipTypename: false # Keep __typename fields
+  apolloReactCommonImportFrom: "@apollo/client/react"
+  apolloReactHooksImportFrom: "@apollo/client/react"
 generates:
   src/graphql/generated/types.ts:
     plugins:

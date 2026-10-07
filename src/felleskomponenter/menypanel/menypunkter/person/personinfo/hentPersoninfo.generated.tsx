@@ -1,6 +1,7 @@
 import * as Types from '../../../../../graphql/generated/types';
 import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client/react';
+import * as ApolloReactHooks from '@apollo/client/react';
 
 const defaultOptions = {} as const;
 
@@ -78,14 +79,14 @@ export const HentPersoninfoDocument = gql`
  *   },
  * });
  */
-export function useHentPersoninfoQuery(baseOptions: Apollo.QueryHookOptions<HentPersoninfoQuery, HentPersoninfoQueryVariables>) {
+export function useHentPersoninfoQuery(baseOptions: ApolloReactHooks.QueryHookOptions<HentPersoninfoQuery, HentPersoninfoQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<HentPersoninfoQuery, HentPersoninfoQueryVariables>(HentPersoninfoDocument, options);
+        return ApolloReactHooks.useQuery<HentPersoninfoQuery, HentPersoninfoQueryVariables>(HentPersoninfoDocument, options);
       }
-export function useHentPersoninfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HentPersoninfoQuery, HentPersoninfoQueryVariables>) {
+export function useHentPersoninfoLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HentPersoninfoQuery, HentPersoninfoQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<HentPersoninfoQuery, HentPersoninfoQueryVariables>(HentPersoninfoDocument, options);
+          return ApolloReactHooks.useLazyQuery<HentPersoninfoQuery, HentPersoninfoQueryVariables>(HentPersoninfoDocument, options);
         }
 export type HentPersoninfoQueryHookResult = ReturnType<typeof useHentPersoninfoQuery>;
 export type HentPersoninfoLazyQueryHookResult = ReturnType<typeof useHentPersoninfoLazyQuery>;
-export type HentPersoninfoQueryResult = Apollo.QueryResult<HentPersoninfoQuery, HentPersoninfoQueryVariables>;
+export type HentPersoninfoQueryResult = ApolloReactCommon.QueryResult<HentPersoninfoQuery, HentPersoninfoQueryVariables>;
