@@ -3,8 +3,8 @@
 }
 
 .beregningsforklaring-kort-felt {
-  border: 1px solid var(--a-border-subtle, #cfd3d8);
-  border-radius: var(--a-border-radius-medium, 8px);
+  border: 1px solid var(--ax-border-neutral-subtle, #cfd3d8);
+  border-radius: var(--ax-radius-4, 8px);
   padding: 0.75rem 1rem;
   margin-bottom: 1rem;
 
@@ -23,7 +23,7 @@
 
 @keyframes beregningsforklaring-kort-blink {
   0% {
-    box-shadow: 0 0 0 3px var(--a-surface-info-subtle, #e0f1ff);
+    box-shadow: 0 0 0 3px var(--ax-bg-info-soft, #e0f1ff);
   }
 
   100% {
@@ -45,7 +45,7 @@
 
 .beregningsforklaring-kort-steg {
   padding: 0.75rem 0;
-  border-bottom: 1px dashed var(--a-border-subtle, #e3e5e8);
+  border-bottom: 1px dashed var(--ax-border-neutral-subtle, #e3e5e8);
 
   &:last-child {
     border-bottom: none;
@@ -68,8 +68,8 @@
   width: 1.375rem;
   height: 1.375rem;
   border-radius: 50%;
-  background: var(--a-surface-info, #0067c5);
-  color: var(--a-text-on-info, #fff);
+  background: var(--ax-bg-info-strong, #0067c5);
+  color: var(--ax-text-info-contrast, #fff);
   font-size: 0.75rem;
   font-weight: 700;
 }
@@ -91,7 +91,7 @@
 }
 
 .beregningsforklaring-kort-rad--ekskludert {
-  color: var(--a-text-subtle, #919699);
+  color: var(--ax-text-neutral-subtle, #919699);
   font-style: italic;
 
   .beregningsforklaring-kort-rad-verdi {
@@ -100,7 +100,7 @@
 }
 
 .beregningsforklaring-kort-rad--sum {
-  border-top: 1px solid var(--a-border-subtle, #e3e5e8);
+  border-top: 1px solid var(--ax-border-neutral-subtle, #e3e5e8);
   margin-top: 0.25rem;
   padding-top: 0.5rem;
   font-weight: 700;
@@ -118,9 +118,9 @@
 .beregningsforklaring-kort-formel {
   font-family: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
   font-size: 0.8125rem;
-  background: var(--a-surface-subtle, #f7f8fa);
-  border: 1px solid var(--a-border-subtle, #e3e5e8);
-  border-radius: var(--a-border-radius-medium, 6px);
+  background: var(--ax-bg-neutral-soft, #f7f8fa);
+  border: 1px solid var(--ax-border-neutral-subtle, #e3e5e8);
+  border-radius: var(--ax-radius-4, 6px);
   padding: 0.5rem 0.625rem;
   margin: 0.375rem 0;
 }
@@ -136,9 +136,9 @@
 .beregningsforklaring-kort-resultat {
   margin-top: 0.75rem;
   padding: 0.75rem 1rem;
-  background: var(--a-surface-subtle, #f7f8fa);
-  border: 1px solid var(--a-border-subtle, #e3e5e8);
-  border-radius: var(--a-border-radius-medium, 6px);
+  background: var(--ax-bg-neutral-soft, #f7f8fa);
+  border: 1px solid var(--ax-border-neutral-subtle, #e3e5e8);
+  border-radius: var(--ax-radius-4, 6px);
   display: flex;
   align-items: center;
   justify-content: space-between;

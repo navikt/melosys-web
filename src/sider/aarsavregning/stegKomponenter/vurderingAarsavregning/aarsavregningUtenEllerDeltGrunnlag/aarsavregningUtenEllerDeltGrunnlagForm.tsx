@@ -912,7 +912,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   return (
     <div className="vurderingAarsavregning">
       {harInnbetaltTrygdeavgift && (
-        <Nav.Box className="innbetaltTrygdeavgiftInputPanel" background="surface-subtle">
+        <Nav.Box className="innbetaltTrygdeavgiftInputPanel" background="neutral-soft">
           <Nav.Heading level="2" className="aarsavregning_seksjon_heading">
             Innbetalt trygdeavgift
           </Nav.Heading>
@@ -925,7 +925,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         </Nav.Box>
       )}
 
-      <Nav.Box className="endeligAvgiftValg_boks" background="surface-subtle">
+      <Nav.Box className="endeligAvgiftValg_boks" background="neutral-soft">
         <EndeligAvgiftValgRadioGroup
           control={control}
           redigerbart={skjemaErRedigerbart}

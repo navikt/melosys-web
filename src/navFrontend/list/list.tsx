@@ -1,17 +1,27 @@
 import { ReactNode } from "react";
 import "./list.less";
-import { List as NavList, ListProps } from "@navikt/ds-react";
+import { Heading, List as NavList, ListProps as NavListProps } from "@navikt/ds-react";
 
 interface ItemProps {
   spacing?: 0 | 2;
   children: ReactNode;
 }
 
-function List({ size = "small", children, ...rest }: ListProps) {
+interface ListProps extends Omit<NavListProps, "title" | "size"> {
+  title?: ReactNode;
+  size?: "small" | "medium";
+}
+
+function List({ title, size = "small", children, ...rest }: ListProps) {
   return (
-    <NavList {...rest} size={size}>
-      {children}
-    </NavList>
+    <div className={`legacy-list legacy-list--${size}`}>
+      {title && (
+        <Heading level="3" size={size === "small" ? "xsmall" : "small"}>
+          {title}
+        </Heading>
+      )}
+      <NavList {...rest}>{children}</NavList>
+    </div>
   );
 }
 

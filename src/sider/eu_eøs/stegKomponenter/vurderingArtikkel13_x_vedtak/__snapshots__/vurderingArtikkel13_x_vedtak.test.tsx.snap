@@ -4,10 +4,10 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
 
 <div>
   <form class="vurderingArtikkel13_x_vedtak">
-    <h1 class="stegvelgertittel navds-heading navds-heading--medium">
+    <h1 class="stegvelgertittel aksel-heading aksel-heading--medium">
       Omfattet av norsk lovgivning, etter artikkel 13, nr 1, a
     </h1>
-    <p class="undertittel navds-body-long navds-body-long--small navds-typo--semibold">
+    <p class="undertittel aksel-body-long aksel-body-long--small aksel-typo--semibold">
       Lovvalgsperiode
     </p>
     <div class="row lovvalgsperiode">
@@ -18,48 +18,38 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
     <div>
       <div class="row forkortLovvalgsperiode">
         <div class="col col-xs-8">
-          <div class="navds-checkbox navds-checkbox--small">
-            <input
-              class="navds-checkbox__input"
-              id="333"
-              aria-labelledby="333"
-              type="checkbox"
-              value
-              name="333"
+          <div class="aksel-checkbox aksel-checkbox--small">
+            <div
+              class="aksel-checkbox__input-wrapper"
+              data-standalone="false"
             >
+              <input
+                id="333"
+                class="aksel-checkbox__input"
+                type="checkbox"
+                value
+                name="333"
+              >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewbox="0 0 13 10"
+                fill="none"
+                focusable="false"
+                aria-hidden="true"
+                class="aksel-checkbox__icon"
+              >
+                <path
+                  d="M4.03524 6.41478L10.4752 0.404669C11.0792 -0.160351 12.029 -0.130672 12.5955 0.47478C13.162 1.08027 13.1296 2.03007 12.5245 2.59621L5.02111 9.59934C4.74099 9.85904 4.37559 10 4.00025 10C3.60651 10 3.22717 9.84621 2.93914 9.56111L0.439143 7.06111C-0.146381 6.47558 -0.146381 5.52542 0.439143 4.93989C1.02467 4.35437 1.97483 4.35437 2.56036 4.93989L4.03524 6.41478Z"
+                  fill="currentColor"
+                >
+                </path>
+              </svg>
+            </div>
             <label
               for="333"
-              class="navds-checkbox__label"
+              class="aksel-checkbox__label aksel-body-short aksel-body-short--small"
             >
-              <span class="navds-checkbox__icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="0.8125rem"
-                  height="0.625rem"
-                  viewbox="0 0 13 10"
-                  fill="none"
-                  focusable="false"
-                  role="img"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M4.03524 6.41478L10.4752 0.404669C11.0792 -0.160351 12.029 -0.130672 12.5955 0.47478C13.162 1.08027 13.1296 2.03007 12.5245 2.59621L5.02111 9.59934C4.74099 9.85904 4.37559 10 4.00025 10C3.60651 10 3.22717 9.84621 2.93914 9.56111L0.439143 7.06111C-0.146381 6.47558 -0.146381 5.52542 0.439143 4.93989C1.02467 4.35437 1.97483 4.35437 2.56036 4.93989L4.03524 6.41478Z"
-                    fill="currentColor"
-                  >
-                  </path>
-                </svg>
-              </span>
-              <span class="navds-checkbox__icon-indeterminate">
-              </span>
-              <span class="navds-checkbox__content">
-                <span
-                  id="333"
-                  aria-hidden="true"
-                  class="navds-checkbox__label-text navds-body-short navds-body-short--small"
-                >
-                  Lovvalget innvilges for en kortere periode
-                </span>
-              </span>
+              Lovvalget innvilges for en kortere periode
             </label>
           </div>
         </div>
@@ -67,26 +57,26 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
     </div>
     <div class="row fritekst">
       <div class="col col-xs-8">
-        <div class="melosys-textarea navds-form-field navds-form-field--small">
+        <div class="melosys-textarea aksel-form-field aksel-form-field--small">
           <label
             for="333"
-            class="navds-form-field__label navds-label navds-label--small"
+            class="aksel-form-field__label aksel-label aksel-label--small"
           >
             Fritekst til begrunnelse
           </label>
           <textarea
             rows="2"
-            style="--__ac-textarea-height: -4px; --__axc-textarea-height: -4px; overflow: hidden;"
+            style="--__axc-textarea-height: -4px; overflow: hidden;"
             textareaclass="skjemaelement__input input--fullbredde"
             name="333"
             id="333"
             aria-describedby="333"
-            class="navds-textarea__input navds-body-short navds-body-short--small"
+            class="aksel-textarea__input aksel-body-short aksel-body-short--small"
           >
           </textarea>
           <textarea
             aria-hidden="true"
-            class="navds-textarea__input navds-body-short navds-body-short--small"
+            class="aksel-textarea__input aksel-body-short aksel-body-short--small"
             readonly
             tabindex="-1"
             style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0);"
@@ -94,15 +84,15 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
           </textarea>
           <span
             id="333"
-            class="navds-sr-only"
+            class="aksel-sr-only"
           >
             Tekstområde med plass til 4000 tegn.
           </span>
-          <p class="navds-textarea__counter navds-body-short navds-body-short--small">
+          <p class="aksel-textarea__counter aksel-body-short aksel-body-short--small">
             4000 tegn igjen
           </p>
           <div
-            class="navds-form-field__error"
+            class="aksel-form-field__error"
             id="333"
             aria-relevant="additions removals"
             aria-live="polite"
@@ -113,26 +103,26 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
     </div>
     <div class="row fritekstSed">
       <div class="col col-xs-8">
-        <div class="melosys-textarea navds-form-field navds-form-field--small">
+        <div class="melosys-textarea aksel-form-field aksel-form-field--small">
           <label
             for="333"
-            class="navds-form-field__label navds-label navds-label--small"
+            class="aksel-form-field__label aksel-label aksel-label--small"
           >
             Ytterligere informasjon til SED (valgfri)
           </label>
           <textarea
             rows="2"
-            style="--__ac-textarea-height: -4px; --__axc-textarea-height: -4px; overflow: hidden;"
+            style="--__axc-textarea-height: -4px; overflow: hidden;"
             textareaclass="skjemaelement__input input--fullbredde"
             name="333"
             id="333"
             aria-describedby="333"
-            class="navds-textarea__input navds-body-short navds-body-short--small"
+            class="aksel-textarea__input aksel-body-short aksel-body-short--small"
           >
           </textarea>
           <textarea
             aria-hidden="true"
-            class="navds-textarea__input navds-body-short navds-body-short--small"
+            class="aksel-textarea__input aksel-body-short aksel-body-short--small"
             readonly
             tabindex="-1"
             style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0);"
@@ -140,15 +130,15 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
           </textarea>
           <span
             id="333"
-            class="navds-sr-only"
+            class="aksel-sr-only"
           >
             Tekstområde med plass til 500 tegn.
           </span>
-          <p class="navds-textarea__counter navds-body-short navds-body-short--small">
+          <p class="aksel-textarea__counter aksel-body-short aksel-body-short--small">
             500 tegn igjen
           </p>
           <div
-            class="navds-form-field__error"
+            class="aksel-form-field__error"
             id="333"
             aria-relevant="additions removals"
             aria-live="polite"
@@ -164,25 +154,31 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
     <div class="row">
       <div class="col col-xs-8">
         <div class="dokumentliste ">
-          <table class="navds-table navds-table--small">
-            <thead class="navds-table__header">
-              <tr class="navds-table__row navds-table__row--shade-on-hover">
-                <th class="navds-table__header-cell navds-label navds-label--small">
+          <table class="aksel-table aksel-table--small">
+            <thead class="aksel-table__header">
+              <tr
+                class="aksel-table__row aksel-table__row--shade-on-hover"
+                data-interactive="false"
+              >
+                <th class="aksel-table__header-cell aksel-label aksel-label--small">
                   Forhåndsvisning av brev
                 </th>
-                <th class="navds-table__header-cell navds-label navds-label--small">
+                <th class="aksel-table__header-cell aksel-label aksel-label--small">
                   Mottaker
                 </th>
               </tr>
             </thead>
-            <tbody class="navds-table__body">
-              <tr class="navds-table__row navds-table__row--shade-on-hover">
-                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+            <tbody class="aksel-table__body">
+              <tr
+                class="aksel-table__row aksel-table__row--shade-on-hover"
+                data-interactive="false"
+              >
+                <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                   <a
                     href="#"
                     title="Åpnes i ny fane"
                     aria-label="Åpnes i ny fane"
-                    class="navds-link navds-link--action"
+                    class="aksel-link"
                   >
                     Innvilgelse yrkesaktiv i flere land
                     <svg
@@ -202,17 +198,20 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
                     </svg>
                   </a>
                 </td>
-                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                   BRUKER
                 </td>
               </tr>
-              <tr class="navds-table__row navds-table__row--shade-on-hover">
-                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+              <tr
+                class="aksel-table__row aksel-table__row--shade-on-hover"
+                data-interactive="false"
+              >
+                <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                   <a
                     href="#"
                     title="Åpnes i ny fane"
                     aria-label="Åpnes i ny fane"
-                    class="navds-link navds-link--action"
+                    class="aksel-link"
                   >
                     SED A003
                     <svg
@@ -232,7 +231,7 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
                     </svg>
                   </a>
                 </td>
-                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                 </td>
               </tr>
             </tbody>
@@ -241,13 +240,19 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
       </div>
     </div>
     <div class="stegKnapper">
-      <button class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small">
-        <span class="navds-label navds-label--small">
+      <button
+        data-variant="primary"
+        class="stegKnapper__bekreft aksel-button aksel-button--small"
+      >
+        <span class="aksel-label aksel-label--small">
           Fatt vedtak
         </span>
       </button>
-      <button class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small">
-        <span class="navds-button__icon">
+      <button
+        data-variant="tertiary"
+        class="stegKnapper__tilbake aksel-button aksel-button--small"
+      >
+        <span class="aksel-button__icon">
           <svg
             width="16"
             height="14"
@@ -264,7 +269,7 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
             </path>
           </svg>
         </span>
-        <span class="navds-label navds-label--small">
+        <span class="aksel-label aksel-label--small">
           Tilbake
         </span>
       </button>

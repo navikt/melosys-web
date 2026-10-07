@@ -85,7 +85,7 @@ export async function finnCheckboxGroup(legend: string, scope: Page | Locator): 
 }
 
 /**
- * Finn en radio-gruppe (role="group") og verifiser synlighet
+ * Finn en radio-gruppe (role="radiogroup") og verifiser synlighet
  * @param navn - Gruppens accessible name (fra legend eller aria-label)
  * @param scope - Page eller Locator å søke innenfor
  * @param options - Valgfrie options: timeout (ms), erSynlig (default true)
@@ -96,7 +96,7 @@ export async function finnRadioGroup(
   scope: Page | Locator,
   options?: { timeout?: number; erSynlig?: boolean },
 ): Promise<Locator> {
-  const gruppe = scope.getByRole("group", { name: navn });
+  const gruppe = scope.getByRole("radiogroup", { name: navn });
   const erSynlig = options?.erSynlig ?? true;
   const timeoutOptions = options?.timeout ? { timeout: options.timeout } : undefined;
 
@@ -119,7 +119,7 @@ export async function finnRadioGroup(
  * @returns Locator for radioknappen (garantert å finnes og være unik)
  */
 export async function finnRadioknapp(label: string, scope: Page | Locator, timeout?: number): Promise<Locator> {
-  const radio = scope.getByRole("radio", { name: label });
+  const radio = scope.getByRole("radio", { name: label, exact: true });
 
   // Verifiser at radioknappen er synlig (med valgfri timeout)
   const options = timeout ? { timeout } : undefined;
@@ -217,7 +217,7 @@ export function sanitizeFilename(filename: string): string {
 }
 
 const ERROR_SELECTORS =
-  ".navds-error-message, .feilmelding, .skjemaelement__feilmelding, [data-testid*='error'], .navds-alert--error";
+  ".aksel-error-message, .feilmelding, .skjemaelement__feilmelding, [data-testid*='error'], .aksel-alert--error";
 
 /**
  * Verifiserer at en spesifikk field error er synlig

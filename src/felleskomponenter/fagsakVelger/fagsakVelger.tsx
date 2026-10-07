@@ -106,7 +106,7 @@ function FagsakVelger({
           size="medium"
           className="horisontal_radiogruppe"
         >
-          <HStack gap="3" justify="space-between">
+          <HStack gap="space-12" justify="space-between">
             <EnkelNavBox focused={valgtVisning === EKSISTERENDE}>
               <Nav.Radio value={EKSISTERENDE}>{EKSISTERENDE}</Nav.Radio>
             </EnkelNavBox>

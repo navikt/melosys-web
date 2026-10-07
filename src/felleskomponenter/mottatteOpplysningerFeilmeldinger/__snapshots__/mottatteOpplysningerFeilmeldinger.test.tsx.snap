@@ -3,7 +3,11 @@
 exports[`MottatteOpplysningerFeilmeldinger > snapshot test 1`] = `
 
 <div>
-  <div class="mottatteopplysninger_feilmeldinger navds-alert navds-alert--warning navds-alert--small">
+  <div
+    data-color="warning"
+    data-variant="warning"
+    class="mottatteopplysninger_feilmeldinger aksel-alert aksel-alert--warning aksel-alert--small"
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="1em"
@@ -13,7 +17,7 @@ exports[`MottatteOpplysningerFeilmeldinger > snapshot test 1`] = `
       focusable="false"
       role="img"
       aria-labelledby="333"
-      class="navds-alert__icon"
+      class="aksel-alert__icon"
     >
       <title id="333">
         Advarsel
@@ -26,7 +30,7 @@ exports[`MottatteOpplysningerFeilmeldinger > snapshot test 1`] = `
       >
       </path>
     </svg>
-    <div class="navds-alert__wrapper navds-alert__wrapper--maxwidth navds-body-long navds-body-long--small">
+    <div class="aksel-alert__wrapper aksel-alert__wrapper--maxwidth aksel-body-long aksel-body-long--small">
       Ugyldige felter. Sjekk følgende menypunkt(er):
       <ul>
         <li>

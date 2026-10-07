@@ -4,33 +4,34 @@ exports[`TidligereGrunnlag > beregning med grunnlag snapshot test 1`] = `
 
 <div>
   <div
-    style="--__ac-box-background: var(--a-surface-subtle);"
-    class="navds-box tidligereGrunnlag navds-box-bg"
+    style="--__axc-box-background: var(--ax-bg-neutral-soft);"
+    class="aksel-box tidligereGrunnlag aksel-box-bg"
   >
-    <h2 class="aarsavregning_seksjon_heading navds-heading navds-heading--small">
+    <h2 class="aarsavregning_seksjon_heading aksel-heading aksel-heading--small">
       Tidligere grunnlag
     </h2>
-    <p class="navds-body-long navds-body-long--small">
+    <p class="aksel-body-long aksel-body-long--small">
       Brutto årsinntekt:
       <strong>
         500&nbsp;000 kr
       </strong>
     </p>
     <section
+      data-color="neutral"
       aria-label="trygdeavgiftdetaljer"
-      class="navds-expansioncard beregnetTrygdeavgiftDetaljer navds-expansioncard--small navds-expansioncard--open"
+      class="aksel-expansioncard beregnetTrygdeavgiftDetaljer aksel-expansioncard--small"
     >
       <div
-        class="navds-expansioncard__header beregnetTrygdeavgiftDetaljer_header"
+        class="aksel-expansioncard__header beregnetTrygdeavgiftDetaljer_header"
         data-open="true"
       >
-        <div class="navds-expansioncard__header-content">
-          <h3 class="navds-expansioncard__title navds-expansioncard__title--small navds-heading navds-heading--small">
+        <div>
+          <h3 class="aksel-expansioncard__title aksel-expansioncard__title--small aksel-heading aksel-heading--small">
             Opplysninger om tidligere beregnet trygdeavgift
           </h3>
         </div>
         <button
-          class="navds-expansioncard__header-button"
+          class="aksel-expansioncard__header-button"
           type="button"
           aria-expanded="true"
         >
@@ -43,7 +44,7 @@ exports[`TidligereGrunnlag > beregning med grunnlag snapshot test 1`] = `
             focusable="false"
             role="img"
             aria-labelledby="333"
-            class="navds-expansioncard__header-chevron"
+            class="aksel-expansioncard__header-chevron"
           >
             <title id="333">
               Vis mer
@@ -61,127 +62,148 @@ exports[`TidligereGrunnlag > beregning med grunnlag snapshot test 1`] = `
       <div
         aria-hidden="false"
         data-open="true"
-        class="navds-expansioncard__content tidligereGrunnlagAccordion_content navds-body-long navds-body-long--small"
+        class="aksel-expansioncard__content tidligereGrunnlagAccordion_content aksel-body-long aksel-body-long--small"
       >
-        <div class="navds-expansioncard__content-inner">
-          <table class="navds-table navds-table--small periode_tabell">
-            <thead class="navds-table__header header_row">
-              <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <div
+          class="aksel-expansioncard__content-inner"
+          data-color="accent"
+        >
+          <table class="aksel-table aksel-table--small periode_tabell">
+            <thead class="aksel-table__header header_row">
+              <tr
+                class="aksel-table__row aksel-table__row--shade-on-hover"
+                data-interactive="false"
+              >
                 <th
-                  class="navds-table__header-cell navds-label navds-label--small"
+                  class="aksel-table__header-cell aksel-label aksel-label--small"
                   scope="col"
                 >
                   Medlemskap
                 </th>
                 <th
-                  class="navds-table__header-cell navds-label navds-label--small"
+                  class="aksel-table__header-cell aksel-label aksel-label--small"
                   scope="col"
                 >
                   Type
                 </th>
                 <th
-                  class="navds-table__header-cell navds-label navds-label--small"
+                  class="aksel-table__header-cell aksel-label aksel-label--small"
                   scope="col"
                 >
                   Bestemmelse
                 </th>
                 <th
-                  class="navds-table__header-cell navds-label navds-label--small"
+                  class="aksel-table__header-cell aksel-label aksel-label--small"
                   scope="col"
                 >
                   Dekning
                 </th>
               </tr>
             </thead>
-            <tbody class="navds-table__body">
-              <tr class="navds-table__row border_top navds-table__row--shade-on-hover">
-                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+            <tbody class="aksel-table__body">
+              <tr
+                class="aksel-table__row border_top aksel-table__row--shade-on-hover"
+                data-interactive="false"
+              >
+                <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                   01.01.2023 - 31.12.2023
                 </td>
-                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                   Pliktig
                 </td>
-                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                 </td>
-                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                   Full dekning
                 </td>
               </tr>
             </tbody>
           </table>
-          <table class="navds-table navds-table--small periode_tabell">
-            <thead class="navds-table__header header_row">
-              <tr class="navds-table__row navds-table__row--shade-on-hover">
+          <table class="aksel-table aksel-table--small periode_tabell">
+            <thead class="aksel-table__header header_row">
+              <tr
+                class="aksel-table__row aksel-table__row--shade-on-hover"
+                data-interactive="false"
+              >
                 <th
-                  class="navds-table__header-cell navds-label navds-label--small"
+                  class="aksel-table__header-cell aksel-label aksel-label--small"
                   scope="col"
                 >
                   Skatteforhold
                 </th>
                 <th
-                  class="navds-table__header-cell navds-label navds-label--small"
+                  class="aksel-table__header-cell aksel-label aksel-label--small"
                   scope="col"
                 >
                   Skattepliktig
                 </th>
               </tr>
             </thead>
-            <tbody class="navds-table__body">
-              <tr class="navds-table__row border_top navds-table__row--shade-on-hover">
-                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+            <tbody class="aksel-table__body">
+              <tr
+                class="aksel-table__row border_top aksel-table__row--shade-on-hover"
+                data-interactive="false"
+              >
+                <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                   01.01.2023 - 31.12.2023
                 </td>
-                <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                   Ja
                 </td>
               </tr>
             </tbody>
           </table>
           <div
-            style="--__ac-stack-direction-xs: column;"
-            class="navds-stack navds-vstack navds-stack-direction"
+            style="--__axc-stack-direction-xs: column;"
+            class="aksel-stack aksel-vstack aksel-stack-direction"
           >
-            <table class="navds-table navds-table--small periode_tabell">
-              <thead class="navds-table__header header_row">
-                <tr class="navds-table__row navds-table__row--shade-on-hover">
+            <table class="aksel-table aksel-table--small periode_tabell">
+              <thead class="aksel-table__header header_row">
+                <tr
+                  class="aksel-table__row aksel-table__row--shade-on-hover"
+                  data-interactive="false"
+                >
                   <th
-                    class="navds-table__header-cell navds-label navds-label--small"
+                    class="aksel-table__header-cell aksel-label aksel-label--small"
                     scope="col"
                   >
                     Inntektsperiode
                   </th>
                   <th
-                    class="navds-table__header-cell navds-label navds-label--small"
+                    class="aksel-table__header-cell aksel-label aksel-label--small"
                     scope="col"
                   >
                     Inntektskilde
                   </th>
                   <th
-                    class="navds-table__header-cell navds-label navds-label--small"
+                    class="aksel-table__header-cell aksel-label aksel-label--small"
                     scope="col"
                   >
                     Betales aga.?
                   </th>
                   <th
-                    class="navds-table__header-cell navds-label tall_felt navds-label--small"
+                    class="aksel-table__header-cell aksel-label tall_felt aksel-label--small"
                     scope="col"
                   >
                     Bruttoinntekt md.
                   </th>
                 </tr>
               </thead>
-              <tbody class="navds-table__body">
-                <tr class="navds-table__row border_top navds-table__row--shade-on-hover">
-                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+              <tbody class="aksel-table__body">
+                <tr
+                  class="aksel-table__row border_top aksel-table__row--shade-on-hover"
+                  data-interactive="false"
+                >
+                  <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                     01.01.2023 - 31.12.2023
                   </td>
-                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                  <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                     Arbeidsinntekt
                   </td>
-                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                  <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                     Ja
                   </td>
-                  <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
+                  <td class="aksel-table__data-cell tall_felt aksel-body-short aksel-body-short--small">
                     500&nbsp;000 kr
                   </td>
                 </tr>
@@ -189,56 +211,62 @@ exports[`TidligereGrunnlag > beregning med grunnlag snapshot test 1`] = `
             </table>
           </div>
           <div class="tidligereGrunnlagPanel">
-            <table class="navds-table navds-table--small periode_tabell">
-              <thead class="navds-table__header header_row">
-                <tr class="navds-table__row navds-table__row--shade-on-hover">
+            <table class="aksel-table aksel-table--small periode_tabell">
+              <thead class="aksel-table__header header_row">
+                <tr
+                  class="aksel-table__row aksel-table__row--shade-on-hover"
+                  data-interactive="false"
+                >
                   <th
-                    class="navds-table__header-cell navds-label navds-label--small"
+                    class="aksel-table__header-cell aksel-label aksel-label--small"
                     scope="col"
                   >
                     Trygdeperiode
                   </th>
                   <th
-                    class="navds-table__header-cell navds-label navds-label--small"
+                    class="aksel-table__header-cell aksel-label aksel-label--small"
                     scope="col"
                   >
                     Dekning
                   </th>
                   <th
-                    class="navds-table__header-cell navds-label navds-label--small"
+                    class="aksel-table__header-cell aksel-label aksel-label--small"
                     scope="col"
                   >
                     Inntektskilde
                   </th>
                   <th
-                    class="navds-table__header-cell navds-label navds-label--small"
+                    class="aksel-table__header-cell aksel-label aksel-label--small"
                     scope="col"
                   >
                     Sats
                   </th>
                   <th
-                    class="navds-table__header-cell navds-label tall_felt navds-label--small"
+                    class="aksel-table__header-cell aksel-label tall_felt aksel-label--small"
                     scope="col"
                   >
                     Avgift md.
                   </th>
                 </tr>
               </thead>
-              <tbody class="navds-table__body">
-                <tr class="navds-table__row border_top navds-table__row--shade-on-hover">
-                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+              <tbody class="aksel-table__body">
+                <tr
+                  class="aksel-table__row border_top aksel-table__row--shade-on-hover"
+                  data-interactive="false"
+                >
+                  <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                     01.01.2023 - 31.12.2023
                   </td>
-                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                  <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                     Full dekning
                   </td>
-                  <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+                  <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
                     Arbeidsinntekt
                   </td>
-                  <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
+                  <td class="aksel-table__data-cell tall_felt aksel-body-short aksel-body-short--small">
                     5.1
                   </td>
-                  <td class="navds-table__data-cell tall_felt navds-body-short navds-body-short--small">
+                  <td class="aksel-table__data-cell tall_felt aksel-body-short aksel-body-short--small">
                     2&nbsp;125 kr
                   </td>
                 </tr>
@@ -257,13 +285,13 @@ exports[`TidligereGrunnlag > manuell beregning snapshot test 1`] = `
 
 <div>
   <div
-    style="--__ac-box-background: var(--a-surface-subtle);"
-    class="navds-box tidligereGrunnlag navds-box-bg"
+    style="--__axc-box-background: var(--ax-bg-neutral-soft);"
+    class="aksel-box tidligereGrunnlag aksel-box-bg"
   >
-    <h2 class="aarsavregning_seksjon_heading navds-heading navds-heading--small">
+    <h2 class="aarsavregning_seksjon_heading aksel-heading aksel-heading--small">
       Tidligere grunnlag
     </h2>
-    <p class="navds-body-long navds-body-long--small">
+    <p class="aksel-body-long aksel-body-long--small">
       Tidligere beregnet trygdeavgift:
       <strong>
         15&nbsp;000 kr

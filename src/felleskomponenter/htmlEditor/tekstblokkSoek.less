@@ -62,7 +62,7 @@
     align-items: center;
     gap: 0.25rem;
     white-space: nowrap;
-    font-size: var(--a-font-size-small);
+    font-size: var(--ax-font-size-small);
   }
 
   &__faner {
@@ -87,8 +87,8 @@
     gap: 0.5rem;
     min-height: 1.75rem;
     padding-top: 0.5rem;
-    border-top: 1px solid var(--a-border-subtle);
-    color: var(--a-text-subtle);
+    border-top: 1px solid var(--ax-border-neutral-subtle);
+    color: var(--ax-text-neutral-subtle);
   }
 
   // Eneste scroll-området – hovring her scroller popoveren, ikke siden.
@@ -116,30 +116,30 @@
     align-items: center;
     justify-content: center;
     padding: 1rem;
-    color: var(--a-text-subtle);
+    color: var(--ax-text-neutral-subtle);
     text-align: center;
   }
 
   &__rad {
-    border: 1px solid var(--a-border-subtle);
+    border: 1px solid var(--ax-border-neutral-subtle);
     border-radius: 6px;
     padding: 0.75rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    background-color: var(--a-surface-default, #fff);
+    background-color: var(--ax-bg-default, #fff);
     transition:
       border-color 0.1s ease,
       background-color 0.1s ease;
 
     &:hover {
-      border-color: var(--a-border-strong);
-      background-color: var(--a-surface-subtle, #f5f5f5);
+      border-color: var(--ax-border-neutral-strong);
+      background-color: var(--ax-bg-neutral-soft, #f5f5f5);
     }
 
     &--utvidet {
-      border-color: var(--a-border-strong);
-      box-shadow: 0 0 0 2px var(--a-surface-action-subtle, rgba(0, 102, 204, 0.1));
+      border-color: var(--ax-border-neutral-strong);
+      box-shadow: 0 0 0 2px var(--ax-bg-accent-soft, rgba(0, 102, 204, 0.1));
     }
 
     &-topp {
@@ -172,7 +172,7 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 0.25rem;
-      color: var(--a-text-subtle);
+      color: var(--ax-text-neutral-subtle);
     }
 
     &-knapper {
@@ -184,7 +184,7 @@
 
   &__forhandsvisning {
     padding: 0.6rem;
-    background-color: var(--a-surface-subtle, #f5f5f5);
+    background-color: var(--ax-bg-neutral-soft, #f5f5f5);
     border-radius: 4px;
     max-height: 14rem;
     overflow-y: auto;

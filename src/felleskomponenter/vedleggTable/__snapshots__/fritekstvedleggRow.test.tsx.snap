@@ -5,8 +5,11 @@ exports[`fritekstvedleggRow > snapshot test 1`] = `
 <div>
   <table>
     <tbody>
-      <tr class="navds-table__row vedlegg-row navds-table__row--shade-on-hover">
-        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+      <tr
+        class="aksel-table__row vedlegg-row aksel-table__row--shade-on-hover"
+        data-interactive="false"
+      >
+        <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -28,7 +31,7 @@ exports[`fritekstvedleggRow > snapshot test 1`] = `
             href="#"
             title="Åpnes i ny fane"
             aria-label="Åpnes i ny fane"
-            class="navds-link navds-link--action"
+            class="aksel-link"
           >
             a
             <svg
@@ -48,16 +51,17 @@ exports[`fritekstvedleggRow > snapshot test 1`] = `
             </svg>
           </a>
         </td>
-        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+        <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
         </td>
-        <td class="navds-table__data-cell icon__cell navds-body-short navds-body-short--small">
+        <td class="aksel-table__data-cell icon__cell aksel-body-short aksel-body-short--small">
           <button
+            data-variant="tertiary"
             type="button"
             aria-label="Rediger vedlegg"
             title="Rediger vedlegg"
-            class="ikon-knapp navds-button navds-button--tertiary navds-button--small navds-button--icon-only"
+            class="ikon-knapp aksel-button aksel-button--small aksel-button--icon-only"
           >
-            <span class="navds-button__icon">
+            <span class="aksel-button__icon">
               <svg
                 width="24"
                 height="24"
@@ -77,12 +81,13 @@ exports[`fritekstvedleggRow > snapshot test 1`] = `
             </span>
           </button>
           <button
+            data-variant="tertiary"
             type="button"
             aria-label="Slett vedlegg"
             title="Slett vedlegg"
-            class="ikon-knapp navds-button navds-button--tertiary navds-button--small navds-button--icon-only"
+            class="ikon-knapp aksel-button aksel-button--small aksel-button--icon-only"
           >
-            <span class="navds-button__icon">
+            <span class="aksel-button__icon">
               <svg
                 width="22"
                 height="24"
