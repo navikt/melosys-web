@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { screen, waitFor } from "@testing-library/react";
+import { act, screen, waitFor } from "@testing-library/react";
 import { renderWithProviders } from "../../../ducks/test-utils/renderWithProviders";
 import MKV from "../../../melosyskodeverk";
 import { STATUS } from "../../../services";
@@ -8,6 +8,7 @@ import { VurderingTrygdeavgift } from "./vurderingTrygdeavgift";
 import * as Api from "../../../services/api";
 import { useFeatureToggle } from "../../../featuretoggle";
 import TrygdeavgiftsperioderTabell from "../../../felleskomponenter/trygdeavgift/komponenter/trygdeavgiftsperioderTabell";
+import * as LovvalgsperiodeTypes from "../../../ducks/lovvalgsperioder/types";
 
 vi.mock("../../../services/api", () => ({
   Trygdeavgift: {
@@ -249,6 +250,175 @@ describe("VurderingTrygdeavgift (lovvalgsperiode)", () => {
       expect(payload.skatteforholdsperioder[0].tomDato).toBe(lovvalgsperiodeDates.tomDato);
       expect(payload.inntektskilder[0].fomDato).toBe(lovvalgsperiodeDates.fomDato);
       expect(payload.inntektskilder[0].tomDato).toBe(lovvalgsperiodeDates.tomDato);
+    });
+  });
+
+  describe("endret lovvalgsperiode", () => {
+    const lagretGrunnlag = (fomDato: string, tomDato: string) =>
+      createMockBeregnetTrygdeavgift({
+        trygdeavgiftsgrunnlag: {
+          skatteforholdsperioder: [{ fomDato, tomDato, skatteplikttype: "IKKE_SKATTEPLIKTIG" }],
+          inntektskilder: [
+            {
+              type: "ARBEIDSINNTEKT",
+              arbeidsgiversavgiftBetales: false,
+              avgiftspliktigInntekt: 50000,
+              fomDato,
+              tomDato,
+              erMaanedsbelop: true,
+            },
+          ],
+        },
+      });
+
+    const endreLovvalgsperiode = (store: any, overrides: object) =>
+      act(() => {
+        store.dispatch({ type: LovvalgsperiodeTypes.OK, data: [createMockLovvalgsperiode(overrides)] });
+      });
+
+    const renderOgEndrePeriode = async (stateOverrides: CreateStateOptions = {}) => {
+      const { store, rerender } = renderComponent(stateOverrides, { aktivtSteg: false });
+      await waitFor(() => expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled());
+      await act(async () => {});
+
+      endreLovvalgsperiode(store, { tomDato: "2024-06-30" });
+      rerender(<VurderingTrygdeavgift {...defaultProps} aktivtSteg />);
+    };
+
+    it("tømmer skjemaet og beregningen når perioden forkortes, som i FTRL", async () => {
+      vi.mocked(Api.Trygdeavgift.hentBeregnetTrygdeavgift).mockResolvedValue({
+        ...lagretGrunnlag("2024-01-01", "2024-12-31"),
+        trygdeavgiftsperioder: [
+          {
+            fom: "2024-01-01",
+            tom: "2024-12-31",
+            trygdedekning: "FULL_DEKNING_EOSFO",
+            inntektskildetype: "ARBEIDSINNTEKT",
+            avgiftssats: 7.7,
+            avgiftPerMd: 3850,
+            beregningsregel: "ORDINÆR",
+          },
+        ],
+      } as any);
+
+      await renderOgEndrePeriode();
+
+      await waitFor(() => expect(defaultProps.oppdaterStatus).toHaveBeenLastCalledWith(false));
+      await act(() => new Promise((resolve) => setTimeout(resolve, 600)));
+      expect(Api.Trygdeavgift.beregnTrygdeavgiftsperioder).not.toHaveBeenCalled();
+      expect(Api.Trygdeavgift.hentOpprinneligTrygdeavgiftsgrunnlag).not.toHaveBeenCalled();
+      expect(screen.queryByTestId("trygdeavgiftstabell")).not.toBeInTheDocument();
+      expect(screen.queryByText(/kan ikke starte før eller slutte etter/)).not.toBeInTheDocument();
+    });
+
+    it("henter opprinnelig grunnlag ved ny vurdering når perioden endres, som i FTRL", async () => {
+      vi.mocked(Api.Trygdeavgift.hentBeregnetTrygdeavgift).mockResolvedValue(
+        lagretGrunnlag("2024-01-01", "2024-12-31") as any,
+      );
+
+      await renderOgEndrePeriode({ behandlingstype: MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING });
+
+      await waitFor(() => expect(Api.Trygdeavgift.hentOpprinneligTrygdeavgiftsgrunnlag).toHaveBeenCalledTimes(1));
+    });
+
+    it("endrer ikke skjemaet når lovvalgsperioden hentes på nytt med samme datoer", async () => {
+      vi.mocked(Api.Trygdeavgift.hentBeregnetTrygdeavgift).mockResolvedValue(
+        lagretGrunnlag("2024-03-01", "2024-09-30") as any,
+      );
+      const { store, rerender } = renderComponent({}, { aktivtSteg: false });
+      await waitFor(() => expect(Api.Trygdeavgift.hentBeregnetTrygdeavgift).toHaveBeenCalled());
+      await act(async () => {});
+
+      endreLovvalgsperiode(store, {});
+      rerender(<VurderingTrygdeavgift {...defaultProps} aktivtSteg />);
+
+      await waitFor(() => expect(Api.Trygdeavgift.beregnTrygdeavgiftsperioder).toHaveBeenCalled());
+      const [, payload] = vi.mocked(Api.Trygdeavgift.beregnTrygdeavgiftsperioder).mock.calls.at(-1)!;
+      expect(payload.skatteforholdsperioder[0]).toMatchObject({ fomDato: "2024-03-01", tomDato: "2024-09-30" });
+    });
+  });
+
+  describe("manglende innbetaling når inneværende år er opphørt", () => {
+    const iFjor = new Date().getFullYear() - 1;
+    const iÅr = iFjor + 1;
+
+    it("viser ikke periodefeil fra det skjulte opprinnelige grunnlaget", async () => {
+      vi.mocked(useFeatureToggle).mockImplementation(
+        (toggle) => toggle === MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
+      );
+      vi.mocked(Api.Trygdeavgift.hentOpprinneligTrygdeavgiftsgrunnlag).mockResolvedValue({
+        skatteforholdsperioder: [
+          { fomDato: `${iFjor}-01-01`, tomDato: `${iÅr}-12-31`, skatteplikttype: "IKKE_SKATTEPLIKTIG" },
+        ],
+        inntektskilder: [
+          {
+            type: "ARBEIDSINNTEKT",
+            arbeidsgiversavgiftBetales: false,
+            avgiftspliktigInntekt: 50000,
+            fomDato: `${iFjor}-01-01`,
+            tomDato: `${iÅr}-12-31`,
+            erMaanedsbelop: true,
+          },
+        ],
+      });
+
+      renderComponent({
+        behandlingstype: MKV.Koder.behandlinger.behandlingstyper.MANGLENDE_INNBETALING_TRYGDEAVGIFT,
+        lovvalgsperioder: [
+          createMockLovvalgsperiode({ fomDato: `${iFjor}-01-01`, tomDato: `${iFjor}-12-31` }),
+          createMockLovvalgsperiode({
+            periodeID: 101,
+            fomDato: `${iÅr}-01-01`,
+            tomDato: `${iÅr}-12-31`,
+            innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.OPPHØRT,
+          }),
+        ],
+      });
+
+      await waitFor(() => expect(Api.Trygdeavgift.hentOpprinneligTrygdeavgiftsgrunnlag).toHaveBeenCalled());
+      await waitFor(() => expect(defaultProps.oppdaterStatus).toHaveBeenLastCalledWith(true));
+      expect(screen.queryByText(/kan ikke starte før eller slutte etter/)).not.toBeInTheDocument();
+    });
+
+    it("skjuler ikke en lagret beregning selv om feltene er skjult", async () => {
+      vi.mocked(useFeatureToggle).mockImplementation(
+        (toggle) => toggle === MELOSYS_FAKTURERINGSKOMPONENTEN_IKKE_TIDLIGERE_PERIODER,
+      );
+      vi.mocked(Api.Trygdeavgift.hentBeregnetTrygdeavgift).mockResolvedValue(
+        createMockBeregnetTrygdeavgift({
+          trygdeavgiftsperioder: [
+            {
+              fom: `${iFjor}-01-01`,
+              tom: `${iFjor}-12-31`,
+              trygdedekning: "FULL_DEKNING",
+              inntektskildetype: "ARBEIDSINNTEKT",
+              avgiftssats: 7.7,
+              avgiftPerMd: 3850,
+              beregningsregel: "ORDINÆR",
+            },
+          ],
+          trygdeavgiftsgrunnlag: {
+            skatteforholdsperioder: [
+              { fomDato: `${iFjor}-01-01`, tomDato: `${iFjor}-12-31`, skatteplikttype: "IKKE_SKATTEPLIKTIG" },
+            ],
+            inntektskilder: [],
+          },
+        }) as any,
+      );
+
+      renderComponent({
+        lovvalgsperioder: [
+          createMockLovvalgsperiode({ fomDato: `${iFjor}-01-01`, tomDato: `${iFjor}-12-31` }),
+          createMockLovvalgsperiode({
+            periodeID: 101,
+            fomDato: `${iÅr}-01-01`,
+            tomDato: `${iÅr}-12-31`,
+            innvilgelsesResultat: MKV.Koder.innvilgelsesResultat.OPPHØRT,
+          }),
+        ],
+      });
+
+      expect(await screen.findByTestId("trygdeavgiftstabell")).toBeInTheDocument();
     });
   });
 
