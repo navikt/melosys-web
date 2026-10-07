@@ -1,6 +1,7 @@
 import * as Types from '../../../../../graphql/generated/types';
 import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client/react';
+import * as ApolloReactHooks from '@apollo/client/react';
 
 const defaultOptions = {} as const;
 
@@ -67,14 +68,14 @@ export const HentFamiliemedlemmerDocument = gql`
  *   },
  * });
  */
-export function useHentFamiliemedlemmerQuery(baseOptions: Apollo.QueryHookOptions<HentFamiliemedlemmerQuery, HentFamiliemedlemmerQueryVariables>) {
+export function useHentFamiliemedlemmerQuery(baseOptions: ApolloReactHooks.QueryHookOptions<HentFamiliemedlemmerQuery, HentFamiliemedlemmerQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<HentFamiliemedlemmerQuery, HentFamiliemedlemmerQueryVariables>(HentFamiliemedlemmerDocument, options);
+        return ApolloReactHooks.useQuery<HentFamiliemedlemmerQuery, HentFamiliemedlemmerQueryVariables>(HentFamiliemedlemmerDocument, options);
       }
-export function useHentFamiliemedlemmerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HentFamiliemedlemmerQuery, HentFamiliemedlemmerQueryVariables>) {
+export function useHentFamiliemedlemmerLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HentFamiliemedlemmerQuery, HentFamiliemedlemmerQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<HentFamiliemedlemmerQuery, HentFamiliemedlemmerQueryVariables>(HentFamiliemedlemmerDocument, options);
+          return ApolloReactHooks.useLazyQuery<HentFamiliemedlemmerQuery, HentFamiliemedlemmerQueryVariables>(HentFamiliemedlemmerDocument, options);
         }
 export type HentFamiliemedlemmerQueryHookResult = ReturnType<typeof useHentFamiliemedlemmerQuery>;
 export type HentFamiliemedlemmerLazyQueryHookResult = ReturnType<typeof useHentFamiliemedlemmerLazyQuery>;
-export type HentFamiliemedlemmerQueryResult = Apollo.QueryResult<HentFamiliemedlemmerQuery, HentFamiliemedlemmerQueryVariables>;
+export type HentFamiliemedlemmerQueryResult = ApolloReactCommon.QueryResult<HentFamiliemedlemmerQuery, HentFamiliemedlemmerQueryVariables>;

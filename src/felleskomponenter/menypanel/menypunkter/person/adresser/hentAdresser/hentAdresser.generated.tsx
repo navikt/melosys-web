@@ -1,6 +1,7 @@
 import * as Types from '../../../../../../graphql/generated/types';
 import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client/react';
+import * as ApolloReactHooks from '@apollo/client/react';
 
 const defaultOptions = {} as const;
 
@@ -133,14 +134,14 @@ export const HentAdresserDocument = gql`
  *   },
  * });
  */
-export function useHentAdresserQuery(baseOptions: Apollo.QueryHookOptions<HentAdresserQuery, HentAdresserQueryVariables>) {
+export function useHentAdresserQuery(baseOptions: ApolloReactHooks.QueryHookOptions<HentAdresserQuery, HentAdresserQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<HentAdresserQuery, HentAdresserQueryVariables>(HentAdresserDocument, options);
+        return ApolloReactHooks.useQuery<HentAdresserQuery, HentAdresserQueryVariables>(HentAdresserDocument, options);
       }
-export function useHentAdresserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HentAdresserQuery, HentAdresserQueryVariables>) {
+export function useHentAdresserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HentAdresserQuery, HentAdresserQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<HentAdresserQuery, HentAdresserQueryVariables>(HentAdresserDocument, options);
+          return ApolloReactHooks.useLazyQuery<HentAdresserQuery, HentAdresserQueryVariables>(HentAdresserDocument, options);
         }
 export type HentAdresserQueryHookResult = ReturnType<typeof useHentAdresserQuery>;
 export type HentAdresserLazyQueryHookResult = ReturnType<typeof useHentAdresserLazyQuery>;
-export type HentAdresserQueryResult = Apollo.QueryResult<HentAdresserQuery, HentAdresserQueryVariables>;
+export type HentAdresserQueryResult = ApolloReactCommon.QueryResult<HentAdresserQuery, HentAdresserQueryVariables>;

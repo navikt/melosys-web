@@ -1,8 +1,10 @@
 import * as Types from '../../graphql/generated/types';
-import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
 
-const defaultOptions = {};
+import { gql } from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client/react';
+import * as ApolloReactHooks from '@apollo/client/react';
+
+const defaultOptions =  {} as const;
 
 export type HentPersonopplysningerQueryVariables = Types.Exact<{
   behandlingID: Types.Scalars['Long'];
@@ -78,14 +80,14 @@ export const HentPersonopplysningerDocument = gql`
  *   },
  * });
  */
-export function useHentPersonopplysningerQuery(baseOptions: Apollo.QueryHookOptions<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>) {
+export function useHentPersonopplysningerQuery(baseOptions: ApolloReactHooks.QueryHookOptions<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>(HentPersonopplysningerDocument, options);
+        return ApolloReactHooks.useQuery<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>(HentPersonopplysningerDocument, options);
       }
-export function useHentPersonopplysningerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>) {
+export function useHentPersonopplysningerLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>(HentPersonopplysningerDocument, options);
+          return ApolloReactHooks.useLazyQuery<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>(HentPersonopplysningerDocument, options);
         }
 export type HentPersonopplysningerQueryHookResult = ReturnType<typeof useHentPersonopplysningerQuery>;
 export type HentPersonopplysningerLazyQueryHookResult = ReturnType<typeof useHentPersonopplysningerLazyQuery>;
-export type HentPersonopplysningerQueryResult = Apollo.QueryResult<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>;
+export type HentPersonopplysningerQueryResult = ApolloReactCommon.QueryResult<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>;

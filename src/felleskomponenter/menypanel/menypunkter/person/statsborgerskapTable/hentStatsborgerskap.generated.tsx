@@ -1,6 +1,7 @@
 import * as Types from '../../../../../graphql/generated/types';
 import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client/react';
+import * as ApolloReactHooks from '@apollo/client/react';
 
 const defaultOptions = {} as const;
 
@@ -58,14 +59,14 @@ export const HentStatsborgerskapDocument = gql`
  *   },
  * });
  */
-export function useHentStatsborgerskapQuery(baseOptions: Apollo.QueryHookOptions<HentStatsborgerskapQuery, HentStatsborgerskapQueryVariables>) {
+export function useHentStatsborgerskapQuery(baseOptions: ApolloReactHooks.QueryHookOptions<HentStatsborgerskapQuery, HentStatsborgerskapQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<HentStatsborgerskapQuery, HentStatsborgerskapQueryVariables>(HentStatsborgerskapDocument, options);
+        return ApolloReactHooks.useQuery<HentStatsborgerskapQuery, HentStatsborgerskapQueryVariables>(HentStatsborgerskapDocument, options);
       }
-export function useHentStatsborgerskapLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HentStatsborgerskapQuery, HentStatsborgerskapQueryVariables>) {
+export function useHentStatsborgerskapLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HentStatsborgerskapQuery, HentStatsborgerskapQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<HentStatsborgerskapQuery, HentStatsborgerskapQueryVariables>(HentStatsborgerskapDocument, options);
+          return ApolloReactHooks.useLazyQuery<HentStatsborgerskapQuery, HentStatsborgerskapQueryVariables>(HentStatsborgerskapDocument, options);
         }
 export type HentStatsborgerskapQueryHookResult = ReturnType<typeof useHentStatsborgerskapQuery>;
 export type HentStatsborgerskapLazyQueryHookResult = ReturnType<typeof useHentStatsborgerskapLazyQuery>;
-export type HentStatsborgerskapQueryResult = Apollo.QueryResult<HentStatsborgerskapQuery, HentStatsborgerskapQueryVariables>;
+export type HentStatsborgerskapQueryResult = ApolloReactCommon.QueryResult<HentStatsborgerskapQuery, HentStatsborgerskapQueryVariables>;

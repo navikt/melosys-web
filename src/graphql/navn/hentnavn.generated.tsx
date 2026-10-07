@@ -1,9 +1,10 @@
 import * as Types from '../generated/types';
 
 import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client/react';
+import * as ApolloReactHooks from '@apollo/client/react';
 
-const defaultOptions =  {}
+const defaultOptions =  {} as const;
 export type HentNavnQueryVariables = Types.Exact<{
   ident: Types.Scalars['String'];
 }>;
@@ -49,14 +50,14 @@ export const HentNavnDocument = gql`
  *   },
  * });
  */
-export function useHentNavnQuery(baseOptions: Apollo.QueryHookOptions<HentNavnQuery, HentNavnQueryVariables>) {
+export function useHentNavnQuery(baseOptions: ApolloReactHooks.QueryHookOptions<HentNavnQuery, HentNavnQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<HentNavnQuery, HentNavnQueryVariables>(HentNavnDocument, options);
+        return ApolloReactHooks.useQuery<HentNavnQuery, HentNavnQueryVariables>(HentNavnDocument, options);
       }
-export function useHentNavnLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HentNavnQuery, HentNavnQueryVariables>) {
+export function useHentNavnLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HentNavnQuery, HentNavnQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<HentNavnQuery, HentNavnQueryVariables>(HentNavnDocument, options);
+          return ApolloReactHooks.useLazyQuery<HentNavnQuery, HentNavnQueryVariables>(HentNavnDocument, options);
         }
 export type HentNavnQueryHookResult = ReturnType<typeof useHentNavnQuery>;
 export type HentNavnLazyQueryHookResult = ReturnType<typeof useHentNavnLazyQuery>;
-export type HentNavnQueryResult = Apollo.QueryResult<HentNavnQuery, HentNavnQueryVariables>;
+export type HentNavnQueryResult = ApolloReactCommon.QueryResult<HentNavnQuery, HentNavnQueryVariables>;
