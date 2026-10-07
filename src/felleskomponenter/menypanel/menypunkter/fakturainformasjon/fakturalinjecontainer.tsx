@@ -1,4 +1,5 @@
 import KopierbarTekst from "../../../kopierbarTekst";
+import LabelMedHjelpetekst from "../../../labelMedHjelpetekst";
 import * as Utils from "../../../../utils";
 import { fakturaserierTypes } from "../../../../ducks/fakturaserier";
 import * as Nav from "../../../../navFrontend";
@@ -8,6 +9,8 @@ interface FakturaLinjeContainerProps {
 }
 
 export function FakturaLinjeContainer({ faktura }: FakturaLinjeContainerProps) {
+  const harBeskrivelse = faktura.beskrivelse !== undefined;
+
   return (
     <div className="fakturalinje">
       <div className="fakturanr_wrapper">
@@ -16,6 +19,20 @@ export function FakturaLinjeContainer({ faktura }: FakturaLinjeContainerProps) {
           {!faktura.eksternFakturaNummer ? " - " : faktura.eksternFakturaNummer}
         </KopierbarTekst>
       </div>
+      {harBeskrivelse && (
+        <div className="fakturabeskrivelse_wrapper">
+          <LabelMedHjelpetekst
+            label={`Beskrivelse: ${faktura.beskrivelse ?? "ikke lagret"}`}
+            hjelpetekst={
+              faktura.beskrivelseErUtledet
+                ? faktura.beskrivelse
+                  ? "Denne teksten er gjenskapt av Melosys. Teksten som står på fakturaen i OeBS kan være en annen."
+                  : "Melosys har ikke lagret hvilken tekst som ble sendt til OeBS for denne fakturaen. Slå den opp i OeBS."
+                : null
+            }
+          />
+        </div>
+      )}
       <div className="fakturalinje">
         {!faktura.eksternFakturaNummer && (
           <Nav.Alert variant="info">
