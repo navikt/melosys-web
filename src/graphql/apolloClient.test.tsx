@@ -4,6 +4,7 @@ import { MockLink } from "@apollo/client/testing";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { PropsWithChildren } from "react";
 import apolloClient from "./apolloClient";
+import { KjoennType } from "./generated/types";
 import { HentPersonopplysningerDocument } from "../felleskomponenter/informasjonlinje/hentpersonopplysninger.generated";
 import { HentPersoninfoDocument } from "../felleskomponenter/menypanel/menypunkter/person/personinfo/hentPersoninfo.generated";
 import { HentStatsborgerskapDocument } from "../felleskomponenter/menypanel/menypunkter/person/statsborgerskapTable/hentStatsborgerskap.generated";
@@ -21,7 +22,7 @@ const documents = [
 const persondata = {
   __typename: "Personopplysninger",
   navn: { __typename: "Navn", fornavn: "Test", mellomnavn: null, etternavn: "Person" },
-  kjoenn: "MANN",
+  kjoenn: KjoennType.Mann,
   folkeregisteridentifikator: "123",
   folkeregisterpersonstatuser: [
     {

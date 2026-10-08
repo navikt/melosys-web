@@ -2,7 +2,8 @@ import "./informasjonlinje.less";
 import MKV from "../../melosyskodeverk";
 import * as StringUtils from "../../utils/streng";
 import * as PersonUtils from "../../utils/person";
-import { useHentPersonopplysningerQuery } from "./hentpersonopplysninger.generated";
+import { useQuery } from "@apollo/client/react";
+import { HentPersonopplysningerDocument } from "./hentpersonopplysninger.generated";
 import { KjoennType } from "../../graphql";
 
 export type PersonopplysningerProps = {
@@ -15,7 +16,7 @@ export type PersonopplysningerProps = {
 } | null;
 
 const useHentPersonopplysninger = (behandlingID: number, skip: boolean): PersonopplysningerProps => {
-  const { data, error } = useHentPersonopplysningerQuery({ variables: { behandlingID }, skip });
+  const { data, error } = useQuery(HentPersonopplysningerDocument, { variables: { behandlingID }, skip });
 
   const person = data?.hentSaksopplysninger.persondata;
   if (error || !person) return null;
