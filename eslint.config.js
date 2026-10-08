@@ -1,9 +1,6 @@
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
-import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
-import jsxA11y from "eslint-plugin-jsx-a11y";
-import importPlugin from "eslint-plugin-import";
 import prettier from "eslint-plugin-prettier";
 import { fileURLToPath } from "url";
 import path from "path";
@@ -32,10 +29,7 @@ export default tseslint.config(
       },
     },
     plugins: {
-      react,
       "react-hooks": reactHooks,
-      "jsx-a11y": jsxA11y,
-      import: importPlugin,
       prettier,
     },
     rules: {
@@ -55,14 +49,6 @@ export default tseslint.config(
 
       // Prettier integration
       "prettier/prettier": "error",
-    },
-    settings: {
-      react: { version: "detect" },
-      "import/resolver": {
-        typescript: {
-          project: ["./tsconfig.eslint.json", "./tests/tsconfig.json"],
-        },
-      },
     },
   },
   {
