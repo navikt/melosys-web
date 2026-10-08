@@ -23,13 +23,13 @@ export type HentPersonopplysningerQuery = (
         & Pick<Types.Navn, 'fornavn' | 'mellomnavn' | 'etternavn'>
       ), folkeregisterpersonstatuser: Array<(
         { __typename?: 'Folkeregisterpersonstatus' }
-        & Pick<Types.Folkeregisterpersonstatus, 'kode' | 'erHistorisk'>
+        & Pick<Types.Folkeregisterpersonstatus, 'kode' | 'tekst' | 'master' | 'kilde' | 'fregGyldighetstidspunkt' | 'erHistorisk'>
       )>, statsborgerskap: Array<(
         { __typename?: 'Statsborgerskap' }
-        & Pick<Types.Statsborgerskap, 'land' | 'erHistorisk'>
+        & Pick<Types.Statsborgerskap, 'land' | 'bekreftelsesdato' | 'gyldigFraOgMed' | 'gyldigTilOgMed' | 'master' | 'kilde' | 'erHistorisk'>
       )>, sivilstand: Array<(
         { __typename?: 'Sivilstand' }
-        & Pick<Types.Sivilstand, 'type' | 'erHistorisk'>
+        & Pick<Types.Sivilstand, 'type' | 'relatertVedSivilstand' | 'gyldigFraOgMed' | 'bekreftelsesdato' | 'master' | 'kilde' | 'erHistorisk'>
       )> }
     ) }
   ) }
@@ -48,15 +48,29 @@ export const HentPersonopplysningerDocument = gql`
       kjoenn
       folkeregisterpersonstatuser {
         kode
+        tekst
+        master
+        kilde
+        fregGyldighetstidspunkt
         erHistorisk
       }
       folkeregisteridentifikator
       statsborgerskap {
         land
+        bekreftelsesdato
+        gyldigFraOgMed
+        gyldigTilOgMed
+        master
+        kilde
         erHistorisk
       }
       sivilstand {
         type
+        relatertVedSivilstand
+        gyldigFraOgMed
+        bekreftelsesdato
+        master
+        kilde
         erHistorisk
       }
     }
