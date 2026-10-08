@@ -1,93 +1,21 @@
-import * as Types from '../../graphql/generated/types';
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+import type * as Types from '../../graphql/generated/types';
 
-import { gql } from '@apollo/client';
-import type * as ApolloReactCommon from '@apollo/client/react';
-import * as ApolloReactHooks from '@apollo/client/react';
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+export type KjoennType =
+  | 'KVINNE'
+  | 'MANN'
+  | 'UKJENT';
 
-const defaultOptions =  {} as const;
-
-export type HentPersonopplysningerQueryVariables = Types.Exact<{
-  behandlingID: Types.Scalars['Long'];
+export type HentPersonopplysningerQueryVariables = Exact<{
+  behandlingID: number;
 }>;
 
 
-export type HentPersonopplysningerQuery = (
-  { __typename?: 'Query' }
-  & { hentSaksopplysninger: (
-    { __typename?: 'Saksopplysninger' }
-    & { persondata: (
-      { __typename?: 'Personopplysninger' }
-      & Pick<Types.Personopplysninger, 'kjoenn' | 'folkeregisteridentifikator'>
-      & { navn: (
-        { __typename?: 'Navn' }
-        & Pick<Types.Navn, 'fornavn' | 'mellomnavn' | 'etternavn'>
-      ), folkeregisterpersonstatuser: Array<(
-        { __typename?: 'Folkeregisterpersonstatus' }
-        & Pick<Types.Folkeregisterpersonstatus, 'kode' | 'erHistorisk'>
-      )>, statsborgerskap: Array<(
-        { __typename?: 'Statsborgerskap' }
-        & Pick<Types.Statsborgerskap, 'land' | 'erHistorisk'>
-      )>, sivilstand: Array<(
-        { __typename?: 'Sivilstand' }
-        & Pick<Types.Sivilstand, 'type' | 'erHistorisk'>
-      )> }
-    ) }
-  ) }
-);
+export type HentPersonopplysningerQuery = { hentSaksopplysninger: { persondata: { kjoenn: Types.KjoennType, folkeregisteridentifikator: string | null, navn: { fornavn: string, mellomnavn: string | null, etternavn: string }, folkeregisterpersonstatuser: Array<{ kode: string, tekst: string, master: string, kilde: string | null, fregGyldighetstidspunkt: string | null, erHistorisk: boolean }>, statsborgerskap: Array<{ land: string, bekreftelsesdato: string | null, gyldigFraOgMed: string | null, gyldigTilOgMed: string | null, master: string, kilde: string | null, erHistorisk: boolean }>, sivilstand: Array<{ type: string, relatertVedSivilstand: string | null, gyldigFraOgMed: string | null, bekreftelsesdato: string | null, master: string, kilde: string | null, erHistorisk: boolean }> } } };
 
 
-export const HentPersonopplysningerDocument = gql`
-    query hentPersonopplysninger($behandlingID: Long!) {
-  hentSaksopplysninger(behandlingID: $behandlingID) {
-    persondata {
-      navn {
-        fornavn
-        mellomnavn
-        etternavn
-      }
-      kjoenn
-      folkeregisterpersonstatuser {
-        kode
-        erHistorisk
-      }
-      folkeregisteridentifikator
-      statsborgerskap {
-        land
-        erHistorisk
-      }
-      sivilstand {
-        type
-        erHistorisk
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useHentPersonopplysningerQuery__
- *
- * To run a query within a React component, call `useHentPersonopplysningerQuery` and pass it any options that fit your needs.
- * When your component renders, `useHentPersonopplysningerQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useHentPersonopplysningerQuery({
- *   variables: {
- *      behandlingID: // value for 'behandlingID'
- *   },
- * });
- */
-export function useHentPersonopplysningerQuery(baseOptions: ApolloReactHooks.QueryHookOptions<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>(HentPersonopplysningerDocument, options);
-      }
-export function useHentPersonopplysningerLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>(HentPersonopplysningerDocument, options);
-        }
-export type HentPersonopplysningerQueryHookResult = ReturnType<typeof useHentPersonopplysningerQuery>;
-export type HentPersonopplysningerLazyQueryHookResult = ReturnType<typeof useHentPersonopplysningerLazyQuery>;
-export type HentPersonopplysningerQueryResult = ApolloReactCommon.QueryResult<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>;
+export const HentPersonopplysningerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"hentPersonopplysninger"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"behandlingID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Long"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hentSaksopplysninger"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"behandlingID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"behandlingID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"persondata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"navn"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fornavn"}},{"kind":"Field","name":{"kind":"Name","value":"mellomnavn"}},{"kind":"Field","name":{"kind":"Name","value":"etternavn"}}]}},{"kind":"Field","name":{"kind":"Name","value":"kjoenn"}},{"kind":"Field","name":{"kind":"Name","value":"folkeregisterpersonstatuser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"kode"}},{"kind":"Field","name":{"kind":"Name","value":"tekst"}},{"kind":"Field","name":{"kind":"Name","value":"master"}},{"kind":"Field","name":{"kind":"Name","value":"kilde"}},{"kind":"Field","name":{"kind":"Name","value":"fregGyldighetstidspunkt"}},{"kind":"Field","name":{"kind":"Name","value":"erHistorisk"}}]}},{"kind":"Field","name":{"kind":"Name","value":"folkeregisteridentifikator"}},{"kind":"Field","name":{"kind":"Name","value":"statsborgerskap"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"land"}},{"kind":"Field","name":{"kind":"Name","value":"bekreftelsesdato"}},{"kind":"Field","name":{"kind":"Name","value":"gyldigFraOgMed"}},{"kind":"Field","name":{"kind":"Name","value":"gyldigTilOgMed"}},{"kind":"Field","name":{"kind":"Name","value":"master"}},{"kind":"Field","name":{"kind":"Name","value":"kilde"}},{"kind":"Field","name":{"kind":"Name","value":"erHistorisk"}}]}},{"kind":"Field","name":{"kind":"Name","value":"sivilstand"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"relatertVedSivilstand"}},{"kind":"Field","name":{"kind":"Name","value":"gyldigFraOgMed"}},{"kind":"Field","name":{"kind":"Name","value":"bekreftelsesdato"}},{"kind":"Field","name":{"kind":"Name","value":"master"}},{"kind":"Field","name":{"kind":"Name","value":"kilde"}},{"kind":"Field","name":{"kind":"Name","value":"erHistorisk"}}]}}]}}]}}]}}]} as unknown as DocumentNode<HentPersonopplysningerQuery, HentPersonopplysningerQueryVariables>;

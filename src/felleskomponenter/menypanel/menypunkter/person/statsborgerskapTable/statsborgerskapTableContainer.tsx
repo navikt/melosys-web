@@ -1,6 +1,7 @@
 import * as Nav from "../../../../../navFrontend";
 
-import { useHentStatsborgerskapQuery } from "./hentStatsborgerskap.generated";
+import { useQuery } from "@apollo/client/react";
+import { HentStatsborgerskapDocument } from "./hentStatsborgerskap.generated";
 
 import StatsborgerskapTable from "./statsborgerskapTable";
 
@@ -9,7 +10,7 @@ interface StatsborgerskapTableContainerProps {
 }
 
 function StatsborgerskapTableContainer({ behandlingID }: StatsborgerskapTableContainerProps) {
-  const { loading, error, data } = useHentStatsborgerskapQuery({ variables: { behandlingID } });
+  const { loading, error, data } = useQuery(HentStatsborgerskapDocument, { variables: { behandlingID } });
 
   if (error) return <Nav.Alert variant="error">Kunne ikke hente statsborgerskap!</Nav.Alert>;
   if (loading) return <div>Laster statsborgerskap...</div>;
