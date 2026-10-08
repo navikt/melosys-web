@@ -1,4 +1,3 @@
-/* eslint-env browser */
 import { combineReducers } from "redux";
 import rootReducer from "./reducer";
 import { configureStore } from "@reduxjs/toolkit";

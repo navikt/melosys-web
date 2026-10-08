@@ -37,8 +37,8 @@ const useKontaktopplysninger = (
       return res;
     } catch (e) {
       if (isApiError(e)) {
-        if (e.status >= 500) throw new Error("Teknisk feil ved sletting av kontaktopplysninger");
-        else if (e.status >= 400) throw new Error(e.body.message);
+        if (e.status >= 500) throw new Error("Teknisk feil ved sletting av kontaktopplysninger", { cause: e });
+        else if (e.status >= 400) throw new Error(e.body.message, { cause: e });
       }
       throw e;
     }
@@ -58,8 +58,8 @@ const useKontaktopplysninger = (
       return await Api.Fagsaker.kontaktopplysninger.send(saksnummer, orgnr, data);
     } catch (e) {
       if (isApiError(e)) {
-        if (e.status >= 500) throw new Error("Teknisk feil ved lagring av kontaktopplysninger");
-        else if (e.status >= 400) throw new Error(e.body.message);
+        if (e.status >= 500) throw new Error("Teknisk feil ved lagring av kontaktopplysninger", { cause: e });
+        else if (e.status >= 400) throw new Error(e.body.message, { cause: e });
       }
       throw e;
     }
