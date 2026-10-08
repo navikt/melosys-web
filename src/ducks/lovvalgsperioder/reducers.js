@@ -23,16 +23,16 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, status: STATUS.PENDING };
     case Types.FEILET:
       // Periodene blir stående: neste lagring sender dem, ikke feilsvaret (MELOSYS-8338).
-      return { ...state, status: STATUS.ERROR, feil: action.data };
+      return { ...state, status: STATUS.ERROR };
     case Types.HENT_FEILET:
-      // Periodene i storen kan være fra forrige behandling. lagre() sender ingenting så lenge listen er tom.
-      return { ...state, status: STATUS.ERROR, data: [], feil: action.data };
+      // Egen type fordi FEILET beholder periodene: etter en feilet henting kan de være fra
+      // forrige behandling, og lagre() ville sendt dem til denne. Tom liste sendes ikke.
+      return { ...state, status: STATUS.ERROR, data: [] };
     case Types.OK:
       return {
         ...state,
         status: STATUS.OK,
         data: action.data,
-        feil: undefined,
       };
     case Types.RESET:
       return { ...initialState };
@@ -50,7 +50,6 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         data: lovvalgsperioder,
         status: STATUS.OK,
-        feil: undefined,
       };
     }
     case Types.OK_SLETT_LOVVALGSPERIODE: {
@@ -61,7 +60,6 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         data: lovvalgsperioder,
         status: STATUS.OK,
-        feil: undefined,
       };
     }
     case Types.ENDRE_PERIODE: {

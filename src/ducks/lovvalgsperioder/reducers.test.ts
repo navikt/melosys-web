@@ -21,11 +21,10 @@ describe("lovvalgsperioder reducer", () => {
     const etterFeil = (): any =>
       reducer({ data: perioder, status: STATUS.OK } as any, { type: Types.FEILET, data: feilsvar });
 
-    it("beholder periodene og legger feilen i feil", () => {
+    it("beholder periodene", () => {
       const next = etterFeil();
       expect(next.status).toBe(STATUS.ERROR);
       expect(next.data).toEqual(perioder);
-      expect(next.feil).toEqual(feilsvar);
     });
 
     it("lar selektoren gi de samme periodene som før", () => {
@@ -38,12 +37,6 @@ describe("lovvalgsperioder reducer", () => {
         data: { fomDato: "2027-02-01", tomDato: "2027-06-30" },
       });
       expect(next.data).toEqual([{ ...perioder[0], fomDato: "2027-02-01", tomDato: "2027-06-30" }]);
-    });
-
-    it("OK fjerner feilen", () => {
-      const next: any = reducer(etterFeil(), { type: Types.OK, data: perioder });
-      expect(next.status).toBe(STATUS.OK);
-      expect(next.feil).toBeUndefined();
     });
   });
 
