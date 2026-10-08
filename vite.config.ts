@@ -13,10 +13,6 @@ const LOCAL_FAKTURERINGSKOMPONENTEN_PORT = 8084;
 
 export default defineConfig({
   base: "/melosys",
-  // React JSX transform krever babel så i vite må man fortsatt importe
-  esbuild: {
-    jsxInject: `import React from 'react'`,
-  },
   css: {
     preprocessorOptions: {
       less: {
@@ -29,7 +25,7 @@ export default defineConfig({
   build: {
     outDir: "./build",
     emptyOutDir: true,
-    rollupOptions: {
+    rolldownOptions: {
       external: ["/env-config.js"],
     },
   },
@@ -78,8 +74,8 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    esbuildOptions: {
-      loader: {
+    rolldownOptions: {
+      moduleTypes: {
         ".js": "jsx",
       },
     },
