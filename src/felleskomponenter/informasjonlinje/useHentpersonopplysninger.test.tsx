@@ -18,8 +18,9 @@ const mockData = {
   },
 };
 
-vi.mock("./hentpersonopplysninger.generated", () => ({
-  useHentPersonopplysningerQuery: vi.fn(() => ({ data: mockData, error: undefined })),
+vi.mock("@apollo/client/react", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@apollo/client/react")>()),
+  useQuery: vi.fn(() => ({ data: mockData, error: undefined })),
 }));
 
 vi.mock("../../utils/streng", () => ({
@@ -31,7 +32,7 @@ vi.mock("../../utils/person", () => ({
 }));
 
 import useHentPersonopplysninger from "./useHentpersonopplysninger";
-import { useHentPersonopplysningerQuery } from "./hentpersonopplysninger.generated";
+import { useQuery } from "@apollo/client/react";
 
 describe("useHentPersonopplysninger", () => {
   it("returnerer personopplysninger fra graphql-data", () => {
@@ -48,7 +49,7 @@ describe("useHentPersonopplysninger", () => {
   });
 
   it("returnerer null ved feil", () => {
-    vi.mocked(useHentPersonopplysningerQuery).mockReturnValueOnce({ data: undefined, error: new Error("feil") } as any);
+    vi.mocked(useQuery).mockReturnValueOnce({ data: undefined, error: new Error("feil") } as any);
     const { result } = renderHook(() => useHentPersonopplysninger(1, false));
     expect(result.current).toBeNull();
   });
@@ -58,7 +59,7 @@ describe("useHentPersonopplysninger", () => {
     doedData.hentSaksopplysninger.persondata.folkeregisterpersonstatuser = [
       { kode: MKV.Koder.personstatuser.DOED, erHistorisk: false },
     ];
-    vi.mocked(useHentPersonopplysningerQuery).mockReturnValueOnce({ data: doedData, error: undefined } as any);
+    vi.mocked(useQuery).mockReturnValueOnce({ data: doedData, error: undefined } as any);
     const { result } = renderHook(() => useHentPersonopplysninger(1, false));
     expect(result.current?.erDoed).toBe(true);
   });

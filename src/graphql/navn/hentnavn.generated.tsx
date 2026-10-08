@@ -1,63 +1,16 @@
-import * as Types from '../generated/types';
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+import type * as Types from '../generated/types';
 
-import { gql } from '@apollo/client';
-import type * as ApolloReactCommon from '@apollo/client/react';
-import * as ApolloReactHooks from '@apollo/client/react';
-
-const defaultOptions =  {} as const;
-export type HentNavnQueryVariables = Types.Exact<{
-  ident: Types.Scalars['String'];
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+export type HentNavnQueryVariables = Exact<{
+  ident: string;
 }>;
 
 
-export type HentNavnQuery = (
-  { __typename?: 'Query' }
-  & { hentPersonopplysninger: (
-    { __typename?: 'Personopplysninger' }
-    & { navn: (
-      { __typename?: 'Navn' }
-      & Pick<Types.Navn, 'fornavn' | 'mellomnavn' | 'etternavn'>
-    ) }
-  ) }
-);
+export type HentNavnQuery = { hentPersonopplysninger: { navn: { fornavn: string, mellomnavn: string | null, etternavn: string } } };
 
 
-export const HentNavnDocument = gql`
-    query hentNavn($ident: String!) {
-  hentPersonopplysninger(ident: $ident) {
-    navn {
-      fornavn
-      mellomnavn
-      etternavn
-    }
-  }
-}
-    `;
-
-/**
- * __useHentNavnQuery__
- *
- * To run a query within a React component, call `useHentNavnQuery` and pass it any options that fit your needs.
- * When your component renders, `useHentNavnQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useHentNavnQuery({
- *   variables: {
- *      ident: // value for 'ident'
- *   },
- * });
- */
-export function useHentNavnQuery(baseOptions: ApolloReactHooks.QueryHookOptions<HentNavnQuery, HentNavnQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<HentNavnQuery, HentNavnQueryVariables>(HentNavnDocument, options);
-      }
-export function useHentNavnLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HentNavnQuery, HentNavnQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<HentNavnQuery, HentNavnQueryVariables>(HentNavnDocument, options);
-        }
-export type HentNavnQueryHookResult = ReturnType<typeof useHentNavnQuery>;
-export type HentNavnLazyQueryHookResult = ReturnType<typeof useHentNavnLazyQuery>;
-export type HentNavnQueryResult = ApolloReactCommon.QueryResult<HentNavnQuery, HentNavnQueryVariables>;
+export const HentNavnDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"hentNavn"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ident"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hentPersonopplysninger"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ident"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ident"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"navn"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fornavn"}},{"kind":"Field","name":{"kind":"Name","value":"mellomnavn"}},{"kind":"Field","name":{"kind":"Name","value":"etternavn"}}]}}]}}]}}]} as unknown as DocumentNode<HentNavnQuery, HentNavnQueryVariables>;

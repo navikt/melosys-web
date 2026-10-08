@@ -1,81 +1,22 @@
-import * as Types from '../../../../../graphql/generated/types';
-import { gql } from '@apollo/client';
-import type * as ApolloReactCommon from '@apollo/client/react';
-import * as ApolloReactHooks from '@apollo/client/react';
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+import type * as Types from '../../../../../graphql/generated/types';
 
-const defaultOptions = {} as const;
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+export type Familierelasjonsrolle =
+  | 'BARN'
+  | 'FAR'
+  | 'MOR'
+  | 'RELATERT_VED_SIVILSTAND';
 
-export type HentFamiliemedlemmerQueryVariables = Types.Exact<{
-  behandlingID: Types.Scalars['Long'];
+export type HentFamiliemedlemmerQueryVariables = Exact<{
+  behandlingID: number;
 }>;
 
 
-export type HentFamiliemedlemmerQuery = (
-  { __typename?: 'Query' }
-  & { hentSaksopplysninger: (
-    { __typename?: 'Saksopplysninger' }
-    & { persondata: (
-      { __typename?: 'Personopplysninger' }
-      & { familiemedlemmer: Array<(
-        { __typename?: 'Familiemedlem' }
-        & Pick<Types.Familiemedlem, 'navn' | 'ident' | 'relasjonsrolle' | 'alder' | 'foreldreansvar' | 'fnrAnnenForelder'>
-        & { sivilstand?: Types.Maybe<(
-          { __typename?: 'Sivilstand' }
-          & Pick<Types.Sivilstand, 'type' | 'gyldigFraOgMed' | 'erHistorisk' | 'master'>
-        )> }
-      )> }
-    ) }
-  ) }
-);
+export type HentFamiliemedlemmerQuery = { hentSaksopplysninger: { persondata: { familiemedlemmer: Array<{ navn: string, ident: string, relasjonsrolle: Types.Familierelasjonsrolle, alder: number | null, foreldreansvar: string | null, fnrAnnenForelder: string | null, sivilstand: { type: string, gyldigFraOgMed: string | null, erHistorisk: boolean, master: string } | null }> } } };
 
 
-export const HentFamiliemedlemmerDocument = gql`
-    query hentFamiliemedlemmer($behandlingID: Long!) {
-  hentSaksopplysninger(behandlingID: $behandlingID) {
-    persondata {
-      familiemedlemmer {
-        navn
-        ident
-        relasjonsrolle
-        alder
-        foreldreansvar
-        fnrAnnenForelder
-        sivilstand {
-          type
-          gyldigFraOgMed
-          erHistorisk
-          master
-        }
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useHentFamiliemedlemmerQuery__
- *
- * To run a query within a React component, call `useHentFamiliemedlemmerQuery` and pass it any options that fit your needs.
- * When your component renders, `useHentFamiliemedlemmerQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useHentFamiliemedlemmerQuery({
- *   variables: {
- *      behandlingID: // value for 'behandlingID'
- *   },
- * });
- */
-export function useHentFamiliemedlemmerQuery(baseOptions: ApolloReactHooks.QueryHookOptions<HentFamiliemedlemmerQuery, HentFamiliemedlemmerQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<HentFamiliemedlemmerQuery, HentFamiliemedlemmerQueryVariables>(HentFamiliemedlemmerDocument, options);
-      }
-export function useHentFamiliemedlemmerLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HentFamiliemedlemmerQuery, HentFamiliemedlemmerQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<HentFamiliemedlemmerQuery, HentFamiliemedlemmerQueryVariables>(HentFamiliemedlemmerDocument, options);
-        }
-export type HentFamiliemedlemmerQueryHookResult = ReturnType<typeof useHentFamiliemedlemmerQuery>;
-export type HentFamiliemedlemmerLazyQueryHookResult = ReturnType<typeof useHentFamiliemedlemmerLazyQuery>;
-export type HentFamiliemedlemmerQueryResult = ApolloReactCommon.QueryResult<HentFamiliemedlemmerQuery, HentFamiliemedlemmerQueryVariables>;
+export const HentFamiliemedlemmerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"hentFamiliemedlemmer"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"behandlingID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Long"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hentSaksopplysninger"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"behandlingID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"behandlingID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"persondata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"familiemedlemmer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"navn"}},{"kind":"Field","name":{"kind":"Name","value":"ident"}},{"kind":"Field","name":{"kind":"Name","value":"relasjonsrolle"}},{"kind":"Field","name":{"kind":"Name","value":"alder"}},{"kind":"Field","name":{"kind":"Name","value":"foreldreansvar"}},{"kind":"Field","name":{"kind":"Name","value":"fnrAnnenForelder"}},{"kind":"Field","name":{"kind":"Name","value":"sivilstand"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"gyldigFraOgMed"}},{"kind":"Field","name":{"kind":"Name","value":"erHistorisk"}},{"kind":"Field","name":{"kind":"Name","value":"master"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<HentFamiliemedlemmerQuery, HentFamiliemedlemmerQueryVariables>;

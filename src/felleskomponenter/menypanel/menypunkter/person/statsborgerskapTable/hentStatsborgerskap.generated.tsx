@@ -1,72 +1,16 @@
-import * as Types from '../../../../../graphql/generated/types';
-import { gql } from '@apollo/client';
-import type * as ApolloReactCommon from '@apollo/client/react';
-import * as ApolloReactHooks from '@apollo/client/react';
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+import type * as Types from '../../../../../graphql/generated/types';
 
-const defaultOptions = {} as const;
-
-export type HentStatsborgerskapQueryVariables = Types.Exact<{
-  behandlingID: Types.Scalars['Long'];
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+export type HentStatsborgerskapQueryVariables = Exact<{
+  behandlingID: number;
 }>;
 
 
-export type HentStatsborgerskapQuery = (
-  { __typename?: 'Query' }
-  & { hentSaksopplysninger: (
-    { __typename?: 'Saksopplysninger' }
-    & { persondata: (
-      { __typename?: 'Personopplysninger' }
-      & { statsborgerskap: Array<(
-        { __typename?: 'Statsborgerskap' }
-        & Pick<Types.Statsborgerskap, 'land' | 'bekreftelsesdato' | 'gyldigFraOgMed' | 'gyldigTilOgMed' | 'master' | 'kilde' | 'erHistorisk'>
-      )> }
-    ) }
-  ) }
-);
+export type HentStatsborgerskapQuery = { hentSaksopplysninger: { persondata: { statsborgerskap: Array<{ land: string, bekreftelsesdato: string | null, gyldigFraOgMed: string | null, gyldigTilOgMed: string | null, master: string, kilde: string | null, erHistorisk: boolean }> } } };
 
 
-export const HentStatsborgerskapDocument = gql`
-    query hentStatsborgerskap($behandlingID: Long!) {
-  hentSaksopplysninger(behandlingID: $behandlingID) {
-    persondata {
-      statsborgerskap {
-        land
-        bekreftelsesdato
-        gyldigFraOgMed
-        gyldigTilOgMed
-        master
-        kilde
-        erHistorisk
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useHentStatsborgerskapQuery__
- *
- * To run a query within a React component, call `useHentStatsborgerskapQuery` and pass it any options that fit your needs.
- * When your component renders, `useHentStatsborgerskapQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useHentStatsborgerskapQuery({
- *   variables: {
- *      behandlingID: // value for 'behandlingID'
- *   },
- * });
- */
-export function useHentStatsborgerskapQuery(baseOptions: ApolloReactHooks.QueryHookOptions<HentStatsborgerskapQuery, HentStatsborgerskapQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<HentStatsborgerskapQuery, HentStatsborgerskapQueryVariables>(HentStatsborgerskapDocument, options);
-      }
-export function useHentStatsborgerskapLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HentStatsborgerskapQuery, HentStatsborgerskapQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<HentStatsborgerskapQuery, HentStatsborgerskapQueryVariables>(HentStatsborgerskapDocument, options);
-        }
-export type HentStatsborgerskapQueryHookResult = ReturnType<typeof useHentStatsborgerskapQuery>;
-export type HentStatsborgerskapLazyQueryHookResult = ReturnType<typeof useHentStatsborgerskapLazyQuery>;
-export type HentStatsborgerskapQueryResult = ApolloReactCommon.QueryResult<HentStatsborgerskapQuery, HentStatsborgerskapQueryVariables>;
+export const HentStatsborgerskapDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"hentStatsborgerskap"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"behandlingID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Long"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hentSaksopplysninger"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"behandlingID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"behandlingID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"persondata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"statsborgerskap"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"land"}},{"kind":"Field","name":{"kind":"Name","value":"bekreftelsesdato"}},{"kind":"Field","name":{"kind":"Name","value":"gyldigFraOgMed"}},{"kind":"Field","name":{"kind":"Name","value":"gyldigTilOgMed"}},{"kind":"Field","name":{"kind":"Name","value":"master"}},{"kind":"Field","name":{"kind":"Name","value":"kilde"}},{"kind":"Field","name":{"kind":"Name","value":"erHistorisk"}}]}}]}}]}}]}}]} as unknown as DocumentNode<HentStatsborgerskapQuery, HentStatsborgerskapQueryVariables>;

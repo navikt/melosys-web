@@ -1,13 +1,13 @@
 import { ComponentProps } from "react";
 import { render, screen } from "@testing-library/react";
 
-import { Bostedsadresse, Kontaktadresse, Oppholdsadresse } from "../../../../../graphql";
+import { HentAdresserQuery } from "./hentAdresser";
 import { Adresser } from "./adresser";
 
 describe("Adresser", () => {
   let props: ComponentProps<typeof Adresser>;
 
-  const bostedsadresser: Bostedsadresse[] = [
+  const bostedsadresser: HentAdresserQuery["hentSaksopplysninger"]["persondata"]["bostedsadresser"] = [
     {
       coAdressenavn: "Co Adresse",
       adresse: {
@@ -26,9 +26,9 @@ describe("Adresser", () => {
       master: "Freg",
       erHistorisk: false,
     },
-  ] as Bostedsadresse[];
+  ];
 
-  const oppholdsadresser: Oppholdsadresse[] = [
+  const oppholdsadresser: HentAdresserQuery["hentSaksopplysninger"]["persondata"]["oppholdsadresser"] = [
     {
       coAdressenavn: "Co Opphold",
       adresse: {
@@ -47,9 +47,9 @@ describe("Adresser", () => {
       master: "Freg",
       erHistorisk: false,
     },
-  ] as Oppholdsadresse[];
+  ];
 
-  const kontaktadresser: Kontaktadresse[] = [
+  const kontaktadresser: HentAdresserQuery["hentSaksopplysninger"]["persondata"]["kontaktadresser"] = [
     {
       coAdressenavn: "Co Kontakt",
       strukturertAdresse: {
@@ -69,7 +69,7 @@ describe("Adresser", () => {
       master: "Freg",
       erHistorisk: false,
     },
-  ] as Kontaktadresse[];
+  ];
 
   beforeEach(() => {
     props = {} as ComponentProps<typeof Adresser>;

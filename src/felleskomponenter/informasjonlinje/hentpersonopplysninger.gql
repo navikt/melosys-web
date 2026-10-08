@@ -1,3 +1,4 @@
+# Listene må ha samme felter som hentPersoninfo og hentStatsborgerskap for å unngå cachetap.
 query hentPersonopplysninger($behandlingID: Long!) {
   hentSaksopplysninger(behandlingID: $behandlingID) {
     persondata {
@@ -9,15 +10,29 @@ query hentPersonopplysninger($behandlingID: Long!) {
       kjoenn
       folkeregisterpersonstatuser {
         kode
+        tekst
+        master
+        kilde
+        fregGyldighetstidspunkt
         erHistorisk
       }
       folkeregisteridentifikator
       statsborgerskap {
         land
+        bekreftelsesdato
+        gyldigFraOgMed
+        gyldigTilOgMed
+        master
+        kilde
         erHistorisk
       }
       sivilstand {
         type
+        relatertVedSivilstand
+        gyldigFraOgMed
+        bekreftelsesdato
+        master
+        kilde
         erHistorisk
       }
     }
