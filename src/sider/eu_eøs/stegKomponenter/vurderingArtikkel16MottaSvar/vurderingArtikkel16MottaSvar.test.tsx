@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { waitFor } from "@testing-library/react";
+import { fireEvent, waitFor } from "@testing-library/react";
 
 import MKV from "../../../../melosyskodeverk";
 
@@ -112,6 +112,22 @@ describe("VurderingArtikkel16MottaSvar", () => {
     await waitFor(() => {
       expect(getByRole("textbox", { name: "Begrunnelse" })).toBeInTheDocument();
     });
+  });
+
+  it("lar bruker velge innvilgelse når API-et ikke har svartype", async () => {
+    initialReduxState.anmodningsperiodesvar.data = {
+      anmodningsperiodeSvarType: null,
+      endretPeriode: { fom: null, tom: null },
+      begrunnelseFritekst: null,
+    };
+    const { getByRole } = renderWithProviders(<ConnectedVurderingArtikkel16MottaSvar {...props} />, {
+      preloadedState: initialReduxState,
+    });
+
+    const innvilgelse = getByRole("radio", { name: "Innvilgelse" });
+    fireEvent.click(innvilgelse);
+
+    await waitFor(() => expect(innvilgelse).toBeChecked());
   });
 
   it("snapshot test", async () => {
