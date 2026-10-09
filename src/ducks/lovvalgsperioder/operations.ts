@@ -22,7 +22,7 @@ import { PerioderStegState } from "../../felleskomponenter/stegvelger";
 export function hent(behandlingID: number) {
   return doThenDispatch(() => Api.Lovvalgsperioder.hent(behandlingID), {
     OK: Types.OK,
-    FEILET: Types.FEILET,
+    FEILET: Types.HENT_FEILET,
     PENDING: Types.PENDING,
   });
 }

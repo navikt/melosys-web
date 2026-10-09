@@ -2,6 +2,7 @@ import * as Api from "../../services/api";
 
 export const OK = "lovvalgsperioder/OK";
 export const FEILET = "lovvalgsperioder/FEILET";
+export const HENT_FEILET = "lovvalgsperioder/HENT_FEILET";
 export const PENDING = "lovvalgsperioder/PENDING";
 export const RESET = "lovvalgsperioder/RESET";
 export const OK_OPPDATER_LOVVALGSPERIODE = "lovvalgsperioder/OK_OPPDATER_LOVVALGSPERIODE";
@@ -16,6 +17,11 @@ export interface ResetAction {
 interface FeiletAction {
   type: typeof FEILET;
   data: any;
+}
+
+interface HentFeiletAction {
+  type: typeof HENT_FEILET;
+  data: unknown;
 }
 
 interface PendingAction {
@@ -54,6 +60,7 @@ export interface EndrePeriodeAction {
 export type Action =
   | ResetAction
   | FeiletAction
+  | HentFeiletAction
   | PendingAction
   | OkAction
   | EndrePeriodeAction

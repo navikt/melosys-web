@@ -22,7 +22,12 @@ export default function reducer(state = initialState, action = {}) {
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };
     case Types.FEILET:
-      return { ...state, status: STATUS.ERROR, data: action.data };
+      // Periodene blir stående: neste lagring sender dem, ikke feilsvaret (MELOSYS-8338).
+      return { ...state, status: STATUS.ERROR };
+    case Types.HENT_FEILET:
+      // Egen type fordi FEILET beholder periodene: etter en feilet henting kan de være fra
+      // forrige behandling, og lagre() ville sendt dem til denne. Tom liste sendes ikke.
+      return { ...state, status: STATUS.ERROR, data: [] };
     case Types.OK:
       return {
         ...state,
