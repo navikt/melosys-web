@@ -71,7 +71,7 @@ export function VurderingVedtak11_3_og_13_3a({
     context: {
       soknadsperiode,
     },
-    resolver: yupResolver<FieldValues>(vurderingVedtak_11_3_og_13_3aSchema),
+    resolver: yupResolver<FieldValues, unknown, FieldValues>(vurderingVedtak_11_3_og_13_3aSchema),
     mode: "onChange",
     defaultValues: {
       kopiTilArbeidsgiver: false,
