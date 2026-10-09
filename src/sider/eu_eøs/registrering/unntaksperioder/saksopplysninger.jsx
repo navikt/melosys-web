@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { withRouter } from "react-router-dom";
+import { useParams } from "react-router";
 import PT from "prop-types";
 import { connect } from "react-redux";
 import MKV from "../../../../melosyskodeverk";
@@ -26,7 +26,6 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import "../saksopplysninger.less";
 
 function Saksopplysninger({
-  match,
   behandlingID,
   redigerbart,
   sed = {},
@@ -66,9 +65,7 @@ function Saksopplysninger({
   const [durationWarningMessage, setDurationWarningMessage] = useState(null);
   const [registreringPending, setRegistreringPending] = useState(false);
 
-  const {
-    params: { saksnr: saksnummer },
-  } = match;
+  const { saksnr: saksnummer } = useParams();
 
   const [harValgtIkkeGodkjenn, setHarValgtIkkeGodkjenn] = useState(false);
   const [harUnntaksperiodefeil, setHarUnntaksperiodefeil] = useState(false);
@@ -448,8 +445,6 @@ Saksopplysninger.propTypes = {
   lovvalgsperiode: PT.object.isRequired,
   sedLovvalgsperiode: MPT.Periode,
   sedLovvalgsbestemmelse: PT.string.isRequired,
-  match: PT.object.isRequired,
-  location: PT.object.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   behandlingsresultat: PT.object,
@@ -482,4 +477,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
+export default connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger);

@@ -1,7 +1,7 @@
 import { JournalforingsOppgaver } from "./jornualforingoppgaver";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
 import { screen, within } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router";
 
 describe("Journalføringsoppgaver", () => {
   const journalforing = [

@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import * as Utils from "../../utils";
 
 import "./errorBoundary.less";
@@ -49,11 +49,11 @@ interface ErrorBoundaryProps {
 }
 
 function ErrorBoundary({ kontekster, children }: ErrorBoundaryProps) {
-  const rootState = useSelector((state: RootState) => state);
+  const slices = useSelector((state: RootState) => kontekster.map(({ slice }) => state[slice]), shallowEqual);
   const feilSamling: ErrorObject[] = [];
 
-  kontekster.forEach(({ slice, varselTekst }) => {
-    const currentSlice = rootState[slice];
+  kontekster.forEach(({ varselTekst }, indeks) => {
+    const currentSlice = slices[indeks];
     const { status: feilStatus } = currentSlice;
     if (feilStatus === "ERROR") {
       const eobj = parseErrorObject(varselTekst, currentSlice);

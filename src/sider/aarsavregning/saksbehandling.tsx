@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { useLocation } from "react-router";
+import { useRuteParams } from "../../navigering";
 import { useSelector } from "react-redux";
 import { useDispatch } from "../../hooks";
 import * as Nav from "../../navFrontend";
@@ -33,13 +34,9 @@ import "./saksbehandling.less";
 import { fakturaserierOperations } from "../../ducks/fakturaserier";
 import { pensjonsopptjeningOperations } from "../../ducks/pensjonsopptjening";
 
-interface Props extends RouteComponentProps<MatchParams> {
-  behandlingOppfriskes: boolean;
-  startOgVisOppfriskModal: (inkluderSiste5aar?: boolean | undefined) => void;
-  visOppfriskModal: () => void;
-}
-
-function Saksbehandling({ match, location }: Props) {
+function Saksbehandling() {
+  const location = useLocation();
+  const { saksnr } = useRuteParams<MatchParams>();
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const [panelExpanded, setPanelExpanded] = useState(true);
@@ -67,7 +64,6 @@ function Saksbehandling({ match, location }: Props) {
   };
 
   const lastInnSaksopplysninger = async () => {
-    const { saksnr } = match.params;
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
 
     try {

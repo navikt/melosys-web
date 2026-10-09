@@ -3,7 +3,7 @@ import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { clearFields, getFormValues, InjectedFormProps, reduxForm, touch } from "redux-form";
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { KTObject } from "@navikt/melosys-kodeverk";
 import { RootState } from "AppTypes";
 
@@ -46,16 +46,16 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type SaksplukkerProps = PropsFromRedux & RouteComponentProps;
+type SaksplukkerProps = PropsFromRedux;
 
 export function Saksplukker({
-  history,
   formValues,
   change,
   nullstillForm,
   invalid,
   touchField,
 }: InjectedFormProps<SaksplukkerFormData, SaksplukkerProps> & SaksplukkerProps) {
+  const navigate = useNavigate();
   const [muligeSakstyper, setMuligeSakstyper] = useState([]);
   const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
   const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
@@ -121,7 +121,7 @@ export function Saksplukker({
           erPensjonistEØSToggleEnabled,
         );
 
-        history.push(redirectURL);
+        navigate(redirectURL);
       }
     }
   };
@@ -196,4 +196,4 @@ const SaksplukkerForm = reduxForm<SaksplukkerFormData, SaksplukkerProps>({
   touchOnBlur: false,
 })(Saksplukker);
 
-export default withRouter(connector(SaksplukkerForm));
+export default connector(SaksplukkerForm);

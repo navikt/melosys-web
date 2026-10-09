@@ -1,6 +1,6 @@
 /* eslint no-alert:off, consistent-return:off */
 import { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { medRuteProps } from "../../navigering";
 import { connect } from "react-redux";
 import { autofill, change, getFormSyncErrors, getFormValues, isValid, SubmissionError, touch } from "redux-form";
 import PT from "prop-types";
@@ -36,7 +36,7 @@ class Journalforing extends Component {
   };
 
   async componentDidMount() {
-    const { journalpostID } = this.props.match.params;
+    const { journalpostID } = this.props.params;
     await this.props.hentJournalOppgave(journalpostID);
     this.props.hentLandkoder();
   }
@@ -95,7 +95,7 @@ class Journalforing extends Component {
     /* eslint-disable-next-line no-console */
     console.assert(hensikt, { message: "hensikt må ha verdi" });
 
-    const { oppgaveID, journalpostID } = this.props.match.params;
+    const { oppgaveID, journalpostID } = this.props.params;
     const {
       journalforingSkjemaVerdier,
       journalforing: { hoveddokument = {}, mottaksKanalErEessi },
@@ -366,10 +366,10 @@ class Journalforing extends Component {
       journalforSEDSkjemaIsValid,
       journalforSEDSkjemaVerdier: { brukerID },
       journalforSEDSkjemaErrors,
-      match,
+      params,
     } = this.props;
 
-    const { oppgaveID, journalpostID } = match.params;
+    const { oppgaveID, journalpostID } = params;
 
     this.touchAll(KV.Form.JOURNALFORING_SED, journalforSEDSkjemaErrors);
     if (!journalforSEDSkjemaIsValid) return;
@@ -411,7 +411,7 @@ class Journalforing extends Component {
 
     const { visFeilmeldingDialog, feilmeldinger, submitSpinner } = this.state;
 
-    const { journalpostID } = this.props.match.params;
+    const { journalpostID } = this.props.params;
     const { dokumentID: hoveddokumentID, tittel: hoveddokumentTittel = "Hoveddokument" } = hoveddokument;
 
     const visSedJournalforing = Utils._isObject(behandlingsInformasjon);
@@ -496,7 +496,7 @@ class Journalforing extends Component {
 }
 
 Journalforing.propTypes = {
-  match: PT.object.isRequired,
+  params: PT.object.isRequired,
   location: PT.object.isRequired,
   hentJournalOppgave: PT.func.isRequired,
   settFeltInnhold: PT.func.isRequired,
@@ -544,4 +544,4 @@ const mapDispatchToProps = (dispatch) => ({
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Journalforing));
+export default medRuteProps(connect(mapStateToProps, mapDispatchToProps)(Journalforing));

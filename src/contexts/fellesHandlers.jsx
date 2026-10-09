@@ -1,6 +1,6 @@
 import { createContext, useMemo } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import PT from "prop-types";
 import { apolloClient } from "../graphql";
 
@@ -19,8 +19,6 @@ export default FellesHandlersContext;
 
 function FellesHandlersProviderUnconnected({
   children,
-  location,
-  history,
   lastInnSaksopplysninger,
   oppfriskSaksopplysninger,
   oppfriskSaksopplysningerForAarsavregning,
@@ -38,6 +36,8 @@ function FellesHandlersProviderUnconnected({
   tilForsiden,
   inkluderSiste5Aar = false,
 }) {
+  const location = useLocation();
+  const navigate = useNavigate();
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
 
   const oppfriskGraphQLSaksopplysninger = async () => {
@@ -75,7 +75,7 @@ function FellesHandlersProviderUnconnected({
   const annenBehandlingOppfriskes = behandlingUnderOppfriskning !== null && !behandlingOppfriskes;
 
   const tilOpprettNySak = () => {
-    history.push("/opprettnysak");
+    navigate("/opprettnysak");
   };
 
   const skjulOppfriskModalOgNavigerTilForside = () => {
@@ -119,8 +119,6 @@ function FellesHandlersProviderUnconnected({
 
 FellesHandlersProviderUnconnected.propTypes = {
   children: PT.node.isRequired,
-  history: PT.object.isRequired,
-  location: PT.object.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
   lagreMottatteOpplysninger: PT.func.isRequired,
@@ -162,6 +160,4 @@ const mapDispatchToProps = (dispatch) => ({
   tilForsiden: () => dispatch(navigeringOperations.tilForsiden()),
 });
 
-export const FellesHandlersProvider = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(FellesHandlersProviderUnconnected),
-);
+export const FellesHandlersProvider = connect(mapStateToProps, mapDispatchToProps)(FellesHandlersProviderUnconnected);
