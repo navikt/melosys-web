@@ -410,7 +410,7 @@ export async function assertNyBehandlingOpprettet(page: Page) {
   }
 
   // Vent på at navigasjonen til hovedsiden fullføres
-  await page.waitForURL(/\/melosys\/?$/);
+  await page.waitForURL(/\/melosys\/$/);
 
   // Verifiser at det ikke vises feilmeldinger på hovedsiden
   await assertErrors(page, []);

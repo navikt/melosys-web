@@ -229,7 +229,7 @@ export class BehandlingPage {
    * Verifiser at vi blir redirectet til hovedsiden uten feilmeldinger
    */
   async verifiserVellykketAvslutning(): Promise<void> {
-    await this.page.waitForURL(/\/melosys\/?$/);
+    await this.page.waitForURL(/\/melosys\/$/);
 
     // Sjekk at det ikke er noen feilmeldinger (role="alert" er semantisk standard)
     const feilmelding = this.page.getByRole("alert");
