@@ -1,5 +1,5 @@
 import PT from "prop-types";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 import { MKVUtils } from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";

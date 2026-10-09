@@ -1,5 +1,5 @@
 import { BodyShort, Heading } from "@navikt/ds-react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useMemo } from "react";
 
 import * as Nav from "../../../navFrontend";
@@ -13,7 +13,7 @@ import { ADMIN_TEKSTBLOKKER } from "../ruter";
 import "./oversikt.less";
 
 function OversiktSide() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const visTekstblokker = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
   const aktiveToggles = useAktiveToggles();
 
@@ -46,7 +46,7 @@ function OversiktSide() {
             <Heading size="small" level="2">
               Tekstblokker og brevmaler
             </Heading>
-            <Nav.Button size="small" variant="tertiary" onClick={() => history.push(ADMIN_TEKSTBLOKKER)}>
+            <Nav.Button size="small" variant="tertiary" onClick={() => navigate(ADMIN_TEKSTBLOKKER)}>
               Gå til Tekstblokker →
             </Nav.Button>
           </div>
