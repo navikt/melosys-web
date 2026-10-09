@@ -7,7 +7,7 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
     <div class="flere__redigeringsknapper__liste">
       <div class="elementer__container">
         <div class="editerbart__element">
-          <h3 class="navds-heading navds-heading--xsmall navds-typo--spacing">
+          <h3 class="aksel-heading aksel-heading--xsmall aksel-typo--spacing">
             <div class="heading-margin">
               <div class="editerbart-element__legend editerbart-element__legend--understrek">
                 <span class="editerbart-element__legend__tittel-container">
@@ -15,18 +15,19 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
                     <div>
                     </div>
                   </span>
-                  <h3 class="editerbart-element__legend__tittel-container__tittel navds-heading navds-heading--xsmall">
+                  <h3 class="editerbart-element__legend__tittel-container__tittel aksel-heading aksel-heading--xsmall">
                     tittel: Navn
                   </h3>
                 </span>
                 <span class="editerbart-element__legend__symboler">
                   <button
+                    data-variant="tertiary"
                     type="button"
                     aria-label="Rediger"
                     title="Rediger"
-                    class="ikon-knapp navds-button navds-button--tertiary navds-button--small navds-button--icon-only"
+                    class="ikon-knapp aksel-button aksel-button--small aksel-button--icon-only"
                   >
-                    <span class="navds-button__icon">
+                    <span class="aksel-button__icon">
                       <svg
                         width="24"
                         height="24"
@@ -46,12 +47,13 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
                     </span>
                   </button>
                   <button
+                    data-variant="tertiary"
                     type="button"
                     aria-label="Slett"
                     title="Slett"
-                    class="ikon-knapp navds-button navds-button--tertiary navds-button--small navds-button--icon-only"
+                    class="ikon-knapp aksel-button aksel-button--small aksel-button--icon-only"
                   >
-                    <span class="navds-button__icon">
+                    <span class="aksel-button__icon">
                       <svg
                         width="22"
                         height="24"
@@ -83,7 +85,7 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
       </div>
       <div class="elementer__container">
         <div class="editerbart__element">
-          <h3 class="navds-heading navds-heading--xsmall navds-typo--spacing">
+          <h3 class="aksel-heading aksel-heading--xsmall aksel-typo--spacing">
             <div class="heading-margin">
               <div class="editerbart-element__legend editerbart-element__legend--understrek">
                 <span class="editerbart-element__legend__tittel-container">
@@ -91,18 +93,19 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
                     <div>
                     </div>
                   </span>
-                  <h3 class="editerbart-element__legend__tittel-container__tittel navds-heading navds-heading--xsmall">
+                  <h3 class="editerbart-element__legend__tittel-container__tittel aksel-heading aksel-heading--xsmall">
                     tittel: Navn
                   </h3>
                 </span>
                 <span class="editerbart-element__legend__symboler">
                   <button
+                    data-variant="tertiary"
                     type="button"
                     aria-label="Rediger"
                     title="Rediger"
-                    class="ikon-knapp navds-button navds-button--tertiary navds-button--small navds-button--icon-only"
+                    class="ikon-knapp aksel-button aksel-button--small aksel-button--icon-only"
                   >
-                    <span class="navds-button__icon">
+                    <span class="aksel-button__icon">
                       <svg
                         width="24"
                         height="24"
@@ -122,12 +125,13 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
                     </span>
                   </button>
                   <button
+                    data-variant="tertiary"
                     type="button"
                     aria-label="Slett"
                     title="Slett"
-                    class="ikon-knapp navds-button navds-button--tertiary navds-button--small navds-button--icon-only"
+                    class="ikon-knapp aksel-button aksel-button--small aksel-button--icon-only"
                   >
-                    <span class="navds-button__icon">
+                    <span class="aksel-button__icon">
                       <svg
                         width="22"
                         height="24"
@@ -159,10 +163,11 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
       </div>
       <div class="legg__til__knapp">
         <button
+          data-variant="tertiary"
           type="button"
-          class="navds-button navds-button--tertiary navds-button--small"
+          class="aksel-button aksel-button--small"
         >
-          <span class="navds-button__icon">
+          <span class="aksel-button__icon">
             <svg
               width="20"
               height="20"
@@ -180,7 +185,7 @@ exports[`EditerbartElementListe > snapshot test 1`] = `
               </path>
             </svg>
           </span>
-          <span class="navds-label navds-label--small">
+          <span class="aksel-label aksel-label--small">
             Legg til
           </span>
         </button>

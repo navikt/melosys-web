@@ -278,7 +278,7 @@ function OpprettNySak({
                   size="medium"
                   className="horisontal_radiogruppe"
                 >
-                  <HStack gap="3" justify="space-between">
+                  <HStack gap="space-12" justify="space-between">
                     <EnkelNavBox focused={hovedpartErBruker}>
                       <Nav.Radio value={BRUKER}>Bruker</Nav.Radio>
                     </EnkelNavBox>

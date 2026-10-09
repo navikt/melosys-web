@@ -5,18 +5,18 @@ exports[`Vedtakstype > snapshot test 1`] = `
 <div>
   <div class="row artikkel">
     <div class="col col-xs-7">
-      <div class="navds-form-field navds-form-field--small">
+      <div class="aksel-form-field aksel-form-field--small">
         <label
           for="333"
-          class="navds-form-field__label navds-label navds-label--small"
+          class="aksel-form-field__label aksel-label aksel-label--small"
         >
           vedtakstypebegrunnelseLabel
         </label>
-        <div class="navds-select__container">
+        <div class="aksel-select__container">
           <select
             id="333"
             name="333"
-            class="navds-select__input navds-body-short navds-body-short--small"
+            class="aksel-select__input aksel-body-short aksel-body-short--small"
           >
             <option
               disabled
@@ -39,7 +39,7 @@ exports[`Vedtakstype > snapshot test 1`] = `
             viewbox="0 0 24 24"
             focusable="false"
             role="img"
-            class="navds-select__chevron"
+            class="aksel-select__chevron"
             aria-hidden="true"
           >
             <path
@@ -52,7 +52,7 @@ exports[`Vedtakstype > snapshot test 1`] = `
           </svg>
         </div>
         <div
-          class="navds-form-field__error"
+          class="aksel-form-field__error"
           id="333"
           aria-relevant="additions removals"
           aria-live="polite"

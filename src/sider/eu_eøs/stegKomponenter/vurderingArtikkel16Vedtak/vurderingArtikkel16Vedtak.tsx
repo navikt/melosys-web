@@ -228,7 +228,15 @@ export function VurderingArtikkel16Vedtak({
     MKV.Koder.behandlinger.behandlingstema.UTSENDT_ARBEIDSTAKER === behandlingstema ||
     MKV.Koder.behandlinger.behandlingstema.UTSENDT_SELVSTENDIG === behandlingstema;
 
-  const finnVedtakInnhold = (svarType: string | null, stegErGyldig: boolean) => {
+  const finnVedtakInnhold = (svarType: string | null | undefined, stegErGyldig: boolean) => {
+    if (svarType === null || svarType === undefined) {
+      return (
+        <Nav.Alert variant="error">
+          Det mangler svar på anmodningen. Vedtak kan ikke fattes før svaret er registrert.
+        </Nav.Alert>
+      );
+    }
+
     switch (svarType) {
       case INNVILGELSE:
         return (
@@ -281,7 +289,12 @@ export function VurderingArtikkel16Vedtak({
     }
   };
 
-  const stegErGyldig = redigerbart && formIsValid && (!harFeilmeldinger || anmodningsperiodeSvarType === AVSLAG);
+  const harGyldigSvarType =
+    anmodningsperiodeSvarType === INNVILGELSE ||
+    anmodningsperiodeSvarType === DELVIS_INNVILGELSE ||
+    anmodningsperiodeSvarType === AVSLAG;
+  const stegErGyldig =
+    redigerbart && harGyldigSvarType && formIsValid && (!harFeilmeldinger || anmodningsperiodeSvarType === AVSLAG);
   const vedtakInnhold = finnVedtakInnhold(anmodningsperiodeSvarType, stegErGyldig);
 
   return (

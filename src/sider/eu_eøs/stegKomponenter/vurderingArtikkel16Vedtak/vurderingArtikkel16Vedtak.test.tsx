@@ -64,6 +64,16 @@ describe("VurderingArtikkel16Vedtak", () => {
     expect(screen.getByText(avslagTekst)).toBeInTheDocument();
   });
 
+  it("viser feilmelding og hindrer vedtak når svar på anmodningen mangler", () => {
+    props.anmodningsperiodesvar.anmodningsperiodeSvarType = null;
+    renderWithProviders(<WrappedArtikkel16Vedtak {...props} />);
+
+    expect(
+      screen.getByText("Det mangler svar på anmodningen. Vedtak kan ikke fattes før svaret er registrert."),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Fatt vedtak" })).toBeDisabled();
+  });
+
   it("snapshot test", () => {
     const { container } = renderWithProviders(<WrappedArtikkel16Vedtak {...props} />);
     expect(container).toMatchSnapshot();

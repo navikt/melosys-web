@@ -1,5 +1,5 @@
 import { ComponentProps } from "react";
-import { MockedProvider } from "@apollo/client/testing";
+import { MockedProvider } from "@apollo/client/testing/react";
 import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
@@ -179,7 +179,7 @@ describe("Personinfo", () => {
 
   it("viser melding ved henting av personinfo", () => {
     renderWithProviders(
-      <MockedProvider mocks={createMocks()} addTypename={false}>
+      <MockedProvider mocks={createMocks()}>
         <Personinfo {...props} />
       </MockedProvider>,
       { preloadedState },
@@ -190,7 +190,7 @@ describe("Personinfo", () => {
 
   it("viser melding ved nettverkserror under henting av personinfo", async () => {
     await renderWithProvidersAsync(
-      <MockedProvider mocks={createMocks(true)} addTypename={false}>
+      <MockedProvider mocks={createMocks(true)}>
         <Personinfo {...props} />
       </MockedProvider>,
       { preloadedState },
@@ -203,7 +203,7 @@ describe("Personinfo", () => {
 
   it("sender sivilstand-data til sivilstandModal etter dataen er hentet", async () => {
     renderWithProviders(
-      <MockedProvider mocks={createMocks()} addTypename={false}>
+      <MockedProvider mocks={createMocks()}>
         <Personinfo {...props} />
       </MockedProvider>,
       { preloadedState },
@@ -225,7 +225,7 @@ describe("Personinfo", () => {
 
   it("sender personstatus-data til personstatusModal etter dataen er hentet", async () => {
     await renderWithProvidersAsync(
-      <MockedProvider mocks={createMocks()} addTypename={false}>
+      <MockedProvider mocks={createMocks()}>
         <Personinfo {...props} />
       </MockedProvider>,
       { preloadedState },

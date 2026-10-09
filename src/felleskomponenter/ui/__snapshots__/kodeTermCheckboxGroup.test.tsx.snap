@@ -3,142 +3,118 @@
 exports[`KodeTermCheckboxGroup > snapshot test 1`] = `
 
 <div>
-  <fieldset class="navds-checkbox-group navds-checkbox-group--small navds-fieldset navds-fieldset--small">
-    <legend class="navds-fieldset__legend navds-label navds-label--small">
+  <fieldset
+    aria-labelledby="333"
+    class="aksel-checkbox-group aksel-checkbox-group--small aksel-fieldset aksel-fieldset--small"
+  >
+    <legend
+      id="333"
+      class="aksel-fieldset__legend aksel-label aksel-label--small"
+    >
       Checkboxer
     </legend>
-    <div class="navds-checkboxes">
-      <div class="navds-checkbox navds-checkbox--small">
-        <input
-          id="333"
-          class="navds-checkbox__input"
-          aria-labelledby="333"
-          type="checkbox"
-          value="SKIP_INNENRIKS"
-          name="333"
+    <div class="aksel-checkboxes">
+      <div class="aksel-checkbox aksel-checkbox--small">
+        <div
+          class="aksel-checkbox__input-wrapper"
+          data-standalone="false"
         >
+          <input
+            id="333"
+            class="aksel-checkbox__input"
+            type="checkbox"
+            value="SKIP_INNENRIKS"
+            name="333"
+          >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewbox="0 0 13 10"
+            fill="none"
+            focusable="false"
+            aria-hidden="true"
+            class="aksel-checkbox__icon"
+          >
+            <path
+              d="M4.03524 6.41478L10.4752 0.404669C11.0792 -0.160351 12.029 -0.130672 12.5955 0.47478C13.162 1.08027 13.1296 2.03007 12.5245 2.59621L5.02111 9.59934C4.74099 9.85904 4.37559 10 4.00025 10C3.60651 10 3.22717 9.84621 2.93914 9.56111L0.439143 7.06111C-0.146381 6.47558 -0.146381 5.52542 0.439143 4.93989C1.02467 4.35437 1.97483 4.35437 2.56036 4.93989L4.03524 6.41478Z"
+              fill="currentColor"
+            >
+            </path>
+          </svg>
+        </div>
         <label
           for="333"
-          class="navds-checkbox__label"
+          class="aksel-checkbox__label aksel-body-short aksel-body-short--small"
         >
-          <span class="navds-checkbox__icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="0.8125rem"
-              height="0.625rem"
-              viewbox="0 0 13 10"
-              fill="none"
-              focusable="false"
-              role="img"
-              aria-hidden="true"
-            >
-              <path
-                d="M4.03524 6.41478L10.4752 0.404669C11.0792 -0.160351 12.029 -0.130672 12.5955 0.47478C13.162 1.08027 13.1296 2.03007 12.5245 2.59621L5.02111 9.59934C4.74099 9.85904 4.37559 10 4.00025 10C3.60651 10 3.22717 9.84621 2.93914 9.56111L0.439143 7.06111C-0.146381 6.47558 -0.146381 5.52542 0.439143 4.93989C1.02467 4.35437 1.97483 4.35437 2.56036 4.93989L4.03524 6.41478Z"
-                fill="currentColor"
-              >
-              </path>
-            </svg>
-          </span>
-          <span class="navds-checkbox__icon-indeterminate">
-          </span>
-          <span class="navds-checkbox__content">
-            <span
-              id="333"
-              aria-hidden="true"
-              class="navds-checkbox__label-text navds-body-short navds-body-short--small"
-            >
-              Territorialfarvann
-            </span>
-          </span>
+          Territorialfarvann
         </label>
       </div>
-      <div class="navds-checkbox navds-checkbox--small">
-        <input
-          id="333"
-          class="navds-checkbox__input"
-          aria-labelledby="333"
-          type="checkbox"
-          value="SKIPS_FLAGGLAND"
-          name="333"
+      <div class="aksel-checkbox aksel-checkbox--small">
+        <div
+          class="aksel-checkbox__input-wrapper"
+          data-standalone="false"
         >
+          <input
+            id="333"
+            class="aksel-checkbox__input"
+            type="checkbox"
+            value="SKIPS_FLAGGLAND"
+            name="333"
+          >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewbox="0 0 13 10"
+            fill="none"
+            focusable="false"
+            aria-hidden="true"
+            class="aksel-checkbox__icon"
+          >
+            <path
+              d="M4.03524 6.41478L10.4752 0.404669C11.0792 -0.160351 12.029 -0.130672 12.5955 0.47478C13.162 1.08027 13.1296 2.03007 12.5245 2.59621L5.02111 9.59934C4.74099 9.85904 4.37559 10 4.00025 10C3.60651 10 3.22717 9.84621 2.93914 9.56111L0.439143 7.06111C-0.146381 6.47558 -0.146381 5.52542 0.439143 4.93989C1.02467 4.35437 1.97483 4.35437 2.56036 4.93989L4.03524 6.41478Z"
+              fill="currentColor"
+            >
+            </path>
+          </svg>
+        </div>
         <label
           for="333"
-          class="navds-checkbox__label"
+          class="aksel-checkbox__label aksel-body-short aksel-body-short--small"
         >
-          <span class="navds-checkbox__icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="0.8125rem"
-              height="0.625rem"
-              viewbox="0 0 13 10"
-              fill="none"
-              focusable="false"
-              role="img"
-              aria-hidden="true"
-            >
-              <path
-                d="M4.03524 6.41478L10.4752 0.404669C11.0792 -0.160351 12.029 -0.130672 12.5955 0.47478C13.162 1.08027 13.1296 2.03007 12.5245 2.59621L5.02111 9.59934C4.74099 9.85904 4.37559 10 4.00025 10C3.60651 10 3.22717 9.84621 2.93914 9.56111L0.439143 7.06111C-0.146381 6.47558 -0.146381 5.52542 0.439143 4.93989C1.02467 4.35437 1.97483 4.35437 2.56036 4.93989L4.03524 6.41478Z"
-                fill="currentColor"
-              >
-              </path>
-            </svg>
-          </span>
-          <span class="navds-checkbox__icon-indeterminate">
-          </span>
-          <span class="navds-checkbox__content">
-            <span
-              id="333"
-              aria-hidden="true"
-              class="navds-checkbox__label-text navds-body-short navds-body-short--small"
-            >
-              Flaggland
-            </span>
-          </span>
+          Flaggland
         </label>
       </div>
-      <div class="navds-checkbox navds-checkbox--small">
-        <input
-          id="333"
-          class="navds-checkbox__input"
-          aria-labelledby="333"
-          type="checkbox"
-          value="BASELAND"
-          checked
-          name="333"
+      <div class="aksel-checkbox aksel-checkbox--small">
+        <div
+          class="aksel-checkbox__input-wrapper"
+          data-standalone="false"
         >
+          <input
+            id="333"
+            class="aksel-checkbox__input"
+            type="checkbox"
+            value="BASELAND"
+            checked
+            name="333"
+          >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewbox="0 0 13 10"
+            fill="none"
+            focusable="false"
+            aria-hidden="true"
+            class="aksel-checkbox__icon"
+          >
+            <path
+              d="M4.03524 6.41478L10.4752 0.404669C11.0792 -0.160351 12.029 -0.130672 12.5955 0.47478C13.162 1.08027 13.1296 2.03007 12.5245 2.59621L5.02111 9.59934C4.74099 9.85904 4.37559 10 4.00025 10C3.60651 10 3.22717 9.84621 2.93914 9.56111L0.439143 7.06111C-0.146381 6.47558 -0.146381 5.52542 0.439143 4.93989C1.02467 4.35437 1.97483 4.35437 2.56036 4.93989L4.03524 6.41478Z"
+              fill="currentColor"
+            >
+            </path>
+          </svg>
+        </div>
         <label
           for="333"
-          class="navds-checkbox__label"
+          class="aksel-checkbox__label aksel-body-short aksel-body-short--small"
         >
-          <span class="navds-checkbox__icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="0.8125rem"
-              height="0.625rem"
-              viewbox="0 0 13 10"
-              fill="none"
-              focusable="false"
-              role="img"
-              aria-hidden="true"
-            >
-              <path
-                d="M4.03524 6.41478L10.4752 0.404669C11.0792 -0.160351 12.029 -0.130672 12.5955 0.47478C13.162 1.08027 13.1296 2.03007 12.5245 2.59621L5.02111 9.59934C4.74099 9.85904 4.37559 10 4.00025 10C3.60651 10 3.22717 9.84621 2.93914 9.56111L0.439143 7.06111C-0.146381 6.47558 -0.146381 5.52542 0.439143 4.93989C1.02467 4.35437 1.97483 4.35437 2.56036 4.93989L4.03524 6.41478Z"
-                fill="currentColor"
-              >
-              </path>
-            </svg>
-          </span>
-          <span class="navds-checkbox__icon-indeterminate">
-          </span>
-          <span class="navds-checkbox__content">
-            <span
-              id="333"
-              aria-hidden="true"
-              class="navds-checkbox__label-text navds-body-short navds-body-short--small"
-            >
-              Hjemmebaseland
-            </span>
-          </span>
+          Hjemmebaseland
         </label>
       </div>
     </div>
@@ -146,7 +122,7 @@ exports[`KodeTermCheckboxGroup > snapshot test 1`] = `
       id="333"
       aria-relevant="additions removals"
       aria-live="polite"
-      class="navds-fieldset__error"
+      class="aksel-fieldset__error"
     >
     </div>
   </fieldset>

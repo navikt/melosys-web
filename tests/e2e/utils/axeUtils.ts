@@ -25,7 +25,7 @@ const KNOWN_THIRD_PARTY_EXCLUSIONS = [
   ".ql-toolbar button",
   "[class^='ql-']",
   // NAV Aksel DatePicker - input-felt mangler labels (kjent issue)
-  ".navds-date__field-input",
+  ".aksel-date__field-input",
   // Definition lists som brukes for metadata-visning (ikke interaktive)
   ".behandling__meta",
 ];

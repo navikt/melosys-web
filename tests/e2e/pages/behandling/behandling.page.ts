@@ -94,34 +94,23 @@ export class BehandlingPage {
       await hamburgerMeny.click();
     }
 
-    // Finn accordion-headeren for "Avslutt behandling"
-    const accordionHeader = this.page.locator(
-      '.behandlingsmeny__meny .navds-accordion__header:has(.navds-accordion__header-content:has-text("Avslutt behandling"))',
-    );
+    const accordionHeader = behandlingsmeny.getByRole("button", { name: "Avslutt behandling", exact: true });
 
     await expect(accordionHeader, `${this.ctx}: Fant ikke "Avslutt behandling" i menyen`).toBeVisible();
     await accordionHeader.click();
 
-    // Vær mer spesifikk - finn accordion content som tilhører "Avslutt behandling"
-    const accordionContent = this.page.locator(
-      '.behandlingsmeny__meny .navds-accordion__item:has(.navds-accordion__header:has(.navds-accordion__header-content:has-text("Avslutt behandling"))) .navds-accordion__content',
-    );
-    await expect(accordionContent, `${this.ctx}: Menyen "Avslutt behandling" åpnet ikke`).toBeVisible();
+    await expect(
+      behandlingsmeny.locator(".behandlingsmeny__handling:visible").first(),
+      `${this.ctx}: Menyen "Avslutt behandling" åpnet ikke`,
+    ).toBeVisible();
   }
 
   /**
    * Velg "Søknaden er innvilget" som avslutningsgrunn
    */
   async velgSoknadenErInnvilget(): Promise<void> {
-    // Først, sjekk at accordion-innholdet fortsatt er synlig
-    const accordionContent = this.page.locator(
-      '.behandlingsmeny__meny .navds-accordion__item:has(.navds-accordion__header:has(.navds-accordion__header-content:has-text("Avslutt behandling"))) .navds-accordion__content',
-    );
-
-    await expect(accordionContent, `${this.ctx}: Menyen "Avslutt behandling" er ikke åpen`).toBeVisible();
-
-    // List alle tilgjengelige alternativer innen accordion content
-    const alleHandlinger = accordionContent.locator(".behandlingsmeny__handling");
+    const alleHandlinger = this.page.locator(".behandlingsmeny__meny .behandlingsmeny__handling:visible");
+    await expect(alleHandlinger.first(), `${this.ctx}: Menyen "Avslutt behandling" er ikke åpen`).toBeVisible();
     const antallHandlinger = await alleHandlinger.count();
 
     expect(antallHandlinger > 0, `${this.ctx}: Fant ingen avslutningsalternativer i menyen`).toBe(true);

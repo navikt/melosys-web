@@ -159,7 +159,7 @@ export function VurderingInngang({ bekreft, aktivtSteg, oppdaterStatus }: Props)
           <Nav.Column className="fomDato">
             <Forms.Datovelger label="Fra og med" name="fom" readOnly={!feltRedigerbart} control={control} />
           </Nav.Column>
-          <Nav.Column>
+          <Nav.Column className="tomDato">
             <Forms.Datovelger
               label={
                 <LabelMedHjelpetekst

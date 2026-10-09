@@ -78,7 +78,7 @@ describe("Elementskrift", () => {
   it("skal ha semibold weight", () => {
     const { container } = render(<Elementskrift ikon={MockIcon} tekst="Test" className="" />);
 
-    const element = container.querySelector(".navds-body-long");
+    const element = container.querySelector(".aksel-body-long");
     expect(element).toBeInTheDocument();
   });
 

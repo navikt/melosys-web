@@ -33,7 +33,12 @@ function BehandlingerListe({ behandlingerForFagsak }: BehandlingerListeProps) {
     <VStack>
       <div className="behandlinger-liste">
         {behandlingerToShow.map((behandling) => (
-          <HStack key={behandling.behandlingID} justify="space-between" paddingInline="3 3" paddingBlock="2 1">
+          <HStack
+            key={behandling.behandlingID}
+            justify="space-between"
+            paddingInline="space-12 space-12"
+            paddingBlock="space-8 space-4"
+          >
             <div className="behandling-tittel">{behandling.tittel}</div>
             <BehandlingsstatusMedSvarfrist
               behandlingsstatus={behandling.behandlingsstatus}

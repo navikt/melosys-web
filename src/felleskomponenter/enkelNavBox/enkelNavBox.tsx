@@ -10,10 +10,10 @@ interface EnkelNavBoxProps {
 function EnkelNavBox({ focused, children }: EnkelNavBoxProps) {
   return (
     <Nav.Box
-      padding="3"
+      padding="space-12"
       borderWidth="1"
-      borderRadius="small"
-      borderColor="border-default"
+      borderRadius="4"
+      borderColor="neutral-subtle"
       className={`radioKnappRamme ${focused && "focused"}`}
     >
       {children}

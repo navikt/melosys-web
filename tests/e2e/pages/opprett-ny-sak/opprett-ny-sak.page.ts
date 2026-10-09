@@ -68,7 +68,7 @@ export class OpprettNySakPage {
     }
 
     // Det finnes eksisterende saker - velg "Opprett ny sak" radioknapp
-    const opprettNySakRadio = this.page.locator(".navds-radio__content:has-text('Opprett ny sak')");
+    const opprettNySakRadio = this.page.getByRole("radio", { name: "Opprett ny sak" });
     await expect(opprettNySakRadio, "Kunne ikke finne 'Opprett ny sak").toBeVisible();
     await opprettNySakRadio.click();
     await this.page.waitForLoadState("domcontentloaded");
@@ -91,7 +91,7 @@ export class OpprettNySakPage {
       "Fant ikke meldingen `Ingen eksisterende saker funnet. Du må opprette en ny sak.´",
     ).not.toBeVisible();
 
-    const knyttTilEksSakRadio = this.page.locator(".navds-radio__content:has-text('Eksisterende sak')");
+    const knyttTilEksSakRadio = this.page.getByRole("radio", { name: "Eksisterende sak" });
     await expect(knyttTilEksSakRadio, "Fant ikke radioknapp for 'Eksisterende sak'").toBeVisible();
     await knyttTilEksSakRadio.click();
 
@@ -124,7 +124,7 @@ export class OpprettNySakPage {
    * Velg "Virksomhet" i "Hvem skal saken opprettes på?" seksjonen
    */
   async velgVirksomhet(): Promise<void> {
-    const virksomhetRadio = this.page.locator(".navds-radio__content:has-text('Virksomhet')");
+    const virksomhetRadio = this.page.getByRole("radio", { name: "Virksomhet" });
     await expect(virksomhetRadio, "Fant ikke radioknapp for 'Virksomhet'").toBeVisible();
     await virksomhetRadio.click();
   }
@@ -386,14 +386,14 @@ export class OpprettNySakPage {
       "Undertittel 'Hvem skal saken opprettes på?' skal være synlig",
     ).toBeVisible();
     await expect(
-      this.page.locator(".opprettnysak .navds-radio__content:has-text('Bruker')"),
+      this.page.getByRole("radio", { name: "Bruker" }),
       "Radio-valg 'Bruker' skal være synlig",
     ).toBeVisible();
     await expect(
-      this.page.locator(".opprettnysak .navds-radio__content:has-text('Virksomhet')"),
+      this.page.getByRole("radio", { name: "Virksomhet" }),
       "Radio-valg 'Virksomhet' skal være synlig",
     ).toBeVisible();
-    await expect(this.page.locator(".opprettnysak .navds-radio input[value='BRUKER']")).toBeChecked();
+    await expect(this.page.getByRole("radio", { name: "Bruker" })).toBeChecked();
   }
 
   /**
@@ -475,18 +475,13 @@ export class OpprettNySakPage {
     let alleRadioButtons = behandlingstypeGruppe.getByRole("radio");
     let antallRadioButtons = await alleRadioButtons.count();
 
-    // Prøv alternative selektorer hvis ingen radiobuttons finnes
+    // Prøv en direkte input-selektor hvis tilgjengelighetsrollen mangler.
     if (antallRadioButtons === 0) {
       const alternativeRadios = await behandlingstypeGruppe.locator("input[type='radio']").count();
-      const navdsRadios = await behandlingstypeGruppe.locator(".navds-radio").count();
 
-      // Bruk alternative selektorer hvis de finner radiobuttons
       if (alternativeRadios > 0) {
         alleRadioButtons = behandlingstypeGruppe.locator("input[type='radio']");
         antallRadioButtons = alternativeRadios;
-      } else if (navdsRadios > 0) {
-        alleRadioButtons = behandlingstypeGruppe.locator(".navds-radio input");
-        antallRadioButtons = navdsRadios;
       }
     }
 
@@ -551,7 +546,7 @@ export class OpprettNySakPage {
   /**
    * Verifiser at Behandlingstema-feltet er read-only (låst), ikke disabled.
    * Aksel read-only gjør feltet ikke-`disabled`, men gir wrapperen klassen
-   * `navds-form-field--readonly` og viser et låseikon. (MELOSYS-8098)
+   * `aksel-form-field--readonly` og viser et låseikon. (MELOSYS-8098)
    */
   async verifiserBehandlingstemaReadOnly(): Promise<void> {
     // Låseikonet legger "Skrivebeskyttet" i label-teksten, derfor regex på navnet
@@ -559,7 +554,7 @@ export class OpprettNySakPage {
     await expect(behandlingstema, "Behandlingstema-feltet skal være synlig").toBeVisible();
     await expect(behandlingstema, "Behandlingstema skal være read-only, ikke disabled").not.toBeDisabled();
 
-    const readOnlyFelt = this.page.locator(".navds-form-field--readonly", { has: behandlingstema });
+    const readOnlyFelt = this.page.locator(".aksel-form-field--readonly", { has: behandlingstema });
     await expect(readOnlyFelt, "Behandlingstema skal rendres som read-only").toBeVisible();
   }
 

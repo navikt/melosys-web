@@ -76,7 +76,7 @@ function JournalforingGjelder({
           size="medium"
           className="horisontal_radiogruppe"
         >
-          <HStack gap="3" justify="space-between">
+          <HStack gap="space-12" justify="space-between">
             <EnkelNavBox focused={journalforingGjelder === BRUKER}>
               <Nav.Radio value={BRUKER} id={BRUKER}>
                 {KV.kodeTilTerm(BRUKER, MKV.KTObjects.aktoersroller)}

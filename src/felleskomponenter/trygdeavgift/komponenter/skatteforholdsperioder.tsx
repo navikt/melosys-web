@@ -76,7 +76,7 @@ export function Skatteforholdsperioder({
               control={control}
               className="skatteforholdsperioder-radio-group"
             >
-              <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
+              <Stack gap="space-24" direction={{ xs: "column", sm: "row" }} wrap={false}>
                 <Nav.Radio value={MKV.Koder.skatteplikttype.SKATTEPLIKTIG}>Ja</Nav.Radio>
                 <Nav.Radio value={MKV.Koder.skatteplikttype.IKKE_SKATTEPLIKTIG}>Nei</Nav.Radio>
               </Stack>
