@@ -17,7 +17,7 @@
     "@apollo/client": "^4.3.1",
     "@azure/msal-browser": "^4.13.0",
     "@azure/msal-react": "^3.0.12",
-    "@hookform/resolvers": "^3.9.0",
+    "@hookform/resolvers": "^5.9.1",
     "@navikt/aksel-icons": "^8.17.2",
     "@navikt/ds-css": "^8.17.2",
     "@navikt/ds-react": "^8.17.2",

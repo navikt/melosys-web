@@ -56,7 +56,7 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   const kontrollFeil = useSelector(kontrollSelectors.KontrollFeilSelector);
 
   const { control, watch, formState, setValue } = useForm({
-    resolver: yupResolver<FieldValues>(vurdering_unntak_medlemskap),
+    resolver: yupResolver<FieldValues, unknown, FieldValues>(vurdering_unntak_medlemskap),
     context: { sluttDato: mottatteOpplysningerPeriode.tom },
     mode: "all",
     defaultValues: {
