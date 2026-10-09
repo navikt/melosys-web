@@ -80,16 +80,24 @@ const tomtRektangel = { top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 
 Range.prototype.getBoundingClientRect = () => tomtRektangel;
 Range.prototype.getClientRects = () => Object.assign([], { item: () => null });
 
-// Mocker localStorage
-global.localStorage = {
-  removeItem: vi.fn(),
-  setItem: vi.fn(),
-  getItem: vi.fn(),
-};
+// Mocker localStorage og sessionStorage. jsdom definerer dem som getter-egenskaper på window,
+// så de må overstyres med defineProperty i stedet for vanlig tilordning.
+Object.defineProperty(window, "localStorage", {
+  configurable: true,
+  writable: true,
+  value: {
+    removeItem: vi.fn(),
+    setItem: vi.fn(),
+    getItem: vi.fn(),
+  },
+});
 
-// Mocker sessionStorage
-global.sessionStorage = {
-  removeItem: vi.fn(),
-  setItem: vi.fn(),
-  getItem: vi.fn(),
-};
+Object.defineProperty(window, "sessionStorage", {
+  configurable: true,
+  writable: true,
+  value: {
+    removeItem: vi.fn(),
+    setItem: vi.fn(),
+    getItem: vi.fn(),
+  },
+});
