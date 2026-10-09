@@ -1,4 +1,4 @@
-import { NavLink, useRouteMatch } from "react-router-dom";
+import { matchPath, NavLink, useLocation } from "react-router";
 
 import TekstblokkSoek from "../../../felleskomponenter/htmlEditor/tekstblokkSoek";
 import useFeatureToggle from "../../../featuretoggle/useFeatureToggle";
@@ -13,9 +13,10 @@ const TITTEL = "Brev- og tekstbibliotek";
 // har bedre plass på en egen side.
 function BrevbibliotekKnapp() {
   const togglePaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
+  const { pathname } = useLocation();
   // Ruten avgjør, ikke redux: en fagsak kan ligge igjen i state etter at brukeren har
   // navigert bort, og ville da gitt popoveren på forsiden.
-  const iSak = useRouteMatch(SAKSRUTER) !== null;
+  const iSak = SAKSRUTER.some((path) => matchPath({ path, end: false }, pathname) !== null);
 
   if (!togglePaa) return null;
 

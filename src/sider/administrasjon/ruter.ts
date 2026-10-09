@@ -1,2 +1,4 @@
 export const ADMIN_BASE = "/administrasjon";
-export const ADMIN_TEKSTBLOKKER = `${ADMIN_BASE}/tekstblokker`;
+// Relativ sti for den nøstede ruten under ADMIN_BASE.
+export const ADMIN_TEKSTBLOKKER_STI = "tekstblokker";
+export const ADMIN_TEKSTBLOKKER = `${ADMIN_BASE}/${ADMIN_TEKSTBLOKKER_STI}`;

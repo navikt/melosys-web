@@ -1,11 +1,12 @@
 import { vi } from "vitest";
 import React from "react";
+import { MemoryRouter, Route, Routes } from "react-router";
 import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
 import Saksbehandling from "./saksbehandling";
 import MKV from "../../melosyskodeverk";
 
 // Type helper for testing Redux-connected components with partial props
-// Redux mapStateToProps/mapDispatchToProps provides most props, so we only need location/match in tests
+// Redux mapStateToProps/mapDispatchToProps provides most props; route data comes from MemoryRouter
 const SaksbehandlingTest = Saksbehandling as React.ComponentType<Partial<React.ComponentProps<typeof Saksbehandling>>>;
 
 // Mock dependencies
@@ -82,20 +83,26 @@ describe("Trygdeavtale Saksbehandling", () => {
     pathname: "/trygdeavtale/12345678",
   };
 
-  const mockMatch = {
-    params: {
-      saksnr: "12345678",
-    },
+  const mockParams = {
+    saksnr: "12345678",
   };
 
+  const medRuter = (location: { pathname: string; search: string }) => (
+    <MemoryRouter initialEntries={[`${location.pathname}/${location.search}`]}>
+      <Routes>
+        <Route path="/trygdeavtale/:saksnr/*" element={<SaksbehandlingTest />} />
+      </Routes>
+    </MemoryRouter>
+  );
+
   const renderSaksbehandling = (preloadedState = defaultPreloadedState) => {
-    return renderWithProviders(<SaksbehandlingTest location={mockLocation} match={mockMatch} />, {
+    return renderWithProviders(medRuter(mockLocation), {
       preloadedState,
     });
   };
 
   it("skal returnere null hvis redigerbart er null", () => {
-    const { container } = renderWithProviders(<SaksbehandlingTest location={mockLocation} match={mockMatch} />, {
+    const { container } = renderWithProviders(medRuter(mockLocation), {
       preloadedState: defaultPreloadedState,
     });
 
@@ -109,12 +116,9 @@ describe("Trygdeavtale Saksbehandling", () => {
       pathname: "/trygdeavtale/12345678",
     };
 
-    const { container } = renderWithProviders(
-      <SaksbehandlingTest location={locationUtenBehandlingID} match={mockMatch} />,
-      {
-        preloadedState: defaultPreloadedState,
-      },
-    );
+    const { container } = renderWithProviders(medRuter(locationUtenBehandlingID), {
+      preloadedState: defaultPreloadedState,
+    });
 
     expect(container.querySelector(".trygdeavtale_saksbehandling")).not.toBeInTheDocument();
   });
@@ -129,8 +133,8 @@ describe("Trygdeavtale Saksbehandling", () => {
   it("skal ha saksnummer fra route params", () => {
     renderSaksbehandling();
 
-    // Komponenten bruker saksnummer fra match.params
-    expect(mockMatch.params.saksnr).toBe("12345678");
+    // Komponenten bruker saksnummer fra route params
+    expect(mockParams.saksnr).toBe("12345678");
   });
 
   it("skal kalle API for å hente saksopplysninger", () => {

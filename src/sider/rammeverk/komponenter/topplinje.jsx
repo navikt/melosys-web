@@ -1,4 +1,4 @@
-import { NavLink, withRouter } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router";
 import { withMsal } from "@azure/msal-react";
 import PT from "prop-types";
 
@@ -15,11 +15,11 @@ import { HolidayDecor } from "../../../felleskomponenter/høytidOgMorro/holidayD
 function Topplinje(props) {
   const { saksbehandler = "" } = props;
   const visAdmin = useFeatureToggle(MELOSYS_ADMINISTRASJON);
+  const navigate = useNavigate();
 
   const tilForsidenHandler = (event) => {
     event.preventDefault();
-    const { history } = props;
-    history.push("/");
+    navigate("/");
   };
 
   const loggUt = () => {
@@ -73,8 +73,7 @@ function Topplinje(props) {
 
 Topplinje.propTypes = {
   saksbehandler: PT.string,
-  history: PT.object.isRequired,
   msalContext: PT.object.isRequired,
 };
 
-export default withMsal(withRouter(Topplinje));
+export default withMsal(Topplinje);

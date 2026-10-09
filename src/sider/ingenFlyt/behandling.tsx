@@ -3,7 +3,8 @@ import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { RouteComponentProps } from "react-router-dom";
+import { useLocation } from "react-router";
+import { useRuteParams } from "../../navigering";
 
 import MKV from "../../melosyskodeverk";
 import * as Nav from "../../navFrontend";
@@ -52,8 +53,6 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface Props extends RouteComponentProps<MatchParams> {}
-
 function Behandling({
   arbeidsland,
   behandlingstema,
@@ -61,15 +60,13 @@ function Behandling({
   fagsakStatus,
   hovedpartRolle,
   lastInnSaksopplysninger,
-  location,
-  match: {
-    params: { saksnr: saksnummer, sakstype },
-  },
   mottatteOpplysningerPeriodeFom,
   mottatteOpplysningerPeriodeTom,
   redigerbart,
   resetSaksopplysninger,
-}: Props & PropsFromRedux) {
+}: PropsFromRedux) {
+  const location = useLocation();
+  const { saksnr: saksnummer, sakstype } = useRuteParams<MatchParams>();
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
   const saksopplysningerErLastet = !!behandlingstema;
 

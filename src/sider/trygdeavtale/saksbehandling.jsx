@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { useLocation, useParams } from "react-router";
 import PT from "prop-types";
 
 import MKV from "../../melosyskodeverk";
@@ -45,8 +46,6 @@ function Saksbehandling({
   hentLandkoder,
   hentLovvalgsperiode,
   hentFagsaker,
-  location,
-  match,
   redigerbart = null,
   resetBehandlingerState,
   resetMottatteOpplysningerState,
@@ -63,7 +62,8 @@ function Saksbehandling({
 }) {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
-  const saksnummer = match?.params?.saksnr;
+  const location = useLocation();
+  const { saksnr: saksnummer } = useParams();
 
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
@@ -190,8 +190,6 @@ Saksbehandling.propTypes = {
   behandlingsresultatType: PT.string.isRequired,
   fagsakStatusKode: PT.string.isRequired,
   hovedpartRolle: PT.string.isRequired,
-  location: PT.object.isRequired,
-  match: PT.object.isRequired,
   redigerbart: PT.bool,
   soknadForm: PT.object.isRequired,
   // Funcs

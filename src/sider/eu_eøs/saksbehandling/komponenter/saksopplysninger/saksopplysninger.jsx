@@ -1,6 +1,5 @@
 import PT from "prop-types";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 
 import MKV from "../../../../../melosyskodeverk";
 import * as Utils from "../../../../../utils";
@@ -106,7 +105,6 @@ Saksopplysninger.propTypes = {
   avklartefakta: MPT.AvklartefaktaListe.isRequired,
   behandlingsresultatType: PT.string.isRequired,
   fagsakStatusKode: PT.string.isRequired,
-  match: PT.object.isRequired,
   sendMottatteOpplysninger: PT.func.isRequired,
   mottatteOpplysninger: MPT.MottatteOpplysninger,
   soknadForm: PT.object.isRequired,
@@ -135,4 +133,4 @@ const mapDispatchToProps = (dispatch) => ({
   sendMottatteOpplysninger: (bid, dokument) => dispatch(mottatteOpplysningerOperations.send(bid, dokument)),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
+export default connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger);

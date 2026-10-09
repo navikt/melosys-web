@@ -1,11 +1,12 @@
-import PT from "prop-types";
+import { useLocation } from "react-router";
 
 import * as Nav from "../../navFrontend";
 
 import "./ukjentSide.less";
 
 /* eslint arrow-body-style:off */
-function UkjentSide({ location }) {
+function UkjentSide() {
+  const location = useLocation();
   const logdata = {
     message: "Ukjent Side",
     data: {
@@ -24,9 +25,5 @@ function UkjentSide({ location }) {
     </Nav.Alert>
   );
 }
-
-UkjentSide.propTypes = {
-  location: PT.object.isRequired,
-};
 
 export default UkjentSide;

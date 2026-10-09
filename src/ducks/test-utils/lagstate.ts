@@ -14,16 +14,6 @@ function lagState({
       registeredFields: [],
     },
   },
-  router = {
-    location: {
-      pathname: "",
-      state: "",
-      search: "",
-      hash: "",
-      query: {},
-    },
-    action: "PUSH",
-  },
   anmodningomunntak = { status: STATUS.OK, data: {} },
   anmodningsperioder = { status: STATUS.OK, data: [] },
   anmodningsperiodesvar = { status: STATUS.OK, data: {} },
@@ -60,7 +50,6 @@ function lagState({
 }: Partial<RootState>): RootState {
   return {
     form,
-    router,
     anmodningomunntak,
     anmodningsperioder,
     anmodningsperiodesvar,

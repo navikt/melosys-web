@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { useLocation } from "react-router";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
 import MKV, { MKVUtils } from "../../melosyskodeverk";
@@ -47,15 +47,14 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>)
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type EndreBehandlingModalProps = PropsFromRedux &
-  RouteComponentProps & {
-    fagsak: Api.Fagsak;
-    oppsummering: Api.Behandlinger.behandling.Oppsummering;
-    mottattDato?: string;
-    skalViseModal: boolean;
-    erÅrsavregning?: boolean;
-    lukkModal: () => void;
-  };
+type EndreBehandlingModalProps = PropsFromRedux & {
+  fagsak: Api.Fagsak;
+  oppsummering: Api.Behandlinger.behandling.Oppsummering;
+  mottattDato?: string;
+  skalViseModal: boolean;
+  erÅrsavregning?: boolean;
+  lukkModal: () => void;
+};
 
 function EndreBehandlingModal({
   skalViseModal,
@@ -67,10 +66,10 @@ function EndreBehandlingModal({
   muligeBehandlingsstatuser,
   hentMuligeBehandlingsstatuser,
   tilAnnenSide,
-  location,
   anmodningsperioderSendtTilUtlandet,
   erÅrsavregning,
 }: EndreBehandlingModalProps) {
+  const location = useLocation();
   const [generellFeil, setGenerellFeil] = useState("");
   const [behandlingEndret, setBehandlingEndret] = useState(false);
   const [sakstype, setSakstype] = useState(fagsak.sakstype?.kode);
@@ -386,4 +385,4 @@ function EndreBehandlingModal({
   );
 }
 
-export default withRouter(connector(EndreBehandlingModal));
+export default connector(EndreBehandlingModal);

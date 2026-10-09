@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import PT from "prop-types";
-import { withRouter } from "react-router-dom";
 import * as Nav from "../../navFrontend";
 
 import { oversikt } from "../../ducks/oppgaver/operations";
@@ -75,9 +74,7 @@ function Forside(props) {
 }
 
 Forside.propTypes = {
-  location: PT.object.isRequired,
-  history: PT.object.isRequired,
   tilOpprettNySak: PT.func.isRequired,
 };
 
-export default withRouter(Forside);
+export default Forside;
