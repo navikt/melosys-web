@@ -66,7 +66,7 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
           </label>
           <textarea
             rows="2"
-            style="--__axc-textarea-height: -4px; overflow: hidden;"
+            style="--__axc-textarea-height: auto; overflow: hidden;"
             textareaclass="skjemaelement__input input--fullbredde"
             name="333"
             id="333"
@@ -79,7 +79,7 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
             class="aksel-textarea__input aksel-body-short aksel-body-short--small"
             readonly
             tabindex="-1"
-            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0);"
+            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); width: auto;"
           >
           </textarea>
           <span
@@ -112,7 +112,7 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
           </label>
           <textarea
             rows="2"
-            style="--__axc-textarea-height: -4px; overflow: hidden;"
+            style="--__axc-textarea-height: auto; overflow: hidden;"
             textareaclass="skjemaelement__input input--fullbredde"
             name="333"
             id="333"
@@ -125,7 +125,7 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
             class="aksel-textarea__input aksel-body-short aksel-body-short--small"
             readonly
             tabindex="-1"
-            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0);"
+            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); width: auto;"
           >
           </textarea>
           <span
