@@ -115,8 +115,9 @@ describe("SendBrev – kopi til bruker/brukers fullmektig", () => {
 
     renderSendBrev();
 
+    // Sjekkboksen vises først når mulige mottakere er hentet, som kan skje etter at Send brev er aktivert.
+    expect(await screen.findByRole("checkbox", { name: "Send kopi til bruker/brukers fullmektig" })).not.toBeChecked();
     await waitFor(() => expect(screen.getByRole("button", { name: "Send brev" })).toBeEnabled());
-    expect(screen.getByRole("checkbox", { name: "Send kopi til bruker/brukers fullmektig" })).not.toBeChecked();
     expect(screen.queryByText("En feil fra backend")).not.toBeInTheDocument();
   });
 
@@ -144,7 +145,9 @@ describe("SendBrev – kopi til bruker/brukers fullmektig", () => {
     });
 
     renderSendBrev();
-    await userEvent.click(await screen.findByRole("button", { name: "Send brev" }));
+    const sendBrevKnapp = await screen.findByRole("button", { name: "Send brev" });
+    await waitFor(() => expect(sendBrevKnapp).toBeEnabled());
+    await userEvent.click(sendBrevKnapp);
 
     expect(await screen.findByText(forventetMelding)).toBeVisible();
     expect(screen.queryByText(/Ugyldig JSON-skjema/)).not.toBeInTheDocument();
