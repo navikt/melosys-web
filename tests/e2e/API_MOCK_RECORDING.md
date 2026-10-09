@@ -585,7 +585,7 @@ await opprettNySakPage.velgBehandlingsaarsak("Søknad");
 
 // 2. Wait for navigation (which only happens after successful POST)
 await Promise.all([
-  page.waitForURL(/\/melosys\/$/, { timeout: 15000 }),
+  page.waitForURL(/\/melosys\/?$/, { timeout: 15000 }),
   opprettNySakPage.klikkOpprettNyBehandling(),
 ]);
 

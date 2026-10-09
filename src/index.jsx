@@ -6,7 +6,7 @@ import "./setupYup";
 import { createRoot } from "react-dom/client";
 import { Provider as ReduxProvider } from "react-redux";
 import { ApolloProvider } from "@apollo/client/react";
-import { unstable_HistoryRouter as HistoryRouter } from "react-router";
+import { BrowserRouter } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import App from "./App";
 import AppErrorBoundary from "./felleskomponenter/appErrorBoundary/appErrorBoundary";
@@ -16,7 +16,7 @@ import "@navikt/ds-css";
 
 import { store } from "./store";
 import * as Constants from "./constants";
-import { lagNettleserhistorikk, NavigeringRegistrering } from "./navigering";
+import { NavigeringRegistrering } from "./navigering";
 import { unregister } from "./registerServiceWorker";
 import { FellesHandlersProvider } from "./contexts";
 import Modals from "./modals";
@@ -27,14 +27,12 @@ import { queryClient } from "./services/queryClient";
 const environment = window.env.ENVIRONMENT;
 const isDevelopmentProfile = environment === "local";
 
-const historikk = lagNettleserhistorikk(Constants.URL_BASENAME);
-
 const container = document.getElementById("root");
 const root = createRoot(container);
 
 root.render(
   <ReduxProvider store={store}>
-    <HistoryRouter basename={Constants.URL_BASENAME} history={historikk}>
+    <BrowserRouter basename={Constants.URL_BASENAME}>
       <NavigeringRegistrering />
       <ApolloProvider client={apolloClient}>
         <QueryClientProvider client={queryClient}>
@@ -48,7 +46,7 @@ root.render(
           </App>
         </QueryClientProvider>
       </ApolloProvider>
-    </HistoryRouter>
+    </BrowserRouter>
   </ReduxProvider>,
 );
 

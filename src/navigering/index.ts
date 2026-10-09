@@ -1,4 +1,3 @@
-export { lagNettleserhistorikk } from "./historikk";
 export { naviger, registrerNavigate } from "./navigator";
 export { NavigeringRegistrering } from "./navigeringRegistrering";
 export { medRuteProps } from "./medRuteProps";
