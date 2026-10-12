@@ -44,7 +44,7 @@
     "redux-form": "^8.3.10",
     "redux-thunk": "^3.1.0",
     "reselect": "^4.0.0",
-    "uuid": "^11.1.1",
+    "uuid": "^14.0.2",
     "yup": "^1.7.1"
   },
   "disabled-homepage": "http://eesi2.no/melosys",
