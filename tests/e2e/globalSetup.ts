@@ -1,12 +1,11 @@
 /**
  * Playwright global setup - kjøres én gang før alle tester.
- * Renser database og mock-data, deretter initialiserer testdata.
+ * Renser mock-data, deretter initialiserer testdata.
  *
- * I playback mode (E2E_MODE=playback) hoppes database-operasjoner over
+ * I playback mode (E2E_MODE=playback) hoppes testdata-oppsett over
  * siden mock-serveren ikke trenger ekte testdata.
  */
 import { resetTestData } from "./utils/testdataUtils";
-import { withDatabase } from "./utils/databaseHelper";
 import { writeFileSync, existsSync, readFileSync } from "fs";
 import { tmpdir } from "os";
 import { join, dirname } from "path";
@@ -42,28 +41,14 @@ async function clearMockData(): Promise<void> {
   }
 }
 
-/**
- * Renser hele Oracle-databasen (truncate alle data-tabeller, behold lookup-tabeller)
- */
-async function clearOracleDatabase(): Promise<void> {
-  try {
-    await withDatabase(async (db) => {
-      await db.cleanDatabase();
-    });
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.warn(`  Could not clear Oracle database (ignorerer): ${error}`);
-  }
-}
-
 async function globalSetup() {
   /* eslint-disable no-console */
   const mode = getTestMode();
   console.log(`\n Global setup: Mode = ${mode}\n`);
 
-  // In playback mode, skip all database operations
+  // In playback mode, skip test data setup
   if (shouldUseMockServer()) {
-    console.log(" Playback mode: Skipping database setup (using mock server)");
+    console.log(" Playback mode: Skipping test data setup (using mock server)");
 
     // Try to load existing metadata from recordings or use dummy metadata
     const metadataPath = join(tmpdir(), "melosys-e2e-testdata-metadata.json");
@@ -91,13 +76,9 @@ async function globalSetup() {
     console.log("Step 1: Clearing mock data...");
     await clearMockData();
 
-    // 2. Rens Oracle database (truncate alle data-tabeller)
-    console.log("\nStep 2: Clearing Oracle database...");
-    await clearOracleDatabase();
-
-    // 3. Initialiser testdata på nytt via API (kan hoppes over med SKIP_TESTDATA_RESET=true)
+    // 2. Initialiser testdata på nytt via API (kan hoppes over med SKIP_TESTDATA_RESET=true)
     if (process.env.SKIP_TESTDATA_RESET === "true") {
-      console.log("\nStep 3: Skipping test data initialization (SKIP_TESTDATA_RESET=true)");
+      console.log("\nStep 2: Skipping test data initialization (SKIP_TESTDATA_RESET=true)");
       console.log("  Using existing metadata from recordings directory\n");
 
       // Use existing metadata from recordings
@@ -112,7 +93,7 @@ async function globalSetup() {
         console.warn("  Warning: No existing metadata found, tests may fail\n");
       }
     } else {
-      console.log("\nStep 3: Initializing test data...");
+      console.log("\nStep 2: Initializing test data...");
       const metadata = await resetTestData();
       const sakCount = Object.keys(metadata).length;
       console.log(`  Test data initialized: ${sakCount} saker klar for testing\n`);
