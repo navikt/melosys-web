@@ -33,7 +33,7 @@ global.mswServer = server;
 // Start server før tester kjører
 beforeAll(() => {
   server.listen({
-    onUnhandledRequest: "bypass", // Ignorer requests uten handlers
+    onUnhandledFrame: "bypass", // Ignorer requests uten handlers
   });
 });
 
