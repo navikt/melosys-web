@@ -265,8 +265,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(redux@5.0.1)
       reselect:
-        specifier: ^4.0.0
-        version: 4.1.8
+        specifier: ^5.3.0
+        version: 5.3.0
       uuid:
         specifier: ^14.0.2
         version: 14.0.2
@@ -3613,9 +3613,6 @@ packages:
   require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
-
-  reselect@4.1.8:
-    resolution: {integrity: sha512-ab9EmR80F/zQTMNeneUr4cv+jSwPJgIlvEmVwLerwrWVbpLlBuls9XHzIeTFy4cegU2NHBp3va0LKOzU5qFEYQ==}
 
   reselect@5.3.0:
     resolution: {integrity: sha512-XGoLeRAVzUTcJ1qkxPQhDJyIZ5d6zzZD9nT7AEZOaaU9UbWclhycElmhO+VD5bFeLuzhPBaOV2oXC8uG35ZSpg==}
@@ -7739,8 +7736,6 @@ snapshots:
   remove-trailing-spaces@1.0.9: {}
 
   require-from-string@2.0.2: {}
-
-  reselect@4.1.8: {}
 
   reselect@5.3.0: {}
 

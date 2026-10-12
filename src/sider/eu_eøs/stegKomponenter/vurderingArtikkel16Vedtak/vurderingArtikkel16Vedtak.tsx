@@ -339,5 +339,4 @@ const VurderingArtikkel16VedtakForm = reduxForm<FormValuesProps, VurderingArtikk
     })(values),
 })(VurderingArtikkel16Vedtak);
 
-// @ts-expect-error Type mismatch between redux-form and connector
 export default connector(VurderingArtikkel16VedtakForm);

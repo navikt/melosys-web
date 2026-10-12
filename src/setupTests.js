@@ -5,6 +5,7 @@ import { setupServer } from "msw/node";
 import { handlers } from "./test/mocks/handlers";
 // Oppsettfilen for Yup kjøres ikke uten videre av vi. Derfor er det nødvendig å importere den manuelt her.
 import "./setupYup";
+import "./setupReselect";
 
 // Enable React act() environment for testing
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
