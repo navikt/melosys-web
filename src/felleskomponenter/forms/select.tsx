@@ -15,7 +15,6 @@ interface SelectComponentProps extends Omit<React.SelectHTMLAttributes<HTMLSelec
   error?: ReactNode;
   readOnly?: boolean;
   errorId?: string;
-  htmlSize?: number;
   id?: string;
 }
 

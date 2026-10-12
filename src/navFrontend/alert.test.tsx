@@ -11,6 +11,6 @@ describe("Alert", () => {
   it("rendrer warning-variant", () => {
     const { container } = render(<Alert variant="warning">Advarsel-tekst</Alert>);
     expect(screen.getByText("Advarsel-tekst")).toBeInTheDocument();
-    expect(container.querySelector(".navds-alert--warning")).toBeInTheDocument();
+    expect(container.querySelector(".aksel-alert--warning")).toBeInTheDocument();
   });
 });

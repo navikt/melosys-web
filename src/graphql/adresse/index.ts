@@ -1,7 +1,4 @@
 import { hentBostedsadresseForPerson } from "./hentBostedsadresseForPerson";
-import {
-  HentBostedsadresseForPersonDocument,
-  useHentBostedsadresseForPersonQuery,
-} from "./hentBostedsadresseForPerson.generated";
+import { HentBostedsadresseForPersonDocument } from "./hentBostedsadresseForPerson.generated";
 
-export { hentBostedsadresseForPerson, HentBostedsadresseForPersonDocument, useHentBostedsadresseForPersonQuery };
+export { hentBostedsadresseForPerson, HentBostedsadresseForPersonDocument };

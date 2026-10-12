@@ -2,7 +2,8 @@ import * as Nav from "../../../../../navFrontend";
 
 import AdresseTableContainer from "./adresseTable";
 
-import { HentAdresserQuery, useHentAdresserQuery } from "./hentAdresser";
+import { useQuery } from "@apollo/client/react";
+import { HentAdresserQuery, HentAdresserDocument } from "./hentAdresser";
 
 interface AdresserProps {
   data: HentAdresserQuery;
@@ -27,7 +28,7 @@ interface AdresserWrapperProps {
 }
 
 function AdresserWrapper({ behandlingID }: AdresserWrapperProps) {
-  const { error, loading, data } = useHentAdresserQuery({ variables: { behandlingID } });
+  const { error, loading, data } = useQuery(HentAdresserDocument, { variables: { behandlingID } });
 
   if (error) return <Nav.Alert variant="error">Kunne ikke hente adresser!</Nav.Alert>;
   if (loading) return <div>Laster adresser...</div>;

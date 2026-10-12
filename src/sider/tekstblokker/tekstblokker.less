@@ -31,23 +31,23 @@
   &__tom {
     padding: 2rem;
     text-align: center;
-    color: var(--a-text-subtle);
-    border: 1px dashed var(--a-border-subtle);
-    border-radius: var(--a-border-radius-medium, 4px);
+    color: var(--ax-text-neutral-subtle);
+    border: 1px dashed var(--ax-border-neutral-subtle);
+    border-radius: var(--ax-radius-4, 4px);
   }
 
   &__tabell {
-    background-color: var(--a-surface-default, #fff);
+    background-color: var(--ax-bg-default, #fff);
   }
 
   &__placeholder-tabell {
-    background-color: var(--a-surface-default, #fff);
+    background-color: var(--ax-bg-default, #fff);
   }
 
   &__placeholder-nokkel {
     font-family: var(--a-font-family-code, monospace);
-    background-color: var(--a-surface-subtle);
-    border-radius: var(--a-border-radius-medium, 4px);
+    background-color: var(--ax-bg-neutral-soft);
+    border-radius: var(--ax-radius-4, 4px);
     padding: 0 0.25rem;
     white-space: nowrap;
   }
@@ -56,7 +56,7 @@
     background: transparent;
     border: 0;
     padding: 0;
-    color: var(--a-text-action);
+    color: var(--ax-text-accent-subtle);
     text-decoration: underline;
     cursor: pointer;
     font: inherit;
@@ -75,7 +75,7 @@
 
   // Lesevisningen har ingen redigering å lenke til, så tittelen står som ren tekst.
   &__rad-tittel-tekst {
-    font-weight: var(--a-font-weight-bold);
+    font-weight: var(--ax-font-weight-bold);
   }
 
   &__statusfilter {
@@ -86,7 +86,7 @@
   }
 
   &__historikk {
-    background-color: var(--a-surface-default, #fff);
+    background-color: var(--ax-bg-default, #fff);
   }
 
   &__historikk-innhold {
@@ -127,7 +127,7 @@
 
   &__rad-forhandsvisning {
     padding: 1rem 1.5rem;
-    background-color: var(--a-surface-subtle, #f5f5f5);
+    background-color: var(--ax-bg-neutral-soft, #f5f5f5);
     border-radius: 4px;
     max-height: 22rem;
     overflow-y: auto;
@@ -172,7 +172,7 @@
     }
 
     &-tom {
-      color: var(--a-text-subtle);
+      color: var(--ax-text-neutral-subtle);
       font-style: italic;
       font-size: 0.85rem;
     }

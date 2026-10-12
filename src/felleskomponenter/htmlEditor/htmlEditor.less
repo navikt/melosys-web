@@ -40,7 +40,7 @@
 
       .bracketed-text {
         font-weight: bold;
-        color: var(--a-text-danger);
+        color: var(--ax-text-danger-subtle);
       }
 
       // Utfylte placeholder-verdier – dus blå så de skiller seg tydelig fra den røde
@@ -48,21 +48,21 @@
       // Pekeren gjelder kun i editoren: der åpner klikk popoveren, i forhåndsvisningen er
       // verdien ren visning.
       .placeholder-utfylt {
-        background-color: var(--a-surface-info-subtle, #e0f1ff);
+        background-color: var(--ax-bg-info-soft, #e0f1ff);
         border-radius: 2px;
         cursor: pointer;
       }
 
       // Uerstattede placeholdere – gul varseltone: her mangler det en verdi.
       .placeholder-uerstattet {
-        background-color: var(--a-surface-warning-subtle, #ffeccc);
+        background-color: var(--ax-bg-warning-soft, #ffeccc);
         border-radius: 2px;
       }
 
       // Nøkler som ikke finnes i katalogen – rød flate. Klammemarkeringen er rød tekst
       // uten flate, så de to rødtonene er til å skille fra hverandre.
       .placeholder-ukjent {
-        background-color: var(--a-surface-danger-subtle, #ffe3e3);
+        background-color: var(--ax-bg-danger-soft, #ffe3e3);
         border-radius: 2px;
       }
 
@@ -70,7 +70,7 @@
       // pekeren viser at markeringen er noe å klikke på.
       .placeholder-valg,
       .placeholder-valgt {
-        background-color: var(--a-surface-alt-1-subtle, #e0d8e9);
+        background-color: var(--ax-bg-meta-purple-soft, #e0d8e9);
         border-radius: 2px;
         cursor: pointer;
       }
@@ -78,8 +78,8 @@
       // Betingelsestokener – nøytral grå. De er styring, ikke brevtekst, og har ingen
       // status å varsle om: omfanget avgjøres først ved innsetting.
       .placeholder-betingelse {
-        background-color: var(--a-surface-neutral-subtle, #e6e6e6);
-        color: var(--a-text-subtle, #545454);
+        background-color: var(--ax-bg-neutral-soft, #e6e6e6);
+        color: var(--ax-text-neutral-subtle, #545454);
         border-radius: 2px;
       }
 
@@ -133,12 +133,12 @@
 
     &--error {
       .ql-toolbar {
-        border-color: var(--a-border-danger);
+        border-color: var(--ax-border-danger);
         border-width: 2px 2px 2px 2px;
       }
 
       .ql-container {
-        border-color: var(--a-border-danger);
+        border-color: var(--ax-border-danger);
         border-width: 0 2px 2px 2px;
       }
     }
@@ -177,12 +177,12 @@
   // enn grå. Modifikatoren står på samme element som .htmlEditor, så den må skrives sammen
   // med den her, ikke som en forelder.
   &.htmlEditor--betingelse-varsel .editor-wrapper .ql-container .placeholder-betingelse {
-    background-color: var(--a-surface-warning-subtle, #ffeccc);
+    background-color: var(--ax-bg-warning-soft, #ffeccc);
     color: inherit;
   }
 
   .feilmelding {
-    color: var(--a-text-danger);
+    color: var(--ax-text-danger-subtle);
     font-family: Arial, sans-serif;
     font-size: 0.875rem;
     font-weight: 600;

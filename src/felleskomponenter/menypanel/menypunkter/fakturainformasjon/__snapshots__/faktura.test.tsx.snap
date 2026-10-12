@@ -5,10 +5,13 @@ exports[`Faktura > snapshot test 1`] = `
 <div>
   <table>
     <tbody>
-      <tr class="navds-table__row navds-table__expandable-row navds-table__row--shade-on-hover">
-        <td class="navds-table__data-cell navds-table__toggle-expand-cell navds-body-short navds-body-short--medium">
+      <tr
+        class="aksel-table__row aksel-table__expandable-row aksel-table__row--shade-on-hover"
+        data-interactive="false"
+      >
+        <td class="aksel-table__data-cell aksel-table__toggle-expand-cell aksel-body-short aksel-body-short--medium">
           <button
-            class="navds-table__toggle-expand-button"
+            class="aksel-table__toggle-expand-button"
             type="button"
             aria-controls="_r_0_"
             aria-expanded="false"
@@ -22,7 +25,7 @@ exports[`Faktura > snapshot test 1`] = `
               focusable="false"
               role="img"
               aria-labelledby="333"
-              class="navds-table__expandable-icon"
+              class="aksel-table__expandable-icon"
             >
               <title id="333">
                 Vis mer
@@ -37,39 +40,39 @@ exports[`Faktura > snapshot test 1`] = `
             </svg>
           </button>
         </td>
-        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+        <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
         </td>
-        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+        <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
           Q2 - Q3 2023
         </td>
-        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+        <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
           <div class="faktura_status_wrapper">
             <div class="dott green">
             </div>
             Bestilt
           </div>
         </td>
-        <td class="navds-table__data-cell navds-body-short navds-body-short--small">
+        <td class="aksel-table__data-cell aksel-body-short aksel-body-short--small">
           -
         </td>
       </tr>
       <tr
         data-state="closed"
-        class="navds-table__expanded-row"
+        class="aksel-table__expanded-row"
         aria-hidden="true"
         id="333"
       >
         <td
           colspan="999"
-          class="navds-table__expanded-row-cell"
+          class="aksel-table__expanded-row-cell"
         >
           <div
-            class="navds-table__expanded-row-collapse"
+            class="aksel-table__expanded-row-collapse"
             style="height: 0px; overflow: hidden;"
           >
             <div
               aria-hidden="true"
-              class="navds-table__expanded-row-content navds-table__expanded-row-content--gutter-left"
+              class="aksel-table__expanded-row-content aksel-table__expanded-row-content--gutter-left"
               style="display: none;"
             >
               <div class="fakturalinje">
@@ -111,7 +114,11 @@ exports[`Faktura > snapshot test 1`] = `
                   </span>
                 </div>
                 <div class="fakturalinje">
-                  <div class="navds-alert navds-alert--info navds-alert--small">
+                  <div
+                    data-color="info"
+                    data-variant="info"
+                    class="aksel-alert aksel-alert--info aksel-alert--small"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="1em"
@@ -121,7 +128,7 @@ exports[`Faktura > snapshot test 1`] = `
                       focusable="false"
                       role="img"
                       aria-labelledby="333"
-                      class="navds-alert__icon"
+                      class="aksel-alert__icon"
                     >
                       <title id="333">
                         Informasjon
@@ -134,40 +141,43 @@ exports[`Faktura > snapshot test 1`] = `
                       >
                       </path>
                     </svg>
-                    <div class="navds-alert__wrapper navds-alert__wrapper--maxwidth navds-body-long navds-body-long--small">
+                    <div class="aksel-alert__wrapper aksel-alert__wrapper--maxwidth aksel-body-long aksel-body-long--small">
                       Fakturanummer er bare kjent i Melosys når det gjelder en manglende innbetaling, du kan likevel finne faktura i OeBS ved å søke på bruker
                     </div>
                   </div>
                 </div>
-                <table class="navds-table navds-table--small">
-                  <thead class="navds-table__header">
-                    <tr class="navds-table__row">
+                <table class="aksel-table aksel-table--small">
+                  <thead class="aksel-table__header">
+                    <tr
+                      class="aksel-table__row"
+                      data-interactive="false"
+                    >
                       <th
-                        class="navds-table__header-cell navds-label navds-label--small"
+                        class="aksel-table__header-cell aksel-label aksel-label--small"
                         scope="col"
                       >
                       </th>
                       <th
-                        class="navds-table__header-cell navds-label navds-label--small"
+                        class="aksel-table__header-cell aksel-label aksel-label--small"
                         scope="col"
                       >
                         Antall
                       </th>
                       <th
-                        class="navds-table__header-cell navds-label navds-label--small"
+                        class="aksel-table__header-cell aksel-label aksel-label--small"
                         scope="col"
                       >
                         Enhetspris
                       </th>
                       <th
-                        class="navds-table__header-cell navds-label navds-label--small"
+                        class="aksel-table__header-cell aksel-label aksel-label--small"
                         scope="col"
                       >
                         Beløp
                       </th>
                     </tr>
                   </thead>
-                  <tbody class="navds-table__body">
+                  <tbody class="aksel-table__body">
                   </tbody>
                 </table>
               </div>

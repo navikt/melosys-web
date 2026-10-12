@@ -33,7 +33,7 @@ export function EndeligAvgiftValgRadioGroup({
           handleEndeligAvgiftValgChange(value);
         }}
       >
-        <Nav.HStack gap="4" align="center">
+        <Nav.HStack gap="space-16" align="center">
           <Nav.Radio value={OPPLYSNINGER_ENDRET} className={endeligAvgiftValg === OPPLYSNINGER_ENDRET ? "checked" : ""}>
             Beregn trygdeavgiften
           </Nav.Radio>

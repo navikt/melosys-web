@@ -1,7 +1,7 @@
 @import "../../../../constants.less";
 
 .vurderingAarsavregning {
-  .navds-table {
+  .aksel-table {
     margin-bottom: 1.5rem;
   }
 
@@ -9,7 +9,7 @@
     text-align: right;
   }
 
-  .navds-popover {
+  .aksel-popover {
     p {
       margin: unset;
     }
@@ -20,14 +20,14 @@
     }
   }
 
-  .navds-help-text__button {
+  .aksel-help-text__button {
     padding-top: 0;
   }
 
   .perioder,
   .bestemmelseSelect,
   .medlemskapsperioder {
-    .navds-form-field__readonly-icon {
+    .aksel-form-field__readonly-icon {
       display: none;
     }
   }
@@ -99,18 +99,18 @@
     grid-template-columns: auto 6rem;
     width: fit-content;
 
-    > .navds-form-field__label,
-    > .navds-select__container {
+    > .aksel-form-field__label,
+    > .aksel-select__container {
       margin: 0;
     }
 
-    > .navds-form-field__error {
+    > .aksel-form-field__error {
       grid-column: 1 / -1;
     }
   }
 
   .avgift_input {
-    .navds-text-field__input {
+    .aksel-text-field__input {
       width: 7.5rem;
       text-align: right;
     }
@@ -129,7 +129,7 @@
       padding-bottom: 0.75rem;
     }
 
-    .navds-radio-buttons {
+    .aksel-radio-buttons {
       margin-bottom: 0;
     }
 
@@ -146,7 +146,7 @@
       margin-bottom: 0.5rem;
     }
 
-    .navds-form-field {
+    .aksel-form-field {
       margin-bottom: 0;
     }
   }
@@ -159,10 +159,10 @@
   .endeligAvgiftValg_radio_group {
     container-type: inline-size;
 
-    .navds-radio-buttons {
+    .aksel-radio-buttons {
       margin-bottom: 0.5rem;
 
-      .navds-radio {
+      .aksel-radio {
         border-style: solid;
         border-width: 1px;
         border-color: @gray-dark;
@@ -172,12 +172,12 @@
         &.endeligAvgiftValg_radio_lang {
           flex: 0 1 auto;
 
-          .navds-radio__content,
-          .navds-radio__label {
+          .aksel-radio__content,
+          .aksel-radio__label {
             min-width: 0;
           }
 
-          .navds-radio__label {
+          .aksel-radio__label {
             align-items: center;
           }
         }
@@ -191,7 +191,7 @@
           border-color: @blue-nav;
         }
 
-        &.navds-radio--readonly {
+        &.aksel-radio--readonly {
           border-color: @gray-dark !important;
         }
       }
@@ -200,8 +200,8 @@
 
   @container (max-width: 1000px) {
     .endeligAvgiftValg_radio_group {
-      .navds-radio-buttons {
-        .navds-radio.endeligAvgiftValg_radio_lang {
+      .aksel-radio-buttons {
+        .aksel-radio.endeligAvgiftValg_radio_lang {
           flex: 1 1 12rem;
           max-width: max-content;
           min-width: 12rem;
@@ -210,8 +210,8 @@
     }
   }
 
-  .navds-expansioncard__content {
-    .navds-heading {
+  .aksel-expansioncard__content {
+    .aksel-heading {
       margin-bottom: 1.5rem;
     }
 

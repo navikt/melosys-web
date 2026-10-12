@@ -1,5 +1,3 @@
-import { useLocation } from "react-router-dom";
-
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER } from "../../featuretoggle/toggleNavn";
 import UkjentSide from "../ukjentSide";
@@ -12,9 +10,8 @@ import "./brevbibliotek.less";
 // uten HtmlEditor. Innholdet er admin-siden i skrivebeskyttet modus.
 function BrevbibliotekSide() {
   const togglePaa = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
-  const location = useLocation();
 
-  if (togglePaa === false) return <UkjentSide location={location} />;
+  if (togglePaa === false) return <UkjentSide />;
   // Ulastet toggle: vent heller enn å blinke opp en «finnes ikke»-side.
   if (togglePaa === undefined) return null;
 

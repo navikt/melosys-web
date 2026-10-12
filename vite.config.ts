@@ -1,6 +1,5 @@
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
-import viteTsconfigPaths from "vite-tsconfig-paths";
 import svgrPlugin from "vite-plugin-svgr";
 import * as path from "path";
 
@@ -13,10 +12,6 @@ const LOCAL_FAKTURERINGSKOMPONENTEN_PORT = 8084;
 
 export default defineConfig({
   base: "/melosys",
-  // React JSX transform krever babel så i vite må man fortsatt importe
-  esbuild: {
-    jsxInject: `import React from 'react'`,
-  },
   css: {
     preprocessorOptions: {
       less: {
@@ -29,7 +24,7 @@ export default defineConfig({
   build: {
     outDir: "./build",
     emptyOutDir: true,
-    rollupOptions: {
+    rolldownOptions: {
       external: ["/env-config.js"],
     },
   },
@@ -51,7 +46,6 @@ export default defineConfig({
       include: /\.(js|jsx|ts|tsx)$/,
       jsxRuntime: "automatic",
     }),
-    viteTsconfigPaths(),
     svgrPlugin(),
   ],
   server: {
@@ -78,8 +72,8 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    esbuildOptions: {
-      loader: {
+    rolldownOptions: {
+      moduleTypes: {
         ".js": "jsx",
       },
     },

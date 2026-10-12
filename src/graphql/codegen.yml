@@ -2,6 +2,7 @@ schema:
   - http://localhost:8080/graphql:
       headers:
         Cookie: ""
+        Authorization: "Bearer ${GRAPHQL_TOKEN}"
 config:
   scalars:
     # Mapper custom scalars i graphql-skjemaet til typescript-typer.
@@ -9,25 +10,24 @@ config:
     DateTime: string
     Long: number
 
-  preResolveTypes: false # This can affect how types are generated
   skipTypename: false # Keep __typename fields
+  useTypeImports: true
 generates:
   src/graphql/generated/types.ts:
     plugins:
       - typescript
 
-  # Genererer react-hooks for operations på samme sted som operations er definert.
+  # Genererer typede dokumenter for Apollo 4 på samme sted som operations er definert.
   src/:
     preset: near-operation-file
     documents:
       - "src/**/*.gql"
-      - "!src/graphql/**/*.gql"
     presetConfig:
       extension: .generated.tsx
       baseTypesPath: graphql/generated/types.ts
     plugins:
       - typescript-operations
-      - typescript-react-apollo
+      - typed-document-node
 
   # Genererer sdk til bruk utenfor react-komponenter.
   src/graphql/generated/getSdk.ts:

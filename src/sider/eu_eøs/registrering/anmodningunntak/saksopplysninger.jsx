@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { withRouter } from "react-router-dom";
 import PT from "prop-types";
 import { connect } from "react-redux";
 import * as EKV from "eessi-kodeverk";
@@ -449,8 +448,6 @@ Saksopplysninger.propTypes = {
   sed: MPT.Behandlinger.Saksopplysninger.SED,
   vurderingBegrunnelser: PT.arrayOf(PT.string).isRequired,
   avklartefakta: PT.array.isRequired,
-  match: PT.object.isRequired,
-  location: PT.object.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
   anmodningsperiodeID: PT.string,
   anmodningsperiodeSvar: PT.object.isRequired,
@@ -477,4 +474,4 @@ const mapDispatchToProps = (dispatch) => ({
   sendAnmodningUnntakSvar: (behandlingID, svar) => dispatch(anmodningunntakOperations.svar(behandlingID, svar)),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
+export default connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger);

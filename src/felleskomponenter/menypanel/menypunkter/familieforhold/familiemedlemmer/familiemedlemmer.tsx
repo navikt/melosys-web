@@ -1,7 +1,8 @@
 import { useSelector } from "react-redux";
 import { BodyShort } from "@navikt/ds-react";
 import { ChildEyesIcon, PersonGroupIcon } from "@navikt/aksel-icons";
-import { useHentFamiliemedlemmerQuery } from "./hentFamiliemedlemmer.generated";
+import { useQuery } from "@apollo/client/react";
+import { HentFamiliemedlemmerDocument } from "./hentFamiliemedlemmer.generated";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { Familierelasjonsrolle } from "../../../../../graphql";
 import bem from "../../../../../bemUtils";
@@ -13,7 +14,7 @@ import "./familiemedlemmer.less";
 
 function Familiemedlemmer() {
   const behandlingID: number = useSelector(behandlingerSelectors.BehandlingIDSelector) as number;
-  const { loading, error, data } = useHentFamiliemedlemmerQuery({ variables: { behandlingID } });
+  const { loading, error, data } = useQuery(HentFamiliemedlemmerDocument, { variables: { behandlingID } });
 
   if (error) return <Nav.Alert variant="error">Kunne ikke hente familiemedlemmer!</Nav.Alert>;
   if (loading) return <div>Henter familiemedlemmer...</div>;

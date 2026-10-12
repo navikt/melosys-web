@@ -5,8 +5,9 @@ vi.mock("../../../../../navFrontend", () => ({
   Alert: ({ children }: any) => <div>{children}</div>,
 }));
 
-vi.mock("./hentStatsborgerskap.generated", () => ({
-  useHentStatsborgerskapQuery: vi.fn(),
+vi.mock("@apollo/client/react", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@apollo/client/react")>()),
+  useQuery: vi.fn(),
 }));
 
 vi.mock("./statsborgerskapTable", () => ({
@@ -18,23 +19,23 @@ vi.mock("./statsborgerskapTable", () => ({
 }));
 
 import StatsborgerskapTableContainer from "./statsborgerskapTableContainer";
-import { useHentStatsborgerskapQuery } from "./hentStatsborgerskap.generated";
+import { useQuery } from "@apollo/client/react";
 
 describe("StatsborgerskapTableContainer", () => {
   it("viser feilmelding ved error", () => {
-    vi.mocked(useHentStatsborgerskapQuery).mockReturnValue({ loading: false, error: true, data: undefined } as any);
+    vi.mocked(useQuery).mockReturnValue({ loading: false, error: true, data: undefined } as any);
     render(<StatsborgerskapTableContainer behandlingID={1} />);
     expect(screen.getByText("Kunne ikke hente statsborgerskap!")).toBeDefined();
   });
 
   it("viser laster-tekst ved loading", () => {
-    vi.mocked(useHentStatsborgerskapQuery).mockReturnValue({ loading: true, error: undefined, data: undefined } as any);
+    vi.mocked(useQuery).mockReturnValue({ loading: true, error: undefined, data: undefined } as any);
     render(<StatsborgerskapTableContainer behandlingID={1} />);
     expect(screen.getByText("Laster statsborgerskap...")).toBeDefined();
   });
 
   it("rendrer kun aktiv tabell når ingen historiske", () => {
-    vi.mocked(useHentStatsborgerskapQuery).mockReturnValue({
+    vi.mocked(useQuery).mockReturnValue({
       loading: false,
       error: undefined,
       data: {
@@ -51,7 +52,7 @@ describe("StatsborgerskapTableContainer", () => {
   });
 
   it("rendrer både aktiv og historisk tabell", () => {
-    vi.mocked(useHentStatsborgerskapQuery).mockReturnValue({
+    vi.mocked(useQuery).mockReturnValue({
       loading: false,
       error: undefined,
       data: {

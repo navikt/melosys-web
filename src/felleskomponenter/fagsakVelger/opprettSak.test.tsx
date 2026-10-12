@@ -200,7 +200,7 @@ describe("OpprettSak - journalføring", () => {
     // Låseikonet legger "Skrivebeskyttet" i label-teksten, derfor regex
     const sakstypeSelect = getByLabelText(/Sakstype/);
     expect(sakstypeSelect).not.toBeDisabled();
-    expect(sakstypeSelect.closest(".navds-form-field")).toHaveClass("navds-form-field--readonly");
+    expect(sakstypeSelect.closest(".aksel-form-field")).toHaveClass("aksel-form-field--readonly");
   });
 
   it("Sakstype-dropdown er IKKE readOnly uten utenlandsk trygdemyndighet", () => {
@@ -210,7 +210,7 @@ describe("OpprettSak - journalføring", () => {
 
     const sakstypeSelect = getByLabelText("Sakstype");
     expect(sakstypeSelect).not.toBeDisabled();
-    expect(sakstypeSelect.closest(".navds-form-field")).not.toHaveClass("navds-form-field--readonly");
+    expect(sakstypeSelect.closest(".aksel-form-field")).not.toHaveClass("aksel-form-field--readonly");
   });
 });
 

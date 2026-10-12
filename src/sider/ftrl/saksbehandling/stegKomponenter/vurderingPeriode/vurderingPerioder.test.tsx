@@ -185,10 +185,21 @@ const vent = (ms: number) =>
     await vi.advanceTimersByTimeAsync(ms);
   });
 
-const kjørFerdig = () =>
-  act(async () => {
-    await vi.runAllTimersAsync();
-  });
+const kjørFerdig = async () => {
+  for (let forsøk = 0; forsøk < 10; forsøk += 1) {
+    await act(async () => {
+      await vi.runAllTimersAsync();
+    });
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    if (vi.getTimerCount() === 0) return;
+  }
+
+  throw new Error("Timerkøen ble ikke tom");
+};
 
 const resultat = (rad: number) =>
   screen.getByRole("combobox", { name: `Resultat periode ${rad}` }) as HTMLSelectElement;

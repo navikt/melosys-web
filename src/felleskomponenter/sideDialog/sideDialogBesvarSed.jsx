@@ -41,10 +41,10 @@ function EnkeltSed({ sed }) {
       as={Nav.Link}
       href={sed.rinaUrl}
       target="_blank"
-      padding="2"
+      padding="space-8"
       borderWidth="1"
       borderRadius="medium"
-      borderColor="border-default"
+      borderColor="neutral-subtle"
     >
       <div className="kolonne__navn">
         <Nav.BodyLong weight="semibold" size="small" className="lenkepanel__heading">

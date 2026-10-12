@@ -8,6 +8,7 @@ exports[`Behandlingsoppgaver > viser behandlingsoppgave 1`] = `
       <a
         class="behandlingOppgave__link"
         href="/TRYGDEAVTALE/saksbehandling/4/?behandlingID=4"
+        data-discover="true"
       >
         <div class="panel behandlingOppgave">
           <div class="row behandlingOppgave__info">
@@ -16,7 +17,7 @@ exports[`Behandlingsoppgaver > viser behandlingsoppgave 1`] = `
                 <div class="panelheader">
                   <div class="panelheader__tittel">
                     <div class="panelheader__tittel__hoved">
-                      <h1 class="navds-heading navds-heading--xsmall">
+                      <h1 class="aksel-heading aksel-heading--xsmall">
                         Peter Petersen - Z123456
                       </h1>
                        

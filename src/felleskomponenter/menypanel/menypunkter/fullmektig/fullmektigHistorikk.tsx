@@ -34,8 +34,6 @@ function FullmektigHistorikk({ finnOrganisasjonAdresse, finnPersonAdresse }: Ful
       const updatedFullmektige = await Promise.all(
         (fullmektigHistorikk || []).map(async (fullmektig) => {
           let brevAdresse: AdresseOgFeil | undefined;
-          let kontaktInfo: HentKontaktopplysningerResponse | undefined;
-
           if (fullmektig.orgnr) {
             const [adresse] = await Promise.all([
               finnOrganisasjonAdresse(fullmektig.orgnr),
@@ -53,7 +51,7 @@ function FullmektigHistorikk({ finnOrganisasjonAdresse, finnPersonAdresse }: Ful
           return {
             ...fullmektig,
             brevadresse: brevAdresse,
-            kontaktinfo: kontaktInfo,
+            kontaktinfo: undefined,
           } as FullmektigHistorikkInfo;
         }),
       );

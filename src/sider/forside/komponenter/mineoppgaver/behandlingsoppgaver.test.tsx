@@ -1,6 +1,6 @@
 import { BehandlingOppgaver } from "./behandlingOppgaver";
 import { renderWithProviders } from "../../../../ducks/test-utils/renderWithProviders";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router";
 
 vi.mock("../../../../featuretoggle", () => ({
   __esModule: true,

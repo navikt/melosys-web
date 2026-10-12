@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import PT from "prop-types";
 import { connect, useDispatch } from "react-redux";
+import { useLocation, useParams } from "react-router";
 
 import MKV from "../../../melosyskodeverk";
 import * as Utils from "../../../utils";
@@ -24,11 +25,7 @@ import { redigerbartSelectors } from "../../../ducks/redigerbart";
 import "./registrering.less";
 
 export function Registrering({
-  match: {
-    params: { saksnr: saksnummer },
-  },
   tilForsiden,
-  location,
   hentAvklartefakta,
   hentBehandling,
   hentFagsaker,
@@ -45,6 +42,8 @@ export function Registrering({
   behandlingOppfriskes,
   startOgVisOppfriskModal,
 }) {
+  const location = useLocation();
+  const { saksnr: saksnummer } = useParams();
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
   const dispatch = useDispatch();
   const [saksopplysningerErHentet, setSaksopplysningerErHentet] = useState(false);
@@ -130,8 +129,6 @@ Registrering.propTypes = {
   vurderingBegrunnelser: PT.arrayOf(PT.string),
   lovvalgsperioder: PT.array.isRequired, // TODO lag proptype
   sed: MPT.Behandlinger.Saksopplysninger.SED,
-  match: PT.object.isRequired,
-  location: PT.object.isRequired,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
   tilForsiden: PT.func.isRequired,

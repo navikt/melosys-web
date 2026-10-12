@@ -1,4 +1,3 @@
-/* eslint react/no-array-index-key:off */
 import { Component } from "react";
 import PT from "prop-types";
 

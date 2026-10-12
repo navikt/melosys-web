@@ -72,7 +72,7 @@ describe("EnkelNavBox", () => {
       </EnkelNavBox>,
     );
 
-    const box = container.querySelector(".navds-box");
+    const box = container.querySelector(".aksel-box");
     expect(box).toBeInTheDocument();
   });
 
@@ -193,7 +193,7 @@ describe("EnkelNavBox", () => {
       </EnkelNavBox>,
     );
 
-    const box = container.querySelector(".navds-box");
+    const box = container.querySelector(".aksel-box");
     // Box should have been rendered with the props
     expect(box).toBeInTheDocument();
   });

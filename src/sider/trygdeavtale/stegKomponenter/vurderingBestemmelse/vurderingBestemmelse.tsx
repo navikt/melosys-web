@@ -182,7 +182,7 @@ function VurderingBestemmelse({
         </Nav.Row>
       )}
       {formValues?.bestemmelse && (
-        <Box padding="4" background="surface-subtle">
+        <Box padding="space-16" background="neutral-soft">
           <BestemmelseHjelpetekst bestemmelse={formValues.bestemmelse} />
         </Box>
       )}

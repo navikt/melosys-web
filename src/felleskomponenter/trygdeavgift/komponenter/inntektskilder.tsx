@@ -207,7 +207,7 @@ export function Inntektskilder({
                     control={control}
                     onChange={(value) => handleEndreArbAvgBetales(index, value)}
                   >
-                    <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
+                    <Stack gap="space-24" direction={{ xs: "column", sm: "row" }} wrap={false}>
                       <Nav.Radio
                         value={BOOLSK_STRING.SANN}
                         disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}

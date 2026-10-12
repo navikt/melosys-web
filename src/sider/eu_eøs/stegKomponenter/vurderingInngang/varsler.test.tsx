@@ -7,20 +7,18 @@ vi.mock("../../../../featuretoggle", () => ({
   useFeatureToggle: () => true,
 }));
 
-vi.mock(
-  "../../../../felleskomponenter/menypanel/menypunkter/person/statsborgerskapTable/hentStatsborgerskap.generated",
-  () => ({
-    useHentStatsborgerskapQuery: () => ({
-      data: {
-        hentSaksopplysninger: {
-          persondata: {
-            statsborgerskap: [{ land: "NO" }],
-          },
+vi.mock("@apollo/client/react", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@apollo/client/react")>()),
+  useQuery: () => ({
+    data: {
+      hentSaksopplysninger: {
+        persondata: {
+          statsborgerskap: [{ land: "NO" }],
         },
       },
-    }),
+    },
   }),
-);
+}));
 
 describe("Varsler", () => {
   let props: ComponentProps<typeof Varsler>;

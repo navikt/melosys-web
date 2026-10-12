@@ -3,10 +3,10 @@
 exports[`Input > snapshot test 1`] = `
 
 <div>
-  <div class="melosys-textfield  navds-form-field navds-form-field--small">
+  <div class="melosys-textfield  aksel-form-field aksel-form-field--small">
     <label
       for="333"
-      class="navds-form-field__label navds-label navds-label--small"
+      class="aksel-form-field__label aksel-label aksel-label--small"
     >
       test
     </label>
@@ -14,13 +14,13 @@ exports[`Input > snapshot test 1`] = `
       meta="[object Object]"
       navn="Test"
       id="333"
-      class="navds-text-field__input navds-body-short navds-body-short--small"
+      class="aksel-text-field__input aksel-body-short aksel-body-short--small"
       type="text"
       value
       name="333"
     >
     <div
-      class="navds-form-field__error"
+      class="aksel-form-field__error"
       id="333"
       aria-relevant="additions removals"
       aria-live="polite"

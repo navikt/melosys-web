@@ -6,23 +6,23 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
   <div class="cssklasse">
     <div class="row">
       <div class="col col-xs-6">
-        <div class="melosys-textfield  navds-form-field navds-form-field--small">
+        <div class="melosys-textfield  aksel-form-field aksel-form-field--small">
           <label
             for="333"
-            class="navds-form-field__label navds-label navds-label--small"
+            class="aksel-form-field__label aksel-label aksel-label--small"
           >
             Navn på virksomheten
           </label>
           <input
             meta="[object Object]"
             id="333"
-            class="navds-text-field__input navds-body-short navds-body-short--small"
+            class="aksel-text-field__input aksel-body-short aksel-body-short--small"
             type="text"
             value
             name="333"
           >
           <div
-            class="navds-form-field__error"
+            class="aksel-form-field__error"
             id="333"
             aria-relevant="additions removals"
             aria-live="polite"
@@ -31,23 +31,23 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         </div>
       </div>
       <div class="col col-xs-6">
-        <div class="melosys-textfield  navds-form-field navds-form-field--small">
+        <div class="melosys-textfield  aksel-form-field aksel-form-field--small">
           <label
             for="333"
-            class="navds-form-field__label navds-label navds-label--small"
+            class="aksel-form-field__label aksel-label aksel-label--small"
           >
             Registreringsnummer
           </label>
           <input
             meta="[object Object]"
             id="333"
-            class="navds-text-field__input navds-body-short navds-body-short--small"
+            class="aksel-text-field__input aksel-body-short aksel-body-short--small"
             type="text"
             value
             name="333"
           >
           <div
-            class="navds-form-field__error"
+            class="aksel-form-field__error"
             id="333"
             aria-relevant="additions removals"
             aria-live="polite"
@@ -58,23 +58,23 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
     </div>
     <div class="row">
       <div class="col col-xs-12">
-        <div class="melosys-textfield  navds-form-field navds-form-field--small">
+        <div class="melosys-textfield  aksel-form-field aksel-form-field--small">
           <label
             for="333"
-            class="navds-form-field__label navds-label navds-label--small"
+            class="aksel-form-field__label aksel-label aksel-label--small"
           >
             Bygning
           </label>
           <input
             meta="[object Object]"
             id="333"
-            class="navds-text-field__input navds-body-short navds-body-short--small"
+            class="aksel-text-field__input aksel-body-short aksel-body-short--small"
             type="text"
             value
             name="333"
           >
           <div
-            class="navds-form-field__error"
+            class="aksel-form-field__error"
             id="333"
             aria-relevant="additions removals"
             aria-live="polite"
@@ -85,23 +85,23 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
     </div>
     <div class="row">
       <div class="col col-xs-6">
-        <div class="melosys-textfield  navds-form-field navds-form-field--small">
+        <div class="melosys-textfield  aksel-form-field aksel-form-field--small">
           <label
             for="333"
-            class="navds-form-field__label navds-label navds-label--small"
+            class="aksel-form-field__label aksel-label aksel-label--small"
           >
             Gate/veg
           </label>
           <input
             meta="[object Object]"
             id="333"
-            class="navds-text-field__input navds-body-short navds-body-short--small"
+            class="aksel-text-field__input aksel-body-short aksel-body-short--small"
             type="text"
             value
             name="333"
           >
           <div
-            class="navds-form-field__error"
+            class="aksel-form-field__error"
             id="333"
             aria-relevant="additions removals"
             aria-live="polite"
@@ -110,23 +110,23 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         </div>
       </div>
       <div class="col col-xs-6">
-        <div class="melosys-textfield  navds-form-field navds-form-field--small">
+        <div class="melosys-textfield  aksel-form-field aksel-form-field--small">
           <label
             for="333"
-            class="navds-form-field__label navds-label navds-label--small"
+            class="aksel-form-field__label aksel-label aksel-label--small"
           >
             Husnummer
           </label>
           <input
             meta="[object Object]"
             id="333"
-            class="navds-text-field__input navds-body-short navds-body-short--small"
+            class="aksel-text-field__input aksel-body-short aksel-body-short--small"
             type="text"
             value
             name="333"
           >
           <div
-            class="navds-form-field__error"
+            class="aksel-form-field__error"
             id="333"
             aria-relevant="additions removals"
             aria-live="polite"
@@ -137,23 +137,23 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
     </div>
     <div class="row">
       <div class="col col-xs-6">
-        <div class="melosys-textfield  navds-form-field navds-form-field--small">
+        <div class="melosys-textfield  aksel-form-field aksel-form-field--small">
           <label
             for="333"
-            class="navds-form-field__label navds-label navds-label--small"
+            class="aksel-form-field__label aksel-label aksel-label--small"
           >
             Poststed
           </label>
           <input
             meta="[object Object]"
             id="333"
-            class="navds-text-field__input navds-body-short navds-body-short--small"
+            class="aksel-text-field__input aksel-body-short aksel-body-short--small"
             type="text"
             value
             name="333"
           >
           <div
-            class="navds-form-field__error"
+            class="aksel-form-field__error"
             id="333"
             aria-relevant="additions removals"
             aria-live="polite"
@@ -162,23 +162,23 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
         </div>
       </div>
       <div class="col col-xs-6">
-        <div class="melosys-textfield  navds-form-field navds-form-field--small">
+        <div class="melosys-textfield  aksel-form-field aksel-form-field--small">
           <label
             for="333"
-            class="navds-form-field__label navds-label navds-label--small"
+            class="aksel-form-field__label aksel-label aksel-label--small"
           >
             Postnummer
           </label>
           <input
             meta="[object Object]"
             id="333"
-            class="navds-text-field__input navds-body-short navds-body-short--small"
+            class="aksel-text-field__input aksel-body-short aksel-body-short--small"
             type="text"
             value
             name="333"
           >
           <div
-            class="navds-form-field__error"
+            class="aksel-form-field__error"
             id="333"
             aria-relevant="additions removals"
             aria-live="polite"
@@ -189,23 +189,23 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
     </div>
     <div class="row">
       <div class="col col-xs-6">
-        <div class="melosys-textfield  navds-form-field navds-form-field--small">
+        <div class="melosys-textfield  aksel-form-field aksel-form-field--small">
           <label
             for="333"
-            class="navds-form-field__label navds-label navds-label--small"
+            class="aksel-form-field__label aksel-label aksel-label--small"
           >
             Region
           </label>
           <input
             meta="[object Object]"
             id="333"
-            class="navds-text-field__input navds-body-short navds-body-short--small"
+            class="aksel-text-field__input aksel-body-short aksel-body-short--small"
             type="text"
             value
             name="333"
           >
           <div
-            class="navds-form-field__error"
+            class="aksel-form-field__error"
             id="333"
             aria-relevant="additions removals"
             aria-live="polite"
@@ -216,22 +216,22 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
       <div class="col col-xs-6">
         <div class>
           <div>
-            <div class="melosys-textfield landliste__linje__input navds-form-field navds-form-field--small">
+            <div class="melosys-textfield landliste__linje__input aksel-form-field aksel-form-field--small">
               <label
                 for="333"
-                class="navds-form-field__label navds-label navds-label--small"
+                class="aksel-form-field__label aksel-label aksel-label--small"
               >
                 Land
               </label>
               <input
                 list="333"
                 id="333"
-                class="navds-text-field__input navds-body-short navds-body-short--small"
+                class="aksel-text-field__input aksel-body-short aksel-body-short--small"
                 type="text"
                 value
               >
               <div
-                class="navds-form-field__error"
+                class="aksel-form-field__error"
                 id="333"
                 aria-relevant="additions removals"
                 aria-live="polite"
@@ -356,48 +356,38 @@ exports[`EnkeltArbeidsforholdUtland > snapshot test 1`] = `
     </div>
     <div class="row">
       <div class="col col-xs-12">
-        <div class="navds-checkbox navds-checkbox--small">
-          <input
-            class="navds-checkbox__input"
-            id="333"
-            aria-labelledby="333"
-            type="checkbox"
-            value
-            name="333"
+        <div class="aksel-checkbox aksel-checkbox--small">
+          <div
+            class="aksel-checkbox__input-wrapper"
+            data-standalone="false"
           >
+            <input
+              id="333"
+              class="aksel-checkbox__input"
+              type="checkbox"
+              value
+              name="333"
+            >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewbox="0 0 13 10"
+              fill="none"
+              focusable="false"
+              aria-hidden="true"
+              class="aksel-checkbox__icon"
+            >
+              <path
+                d="M4.03524 6.41478L10.4752 0.404669C11.0792 -0.160351 12.029 -0.130672 12.5955 0.47478C13.162 1.08027 13.1296 2.03007 12.5245 2.59621L5.02111 9.59934C4.74099 9.85904 4.37559 10 4.00025 10C3.60651 10 3.22717 9.84621 2.93914 9.56111L0.439143 7.06111C-0.146381 6.47558 -0.146381 5.52542 0.439143 4.93989C1.02467 4.35437 1.97483 4.35437 2.56036 4.93989L4.03524 6.41478Z"
+                fill="currentColor"
+              >
+              </path>
+            </svg>
+          </div>
           <label
             for="333"
-            class="navds-checkbox__label"
+            class="aksel-checkbox__label aksel-body-short aksel-body-short--small"
           >
-            <span class="navds-checkbox__icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="0.8125rem"
-                height="0.625rem"
-                viewbox="0 0 13 10"
-                fill="none"
-                focusable="false"
-                role="img"
-                aria-hidden="true"
-              >
-                <path
-                  d="M4.03524 6.41478L10.4752 0.404669C11.0792 -0.160351 12.029 -0.130672 12.5955 0.47478C13.162 1.08027 13.1296 2.03007 12.5245 2.59621L5.02111 9.59934C4.74099 9.85904 4.37559 10 4.00025 10C3.60651 10 3.22717 9.84621 2.93914 9.56111L0.439143 7.06111C-0.146381 6.47558 -0.146381 5.52542 0.439143 4.93989C1.02467 4.35437 1.97483 4.35437 2.56036 4.93989L4.03524 6.41478Z"
-                  fill="currentColor"
-                >
-                </path>
-              </svg>
-            </span>
-            <span class="navds-checkbox__icon-indeterminate">
-            </span>
-            <span class="navds-checkbox__content">
-              <span
-                id="333"
-                aria-hidden="true"
-                class="navds-checkbox__label-text navds-body-short navds-body-short--small"
-              >
-                Tilhører virksomheten samme konsern som den norske arbeidsgiveren?
-              </span>
-            </span>
+            Tilhører virksomheten samme konsern som den norske arbeidsgiveren?
           </label>
         </div>
       </div>

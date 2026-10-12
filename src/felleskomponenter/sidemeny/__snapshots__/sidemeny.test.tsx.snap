@@ -8,7 +8,7 @@ exports[`SideMeny > snapshot test 1`] = `
       <nav aria-labelledby="333">
         <ul class="linkgroup">
           <li class="linkgroup__label">
-            <p class="navds-body-long navds-body-long--small">
+            <p class="aksel-body-long aksel-body-long--small">
               Sukker
             </p>
           </li>
@@ -31,7 +31,7 @@ exports[`SideMeny > snapshot test 1`] = `
         </ul>
         <ul class="linkgroup">
           <li class="linkgroup__label">
-            <p class="navds-body-long navds-body-long--small">
+            <p class="aksel-body-long aksel-body-long--small">
               Salt
             </p>
           </li>

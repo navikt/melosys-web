@@ -697,7 +697,7 @@ export function AarsavregningMedGrunnlagForm({ initiellData, bekreft, oppdaterSt
               (erHelseutgiftDekkesPeriode ? (
                 sisteGjeldendeAvgiftspliktigperioder?.map((periode) => (
                   <Nav.BodyLong size="small" key={Utils._uuid()} style={{ marginBottom: "1rem" }}>
-                    <span className="navds-label navds-label--small">Periode Norge dekker helseutgifter:</span>{" "}
+                    <span className="aksel-label aksel-label--small">Periode Norge dekker helseutgifter:</span>{" "}
                     {`${Utils.dato.formatterDatoTilNorsk(periode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
                       periode.tomDato,
                     )}`}

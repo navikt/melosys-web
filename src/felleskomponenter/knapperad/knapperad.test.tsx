@@ -70,7 +70,7 @@ describe("Knapperad", () => {
     render(<Knapperad {...props} />);
 
     const bekreftKnapp = screen.getByRole("button", { name: /bekrefttekst/ });
-    expect(bekreftKnapp).toHaveClass("navds-button--loading");
+    expect(bekreftKnapp).toHaveClass("aksel-button--loading");
   });
 
   it("skal ikke vise spinner når spinner er false eller undefined", () => {
@@ -78,7 +78,7 @@ describe("Knapperad", () => {
     render(<Knapperad {...props} />);
 
     const bekreftKnapp = screen.getByRole("button", { name: "bekrefttekst" });
-    expect(bekreftKnapp).not.toHaveClass("navds-button--loading");
+    expect(bekreftKnapp).not.toHaveClass("aksel-button--loading");
   });
 
   it("skal håndtere size small på avbryt-knapp", () => {
@@ -86,7 +86,7 @@ describe("Knapperad", () => {
     render(<Knapperad {...props} />);
 
     const avbrytKnapp = screen.getByRole("button", { name: "avbryttekst" });
-    expect(avbrytKnapp).toHaveClass("navds-button--small");
+    expect(avbrytKnapp).toHaveClass("aksel-button--small");
   });
 
   it("skal håndtere size medium på avbryt-knapp", () => {
@@ -94,7 +94,7 @@ describe("Knapperad", () => {
     render(<Knapperad {...props} />);
 
     const avbrytKnapp = screen.getByRole("button", { name: "avbryttekst" });
-    expect(avbrytKnapp).toHaveClass("navds-button--medium");
+    expect(avbrytKnapp).toHaveClass("aksel-button--medium");
   });
 
   it("skal håndtere size xsmall på avbryt-knapp", () => {
@@ -102,21 +102,21 @@ describe("Knapperad", () => {
     render(<Knapperad {...props} />);
 
     const avbrytKnapp = screen.getByRole("button", { name: "avbryttekst" });
-    expect(avbrytKnapp).toHaveClass("navds-button--xsmall");
+    expect(avbrytKnapp).toHaveClass("aksel-button--xsmall");
   });
 
   it("skal ha primary variant på bekreft-knapp", () => {
     render(<Knapperad {...props} />);
 
     const bekreftKnapp = screen.getByRole("button", { name: "bekrefttekst" });
-    expect(bekreftKnapp).toHaveClass("navds-button--primary");
+    expect(bekreftKnapp).toHaveAttribute("data-variant", "primary");
   });
 
   it("skal ha tertiary variant på avbryt-knapp", () => {
     render(<Knapperad {...props} />);
 
     const avbrytKnapp = screen.getByRole("button", { name: "avbryttekst" });
-    expect(avbrytKnapp).toHaveClass("navds-button--tertiary");
+    expect(avbrytKnapp).toHaveAttribute("data-variant", "tertiary");
   });
 
   it("skal ha CSS-klasse container__knapperad", () => {
