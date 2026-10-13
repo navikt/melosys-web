@@ -83,8 +83,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
     resolver: yupResolver<FieldValues, unknown, FieldValues>(vurdering_inngang_manglende_innbetaling),
     mode: "all",
     defaultValues: {
-      manglendeInnbetalingHandlingsvalg:
-        (redigerbart === false ? utledetHandlingsvalg : undefined) ?? lagretHandlingsvalg?.kode,
+      manglendeInnbetalingHandlingsvalg: utledetHandlingsvalg ?? lagretHandlingsvalg?.kode,
     } as FieldValues,
   });
   const formValues = watch();
