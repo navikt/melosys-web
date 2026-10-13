@@ -72,8 +72,9 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const lagretHandlingsvalg = useSelector(oppsummertfaktaSelectors.ManglendeInnbetalingHandlingsvalgSelector);
   const behandlingsresultatTypeKode = useSelector(behandlingsresultatSelectors.BehandlingsresultatTypeSelector);
-  const utledetHandlingsvalg =
-    redigerbart === false ? utledHandlingsvalgFraBehandlingsresultat(behandlingsresultatTypeKode) : undefined;
+  const utledetHandlingsvalg = !redigerbart
+    ? utledHandlingsvalgFraBehandlingsresultat(behandlingsresultatTypeKode)
+    : undefined;
 
   const {
     control,
