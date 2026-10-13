@@ -26,14 +26,14 @@ describe("vurderingInngangManglendeInnbetalingSchema", () => {
 
   it("should accept valid value", async () => {
     const errors = await getErrors(schema, {
-      fullstendigManglendeInnbetaling: "HELE_PERIODEN_OPPHØRES",
+      manglendeInnbetalingHandlingsvalg: "HELE_PERIODEN_OPPHØRES",
     });
     expect(errors).toEqual([]);
   });
 
-  it("should require fullstendigManglendeInnbetaling", async () => {
+  it("should require manglendeInnbetalingHandlingsvalg", async () => {
     const errors = await getErrors(schema, {
-      fullstendigManglendeInnbetaling: undefined,
+      manglendeInnbetalingHandlingsvalg: undefined,
     });
     expect(errors.some((e) => e.includes("Må fylles ut"))).toBe(true);
   });

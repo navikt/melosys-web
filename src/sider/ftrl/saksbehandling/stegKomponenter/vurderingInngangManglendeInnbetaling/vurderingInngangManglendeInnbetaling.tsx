@@ -83,7 +83,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
     resolver: yupResolver<FieldValues, unknown, FieldValues>(vurdering_inngang_manglende_innbetaling),
     mode: "all",
     defaultValues: {
-      fullstendigManglendeInnbetaling:
+      manglendeInnbetalingHandlingsvalg:
         (redigerbart === false ? utledetHandlingsvalg : undefined) ?? lagretHandlingsvalg?.kode,
     } as FieldValues,
   });
@@ -102,7 +102,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
     const response = await dispatch(
       oppsummertfaktaOperations.lagreManglendeInnbetalingHandlingsvalg(
         behandlingID,
-        formValues.fullstendigManglendeInnbetaling,
+        formValues.manglendeInnbetalingHandlingsvalg,
       ),
     );
     if (response.type !== oppsummertfaktaTypes.FEILET) {
@@ -112,7 +112,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
 
   useEffect(() => {
     if (aktivtSteg) {
-      oppdaterStatus(formIsValid, nesteStegId(formValues.fullstendigManglendeInnbetaling));
+      oppdaterStatus(formIsValid, nesteStegId(formValues.manglendeInnbetalingHandlingsvalg));
     }
   }, [formIsValid]);
 
@@ -132,7 +132,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
       <Forms.RadioGroup
         legend=""
         hideLegend
-        name="fullstendigManglendeInnbetaling"
+        name="manglendeInnbetalingHandlingsvalg"
         control={control}
         onChange={handleChange}
         readOnly={!redigerbart}
