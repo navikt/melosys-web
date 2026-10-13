@@ -70,9 +70,9 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
-  const lagretHandlingsvalg = useSelector(oppsummertfaktaSelectors.ManglendeInnbetalingHandlingsvalgSelector);
+  const handlingsvalgFraAvklarteFakta = useSelector(oppsummertfaktaSelectors.ManglendeInnbetalingHandlingsvalgSelector);
   const behandlingsresultatTypeKode = useSelector(behandlingsresultatSelectors.BehandlingsresultatTypeSelector);
-  const utledetHandlingsvalg = !redigerbart
+  const handlingsvalgFraBehandlingsresultat = !redigerbart
     ? utledHandlingsvalgFraBehandlingsresultat(behandlingsresultatTypeKode)
     : undefined;
 
@@ -84,7 +84,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
     resolver: yupResolver<FieldValues, unknown, FieldValues>(vurdering_inngang_manglende_innbetaling),
     mode: "all",
     defaultValues: {
-      manglendeInnbetalingHandlingsvalg: utledetHandlingsvalg ?? lagretHandlingsvalg?.kode,
+      manglendeInnbetalingHandlingsvalg: handlingsvalgFraBehandlingsresultat ?? handlingsvalgFraAvklarteFakta?.kode,
     } as FieldValues,
   });
   const formValues = watch();
