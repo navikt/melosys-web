@@ -141,6 +141,24 @@ describe("Lovvalgsperioder operations", () => {
     });
   });
 
+  describe("hent", () => {
+    it("fjerner periodene fra forrige behandling når hentingen feiler", async () => {
+      const store = createTestStore(initialState);
+
+      mswServer.use(
+        http.get("/api/lovvalgsperioder/5", () => {
+          return HttpResponse.json({ message: "Internal Server Error" }, { status: 500 });
+        }),
+      );
+
+      await store.dispatch(operations.hent(5) as any);
+
+      const finalState = store.getState();
+      expect(finalState.lovvalgsperioder.status).toBe(STATUS.ERROR);
+      expect(finalState.lovvalgsperioder.data).toEqual([]);
+    });
+  });
+
   describe("oppdaterLovvalgsperioderState", () => {
     it("resets state when no selections are made", () => {
       const store = createTestStore(initialState);
