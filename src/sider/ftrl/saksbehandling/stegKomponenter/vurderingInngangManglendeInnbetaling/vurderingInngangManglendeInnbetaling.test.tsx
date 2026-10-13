@@ -108,6 +108,19 @@ describe("VurderingInngangManglendeInnbetaling", () => {
     expect(screen.getByRole("radio", { name: /Deler av perioden/ })).not.toBeChecked();
   });
 
+  it("utleder handlingsvalg fra behandlingsresultatet uavhengig av redigerbarhet", async () => {
+    vi.mocked(redigerbartSelectors.RedigerbartSelector).mockReturnValue(true);
+    handlingsvalgSelectorMock.mockReturnValue({ kode: "DELER_AV_PERIODEN_OPPHØRES" });
+    vi.mocked(behandlingsresultatSelectors.BehandlingsresultatTypeSelector).mockReturnValue("OPPHØRT");
+
+    await act(async () => {
+      render(<VurderingInngangManglendeInnbetaling bekreft={vi.fn()} aktivtSteg oppdaterStatus={vi.fn()} />);
+    });
+
+    expect(screen.getByRole("radio", { name: /Hele perioden/ })).toBeChecked();
+    expect(screen.getByRole("radio", { name: /Deler av perioden/ })).not.toBeChecked();
+  });
+
   it("lagrer ikke valget bare ved å velge en radioknapp", async () => {
     render(<VurderingInngangManglendeInnbetaling bekreft={vi.fn()} aktivtSteg oppdaterStatus={vi.fn()} />);
 
