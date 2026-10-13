@@ -2,6 +2,11 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 
 const dispatchMock = vi.fn(() => Promise.resolve({ type: "oppsummertfakta/OK" }));
+const { redigerbartSelectorMock, handlingsvalgSelectorMock, behandlingsresultatTypeSelectorMock } = vi.hoisted(() => ({
+  redigerbartSelectorMock: vi.fn(() => true),
+  handlingsvalgSelectorMock: vi.fn((): { kode: string } | undefined => undefined),
+  behandlingsresultatTypeSelectorMock: vi.fn((): string | undefined => undefined),
+}));
 
 vi.mock("react-redux", async (importOriginal) => {
   const actual = await importOriginal<typeof import("react-redux")>();
@@ -28,12 +33,18 @@ vi.mock("../../../../../ducks/oppsummertfakta", () => ({
     })),
   },
   oppsummertfaktaSelectors: {
-    ManglendeInnbetalingHandlingsvalgSelector: () => undefined,
+    ManglendeInnbetalingHandlingsvalgSelector: handlingsvalgSelectorMock,
   },
 }));
 
 vi.mock("../../../../../ducks/redigerbart", () => ({
-  redigerbartSelectors: { RedigerbartSelector: () => true },
+  redigerbartSelectors: { RedigerbartSelector: redigerbartSelectorMock },
+}));
+
+vi.mock("../../../../../ducks/behandlingsresultat", () => ({
+  behandlingsresultatSelectors: {
+    BehandlingsresultatTypeSelector: behandlingsresultatTypeSelectorMock,
+  },
 }));
 
 vi.mock("../../../../../ducks/behandlinger", () => ({
@@ -51,6 +62,8 @@ vi.mock("../../../../../modals/bekreftValgTypes", () => ({
 }));
 
 import { oppsummertfaktaOperations } from "../../../../../ducks/oppsummertfakta";
+import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
+import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import { modalerOperations } from "../../../../../ducks/modaler";
 import { BekreftValgTypes } from "../../../../../modals/bekreftValgTypes";
 import { VurderingInngangManglendeInnbetaling } from "./vurderingInngangManglendeInnbetaling";
@@ -60,6 +73,39 @@ describe("VurderingInngangManglendeInnbetaling", () => {
     dispatchMock.mockClear();
     vi.mocked(oppsummertfaktaOperations.lagreManglendeInnbetalingHandlingsvalg).mockClear();
     vi.mocked(modalerOperations.visBekreftValg).mockClear();
+    vi.mocked(redigerbartSelectors.RedigerbartSelector).mockReturnValue(true);
+    handlingsvalgSelectorMock.mockReturnValue(undefined);
+    vi.mocked(behandlingsresultatSelectors.BehandlingsresultatTypeSelector).mockReturnValue(undefined);
+  });
+
+  it.each([
+    ["OPPHØRT", /Hele perioden/, "VedtakOpphoer"],
+    ["DELVIS_OPPHØRT", /Deler av perioden/, "Inngang"],
+    ["MEDLEM_I_FOLKETRYGDEN", /Vedtaket skal endres/, "Inngang"],
+  ])("utleder radio-valg fra behandlingsresultatet %s i innsynsmodus", async (resultatType, valg, nesteStegId) => {
+    vi.mocked(redigerbartSelectors.RedigerbartSelector).mockReturnValue(false);
+    vi.mocked(behandlingsresultatSelectors.BehandlingsresultatTypeSelector).mockReturnValue(resultatType);
+    const oppdaterStatus = vi.fn();
+
+    await act(async () => {
+      render(<VurderingInngangManglendeInnbetaling bekreft={vi.fn()} aktivtSteg oppdaterStatus={oppdaterStatus} />);
+    });
+
+    expect(screen.getByRole("radio", { name: valg })).toBeChecked();
+    await waitFor(() => expect(oppdaterStatus).toHaveBeenLastCalledWith(true, nesteStegId));
+  });
+
+  it("foretrekker lagret handlingsvalg fremfor utledet resultat", async () => {
+    vi.mocked(redigerbartSelectors.RedigerbartSelector).mockReturnValue(false);
+    handlingsvalgSelectorMock.mockReturnValue({ kode: "DELER_AV_PERIODEN_OPPHØRES" });
+    vi.mocked(behandlingsresultatSelectors.BehandlingsresultatTypeSelector).mockReturnValue("OPPHØRT");
+
+    await act(async () => {
+      render(<VurderingInngangManglendeInnbetaling bekreft={vi.fn()} aktivtSteg oppdaterStatus={vi.fn()} />);
+    });
+
+    expect(screen.getByRole("radio", { name: /Deler av perioden/ })).toBeChecked();
+    expect(screen.getByRole("radio", { name: /Hele perioden/ })).not.toBeChecked();
   });
 
   it("lagrer ikke valget bare ved å velge en radioknapp", async () => {
