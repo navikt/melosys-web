@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { useLocation } from "react-router";
+import { useRuteParams } from "../../../navigering";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
@@ -94,7 +95,7 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface Props extends RouteComponentProps<MatchParams> {
+interface Props {
   behandlingOppfriskes: boolean;
   startOgVisOppfriskModal: () => void;
   visOppfriskModal: () => void;
@@ -120,8 +121,6 @@ function Saksbehandling({
   hentOppsummertFakta,
   hentVilkår,
   landkoder,
-  location,
-  match,
   redigerbart,
   resetBehandlingerState,
   resetMottatteOpplysningerState,
@@ -143,6 +142,8 @@ function Saksbehandling({
   behandlingstema,
   resetFakturaInformasjon,
 }: Props & PropsFromRedux) {
+  const location = useLocation();
+  const { saksnr } = useRuteParams<MatchParams>();
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
 
@@ -155,7 +156,6 @@ function Saksbehandling({
   };
 
   const lastInnSaksopplysninger = async () => {
-    const { saksnr } = match.params;
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
 
     try {

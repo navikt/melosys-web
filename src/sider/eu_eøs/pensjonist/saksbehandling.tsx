@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { useLocation } from "react-router";
+import { useRuteParams } from "../../../navigering";
 import { useSelector } from "react-redux";
 import { HGrid } from "@navikt/ds-react";
 import * as KV from "../../../kodeverk";
@@ -35,13 +36,9 @@ import {
 import { oppsummertfaktaOperations } from "../../../ducks/oppsummertfakta";
 import { fakturaserierOperations } from "../../../ducks/fakturaserier";
 
-interface Props extends RouteComponentProps<MatchParams> {
-  behandlingOppfriskes: boolean;
-  startOgVisOppfriskModal: (inkluderSiste5aar?: boolean | undefined) => void;
-  visOppfriskModal: () => void;
-}
-
-function Saksbehandling({ match, location }: Props) {
+function Saksbehandling() {
+  const location = useLocation();
+  const { saksnr: saksnummer } = useRuteParams<MatchParams>();
   const dispatch = useDispatch();
 
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
@@ -55,7 +52,6 @@ function Saksbehandling({ match, location }: Props) {
   const [behandlingID, setBehandlingID] = useState(-1);
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
   const [panelExpanded, setPanelExpanded] = useState(true);
-  const saksnummer = match?.params?.saksnr;
   const oppdaterBehandlingIDState = () => {
     const behandlingIDFraParam = Utils.queryString.getParam(location, "behandlingID");
 

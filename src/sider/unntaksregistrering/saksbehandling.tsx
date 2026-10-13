@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "../../hooks";
-import { RouteComponentProps } from "react-router-dom";
+import { useLocation } from "react-router";
+import { useRuteParams } from "../../navigering";
 
 import MKV from "../../melosyskodeverk";
 import * as KV from "../../kodeverk";
@@ -30,22 +31,17 @@ import "./saksbehandling.less";
 import { kontrollOperations } from "../../ducks/kontroll";
 import { menypanelOperations, menypanelSelectors } from "../../ducks/menypanel";
 
-interface SaksbehandlingProps extends RouteComponentProps<MatchParams> {
+interface SaksbehandlingProps {
   visOppfriskModal: () => void;
   behandlingOppfriskes: boolean;
   startOgVisOppfriskModal: () => void;
 }
 
-function Saksbehandling({
-  location,
-  match,
-  visOppfriskModal,
-  behandlingOppfriskes,
-  startOgVisOppfriskModal,
-}: SaksbehandlingProps) {
+function Saksbehandling({ visOppfriskModal, behandlingOppfriskes, startOgVisOppfriskModal }: SaksbehandlingProps) {
+  const location = useLocation();
+  const { saksnr: saksnummer } = useRuteParams<MatchParams>();
   const dispatch = useDispatch();
   const [saksopplysningerLastet, setSaksopplysningerLastet] = useState(false);
-  const saksnummer = match?.params?.saksnr;
 
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);

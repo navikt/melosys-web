@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 
 import useFeatureToggle from "../../featuretoggle/useFeatureToggle";
 import { MELOSYS_TEKSTBLOKKER } from "../../featuretoggle/toggleNavn";
@@ -7,7 +7,7 @@ import { ADMIN_BASE, ADMIN_TEKSTBLOKKER } from "./ruter";
 interface MenyValg {
   tittel: string;
   sti: string;
-  exact?: boolean;
+  end?: boolean;
   synlig: boolean;
 }
 
@@ -15,7 +15,7 @@ function AdministrasjonSidemeny() {
   const visTekstblokker = useFeatureToggle(MELOSYS_TEKSTBLOKKER);
 
   const valg: MenyValg[] = [
-    { tittel: "Oversikt", sti: ADMIN_BASE, exact: true, synlig: true },
+    { tittel: "Oversikt", sti: ADMIN_BASE, end: true, synlig: true },
     { tittel: "Brev- og tekstbibliotek", sti: ADMIN_TEKSTBLOKKER, synlig: Boolean(visTekstblokker) },
   ];
 
@@ -28,9 +28,12 @@ function AdministrasjonSidemeny() {
             <li key={v.sti}>
               <NavLink
                 to={v.sti}
-                exact={v.exact}
-                className="administrasjon__sidemeny-lenke"
-                activeClassName="administrasjon__sidemeny-lenke--aktiv"
+                end={v.end}
+                className={({ isActive }) =>
+                  isActive
+                    ? "administrasjon__sidemeny-lenke administrasjon__sidemeny-lenke--aktiv"
+                    : "administrasjon__sidemeny-lenke"
+                }
                 aria-current="page"
               >
                 {v.tittel}

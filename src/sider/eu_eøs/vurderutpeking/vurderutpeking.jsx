@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { connect } from "react-redux";
+import { useLocation, useParams } from "react-router";
 import PT from "prop-types";
 import { getFormValues } from "redux-form";
 
@@ -43,11 +44,7 @@ const hentForsteSteg = (behandlingstema) => {
 };
 
 function Vurderutpeking({
-  match: {
-    params: { saksnr: saksnummer },
-  },
   lastInnSaksopplysninger,
-  location,
   behandlingstema,
   hovedpartRolle,
   redigerbart,
@@ -68,6 +65,8 @@ function Vurderutpeking({
   vurderUtpekingFormValues = {},
   hentLandkoder,
 }) {
+  const location = useLocation();
+  const { saksnr: saksnummer } = useParams();
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, "behandlingID"));
 
   useEffect(() => {
@@ -153,8 +152,6 @@ function Vurderutpeking({
 
 Vurderutpeking.propTypes = {
   lastInnSaksopplysninger: PT.func.isRequired,
-  match: PT.object.isRequired,
-  location: PT.object.isRequired,
   behandlingstema: PT.string.isRequired,
   hovedpartRolle: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,

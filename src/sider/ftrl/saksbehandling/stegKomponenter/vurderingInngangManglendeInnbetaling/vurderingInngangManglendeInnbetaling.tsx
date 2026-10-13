@@ -58,7 +58,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
     watch,
     formState: { isValid: formIsValid },
   } = useForm({
-    resolver: yupResolver<FieldValues>(vurdering_inngang_manglende_innbetaling),
+    resolver: yupResolver<FieldValues, unknown, FieldValues>(vurdering_inngang_manglende_innbetaling),
     mode: "all",
     defaultValues: {
       fullstendigManglendeInnbetaling: useSelector(oppsummertfaktaSelectors.ManglendeInnbetalingHandlingsvalgSelector)

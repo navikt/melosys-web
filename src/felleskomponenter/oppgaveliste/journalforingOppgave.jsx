@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 import * as MPT from "../../proptypes";
 import * as Ikoner from "../../resources/images";

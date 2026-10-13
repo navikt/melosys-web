@@ -6,7 +6,7 @@ import SorterbarListe from "./sorterbarListe";
 import JournalforingOppgave from "../oppgaveliste/journalforingOppgave";
 import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";
 import { reduxForm } from "redux-form";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router";
 
 describe("SorterbarListe", () => {
   let props: any;
