@@ -84,7 +84,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
     mode: "all",
     defaultValues: {
       fullstendigManglendeInnbetaling:
-        lagretHandlingsvalg?.kode ?? (redigerbart === false ? utledetHandlingsvalg : undefined),
+        (redigerbart === false ? utledetHandlingsvalg : undefined) ?? lagretHandlingsvalg?.kode,
     } as FieldValues,
   });
   const formValues = watch();

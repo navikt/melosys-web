@@ -95,7 +95,7 @@ describe("VurderingInngangManglendeInnbetaling", () => {
     await waitFor(() => expect(oppdaterStatus).toHaveBeenLastCalledWith(true, nesteStegId));
   });
 
-  it("foretrekker lagret handlingsvalg fremfor utledet resultat", async () => {
+  it("foretrekker behandlingsresultatet fremfor lagret handlingsvalg i innsynsmodus", async () => {
     vi.mocked(redigerbartSelectors.RedigerbartSelector).mockReturnValue(false);
     handlingsvalgSelectorMock.mockReturnValue({ kode: "DELER_AV_PERIODEN_OPPHØRES" });
     vi.mocked(behandlingsresultatSelectors.BehandlingsresultatTypeSelector).mockReturnValue("OPPHØRT");
@@ -104,8 +104,8 @@ describe("VurderingInngangManglendeInnbetaling", () => {
       render(<VurderingInngangManglendeInnbetaling bekreft={vi.fn()} aktivtSteg oppdaterStatus={vi.fn()} />);
     });
 
-    expect(screen.getByRole("radio", { name: /Deler av perioden/ })).toBeChecked();
-    expect(screen.getByRole("radio", { name: /Hele perioden/ })).not.toBeChecked();
+    expect(screen.getByRole("radio", { name: /Hele perioden/ })).toBeChecked();
+    expect(screen.getByRole("radio", { name: /Deler av perioden/ })).not.toBeChecked();
   });
 
   it("lagrer ikke valget bare ved å velge en radioknapp", async () => {
