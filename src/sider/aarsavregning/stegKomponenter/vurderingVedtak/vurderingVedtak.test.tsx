@@ -500,7 +500,10 @@ describe("MELOSYS-7114: Obligatorisk begrunnelse", () => {
 import { act, fireEvent } from "@testing-library/react";
 
 describe("Blokkert vedtakssteg for ustøttet EØS-sakstype", () => {
-  const lagBlokkertState = (toggles: Record<string, boolean> = {}, redigerbart = true) => ({
+  const lagBlokkertState = (
+    toggles: Record<string, boolean> = { "melosys.arsavregning.eos_tjenesteperson": true },
+    redigerbart = true,
+  ) => ({
     behandlinger: {
       status: "OK",
       data: {
@@ -593,7 +596,7 @@ describe("Blokkert vedtakssteg for ustøttet EØS-sakstype", () => {
   ])("viser den blokkerende meldingen: $blokkert ($navn)", async ({ blokkert, redigerbart }) => {
     await renderWithProvidersAsync(<VurderingVedtak {...mockProps} />, {
       preloadedState: lagBlokkertState(
-        blokkert ? {} : { "melosys.arsavregning.eos_tjenesteperson": true },
+        blokkert ? { "melosys.arsavregning.eos_tjenesteperson": true } : {},
         redigerbart,
       ) as any,
     });
@@ -644,7 +647,7 @@ describe("Blokkert vedtakssteg for ustøttet EØS-sakstype", () => {
 
   it("aktiverer «Fatt vedtak» og fatter vedtak når sakstypen er støttet", async () => {
     const { container } = await renderWithProvidersAsync(<VurderingVedtak {...mockProps} />, {
-      preloadedState: lagBlokkertState({ "melosys.arsavregning.eos_tjenesteperson": true }) as any,
+      preloadedState: lagBlokkertState({}) as any,
     });
 
     await waitFor(() => {
