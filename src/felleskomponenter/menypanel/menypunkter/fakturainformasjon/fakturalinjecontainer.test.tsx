@@ -5,15 +5,6 @@ vi.mock("../../../kopierbarTekst", () => ({
   default: ({ children }: any) => <span>{children}</span>,
 }));
 
-vi.mock("../../../labelMedHjelpetekst", () => ({
-  default: ({ label, hjelpetekst }: any) => (
-    <div>
-      <span>{label}</span>
-      {hjelpetekst && <span>{hjelpetekst}</span>}
-    </div>
-  ),
-}));
-
 vi.mock("../../../../utils", () => ({
   _uuid: () => String(Math.random()),
   _isEmpty: (val: any) => !val || val.length === 0,
@@ -67,24 +58,16 @@ describe("FakturaLinjeContainer", () => {
       beskrivelse: "Trygdeavgift 1. kvartal 2024",
     } as any;
     render(<FakturaLinjeContainer faktura={faktura} />);
-    expect(screen.getByText(/Trygdeavgift 1. kvartal 2024/)).toBeDefined();
-    expect(screen.queryByText(/Slå den opp i OeBS/)).toBeNull();
+    expect(screen.getByText("Beskrivelse: Trygdeavgift 1. kvartal 2024")).toBeDefined();
   });
 
-  it("sier fra når beskrivelsen ikke er lagret", () => {
+  it("viser strek når beskrivelsen ikke er lagret", () => {
     const faktura = {
       eksternFakturaNummer: "F-1",
       fakturaLinje: [],
       beskrivelse: null,
     } as any;
     render(<FakturaLinjeContainer faktura={faktura} />);
-    expect(screen.getByText(/Beskrivelse: ikke lagret/)).toBeDefined();
-    expect(screen.getByText(/Slå den opp i OeBS/)).toBeDefined();
-  });
-
-  it("viser ingen beskrivelse når faktureringskomponenten ikke sender feltet", () => {
-    const faktura = { eksternFakturaNummer: "F-1", fakturaLinje: [] } as any;
-    render(<FakturaLinjeContainer faktura={faktura} />);
-    expect(screen.queryByText(/Beskrivelse:/)).toBeNull();
+    expect(screen.getByText("Beskrivelse: -")).toBeDefined();
   });
 });
