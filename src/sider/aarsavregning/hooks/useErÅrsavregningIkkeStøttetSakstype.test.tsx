@@ -43,14 +43,7 @@ const renderMedState = (state: ReturnType<typeof lagState>) => {
 };
 
 describe("useErÅrsavregningIkkeStøttetSakstype", () => {
-  it("blokkerer EØS pensjonist (TRYGDEAVGIFT) når toggle er av", () => {
-    const { result } = renderMedState(
-      lagState({ sakstype: "EU_EOS", sakstema: "TRYGDEAVGIFT", behandlingstema: "PENSJONIST" }),
-    );
-    expect(result.current).toBe(true);
-  });
-
-  it("blokkerer ikke EØS pensjonist når toggle er på", () => {
+  it("blokkerer EØS pensjonist (TRYGDEAVGIFT) når toggle er på", () => {
     const { result } = renderMedState(
       lagState({
         sakstype: "EU_EOS",
@@ -59,21 +52,17 @@ describe("useErÅrsavregningIkkeStøttetSakstype", () => {
         toggles: { "melosys.arsavregning.eos_pensjonist": true },
       }),
     );
-    expect(result.current).toBe(false);
-  });
-
-  it("blokkerer EØS tjenesteperson (MEDLEMSKAP_LOVVALG) når toggle er av", () => {
-    const { result } = renderMedState(
-      lagState({
-        sakstype: "EU_EOS",
-        sakstema: "MEDLEMSKAP_LOVVALG",
-        behandlingstema: "ARBEID_TJENESTEPERSON_ELLER_FLY",
-      }),
-    );
     expect(result.current).toBe(true);
   });
 
-  it("blokkerer ikke EØS tjenesteperson når toggle er på", () => {
+  it("blokkerer ikke EØS pensjonist når toggle er av", () => {
+    const { result } = renderMedState(
+      lagState({ sakstype: "EU_EOS", sakstema: "TRYGDEAVGIFT", behandlingstema: "PENSJONIST" }),
+    );
+    expect(result.current).toBe(false);
+  });
+
+  it("blokkerer EØS tjenesteperson (MEDLEMSKAP_LOVVALG) når toggle er på", () => {
     const { result } = renderMedState(
       lagState({
         sakstype: "EU_EOS",
@@ -82,12 +71,28 @@ describe("useErÅrsavregningIkkeStøttetSakstype", () => {
         toggles: { "melosys.arsavregning.eos_tjenesteperson": true },
       }),
     );
+    expect(result.current).toBe(true);
+  });
+
+  it("blokkerer ikke EØS tjenesteperson når toggle er av", () => {
+    const { result } = renderMedState(
+      lagState({
+        sakstype: "EU_EOS",
+        sakstema: "MEDLEMSKAP_LOVVALG",
+        behandlingstema: "ARBEID_TJENESTEPERSON_ELLER_FLY",
+      }),
+    );
     expect(result.current).toBe(false);
   });
 
   it("blokkerer ikke andre sakstype/tema/behandlingstema-kombinasjoner", () => {
     const { result } = renderMedState(
-      lagState({ sakstype: "FTRL", sakstema: "TRYGDEAVGIFT", behandlingstema: "PENSJONIST" }),
+      lagState({
+        sakstype: "FTRL",
+        sakstema: "TRYGDEAVGIFT",
+        behandlingstema: "PENSJONIST",
+        toggles: { "melosys.arsavregning.eos_pensjonist": true },
+      }),
     );
     expect(result.current).toBe(false);
   });
@@ -98,6 +103,7 @@ describe("useErÅrsavregningIkkeStøttetSakstype", () => {
         sakstype: "EU_EOS",
         sakstema: "TRYGDEAVGIFT",
         behandlingstema: "ARBEID_TJENESTEPERSON_ELLER_FLY",
+        toggles: { "melosys.arsavregning.eos_tjenesteperson": true },
       }),
     );
     expect(result.current).toBe(true);
@@ -109,6 +115,7 @@ describe("useErÅrsavregningIkkeStøttetSakstype", () => {
         sakstype: "FTRL",
         sakstema: "MEDLEMSKAP_LOVVALG",
         behandlingstema: "ARBEID_TJENESTEPERSON_ELLER_FLY",
+        toggles: { "melosys.arsavregning.eos_tjenesteperson": true },
       }),
     );
     expect(result.current).toBe(false);

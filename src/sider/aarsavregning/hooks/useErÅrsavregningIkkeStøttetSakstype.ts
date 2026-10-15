@@ -13,7 +13,7 @@ const { PENSJONIST, ARBEID_TJENESTEPERSON_ELLER_FLY } = MKV.Koder.behandlinger.b
  * Årsavregning for EØS pensjonist og EØS offentlig tjenesteperson/flyvende personell
  * opprettes automatisk, men selve gjennomføringen av årsavregningsbehandlingen støttes ikke ennå.
  * Returnerer true når saksbehandler skal blokkeres fra å bekrefte årsavregningssteget eller fatte
- * årsavregningsvedtak. Blokkeringen fjernes per sakstype når respektiv toggle slås på.
+ * årsavregningsvedtak. Blokkeringen gjelder per sakstype når respektiv toggle er slått på.
  */
 export function useErÅrsavregningIkkeStøttetSakstype(): boolean {
   const sakstype = useSelector(fagsakSelectors.SakstypeKodeSelector);
