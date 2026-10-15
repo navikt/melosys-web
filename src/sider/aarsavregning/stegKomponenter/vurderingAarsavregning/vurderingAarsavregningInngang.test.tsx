@@ -55,7 +55,7 @@ const lagState = ({
   redigerbart = true,
   sakstema = "MEDLEMSKAP_LOVVALG",
   behandlingstema = "ARBEID_TJENESTEPERSON_ELLER_FLY",
-  toggles = { "melosys.arsavregning.eos_pensjonist": true },
+  toggles = { "melosys.arsavregning.eos_pensjonist": true, "melosys.arsavregning.eos_tjenesteperson": true },
 }: {
   redigerbart?: boolean;
   sakstema?: string;
@@ -142,11 +142,11 @@ describe("VurderingAarsavregningInngang — ustøttet EØS-sakstype", () => {
       lagState({
         redigerbart,
         toggles: blokkert
-          ? { "melosys.arsavregning.eos_pensjonist": true }
-          : {
+          ? {
               "melosys.arsavregning.eos_pensjonist": true,
               "melosys.arsavregning.eos_tjenesteperson": true,
-            },
+            }
+          : { "melosys.arsavregning.eos_pensjonist": true },
       });
 
     it(`viser meldingen: ${blokkert}`, async () => {

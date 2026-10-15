@@ -31,6 +31,7 @@ import {
 } from "./tekster";
 import { BrevMottakereTabell } from "./mottakertabell/brevMottakereTabell";
 import { Lovvalgsperiode } from "./lovvalgsperiode";
+import { utledVedtakstype } from "./utledVedtakstype";
 import vurderingVedtakSchema from "./vurderingVedtakSchema";
 import "./vurderingVedtak.less";
 
@@ -71,6 +72,7 @@ export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
   const lagretInnledningFritekst = useSelector(behandlingsresultatSelectors.InnledningFritekstSelector);
   const lagretNyVurderingBakgrunn = useSelector(behandlingsresultatSelectors.NyVurderingBakgrunnSelector);
   const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
+  const vedtakstypeForVedtak = utledVedtakstype(vedtakstype, behandlingstype);
 
   const erNyVurderingBakgrunnValgFritekst = (nyVurderingBakgrunnValg?: string): boolean => {
     return !MKV.KTObjects.begrunnelser.nyvurderingbakgrunner?.some((bakgrunn: KTObject) => {
@@ -115,7 +117,7 @@ export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
     await dispatch(
       kontrollOperations.kontrollerFerdigbehandling({
         behandlingID,
-        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        vedtakstype: vedtakstypeForVedtak,
         skalRegisteropplysningerOppdateres: false,
       }),
     );
@@ -170,7 +172,7 @@ export function VurderingVedtak({ aktivtSteg, tilbake }: Props) {
     dispatch(
       vedtakOperations.fatt(behandlingID, {
         behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
-        vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+        vedtakstype: vedtakstypeForVedtak,
       }),
     );
 
