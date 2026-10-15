@@ -10,6 +10,12 @@ interface FakturaLinjeContainerProps {
 export function FakturaLinjeContainer({ faktura }: FakturaLinjeContainerProps) {
   return (
     <div className="fakturalinje">
+      {!faktura.eksternFakturaNummer && (
+        <Nav.Alert variant="info" className="fakturanr-varsel">
+          Fakturanummer er bare kjent i Melosys når det gjelder en manglende innbetaling, du kan likevel finne faktura i
+          OeBS ved å søke på bruker
+        </Nav.Alert>
+      )}
       <div className="fakturanr_wrapper">
         Fakturanr:&nbsp;
         <KopierbarTekst hovertekst="">
@@ -17,14 +23,6 @@ export function FakturaLinjeContainer({ faktura }: FakturaLinjeContainerProps) {
         </KopierbarTekst>
       </div>
       <div className="fakturabeskrivelse_wrapper">Beskrivelse: {faktura.beskrivelse ?? "-"}</div>
-      <div className="fakturalinje">
-        {!faktura.eksternFakturaNummer && (
-          <Nav.Alert variant="info">
-            Fakturanummer er bare kjent i Melosys når det gjelder en manglende innbetaling, du kan likevel finne faktura
-            i OeBS ved å søke på bruker
-          </Nav.Alert>
-        )}
-      </div>
 
       <Nav.Table>
         <Nav.Table.Header>

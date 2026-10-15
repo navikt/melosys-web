@@ -76,6 +76,37 @@ exports[`Faktura > snapshot test 1`] = `
               style="display: none;"
             >
               <div class="fakturalinje">
+                <div
+                  data-color="info"
+                  data-variant="info"
+                  class="fakturanr-varsel aksel-alert aksel-alert--info aksel-alert--small"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    fill="none"
+                    viewbox="0 0 24 24"
+                    focusable="false"
+                    role="img"
+                    aria-labelledby="333"
+                    class="aksel-alert__icon"
+                  >
+                    <title id="333">
+                      Informasjon
+                    </title>
+                    <path
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      d="M3.25 4A.75.75 0 0 1 4 3.25h16a.75.75 0 0 1 .75.75v16a.75.75 0 0 1-.75.75H4a.75.75 0 0 1-.75-.75zM11 7.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0m-1.25 3a.75.75 0 0 1 .75-.75H12a.75.75 0 0 1 .75.75v4.75h.75a.75.75 0 0 1 0 1.5h-3a.75.75 0 0 1 0-1.5h.75v-4h-.75a.75.75 0 0 1-.75-.75"
+                      clip-rule="evenodd"
+                    >
+                    </path>
+                  </svg>
+                  <div class="aksel-alert__wrapper aksel-alert__wrapper--maxwidth aksel-body-long aksel-body-long--small">
+                    Fakturanummer er bare kjent i Melosys når det gjelder en manglende innbetaling, du kan likevel finne faktura i OeBS ved å søke på bruker
+                  </div>
+                </div>
                 <div class="fakturanr_wrapper">
                   Fakturanr:&nbsp;
                   <span class="kopierbar-tekst">
@@ -115,39 +146,6 @@ exports[`Faktura > snapshot test 1`] = `
                 </div>
                 <div class="fakturabeskrivelse_wrapper">
                   Beskrivelse: -
-                </div>
-                <div class="fakturalinje">
-                  <div
-                    data-color="info"
-                    data-variant="info"
-                    class="aksel-alert aksel-alert--info aksel-alert--small"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="1em"
-                      height="1em"
-                      fill="none"
-                      viewbox="0 0 24 24"
-                      focusable="false"
-                      role="img"
-                      aria-labelledby="333"
-                      class="aksel-alert__icon"
-                    >
-                      <title id="333">
-                        Informasjon
-                      </title>
-                      <path
-                        fill="currentColor"
-                        fill-rule="evenodd"
-                        d="M3.25 4A.75.75 0 0 1 4 3.25h16a.75.75 0 0 1 .75.75v16a.75.75 0 0 1-.75.75H4a.75.75 0 0 1-.75-.75zM11 7.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0m-1.25 3a.75.75 0 0 1 .75-.75H12a.75.75 0 0 1 .75.75v4.75h.75a.75.75 0 0 1 0 1.5h-3a.75.75 0 0 1 0-1.5h.75v-4h-.75a.75.75 0 0 1-.75-.75"
-                        clip-rule="evenodd"
-                      >
-                      </path>
-                    </svg>
-                    <div class="aksel-alert__wrapper aksel-alert__wrapper--maxwidth aksel-body-long aksel-body-long--small">
-                      Fakturanummer er bare kjent i Melosys når det gjelder en manglende innbetaling, du kan likevel finne faktura i OeBS ved å søke på bruker
-                    </div>
-                  </div>
                 </div>
                 <table class="aksel-table aksel-table--small">
                   <thead class="aksel-table__header">
