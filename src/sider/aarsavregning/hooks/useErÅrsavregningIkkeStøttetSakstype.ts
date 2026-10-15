@@ -29,7 +29,7 @@ export function useErÅrsavregningIkkeStøttetSakstype(): boolean {
   const erEøsTjenesteperson = sakstype === EU_EOS && behandlingstema === ARBEID_TJENESTEPERSON_ELLER_FLY;
 
   return (
-    (erEøsTrygdeavgiftPensjonist && !erÅrsavregningEøsPensjonistToggleEnabled) ||
-    (erEøsTjenesteperson && !erÅrsavregningEøsTjenestepersonToggleEnabled)
+    (erEøsTrygdeavgiftPensjonist && erÅrsavregningEøsPensjonistToggleEnabled === true) ||
+    (erEøsTjenesteperson && erÅrsavregningEøsTjenestepersonToggleEnabled === true)
   );
 }
