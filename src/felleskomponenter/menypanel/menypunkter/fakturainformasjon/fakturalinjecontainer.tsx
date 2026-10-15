@@ -9,7 +9,8 @@ interface FakturaLinjeContainerProps {
 }
 
 export function FakturaLinjeContainer({ faktura }: FakturaLinjeContainerProps) {
-  const harBeskrivelse = faktura.beskrivelse !== undefined;
+  // undefined: faktureringskomponenten sender ikke feltet ennå
+  const visBeskrivelse = faktura.beskrivelse !== undefined;
 
   return (
     <div className="fakturalinje">
@@ -19,15 +20,13 @@ export function FakturaLinjeContainer({ faktura }: FakturaLinjeContainerProps) {
           {!faktura.eksternFakturaNummer ? " - " : faktura.eksternFakturaNummer}
         </KopierbarTekst>
       </div>
-      {harBeskrivelse && (
+      {visBeskrivelse && (
         <div className="fakturabeskrivelse_wrapper">
           <LabelMedHjelpetekst
             label={`Beskrivelse: ${faktura.beskrivelse ?? "ikke lagret"}`}
             hjelpetekst={
-              faktura.beskrivelseErUtledet
-                ? faktura.beskrivelse
-                  ? "Denne teksten er gjenskapt av Melosys. Teksten som står på fakturaen i OeBS kan være en annen."
-                  : "Melosys har ikke lagret hvilken tekst som ble sendt til OeBS for denne fakturaen. Slå den opp i OeBS."
+              faktura.beskrivelse === null
+                ? "Melosys har ikke lagret hvilken tekst som ble sendt til OeBS for denne fakturaen. Slå den opp i OeBS."
                 : null
             }
           />

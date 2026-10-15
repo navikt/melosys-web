@@ -60,39 +60,26 @@ describe("FakturaLinjeContainer", () => {
     expect(screen.getByText("Totalt")).toBeDefined();
   });
 
-  it("viser lagret beskrivelse uten forbehold", () => {
+  it("viser lagret beskrivelse", () => {
     const faktura = {
       eksternFakturaNummer: "F-1",
       fakturaLinje: [],
       beskrivelse: "Trygdeavgift 1. kvartal 2024",
-      beskrivelseErUtledet: false,
     } as any;
     render(<FakturaLinjeContainer faktura={faktura} />);
     expect(screen.getByText(/Trygdeavgift 1. kvartal 2024/)).toBeDefined();
-    expect(screen.queryByText(/gjenskapt av Melosys/)).toBeNull();
+    expect(screen.queryByText(/Slå den opp i OeBS/)).toBeNull();
   });
 
-  it("tar forbehold når beskrivelsen er utledet", () => {
-    const faktura = {
-      eksternFakturaNummer: "F-1",
-      fakturaLinje: [],
-      beskrivelse: "Trygdeavgift 1. kvartal 2024",
-      beskrivelseErUtledet: true,
-    } as any;
-    render(<FakturaLinjeContainer faktura={faktura} />);
-    expect(screen.getByText(/gjenskapt av Melosys/)).toBeDefined();
-  });
-
-  it("sier fra når beskrivelsen ikke kan utledes", () => {
+  it("sier fra når beskrivelsen ikke er lagret", () => {
     const faktura = {
       eksternFakturaNummer: "F-1",
       fakturaLinje: [],
       beskrivelse: null,
-      beskrivelseErUtledet: true,
     } as any;
     render(<FakturaLinjeContainer faktura={faktura} />);
     expect(screen.getByText(/Beskrivelse: ikke lagret/)).toBeDefined();
-    expect(screen.getByText(/ikke lagret hvilken tekst som ble sendt til OeBS/)).toBeDefined();
+    expect(screen.getByText(/Slå den opp i OeBS/)).toBeDefined();
   });
 
   it("viser ingen beskrivelse når faktureringskomponenten ikke sender feltet", () => {
