@@ -62,6 +62,8 @@ export interface Faktura {
   periodeTil: string;
   eksternFakturaStatus: FakturaTilbakemelding[];
   eksternFakturaNummer?: string;
+  // Fakturateksten som sendes til OeBS. null hvis fakturaen ble bestilt før vi begynte å lagre teksten.
+  beskrivelse: string | null;
 }
 
 export interface FakturaLinje {

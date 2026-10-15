@@ -50,4 +50,24 @@ describe("FakturaLinjeContainer", () => {
     expect(screen.getAllByText("3000 kr")).toHaveLength(2);
     expect(screen.getByText("Totalt")).toBeDefined();
   });
+
+  it("viser lagret beskrivelse", () => {
+    const faktura = {
+      eksternFakturaNummer: "F-1",
+      fakturaLinje: [],
+      beskrivelse: "Trygdeavgift 1. kvartal 2024",
+    } as any;
+    render(<FakturaLinjeContainer faktura={faktura} />);
+    expect(screen.getByText("Beskrivelse: Trygdeavgift 1. kvartal 2024")).toBeDefined();
+  });
+
+  it("viser strek når beskrivelsen ikke er lagret", () => {
+    const faktura = {
+      eksternFakturaNummer: "F-1",
+      fakturaLinje: [],
+      beskrivelse: null,
+    } as any;
+    render(<FakturaLinjeContainer faktura={faktura} />);
+    expect(screen.getByText("Beskrivelse: -")).toBeDefined();
+  });
 });
