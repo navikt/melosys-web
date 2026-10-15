@@ -18,7 +18,14 @@ const authLink = setContext((_, { headers }) => {
 
 const apolloClient = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      // Delspørringene mangler objekt-ID-er og må flettes uten å overskrive hverandre.
+      // Overlappende lister må hente samme felter, siden listeverdier fortsatt erstattes.
+      Saksopplysninger: { merge: true },
+      Personopplysninger: { merge: true },
+    },
+  }),
 });
 
 export default apolloClient;

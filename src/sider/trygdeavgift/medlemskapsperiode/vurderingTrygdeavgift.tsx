@@ -126,24 +126,32 @@ export function VurderingTrygdeavgift({ bekreft, tilbake, aktivtSteg, oppdaterSt
   } = useFieldArray({ control: control as any, name: "inntektskilder" }) as any;
   const formValues = watch();
 
-  const aktivFeilmeldingType = finnAktivFeilmelding(
-    formValues?.inntektskilder,
-    formValues?.skatteforholdsperioder,
-    medlemskapsperioder,
-    innvilgetMedlemskapsperiode,
-  );
-
   const trygdeavgiftErIkkeTom = !Utils._isEmpty(lagretTrygdeavgift?.trygdeavgiftsperioder);
+
+  const innvilgedeMedlemskapsperioder = medlemskapsperioder.filter(
+    (periode) => periode.innvilgelsesResultat === MKV.Koder.innvilgelsesResultat.INNVILGET,
+  );
 
   const skalIkkeBeregneForelopigTrygdeavgift =
     skalIkkeViseTidligerePerioderToggle &&
-    medlemskapsperioder.length > 0 &&
-    medlemskapsperioder.every((periode) => new Date(periode.tomDato).getFullYear() < new Date().getFullYear());
+    innvilgedeMedlemskapsperioder.length > 0 &&
+    innvilgedeMedlemskapsperioder.every(
+      (periode) => new Date(periode.tomDato).getFullYear() < new Date().getFullYear(),
+    );
 
   const skalViseSkatteforholdOgInntektsperioder =
     !skalIkkeViseTidligerePerioderToggle ||
     (trygdeavgiftErIkkeTom && !redigerbart) ||
     !skalIkkeBeregneForelopigTrygdeavgift;
+
+  const aktivFeilmeldingType = skalViseSkatteforholdOgInntektsperioder
+    ? finnAktivFeilmelding(
+        formValues?.inntektskilder,
+        formValues?.skatteforholdsperioder,
+        medlemskapsperioder,
+        innvilgetMedlemskapsperiode,
+      )
+    : undefined;
 
   const harMedlemskapsperiodeFraTidligereÅr = harPerioderFraTidligereÅr(medlemskapsperioder);
   const beregningErGyldig = formIsValid && !feilMeldingBlokkerer(aktivFeilmeldingType);

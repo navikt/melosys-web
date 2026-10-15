@@ -7,17 +7,17 @@ import MKV from "../../melosyskodeverk";
 // Mock icons
 vi.mock("../../resources/images", () => ({
   LockOpenFilled: ({ color }: { color: string }) => (
-    <div data-testid="lock-open" data-color={color}>
+    <div data-testid="lock-open" data-icon-color={color}>
       LockOpen
     </div>
   ),
   LockClosedFilled: ({ color }: { color: string }) => (
-    <div data-testid="lock-closed" data-color={color}>
+    <div data-testid="lock-closed" data-icon-color={color}>
       LockClosed
     </div>
   ),
   ClockFilled: ({ color }: { color: string }) => (
-    <div data-testid="clock" data-color={color}>
+    <div data-testid="clock" data-icon-color={color}>
       Clock
     </div>
   ),
@@ -70,7 +70,7 @@ describe("Behandlingsstatus", () => {
 
       const ikon = screen.getByTestId("lock-open");
       expect(ikon).toBeInTheDocument();
-      expect(ikon).toHaveAttribute("data-color", "#0056B4");
+      expect(ikon).toHaveAttribute("data-icon-color", "#0056B4");
     });
 
     it("skal vise LockOpenFilled ikon for UNDER_BEHANDLING status", () => {
@@ -83,7 +83,7 @@ describe("Behandlingsstatus", () => {
 
       const ikon = screen.getByTestId("lock-open");
       expect(ikon).toBeInTheDocument();
-      expect(ikon).toHaveAttribute("data-color", "#0056B4");
+      expect(ikon).toHaveAttribute("data-icon-color", "#0056B4");
     });
 
     it("skal vise LockOpenFilled ikon for SVAR_ANMODNING_MOTTATT status", () => {
@@ -108,7 +108,7 @@ describe("Behandlingsstatus", () => {
 
       const ikon = screen.getByTestId("lock-open");
       expect(ikon).toBeInTheDocument();
-      expect(ikon).toHaveAttribute("data-color", "#D47B00");
+      expect(ikon).toHaveAttribute("data-icon-color", "#D47B00");
     });
 
     it("skal vise ClockFilled ikon for AVVENT_DOK_UTL status", () => {
@@ -121,7 +121,7 @@ describe("Behandlingsstatus", () => {
 
       const ikon = screen.getByTestId("clock");
       expect(ikon).toBeInTheDocument();
-      expect(ikon).toHaveAttribute("data-color", "#0056B4");
+      expect(ikon).toHaveAttribute("data-icon-color", "#0056B4");
     });
 
     it("skal vise ClockFilled ikon for AVVENT_DOK_PART status", () => {
@@ -170,7 +170,7 @@ describe("Behandlingsstatus", () => {
 
       const ikon = screen.getByTestId("clock");
       expect(ikon).toBeInTheDocument();
-      expect(ikon).toHaveAttribute("data-color", "#D47B00");
+      expect(ikon).toHaveAttribute("data-icon-color", "#D47B00");
     });
 
     it("skal vise LockClosedFilled ikon for IVERKSETTER_VEDTAK status", () => {
@@ -183,7 +183,7 @@ describe("Behandlingsstatus", () => {
 
       const ikon = screen.getByTestId("lock-closed");
       expect(ikon).toBeInTheDocument();
-      expect(ikon).toHaveAttribute("data-color", "#6A6A6A");
+      expect(ikon).toHaveAttribute("data-icon-color", "#6A6A6A");
     });
 
     it("skal vise LockClosedFilled ikon for MIDLERTIDIG_LOVVALGSBESLUTNING status", () => {

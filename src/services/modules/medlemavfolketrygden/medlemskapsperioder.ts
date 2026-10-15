@@ -6,8 +6,10 @@ import type { MedlemskapsperiodeDto, BasePeriode } from "../types/periodeTyper";
  * Request DTO for opprettelse/oppdatering av medlemskapsperiode.
  * Utledet fra MedlemskapsperiodeDto, men tomDato er valgfri.
  */
-export interface OppdaterMedlemskapsperiode
-  extends Pick<MedlemskapsperiodeDto, "fomDato" | "innvilgelsesResultat" | "bestemmelse" | "trygdedekning"> {
+export interface OppdaterMedlemskapsperiode extends Pick<
+  MedlemskapsperiodeDto,
+  "fomDato" | "innvilgelsesResultat" | "bestemmelse" | "trygdedekning"
+> {
   tomDato?: string | null;
 }
 

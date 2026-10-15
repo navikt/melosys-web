@@ -74,7 +74,7 @@ export function VilkaarOgBegrunnelser({
         defaultValue={vilkårErValgt}
         readOnly={!redigerbart}
       >
-        <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
+        <Stack gap="space-24" direction={{ xs: "column", sm: "row" }} wrap={false}>
           <Nav.Radio value>Ja</Nav.Radio>
           <Nav.Radio value={false}>Nei</Nav.Radio>
         </Stack>

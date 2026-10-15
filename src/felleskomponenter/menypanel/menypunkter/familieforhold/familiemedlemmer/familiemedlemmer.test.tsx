@@ -1,4 +1,4 @@
-import { MockedProvider } from "@apollo/client/testing";
+import { MockedProvider } from "@apollo/client/testing/react";
 import Familiemedlemmer from "./familiemedlemmer";
 import { HentFamiliemedlemmerDocument } from "./hentFamiliemedlemmer.generated";
 import { Familierelasjonsrolle } from "../../../../../graphql";

@@ -12,7 +12,7 @@ const vurderingManglendeInnbetalingValg = [
 export type VurderingInngangManglendeInnbetaling = (typeof vurderingManglendeInnbetalingValg)[number];
 
 const vurdering_inngang_manglende_innbetaling = object().shape({
-  fullstendigManglendeInnbetaling: string()
+  manglendeInnbetalingHandlingsvalg: string()
     .oneOf([...vurderingManglendeInnbetalingValg])
     .required(MAA_FYLLES_UT),
 });

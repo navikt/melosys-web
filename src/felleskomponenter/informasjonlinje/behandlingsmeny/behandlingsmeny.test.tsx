@@ -57,7 +57,7 @@ describe("Behandlingsmeny", () => {
     expect(screen.getAllByRole("button", { name: "Til min oppgaveliste" })).toHaveLength(1);
     expect(screen.queryByText("Legg behandlingen i mine oppgaver")).not.toBeInTheDocument();
     expect(tildel).toHaveClass("behandlingsmeny__handling");
-    expect(tildel.closest(".navds-accordion__content")).toContainElement(screen.getByText("Til felles oppgaveliste"));
+    expect(tildel.closest(".aksel-accordion__content")).toContainElement(screen.getByText("Til felles oppgaveliste"));
     await user.click(tildel);
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(screen.getByText("Ola Nordmann", { selector: "strong" })).toBeInTheDocument();

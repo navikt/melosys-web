@@ -56,7 +56,7 @@ describe("SumArsavregningTabell - Toggle Disabled", () => {
 
   it("viser raden for forrige års Avgiftssystem med riktig ledetekst når verdi er oppgitt", () => {
     const { rerender } = render(
-      <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereAarsavregningInnbetaltTrygdeavgift={5000} />,
+      <SumArsavregningTabell harGrunnlagIMelosys={false} tilbakelagtInnbetaltTrygdeavgift={5000} />,
     );
     // Label for previous year's value in a correction scenario
     const previousRow = screen.getByText("Tidligere trygdeavgift fra Avgiftssystemet").closest("tr");
@@ -98,13 +98,29 @@ describe("SumArsavregningTabell - Toggle Disabled", () => {
         nyTrygdeavgift={50000}
         tidligereTrygdeavgift={20000}
         tidligereInnbetaltTrygdeavgift={10000} // Current year input
-        tidligereAarsavregningInnbetaltTrygdeavgift={5000} // Previous year value
+        tilbakelagtInnbetaltTrygdeavgift={5000} // Lagt tilbake av backend
         harGrunnlagIMelosys={true}
       />,
     );
     // Sum = 50000 - 20000 - 10000 + 5000 = 25000
     const differanseRow = screen.getByText("Differanse").closest("tr");
     expect(within(differanseRow!).getByText("25 000 kr")).toBeInTheDocument();
+  });
+
+  it("viser beløp til fakturering fra backend i stedet for summen av radene", () => {
+    render(
+      <SumArsavregningTabell
+        harGrunnlagIMelosys={true}
+        nyTrygdeavgift={50000}
+        tidligereTrygdeavgift={20000}
+        tidligereInnbetaltTrygdeavgift={10000}
+        tilbakelagtInnbetaltTrygdeavgift={5000}
+        tilFaktureringBeloep={12345}
+      />,
+    );
+    // Lokal utregning ville gitt 25 000; backendens beløp vises
+    const differanseRow = screen.getByText("Differanse").closest("tr");
+    expect(within(differanseRow!).getByText("12 345 kr")).toBeInTheDocument();
   });
 
   it("håndterer negativ differanse med unicode-minus", () => {
@@ -120,7 +136,7 @@ describe("SumArsavregningTabell - Toggle Disabled", () => {
         nyTrygdeavgift={50000}
         tidligereTrygdeavgift={20000}
         tidligereInnbetaltTrygdeavgift={10000}
-        tidligereAarsavregningInnbetaltTrygdeavgift={5000}
+        tilbakelagtInnbetaltTrygdeavgift={5000}
         harGrunnlagIMelosys={true}
       />,
     );
@@ -157,7 +173,7 @@ describe("SumArsavregningTabell - Toggle Enabled", () => {
 
   it("viser raden for forrige års Avgiftssystem med riktig ledetekst når verdi er oppgitt", () => {
     const { rerender } = render(
-      <SumArsavregningTabell harGrunnlagIMelosys={false} tidligereAarsavregningInnbetaltTrygdeavgift={5000} />,
+      <SumArsavregningTabell harGrunnlagIMelosys={false} tilbakelagtInnbetaltTrygdeavgift={5000} />,
     );
     // Label for previous year's value in a correction scenario
     const previousRow = screen.getByText("Tidligere innbetalt trygdeavgift").closest("tr");

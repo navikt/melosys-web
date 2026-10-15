@@ -45,7 +45,7 @@ function Pensjonsopptjening() {
 
   return (
     <div className="panel panelSeksjon">
-      <Nav.VStack gap="6">
+      <Nav.VStack gap="space-24">
         <Nav.Heading level="2">Pensjonsopptjening</Nav.Heading>
 
         {pensjonsopptjening.status === STATUS.PENDING && <Nav.Loader />}

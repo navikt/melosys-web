@@ -79,7 +79,7 @@ test.describe("'Utenfor avtaleland' behandlingslogikk", () => {
     // Click and wait for navigation to complete (behandling creation triggers navigation to frontpage)
     // This ensures the POST is fully completed and captured in recordings
     await Promise.all([
-      page.waitForURL(/\/melosys\/$/, { timeout: 15000 }),
+      page.waitForURL(/\/melosys\/?$/, { timeout: 15000 }),
       opprettNySakPage.klikkOpprettNyBehandling(),
     ]);
 

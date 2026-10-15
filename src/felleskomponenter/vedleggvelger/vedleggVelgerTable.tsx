@@ -31,7 +31,7 @@ function VedleggVelgerTable({
   const vedleggErMarkert = (vedlegg: TilgjengeligStandardvedlegg | FysiskDokument) =>
     Boolean(
       ("type" in vedlegg && valgteVedlegg.standardvedlegg?.type === vedlegg.type) ||
-        ("id" in vedlegg && valgteVedlegg.saksvedlegg.find((valgtVedlegg) => valgtVedlegg.id === vedlegg.id)),
+      ("id" in vedlegg && valgteVedlegg.saksvedlegg.find((valgtVedlegg) => valgtVedlegg.id === vedlegg.id)),
     );
 
   const harSaksdokumenter = !Utils._isEmpty(alleSaksvedlegg);

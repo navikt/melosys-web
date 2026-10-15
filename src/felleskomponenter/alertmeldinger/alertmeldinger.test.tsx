@@ -27,7 +27,7 @@ describe("Alertmeldinger", () => {
     it("skal ha info variant", () => {
       const { container } = render(<Innsynsmelding />);
 
-      const alert = container.querySelector(".navds-alert--info");
+      const alert = container.querySelector(".aksel-alert--info");
       expect(alert).toBeInTheDocument();
     });
 
@@ -54,7 +54,7 @@ describe("Alertmeldinger", () => {
     it("skal ha info variant", () => {
       const { container } = render(<VirksomhetMelding />);
 
-      const alert = container.querySelector(".navds-alert--info");
+      const alert = container.querySelector(".aksel-alert--info");
       expect(alert).toBeInTheDocument();
     });
 
@@ -75,7 +75,7 @@ describe("Alertmeldinger", () => {
     it("skal ha warning variant", () => {
       const { container } = render(<IngenFlytMelding />);
 
-      const alert = container.querySelector(".navds-alert--warning");
+      const alert = container.querySelector(".aksel-alert--warning");
       expect(alert).toBeInTheDocument();
     });
 
@@ -110,7 +110,7 @@ describe("Alertmeldinger", () => {
     it("skal ha warning variant", () => {
       const { container } = render(<NyVurderingMelding />);
 
-      const alert = container.querySelector(".navds-alert--warning");
+      const alert = container.querySelector(".aksel-alert--warning");
       expect(alert).toBeInTheDocument();
     });
 
@@ -154,7 +154,7 @@ describe("Alertmeldinger", () => {
         <StandardMeldingOverst variant="error" actionEtterSynlighet={mockAction} melding="Error melding" />,
       );
 
-      const alert = container.querySelector(".navds-alert--error");
+      const alert = container.querySelector(".aksel-alert--error");
       expect(alert).toBeInTheDocument();
     });
 
@@ -246,7 +246,7 @@ describe("Alertmeldinger", () => {
         <StandardMeldingOverst variant="success" actionEtterSynlighet={mockAction} melding="Success!" />,
       );
 
-      const alert = container.querySelector(".navds-alert--success");
+      const alert = container.querySelector(".aksel-alert--success");
       expect(alert).toBeInTheDocument();
     });
 
@@ -256,7 +256,7 @@ describe("Alertmeldinger", () => {
         <StandardMeldingOverst variant="warning" actionEtterSynlighet={mockAction} melding="Warning!" />,
       );
 
-      const alert = container.querySelector(".navds-alert--warning");
+      const alert = container.querySelector(".aksel-alert--warning");
       expect(alert).toBeInTheDocument();
     });
 

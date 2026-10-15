@@ -1,9 +1,9 @@
-import { Controller, UseControllerProps } from "react-hook-form";
-import { forwardRef, ReactNode } from "react";
+import { Controller, FieldValues } from "react-hook-form";
+import { ReactNode } from "react";
 
 import * as Nav from "../../navFrontend";
 
-import { RegisterHookFormProps } from "./misc/reacthookProps";
+import { ReactHookFormControllerProps, RegisterHookFormProps } from "./misc/reacthookProps";
 import { getErrorMessage } from "./misc/mapFeilmelding";
 import { _uuid } from "../../utils";
 
@@ -39,29 +39,33 @@ function InnerCheckboxComponent({ readOnly, ...rest }: CheckboxInnerComponentPro
   );
 }
 
-type CheckboxProps = CheckboxComponentProps & UseControllerProps;
+type CheckboxProps<TFieldValues extends FieldValues = FieldValues> = CheckboxComponentProps &
+  ReactHookFormControllerProps<TFieldValues>;
 
-const Checkbox = forwardRef<HTMLSelectElement, CheckboxProps>(
-  ({ name, control, checked, ...rest }: CheckboxProps, _ref: any) => {
-    return (
-      <Controller
-        name={name}
-        control={control}
-        render={({ field, formState }) => (
-          <InnerCheckboxComponent
-            {...field}
-            {...rest}
-            checked={checked !== undefined ? checked : field.value}
-            onChange={(event: any) => {
-              field.onChange(event);
-              if (rest.onChange) rest.onChange(event);
-            }}
-            feil={getErrorMessage(field, formState)}
-          />
-        )}
-      />
-    );
-  },
-);
+function Checkbox<TFieldValues extends FieldValues = FieldValues>({
+  name,
+  control,
+  checked,
+  ...rest
+}: CheckboxProps<TFieldValues>) {
+  return (
+    <Controller<TFieldValues>
+      name={name}
+      control={control}
+      render={({ field, formState }) => (
+        <InnerCheckboxComponent
+          {...field}
+          {...rest}
+          checked={checked !== undefined ? checked : field.value}
+          onChange={(event: any) => {
+            field.onChange(event);
+            if (rest.onChange) rest.onChange(event);
+          }}
+          feil={getErrorMessage(field, formState)}
+        />
+      )}
+    />
+  );
+}
 
 export default Checkbox;

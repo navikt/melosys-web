@@ -21,7 +21,7 @@ import { STEG, FANE_STATUS } from "./stegMotor";
 describe("Stegvelger - Component Structure", () => {
   it("kan importeres uten feil", () => {
     expect(Stegvelger).toBeDefined();
-    expect(typeof Stegvelger).toBe("function"); // Redux connect returnerer en funksjon
+    expect(typeof Stegvelger).toBe("object"); // Redux connect returnerer en React.memo-komponent
   });
 
   it("STEG enum eksisterer", () => {

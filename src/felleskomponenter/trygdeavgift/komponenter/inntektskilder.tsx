@@ -115,7 +115,13 @@ export function Inntektskilder({
     if (settesDefaultArbAvgBetales(kildetype)) {
       defaultArbAvgBetales = kildetype === ARBEIDSINNTEKT_FRA_NORGE ? BOOLSK_STRING.SANN : BOOLSK_STRING.USANN;
     }
-    update(index, { ...formValues.inntektskilder[index], kildetype, arbAvgBetales: defaultArbAvgBetales });
+    const inntektskilde = formValues.inntektskilder[index];
+    update(index, {
+      ...inntektskilde,
+      kildetype,
+      arbAvgBetales: defaultArbAvgBetales,
+      erMaanedsbelop: inntektskilde.erMaanedsbelop ?? BOOLSK_STRING.SANN,
+    });
   };
 
   const handleEndreArbAvgBetales = (index: number, arbAvgBetales: string) => {
@@ -201,7 +207,7 @@ export function Inntektskilder({
                     control={control}
                     onChange={(value) => handleEndreArbAvgBetales(index, value)}
                   >
-                    <Stack gap="6" direction={{ xs: "column", sm: "row" }} wrap={false}>
+                    <Stack gap="space-24" direction={{ xs: "column", sm: "row" }} wrap={false}>
                       <Nav.Radio
                         value={BOOLSK_STRING.SANN}
                         disabled={!redigerbart || settesDefaultArbAvgBetales(inntektskilde.kildetype)}

@@ -5,6 +5,7 @@ coverage
 node_modules
 nais
 *.md
+pnpm-lock.yaml
 
 src/graphql/generated/**
 **/*generated.tsx

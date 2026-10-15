@@ -1,146 +1,16 @@
-import * as Types from '../../../../../../graphql/generated/types';
-import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+import type * as Types from '../../../../../../graphql/generated/types';
 
-const defaultOptions = {} as const;
-
-export type HentAdresserQueryVariables = Types.Exact<{
-  behandlingID: Types.Scalars['Long'];
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+export type HentAdresserQueryVariables = Exact<{
+  behandlingID: number;
 }>;
 
 
-export type HentAdresserQuery = (
-  { __typename?: 'Query' }
-  & { hentSaksopplysninger: (
-    { __typename?: 'Saksopplysninger' }
-    & { persondata: (
-      { __typename?: 'Personopplysninger' }
-      & { bostedsadresser: Array<(
-        { __typename?: 'Bostedsadresse' }
-        & Pick<Types.Bostedsadresse, 'coAdressenavn' | 'gyldigFraOgMed' | 'gyldigTilOgMed' | 'kilde' | 'master' | 'erHistorisk'>
-        & { adresse: (
-          { __typename?: 'StrukturertAdresseformat' }
-          & Pick<Types.StrukturertAdresseformat, 'tilleggsnavn' | 'gatenavn' | 'husnummerEtasjeLeilighet' | 'postboks' | 'postnummer' | 'poststed' | 'region' | 'land'>
-        ) }
-      )>, oppholdsadresser: Array<(
-        { __typename?: 'Oppholdsadresse' }
-        & Pick<Types.Oppholdsadresse, 'coAdressenavn' | 'gyldigFraOgMed' | 'gyldigTilOgMed' | 'kilde' | 'master' | 'erHistorisk'>
-        & { adresse: (
-          { __typename?: 'StrukturertAdresseformat' }
-          & Pick<Types.StrukturertAdresseformat, 'tilleggsnavn' | 'gatenavn' | 'husnummerEtasjeLeilighet' | 'postboks' | 'postnummer' | 'poststed' | 'region' | 'land'>
-        ) }
-      )>, kontaktadresser: Array<(
-        { __typename?: 'Kontaktadresse' }
-        & Pick<Types.Kontaktadresse, 'coAdressenavn' | 'gyldigFraOgMed' | 'gyldigTilOgMed' | 'master' | 'kilde' | 'erHistorisk'>
-        & { semistrukturertAdresse?: Types.Maybe<(
-          { __typename?: 'SemistrukturertAdresseformat' }
-          & Pick<Types.SemistrukturertAdresseformat, 'adresselinje1' | 'adresselinje2' | 'adresselinje3' | 'adresselinje4' | 'postnummer' | 'poststed' | 'land'>
-        )>, strukturertAdresse?: Types.Maybe<(
-          { __typename?: 'StrukturertAdresseformat' }
-          & Pick<Types.StrukturertAdresseformat, 'tilleggsnavn' | 'gatenavn' | 'husnummerEtasjeLeilighet' | 'postboks' | 'postnummer' | 'poststed' | 'region' | 'land'>
-        )> }
-      )> }
-    ) }
-  ) }
-);
+export type HentAdresserQuery = { hentSaksopplysninger: { persondata: { bostedsadresser: Array<{ coAdressenavn: string | null, gyldigFraOgMed: string | null, gyldigTilOgMed: string | null, kilde: string | null, master: string, erHistorisk: boolean, adresse: { tilleggsnavn: string | null, gatenavn: string | null, husnummerEtasjeLeilighet: string | null, postboks: string | null, postnummer: string | null, poststed: string | null, region: string | null, land: string } }>, oppholdsadresser: Array<{ coAdressenavn: string | null, gyldigFraOgMed: string | null, gyldigTilOgMed: string | null, kilde: string | null, master: string, erHistorisk: boolean, adresse: { tilleggsnavn: string | null, gatenavn: string | null, husnummerEtasjeLeilighet: string | null, postboks: string | null, postnummer: string | null, poststed: string | null, region: string | null, land: string } }>, kontaktadresser: Array<{ coAdressenavn: string | null, gyldigFraOgMed: string | null, gyldigTilOgMed: string | null, master: string, kilde: string | null, erHistorisk: boolean, semistrukturertAdresse: { adresselinje1: string | null, adresselinje2: string | null, adresselinje3: string | null, adresselinje4: string | null, postnummer: string | null, poststed: string | null, land: string } | null, strukturertAdresse: { tilleggsnavn: string | null, gatenavn: string | null, husnummerEtasjeLeilighet: string | null, postboks: string | null, postnummer: string | null, poststed: string | null, region: string | null, land: string } | null }> } } };
 
 
-export const HentAdresserDocument = gql`
-    query hentAdresser($behandlingID: Long!) {
-  hentSaksopplysninger(behandlingID: $behandlingID) {
-    persondata {
-      bostedsadresser {
-        coAdressenavn
-        adresse {
-          tilleggsnavn
-          gatenavn
-          husnummerEtasjeLeilighet
-          postboks
-          postnummer
-          poststed
-          region
-          land
-        }
-        gyldigFraOgMed
-        gyldigTilOgMed
-        kilde
-        master
-        erHistorisk
-      }
-      oppholdsadresser {
-        coAdressenavn
-        adresse {
-          tilleggsnavn
-          gatenavn
-          husnummerEtasjeLeilighet
-          postboks
-          postnummer
-          poststed
-          region
-          land
-        }
-        gyldigFraOgMed
-        gyldigTilOgMed
-        kilde
-        master
-        erHistorisk
-      }
-      kontaktadresser {
-        coAdressenavn
-        semistrukturertAdresse {
-          adresselinje1
-          adresselinje2
-          adresselinje3
-          adresselinje4
-          postnummer
-          poststed
-          land
-        }
-        strukturertAdresse {
-          tilleggsnavn
-          gatenavn
-          husnummerEtasjeLeilighet
-          postboks
-          postnummer
-          poststed
-          region
-          land
-        }
-        gyldigFraOgMed
-        gyldigTilOgMed
-        master
-        kilde
-        erHistorisk
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useHentAdresserQuery__
- *
- * To run a query within a React component, call `useHentAdresserQuery` and pass it any options that fit your needs.
- * When your component renders, `useHentAdresserQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useHentAdresserQuery({
- *   variables: {
- *      behandlingID: // value for 'behandlingID'
- *   },
- * });
- */
-export function useHentAdresserQuery(baseOptions: Apollo.QueryHookOptions<HentAdresserQuery, HentAdresserQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<HentAdresserQuery, HentAdresserQueryVariables>(HentAdresserDocument, options);
-      }
-export function useHentAdresserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HentAdresserQuery, HentAdresserQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<HentAdresserQuery, HentAdresserQueryVariables>(HentAdresserDocument, options);
-        }
-export type HentAdresserQueryHookResult = ReturnType<typeof useHentAdresserQuery>;
-export type HentAdresserLazyQueryHookResult = ReturnType<typeof useHentAdresserLazyQuery>;
-export type HentAdresserQueryResult = Apollo.QueryResult<HentAdresserQuery, HentAdresserQueryVariables>;
+export const HentAdresserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"hentAdresser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"behandlingID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Long"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hentSaksopplysninger"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"behandlingID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"behandlingID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"persondata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"bostedsadresser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"coAdressenavn"}},{"kind":"Field","name":{"kind":"Name","value":"adresse"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tilleggsnavn"}},{"kind":"Field","name":{"kind":"Name","value":"gatenavn"}},{"kind":"Field","name":{"kind":"Name","value":"husnummerEtasjeLeilighet"}},{"kind":"Field","name":{"kind":"Name","value":"postboks"}},{"kind":"Field","name":{"kind":"Name","value":"postnummer"}},{"kind":"Field","name":{"kind":"Name","value":"poststed"}},{"kind":"Field","name":{"kind":"Name","value":"region"}},{"kind":"Field","name":{"kind":"Name","value":"land"}}]}},{"kind":"Field","name":{"kind":"Name","value":"gyldigFraOgMed"}},{"kind":"Field","name":{"kind":"Name","value":"gyldigTilOgMed"}},{"kind":"Field","name":{"kind":"Name","value":"kilde"}},{"kind":"Field","name":{"kind":"Name","value":"master"}},{"kind":"Field","name":{"kind":"Name","value":"erHistorisk"}}]}},{"kind":"Field","name":{"kind":"Name","value":"oppholdsadresser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"coAdressenavn"}},{"kind":"Field","name":{"kind":"Name","value":"adresse"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tilleggsnavn"}},{"kind":"Field","name":{"kind":"Name","value":"gatenavn"}},{"kind":"Field","name":{"kind":"Name","value":"husnummerEtasjeLeilighet"}},{"kind":"Field","name":{"kind":"Name","value":"postboks"}},{"kind":"Field","name":{"kind":"Name","value":"postnummer"}},{"kind":"Field","name":{"kind":"Name","value":"poststed"}},{"kind":"Field","name":{"kind":"Name","value":"region"}},{"kind":"Field","name":{"kind":"Name","value":"land"}}]}},{"kind":"Field","name":{"kind":"Name","value":"gyldigFraOgMed"}},{"kind":"Field","name":{"kind":"Name","value":"gyldigTilOgMed"}},{"kind":"Field","name":{"kind":"Name","value":"kilde"}},{"kind":"Field","name":{"kind":"Name","value":"master"}},{"kind":"Field","name":{"kind":"Name","value":"erHistorisk"}}]}},{"kind":"Field","name":{"kind":"Name","value":"kontaktadresser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"coAdressenavn"}},{"kind":"Field","name":{"kind":"Name","value":"semistrukturertAdresse"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adresselinje1"}},{"kind":"Field","name":{"kind":"Name","value":"adresselinje2"}},{"kind":"Field","name":{"kind":"Name","value":"adresselinje3"}},{"kind":"Field","name":{"kind":"Name","value":"adresselinje4"}},{"kind":"Field","name":{"kind":"Name","value":"postnummer"}},{"kind":"Field","name":{"kind":"Name","value":"poststed"}},{"kind":"Field","name":{"kind":"Name","value":"land"}}]}},{"kind":"Field","name":{"kind":"Name","value":"strukturertAdresse"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tilleggsnavn"}},{"kind":"Field","name":{"kind":"Name","value":"gatenavn"}},{"kind":"Field","name":{"kind":"Name","value":"husnummerEtasjeLeilighet"}},{"kind":"Field","name":{"kind":"Name","value":"postboks"}},{"kind":"Field","name":{"kind":"Name","value":"postnummer"}},{"kind":"Field","name":{"kind":"Name","value":"poststed"}},{"kind":"Field","name":{"kind":"Name","value":"region"}},{"kind":"Field","name":{"kind":"Name","value":"land"}}]}},{"kind":"Field","name":{"kind":"Name","value":"gyldigFraOgMed"}},{"kind":"Field","name":{"kind":"Name","value":"gyldigTilOgMed"}},{"kind":"Field","name":{"kind":"Name","value":"master"}},{"kind":"Field","name":{"kind":"Name","value":"kilde"}},{"kind":"Field","name":{"kind":"Name","value":"erHistorisk"}}]}}]}}]}}]}}]} as unknown as DocumentNode<HentAdresserQuery, HentAdresserQueryVariables>;

@@ -68,7 +68,7 @@ describe("UnntakHjelpetekst", () => {
   it("skal ha Box wrapper med riktig padding og background", () => {
     const { container } = render(<UnntakHjelpetekst />);
 
-    const box = container.querySelector(".navds-box");
+    const box = container.querySelector(".aksel-box");
     expect(box).toBeInTheDocument();
   });
 
@@ -117,7 +117,7 @@ describe("UnntakHjelpetekst", () => {
     const { container } = render(<UnntakHjelpetekst />);
 
     // Verify the component rendered without errors
-    expect(container.querySelector(".navds-box")).toBeInTheDocument();
+    expect(container.querySelector(".aksel-box")).toBeInTheDocument();
 
     // Check that all main texts are present
     expect(container.textContent).toContain("For å søke om unntak, må du:");

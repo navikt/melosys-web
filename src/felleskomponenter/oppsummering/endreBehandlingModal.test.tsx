@@ -1,7 +1,7 @@
 import React from "react";
 import { waitFor, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import EndreBehandlingModal from "./endreBehandlingModal";
 import { renderWithProviders } from "../../ducks/test-utils/renderWithProviders";

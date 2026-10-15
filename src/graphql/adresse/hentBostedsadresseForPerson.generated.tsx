@@ -1,87 +1,16 @@
-import * as Types from '../generated/types';
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+import type * as Types from '../generated/types';
 
-import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
-
-const defaultOptions =  {}
-export type HentBostedsadresseForPersonQueryVariables = Types.Exact<{
-  ident: Types.Scalars['String'];
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+export type HentBostedsadresseForPersonQueryVariables = Exact<{
+  ident: string;
 }>;
 
 
-export type HentBostedsadresseForPersonQuery = (
-  { __typename?: 'Query' }
-  & { hentPersonopplysninger: (
-    { __typename?: 'Personopplysninger' }
-    & { bostedsadresser: Array<(
-      { __typename?: 'Bostedsadresse' }
-      & Pick<Types.Bostedsadresse, 'coAdressenavn' | 'gyldigFraOgMed' | 'gyldigTilOgMed' | 'kilde' | 'master' | 'erHistorisk'>
-      & { adresse: (
-        { __typename?: 'StrukturertAdresseformat' }
-        & Pick<Types.StrukturertAdresseformat, 'tilleggsnavn' | 'gatenavn' | 'husnummerEtasjeLeilighet' | 'postboks' | 'postnummer' | 'poststed' | 'region' | 'land'>
-      ) }
-    )>, navn: (
-      { __typename?: 'Navn' }
-      & Pick<Types.Navn, 'fornavn' | 'mellomnavn' | 'etternavn'>
-    ) }
-  ) }
-);
+export type HentBostedsadresseForPersonQuery = { hentPersonopplysninger: { bostedsadresser: Array<{ coAdressenavn: string | null, gyldigFraOgMed: string | null, gyldigTilOgMed: string | null, kilde: string | null, master: string, erHistorisk: boolean, adresse: { tilleggsnavn: string | null, gatenavn: string | null, husnummerEtasjeLeilighet: string | null, postboks: string | null, postnummer: string | null, poststed: string | null, region: string | null, land: string } }>, navn: { fornavn: string, mellomnavn: string | null, etternavn: string } } };
 
 
-export const HentBostedsadresseForPersonDocument = gql`
-    query hentBostedsadresseForPerson($ident: String!) {
-  hentPersonopplysninger(ident: $ident) {
-    bostedsadresser {
-      coAdressenavn
-      adresse {
-        tilleggsnavn
-        gatenavn
-        husnummerEtasjeLeilighet
-        postboks
-        postnummer
-        poststed
-        region
-        land
-      }
-      gyldigFraOgMed
-      gyldigTilOgMed
-      kilde
-      master
-      erHistorisk
-    }
-    navn {
-      fornavn
-      mellomnavn
-      etternavn
-    }
-  }
-}
-    `;
-
-/**
- * __useHentBostedsadresseForPersonQuery__
- *
- * To run a query within a React component, call `useHentBostedsadresseForPersonQuery` and pass it any options that fit your needs.
- * When your component renders, `useHentBostedsadresseForPersonQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useHentBostedsadresseForPersonQuery({
- *   variables: {
- *      ident: // value for 'ident'
- *   },
- * });
- */
-export function useHentBostedsadresseForPersonQuery(baseOptions: Apollo.QueryHookOptions<HentBostedsadresseForPersonQuery, HentBostedsadresseForPersonQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<HentBostedsadresseForPersonQuery, HentBostedsadresseForPersonQueryVariables>(HentBostedsadresseForPersonDocument, options);
-      }
-export function useHentBostedsadresseForPersonLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HentBostedsadresseForPersonQuery, HentBostedsadresseForPersonQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<HentBostedsadresseForPersonQuery, HentBostedsadresseForPersonQueryVariables>(HentBostedsadresseForPersonDocument, options);
-        }
-export type HentBostedsadresseForPersonQueryHookResult = ReturnType<typeof useHentBostedsadresseForPersonQuery>;
-export type HentBostedsadresseForPersonLazyQueryHookResult = ReturnType<typeof useHentBostedsadresseForPersonLazyQuery>;
-export type HentBostedsadresseForPersonQueryResult = Apollo.QueryResult<HentBostedsadresseForPersonQuery, HentBostedsadresseForPersonQueryVariables>;
+export const HentBostedsadresseForPersonDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"hentBostedsadresseForPerson"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ident"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hentPersonopplysninger"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ident"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ident"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"bostedsadresser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"coAdressenavn"}},{"kind":"Field","name":{"kind":"Name","value":"adresse"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tilleggsnavn"}},{"kind":"Field","name":{"kind":"Name","value":"gatenavn"}},{"kind":"Field","name":{"kind":"Name","value":"husnummerEtasjeLeilighet"}},{"kind":"Field","name":{"kind":"Name","value":"postboks"}},{"kind":"Field","name":{"kind":"Name","value":"postnummer"}},{"kind":"Field","name":{"kind":"Name","value":"poststed"}},{"kind":"Field","name":{"kind":"Name","value":"region"}},{"kind":"Field","name":{"kind":"Name","value":"land"}}]}},{"kind":"Field","name":{"kind":"Name","value":"gyldigFraOgMed"}},{"kind":"Field","name":{"kind":"Name","value":"gyldigTilOgMed"}},{"kind":"Field","name":{"kind":"Name","value":"kilde"}},{"kind":"Field","name":{"kind":"Name","value":"master"}},{"kind":"Field","name":{"kind":"Name","value":"erHistorisk"}}]}},{"kind":"Field","name":{"kind":"Name","value":"navn"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fornavn"}},{"kind":"Field","name":{"kind":"Name","value":"mellomnavn"}},{"kind":"Field","name":{"kind":"Name","value":"etternavn"}}]}}]}}]}}]} as unknown as DocumentNode<HentBostedsadresseForPersonQuery, HentBostedsadresseForPersonQueryVariables>;

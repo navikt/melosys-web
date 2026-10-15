@@ -4,15 +4,15 @@ exports[`Begrunnelser > snapshot test 1`] = `
 
 <div>
   <div class="begrunnelser">
-    <p class="begrunnelseTittel navds-body-long navds-body-long--small navds-typo--semibold">
+    <p class="begrunnelseTittel aksel-body-long aksel-body-long--small aksel-typo--semibold">
       Begrunnelser
     </p>
-    <p class="begrunnelse navds-body-long navds-body-long--small">
+    <p class="begrunnelse aksel-body-long aksel-body-long--small">
       Term1
     </p>
-    <p class="begrunnelse navds-body-long navds-body-long--small">
+    <p class="begrunnelse aksel-body-long aksel-body-long--small">
     </p>
-    <p class="begrunnelse navds-body-long navds-body-long--small">
+    <p class="begrunnelse aksel-body-long aksel-body-long--small">
       Term3
     </p>
   </div>

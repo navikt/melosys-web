@@ -6,8 +6,10 @@ import * as Utils from "../../../utils";
 
 import "../skjema.less";
 
-interface SelectWrappedComponentBaseProps
-  extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "size" | "multiple"> {
+interface SelectWrappedComponentBaseProps extends Omit<
+  React.SelectHTMLAttributes<HTMLSelectElement>,
+  "size" | "multiple"
+> {
   emptyFieldDisabled?: boolean;
   label?: string | React.ReactElement;
   children?: React.ReactNode;
@@ -18,7 +20,6 @@ interface SelectWrappedComponentBaseProps
   error?: React.ReactNode;
   readonly?: boolean;
   errorId?: string;
-  htmlSize?: number;
   id?: string;
 }
 
@@ -39,7 +40,6 @@ function SelectWrappedComponent({
   className,
   readonly,
   errorId,
-  htmlSize,
   ...rest
 }: SelectWrappedComponentProps) {
   const { touched, active } = meta;
@@ -65,7 +65,6 @@ function SelectWrappedComponent({
       className={className ?? ""}
       readOnly={readonly ?? false}
       errorId={errorId}
-      htmlSize={htmlSize}
       {...inputProps}
     >
       <option disabled={emptyFieldDisabled} value="">

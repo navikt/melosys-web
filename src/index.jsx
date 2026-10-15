@@ -2,11 +2,12 @@
 // bruker de egendefinerte yup-metodene, så de må være registrert først. Importeres et
 // slikt schema indirekte av App-treet, feiler det ellers med "erIkkeBlank is not a function".
 import "./setupYup";
+import "./setupReselect";
 
 import { createRoot } from "react-dom/client";
 import { Provider as ReduxProvider } from "react-redux";
-import { ApolloProvider } from "@apollo/client";
-import { Router } from "react-router-dom";
+import { ApolloProvider } from "@apollo/client/react";
+import { BrowserRouter } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import App from "./App";
 import AppErrorBoundary from "./felleskomponenter/appErrorBoundary/appErrorBoundary";
@@ -14,7 +15,9 @@ import AppErrorBoundary from "./felleskomponenter/appErrorBoundary/appErrorBound
 import "./index.less";
 import "@navikt/ds-css";
 
-import { store, history } from "./store";
+import { store } from "./store";
+import * as Constants from "./constants";
+import { NavigeringRegistrering } from "./navigering";
 import { unregister } from "./registerServiceWorker";
 import { FellesHandlersProvider } from "./contexts";
 import Modals from "./modals";
@@ -30,7 +33,8 @@ const root = createRoot(container);
 
 root.render(
   <ReduxProvider store={store}>
-    <Router history={history}>
+    <BrowserRouter basename={Constants.URL_BASENAME}>
+      <NavigeringRegistrering />
       <ApolloProvider client={apolloClient}>
         <QueryClientProvider client={queryClient}>
           <App isDevelopmentProfile={isDevelopmentProfile}>
@@ -43,7 +47,7 @@ root.render(
           </App>
         </QueryClientProvider>
       </ApolloProvider>
-    </Router>
+    </BrowserRouter>
   </ReduxProvider>,
 );
 

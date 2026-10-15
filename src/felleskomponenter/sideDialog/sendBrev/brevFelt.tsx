@@ -37,8 +37,7 @@ function BrevFelt({
   betingelser,
 }: BrevFeltProps) {
   const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state)) as
-    | SyncErrors
-    | undefined;
+    SyncErrors | undefined;
   const formValues = useSelector((state: RootState) => getFormValues(KV.Form.SEND_BREV)(state)) as SendBrevFormValues;
 
   // Sjekk om dette feltet er påkrevd og mangler verdi

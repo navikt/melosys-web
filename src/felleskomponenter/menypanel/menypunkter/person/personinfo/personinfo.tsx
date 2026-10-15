@@ -8,7 +8,8 @@ import Personstatus from "./personstatus/personstatus";
 import Fødsel from "./fødsel/fødsel";
 import useHentPersonopplysninger from "../../../../informasjonlinje/useHentpersonopplysninger";
 
-import { useHentPersoninfoQuery } from "./hentPersoninfo.generated";
+import { useQuery } from "@apollo/client/react";
+import { HentPersoninfoDocument } from "./hentPersoninfo.generated";
 
 import "./personinfo.less";
 
@@ -23,7 +24,7 @@ function PersonInfo({ behandlingID, ...props }: PersonInfoProps) {
     data: personinfoData,
     loading: personinfoLoading,
     error: personinfoError,
-  } = useHentPersoninfoQuery({ variables: { behandlingID } });
+  } = useQuery(HentPersoninfoDocument, { variables: { behandlingID } });
   const [endreFokus, setEndreFokus] = useState(props.endreFokus);
 
   useEffect(() => {

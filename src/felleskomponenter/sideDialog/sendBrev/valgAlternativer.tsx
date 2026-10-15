@@ -127,7 +127,7 @@ function ValgAlternativer({
   if (valg.valgType === DokumenterV2.ValgType.RADIO) {
     return (
       <Skjema.RadioGroup legend={label} name={`felt.${feltKode}.valg`} readOnly={!redigerbart} error={feilmelding}>
-        <Nav.HStack gap="4">
+        <Nav.HStack gap="space-16">
           {valg.valgAlternativer.map((alternativ) => (
             <Nav.Radio
               value={alternativ.kode}

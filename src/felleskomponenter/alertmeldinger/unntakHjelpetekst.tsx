@@ -4,7 +4,7 @@ import * as Nav from "../../navFrontend";
 
 function UnntakHjelpetekst() {
   return (
-    <Box padding="4" background="surface-subtle">
+    <Box padding="space-16" background="neutral-soft">
       <Nav.List title="For å søke om unntak, må du:">
         <Nav.List.Item>
           sende nødvendige brev via «Send brev» -menyen.

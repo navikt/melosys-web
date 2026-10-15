@@ -790,9 +790,9 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
     ) {
       return Boolean(
         formIsValid &&
-          aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag &&
-          feilmelding === undefined &&
-          arrayValideringsfeil === undefined,
+        aarsavregningResponse?.nyttTrygdeavgiftsGrunnlag &&
+        feilmelding === undefined &&
+        arrayValideringsfeil === undefined,
       );
     }
     if (endeligAvgiftValg === MANUELL_ENDELIG_AVGIFT) {
@@ -896,6 +896,8 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   const tidligereAarsavregningInnbetaltTrygdeavgift =
     initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereInnbetaltTrygdeavgift;
 
+  const tilbakelagtInnbetaltTrygdeavgift = aarsavregningResponse?.avregning?.tilbakelagtInnbetaltTrygdeavgift;
+
   const tidligereAarsavregningErManueltBeregnet = Boolean(
     initiellData.aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger
       ?.tidligereÅrsavregningManueltAvgiftBeloep,
@@ -910,7 +912,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
   return (
     <div className="vurderingAarsavregning">
       {harInnbetaltTrygdeavgift && (
-        <Nav.Box className="innbetaltTrygdeavgiftInputPanel" background="surface-subtle">
+        <Nav.Box className="innbetaltTrygdeavgiftInputPanel" background="neutral-soft">
           <Nav.Heading level="2" className="aarsavregning_seksjon_heading">
             Innbetalt trygdeavgift
           </Nav.Heading>
@@ -923,7 +925,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
         </Nav.Box>
       )}
 
-      <Nav.Box className="endeligAvgiftValg_boks" background="surface-subtle">
+      <Nav.Box className="endeligAvgiftValg_boks" background="neutral-soft">
         <EndeligAvgiftValgRadioGroup
           control={control}
           redigerbart={skjemaErRedigerbart}
@@ -1069,7 +1071,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             nyTrygdeavgift={aarsavregningResponse?.avregning?.beregnetAvgiftBelop}
             tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
             tidligereInnbetaltTrygdeavgift={aarsavregningResponse?.avregning?.innbetaltTrygdeavgift}
-            tidligereAarsavregningInnbetaltTrygdeavgift={tidligereAarsavregningInnbetaltTrygdeavgift}
+            tilbakelagtInnbetaltTrygdeavgift={tilbakelagtInnbetaltTrygdeavgift}
           />
         )}
 
@@ -1083,7 +1085,7 @@ export function AarsavregningUtenEllerDeltGrunnlagForm({
             nyTrygdeavgift={Number(manueltAvgiftBeloep)}
             tidligereTrygdeavgift={aarsavregningResponse?.avregning?.tidligereFakturertBeloep}
             tidligereInnbetaltTrygdeavgift={innbetaltTrygdeavgift ? Number(innbetaltTrygdeavgift) : undefined}
-            tidligereAarsavregningInnbetaltTrygdeavgift={tidligereAarsavregningInnbetaltTrygdeavgift}
+            tilbakelagtInnbetaltTrygdeavgift={tilbakelagtInnbetaltTrygdeavgift}
           />
         )}
 

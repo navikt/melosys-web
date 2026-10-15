@@ -1,4 +1,4 @@
-import { Route, Switch } from "react-router-dom";
+import { Route, Routes } from "react-router";
 import * as MKV from "@navikt/melosys-kodeverk";
 import Forside from "./sider/forside";
 import Unntaksperioder from "./sider/eu_eøs/registrering/unntaksperioder";
@@ -26,12 +26,11 @@ import { MELOSYS_ADMINISTRASJON } from "./featuretoggle/toggleNavn";
 import { FellesHandlersContext } from "./contexts";
 import ErrorBoundary from "./felleskomponenter/errorBoundary";
 
-function AdministrasjonRute(props) {
+function AdministrasjonRute() {
   const togglePaa = useFeatureToggle(MELOSYS_ADMINISTRASJON);
-  // UkjentSide logger og viser stien, så den må få location videre.
-  if (togglePaa === false) return <UkjentSide location={props.location} />;
+  if (togglePaa === false) return <UkjentSide />;
   if (togglePaa === undefined) return null;
-  return <AdministrasjonSide {...props} />;
+  return <AdministrasjonSide />;
 }
 
 const { EU_EOS, FTRL, TRYGDEAVTALE } = MKV.Koder.sakstyper;
@@ -40,11 +39,10 @@ function Routing() {
   return (
     <FellesHandlersContext.Consumer>
       {(fellesHandlers) => (
-        <Switch>
+        <Routes>
           <Route
-            exact
             path="/"
-            render={(props) => (
+            element={
               <ErrorBoundary
                 kontekster={[
                   {
@@ -53,81 +51,54 @@ function Routing() {
                   },
                 ]}
               >
-                <Forside {...props} {...fellesHandlers} />
+                <Forside {...fellesHandlers} />
               </ErrorBoundary>
-            )}
+            }
           />
           <Route
-            exact
             path="/sok"
-            render={(props) => (
+            element={
               <ErrorBoundary
                 kontekster={[
                   { slice: "fagsaker", varselTekst: "Det har oppstått en feil: Kunne ikke hente fagsaker" },
                   { slice: "oppgaver", varselTekst: "Det har oppstått en feil: Kunne ikke søke etter oppgaver" },
                 ]}
               >
-                <Sok {...props} />
+                <Sok />
               </ErrorBoundary>
-            )}
+            }
           />
           <Route
-            exact
             path={`/${EU_EOS}/registrering/:saksnr/unntaksperioder`}
-            render={(props) => <Unntaksperioder {...props} {...fellesHandlers} />}
+            element={<Unntaksperioder {...fellesHandlers} />}
           />
           <Route
-            exact
             path={`/${EU_EOS}/registrering/:saksnr/anmodningunntak`}
-            render={(props) => <Anmodningsunntak {...props} {...fellesHandlers} />}
+            element={<Anmodningsunntak {...fellesHandlers} />}
           />
+          <Route path={`/${EU_EOS}/saksbehandling/:saksnr/*`} element={<EuEøsSaksbehandling {...fellesHandlers} />} />
+          <Route path={`/${FTRL}/saksbehandling/:saksnr/*`} element={<FtrlSaksbehandling {...fellesHandlers} />} />
+          <Route path="/:sakstype/ikkeYrkesaktiv/:saksnr/*" element={<IkkeYrkesaktiv {...fellesHandlers} />} />
           <Route
-            path={`/${EU_EOS}/saksbehandling/:saksnr`}
-            render={(props) => <EuEøsSaksbehandling {...props} {...fellesHandlers} />}
+            path={`/${TRYGDEAVTALE}/saksbehandling/:saksnr/*`}
+            element={<TrygdeavtaleSaksbehandling {...fellesHandlers} />}
           />
-          <Route
-            path={`/${FTRL}/saksbehandling/:saksnr`}
-            render={(props) => <FtrlSaksbehandling {...props} {...fellesHandlers} />}
-          />
-          <Route
-            path="/:sakstype/ikkeYrkesaktiv/:saksnr"
-            render={(props) => <IkkeYrkesaktiv {...props} {...fellesHandlers} />}
-          />
-          <Route
-            path={`/${TRYGDEAVTALE}/saksbehandling/:saksnr`}
-            render={(props) => <TrygdeavtaleSaksbehandling {...props} {...fellesHandlers} />}
-          />
-          <Route
-            path="/:sakstype/aarsavregning/:saksnr"
-            render={(props) => <Årsavregning {...props} {...fellesHandlers} />}
-          />
-          <Route
-            path={`/${EU_EOS}/pensjonist/:saksnr`}
-            render={(props) => <EøsPensjonist {...props} {...fellesHandlers} />}
-          />
-          <Route
-            path="/:sakstype/behandling/:saksnr"
-            render={(props) => <IngenFlytBehandling {...props} {...fellesHandlers} />}
-          />
-          <Route
-            path="/journalforing/:journalpostID/:oppgaveID"
-            render={(props) => <Journalforing {...props} {...fellesHandlers} />}
-          />
-          <Route path="/opprettnysak" render={(props) => <OpprettNySak {...props} {...fellesHandlers} />} />;
-          <Route
-            path={`/${EU_EOS}/vurderutpeking/:saksnr`}
-            render={(props) => <VurderUtpeking {...props} {...fellesHandlers} />}
-          />
-          <Route path={ADMIN_BASE} render={(props) => <AdministrasjonRute {...props} />} />
+          <Route path="/:sakstype/aarsavregning/:saksnr/*" element={<Årsavregning {...fellesHandlers} />} />
+          <Route path={`/${EU_EOS}/pensjonist/:saksnr/*`} element={<EøsPensjonist {...fellesHandlers} />} />
+          <Route path="/:sakstype/behandling/:saksnr/*" element={<IngenFlytBehandling {...fellesHandlers} />} />
+          <Route path="/journalforing/:journalpostID/:oppgaveID/*" element={<Journalforing {...fellesHandlers} />} />
+          <Route path="/opprettnysak/*" element={<OpprettNySak {...fellesHandlers} />} />
+          <Route path={`/${EU_EOS}/vurderutpeking/:saksnr/*`} element={<VurderUtpeking {...fellesHandlers} />} />
+          <Route path={`${ADMIN_BASE}/*`} element={<AdministrasjonRute />} />
           {/* Biblioteket er et oppslagsverk for saksbehandlere, ikke en admin-flate,
               så det gates på melosys.tekstblokker alene. */}
-          <Route path={BREVBIBLIOTEK} render={() => <BrevbibliotekSide />} />
+          <Route path={`${BREVBIBLIOTEK}/*`} element={<BrevbibliotekSide />} />
           <Route
-            path="/:sakstype/unntaksregistrering/:saksnr"
-            render={(props) => <Unntaksregistrering {...props} {...fellesHandlers} />}
+            path="/:sakstype/unntaksregistrering/:saksnr/*"
+            element={<Unntaksregistrering {...fellesHandlers} />}
           />
-          <Route component={UkjentSide} />
-        </Switch>
+          <Route path="*" element={<UkjentSide />} />
+        </Routes>
       )}
     </FellesHandlersContext.Consumer>
   );

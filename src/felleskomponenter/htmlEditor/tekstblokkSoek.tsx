@@ -194,7 +194,6 @@ function TekstblokkSoekIntern({
         onClose={lukk}
         anchorEl={ankerRef.current}
         placement={placement}
-        arrow={false}
         className="tekstblokkSoek__popover"
       >
         <Popover.Content
@@ -437,7 +436,7 @@ function TekstblokkRad({
         </div>
       </div>
       {/* Statusen står utenfor knappen, ellers ville skjermleseren lest hele teksten på nytt. */}
-      <span role="status" aria-live="polite" className="navds-sr-only">
+      <span role="status" aria-live="polite" className="aksel-sr-only">
         {kopistatus === "kopiert" && `${blokk.tittel} er kopiert til utklippstavlen`}
         {kopistatus === "feilet" && `Kunne ikke kopiere ${blokk.tittel} til utklippstavlen`}
       </span>

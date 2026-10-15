@@ -7,10 +7,12 @@ import * as Forms from "../../../../../felleskomponenter/forms";
 import * as Nav from "../../../../../navFrontend";
 import * as Mui from "../../../../../felleskomponenter/ui";
 import { redigerbartSelectors } from "../../../../../ducks/redigerbart";
+import MKV from "../../../../../melosyskodeverk";
 import "./vurderingInngangManglendeInnbetaling.less";
 import vurdering_inngang_manglende_innbetaling from "./vurderingInngangManglendeInnbetalingSchema";
 import type { VurderingInngangManglendeInnbetaling as VurderingInngangManglendeInnbetalingValg } from "./vurderingInngangManglendeInnbetalingSchema";
 import { oppsummertfaktaOperations, oppsummertfaktaSelectors } from "../../../../../ducks/oppsummertfakta";
+import { behandlingsresultatSelectors } from "../../../../../ducks/behandlingsresultat";
 import * as oppsummertfaktaTypes from "../../../../../ducks/oppsummertfakta/types";
 import { behandlingerSelectors } from "../../../../../ducks/behandlinger";
 import { modalerOperations } from "../../../../../ducks/modaler";
@@ -48,21 +50,39 @@ const valg: RadioValg[] = [
   { value: "VEDTAKET_SKAL_ENDRES", text: "Vedtaket skal endres." },
 ];
 
+const utledHandlingsvalgFraBehandlingsresultat = (
+  behandlingsresultatTypeKode?: string,
+): VurderingInngangManglendeInnbetalingValg | undefined => {
+  const { OPPHØRT, DELVIS_OPPHØRT, MEDLEM_I_FOLKETRYGDEN } = MKV.Koder.behandlinger.behandlingsresultattyper;
+  switch (behandlingsresultatTypeKode) {
+    case OPPHØRT:
+      return "HELE_PERIODEN_OPPHØRES";
+    case DELVIS_OPPHØRT:
+      return "DELER_AV_PERIODEN_OPPHØRES";
+    case MEDLEM_I_FOLKETRYGDEN:
+      return "VEDTAKET_SKAL_ENDRES";
+    default:
+      return undefined;
+  }
+};
+
 export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppdaterStatus }: Props) {
   const dispatch = useDispatch();
   const redigerbart = useSelector(redigerbartSelectors.RedigerbartSelector);
   const behandlingID = useSelector(behandlingerSelectors.BehandlingIDSelector);
+  const handlingsvalgFraAvklarteFakta = useSelector(oppsummertfaktaSelectors.ManglendeInnbetalingHandlingsvalgSelector);
+  const behandlingsresultatTypeKode = useSelector(behandlingsresultatSelectors.BehandlingsresultatTypeSelector);
 
   const {
     control,
     watch,
     formState: { isValid: formIsValid },
   } = useForm({
-    resolver: yupResolver<FieldValues>(vurdering_inngang_manglende_innbetaling),
+    resolver: yupResolver<FieldValues, unknown, FieldValues>(vurdering_inngang_manglende_innbetaling),
     mode: "all",
     defaultValues: {
-      fullstendigManglendeInnbetaling: useSelector(oppsummertfaktaSelectors.ManglendeInnbetalingHandlingsvalgSelector)
-        ?.kode,
+      manglendeInnbetalingHandlingsvalg:
+        utledHandlingsvalgFraBehandlingsresultat(behandlingsresultatTypeKode) ?? handlingsvalgFraAvklarteFakta?.kode,
     } as FieldValues,
   });
   const formValues = watch();
@@ -80,7 +100,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
     const response = await dispatch(
       oppsummertfaktaOperations.lagreManglendeInnbetalingHandlingsvalg(
         behandlingID,
-        formValues.fullstendigManglendeInnbetaling,
+        formValues.manglendeInnbetalingHandlingsvalg,
       ),
     );
     if (response.type !== oppsummertfaktaTypes.FEILET) {
@@ -90,7 +110,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
 
   useEffect(() => {
     if (aktivtSteg) {
-      oppdaterStatus(formIsValid, nesteStegId(formValues.fullstendigManglendeInnbetaling));
+      oppdaterStatus(formIsValid, nesteStegId(formValues.manglendeInnbetalingHandlingsvalg));
     }
   }, [formIsValid]);
 
@@ -110,7 +130,7 @@ export function VurderingInngangManglendeInnbetaling({ bekreft, aktivtSteg, oppd
       <Forms.RadioGroup
         legend=""
         hideLegend
-        name="fullstendigManglendeInnbetaling"
+        name="manglendeInnbetalingHandlingsvalg"
         control={control}
         onChange={handleChange}
         readOnly={!redigerbart}

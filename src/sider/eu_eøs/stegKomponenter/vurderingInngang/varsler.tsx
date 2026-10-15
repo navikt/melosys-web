@@ -1,5 +1,6 @@
 import * as Api from "../../../../services/api";
-import { useHentStatsborgerskapQuery } from "../../../../felleskomponenter/menypanel/menypunkter/person/statsborgerskapTable/hentStatsborgerskap.generated";
+import { useQuery } from "@apollo/client/react";
+import { HentStatsborgerskapDocument } from "../../../../felleskomponenter/menypanel/menypunkter/person/statsborgerskapTable/hentStatsborgerskap.generated";
 import classNames from "classnames";
 import * as Utils from "../../../../utils";
 import MKV, { MKVUtils } from "../../../../melosyskodeverk";
@@ -18,7 +19,7 @@ interface VarslerProps {
 
 function Varsler({ oppfyllerInngangsvilkar, inngangsvilkaar, landkoder, behandlingstema, behandlingID }: VarslerProps) {
   const inngangsvilkaarBegrunnelseKoder = inngangsvilkaar?.begrunnelseKoder || [];
-  const { data: statsborgerskapData } = useHentStatsborgerskapQuery({
+  const { data: statsborgerskapData } = useQuery(HentStatsborgerskapDocument, {
     variables: { behandlingID },
   });
   const statsborgerskapLand =

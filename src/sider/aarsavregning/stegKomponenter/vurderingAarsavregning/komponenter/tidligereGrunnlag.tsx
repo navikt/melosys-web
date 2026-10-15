@@ -15,15 +15,15 @@ export function TidligereGrunnlag({ aarsavregningResponse }: TidligereGrunnlagPr
   const erManueltBeregnet = Boolean(
     aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
       null &&
-      aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
-        undefined,
+    aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
+      undefined,
   );
 
   const forskuddsvisFakturertTrygdeavgift =
     (aarsavregningResponse.tidligereTrygdeavgiftsGrunnlagsopplysninger?.avgift?.totalAvgift ?? 0) > 0;
 
   return (
-    <Nav.Box className="tidligereGrunnlag" background="surface-subtle">
+    <Nav.Box className="tidligereGrunnlag" background="neutral-soft">
       <Nav.Heading level="2" className="aarsavregning_seksjon_heading">
         Tidligere grunnlag
       </Nav.Heading>

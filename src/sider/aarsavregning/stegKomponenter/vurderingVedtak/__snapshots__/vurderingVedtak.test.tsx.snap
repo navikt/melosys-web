@@ -4,100 +4,115 @@ exports[`VurderingVedtak > should render snapshot with realistic data 1`] = `
 
 <div>
   <form class="vurderingVedtakAarsavregning">
-    <h1 class="stegvelgertittel navds-heading navds-heading--medium">
+    <h1 class="stegvelgertittel aksel-heading aksel-heading--medium">
       Vedtak årsavregning 2024
     </h1>
     <div
-      style="--__ac-box-background: var(--a-surface-subtle);"
-      class="navds-box sumArsavregningTabell navds-box-bg"
+      style="--__axc-box-background: var(--ax-bg-neutral-soft);"
+      class="aksel-box sumArsavregningTabell aksel-box-bg"
     >
       <table
         width="500"
-        class="navds-table navds-table--small periode_tabell"
+        class="aksel-table aksel-table--small periode_tabell"
       >
-        <tbody class="navds-table__body">
-          <tr class="navds-table__row navds-table__row--shade-on-hover">
+        <tbody class="aksel-table__body">
+          <tr
+            class="aksel-table__row aksel-table__row--shade-on-hover"
+            data-interactive="false"
+          >
             <td
               scope="col"
-              class="navds-table__data-cell navds-body-short navds-body-short--small"
+              class="aksel-table__data-cell aksel-body-short aksel-body-short--small"
             >
             </td>
             <td
               width="400"
               scope="col"
-              class="navds-table__data-cell navds-body-short navds-body-short--small"
+              class="aksel-table__data-cell aksel-body-short aksel-body-short--small"
             >
               Endelig beregnet trygdeavgift
             </td>
-            <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+            <td class="aksel-table__data-cell aksel-table__data-cell--align-right aksel-body-short aksel-body-short--small">
               28&nbsp;000,00 kr
             </td>
           </tr>
-          <tr class="navds-table__row navds-table__row--shade-on-hover">
+          <tr
+            class="aksel-table__row aksel-table__row--shade-on-hover"
+            data-interactive="false"
+          >
             <td
               scope="col"
-              class="navds-table__data-cell navds-body-short navds-body-short--small"
+              class="aksel-table__data-cell aksel-body-short aksel-body-short--small"
             >
               -
             </td>
             <td
               scope="col"
-              class="navds-table__data-cell navds-body-short navds-body-short--small"
+              class="aksel-table__data-cell aksel-body-short aksel-body-short--small"
             >
               Tidligere beregnet trygdeavgift
             </td>
-            <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+            <td class="aksel-table__data-cell aksel-table__data-cell--align-right aksel-body-short aksel-body-short--small">
               25&nbsp;000,00 kr
             </td>
           </tr>
-          <tr class="navds-table__row navds-table__row--shade-on-hover">
+          <tr
+            class="aksel-table__row aksel-table__row--shade-on-hover"
+            data-interactive="false"
+          >
             <td
               scope="col"
-              class="navds-table__data-cell navds-body-short navds-body-short--small"
+              class="aksel-table__data-cell aksel-body-short aksel-body-short--small"
             >
               +
             </td>
             <td
               scope="col"
-              class="navds-table__data-cell navds-body-short navds-body-short--small"
+              class="aksel-table__data-cell aksel-body-short aksel-body-short--small"
             >
               Tidligere trygdeavgift fra Avgiftssystemet
             </td>
-            <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+            <td class="aksel-table__data-cell aksel-table__data-cell--align-right aksel-body-short aksel-body-short--small">
               27&nbsp;000,00 kr
             </td>
           </tr>
-          <tr class="navds-table__row navds-table__row--shade-on-hover">
+          <tr
+            class="aksel-table__row aksel-table__row--shade-on-hover"
+            data-interactive="false"
+          >
             <td
               scope="col"
-              class="navds-table__data-cell navds-body-short navds-body-short--small"
+              class="aksel-table__data-cell aksel-body-short aksel-body-short--small"
             >
               -
             </td>
             <td
               scope="col"
-              class="navds-table__data-cell navds-body-short navds-body-short--small"
+              class="aksel-table__data-cell aksel-body-short aksel-body-short--small"
             >
               Trygdeavgift fra Avgiftssystemet
             </td>
-            <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+            <td class="aksel-table__data-cell aksel-table__data-cell--align-right aksel-body-short aksel-body-short--small">
               30&nbsp;000,00 kr
             </td>
           </tr>
-          <tr class="navds-table__row navds-table__row--shade-on-hover">
+          <tr
+            class="aksel-table__row aksel-table__row--shade-on-hover"
+            data-interactive="false"
+          >
             <td
               scope="col"
-              class="navds-table__data-cell navds-body-short navds-body-short--small"
+              class="aksel-table__data-cell aksel-body-short aksel-body-short--small"
             >
               =
             </td>
             <td
               scope="col"
-              class="navds-table__data-cell navds-body-short navds-body-short--small"
+              class="aksel-table__data-cell aksel-body-short aksel-body-short--small"
             >
               Differanse
             </td>
-            <td class="navds-table__data-cell navds-table__data-cell--align-right navds-body-short navds-body-short--small">
+            <td class="aksel-table__data-cell aksel-table__data-cell--align-right aksel-body-short aksel-body-short--small">
               <b>
                 0,00&nbsp;kr&nbsp;
               </b>
@@ -106,60 +121,50 @@ exports[`VurderingVedtak > should render snapshot with realistic data 1`] = `
         </tbody>
       </table>
     </div>
-    <div class="navds-checkbox navds-checkbox--small">
-      <input
-        class="navds-checkbox__input"
-        id="333"
-        aria-labelledby="333"
-        type="checkbox"
-        name="333"
+    <div class="aksel-checkbox aksel-checkbox--small">
+      <div
+        class="aksel-checkbox__input-wrapper"
+        data-standalone="false"
       >
+        <input
+          id="333"
+          class="aksel-checkbox__input"
+          type="checkbox"
+          name="333"
+        >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewbox="0 0 13 10"
+          fill="none"
+          focusable="false"
+          aria-hidden="true"
+          class="aksel-checkbox__icon"
+        >
+          <path
+            d="M4.03524 6.41478L10.4752 0.404669C11.0792 -0.160351 12.029 -0.130672 12.5955 0.47478C13.162 1.08027 13.1296 2.03007 12.5245 2.59621L5.02111 9.59934C4.74099 9.85904 4.37559 10 4.00025 10C3.60651 10 3.22717 9.84621 2.93914 9.56111L0.439143 7.06111C-0.146381 6.47558 -0.146381 5.52542 0.439143 4.93989C1.02467 4.35437 1.97483 4.35437 2.56036 4.93989L4.03524 6.41478Z"
+            fill="currentColor"
+          >
+          </path>
+        </svg>
+      </div>
       <label
         for="333"
-        class="navds-checkbox__label"
+        class="aksel-checkbox__label aksel-body-short aksel-body-short--small"
       >
-        <span class="navds-checkbox__icon">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="0.8125rem"
-            height="0.625rem"
-            viewbox="0 0 13 10"
-            fill="none"
-            focusable="false"
-            role="img"
-            aria-hidden="true"
-          >
-            <path
-              d="M4.03524 6.41478L10.4752 0.404669C11.0792 -0.160351 12.029 -0.130672 12.5955 0.47478C13.162 1.08027 13.1296 2.03007 12.5245 2.59621L5.02111 9.59934C4.74099 9.85904 4.37559 10 4.00025 10C3.60651 10 3.22717 9.84621 2.93914 9.56111L0.439143 7.06111C-0.146381 6.47558 -0.146381 5.52542 0.439143 4.93989C1.02467 4.35437 1.97483 4.35437 2.56036 4.93989L4.03524 6.41478Z"
-              fill="currentColor"
-            >
-            </path>
-          </svg>
-        </span>
-        <span class="navds-checkbox__icon-indeterminate">
-        </span>
-        <span class="navds-checkbox__content">
-          <span
-            id="333"
-            aria-hidden="true"
-            class="navds-checkbox__label-text navds-body-short navds-body-short--small"
-          >
-            <strong>
-              Inntektsgrunnlaget er skjønnsmessig fastsatt.
-            </strong>
-            &nbsp;Dette utløser en standardtekst i brevet
-          </span>
-        </span>
+        <strong>
+          Inntektsgrunnlaget er skjønnsmessig fastsatt.
+        </strong>
+        &nbsp;Dette utløser en standardtekst i brevet
       </label>
     </div>
     <div class="row trygdeavgift">
       <div class="col col-xs-12">
-        <p class="info navds-body-long navds-body-long--small">
+        <p class="info aksel-body-long aksel-body-long--small">
         </p>
       </div>
     </div>
     <div class="row margin-top--2rem">
-      <div class="navds-body-long navds-body-long--small navds-typo--semibold">
+      <div class="aksel-body-long aksel-body-long--small aksel-typo--semibold">
         <div class="labelMedHjelpetekst__wrapper">
           <span>
             Fritekst til innledning
@@ -608,7 +613,7 @@ exports[`VurderingVedtak > should render snapshot with realistic data 1`] = `
       </div>
     </div>
     <div class="row margin-top--2rem">
-      <div class="navds-body-long navds-body-long--small navds-typo--semibold">
+      <div class="aksel-body-long aksel-body-long--small aksel-typo--semibold">
         <div class="labelMedHjelpetekst__wrapper">
           <span>
             Fritekst til begrunnelse
@@ -1058,21 +1063,24 @@ exports[`VurderingVedtak > should render snapshot with realistic data 1`] = `
     </div>
     <div class="stegKnapper margin-top--2rem">
       <button
+        data-variant="primary"
         type="submit"
-        class="stegKnapper__bekreft navds-button navds-button--primary navds-button--small navds-button--loading"
+        class="stegKnapper__bekreft aksel-button aksel-button--small aksel-button--loading"
       >
         <svg
           aria-labelledby="333"
-          class="navds-loader navds-loader--small navds-loader--neutral"
+          class="aksel-loader aksel-loader--small aksel-loader--neutral"
           focusable="false"
           viewbox="0 0 50 50"
           preserveaspectratio="xMidYMid"
+          data-color="neutral"
+          data-variant="neutral"
         >
           <title id="333">
             Venter…
           </title>
           <circle
-            class="navds-loader__background"
+            class="aksel-loader__background"
             xmlns="http://www.w3.org/2000/svg"
             cx="25"
             cy="25"
@@ -1081,7 +1089,7 @@ exports[`VurderingVedtak > should render snapshot with realistic data 1`] = `
           >
           </circle>
           <circle
-            class="navds-loader__foreground"
+            class="aksel-loader__foreground"
             cx="25"
             cy="25"
             r="20"
@@ -1090,15 +1098,16 @@ exports[`VurderingVedtak > should render snapshot with realistic data 1`] = `
           >
           </circle>
         </svg>
-        <span class="navds-label navds-label--small">
+        <span class="aksel-label aksel-label--small">
           Fatt vedtak
         </span>
       </button>
       <button
+        data-variant="tertiary"
         type="button"
-        class="stegKnapper__tilbake navds-button navds-button--tertiary navds-button--small"
+        class="stegKnapper__tilbake aksel-button aksel-button--small"
       >
-        <span class="navds-button__icon">
+        <span class="aksel-button__icon">
           <svg
             width="16"
             height="14"
@@ -1115,7 +1124,7 @@ exports[`VurderingVedtak > should render snapshot with realistic data 1`] = `
             </path>
           </svg>
         </span>
-        <span class="navds-label navds-label--small">
+        <span class="aksel-label aksel-label--small">
           Tilbake
         </span>
       </button>

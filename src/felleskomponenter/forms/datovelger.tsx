@@ -1,11 +1,11 @@
-import { ReactNode, forwardRef } from "react";
-import { Controller, UseControllerProps } from "react-hook-form";
+import { ReactNode } from "react";
+import { Controller, FieldValues } from "react-hook-form";
 
 import * as Utils from "../../utils/dato";
 
 import PlainDatovelger from "../datovelger";
 
-import { RegisterHookFormProps } from "./misc/reacthookProps";
+import { ReactHookFormControllerProps, RegisterHookFormProps } from "./misc/reacthookProps";
 import { getErrorMessage } from "./misc/mapFeilmelding";
 
 interface DatovelgerComponentProps {
@@ -54,37 +54,38 @@ function InnerDatovelgerComponent({
   );
 }
 
-type DatovelgerProps = DatovelgerComponentProps & UseControllerProps;
+type DatovelgerProps<TFieldValues extends FieldValues = FieldValues> = DatovelgerComponentProps &
+  ReactHookFormControllerProps<TFieldValues>;
 
-// Bruker forwardRef for å matche UseControllerProps typing pattern,
-// men ref brukes ikke og videresentdes ikke (DatePicker.Input håndterer sin egen ref)
-const Datovelger = forwardRef<HTMLInputElement, DatovelgerProps>(
-  ({ name, control, ...rest }: DatovelgerProps, _ref) => {
-    return (
-      <Controller
-        name={name}
-        control={control}
-        render={({ field, formState }) => (
-          <InnerDatovelgerComponent
-            {...field}
-            {...rest}
-            label={rest.label}
-            readOnly={rest.readOnly}
-            bredde={rest.bredde}
-            minDate={rest.minDate}
-            maxDate={rest.maxDate}
-            forhindreAutoUtfylling={rest.forhindreAutoUtfylling}
-            laasAar={rest.laasAar}
-            onChange={(value: string) => {
-              field.onChange(value || "");
-              if (rest.onChange) rest.onChange(value);
-            }}
-            feil={getErrorMessage(field, formState)}
-          />
-        )}
-      />
-    );
-  },
-);
+function Datovelger<TFieldValues extends FieldValues = FieldValues>({
+  name,
+  control,
+  ...rest
+}: DatovelgerProps<TFieldValues>) {
+  return (
+    <Controller<TFieldValues>
+      name={name}
+      control={control}
+      render={({ field, formState }) => (
+        <InnerDatovelgerComponent
+          {...field}
+          {...rest}
+          label={rest.label}
+          readOnly={rest.readOnly}
+          bredde={rest.bredde}
+          minDate={rest.minDate}
+          maxDate={rest.maxDate}
+          forhindreAutoUtfylling={rest.forhindreAutoUtfylling}
+          laasAar={rest.laasAar}
+          onChange={(value: string) => {
+            field.onChange(value || "");
+            if (rest.onChange) rest.onChange(value);
+          }}
+          feil={getErrorMessage(field, formState)}
+        />
+      )}
+    />
+  );
+}
 
 export default Datovelger;

@@ -259,12 +259,12 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
   const forrigeÅrsavregningErManueltBeregnet = Boolean(
     aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
       null &&
-      aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
-        undefined,
+    aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereÅrsavregningManueltAvgiftBeloep !==
+      undefined,
   );
   const forrigeÅrsavregningHarInnbetaltTrygdeavgift = Boolean(
     aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereInnbetaltTrygdeavgift !== null &&
-      aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereInnbetaltTrygdeavgift !== undefined,
+    aarsavregningResponse?.tidligereTrygdeavgiftsGrunnlagsopplysninger?.tidligereInnbetaltTrygdeavgift !== undefined,
   );
 
   const sisteMuligeÅr = new Date().getFullYear() - 1;
@@ -356,7 +356,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
           )}
 
           {aarsavregningResponse && harTidligereTrygdeavgiftsgrunnlag === false && (
-            <Nav.Box className="tidligereGrunnlag tidligereGrunnlag_ingenInfo" background="surface-subtle">
+            <Nav.Box className="tidligereGrunnlag tidligereGrunnlag_ingenInfo" background="neutral-soft">
               <Nav.Heading level="2" className="aarsavregning_seksjon_heading">
                 Tidligere grunnlag
               </Nav.Heading>
@@ -375,7 +375,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                 className={`innbetaltTrygdeavgiftPanel${
                   harInnbetaltTrygdeavgift ? " innbetaltTrygdeavgiftPanel_medInput" : ""
                 }`}
-                background="surface-subtle"
+                background="neutral-soft"
               >
                 <Nav.VStack align="start">
                   <Nav.Heading level="2" className="aarsavregning_seksjon_heading">
@@ -391,7 +391,7 @@ export function VurderingAarsavregningInngang({ bekreft, oppdaterStatus, aktivtS
                     value={harInnbetaltTrygdeavgift}
                     readOnly={!redigerbart || harAktivÅrsavregning || forrigeÅrsavregningHarInnbetaltTrygdeavgift}
                   >
-                    <Nav.HStack gap="6">
+                    <Nav.HStack gap="space-24">
                       <Nav.Radio value>Ja</Nav.Radio>
                       <Nav.Radio value={false}>Nei</Nav.Radio>
                     </Nav.HStack>

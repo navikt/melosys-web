@@ -29,17 +29,17 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
       </svg>
     </div>
     <div class="behandlingsmeny__meny">
-      <div class="navds-accordion navds-accordion--medium navds-accordion--indent">
+      <div class="aksel-accordion aksel-accordion--medium aksel-accordion--indent">
         <div
-          class="navds-accordion__item"
+          class="aksel-accordion__item"
           data-expanded="false"
         >
           <button
-            class="navds-accordion__header"
+            class="aksel-accordion__header"
             aria-expanded="false"
             type="button"
           >
-            <span class="navds-accordion__icon-wrapper">
+            <span class="aksel-accordion__icon-wrapper">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="1em"
@@ -48,7 +48,7 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
                 viewbox="0 0 24 24"
                 focusable="false"
                 role="img"
-                class="navds-accordion__header-chevron"
+                class="aksel-accordion__header-chevron"
                 aria-hidden="true"
               >
                 <path
@@ -60,44 +60,46 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
                 </path>
               </svg>
             </span>
-            <span class="navds-accordion__header-content navds-heading navds-heading--small">
+            <span class="aksel-heading aksel-heading--xsmall">
               Legg behandling tilbake
             </span>
           </button>
-          <div
-            aria-hidden="true"
-            class="navds-accordion__content navds-accordion__content--closed navds-body-long navds-body-long--medium"
-          >
+          <div class="aksel-accordion__content aksel-accordion__content--closed aksel-body-long aksel-body-long--medium">
             <div
-              class="behandlingsmeny__handling"
-              role="button"
-              tabindex="0"
+              class="aksel-accordion__content-inner"
+              data-color="accent"
             >
-              <div class="behandlingsmeny__handling__tekst">
-                Til min oppgaveliste
+              <div
+                class="behandlingsmeny__handling"
+                role="button"
+                tabindex="0"
+              >
+                <div class="behandlingsmeny__handling__tekst">
+                  Til min oppgaveliste
+                </div>
               </div>
-            </div>
-            <div
-              class="behandlingsmeny__handling"
-              role="button"
-              tabindex="0"
-            >
-              <div class="behandlingsmeny__handling__tekst">
-                Til felles oppgaveliste
+              <div
+                class="behandlingsmeny__handling"
+                role="button"
+                tabindex="0"
+              >
+                <div class="behandlingsmeny__handling__tekst">
+                  Til felles oppgaveliste
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div
-          class="navds-accordion__item"
+          class="aksel-accordion__item"
           data-expanded="false"
         >
           <button
-            class="navds-accordion__header"
+            class="aksel-accordion__header"
             aria-expanded="false"
             type="button"
           >
-            <span class="navds-accordion__icon-wrapper">
+            <span class="aksel-accordion__icon-wrapper">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="1em"
@@ -106,7 +108,7 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
                 viewbox="0 0 24 24"
                 focusable="false"
                 role="img"
-                class="navds-accordion__header-chevron"
+                class="aksel-accordion__header-chevron"
                 aria-hidden="true"
               >
                 <path
@@ -118,32 +120,34 @@ exports[`Behandlingsmeny > snapshot test 1`] = `
                 </path>
               </svg>
             </span>
-            <span class="navds-accordion__header-content navds-heading navds-heading--small">
+            <span class="aksel-heading aksel-heading--xsmall">
               Avslutt behandling
             </span>
           </button>
-          <div
-            aria-hidden="true"
-            class="navds-accordion__content navds-accordion__content--closed navds-body-long navds-body-long--medium"
-          >
-            <div class="divider">
-            </div>
+          <div class="aksel-accordion__content aksel-accordion__content--closed aksel-body-long aksel-body-long--medium">
             <div
-              class="behandlingsmeny__handling"
-              role="button"
-              tabindex="0"
+              class="aksel-accordion__content-inner"
+              data-color="accent"
             >
-              <div class="behandlingsmeny__handling__tekst">
-                Ferdigbehandlet
+              <div class="divider">
               </div>
-            </div>
-            <div
-              class="behandlingsmeny__handling"
-              role="button"
-              tabindex="0"
-            >
-              <div class="behandlingsmeny__handling__tekst">
-                Behandlingen er bortfalt
+              <div
+                class="behandlingsmeny__handling"
+                role="button"
+                tabindex="0"
+              >
+                <div class="behandlingsmeny__handling__tekst">
+                  Ferdigbehandlet
+                </div>
+              </div>
+              <div
+                class="behandlingsmeny__handling"
+                role="button"
+                tabindex="0"
+              >
+                <div class="behandlingsmeny__handling__tekst">
+                  Behandlingen er bortfalt
+                </div>
               </div>
             </div>
           </div>

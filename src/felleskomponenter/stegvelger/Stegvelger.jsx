@@ -1,6 +1,5 @@
 import { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 import PT from "prop-types";
 
 import MKV from "../../melosyskodeverk";
@@ -665,7 +664,6 @@ Stegvelger.propTypes = {
   hentVilkar: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
-  history: PT.object.isRequired,
   endreVedtak: PT.func.isRequired,
   kontrollerFerdigbehandling: PT.func.isRequired,
   lagreMottatteOpplysningerHandler: PT.func.isRequired,
@@ -865,4 +863,4 @@ const mapDispatchToProps = (dispatch) => ({
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));
+export default connect(mapStateToProps, mapDispatchToProps)(Stegvelger);

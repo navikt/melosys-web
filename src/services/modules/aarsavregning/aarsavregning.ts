@@ -16,7 +16,7 @@ export interface AarsavregningResponse {
 }
 
 export interface AarsavregningRequest {
-  avregning: Omit<Avregning, "tidligereFakturertBeloep">;
+  avregning: Omit<Avregning, "tidligereFakturertBeloep" | "tilbakelagtInnbetaltTrygdeavgift">;
 }
 
 export interface OppdaterHarInnbetaltTrygdeavgiftRequest {
@@ -66,6 +66,7 @@ export interface Avregning {
   tilFaktureringBeloep?: number;
   innbetaltTrygdeavgift?: number;
   manueltAvgiftBeloep?: number;
+  tilbakelagtInnbetaltTrygdeavgift?: number;
 }
 
 export interface AarsavregningListResponse {

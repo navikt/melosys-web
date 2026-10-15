@@ -40,7 +40,7 @@ describe("ErrorMessage", () => {
   it("skal vise warning alert variant", () => {
     const { container } = render(<ErrorMessage feilobjekt={defaultFeilobjekt} />);
 
-    const alert = container.querySelector(".navds-alert--warning");
+    const alert = container.querySelector(".aksel-alert--warning");
     expect(alert).toBeInTheDocument();
   });
 

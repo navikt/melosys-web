@@ -28,7 +28,7 @@
     @media (max-width: 768px) {
       flex-direction: row;
       flex-wrap: wrap;
-      border-bottom: 1px solid var(--a-border-subtle);
+      border-bottom: 1px solid var(--ax-border-neutral-subtle);
       padding-bottom: 0.5rem;
     }
   }
@@ -36,26 +36,26 @@
   &__sidemeny-lenke {
     display: block;
     padding: 0.5rem 0 0.5rem 1rem;
-    color: var(--a-text-default);
+    color: var(--ax-text-neutral);
     text-decoration: none;
     font-size: 1rem;
     border-left: 2px solid transparent;
 
     &:hover {
-      color: var(--a-text-action);
+      color: var(--ax-text-accent-subtle);
       text-decoration: underline;
     }
 
     &:focus-visible {
-      outline: 2px solid var(--a-border-focus);
+      outline: 2px solid var(--ax-border-focus);
       outline-offset: 2px;
       border-radius: 2px;
     }
 
     &--aktiv {
-      color: var(--a-text-action);
+      color: var(--ax-text-accent-subtle);
       font-weight: 600;
-      border-left-color: var(--a-border-action);
+      border-left-color: var(--ax-border-accent);
       background-color: transparent;
 
       &:hover {
@@ -69,7 +69,7 @@
       padding: 0.5rem 0.75rem;
 
       &--aktiv {
-        border-bottom-color: var(--a-border-action);
+        border-bottom-color: var(--ax-border-accent);
         border-left: none;
       }
     }

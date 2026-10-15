@@ -5,6 +5,7 @@ import { setupServer } from "msw/node";
 import { handlers } from "./test/mocks/handlers";
 // Oppsettfilen for Yup kjøres ikke uten videre av vi. Derfor er det nødvendig å importere den manuelt her.
 import "./setupYup";
+import "./setupReselect";
 
 // Enable React act() environment for testing
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
@@ -33,7 +34,7 @@ global.mswServer = server;
 // Start server før tester kjører
 beforeAll(() => {
   server.listen({
-    onUnhandledRequest: "bypass", // Ignorer requests uten handlers
+    onUnhandledFrame: "bypass", // Ignorer requests uten handlers
   });
 });
 
@@ -80,16 +81,24 @@ const tomtRektangel = { top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 
 Range.prototype.getBoundingClientRect = () => tomtRektangel;
 Range.prototype.getClientRects = () => Object.assign([], { item: () => null });
 
-// Mocker localStorage
-global.localStorage = {
-  removeItem: vi.fn(),
-  setItem: vi.fn(),
-  getItem: vi.fn(),
-};
+// Mocker localStorage og sessionStorage. jsdom definerer dem som getter-egenskaper på window,
+// så de må overstyres med defineProperty i stedet for vanlig tilordning.
+Object.defineProperty(window, "localStorage", {
+  configurable: true,
+  writable: true,
+  value: {
+    removeItem: vi.fn(),
+    setItem: vi.fn(),
+    getItem: vi.fn(),
+  },
+});
 
-// Mocker sessionStorage
-global.sessionStorage = {
-  removeItem: vi.fn(),
-  setItem: vi.fn(),
-  getItem: vi.fn(),
-};
+Object.defineProperty(window, "sessionStorage", {
+  configurable: true,
+  writable: true,
+  value: {
+    removeItem: vi.fn(),
+    setItem: vi.fn(),
+    getItem: vi.fn(),
+  },
+});

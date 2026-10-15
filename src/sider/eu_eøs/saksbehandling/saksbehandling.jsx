@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { connect } from "react-redux";
 import PT from "prop-types";
-import { withRouter } from "react-router-dom";
+import { medRuteProps } from "../../../navigering";
 
 import MKV from "../../../melosyskodeverk";
 import * as Utils from "../../../utils";
@@ -71,8 +71,8 @@ class Saksbehandling extends Component {
   };
 
   lastInnSaksopplysninger = async () => {
-    const { match, location } = this.props;
-    const { saksnr } = match.params;
+    const { params, location } = this.props;
+    const { saksnr } = params;
     const behandlingID = Utils.queryString.getParam(location, "behandlingID");
     this.setState({ behandlingID: Utils._toInteger(behandlingID) });
 
@@ -216,8 +216,7 @@ Saksbehandling.propTypes = {
   vilkar: PT.array, // TODO lag proptype
   behandlingsPeriode: PT.object.isRequired, // TODO lag proptype
   lovvalgsperioder: PT.array.isRequired, // TODO lag proptype
-  history: PT.object.isRequired,
-  match: PT.object.isRequired,
+  params: PT.object.isRequired,
   location: PT.object.isRequired,
   // Funcs
   hentFagsaker: PT.func.isRequired,
@@ -315,4 +314,4 @@ const mapDispatchToProps = (dispatch) => ({
   resetKontrollFeil: () => dispatch(kontrollOperations.resetKontrollFeil()),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
+export default medRuteProps(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

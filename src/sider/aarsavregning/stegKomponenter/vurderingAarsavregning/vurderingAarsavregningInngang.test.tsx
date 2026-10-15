@@ -169,7 +169,7 @@ describe("VurderingAarsavregningInngang — ustøttet EØS-sakstype", () => {
       expect((container.querySelector("#aarVelger") as HTMLSelectElement).disabled).toBe(blokkert);
       // Støttet sakstype i innsyn skal fortsatt være readOnly, som før.
       // For en blokkert sakstype vinner disabled: ds-react dropper readOnly når disabled er satt.
-      expect(container.querySelector(".navds-select--readonly") !== null).toBe(!redigerbart && !blokkert);
+      expect(container.querySelector(".aksel-select--readonly") !== null).toBe(!redigerbart && !blokkert);
     });
 
     it(`skriver harInnbetaltTrygdeavgift til backend: ${!blokkert}`, async () => {

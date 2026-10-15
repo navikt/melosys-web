@@ -43,7 +43,7 @@ function MedlemskapsPerioderTabell({ perioder }: { perioder?: Avgiftspliktigperi
       <>
         {sortertePerioder.map((medlemskapsPeriode) => (
           <Nav.BodyLong size="small" key={Utils._uuid()} style={{ marginBottom: "1rem" }}>
-            <span className="navds-label navds-label--small">Periode Norge dekker helseutgifter:</span>{" "}
+            <span className="aksel-label aksel-label--small">Periode Norge dekker helseutgifter:</span>{" "}
             {`${Utils.dato.formatterDatoTilNorsk(medlemskapsPeriode.fomDato)} - ${Utils.dato.formatterDatoTilNorsk(
               medlemskapsPeriode.tomDato,
             )}`}

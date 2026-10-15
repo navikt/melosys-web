@@ -1,30 +1,30 @@
 import { Component } from "react";
 import { connect } from "react-redux";
 import { reduxForm, change } from "redux-form";
-import { withRouter } from "react-router-dom";
 import PT from "prop-types";
 
 import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
+import { medRuteProps } from "../../../navigering";
 
 import "./sokskjema.less";
 import { EnkelFellesInputFnrDnrOrgnrSaksnr } from "../../../felleskomponenter/enkelFellesInputFnrDnrOrgnrSaksnr";
 
 class SokSkjema extends Component {
   UNSAFE_componentWillMount() {
-    const { fnr } = this.props.match.params;
+    const { fnr } = this.props.params;
     this.oppdaterLokalSokState(fnr);
   }
 
   vedSokSubmit = (form) => {
-    const { lagreSokString, handleSubmit, history } = this.props;
+    const { lagreSokString, handleSubmit, navigate } = this.props;
     const { sokStreng } = this.state;
 
     lagreSokString(sokStreng);
     handleSubmit(form);
 
     sessionStorage.setItem("sokefrase", sokStreng);
-    history.push("/sok");
+    navigate("/sok");
   };
 
   vedEndretSokFelt = (sokStreng) => {
@@ -61,8 +61,8 @@ class SokSkjema extends Component {
 SokSkjema.propTypes = {
   handleSubmit: PT.func.isRequired,
   lagreSokString: PT.func.isRequired,
-  match: PT.object.isRequired,
-  history: PT.object.isRequired,
+  params: PT.object.isRequired,
+  navigate: PT.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -75,4 +75,4 @@ const sokSkjemaForm = reduxForm({
   onSubmit: () => {},
 })(SokSkjema);
 
-export default withRouter(connect(null, mapDispatchToProps)(sokSkjemaForm));
+export default medRuteProps(connect(null, mapDispatchToProps)(sokSkjemaForm));

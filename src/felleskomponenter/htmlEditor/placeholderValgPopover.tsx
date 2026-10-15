@@ -56,14 +56,7 @@ function PlaceholderValgPopover({
   }, [fokuserAlternativ]);
 
   return (
-    <Popover
-      open
-      onClose={onLukk}
-      anchorEl={anker}
-      placement="bottom-start"
-      arrow={false}
-      className="placeholderValg__popover"
-    >
+    <Popover open onClose={onLukk} anchorEl={anker} placement="bottom-start" className="placeholderValg__popover">
       <Popover.Content ref={innholdRef} className="placeholderValg__innhold">
         {nokkel === undefined ? (
           <Nav.BodyShort size="small" weight="semibold">

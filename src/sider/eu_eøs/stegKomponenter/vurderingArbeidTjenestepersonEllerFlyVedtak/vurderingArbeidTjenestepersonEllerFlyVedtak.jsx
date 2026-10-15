@@ -268,7 +268,7 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
               name="informerUtenlandskTrygdemyndighet"
               readOnly={!redigerbart}
             >
-              <Nav.HStack gap="16">
+              <Nav.HStack gap="space-64">
                 <Nav.Radio value>Ja</Nav.Radio>
                 <Nav.Radio value={false}>Nei</Nav.Radio>
               </Nav.HStack>
@@ -305,7 +305,7 @@ export function VurderingArbeidTjenestepersonEllerFlyVedtak({
               name="informerUtenlandskTrygdemyndighet"
               readOnly={!redigerbart}
             >
-              <Nav.HStack gap="16">
+              <Nav.HStack gap="space-64">
                 <Nav.Radio value>Ja</Nav.Radio>
                 <Nav.Radio value={false}>Nei</Nav.Radio>
               </Nav.HStack>
