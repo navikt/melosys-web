@@ -27,10 +27,14 @@ function lagApp() {
       response.status(200).send("ok");
     });
   }
-  app.get("/bad-gateway", traceIdHeader(() => TRACE_ID), (_request, response) => {
-    response.writeHead(502, { "Content-Type": "text/plain" });
-    response.end("502 Bad Gateway");
-  });
+  app.get(
+    "/bad-gateway",
+    traceIdHeader(() => TRACE_ID),
+    (_request, response) => {
+      response.writeHead(502, { "Content-Type": "text/plain" });
+      response.end("502 Bad Gateway");
+    },
+  );
   return app;
 }
 
