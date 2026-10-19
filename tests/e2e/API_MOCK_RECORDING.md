@@ -214,7 +214,7 @@ To ensure recordings are stable and don't change unnecessarily when re-recorded,
 - `registrertDato`, `endretDato`, `opprettetTidspunkt`, `endretTidspunkt`
 - `sistOppdatert`, `mottaksdato`, `behandlingsfrist`, `svarFrist`
 - `opprettetDato`, `sisteOpplysningerHentetDato`, `opprettelsestidspunkt`
-- `sistBekreftet`, `correlationId`
+- `sistBekreftet`, `correlationId`, `traceId`
 
 **Normalization patterns:**
 
@@ -224,6 +224,7 @@ To ensure recordings are stable and don't change unnecessarily when re-recorded,
 | ISO date (`2025-12-11`) | `2025-01-01` |
 | Norwegian date (`11.12.2025`) | `01.01.2025` |
 | UUID (for `correlationId`) | `00000000-0000-0000-0000-000000000000` |
+| Trace-id, 32 hex (for `traceId`) | `00000000000000000000000000000000` |
 | Embedded timestamps (`--- 11.12.2025 15:53 ---`) | `--- 01.01.2025 00:00 ---` |
 
 **Array sorting:**

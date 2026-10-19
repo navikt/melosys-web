@@ -76,11 +76,16 @@ const FIELDS_TO_NORMALIZE = [
   "opprettelsestidspunkt",
   "sistBekreftet",
   "correlationId",
+  "traceId",
 ];
 
 // UUID pattern for normalization
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const NORMALIZED_UUID = "00000000-0000-0000-0000-000000000000";
+
+// W3C trace-id (32 hex) for `traceId`
+const TRACE_ID_PATTERN = /^[0-9a-f]{32}$/i;
+const NORMALIZED_TRACE_ID = "0".repeat(32);
 
 /**
  * Normalize embedded timestamps in a string value.
@@ -163,6 +168,8 @@ function normalizeForStableRecording(obj: unknown): unknown {
         // Check for UUID first
         if (UUID_PATTERN.test(value)) {
           normalizedValue = NORMALIZED_UUID;
+        } else if (TRACE_ID_PATTERN.test(value)) {
+          normalizedValue = NORMALIZED_TRACE_ID;
         } else {
           // Try timestamp patterns
           for (const { pattern, value: replacement } of NORMALIZE_PATTERNS) {
