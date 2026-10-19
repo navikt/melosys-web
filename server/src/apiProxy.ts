@@ -3,6 +3,7 @@ import { createProxyMiddleware } from "http-proxy-middleware";
 
 import config from "./config.js";
 import logger from "./logger.js";
+import { traceIdHeader } from "./traceId.js";
 
 // Tilsvarer nginx sin standard client_max_body_size. Sjekkes kun mot
 // Content-Length-headeren (uten å konsumere selve streamen), siden en
@@ -24,6 +25,9 @@ const PROXY_TIMEOUT_MS = 60_000;
  *
  * `xfwd: true` sørger for at X-Forwarded-Host/-Server/-For settes på
  * requesten videre til upstream.
+ *
+ * Alle proxy-svar (også 413/502 vi lager selv) får `X-Trace-Id` når
+ * OpenTelemetry har en aktiv trace.
  */
 export function setupApiProxy(router: Router) {
   addProxy(router, "/api", `${config.upstreams.melosysApiUrl}/api`);
@@ -43,6 +47,7 @@ export function setupApiProxy(router: Router) {
 function addProxy(router: Router, path: string, target: string) {
   router.use(
     path,
+    traceIdHeader(),
     limitBodySize,
     createProxyMiddleware({
       target,
