@@ -38,24 +38,19 @@ test.describe("EU/EØS Registrering av unntaksperioder - begrunnelser for ikke g
     expect(mock.ikkeMockedeKall, "Kall uten mock").toEqual([]);
   });
 
-  test("krever minst én begrunnelse", async ({ page }) => {
-    let erSendt = false;
-    page.on("request", (req) => {
-      if (req.method() === "POST" && req.url().endsWith("/ikkegodkjenn")) erSendt = true;
-    });
-
+  test("krever minst én begrunnelse", async () => {
     await unntaksperioder.verifiserAvkryssedeBegrunnelser([]);
     await unntaksperioder.lagre();
 
     await unntaksperioder.verifiserFeilmelding("Begrunnelse for avslag er påkrevd");
-    expect(erSendt, "ikkegodkjenn skal ikke sendes uten begrunnelse").toBe(false);
+    expect(mock.ikkeGodkjennKall, "ikkegodkjenn skal ikke sendes uten begrunnelse").toEqual([]);
   });
 
   test("sender kun avkryssede begrunnelser", async () => {
     await unntaksperioder.kryssAvBegrunnelser([BEGRUNNELSE.OVER_24_MD.label, BEGRUNNELSE.TREDJELANDSBORGER.label]);
     await unntaksperioder.fjernBegrunnelser([BEGRUNNELSE.OVER_24_MD.label]);
     await unntaksperioder.verifiserAvkryssedeBegrunnelser([BEGRUNNELSE.TREDJELANDSBORGER.label]);
-    await expect(unntaksperioder.fritekst()).toHaveCount(0);
+    await unntaksperioder.verifiserFritekstSkjult();
 
     const payload = await unntaksperioder.lagreOgHentIkkeGodkjenn();
 
@@ -67,12 +62,12 @@ test.describe("EU/EØS Registrering av unntaksperioder - begrunnelser for ikke g
 
   test("Fritekst krever utfylt begrunnelse", async () => {
     await unntaksperioder.kryssAvBegrunnelser([BEGRUNNELSE.OVER_24_MD.label, BEGRUNNELSE.ANNET.label]);
-    await expect(unntaksperioder.fritekst()).toBeVisible();
+    await unntaksperioder.verifiserFritekstSynlig();
 
     await unntaksperioder.lagre();
     await unntaksperioder.verifiserFeilmelding("Fritekstfelt er påkrevd");
 
-    await unntaksperioder.fritekst().fill("Mangler dokumentasjon");
+    await unntaksperioder.fyllUtFritekst("Mangler dokumentasjon");
     const payload = await unntaksperioder.lagreOgHentIkkeGodkjenn();
 
     expect({ ...payload, ikkeGodkjentBegrunnelseKoder: [...payload.ikkeGodkjentBegrunnelseKoder].sort() }).toEqual({

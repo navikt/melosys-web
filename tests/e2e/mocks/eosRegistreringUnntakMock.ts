@@ -15,6 +15,8 @@ export interface IkkeGodkjennRequest {
 
 export interface EosRegistreringUnntakMock {
   url: string;
+  /** Request-body for hvert kall til POST .../ikkegodkjenn */
+  ikkeGodkjennKall: IkkeGodkjennRequest[];
   /** Kall som ikke har en mock (method + path). Bør være tom etter testen. */
   ikkeMockedeKall: string[];
 }
@@ -23,6 +25,7 @@ export async function mockEosRegistreringUnntak(page: Page): Promise<EosRegistre
   const { saksnummer, behandlingID, get, graphql, kontrollfeil } = fixture;
   const getResponser: Record<string, unknown> = get;
   const ikkeMockedeKall: string[] = [];
+  const ikkeGodkjennKall: IkkeGodkjennRequest[] = [];
   // Etter innsending navigeres det til forsiden, som ikke er mocket
   let erInnsendt = false;
 
@@ -43,6 +46,7 @@ export async function mockEosRegistreringUnntak(page: Page): Promise<EosRegistre
 
       if (method === "POST" && pathname === `/api/saksflyt/unntaksperioder/${behandlingID}/ikkegodkjenn`) {
         erInnsendt = true;
+        ikkeGodkjennKall.push(request.postDataJSON() as IkkeGodkjennRequest);
         return svarJson(route, {});
       }
 
@@ -57,6 +61,7 @@ export async function mockEosRegistreringUnntak(page: Page): Promise<EosRegistre
 
   return {
     url: `/melosys/EU_EOS/registrering/${saksnummer}/unntaksperioder/?behandlingID=${behandlingID}`,
+    ikkeGodkjennKall,
     ikkeMockedeKall,
   };
 }

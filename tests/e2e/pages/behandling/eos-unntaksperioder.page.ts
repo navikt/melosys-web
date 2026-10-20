@@ -53,8 +53,20 @@ export class EosUnntaksperioderPage {
     await expect(this.begrunnelser).toHaveCount(0);
   }
 
-  fritekst(): Locator {
+  private get fritekst(): Locator {
     return this.skjema.getByLabel("Skriv inn begrunnelse for avslaget...");
+  }
+
+  async fyllUtFritekst(tekst: string): Promise<void> {
+    await this.fritekst.fill(tekst);
+  }
+
+  async verifiserFritekstSynlig(): Promise<void> {
+    await expect(this.fritekst).toBeVisible();
+  }
+
+  async verifiserFritekstSkjult(): Promise<void> {
+    await expect(this.fritekst).toHaveCount(0);
   }
 
   async verifiserFeilmelding(tekst: string): Promise<void> {
