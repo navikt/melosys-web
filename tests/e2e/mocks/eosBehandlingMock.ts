@@ -33,7 +33,7 @@ const INNGANGSVILKAAR = "FO_883_2004_INNGANGSVILKAAR";
 // Backend returnerer et beriket objekt for disse, så vi svarer med lagret GET-respons i stedet for å speile request-body
 const POST_SOM_RETURNERER_LAGRET = ["/api/avklartefakta/", "/api/mottatteopplysninger/"];
 
-async function svarJson(route: Route, body: unknown): Promise<void> {
+export async function svarJson(route: Route, body: unknown): Promise<void> {
   await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(body) });
 }
 
@@ -76,17 +76,7 @@ export async function mockEosUtsendtArbeidstaker(page: Page): Promise<EosBehandl
     },
   );
 
-  await page.route(
-    (url) => /^\/graphql\/?$/.test(url.pathname),
-    async (route) => {
-      const { operationName } = route.request().postDataJSON() as { operationName: keyof typeof graphql };
-      if (operationName in graphql) {
-        return svarJson(route, graphql[operationName]);
-      }
-      ikkeMockedeKall.push(`graphql ${operationName}`);
-      return route.fulfill({ status: 404, body: `Ingen mock for graphql ${operationName}` });
-    },
-  );
+  await mockGraphql(page, graphql, ikkeMockedeKall);
 
   return {
     saksnummer,
@@ -94,4 +84,22 @@ export async function mockEosUtsendtArbeidstaker(page: Page): Promise<EosBehandl
     url: `/melosys/EU_EOS/saksbehandling/${saksnummer}?behandlingID=${behandlingID}`,
     ikkeMockedeKall,
   };
+}
+
+export async function mockGraphql(
+  page: Page,
+  graphql: Record<string, unknown>,
+  ikkeMockedeKall: string[],
+): Promise<void> {
+  await page.route(
+    (url) => /^\/graphql\/?$/.test(url.pathname),
+    async (route) => {
+      const { operationName } = route.request().postDataJSON() as { operationName: string };
+      if (operationName in graphql) {
+        return svarJson(route, graphql[operationName]);
+      }
+      ikkeMockedeKall.push(`graphql ${operationName}`);
+      return route.fulfill({ status: 404, body: `Ingen mock for graphql ${operationName}` });
+    },
+  );
 }
