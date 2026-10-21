@@ -143,6 +143,7 @@ export default function reducer(state = initialState, action = {}) {
           navn: forhold.navn || null,
           orgnr: forhold.orgnr || null,
           selvstendigNaeringsvirksomhet: false,
+          tilhorerSammeKonsern: forhold.tilhorerSammeKonsern ?? null,
           adresse: lagNullableStrukturertAdresse(forhold.adresse),
         })),
         ...dokument.selvstendigNaeringsvirksomhetUtland.map((virksomhet) => ({
@@ -150,6 +151,7 @@ export default function reducer(state = initialState, action = {}) {
           navn: virksomhet.navn || null,
           orgnr: virksomhet.orgnr || null,
           selvstendigNaeringsvirksomhet: true,
+          tilhorerSammeKonsern: virksomhet.tilhorerSammeKonsern ?? null,
           adresse: lagNullableStrukturertAdresse(virksomhet.adresse),
         })),
       ];
@@ -164,6 +166,7 @@ export default function reducer(state = initialState, action = {}) {
         innretningLandkode: arbeidsstedOffshore.innretningLandkode || "",
         territorialfarvann: null,
         innretningstype: arbeidsstedOffshore.innretningstype || null,
+        yrke: arbeidsstedOffshore.yrke || null,
       });
 
       const lagMaritimtArbeidAvArbeidsstedSkip = (arbeidsstedSkip) => ({
@@ -283,6 +286,9 @@ export default function reducer(state = initialState, action = {}) {
             hjemmebaseNavn: arbeidssted.hjemmebaseNavn || null,
             hjemmebaseLand: arbeidssted.hjemmebaseLand || null,
             typeFlyvninger: arbeidssted.typeFlyvninger || null,
+            erVanligHjemmebase: arbeidssted.erVanligHjemmebase ?? null,
+            vanligHjemmebaseLand: arbeidssted.vanligHjemmebaseLand || null,
+            vanligHjemmebaseNavn: arbeidssted.vanligHjemmebaseNavn || null,
           })),
           soeknadsland: {
             landkoder: dokument.soknadsland.landkoder,
