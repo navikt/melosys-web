@@ -1,8 +1,5 @@
 import { ReactNode } from "react";
-import Select from "react-select";
-
-import "./multiSelect.less";
-import * as Utils from "../../utils";
+import { UNSAFE_Combobox as Combobox } from "@navikt/ds-react";
 
 export interface OptionBase {
   value: string;
@@ -17,7 +14,7 @@ interface MultiSelectProps<T> {
   feil?: string;
   redigerbart?: boolean;
   className?: string;
-  /** aria-label for tilgjengelighet - brukes hvis label er en ReactNode som ikke kan leses som tekst */
+  /** Brukes som skjult label når label er tom */
   "aria-label"?: string;
 }
 
@@ -25,37 +22,29 @@ function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
   const { label, values, onChange, options, feil, className, redigerbart = true } = props;
   const ariaLabel = props["aria-label"];
 
-  const selectId = `select${Utils._uuid()}`;
-  const labelId = `${selectId}-label`;
+  const harSynligLabel = label !== "" && label !== null && label !== undefined;
+  const valgteVerdier = values ?? [];
 
-  // Utled aria-label fra label prop hvis den er en string, ellers bruk eksplisitt aria-label
-  const effectiveAriaLabel = ariaLabel ?? (typeof label === "string" ? label : undefined);
-
-  const hasVisibleLabel = label !== "" && label !== null && label !== undefined;
+  const vedToggle = (verdi: string, erValgt: boolean) => {
+    const nyeVerdier = erValgt ? [...valgteVerdier, verdi] : valgteVerdier.filter((v) => v !== verdi);
+    onChange(
+      nyeVerdier.map((v) => options.find((option) => option.value === v)).filter((option): option is T => !!option),
+    );
+  };
 
   return (
-    <div className={className} style={{ cursor: redigerbart ? "default" : "not-allowed" }}>
-      {hasVisibleLabel && (
-        <label id={labelId} htmlFor={selectId} style={{ display: "block", paddingBottom: "0.5rem" }}>
-          {label}
-        </label>
-      )}
-      <Select
-        inputId={selectId}
-        {...(hasVisibleLabel ? { "aria-labelledby": labelId } : {})}
-        {...(effectiveAriaLabel ? { "aria-label": effectiveAriaLabel } : {})}
-        onChange={(selectedOptions) => onChange(selectedOptions || [])}
-        menuPortalTarget={document.body}
+    <div className={className}>
+      <Combobox
+        label={harSynligLabel ? label : ariaLabel}
+        hideLabel={!harSynligLabel}
+        size="small"
+        isMultiSelect
         options={options}
-        placeholder="Velg..."
-        isMulti
-        isDisabled={!redigerbart}
-        noOptionsMessage={() => ""}
-        value={options.filter((option) => values?.indexOf(option.value) >= 0)}
+        selectedOptions={options.filter((option) => valgteVerdier.includes(option.value))}
+        onToggleSelected={vedToggle}
+        disabled={!redigerbart}
+        error={feil}
       />
-      <div role="alert" aria-live="assertive">
-        {feil && <div className="skjemaelement__feilmelding skjemaelement__feilmelding--multiSelect">{feil}</div>}
-      </div>
     </div>
   );
 }

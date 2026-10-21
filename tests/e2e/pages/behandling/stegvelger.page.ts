@@ -138,9 +138,10 @@ export class StegvelgerPage extends BehandlingPage {
     const landInput = landMultiSelect.locator("input");
     await landInput.click();
 
-    const landOption = this.page.getByRole("option", { name: arbeidsland });
+    const landOption = this.page.getByRole("option", { name: arbeidsland, exact: true });
     await expect(landOption, `${this.ctx}: Land-option "${arbeidsland}" ikke funnet i dropdown`).toBeVisible();
     await landOption.click();
+    await landInput.press("Escape");
 
     // Velg trygdedekning fra dropdown
     const trygdedekningSelect = await finnCombobox("Trygdedekning", this.page, 5000);
