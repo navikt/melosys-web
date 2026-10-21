@@ -219,6 +219,7 @@ describe("mottatteOpplysninger reducer", () => {
             navn: "Abcdef",
             orgnr: "123456789",
             selvstendigNaeringsvirksomhet: false,
+            tilhorerSammeKonsern: true,
             adresse: {
               tilleggsnavn: null,
               gatenavn: null,
@@ -285,6 +286,9 @@ describe("mottatteOpplysninger reducer", () => {
             hjemmebaseNavn: "Gardermoen",
             hjemmebaseLand: MKV.Koder.landkoder.NO,
             typeFlyvninger: MKV.Koder.flyvningstyper.NASJONAL,
+            erVanligHjemmebase: false,
+            vanligHjemmebaseLand: DK,
+            vanligHjemmebaseNavn: "Kastrup",
           },
         ],
         representantIUtlandet: {
@@ -421,6 +425,7 @@ describe("mottatteOpplysninger reducer", () => {
               navn: "Abcdef",
               orgnr: "123456789",
               selvstendigNaeringsvirksomhet: false,
+              tilhorerSammeKonsern: true,
               adresse: {
                 tilleggsnavn: null,
                 gatenavn: null,
@@ -437,6 +442,7 @@ describe("mottatteOpplysninger reducer", () => {
               navn: "fedcba",
               orgnr: "123456789",
               selvstendigNaeringsvirksomhet: true,
+              tilhorerSammeKonsern: null,
               adresse: {
                 tilleggsnavn: null,
                 gatenavn: null,
@@ -471,6 +477,7 @@ describe("mottatteOpplysninger reducer", () => {
               innretningLandkode: "12345",
               territorialfarvann: null,
               innretningstype: "PLATTFORM",
+              yrke: null,
             },
             {
               enhetNavn: "12345",
@@ -487,6 +494,9 @@ describe("mottatteOpplysninger reducer", () => {
               hjemmebaseNavn: "Gardermoen",
               hjemmebaseLand: MKV.Koder.landkoder.NO,
               typeFlyvninger: MKV.Koder.flyvningstyper.NASJONAL,
+              erVanligHjemmebase: false,
+              vanligHjemmebaseLand: DK,
+              vanligHjemmebaseNavn: "Kastrup",
             },
           ],
           soeknadsland: {
