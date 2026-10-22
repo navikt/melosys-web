@@ -55,6 +55,15 @@ describe("MultiSelect", () => {
     expect(screen.queryByRole("button", { name: "Sverige slett" })).not.toBeInTheDocument();
   });
 
+  it("viser valgte verdier i valgt rekkefølge", () => {
+    renderWithProviders(<MultiSelect {...props} values={["FI", "SE"]} />);
+
+    const valgte = screen.getAllByRole("button", { name: / slett$/ });
+    expect(valgte).toHaveLength(2);
+    expect(valgte[0]).toHaveAccessibleName("Finland slett");
+    expect(valgte[1]).toHaveAccessibleName("Sverige slett");
+  });
+
   it("viser feilmelding", () => {
     renderWithProviders(<MultiSelect {...props} feil="Du må velge land" />);
 

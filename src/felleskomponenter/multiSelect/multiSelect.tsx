@@ -25,11 +25,12 @@ function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
   const harSynligLabel = label !== "" && label !== null && label !== undefined;
   const valgteVerdier = values ?? [];
 
+  const tilOptions = (verdier: string[]) =>
+    verdier.map((v) => options.find((option) => option.value === v)).filter((option): option is T => !!option);
+
   const vedToggle = (verdi: string, erValgt: boolean) => {
     const nyeVerdier = erValgt ? [...valgteVerdier, verdi] : valgteVerdier.filter((v) => v !== verdi);
-    onChange(
-      nyeVerdier.map((v) => options.find((option) => option.value === v)).filter((option): option is T => !!option),
-    );
+    onChange(tilOptions(nyeVerdier));
   };
 
   return (
@@ -40,7 +41,7 @@ function MultiSelect<T extends OptionBase>(props: MultiSelectProps<T>) {
         size="small"
         isMultiSelect
         options={options}
-        selectedOptions={options.filter((option) => valgteVerdier.includes(option.value))}
+        selectedOptions={tilOptions(valgteVerdier)}
         onToggleSelected={vedToggle}
         disabled={!redigerbart}
         error={feil}
