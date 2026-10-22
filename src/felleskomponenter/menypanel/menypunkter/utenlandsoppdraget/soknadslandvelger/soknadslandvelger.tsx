@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { change } from "redux-form";
 import { useDispatch } from "../../../../../hooks";
 
 import MKV from "../../../../../melosyskodeverk";
@@ -42,6 +43,7 @@ function Soknadslandvelger({ redigerbart, lagreSoknadOgOppfriskSaksopplysninger 
   };
 
   const avbryt = () => {
+    dispatch(change(KV.Form.SOKNAD, "soknadsland", { landkoder: soknadsland, flereLandUkjentHvilke }));
     setStatus(Status.RedigeringUtfort);
   };
 
