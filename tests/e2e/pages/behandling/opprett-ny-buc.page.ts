@@ -37,6 +37,15 @@ export class OpprettNyBucPage {
     await expect(this.flervalg("Land")).toBeVisible();
   }
 
+  /**
+   * Aksel Combobox registrerer «klikk utenfor»-lytteren i en setTimeout(0) når listen åpnes. Lukkes listen før
+   * timeouten har kjørt (lett under last), lekker lytteren og senere klikk i listen lukker den uten å velge.
+   * Vent derfor en macrotask etter at en liste er åpnet.
+   */
+  private async ventTilListenErKlar(): Promise<void> {
+    await this.page.evaluate(() => new Promise((resolve) => setTimeout(resolve, 0)));
+  }
+
   async velgBuc(buc: string): Promise<void> {
     await this.panel.getByRole("combobox", { name: /^BUC/ }).selectOption(buc);
   }
@@ -46,6 +55,7 @@ export class OpprettNyBucPage {
    */
   async velg(felt: Flervalg, verdi: string, søketekst: string = verdi): Promise<void> {
     await this.flervalg(felt).fill(søketekst);
+    await this.ventTilListenErKlar();
     await this.page.getByRole("option", { name: verdi, exact: true }).click();
     await expect(this.valgte(felt).filter({ hasText: verdi })).toHaveCount(1);
   }
@@ -70,6 +80,7 @@ export class OpprettNyBucPage {
    */
   async verifiserValgmuligheter(felt: Flervalg, forventet: string[]): Promise<void> {
     await this.flervalg(felt).click();
+    await this.ventTilListenErKlar();
     const listeId = await this.flervalg(felt).getAttribute("aria-controls");
     await expect(this.page.locator(`[id="${listeId}"]`).getByRole("option")).toHaveText(forventet);
   }
