@@ -37,10 +37,6 @@ import { anmodningsperioderSelectors } from "../../../../ducks/anmodningsperiode
 const { FO_883_2004_ART16_1, KONV_EFTA_STORBRITANNIA_ART18_1 } = MKV.Koder.vilkaar;
 const { SAERLIG_AVSLAGSGRUNN } = MKV.Koder.begrunnelser.avslag_anmodning_begrunnelser;
 
-interface ListevelgerFlervalgEvent {
-  value: string[];
-}
-
 interface BestemmelserProps {
   oppdaterData: (objekt: any) => void;
   slettData: (objekt: any) => void;
@@ -155,8 +151,8 @@ export function Bestemmelser({
     setTimeout(() => setPending(false), 100);
   };
 
-  const handleEndreBegrunnelse = (event: ListevelgerFlervalgEvent, id: string) => {
-    oppdaterData(lagVilkarbegrunnelse(id, event.value));
+  const handleEndreBegrunnelse = (begrunnelseKoder: string[], id: string) => {
+    oppdaterData(lagVilkarbegrunnelse(id, begrunnelseKoder));
   };
 
   const handleEndreFritekst = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -200,14 +196,13 @@ export function Bestemmelser({
   const renderSkjemadelVedAnmodningUnntak = () => {
     if (utsendingsvilkår.oppfylt === false && !pending && bestemmelseErGyldig) {
       return (
-        <Mui.ListevelgerFlervalg
+        <Mui.KodeTermCheckboxGroup
           muligeValg={hentBegrunnelser()}
-          label="Legg til begrunnelse for at utsendingsbestemmelse ikke er oppfylt"
-          tillatFritekst={false}
-          onChange={(event: ListevelgerFlervalgEvent) =>
-            handleEndreBegrunnelse(event, finnFeltNavn(utsendingsvilkår?.vilkaar))
+          legend="Legg til begrunnelse for at utsendingsbestemmelse ikke er oppfylt"
+          onChange={(begrunnelseKoder: string[]) =>
+            handleEndreBegrunnelse(begrunnelseKoder, finnFeltNavn(utsendingsvilkår?.vilkaar))
           }
-          defaultElementer={utsendingsvilkår.begrunnelseKoder}
+          defaultValg={utsendingsvilkår.begrunnelseKoder}
           disabled={!redigerbart}
         />
       );
@@ -220,14 +215,13 @@ export function Bestemmelser({
     if (unntaksvilkår.oppfylt === false && !pending) {
       return (
         <>
-          <Mui.ListevelgerFlervalg
+          <Mui.KodeTermCheckboxGroup
             muligeValg={MKV.KTObjects.begrunnelser.avslag_anmodning_begrunnelser}
-            label="Legg til begrunnelse for at unntaksbestemmelse ikke er oppfylt"
-            tillatFritekst={false}
-            onChange={(event: ListevelgerFlervalgEvent) =>
-              handleEndreBegrunnelse(event, `${finnFeltNavn(unntaksvilkår?.vilkaar)}_avslag`)
+            legend="Legg til begrunnelse for at unntaksbestemmelse ikke er oppfylt"
+            onChange={(begrunnelseKoder: string[]) =>
+              handleEndreBegrunnelse(begrunnelseKoder, `${finnFeltNavn(unntaksvilkår?.vilkaar)}_avslag`)
             }
-            defaultElementer={unntaksvilkår.begrunnelseKoder}
+            defaultValg={unntaksvilkår.begrunnelseKoder}
             disabled={!redigerbart}
           />
           {visFritekstfelt && (

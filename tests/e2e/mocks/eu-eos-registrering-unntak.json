@@ -1,0 +1,617 @@
+{
+  "saksnummer": "MEL-9002",
+  "behandlingID": 9002,
+  "kontrollfeil": {
+    "status": 400,
+    "error": "Bad Request",
+    "message": "Validering av unntaksperiode feilet",
+    "traceId": null,
+    "feilkoder": [
+      {
+        "felter": [],
+        "kode": "PERIODEN_OVER_24_MD",
+        "type": "FEIL"
+      }
+    ]
+  },
+  "get": {
+    "/api/featuretoggle": {
+      "standardvedlegg_eget_vedlegg_avtaleland": true,
+      "melosys.ftrl.begrense_periode_vedtak": true,
+      "melosys.arsavregning.eos_tjenesteperson": false,
+      "melosys.trygdeavgift.vis_beregningsforklaring": true,
+      "melosys.faktureringskomponent.vis_referanse": true,
+      "melosys.vis-pensjonsopptjening-popp": true,
+      "melosys.administrasjon": true,
+      "melosys.pensjonist": true,
+      "melosys.pensjonist_eos": true,
+      "melosys.arsavregning": true,
+      "melosys.faktureringskomponenten.ikke-tidligere-perioder": false,
+      "melosys.tekstblokker": true,
+      "melosys.tildel_oppgave": true,
+      "melosys.arsavregning.eos_pensjonist": true,
+      "melosys.arsavregning.uten.flyt": false,
+      "melosys.tekstblokker.dynamisk-placeholder": true
+    },
+    "/api/fagsaker/MEL-9002": {
+      "betalingsvalg": null,
+      "endretDato": "2026-10-20T11:42:01.854614Z",
+      "gsakSaksnummer": 1359573,
+      "hovedpartRolle": "BRUKER",
+      "registrertDato": "2026-10-20T11:42:01.832468Z",
+      "saksnummer": "MEL-9002",
+      "saksstatus": {
+        "kode": "OPPRETTET",
+        "term": "Saken er opprettet"
+      },
+      "sakstema": {
+        "kode": "UNNTAK",
+        "term": "Unntak"
+      },
+      "sakstype": {
+        "kode": "EU_EOS",
+        "term": "EU/EØS-land"
+      }
+    },
+    "/api/lovvalgsperioder/9002": [],
+    "/api/avklartefakta/9002": [],
+    "/api/behandlinger/9002": {
+      "behandlingID": 9002,
+      "oppsummering": {
+        "behandlingsfrist": "2027-04-18",
+        "behandlingsresultattype": {
+          "kode": "IKKE_FASTSATT",
+          "term": "Ikke fastsatt"
+        },
+        "behandlingsstatus": {
+          "kode": "UNDER_BEHANDLING",
+          "term": "Behandlingen pågår"
+        },
+        "behandlingstema": {
+          "kode": "REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING",
+          "term": "Melding om utstasjonering – A009"
+        },
+        "behandlingstype": {
+          "kode": "FØRSTEGANG",
+          "term": "Førstegangsbehandling"
+        },
+        "endretAvNavn": "Lokal Testbruker",
+        "endretDato": "2026-10-20T11:42:06.973519Z",
+        "registrertDato": "2026-10-20T11:42:01.835514Z",
+        "sisteOpplysningerHentetDato": "2026-10-20T11:42:01.925928Z",
+        "svarFrist": null
+      },
+      "saksopplysninger": {
+        "arbeidsforhold": [],
+        "organisasjoner": [],
+        "medlemskap": {
+          "medlemsperiode": []
+        },
+        "inntekt": {
+          "arbeidsInntektMaanedListe": [
+            {
+              "aarMaaned": "2026-08",
+              "arbeidsInntektInformasjon": {
+                "inntektListe": [
+                  {
+                    "type": "Loennsinntekt",
+                    "beloep": 50000,
+                    "fordel": "kontantytelse",
+                    "inntektskilde": "A-ordningen",
+                    "inntektsperiodetype": "Maaned",
+                    "inntektsstatus": "LoependeInnrapportert",
+                    "levereringstidspunkt": "2026-10-01T00:00:00",
+                    "opptjeningsland": null,
+                    "opptjeningsperiode": {
+                      "fom": null,
+                      "tom": null
+                    },
+                    "utbetaltIPeriode": "2026-08",
+                    "opplysningspliktigID": "974761076",
+                    "virksomhetID": "888888888",
+                    "inntektsmottakerID": "30056928150",
+                    "inngaarIGrunnlagForTrekk": true,
+                    "utloeserArbeidsgiveravgift": true,
+                    "informasjonsstatus": "InngaarAlltid",
+                    "beskrivelse": "fastloenn"
+                  }
+                ]
+              }
+            },
+            {
+              "aarMaaned": "2026-09",
+              "arbeidsInntektInformasjon": {
+                "inntektListe": [
+                  {
+                    "type": "Loennsinntekt",
+                    "beloep": 50000,
+                    "fordel": "kontantytelse",
+                    "inntektskilde": "A-ordningen",
+                    "inntektsperiodetype": "Maaned",
+                    "inntektsstatus": "LoependeInnrapportert",
+                    "levereringstidspunkt": "2026-10-01T00:00:00",
+                    "opptjeningsland": null,
+                    "opptjeningsperiode": {
+                      "fom": null,
+                      "tom": null
+                    },
+                    "utbetaltIPeriode": "2026-09",
+                    "opplysningspliktigID": "974761076",
+                    "virksomhetID": "888888888",
+                    "inntektsmottakerID": "30056928150",
+                    "inngaarIGrunnlagForTrekk": true,
+                    "utloeserArbeidsgiveravgift": true,
+                    "informasjonsstatus": "InngaarAlltid",
+                    "beskrivelse": "fastloenn"
+                  }
+                ]
+              }
+            },
+            {
+              "aarMaaned": "2026-10",
+              "arbeidsInntektInformasjon": {
+                "inntektListe": [
+                  {
+                    "type": "Loennsinntekt",
+                    "beloep": 50000,
+                    "fordel": "kontantytelse",
+                    "inntektskilde": "A-ordningen",
+                    "inntektsperiodetype": "Maaned",
+                    "inntektsstatus": "LoependeInnrapportert",
+                    "levereringstidspunkt": "2026-10-01T00:00:00",
+                    "opptjeningsland": null,
+                    "opptjeningsperiode": {
+                      "fom": null,
+                      "tom": null
+                    },
+                    "utbetaltIPeriode": "2026-10",
+                    "opplysningspliktigID": "974761076",
+                    "virksomhetID": "888888888",
+                    "inntektsmottakerID": "30056928150",
+                    "inngaarIGrunnlagForTrekk": true,
+                    "utloeserArbeidsgiveravgift": true,
+                    "informasjonsstatus": "InngaarAlltid",
+                    "beskrivelse": "fastloenn"
+                  }
+                ]
+              }
+            }
+          ],
+          "frilansInntektMaanedListe": []
+        },
+        "sed": {
+          "bucType": "LA_BUC_02",
+          "erEndring": false,
+          "fnr": null,
+          "lovvalgsbestemmelse": "FO_883_2004_ART13_1A",
+          "lovvalgslandKode": "DE",
+          "lovvalgsperiode": {
+            "fom": "2026-11-01",
+            "tom": "2029-11-01"
+          },
+          "rinaDokumentID": "479752590",
+          "rinaSaksnummer": "815535190",
+          "sedType": "A009"
+        }
+      },
+      "redigerbart": true,
+      "tilordnetIdent": "Z123456",
+      "tilordnetNavn": "Lokal Testbruker",
+      "tilordnetMeg": true,
+      "kanTildeles": false,
+      "tildelingTilgjengelig": true
+    },
+    "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/": [
+      {
+        "kode": "EU_EOS",
+        "term": "EU/EØS-land"
+      },
+      {
+        "kode": "TRYGDEAVTALE",
+        "term": "Avtaleland"
+      },
+      {
+        "kode": "FTRL",
+        "term": "Utenfor avtaleland"
+      }
+    ],
+    "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/": [
+      {
+        "kode": "MEDLEMSKAP_LOVVALG",
+        "term": "Medlemskap og lovvalg"
+      },
+      {
+        "kode": "UNNTAK",
+        "term": "Unntak"
+      },
+      {
+        "kode": "TRYGDEAVGIFT",
+        "term": "Trygdeavgift"
+      }
+    ],
+    "/api/saksbehandling/MEL-9002/behandlingstyper/kombinasjoner-for-endring/": [],
+    "/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/": [
+      {
+        "kode": "FORESPØRSEL_TRYGDEMYNDIGHET",
+        "term": "Forespørsel fra trygdemyndighet"
+      },
+      {
+        "kode": "A1_ANMODNING_OM_UNNTAK_PAPIR",
+        "term": "A1 / Anmodning om unntak på papir"
+      }
+    ],
+    "/api/behandlinger/9002/aarsak/mottaksdato": {
+      "mottaksdato": "2026-10-20"
+    },
+    "/api/fagsaker/MEL-9002/trygdeavgift/oppsummering": {
+      "harBehandlingMedTrygdeavgift": false
+    },
+    "/api/brev/utkast/9002": [],
+    "/api/behandlinger/9002/tidligere-medlemsperioder": {
+      "tidligere_medlemsperiode_ids": []
+    },
+    "/api/vilkaar/9002": [],
+    "/api/behandlinger/9002/resultat": {
+      "aarsavregningID": null,
+      "begrunnelseFritekst": null,
+      "begrunnelseKoder": [],
+      "behandlingsresultatTypeKode": "IKKE_FASTSATT",
+      "fakturaserieReferanse": null,
+      "innledningFritekst": null,
+      "kontrollresultatBegrunnelseKoder": ["PERIODEN_OVER_24_MD"],
+      "nyVurderingBakgrunn": null,
+      "trygdeavgiftFritekst": null,
+      "utfallRegistreringUnntak": null,
+      "utfallUtpeking": null,
+      "vedtakstype": null
+    },
+    "/api/fagsaker/MEL-9002/dokumenter": [
+      {
+        "journalpostID": "473935567",
+        "mottattDato": "2026-10-20T00:00:00Z",
+        "journalforingDato": "2026-10-20T11:42:01.888222302Z",
+        "mottaksretning": {
+          "kode": "INN",
+          "term": "Inngående dokument"
+        },
+        "avsenderEllerMottaker": "Utenlandsk trygdemyndighet",
+        "hoveddokument": {
+          "dokumentID": "824407392",
+          "logiskeVedlegg": [],
+          "tittel": "A009 - Mottatt fra DE"
+        },
+        "vedlegg": []
+      }
+    ]
+  },
+  "graphql": {
+    "hentPersoninfo": {
+      "data": {
+        "hentSaksopplysninger": {
+          "persondata": {
+            "folkeregisterpersonstatuser": [
+              {
+                "kode": "MIDLERTIDIG",
+                "tekst": "Midlertidig (D-nummer)",
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "fregGyldighetstidspunkt": "2020-10-22",
+                "erHistorisk": true,
+                "__typename": "Folkeregisterpersonstatus"
+              },
+              {
+                "kode": "BOSATT",
+                "tekst": "Bosatt etter folkeregisterloven",
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "fregGyldighetstidspunkt": "1990-01-01",
+                "erHistorisk": false,
+                "__typename": "Folkeregisterpersonstatus"
+              },
+              {
+                "kode": "UTFLYTTET",
+                "tekst": "Utflyttet",
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "fregGyldighetstidspunkt": "2012-03-15",
+                "erHistorisk": true,
+                "__typename": "Folkeregisterpersonstatus"
+              }
+            ],
+            "foedsel": {
+              "foedeland": "NO",
+              "foedested": "OSLO",
+              "foedselsaar": 1969,
+              "foedselsdato": "1969-05-30",
+              "__typename": "Foedsel"
+            },
+            "sivilstand": [
+              {
+                "type": "Gift",
+                "relatertVedSivilstand": "21075114491",
+                "gyldigFraOgMed": "2019-08-03",
+                "bekreftelsesdato": null,
+                "master": "Freg",
+                "kilde": "FREG",
+                "erHistorisk": false,
+                "__typename": "Sivilstand"
+              },
+              {
+                "type": "Skilt",
+                "relatertVedSivilstand": null,
+                "gyldigFraOgMed": "2014-04-09",
+                "bekreftelsesdato": null,
+                "master": "NAV (PDL)",
+                "kilde": "Tyske trygdemyndigheter, TYSKLAND",
+                "erHistorisk": true,
+                "__typename": "Sivilstand"
+              },
+              {
+                "type": "Separert",
+                "relatertVedSivilstand": "12028536819",
+                "gyldigFraOgMed": "2013-01-03",
+                "bekreftelsesdato": null,
+                "master": "NAV (PDL)",
+                "kilde": "Tyske trygdemyndigheter, TYSKLAND",
+                "erHistorisk": true,
+                "__typename": "Sivilstand"
+              },
+              {
+                "type": "Gift",
+                "relatertVedSivilstand": "12028536819",
+                "gyldigFraOgMed": "2011-02-02",
+                "bekreftelsesdato": null,
+                "master": "Freg",
+                "kilde": "KILDE_DSF",
+                "erHistorisk": false,
+                "__typename": "Sivilstand"
+              }
+            ],
+            "__typename": "Personopplysninger"
+          },
+          "__typename": "Saksopplysninger"
+        }
+      }
+    },
+    "hentStatsborgerskap": {
+      "data": {
+        "hentSaksopplysninger": {
+          "persondata": {
+            "statsborgerskap": [
+              {
+                "land": "NORGE",
+                "bekreftelsesdato": null,
+                "gyldigFraOgMed": "1990-01-01",
+                "gyldigTilOgMed": null,
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "erHistorisk": false,
+                "__typename": "Statsborgerskap"
+              }
+            ],
+            "__typename": "Personopplysninger"
+          },
+          "__typename": "Saksopplysninger"
+        }
+      }
+    },
+    "hentPersonopplysninger": {
+      "data": {
+        "hentSaksopplysninger": {
+          "persondata": {
+            "navn": {
+              "fornavn": "KARAFFEL",
+              "mellomnavn": null,
+              "etternavn": "TRIVIELL",
+              "__typename": "Navn"
+            },
+            "kjoenn": "MANN",
+            "folkeregisterpersonstatuser": [
+              {
+                "kode": "MIDLERTIDIG",
+                "tekst": "Midlertidig (D-nummer)",
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "fregGyldighetstidspunkt": "2020-10-22",
+                "erHistorisk": true,
+                "__typename": "Folkeregisterpersonstatus"
+              },
+              {
+                "kode": "BOSATT",
+                "tekst": "Bosatt etter folkeregisterloven",
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "fregGyldighetstidspunkt": "1990-01-01",
+                "erHistorisk": false,
+                "__typename": "Folkeregisterpersonstatus"
+              },
+              {
+                "kode": "UTFLYTTET",
+                "tekst": "Utflyttet",
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "fregGyldighetstidspunkt": "2012-03-15",
+                "erHistorisk": true,
+                "__typename": "Folkeregisterpersonstatus"
+              }
+            ],
+            "folkeregisteridentifikator": "30056928150",
+            "statsborgerskap": [
+              {
+                "land": "NORGE",
+                "bekreftelsesdato": null,
+                "gyldigFraOgMed": "1990-01-01",
+                "gyldigTilOgMed": null,
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "erHistorisk": false,
+                "__typename": "Statsborgerskap"
+              }
+            ],
+            "sivilstand": [
+              {
+                "type": "Gift",
+                "relatertVedSivilstand": "21075114491",
+                "gyldigFraOgMed": "2019-08-03",
+                "bekreftelsesdato": null,
+                "master": "Freg",
+                "kilde": "FREG",
+                "erHistorisk": false,
+                "__typename": "Sivilstand"
+              },
+              {
+                "type": "Skilt",
+                "relatertVedSivilstand": null,
+                "gyldigFraOgMed": "2014-04-09",
+                "bekreftelsesdato": null,
+                "master": "NAV (PDL)",
+                "kilde": "Tyske trygdemyndigheter, TYSKLAND",
+                "erHistorisk": true,
+                "__typename": "Sivilstand"
+              },
+              {
+                "type": "Separert",
+                "relatertVedSivilstand": "12028536819",
+                "gyldigFraOgMed": "2013-01-03",
+                "bekreftelsesdato": null,
+                "master": "NAV (PDL)",
+                "kilde": "Tyske trygdemyndigheter, TYSKLAND",
+                "erHistorisk": true,
+                "__typename": "Sivilstand"
+              },
+              {
+                "type": "Gift",
+                "relatertVedSivilstand": "12028536819",
+                "gyldigFraOgMed": "2011-02-02",
+                "bekreftelsesdato": null,
+                "master": "Freg",
+                "kilde": "KILDE_DSF",
+                "erHistorisk": false,
+                "__typename": "Sivilstand"
+              }
+            ],
+            "__typename": "Personopplysninger"
+          },
+          "__typename": "Saksopplysninger"
+        }
+      }
+    },
+    "hentAdresser": {
+      "data": {
+        "hentSaksopplysninger": {
+          "persondata": {
+            "bostedsadresser": [
+              {
+                "coAdressenavn": null,
+                "adresse": {
+                  "tilleggsnavn": "tilleggg navn",
+                  "gatenavn": null,
+                  "husnummerEtasjeLeilighet": null,
+                  "postboks": null,
+                  "postnummer": "2414",
+                  "poststed": "ELVERUM",
+                  "region": null,
+                  "land": "NORGE",
+                  "__typename": "StrukturertAdresseformat"
+                },
+                "gyldigFraOgMed": "1957-09-12",
+                "gyldigTilOgMed": null,
+                "kilde": "Folkeregisteret",
+                "master": "FREG",
+                "erHistorisk": true,
+                "__typename": "Bostedsadresse"
+              },
+              {
+                "coAdressenavn": "Co Yo 1",
+                "adresse": {
+                  "tilleggsnavn": null,
+                  "gatenavn": "bosted gata 3",
+                  "husnummerEtasjeLeilighet": "42",
+                  "postboks": null,
+                  "postnummer": "0001",
+                  "poststed": null,
+                  "region": null,
+                  "land": "STORBRITANNIA",
+                  "__typename": "StrukturertAdresseformat"
+                },
+                "gyldigFraOgMed": "1995-06-16",
+                "gyldigTilOgMed": null,
+                "kilde": "Folkeregisteret",
+                "master": "FREG",
+                "erHistorisk": false,
+                "__typename": "Bostedsadresse"
+              }
+            ],
+            "oppholdsadresser": [
+              {
+                "coAdressenavn": "CO 3",
+                "adresse": {
+                  "tilleggsnavn": null,
+                  "gatenavn": "opphold gata 1",
+                  "husnummerEtasjeLeilighet": "42 B",
+                  "postboks": null,
+                  "postnummer": "0001",
+                  "poststed": "OSLO",
+                  "region": null,
+                  "land": "NORGE",
+                  "__typename": "StrukturertAdresseformat"
+                },
+                "gyldigFraOgMed": "2016-10-20",
+                "gyldigTilOgMed": null,
+                "kilde": "Folkeregisteret",
+                "master": "FREG",
+                "erHistorisk": false,
+                "__typename": "Oppholdsadresse"
+              }
+            ],
+            "kontaktadresser": [
+              {
+                "coAdressenavn": "CO 2",
+                "semistrukturertAdresse": null,
+                "strukturertAdresse": {
+                  "tilleggsnavn": null,
+                  "gatenavn": "kontakt gata 1",
+                  "husnummerEtasjeLeilighet": "42",
+                  "postboks": null,
+                  "postnummer": "0001",
+                  "poststed": null,
+                  "region": null,
+                  "land": "SVERIGE",
+                  "__typename": "StrukturertAdresseformat"
+                },
+                "gyldigFraOgMed": "2016-10-20",
+                "gyldigTilOgMed": null,
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "erHistorisk": false,
+                "__typename": "Kontaktadresse"
+              },
+              {
+                "coAdressenavn": null,
+                "semistrukturertAdresse": {
+                  "adresselinje1": null,
+                  "adresselinje2": null,
+                  "adresselinje3": null,
+                  "adresselinje4": null,
+                  "postnummer": "3011",
+                  "poststed": "DRAMMEN",
+                  "land": "NORGE",
+                  "__typename": "SemistrukturertAdresseformat"
+                },
+                "strukturertAdresse": null,
+                "gyldigFraOgMed": null,
+                "gyldigTilOgMed": null,
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "erHistorisk": true,
+                "__typename": "Kontaktadresse"
+              }
+            ],
+            "__typename": "Personopplysninger"
+          },
+          "__typename": "Saksopplysninger"
+        }
+      }
+    }
+  }
+}
