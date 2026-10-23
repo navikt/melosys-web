@@ -234,7 +234,7 @@ export class OpprettNySakPage {
   }
 
   /**
-   * Velg land i land-dropdown (React Select multiselect)
+   * Velg land i land-dropdown (Aksel Combobox multiselect)
    */
   async setLand(landNavn: string): Promise<void> {
     // Vent for at land-feltet skal vises etter behandlingsårsak er valgt
@@ -242,23 +242,19 @@ export class OpprettNySakPage {
     const landFieldset = this.page.locator('fieldset:has-text("land")').first();
     await expect(landFieldset, "Fant ikke land-feltet").toBeVisible();
 
-    const combobox = landFieldset.locator('[role="combobox"]').first();
+    const combobox = landFieldset.locator("input[role='combobox']").first();
     await expect(combobox, "Fant ikke land combobox").toBeVisible();
+    await combobox.click();
 
-    const dropdownIndicator = landFieldset.locator(".css-1xc3v61-indicatorContainer").first();
-    if ((await dropdownIndicator.count()) > 0) {
-      await dropdownIndicator.click();
-    } else {
-      await combobox.click();
-    }
-
-    // Vent for at dropdown skal åpne og vise opsjoner, deretter velg land
-    const landOption = this.page.locator('[role="option"]').filter({ hasText: landNavn }).first();
+    const landOption = this.page.getByRole("option", { name: landNavn, exact: true });
     await expect(landOption, `Fant ikke land "${landNavn}" i dropdown`).toBeVisible();
     await landOption.click();
 
-    // Vent på at valget er registrert - sjekk at dropdown har lukket seg
-    await expect(this.page.locator('[role="option"]'), "Land dropdown lukket seg ikke etter valg").toHaveCount(0);
+    await expect(
+      landFieldset.getByRole("button", { name: `${landNavn} slett` }),
+      `Land "${landNavn}" ble ikke valgt`,
+    ).toBeVisible();
+    await combobox.press("Escape");
   }
 
   /**

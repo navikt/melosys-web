@@ -1,0 +1,2009 @@
+{
+  "saksnummer": "MEL-9006",
+  "behandlingID": 9006,
+  "get": {
+    "/api/featuretoggle": {
+      "standardvedlegg_eget_vedlegg_avtaleland": true,
+      "melosys.ftrl.begrense_periode_vedtak": true,
+      "melosys.arsavregning.eos_tjenesteperson": false,
+      "melosys.trygdeavgift.vis_beregningsforklaring": true,
+      "melosys.faktureringskomponent.vis_referanse": true,
+      "melosys.vis-pensjonsopptjening-popp": true,
+      "melosys.administrasjon": true,
+      "melosys.pensjonist": true,
+      "melosys.pensjonist_eos": true,
+      "melosys.arsavregning": true,
+      "melosys.faktureringskomponenten.ikke-tidligere-perioder": false,
+      "melosys.tekstblokker": true,
+      "melosys.tildel_oppgave": true,
+      "melosys.arsavregning.eos_pensjonist": true,
+      "melosys.arsavregning.uten.flyt": false,
+      "melosys.tekstblokker.dynamisk-placeholder": true
+    },
+    "/api/kodeverk/nav-felles/LANDKODER_ISO2": [
+      {
+        "kode": "PR",
+        "term": "PUERTO RICO"
+      },
+      {
+        "kode": "PS",
+        "term": "PALESTINA"
+      },
+      {
+        "kode": "PT",
+        "term": "PORTUGAL"
+      },
+      {
+        "kode": "PW",
+        "term": "PALAU"
+      },
+      {
+        "kode": "PY",
+        "term": "PARAGUAY"
+      },
+      {
+        "kode": "QA",
+        "term": "QATAR"
+      },
+      {
+        "kode": "AD",
+        "term": "ANDORRA"
+      },
+      {
+        "kode": "AE",
+        "term": "DE FORENTE ARABISKE EMIRATER"
+      },
+      {
+        "kode": "AF",
+        "term": "AFGHANISTAN"
+      },
+      {
+        "kode": "AG",
+        "term": "ANTIGUA OG BARBUDA"
+      },
+      {
+        "kode": "AI",
+        "term": "ANGUILLA"
+      },
+      {
+        "kode": "AL",
+        "term": "ALBANIA"
+      },
+      {
+        "kode": "AM",
+        "term": "ARMENIA"
+      },
+      {
+        "kode": "AO",
+        "term": "ANGOLA"
+      },
+      {
+        "kode": "AQ",
+        "term": "Antarktis"
+      },
+      {
+        "kode": "AR",
+        "term": "ARGENTINA"
+      },
+      {
+        "kode": "AS",
+        "term": "AM. SAMOA"
+      },
+      {
+        "kode": "AT",
+        "term": "ØSTERRIKE"
+      },
+      {
+        "kode": "RE",
+        "term": "REUNION"
+      },
+      {
+        "kode": "AU",
+        "term": "AUSTRALIA"
+      },
+      {
+        "kode": "AW",
+        "term": "ARUBA"
+      },
+      {
+        "kode": "AX",
+        "term": "ÅLAND"
+      },
+      {
+        "kode": "AZ",
+        "term": "ASERBAJDSJAN"
+      },
+      {
+        "kode": "RO",
+        "term": "ROMANIA"
+      },
+      {
+        "kode": "BA",
+        "term": "BOSNIA-HERCEGOVINA"
+      },
+      {
+        "kode": "BB",
+        "term": "BARBADOS"
+      },
+      {
+        "kode": "RS",
+        "term": "SERBIA"
+      },
+      {
+        "kode": "BD",
+        "term": "BANGLADESH"
+      },
+      {
+        "kode": "RU",
+        "term": "RUSSLAND"
+      },
+      {
+        "kode": "BE",
+        "term": "BELGIA"
+      },
+      {
+        "kode": "BF",
+        "term": "BURKINA FASO"
+      },
+      {
+        "kode": "RW",
+        "term": "RWANDA"
+      },
+      {
+        "kode": "BG",
+        "term": "BULGARIA"
+      },
+      {
+        "kode": "BH",
+        "term": "BAHRAIN"
+      },
+      {
+        "kode": "BI",
+        "term": "BURUNDI"
+      },
+      {
+        "kode": "BJ",
+        "term": "BENIN"
+      },
+      {
+        "kode": "BL",
+        "term": "SAINT BARTHELEMY"
+      },
+      {
+        "kode": "BM",
+        "term": "BERMUDA"
+      },
+      {
+        "kode": "BN",
+        "term": "BRUNEI"
+      },
+      {
+        "kode": "BO",
+        "term": "BOLIVIA"
+      },
+      {
+        "kode": "SA",
+        "term": "SAUDI-ARABIA"
+      },
+      {
+        "kode": "SB",
+        "term": "SALOMONØYENE"
+      },
+      {
+        "kode": "BQ",
+        "term": "BONAIRE, SINT EUSTATIUS OG SABA"
+      },
+      {
+        "kode": "SC",
+        "term": "SEYCHELLENE"
+      },
+      {
+        "kode": "BR",
+        "term": "BRASIL"
+      },
+      {
+        "kode": "BS",
+        "term": "BAHAMAS"
+      },
+      {
+        "kode": "SD",
+        "term": "SUDAN"
+      },
+      {
+        "kode": "BT",
+        "term": "BHUTAN"
+      },
+      {
+        "kode": "SE",
+        "term": "SVERIGE"
+      },
+      {
+        "kode": "SG",
+        "term": "SINGAPORE"
+      },
+      {
+        "kode": "BV",
+        "term": "BOUVETØYA"
+      },
+      {
+        "kode": "BW",
+        "term": "BOTSWANA"
+      },
+      {
+        "kode": "SH",
+        "term": "SANKT HELENA, ASCENSION OG TRISTAN DA CUNHA"
+      },
+      {
+        "kode": "SI",
+        "term": "SLOVENIA"
+      },
+      {
+        "kode": "SJ",
+        "term": "SVALBARD OG JAN MAYEN"
+      },
+      {
+        "kode": "BY",
+        "term": "BELARUS"
+      },
+      {
+        "kode": "BZ",
+        "term": "BELIZE"
+      },
+      {
+        "kode": "SK",
+        "term": "SLOVAKIA"
+      },
+      {
+        "kode": "SL",
+        "term": "SIERRA LEONE"
+      },
+      {
+        "kode": "SM",
+        "term": "SAN MARINO"
+      },
+      {
+        "kode": "SN",
+        "term": "SENEGAL"
+      },
+      {
+        "kode": "SO",
+        "term": "SOMALIA"
+      },
+      {
+        "kode": "CA",
+        "term": "CANADA"
+      },
+      {
+        "kode": "SR",
+        "term": "SURINAM"
+      },
+      {
+        "kode": "???",
+        "term": "UOPPGITT/UKJENT"
+      },
+      {
+        "kode": "SS",
+        "term": "SØR-SUDAN"
+      },
+      {
+        "kode": "CC",
+        "term": "KOKOSØYENE (KEELINGØYENE)"
+      },
+      {
+        "kode": "ST",
+        "term": "SAO TOME OG PRINCIPE"
+      },
+      {
+        "kode": "CD",
+        "term": "KONGO"
+      },
+      {
+        "kode": "SV",
+        "term": "EL SALVADOR"
+      },
+      {
+        "kode": "CF",
+        "term": "DEN SENTRALAFRIKANSKE REPUBLIKK"
+      },
+      {
+        "kode": "CG",
+        "term": "KONGO-BRAZZAVILLE"
+      },
+      {
+        "kode": "CH",
+        "term": "SVEITS"
+      },
+      {
+        "kode": "SX",
+        "term": "SINT MAARTEN"
+      },
+      {
+        "kode": "SY",
+        "term": "SYRIA"
+      },
+      {
+        "kode": "CI",
+        "term": "ELFENBENSKYSTEN"
+      },
+      {
+        "kode": "SZ",
+        "term": "ESWATINI"
+      },
+      {
+        "kode": "CK",
+        "term": "COOKØYENE"
+      },
+      {
+        "kode": "CL",
+        "term": "CHILE"
+      },
+      {
+        "kode": "CM",
+        "term": "KAMERUN"
+      },
+      {
+        "kode": "CN",
+        "term": "KINA"
+      },
+      {
+        "kode": "CO",
+        "term": "COLOMBIA"
+      },
+      {
+        "kode": "CR",
+        "term": "COSTA RICA"
+      },
+      {
+        "kode": "TC",
+        "term": "TURKS- OG CAICOSØYENE"
+      },
+      {
+        "kode": "CS",
+        "term": "SERBIA OG MONTENEGRO"
+      },
+      {
+        "kode": "TD",
+        "term": "TSJAD"
+      },
+      {
+        "kode": "CU",
+        "term": "CUBA"
+      },
+      {
+        "kode": "TG",
+        "term": "TOGO"
+      },
+      {
+        "kode": "CV",
+        "term": "KAPP VERDE"
+      },
+      {
+        "kode": "TH",
+        "term": "THAILAND"
+      },
+      {
+        "kode": "CW",
+        "term": "CURACAO"
+      },
+      {
+        "kode": "CX",
+        "term": "CHRISTMASØYA"
+      },
+      {
+        "kode": "CY",
+        "term": "KYPROS"
+      },
+      {
+        "kode": "TJ",
+        "term": "TADSJIKISTAN"
+      },
+      {
+        "kode": "TK",
+        "term": "TOKELAU"
+      },
+      {
+        "kode": "CZ",
+        "term": "TSJEKKIA"
+      },
+      {
+        "kode": "TL",
+        "term": "ØST-TIMOR"
+      },
+      {
+        "kode": "TM",
+        "term": "TURKMENISTAN"
+      },
+      {
+        "kode": "TN",
+        "term": "TUNISIA"
+      },
+      {
+        "kode": "TO",
+        "term": "TONGA"
+      },
+      {
+        "kode": "TR",
+        "term": "TYRKIA"
+      },
+      {
+        "kode": "TT",
+        "term": "TRINIDAD OG TOBAGO"
+      },
+      {
+        "kode": "DE",
+        "term": "TYSKLAND"
+      },
+      {
+        "kode": "TV",
+        "term": "TUVALU"
+      },
+      {
+        "kode": "TW",
+        "term": "TAIWAN"
+      },
+      {
+        "kode": "DJ",
+        "term": "DJIBOUTI"
+      },
+      {
+        "kode": "TZ",
+        "term": "TANZANIA"
+      },
+      {
+        "kode": "DK",
+        "term": "DANMARK"
+      },
+      {
+        "kode": "DM",
+        "term": "DOMINICA"
+      },
+      {
+        "kode": "DO",
+        "term": "DEN DOMINIKANSKE REPUBLIKK"
+      },
+      {
+        "kode": "UA",
+        "term": "UKRAINA"
+      },
+      {
+        "kode": "UG",
+        "term": "UGANDA"
+      },
+      {
+        "kode": "DZ",
+        "term": "ALGERIE"
+      },
+      {
+        "kode": "UM",
+        "term": "USAS YTRE SMÅØYER"
+      },
+      {
+        "kode": "EC",
+        "term": "ECUADOR"
+      },
+      {
+        "kode": "US",
+        "term": "USA"
+      },
+      {
+        "kode": "EE",
+        "term": "ESTLAND"
+      },
+      {
+        "kode": "EG",
+        "term": "EGYPT"
+      },
+      {
+        "kode": "EH",
+        "term": "VEST-SAHARA"
+      },
+      {
+        "kode": "UY",
+        "term": "URUGUAY"
+      },
+      {
+        "kode": "UZ",
+        "term": "USBEKISTAN"
+      },
+      {
+        "kode": "VA",
+        "term": "VATIKANSTATEN"
+      },
+      {
+        "kode": "ER",
+        "term": "ERITREA"
+      },
+      {
+        "kode": "VC",
+        "term": "SAINT VINCENT OG GRENADINENE"
+      },
+      {
+        "kode": "ES",
+        "term": "SPANIA"
+      },
+      {
+        "kode": "ET",
+        "term": "ETIOPIA"
+      },
+      {
+        "kode": "VE",
+        "term": "VENEZUELA"
+      },
+      {
+        "kode": "VG",
+        "term": "DE BRITISKE JOMFRUØYER"
+      },
+      {
+        "kode": "VI",
+        "term": "DE AMERIKANSKE JOMFRUØYER"
+      },
+      {
+        "kode": "VN",
+        "term": "VIETNAM"
+      },
+      {
+        "kode": "VU",
+        "term": "VANUATU"
+      },
+      {
+        "kode": "FI",
+        "term": "FINLAND"
+      },
+      {
+        "kode": "FJ",
+        "term": "FIJI"
+      },
+      {
+        "kode": "FK",
+        "term": "FALKLANDSØYENE"
+      },
+      {
+        "kode": "FM",
+        "term": "MIKRONESIAFØDERASJONEN"
+      },
+      {
+        "kode": "FO",
+        "term": "FÆRØYENE"
+      },
+      {
+        "kode": "FR",
+        "term": "FRANKRIKE"
+      },
+      {
+        "kode": "WF",
+        "term": "WALLIS OG FUTUNA"
+      },
+      {
+        "kode": "GA",
+        "term": "GABON"
+      },
+      {
+        "kode": "GB",
+        "term": "STORBRITANNIA"
+      },
+      {
+        "kode": "WS",
+        "term": "SAMOA"
+      },
+      {
+        "kode": "GD",
+        "term": "GRENADA"
+      },
+      {
+        "kode": "GE",
+        "term": "GEORGIA"
+      },
+      {
+        "kode": "GF",
+        "term": "FRANSK GUYANA"
+      },
+      {
+        "kode": "GG",
+        "term": "GUERNSEY"
+      },
+      {
+        "kode": "GH",
+        "term": "GHANA"
+      },
+      {
+        "kode": "GI",
+        "term": "GIBRALTAR"
+      },
+      {
+        "kode": "GL",
+        "term": "GRØNLAND"
+      },
+      {
+        "kode": "GM",
+        "term": "GAMBIA"
+      },
+      {
+        "kode": "GN",
+        "term": "GUINEA"
+      },
+      {
+        "kode": "GP",
+        "term": "GUADELOUPE"
+      },
+      {
+        "kode": "GQ",
+        "term": "EKVATORIAL-GUINEA"
+      },
+      {
+        "kode": "XB",
+        "term": "Kanariøyene"
+      },
+      {
+        "kode": "GR",
+        "term": "HELLAS"
+      },
+      {
+        "kode": "GS",
+        "term": "SØR-GEORGIA OG SØR-SANDWICHØYENE"
+      },
+      {
+        "kode": "GT",
+        "term": "GUATEMALA"
+      },
+      {
+        "kode": "GU",
+        "term": "GUAM"
+      },
+      {
+        "kode": "GW",
+        "term": "GUINEA-BISSAU"
+      },
+      {
+        "kode": "GY",
+        "term": "GUYANA"
+      },
+      {
+        "kode": "XK",
+        "term": "KOSOVO"
+      },
+      {
+        "kode": "HK",
+        "term": "HONGKONG"
+      },
+      {
+        "kode": "HM",
+        "term": "HEARD- OG MCDONALD-ØYENE"
+      },
+      {
+        "kode": "HN",
+        "term": "HONDURAS"
+      },
+      {
+        "kode": "HR",
+        "term": "KROATIA"
+      },
+      {
+        "kode": "YE",
+        "term": "JEMEN"
+      },
+      {
+        "kode": "HT",
+        "term": "HAITI"
+      },
+      {
+        "kode": "HU",
+        "term": "UNGARN"
+      },
+      {
+        "kode": "ID",
+        "term": "INDONESIA"
+      },
+      {
+        "kode": "YT",
+        "term": "MAYOTTE"
+      },
+      {
+        "kode": "IE",
+        "term": "IRLAND"
+      },
+      {
+        "kode": "IL",
+        "term": "ISRAEL"
+      },
+      {
+        "kode": "IM",
+        "term": "ISLE OF MAN"
+      },
+      {
+        "kode": "IN",
+        "term": "INDIA"
+      },
+      {
+        "kode": "IO",
+        "term": "DET BRITISKE TERRITORIET I INDIAHAVET"
+      },
+      {
+        "kode": "ZA",
+        "term": "SØR-AFRIKA"
+      },
+      {
+        "kode": "IQ",
+        "term": "IRAK"
+      },
+      {
+        "kode": "IR",
+        "term": "IRAN"
+      },
+      {
+        "kode": "IS",
+        "term": "ISLAND"
+      },
+      {
+        "kode": "IT",
+        "term": "ITALIA"
+      },
+      {
+        "kode": "ZM",
+        "term": "ZAMBIA"
+      },
+      {
+        "kode": "JE",
+        "term": "JERSEY"
+      },
+      {
+        "kode": "ZW",
+        "term": "ZIMBABWE"
+      },
+      {
+        "kode": "JM",
+        "term": "JAMAICA"
+      },
+      {
+        "kode": "JO",
+        "term": "JORDAN"
+      },
+      {
+        "kode": "JP",
+        "term": "JAPAN"
+      },
+      {
+        "kode": "KE",
+        "term": "KENYA"
+      },
+      {
+        "kode": "KG",
+        "term": "KIRGISISTAN"
+      },
+      {
+        "kode": "KH",
+        "term": "KAMBODSJA"
+      },
+      {
+        "kode": "KI",
+        "term": "KIRIBATI"
+      },
+      {
+        "kode": "KM",
+        "term": "KOMORENE"
+      },
+      {
+        "kode": "KN",
+        "term": "SAINT KITTS OG NEVIS"
+      },
+      {
+        "kode": "KP",
+        "term": "NORD-KOREA"
+      },
+      {
+        "kode": "KR",
+        "term": "SØR-KOREA"
+      },
+      {
+        "kode": "KW",
+        "term": "KUWAIT"
+      },
+      {
+        "kode": "KY",
+        "term": "CAYMANØYENE"
+      },
+      {
+        "kode": "KZ",
+        "term": "KASAKHSTAN"
+      },
+      {
+        "kode": "LA",
+        "term": "LAOS"
+      },
+      {
+        "kode": "LB",
+        "term": "LIBANON"
+      },
+      {
+        "kode": "LC",
+        "term": "SAINT LUCIA"
+      },
+      {
+        "kode": "LI",
+        "term": "LIECHTENSTEIN"
+      },
+      {
+        "kode": "LK",
+        "term": "SRI LANKA"
+      },
+      {
+        "kode": "LR",
+        "term": "LIBERIA"
+      },
+      {
+        "kode": "LS",
+        "term": "LESOTHO"
+      },
+      {
+        "kode": "LT",
+        "term": "LITAUEN"
+      },
+      {
+        "kode": "LU",
+        "term": "LUXEMBOURG"
+      },
+      {
+        "kode": "LV",
+        "term": "LATVIA"
+      },
+      {
+        "kode": "LY",
+        "term": "LIBYA"
+      },
+      {
+        "kode": "MA",
+        "term": "MAROKKO"
+      },
+      {
+        "kode": "MC",
+        "term": "MONACO"
+      },
+      {
+        "kode": "MD",
+        "term": "MOLDOVA"
+      },
+      {
+        "kode": "ME",
+        "term": "MONTENEGRO"
+      },
+      {
+        "kode": "MF",
+        "term": "SAINT MARTIN"
+      },
+      {
+        "kode": "MG",
+        "term": "MADAGASKAR"
+      },
+      {
+        "kode": "MH",
+        "term": "MARSHALLØYENE"
+      },
+      {
+        "kode": "MK",
+        "term": "NORD-MAKEDONIA"
+      },
+      {
+        "kode": "ML",
+        "term": "MALI"
+      },
+      {
+        "kode": "MM",
+        "term": "MYANMAR (BURMA)"
+      },
+      {
+        "kode": "MN",
+        "term": "MONGOLIA"
+      },
+      {
+        "kode": "MO",
+        "term": "MACAO"
+      },
+      {
+        "kode": "MP",
+        "term": "NORD-MARIANENE"
+      },
+      {
+        "kode": "MQ",
+        "term": "MARTINIQUE"
+      },
+      {
+        "kode": "MR",
+        "term": "MAURITANIA"
+      },
+      {
+        "kode": "MS",
+        "term": "MONTSERRAT"
+      },
+      {
+        "kode": "MT",
+        "term": "MALTA"
+      },
+      {
+        "kode": "MU",
+        "term": "MAURITIUS"
+      },
+      {
+        "kode": "MV",
+        "term": "MALDIVENE"
+      },
+      {
+        "kode": "MW",
+        "term": "MALAWI"
+      },
+      {
+        "kode": "MX",
+        "term": "MEXICO"
+      },
+      {
+        "kode": "MY",
+        "term": "MALAYSIA"
+      },
+      {
+        "kode": "MZ",
+        "term": "MOSAMBIK"
+      },
+      {
+        "kode": "NA",
+        "term": "NAMIBIA"
+      },
+      {
+        "kode": "NC",
+        "term": "NY-CALEDONIA"
+      },
+      {
+        "kode": "NE",
+        "term": "NIGER"
+      },
+      {
+        "kode": "NF",
+        "term": "NORFOLKØYA"
+      },
+      {
+        "kode": "NG",
+        "term": "NIGERIA"
+      },
+      {
+        "kode": "NI",
+        "term": "NICARAGUA"
+      },
+      {
+        "kode": "NL",
+        "term": "NEDERLAND"
+      },
+      {
+        "kode": "NO",
+        "term": "NORGE"
+      },
+      {
+        "kode": "NP",
+        "term": "NEPAL"
+      },
+      {
+        "kode": "NR",
+        "term": "NAURU"
+      },
+      {
+        "kode": "NU",
+        "term": "NIUE"
+      },
+      {
+        "kode": "NZ",
+        "term": "NEW ZEALAND"
+      },
+      {
+        "kode": "OM",
+        "term": "OMAN"
+      },
+      {
+        "kode": "PA",
+        "term": "PANAMA"
+      },
+      {
+        "kode": "PE",
+        "term": "PERU"
+      },
+      {
+        "kode": "PF",
+        "term": "FRANSK POLYNESIA"
+      },
+      {
+        "kode": "PG",
+        "term": "PAPUA NY-GUINEA"
+      },
+      {
+        "kode": "PH",
+        "term": "FILIPPINENE"
+      },
+      {
+        "kode": "PK",
+        "term": "PAKISTAN"
+      },
+      {
+        "kode": "PL",
+        "term": "POLEN"
+      },
+      {
+        "kode": "PM",
+        "term": "SAINT-PIERRE OG MIQUELON"
+      },
+      {
+        "kode": "PN",
+        "term": "PITCAIRN"
+      }
+    ],
+    "/api/fagsaker/MEL-9006": {
+      "betalingsvalg": null,
+      "endretDato": "2026-10-21T12:30:41.653053Z",
+      "gsakSaksnummer": 3553697,
+      "hovedpartRolle": "BRUKER",
+      "registrertDato": "2026-10-21T12:30:41.386114Z",
+      "saksnummer": "MEL-9006",
+      "saksstatus": {
+        "kode": "OPPRETTET",
+        "term": "Saken er opprettet"
+      },
+      "sakstema": {
+        "kode": "MEDLEMSKAP_LOVVALG",
+        "term": "Medlemskap og lovvalg"
+      },
+      "sakstype": {
+        "kode": "FTRL",
+        "term": "Utenfor avtaleland"
+      }
+    },
+    "/api/kodeverk/melosys-internt/folketrygden": {
+      "begrunnelser": {
+        "Ftrl_2_8_naer_tilknytning_norge_begrunnelser": [
+          {
+            "kode": "ANSATT_I_MULTINASJONALT_SELSKAP",
+            "term": "Arbeid i mor- eller søsterselskap i multinasjonalt konsern"
+          },
+          {
+            "kode": "ANSATT_I_INTERNASJONAL_ORGANISASJON",
+            "term": "Arbeid i internasjonal org. som Norge er medlem av"
+          },
+          {
+            "kode": "MEDFOLGENDE_SOM_ARBEIDER_FRA_HJEMMEKONTOR",
+            "term": "Medfølgende som arbeider på hjemmekontor"
+          },
+          {
+            "kode": "SJOFOLK_SOM_ER_BOSATT_I_UTLANDET",
+            "term": "Arbeid for norsk virksomhet på utenlandskregistrert skip"
+          },
+          {
+            "kode": "HUMANITÆRT_ARBEID",
+            "term": "Humanitært arbeid som finansieres av norske kilder"
+          },
+          {
+            "kode": "AUPAIR",
+            "term": "Aupair, begrenset periode"
+          },
+          {
+            "kode": "PRAKTIKANT",
+            "term": "Praktikant, begrenset periode"
+          },
+          {
+            "kode": "ANNEN_GRUNN",
+            "term": "Annen grunn (fritekst)"
+          }
+        ],
+        "Ftrl_2_7_begrunnelser": [
+          {
+            "kode": "AMBASSADEPERSONELL",
+            "term": "Ambassadepersonell"
+          },
+          {
+            "kode": "ANSATT_MELLOMFOLKELIG_ORGANISASJON",
+            "term": "Ansatt i mellomfolkelig organisasjon"
+          },
+          {
+            "kode": "SELVSTENDIG_NÆRINGSDRIVENDE",
+            "term": "Selvstendig næringsdrivende bosatt i utlandet"
+          },
+          {
+            "kode": "ANNEN_GRUNN",
+            "term": "Annen grunn (fritekst)"
+          }
+        ]
+      }
+    },
+    "/api/avklartefakta/9006/oppsummering": {
+      "virksomheter": {
+        "virksomhetIDer": []
+      },
+      "arbeidsland": {
+        "arbeidsland": ["CN", "JP"]
+      },
+      "fullstendigManglendeInnbetaling": false,
+      "manglendeInnbetalingHandlingsvalg": null,
+      "ikkeYrkesaktivFamilieRelasjonstype": null,
+      "ikkeYrkesaktivOppholdstype": null,
+      "arbeidssituasjonType": null,
+      "ukjentSluttdatoMedlemskapsperiode": false
+    },
+    "/api/behandlinger/9006": {
+      "behandlingID": 9006,
+      "oppsummering": {
+        "behandlingsfrist": "2027-01-19",
+        "behandlingsresultattype": {
+          "kode": "IKKE_FASTSATT",
+          "term": "Ikke fastsatt"
+        },
+        "behandlingsstatus": {
+          "kode": "UNDER_BEHANDLING",
+          "term": "Behandlingen pågår"
+        },
+        "behandlingstema": {
+          "kode": "YRKESAKTIV",
+          "term": "Yrkesaktiv"
+        },
+        "behandlingstype": {
+          "kode": "FØRSTEGANG",
+          "term": "Førstegangsbehandling"
+        },
+        "endretAvNavn": "Lokal Testbruker",
+        "endretDato": "2026-10-21T12:33:35.257850Z",
+        "registrertDato": "2026-10-21T12:30:41.497862Z",
+        "sisteOpplysningerHentetDato": "2026-10-21T12:33:35.214435Z",
+        "svarFrist": null
+      },
+      "saksopplysninger": {
+        "arbeidsforhold": [
+          {
+            "Aordning": null,
+            "ansettelsesPeriode": {
+              "fom": "2021-10-21",
+              "tom": null
+            },
+            "arbeidsavtaler": [
+              {
+                "arbeidstidsordning": {
+                  "kode": "ikkeSkift",
+                  "term": "Ikke skift"
+                },
+                "avloenningstype": "",
+                "yrke": {
+                  "kode": "0013008",
+                  "term": "KONSULENT"
+                },
+                "gyldighetsperiode": {
+                  "fom": "2021-10-21",
+                  "tom": null
+                },
+                "avtaltArbeidstimerPerUke": 37.5,
+                "stillingsprosent": 100,
+                "beregnetAntallTimerPrUke": 37.5,
+                "endringsdatoStillingsprosent": "2021-10-21",
+                "skipsregister": null,
+                "skipstype": null,
+                "maritimArbeidsavtale": false,
+                "beregnetStillingsprosent": null,
+                "antallTimerGammeltAa": null,
+                "fartsomraade": null
+              }
+            ],
+            "arbeidsforholdID": "123",
+            "arbeidsforholdIDnav": 123,
+            "arbeidsforholdstype": "ordinaertArbeidsforhold",
+            "arbeidsgiverID": "999999999",
+            "arbeidsgivertype": "ORGANISASJON",
+            "arbeidstakerID": "30056928150",
+            "opplysningspliktigID": "999999999",
+            "opplysningspliktigtype": "ORGANISASJON",
+            "opprettelsestidspunkt": "2026-10-21T12:33:35.121416009Z",
+            "permisjonOgPermittering": [],
+            "sistBekreftet": "2026-10-21T12:33:35.121446634Z",
+            "timerTimelonnet": [],
+            "utenlandsopphold": []
+          }
+        ],
+        "organisasjoner": [
+          {
+            "forretningsadresse": {
+              "gateadresse": {
+                "gatenavn": "Adresselinje1",
+                "gatenummer": null,
+                "husbokstav": null,
+                "husnummer": null
+              },
+              "land": "NORGE",
+              "postnr": "0010",
+              "poststed": "Oslo"
+            },
+            "navn": "Steinars Stein AS",
+            "oppstartdato": null,
+            "organisasjonsform": "Aksjeselskap",
+            "orgnr": "888888888",
+            "postadresse": {
+              "gateadresse": {
+                "gatenavn": "Adresselinje1",
+                "gatenummer": null,
+                "husbokstav": null,
+                "husnummer": null
+              },
+              "land": "NORGE",
+              "postnr": "0010",
+              "poststed": "Oslo"
+            }
+          },
+          {
+            "forretningsadresse": {
+              "gateadresse": {
+                "gatenavn": "Adresselinje1",
+                "gatenummer": null,
+                "husbokstav": null,
+                "husnummer": null
+              },
+              "land": "NORGE",
+              "postnr": "0010",
+              "poststed": "Oslo"
+            },
+            "navn": "Ståles Stål AS",
+            "oppstartdato": null,
+            "organisasjonsform": "Aksjeselskap",
+            "orgnr": "999999999",
+            "postadresse": {
+              "gateadresse": {
+                "gatenavn": "Adresselinje1",
+                "gatenummer": null,
+                "husbokstav": null,
+                "husnummer": null
+              },
+              "land": "NORGE",
+              "postnr": "0010",
+              "poststed": "Oslo"
+            }
+          }
+        ],
+        "medlemskap": {
+          "medlemsperiode": []
+        },
+        "inntekt": {
+          "arbeidsInntektMaanedListe": [
+            {
+              "aarMaaned": "2026-04",
+              "arbeidsInntektInformasjon": {
+                "inntektListe": [
+                  {
+                    "type": "Loennsinntekt",
+                    "beloep": 50000,
+                    "fordel": "kontantytelse",
+                    "inntektskilde": "A-ordningen",
+                    "inntektsperiodetype": "Maaned",
+                    "inntektsstatus": "LoependeInnrapportert",
+                    "levereringstidspunkt": "2026-10-01T00:00:00",
+                    "opptjeningsland": null,
+                    "opptjeningsperiode": {
+                      "fom": null,
+                      "tom": null
+                    },
+                    "utbetaltIPeriode": "2026-04",
+                    "opplysningspliktigID": "974761076",
+                    "virksomhetID": "888888888",
+                    "inntektsmottakerID": "30056928150",
+                    "inngaarIGrunnlagForTrekk": true,
+                    "utloeserArbeidsgiveravgift": true,
+                    "informasjonsstatus": "InngaarAlltid",
+                    "beskrivelse": "fastloenn"
+                  }
+                ]
+              }
+            },
+            {
+              "aarMaaned": "2026-05",
+              "arbeidsInntektInformasjon": {
+                "inntektListe": [
+                  {
+                    "type": "Loennsinntekt",
+                    "beloep": 50000,
+                    "fordel": "kontantytelse",
+                    "inntektskilde": "A-ordningen",
+                    "inntektsperiodetype": "Maaned",
+                    "inntektsstatus": "LoependeInnrapportert",
+                    "levereringstidspunkt": "2026-10-01T00:00:00",
+                    "opptjeningsland": null,
+                    "opptjeningsperiode": {
+                      "fom": null,
+                      "tom": null
+                    },
+                    "utbetaltIPeriode": "2026-05",
+                    "opplysningspliktigID": "974761076",
+                    "virksomhetID": "888888888",
+                    "inntektsmottakerID": "30056928150",
+                    "inngaarIGrunnlagForTrekk": true,
+                    "utloeserArbeidsgiveravgift": true,
+                    "informasjonsstatus": "InngaarAlltid",
+                    "beskrivelse": "fastloenn"
+                  }
+                ]
+              }
+            },
+            {
+              "aarMaaned": "2026-06",
+              "arbeidsInntektInformasjon": {
+                "inntektListe": [
+                  {
+                    "type": "Loennsinntekt",
+                    "beloep": 50000,
+                    "fordel": "kontantytelse",
+                    "inntektskilde": "A-ordningen",
+                    "inntektsperiodetype": "Maaned",
+                    "inntektsstatus": "LoependeInnrapportert",
+                    "levereringstidspunkt": "2026-10-01T00:00:00",
+                    "opptjeningsland": null,
+                    "opptjeningsperiode": {
+                      "fom": null,
+                      "tom": null
+                    },
+                    "utbetaltIPeriode": "2026-06",
+                    "opplysningspliktigID": "974761076",
+                    "virksomhetID": "888888888",
+                    "inntektsmottakerID": "30056928150",
+                    "inngaarIGrunnlagForTrekk": true,
+                    "utloeserArbeidsgiveravgift": true,
+                    "informasjonsstatus": "InngaarAlltid",
+                    "beskrivelse": "fastloenn"
+                  }
+                ]
+              }
+            },
+            {
+              "aarMaaned": "2026-07",
+              "arbeidsInntektInformasjon": {
+                "inntektListe": [
+                  {
+                    "type": "Loennsinntekt",
+                    "beloep": 50000,
+                    "fordel": "kontantytelse",
+                    "inntektskilde": "A-ordningen",
+                    "inntektsperiodetype": "Maaned",
+                    "inntektsstatus": "LoependeInnrapportert",
+                    "levereringstidspunkt": "2026-10-01T00:00:00",
+                    "opptjeningsland": null,
+                    "opptjeningsperiode": {
+                      "fom": null,
+                      "tom": null
+                    },
+                    "utbetaltIPeriode": "2026-07",
+                    "opplysningspliktigID": "974761076",
+                    "virksomhetID": "888888888",
+                    "inntektsmottakerID": "30056928150",
+                    "inngaarIGrunnlagForTrekk": true,
+                    "utloeserArbeidsgiveravgift": true,
+                    "informasjonsstatus": "InngaarAlltid",
+                    "beskrivelse": "fastloenn"
+                  }
+                ]
+              }
+            },
+            {
+              "aarMaaned": "2026-08",
+              "arbeidsInntektInformasjon": {
+                "inntektListe": [
+                  {
+                    "type": "Loennsinntekt",
+                    "beloep": 50000,
+                    "fordel": "kontantytelse",
+                    "inntektskilde": "A-ordningen",
+                    "inntektsperiodetype": "Maaned",
+                    "inntektsstatus": "LoependeInnrapportert",
+                    "levereringstidspunkt": "2026-10-01T00:00:00",
+                    "opptjeningsland": null,
+                    "opptjeningsperiode": {
+                      "fom": null,
+                      "tom": null
+                    },
+                    "utbetaltIPeriode": "2026-08",
+                    "opplysningspliktigID": "974761076",
+                    "virksomhetID": "888888888",
+                    "inntektsmottakerID": "30056928150",
+                    "inngaarIGrunnlagForTrekk": true,
+                    "utloeserArbeidsgiveravgift": true,
+                    "informasjonsstatus": "InngaarAlltid",
+                    "beskrivelse": "fastloenn"
+                  }
+                ]
+              }
+            },
+            {
+              "aarMaaned": "2026-09",
+              "arbeidsInntektInformasjon": {
+                "inntektListe": [
+                  {
+                    "type": "Loennsinntekt",
+                    "beloep": 50000,
+                    "fordel": "kontantytelse",
+                    "inntektskilde": "A-ordningen",
+                    "inntektsperiodetype": "Maaned",
+                    "inntektsstatus": "LoependeInnrapportert",
+                    "levereringstidspunkt": "2026-10-01T00:00:00",
+                    "opptjeningsland": null,
+                    "opptjeningsperiode": {
+                      "fom": null,
+                      "tom": null
+                    },
+                    "utbetaltIPeriode": "2026-09",
+                    "opplysningspliktigID": "974761076",
+                    "virksomhetID": "888888888",
+                    "inntektsmottakerID": "30056928150",
+                    "inngaarIGrunnlagForTrekk": true,
+                    "utloeserArbeidsgiveravgift": true,
+                    "informasjonsstatus": "InngaarAlltid",
+                    "beskrivelse": "fastloenn"
+                  }
+                ]
+              }
+            },
+            {
+              "aarMaaned": "2026-10",
+              "arbeidsInntektInformasjon": {
+                "inntektListe": [
+                  {
+                    "type": "Loennsinntekt",
+                    "beloep": 50000,
+                    "fordel": "kontantytelse",
+                    "inntektskilde": "A-ordningen",
+                    "inntektsperiodetype": "Maaned",
+                    "inntektsstatus": "LoependeInnrapportert",
+                    "levereringstidspunkt": "2026-10-01T00:00:00",
+                    "opptjeningsland": null,
+                    "opptjeningsperiode": {
+                      "fom": null,
+                      "tom": null
+                    },
+                    "utbetaltIPeriode": "2026-10",
+                    "opplysningspliktigID": "974761076",
+                    "virksomhetID": "888888888",
+                    "inntektsmottakerID": "30056928150",
+                    "inngaarIGrunnlagForTrekk": true,
+                    "utloeserArbeidsgiveravgift": true,
+                    "informasjonsstatus": "InngaarAlltid",
+                    "beskrivelse": "fastloenn"
+                  }
+                ]
+              }
+            }
+          ],
+          "frilansInntektMaanedListe": []
+        },
+        "sed": {
+          "bucType": null,
+          "erEndring": false,
+          "fnr": null,
+          "lovvalgsbestemmelse": null,
+          "lovvalgslandKode": null,
+          "lovvalgsperiode": null,
+          "rinaDokumentID": null,
+          "rinaSaksnummer": null,
+          "sedType": null
+        }
+      },
+      "redigerbart": true,
+      "tilordnetIdent": "Z123456",
+      "tilordnetNavn": "Lokal Testbruker",
+      "tilordnetMeg": true,
+      "kanTildeles": false,
+      "tildelingTilgjengelig": true
+    },
+    "/api/behandlinger/9006/resultat": {
+      "aarsavregningID": null,
+      "begrunnelseFritekst": null,
+      "begrunnelseKoder": [],
+      "behandlingsresultatTypeKode": "IKKE_FASTSATT",
+      "fakturaserieReferanse": null,
+      "innledningFritekst": null,
+      "kontrollresultatBegrunnelseKoder": [],
+      "nyVurderingBakgrunn": null,
+      "trygdeavgiftFritekst": null,
+      "utfallRegistreringUnntak": null,
+      "utfallUtpeking": null,
+      "vedtakstype": null
+    },
+    "/api/behandlinger/9006/medlemskapsperioder": [],
+    "/api/vilkaar/9006": [],
+    "/api/mottatteopplysninger/9006": {
+      "arbeidsgiverOgArbeidstakerHarUlikPeriode": false,
+      "data": {
+        "arbeidPaaLand": {
+          "erFastArbeidssted": null,
+          "erHjemmekontor": null,
+          "fysiskeArbeidssteder": []
+        },
+        "bosted": {
+          "antallMaanederINorge": 0,
+          "intensjonOmRetur": null,
+          "oppgittAdresse": {
+            "tilleggsnavn": null,
+            "gatenavn": null,
+            "husnummerEtasjeLeilighet": null,
+            "postboks": null,
+            "postnummer": null,
+            "poststed": null,
+            "region": null,
+            "landkode": null
+          }
+        },
+        "foretakUtland": [],
+        "juridiskArbeidsgiverNorge": {
+          "andelKontrakterINorge": 0,
+          "andelOmsetningINorge": 0,
+          "andelOppdragINorge": 0,
+          "andelRekruttertINorge": 0,
+          "antallAdmAnsatte": 0,
+          "antallAnsatte": 0,
+          "antallUtsendte": 0,
+          "ekstraArbeidsgivere": [],
+          "erOffentligVirksomhet": null
+        },
+        "luftfartBaser": [],
+        "maritimtArbeid": [],
+        "oppholdUtland": {
+          "ektefelleEllerBarnINorge": null,
+          "oppholdsPeriode": {
+            "fom": null,
+            "tom": null
+          },
+          "oppholdslandkoder": [],
+          "studentFinansieringKode": null,
+          "studentSemester": null
+        },
+        "periode": {
+          "fom": "2027-02-01",
+          "tom": "2027-02-28"
+        },
+        "personOpplysninger": {
+          "foedestedOgLand": null,
+          "medfolgendeFamilie": [],
+          "utenlandskIdent": []
+        },
+        "representantIUtlandet": null,
+        "selvstendigArbeid": {
+          "erSelvstendig": null,
+          "selvstendigForetak": []
+        },
+        "soeknadsland": {
+          "landkoder": ["CN", "JP"],
+          "flereLandUkjentHvilke": false
+        },
+        "trygdedekning": "FTRL_2_9_FØRSTE_LEDD_A_HELSE"
+      },
+      "mottaksdato": "2026-10-21",
+      "type": "SØKNAD_YRKESAKTIVE_NORGE_ELLER_UTENFOR_EØS"
+    },
+    "/api/fagsaker/MEL-9006/dokumenter": [],
+    "/api/saksbehandling/behandlingstemaer/hent-lovlige-kombinasjoner/": [
+      {
+        "kode": "YRKESAKTIV",
+        "term": "Yrkesaktiv"
+      },
+      {
+        "kode": "IKKE_YRKESAKTIV",
+        "term": "Ikke yrkesaktiv"
+      },
+      {
+        "kode": "PENSJONIST",
+        "term": "Pensjonist/uføretrygdet"
+      },
+      {
+        "kode": "UNNTAK_MEDLEMSKAP",
+        "term": "Søknad om unntak fra folketrygdloven"
+      }
+    ],
+    "/api/saksbehandling/sakstyper/hent-lovlige-kombinasjoner/": [
+      {
+        "kode": "EU_EOS",
+        "term": "EU/EØS-land"
+      },
+      {
+        "kode": "TRYGDEAVTALE",
+        "term": "Avtaleland"
+      },
+      {
+        "kode": "FTRL",
+        "term": "Utenfor avtaleland"
+      }
+    ],
+    "/api/saksbehandling/sakstemaer/hent-lovlige-kombinasjoner/": [
+      {
+        "kode": "MEDLEMSKAP_LOVVALG",
+        "term": "Medlemskap og lovvalg"
+      },
+      {
+        "kode": "TRYGDEAVGIFT",
+        "term": "Trygdeavgift"
+      }
+    ],
+    "/api/saksbehandling/MEL-9006/behandlingstyper/kombinasjoner-for-endring/": [
+      {
+        "kode": "FØRSTEGANG",
+        "term": "Førstegangsbehandling"
+      },
+      {
+        "kode": "NY_VURDERING",
+        "term": "Ny vurdering"
+      },
+      {
+        "kode": "KLAGE",
+        "term": "Klage"
+      },
+      {
+        "kode": "HENVENDELSE",
+        "term": "Henvendelse"
+      },
+      {
+        "kode": "MANGLENDE_INNBETALING_TRYGDEAVGIFT",
+        "term": "Vurdering manglende innbetaling trygdeavgift"
+      },
+      {
+        "kode": "ÅRSAVREGNING",
+        "term": "Årsavregning"
+      }
+    ],
+    "/api/behandlinger/9006/aarsak/mottaksdato": {
+      "mottaksdato": "2026-10-21"
+    },
+    "/api/fagsaker/MEL-9006/trygdeavgift/oppsummering": {
+      "harBehandlingMedTrygdeavgift": false
+    },
+    "/api/brev/utkast/9006": [],
+    "/api/ftrl/trygdedekninger/": [
+      "FULL_DEKNING_FTRL",
+      "FTRL_2_9_FØRSTE_LEDD_A_HELSE",
+      "FTRL_2_9_FØRSTE_LEDD_A_ANDRE_LEDD_HELSE_SYKE_FORELDREPENGER",
+      "FTRL_2_9_FØRSTE_LEDD_B_PENSJON",
+      "FTRL_2_9_FØRSTE_LEDD_C_HELSE_PENSJON",
+      "FTRL_2_9_FØRSTE_LEDD_C_ANDRE_LEDD_HELSE_PENSJON_SYKE_FORELDREPENGER",
+      "FTRL_2_7_TREDJE_LEDD_B_HELSE_SYKE_FORELDREPENGER",
+      "FTRL_2_7A_ANDRE_LEDD_B_HELSE_SYKE_FORELDREPENGER",
+      "FTRL_2_9_FØRSTE_LEDD_B_TREDJE_LEDD_PENSJON_YRKESSKADE",
+      "FTRL_2_9_FØRSTE_LEDD_C_TREDJE_LEDD_HELSE_PENSJON_YRKESSKADE",
+      "FTRL_2_9_FØRSTE_LEDD_C_ANDRE_LEDD_TREDJE_LEDD_HELSE_PENSJON_SYKE_FORELDREPENGER_YRKESSKADE",
+      "TILLEGGSAVTALE_NATO_HELSEDEL"
+    ]
+  },
+  "graphql": {
+    "hentPersonopplysninger": {
+      "data": {
+        "hentSaksopplysninger": {
+          "persondata": {
+            "navn": {
+              "fornavn": "KARAFFEL",
+              "mellomnavn": null,
+              "etternavn": "TRIVIELL",
+              "__typename": "Navn"
+            },
+            "kjoenn": "MANN",
+            "folkeregisterpersonstatuser": [
+              {
+                "kode": "UTFLYTTET",
+                "tekst": "Utflyttet",
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "fregGyldighetstidspunkt": "2012-03-15",
+                "erHistorisk": true,
+                "__typename": "Folkeregisterpersonstatus"
+              },
+              {
+                "kode": "BOSATT",
+                "tekst": "Bosatt etter folkeregisterloven",
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "fregGyldighetstidspunkt": "1990-01-01",
+                "erHistorisk": false,
+                "__typename": "Folkeregisterpersonstatus"
+              },
+              {
+                "kode": "MIDLERTIDIG",
+                "tekst": "Midlertidig (D-nummer)",
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "fregGyldighetstidspunkt": "2020-10-22",
+                "erHistorisk": true,
+                "__typename": "Folkeregisterpersonstatus"
+              }
+            ],
+            "folkeregisteridentifikator": "30056928150",
+            "statsborgerskap": [
+              {
+                "land": "NORGE",
+                "bekreftelsesdato": null,
+                "gyldigFraOgMed": "1990-01-01",
+                "gyldigTilOgMed": null,
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "erHistorisk": false,
+                "__typename": "Statsborgerskap"
+              }
+            ],
+            "sivilstand": [
+              {
+                "type": "Gift",
+                "relatertVedSivilstand": "21075114491",
+                "gyldigFraOgMed": "2019-08-03",
+                "bekreftelsesdato": null,
+                "master": "Freg",
+                "kilde": "FREG",
+                "erHistorisk": false,
+                "__typename": "Sivilstand"
+              },
+              {
+                "type": "Skilt",
+                "relatertVedSivilstand": null,
+                "gyldigFraOgMed": "2014-04-09",
+                "bekreftelsesdato": null,
+                "master": "NAV (PDL)",
+                "kilde": "Tyske trygdemyndigheter, TYSKLAND",
+                "erHistorisk": true,
+                "__typename": "Sivilstand"
+              },
+              {
+                "type": "Separert",
+                "relatertVedSivilstand": "12028536819",
+                "gyldigFraOgMed": "2013-01-03",
+                "bekreftelsesdato": null,
+                "master": "NAV (PDL)",
+                "kilde": "Tyske trygdemyndigheter, TYSKLAND",
+                "erHistorisk": true,
+                "__typename": "Sivilstand"
+              },
+              {
+                "type": "Gift",
+                "relatertVedSivilstand": "12028536819",
+                "gyldigFraOgMed": "2011-02-02",
+                "bekreftelsesdato": null,
+                "master": "Freg",
+                "kilde": "KILDE_DSF",
+                "erHistorisk": false,
+                "__typename": "Sivilstand"
+              }
+            ],
+            "__typename": "Personopplysninger"
+          },
+          "__typename": "Saksopplysninger"
+        }
+      }
+    },
+    "hentPersoninfo": {
+      "data": {
+        "hentSaksopplysninger": {
+          "persondata": {
+            "folkeregisterpersonstatuser": [
+              {
+                "kode": "UTFLYTTET",
+                "tekst": "Utflyttet",
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "fregGyldighetstidspunkt": "2012-03-15",
+                "erHistorisk": true,
+                "__typename": "Folkeregisterpersonstatus"
+              },
+              {
+                "kode": "BOSATT",
+                "tekst": "Bosatt etter folkeregisterloven",
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "fregGyldighetstidspunkt": "1990-01-01",
+                "erHistorisk": false,
+                "__typename": "Folkeregisterpersonstatus"
+              },
+              {
+                "kode": "MIDLERTIDIG",
+                "tekst": "Midlertidig (D-nummer)",
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "fregGyldighetstidspunkt": "2020-10-22",
+                "erHistorisk": true,
+                "__typename": "Folkeregisterpersonstatus"
+              }
+            ],
+            "foedsel": {
+              "foedeland": "NO",
+              "foedested": "OSLO",
+              "foedselsaar": 1969,
+              "foedselsdato": "1969-05-30",
+              "__typename": "Foedsel"
+            },
+            "sivilstand": [
+              {
+                "type": "Gift",
+                "relatertVedSivilstand": "21075114491",
+                "gyldigFraOgMed": "2019-08-03",
+                "bekreftelsesdato": null,
+                "master": "Freg",
+                "kilde": "FREG",
+                "erHistorisk": false,
+                "__typename": "Sivilstand"
+              },
+              {
+                "type": "Skilt",
+                "relatertVedSivilstand": null,
+                "gyldigFraOgMed": "2014-04-09",
+                "bekreftelsesdato": null,
+                "master": "NAV (PDL)",
+                "kilde": "Tyske trygdemyndigheter, TYSKLAND",
+                "erHistorisk": true,
+                "__typename": "Sivilstand"
+              },
+              {
+                "type": "Separert",
+                "relatertVedSivilstand": "12028536819",
+                "gyldigFraOgMed": "2013-01-03",
+                "bekreftelsesdato": null,
+                "master": "NAV (PDL)",
+                "kilde": "Tyske trygdemyndigheter, TYSKLAND",
+                "erHistorisk": true,
+                "__typename": "Sivilstand"
+              },
+              {
+                "type": "Gift",
+                "relatertVedSivilstand": "12028536819",
+                "gyldigFraOgMed": "2011-02-02",
+                "bekreftelsesdato": null,
+                "master": "Freg",
+                "kilde": "KILDE_DSF",
+                "erHistorisk": false,
+                "__typename": "Sivilstand"
+              }
+            ],
+            "__typename": "Personopplysninger"
+          },
+          "__typename": "Saksopplysninger"
+        }
+      }
+    },
+    "hentStatsborgerskap": {
+      "data": {
+        "hentSaksopplysninger": {
+          "persondata": {
+            "statsborgerskap": [
+              {
+                "land": "NORGE",
+                "bekreftelsesdato": null,
+                "gyldigFraOgMed": "1990-01-01",
+                "gyldigTilOgMed": null,
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "erHistorisk": false,
+                "__typename": "Statsborgerskap"
+              }
+            ],
+            "__typename": "Personopplysninger"
+          },
+          "__typename": "Saksopplysninger"
+        }
+      }
+    },
+    "hentAdresser": {
+      "data": {
+        "hentSaksopplysninger": {
+          "persondata": {
+            "bostedsadresser": [
+              {
+                "coAdressenavn": "Co Yo 1",
+                "adresse": {
+                  "tilleggsnavn": null,
+                  "gatenavn": "bosted gata 3",
+                  "husnummerEtasjeLeilighet": "42",
+                  "postboks": null,
+                  "postnummer": "0001",
+                  "poststed": null,
+                  "region": null,
+                  "land": "STORBRITANNIA",
+                  "__typename": "StrukturertAdresseformat"
+                },
+                "gyldigFraOgMed": "1995-06-16",
+                "gyldigTilOgMed": null,
+                "kilde": "Folkeregisteret",
+                "master": "FREG",
+                "erHistorisk": false,
+                "__typename": "Bostedsadresse"
+              },
+              {
+                "coAdressenavn": null,
+                "adresse": {
+                  "tilleggsnavn": "tilleggg navn",
+                  "gatenavn": null,
+                  "husnummerEtasjeLeilighet": null,
+                  "postboks": null,
+                  "postnummer": "2414",
+                  "poststed": "ELVERUM",
+                  "region": null,
+                  "land": "NORGE",
+                  "__typename": "StrukturertAdresseformat"
+                },
+                "gyldigFraOgMed": "1957-09-12",
+                "gyldigTilOgMed": null,
+                "kilde": "Folkeregisteret",
+                "master": "FREG",
+                "erHistorisk": true,
+                "__typename": "Bostedsadresse"
+              }
+            ],
+            "oppholdsadresser": [
+              {
+                "coAdressenavn": "CO 3",
+                "adresse": {
+                  "tilleggsnavn": null,
+                  "gatenavn": "opphold gata 1",
+                  "husnummerEtasjeLeilighet": "42 B",
+                  "postboks": null,
+                  "postnummer": "0001",
+                  "poststed": "OSLO",
+                  "region": null,
+                  "land": "NORGE",
+                  "__typename": "StrukturertAdresseformat"
+                },
+                "gyldigFraOgMed": "2016-10-21",
+                "gyldigTilOgMed": null,
+                "kilde": "Folkeregisteret",
+                "master": "FREG",
+                "erHistorisk": false,
+                "__typename": "Oppholdsadresse"
+              }
+            ],
+            "kontaktadresser": [
+              {
+                "coAdressenavn": null,
+                "semistrukturertAdresse": {
+                  "adresselinje1": null,
+                  "adresselinje2": null,
+                  "adresselinje3": null,
+                  "adresselinje4": null,
+                  "postnummer": "3011",
+                  "poststed": "DRAMMEN",
+                  "land": "NORGE",
+                  "__typename": "SemistrukturertAdresseformat"
+                },
+                "strukturertAdresse": null,
+                "gyldigFraOgMed": null,
+                "gyldigTilOgMed": null,
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "erHistorisk": true,
+                "__typename": "Kontaktadresse"
+              },
+              {
+                "coAdressenavn": "CO 2",
+                "semistrukturertAdresse": null,
+                "strukturertAdresse": {
+                  "tilleggsnavn": null,
+                  "gatenavn": "kontakt gata 1",
+                  "husnummerEtasjeLeilighet": "42",
+                  "postboks": null,
+                  "postnummer": "0001",
+                  "poststed": null,
+                  "region": null,
+                  "land": "SVERIGE",
+                  "__typename": "StrukturertAdresseformat"
+                },
+                "gyldigFraOgMed": "2016-10-21",
+                "gyldigTilOgMed": null,
+                "master": "FREG",
+                "kilde": "Folkeregisteret",
+                "erHistorisk": false,
+                "__typename": "Kontaktadresse"
+              }
+            ],
+            "__typename": "Personopplysninger"
+          },
+          "__typename": "Saksopplysninger"
+        }
+      }
+    }
+  },
+  "post": {
+    "/api/avklartefakta/9006/arbeidsland": {
+      "virksomheter": {
+        "virksomhetIDer": []
+      },
+      "arbeidsland": {
+        "arbeidsland": ["CN", "TH"]
+      },
+      "fullstendigManglendeInnbetaling": false,
+      "manglendeInnbetalingHandlingsvalg": null,
+      "ikkeYrkesaktivFamilieRelasjonstype": null,
+      "ikkeYrkesaktivOppholdstype": null,
+      "arbeidssituasjonType": null,
+      "ukjentSluttdatoMedlemskapsperiode": false
+    }
+  }
+}

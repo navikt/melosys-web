@@ -1,6 +1,6 @@
 import { Page } from "@playwright/test";
 import fixture from "./eu-eos-registrering-unntak.json" with { type: "json" };
-import { mockGraphql, svarJson } from "./eosBehandlingMock";
+import { mockGraphql, svarJson } from "./mockUtils";
 
 /**
  * Mocker alle API- og GraphQL-kall for en EU/EØS-behandling «Melding om utstasjonering – A009»
