@@ -26,6 +26,10 @@ import { feiletResponsSelectors } from "../../../ducks/feiletRespons";
 import vurdering_unntak_medlemskap from "./vurderingUnntakMedlemskapSchema";
 import "./vurderingUnntakMedlemskap.less";
 import { BestemmelseSelect } from "./bestemmelseSelect";
+import {
+  erKonvensjonStorbritanniaFørIkrafttredelse,
+  erUtsendingStorbritanniaOver24Måneder,
+} from "./konvensjonStorbritannia";
 import { resetKontrollFeil } from "../../../ducks/kontroll/actions";
 
 const { EU_EOS, TRYGDEAVTALE } = MKV.Koder.sakstyper;
@@ -175,9 +179,21 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
 
   const utfallErGODKJENT = formValues?.utfallRegistreringUnntak === GODKJENT;
   const utfallErDelvisGodkjent = formValues?.utfallRegistreringUnntak === DELVIS_GODKJENT;
+  const utfallErGodkjentEllerDelvis = utfallErGODKJENT || utfallErDelvisGodkjent;
+
+  const visUtsendingOver24MånederFeil =
+    utfallErGodkjentEllerDelvis &&
+    erUtsendingStorbritanniaOver24Måneder(formValues.fom, formValues.tom, formValues.bestemmelse);
+  const visKonvensjonFørIkrafttredelseInfo =
+    utfallErGodkjentEllerDelvis && erKonvensjonStorbritanniaFørIkrafttredelse(formValues.fom, formValues.bestemmelse);
 
   return (
     <div className="vurderingUnntakMedlemskap">
+      {visKonvensjonFørIkrafttredelseInfo && (
+        <Nav.Alert variant="info" className="vurderingUnntakMedlemskap__konvensjonmelding">
+          Konvensjonen mellom EØS/EFTA-landene og Storbritannia gjelder fra 1. januar 2024
+        </Nav.Alert>
+      )}
       <Nav.Heading level="1" className="stegvelgertittel">
         Unntak medlemskap
       </Nav.Heading>
@@ -250,6 +266,12 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
         </>
       )}
 
+      {visUtsendingOver24MånederFeil && (
+        <Nav.Alert variant="error" className="vurderingUnntakMedlemskap__periodelengdefeil">
+          Periodelengde er mer enn 24 måneder.
+        </Nav.Alert>
+      )}
+
       <Feilmeldinger />
 
       {[DELVIS_GODKJENT, IKKE_GODKJENT].includes(formValues.utfallRegistreringUnntak) && !harErrorFeilmelding && (
@@ -264,6 +286,7 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           onClick: handleBekreft,
           disabled:
             !formState?.isValid ||
+            visUtsendingOver24MånederFeil ||
             (harErrorFeilmelding && formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
             !redigerbart,
         }}
