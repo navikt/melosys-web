@@ -1,5 +1,6 @@
-import { Page, Route } from "@playwright/test";
+import { Page } from "@playwright/test";
 import { FtrlInngangMock, mockFtrlInngang } from "./ftrlInngangMock";
+import { svarJson } from "./mockUtils";
 
 /**
  * Mocker en FTRL-behandling (se ftrlInngangMock.ts) og eessi-kallene som brukes i sidepanelet «Opprett ny BUC».
@@ -25,10 +26,6 @@ export const MOTTAKERINSTITUSJONER: Mottakerinstitusjon[] = [
 ];
 
 const RINA_URL = "http://localhost:8083/rina/buc/123";
-
-async function svarJson(route: Route, body: unknown): Promise<void> {
-  await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(body) });
-}
 
 export async function mockOpprettNyBuc(page: Page): Promise<FtrlInngangMock> {
   const mock = await mockFtrlInngang(page);

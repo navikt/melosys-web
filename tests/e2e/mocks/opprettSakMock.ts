@@ -1,4 +1,5 @@
-import { Page, Route } from "@playwright/test";
+import { Page } from "@playwright/test";
+import { mockGraphql, svarJson } from "./mockUtils";
 
 /**
  * Mocker alle API- og GraphQL-kall for «Opprett ny sak/behandling» for en bruker uten eksisterende saker,
@@ -65,10 +66,6 @@ const GRAPHQL_RESPONSER: Record<string, unknown> = {
   },
 };
 
-async function svarJson(route: Route, body: unknown): Promise<void> {
-  await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(body) });
-}
-
 export async function mockOpprettSak(page: Page): Promise<OpprettSakMock> {
   const ikkeMockedeKall: string[] = [];
   let opprettetSak: OpprettSakRequest | null = null;
@@ -98,17 +95,7 @@ export async function mockOpprettSak(page: Page): Promise<OpprettSakMock> {
     },
   );
 
-  await page.route(
-    (url) => /^\/graphql\/?$/.test(url.pathname),
-    async (route) => {
-      const { operationName } = route.request().postDataJSON() as { operationName: string };
-      if (operationName in GRAPHQL_RESPONSER) {
-        return svarJson(route, GRAPHQL_RESPONSER[operationName]);
-      }
-      ikkeMockedeKall.push(`graphql ${operationName}`);
-      return route.fulfill({ status: 404, body: `Ingen mock for graphql ${operationName}` });
-    },
-  );
+  await mockGraphql(page, GRAPHQL_RESPONSER, ikkeMockedeKall);
 
   return {
     url: "/melosys/opprettnysak",

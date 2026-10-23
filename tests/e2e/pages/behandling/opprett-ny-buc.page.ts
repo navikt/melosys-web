@@ -1,5 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
 import type { OpprettBucRequest } from "../../mocks/opprettNyBucMock";
+import { MultiSelectComponent } from "../komponenter/multiselect.component";
 
 const OPPRETT_NY_BUC = "Opprett ny BUC";
 
@@ -15,16 +16,16 @@ export class OpprettNyBucPage {
     return this.page.getByRole("tabpanel", { name: OPPRETT_NY_BUC });
   }
 
-  private flervalg(felt: Flervalg): Locator {
+  private combobox(felt: Flervalg): Locator {
     return this.panel.getByRole("combobox", { name: felt, exact: true });
   }
 
   /** Chips i et flervalg ligger i samme wrapper som comboboxen */
-  private valgte(felt: Flervalg): Locator {
-    return this.panel
+  private flervalg(felt: Flervalg): MultiSelectComponent {
+    const wrapper = this.panel
       .locator(".aksel-combobox__wrapper")
-      .filter({ has: this.page.getByRole("combobox", { name: felt, exact: true }) })
-      .getByRole("button", { name: / slett$/ });
+      .filter({ has: this.page.getByRole("combobox", { name: felt, exact: true }) });
+    return new MultiSelectComponent(this.page, this.combobox(felt), wrapper);
   }
 
   private get opprettKnapp(): Locator {
@@ -34,16 +35,7 @@ export class OpprettNyBucPage {
   async goto(url: string): Promise<void> {
     await this.page.goto(url);
     await this.page.getByRole("tab", { name: OPPRETT_NY_BUC }).click();
-    await expect(this.flervalg("Land")).toBeVisible();
-  }
-
-  /**
-   * Aksel Combobox registrerer «klikk utenfor»-lytteren i en setTimeout(0) når listen åpnes. Lukkes listen før
-   * timeouten har kjørt (lett under last), lekker lytteren og senere klikk i listen lukker den uten å velge.
-   * Vent derfor en macrotask etter at en liste er åpnet.
-   */
-  private async ventTilListenErKlar(): Promise<void> {
-    await this.page.evaluate(() => new Promise((resolve) => setTimeout(resolve, 0)));
+    await expect(this.combobox("Land")).toBeVisible();
   }
 
   async velgBuc(buc: string): Promise<void> {
@@ -54,35 +46,25 @@ export class OpprettNyBucPage {
    * Søk etter verdien i flervalget og velg den
    */
   async velg(felt: Flervalg, verdi: string, søketekst: string = verdi): Promise<void> {
-    await this.flervalg(felt).fill(søketekst);
-    await this.ventTilListenErKlar();
-    await this.page.getByRole("option", { name: verdi, exact: true }).click();
-    await expect(this.valgte(felt).filter({ hasText: verdi })).toHaveCount(1);
+    await this.flervalg(felt).velg(verdi, søketekst);
   }
 
   async fjern(felt: Flervalg, verdi: string): Promise<void> {
-    await this.valgte(felt).filter({ hasText: verdi }).click();
-    await expect(this.valgte(felt).filter({ hasText: verdi })).toHaveCount(0);
+    await this.flervalg(felt).fjern(verdi);
   }
 
   /**
-   * Verifiser at nøyaktig de oppgitte verdiene er valgt
+   * Verifiser at nøyaktig de oppgitte verdiene er valgt, i valgt rekkefølge
    */
   async verifiserValgte(felt: Flervalg, forventet: string[]): Promise<void> {
-    await expect(this.valgte(felt)).toHaveCount(forventet.length);
-    for (const [i, verdi] of forventet.entries()) {
-      await expect(this.valgte(felt).nth(i)).toHaveAccessibleName(`${verdi} slett`);
-    }
+    await this.flervalg(felt).verifiserValgte(forventet);
   }
 
   /**
    * Verifiser at flervalget tilbyr nøyaktig de oppgitte valgene
    */
   async verifiserValgmuligheter(felt: Flervalg, forventet: string[]): Promise<void> {
-    await this.flervalg(felt).click();
-    await this.ventTilListenErKlar();
-    const listeId = await this.flervalg(felt).getAttribute("aria-controls");
-    await expect(this.page.locator(`[id="${listeId}"]`).getByRole("option")).toHaveText(forventet);
+    await this.flervalg(felt).verifiserValgmuligheter(forventet);
   }
 
   async klikkOpprett(): Promise<void> {

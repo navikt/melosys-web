@@ -1,5 +1,6 @@
-import { Page, Route } from "@playwright/test";
+import { Page } from "@playwright/test";
 import fixture from "./eu-eos-arbeid-flere-land.json" with { type: "json" };
+import { mockGraphql, svarJson } from "./mockUtils";
 import type { MottatteOpplysningerRequest, Soeknadsland } from "./ftrlInngangMock";
 
 /**
@@ -16,10 +17,6 @@ export interface EuEosArbeidFlereLandMock {
   antallOppfriskninger: () => number;
   /** Kall som ikke har en mock (method + path). Bør være tom etter testen. */
   ikkeMockedeKall: string[];
-}
-
-async function svarJson(route: Route, body: unknown): Promise<void> {
-  await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(body) });
 }
 
 export async function mockEuEosArbeidFlereLand(page: Page): Promise<EuEosArbeidFlereLandMock> {
@@ -58,17 +55,7 @@ export async function mockEuEosArbeidFlereLand(page: Page): Promise<EuEosArbeidF
     },
   );
 
-  await page.route(
-    (url) => /^\/graphql\/?$/.test(url.pathname),
-    async (route) => {
-      const { operationName } = route.request().postDataJSON() as { operationName: string };
-      if (operationName in graphql) {
-        return svarJson(route, graphql[operationName as keyof typeof graphql]);
-      }
-      ikkeMockedeKall.push(`graphql ${operationName}`);
-      return route.fulfill({ status: 404, body: `Ingen mock for graphql ${operationName}` });
-    },
-  );
+  await mockGraphql(page, graphql, ikkeMockedeKall);
 
   return {
     url: `/melosys/EU_EOS/saksbehandling/${saksnummer}?behandlingID=${behandlingID}`,

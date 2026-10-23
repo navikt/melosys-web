@@ -1,4 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
+import { MultiSelectComponent } from "../komponenter/multiselect.component";
 
 const PERIODE_OG_LAND = "Periode og land";
 const FLERE_LAND_UKJENT_HVILKE = "Flere land. Ikke kjent hvilke.";
@@ -25,8 +26,8 @@ export class SoknadslandPage {
     return this.land.getByRole("checkbox", { name: FLERE_LAND_UKJENT_HVILKE });
   }
 
-  private valgte(): Locator {
-    return this.land.getByRole("button", { name: / slett$/ });
+  private get valgteLand(): MultiSelectComponent {
+    return new MultiSelectComponent(this.page, this.landvelger, this.land);
   }
 
   async goto(url: string): Promise<void> {
@@ -49,27 +50,22 @@ export class SoknadslandPage {
    * Søk etter landet og velg det
    */
   async velg(land: string, søketekst: string = land): Promise<void> {
-    await this.landvelger.fill(søketekst);
-    await this.page.getByRole("option", { name: land, exact: true }).click();
-    await expect(this.valgte().filter({ hasText: land })).toHaveCount(1);
+    await this.valgteLand.velg(land, søketekst);
   }
 
   async fjern(land: string): Promise<void> {
-    await this.land.getByRole("button", { name: `${land} slett`, exact: true }).click();
+    await this.valgteLand.fjern(land);
   }
 
   async fjernSisteMedBackspace(): Promise<void> {
-    await this.landvelger.press("Backspace");
+    await this.valgteLand.fjernSisteMedBackspace();
   }
 
   /**
    * Verifiser at nøyaktig de oppgitte landene er valgt, i valgt rekkefølge
    */
   async verifiserValgte(forventet: string[]): Promise<void> {
-    await expect(this.valgte()).toHaveCount(forventet.length);
-    for (const [i, land] of forventet.entries()) {
-      await expect(this.valgte().nth(i)).toHaveAccessibleName(`${land} slett`);
-    }
+    await this.valgteLand.verifiserValgte(forventet);
   }
 
   async klikkFlereLandUkjentHvilke(): Promise<void> {

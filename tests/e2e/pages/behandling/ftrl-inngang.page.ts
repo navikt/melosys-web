@@ -1,5 +1,6 @@
 import { expect, Locator, Page, Request } from "@playwright/test";
 import type { ArbeidslandRequest, MottatteOpplysningerRequest } from "../../mocks/ftrlInngangMock";
+import { MultiSelectComponent } from "../komponenter/multiselect.component";
 
 const ARBEIDSLAND = "Arbeidsland";
 const AVTALELAND_ADVARSEL = "Ett eller flere av landene du har valgt er EØS- eller avtaleland";
@@ -27,8 +28,8 @@ export class FtrlInngangPage {
     return this.aktivtSteg.getByRole("button", { name: "Bekreft og fortsett", exact: true });
   }
 
-  private valgtLand(land: string): Locator {
-    return this.aktivtSteg.getByRole("button", { name: `${land} slett`, exact: true });
+  private get arbeidslandvelger(): MultiSelectComponent {
+    return new MultiSelectComponent(this.page, this.arbeidsland, this.aktivtSteg);
   }
 
   async goto(url: string): Promise<void> {
@@ -40,26 +41,19 @@ export class FtrlInngangPage {
    * Søk etter landet i arbeidsland-listen og velg det
    */
   async velgArbeidsland(land: string, søketekst: string = land): Promise<void> {
-    await this.arbeidsland.fill(søketekst);
-    await this.page.getByRole("option", { name: land, exact: true }).click();
-    await this.arbeidsland.press("Escape");
-    await expect(this.valgtLand(land)).toBeVisible();
+    await this.arbeidslandvelger.velg(land, søketekst);
   }
 
   async fjernArbeidsland(land: string): Promise<void> {
-    await this.valgtLand(land).click();
-    await expect(this.valgtLand(land)).toHaveCount(0);
+    await this.arbeidslandvelger.fjern(land);
   }
 
   /**
-   * Verifiser at nøyaktig de oppgitte landene er valgt
+   * Verifiser at nøyaktig de oppgitte landene er valgt, i valgt rekkefølge
    */
   async verifiserValgteArbeidsland(forventet: string[]): Promise<void> {
     await expect(this.arbeidsland).toBeVisible();
-    await expect(this.aktivtSteg.getByRole("button", { name: / slett$/ })).toHaveCount(forventet.length);
-    for (const land of forventet) {
-      await expect(this.valgtLand(land)).toBeVisible();
-    }
+    await this.arbeidslandvelger.verifiserValgte(forventet);
   }
 
   async verifiserFeilmelding(tekst: string): Promise<void> {
