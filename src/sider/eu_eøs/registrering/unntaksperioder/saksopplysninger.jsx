@@ -315,8 +315,7 @@ function Saksopplysninger({
     return null;
   }
 
-  const listevalgEndringHandler = (event) => {
-    const ikkeGodkjentBegrunnelse = [...event.value];
+  const begrunnelseEndringHandler = (ikkeGodkjentBegrunnelse) => {
     setIkkeGodkjentBegrunnelseKoder(ikkeGodkjentBegrunnelse);
     validerAvslag(ikkeGodkjentBegrunnelse);
   };
@@ -385,17 +384,14 @@ function Saksopplysninger({
                 <>
                   <Nav.Row>
                     <Nav.Column xs="6">
-                      <Nav.Fieldset legend="Begrunnelse for ikke godkjent unntaksperiode">
-                        <Mui.ListevelgerFlervalg
-                          disabled={!redigerbart}
-                          muligeValg={MKV.KTObjects.begrunnelser.ikke_godkjent_begrunnelser}
-                          label="Legg til begrunnelse for ikke oppfylt:"
-                          tillatFritekst={false}
-                          onChange={listevalgEndringHandler}
-                          feil={ikkeGodkjentFeilmeldinger.begrunnelseKoder}
-                          defaultElementer={behandlingsresultat.begrunnelseKoder}
-                        />
-                      </Nav.Fieldset>
+                      <Mui.KodeTermCheckboxGroup
+                        disabled={!redigerbart}
+                        muligeValg={MKV.KTObjects.begrunnelser.ikke_godkjent_begrunnelser}
+                        legend="Begrunnelse for ikke godkjent unntaksperiode"
+                        onChange={begrunnelseEndringHandler}
+                        error={ikkeGodkjentFeilmeldinger.begrunnelseKoder}
+                        defaultValg={behandlingsresultat.begrunnelseKoder}
+                      />
                     </Nav.Column>
                   </Nav.Row>
                   <Nav.Row>

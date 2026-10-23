@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PT from "prop-types";
 import { connect, useDispatch } from "react-redux";
-import { change, getFormValues, reduxForm } from "redux-form";
+import { change, FieldArray, getFormValues, reduxForm } from "redux-form";
 
 import * as Api from "../../../../services/api";
 import * as Nav from "../../../../navFrontend";
@@ -33,6 +33,30 @@ import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurderingUtpektSchema from "./vurderingUtpektSchema";
 
 import "./vurderingUtpekt.less";
+
+const INGEN_VALG = [];
+
+function OvergangsregelCheckboxer({ fields, meta, muligeValg, disabled }) {
+  const dispatch = useDispatch();
+
+  return (
+    <Mui.KodeTermCheckboxGroup
+      legend="Overgangsregler gjelder"
+      muligeValg={muligeValg}
+      defaultValg={fields.getAll() ?? INGEN_VALG}
+      onChange={(valgte) => dispatch(change(meta.form, fields.name, valgte))}
+      disabled={disabled}
+      error={meta.error}
+    />
+  );
+}
+
+OvergangsregelCheckboxer.propTypes = {
+  fields: PT.object.isRequired,
+  meta: PT.object.isRequired,
+  muligeValg: PT.arrayOf(MPT.Kodeverk).isRequired,
+  disabled: PT.bool.isRequired,
+};
 
 export function VurderingUtpekt({
   vurderingBegrunnelser = [],
@@ -172,19 +196,12 @@ export function VurderingUtpekt({
       {(redigerbart || formValues.overgangsregelbestemmelser) && (
         <Nav.Row className="rad">
           <Nav.Column xs="5">
-            <Nav.BodyLong weight="semibold" size="small">
-              Overgangsregler gjelder:
-            </Nav.BodyLong>
-            <Nav.Fieldset>
-              <Skjema.ListeVelger
-                feltNavn="overgangsregelbestemmelser"
-                label="Legg til ny overgangsregelbestemmelse:"
-                placeholder="(Velg bestemmelse)"
-                muligeValg={MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser}
-                disabled={!redigerbart}
-                gruppe
-              />
-            </Nav.Fieldset>
+            <FieldArray
+              name="overgangsregelbestemmelser"
+              component={OvergangsregelCheckboxer}
+              muligeValg={MKV.KTObjects.lovvalgsbestemmelser.overgangsregelbestemmelser}
+              disabled={!redigerbart}
+            />
           </Nav.Column>
         </Nav.Row>
       )}

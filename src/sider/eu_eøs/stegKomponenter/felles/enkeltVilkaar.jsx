@@ -26,8 +26,8 @@ function EnkeltVilkaar(props) {
     oppdaterData(lagVilkaar(vilkaarKode, value));
   };
 
-  const listevalgEndringHandler = (event) => {
-    oppdaterData(lagVilkarbegrunnelse(vilkaarKode, event.value));
+  const begrunnelseEndringHandler = (begrunnelseKoder) => {
+    oppdaterData(lagVilkarbegrunnelse(vilkaarKode, begrunnelseKoder));
   };
 
   return (
@@ -48,17 +48,14 @@ function EnkeltVilkaar(props) {
       </Nav.Row>
       {vilkaar.oppfylt !== undefined && !vilkaar.oppfylt && (
         <Nav.Row>
-          <Nav.Column xs="12" md="10" lg="8">
-            <Nav.Fieldset legend="">
-              <Mui.ListevelgerFlervalg
-                muligeValg={begrunnelser}
-                label="Legg til begrunnelse"
-                tillatFritekst={false}
-                onChange={listevalgEndringHandler}
-                defaultElementer={vilkaar.begrunnelseKoder}
-                disabled={!redigerbart}
-              />
-            </Nav.Fieldset>
+          <Nav.Column xs="12">
+            <Mui.KodeTermCheckboxGroup
+              muligeValg={begrunnelser}
+              legend="Legg til begrunnelse"
+              onChange={begrunnelseEndringHandler}
+              defaultValg={vilkaar.begrunnelseKoder}
+              disabled={!redigerbart}
+            />
           </Nav.Column>
         </Nav.Row>
       )}
