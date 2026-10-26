@@ -16,7 +16,6 @@ function PdfLinkStandardvedlegg({ standardvedlegg, skalViseEgenFrontendTittel }:
     <Nav.Link
       href="#"
       title="Åpnes i ny fane"
-      aria-label="Åpnes i ny fane"
       onClick={(event) => {
         event.preventDefault();
         apnePdfINyFane(

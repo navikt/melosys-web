@@ -39,7 +39,7 @@ function FritekstvedleggRow({
     <Nav.Table.Row className="vedlegg-row">
       <Nav.Table.DataCell>
         <Ikoner.Binders className="document-icon" />
-        <Nav.Link href="#" title="Åpnes i ny fane" aria-label="Åpnes i ny fane" onClick={aapnePdf}>
+        <Nav.Link href="#" title="Åpnes i ny fane" onClick={aapnePdf}>
           {fritekstvedlegg.tittel}
           <Ikoner.ExternalLink />
         </Nav.Link>

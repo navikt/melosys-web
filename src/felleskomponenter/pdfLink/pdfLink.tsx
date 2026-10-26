@@ -22,7 +22,6 @@ function PdfLink({ journalpostID, dokumentID, tittel }: PdfLinkProps) {
     <Nav.Link
       href="#"
       title="Åpnes i ny fane"
-      aria-label="Åpnes i ny fane"
       onClick={(event) => {
         event.preventDefault();
         apnePdfINyFane(lagPdfUrl(journalpostID, dokumentID), tittel);

@@ -77,7 +77,6 @@ function Dokumentliste({ behandlingID, dokumenter, validateOnClick, label, class
         <Nav.Link
           href="#"
           title="Åpnes i ny fane"
-          aria-label="Åpnes i ny fane"
           onClick={(e) => e.preventDefault()}
           onMouseDown={() => klikk(dokument)}
         >
@@ -98,7 +97,6 @@ function Dokumentliste({ behandlingID, dokumenter, validateOnClick, label, class
         <Nav.Link
           href="#"
           title="Åpnes i ny fane"
-          aria-label="Åpnes i ny fane"
           onClick={(e) => e.preventDefault()}
           onMouseDown={() => klikk(dokument)}
         >
