@@ -1,14 +1,23 @@
-import { useEffect, useState } from "react";
-import PT from "prop-types";
-import { connect, useDispatch } from "react-redux";
-import { change, FieldArray, getFormValues, reduxForm } from "redux-form";
+import { MouseEvent, useEffect, useState } from "react";
+import { connect, ConnectedProps } from "react-redux";
+import {
+  change,
+  DecoratedFormProps,
+  FieldArray,
+  getFormValues,
+  InjectedFormProps,
+  reduxForm,
+  WrappedFieldArrayProps,
+} from "redux-form";
+import { KTObject } from "@navikt/melosys-kodeverk";
+import { RootState } from "AppTypes";
+import { useDispatch } from "../../../../hooks";
 
 import * as Api from "../../../../services/api";
 import * as Nav from "../../../../navFrontend";
 import * as KV from "../../../../kodeverk";
 import * as Skjema from "../../../../felleskomponenter/skjema";
 import * as Mui from "../../../../felleskomponenter/ui";
-import * as MPT from "../../../../proptypes";
 import * as Utils from "../../../../utils";
 
 import MKV, { MKVUtils } from "../../../../melosyskodeverk";
@@ -34,9 +43,19 @@ import vurderingUtpektSchema from "./vurderingUtpektSchema";
 
 import "./vurderingUtpekt.less";
 
-const INGEN_VALG = [];
+const INGEN_VALG: string[] = [];
 
-function OvergangsregelCheckboxer({ fields, meta, muligeValg, disabled }) {
+interface OvergangsregelCheckboxerProps {
+  muligeValg: KTObject[];
+  disabled: boolean;
+}
+
+function OvergangsregelCheckboxer({
+  fields,
+  meta,
+  muligeValg,
+  disabled,
+}: WrappedFieldArrayProps<string> & OvergangsregelCheckboxerProps) {
   const dispatch = useDispatch();
 
   return (
@@ -51,12 +70,75 @@ function OvergangsregelCheckboxer({ fields, meta, muligeValg, disabled }) {
   );
 }
 
-OvergangsregelCheckboxer.propTypes = {
-  fields: PT.object.isRequired,
-  meta: PT.object.isRequired,
-  muligeValg: PT.arrayOf(MPT.Kodeverk).isRequired,
-  disabled: PT.bool.isRequired,
+interface FormValues {
+  fom?: string;
+  tom?: string;
+  lovvalgsbestemmelse?: string;
+  lovvalgsland?: string;
+  utpekingVurdering?: string;
+  overgangsregelbestemmelser?: string[];
+}
+
+interface OwnProps {
+  slettData: (data?: unknown) => void;
+  tilbake: () => void;
+  bekreftOgFortsett: () => void;
+  oppdaterData: (data: unknown) => void;
+  redigerbart: boolean;
+  tilstand: {
+    harAvklaring: boolean;
+    lovvalgsbestemmelse?: string;
+    lovvalgsland?: string;
+  };
+}
+
+const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
+  const behandlingsstatus = behandlingerSelectors.BehandlingsstatusKodeSelector(state);
+
+  const behandlingsstatusErAvsluttetEllerMidlertidigBeslutning =
+    MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus);
+
+  const lovvalgsperiode = behandlingsstatusErAvsluttetEllerMidlertidigBeslutning
+    ? {
+        fomDato: lovvalgsperioderSelectors.FomDatoSelector(state),
+        tomDato: lovvalgsperioderSelectors.TomDatoSelector(state),
+      }
+    : {
+        fomDato: mottatteOpplysningerSelectors.PeriodeFomSelector(state),
+        tomDato: mottatteOpplysningerSelectors.PeriodeTomSelector(state),
+      };
+
+  const initialLovvalgsperiodeFom = behandlingsstatusErAvsluttetEllerMidlertidigBeslutning
+    ? lovvalgsperioderSelectors.FomDatoSelector(state)
+    : behandlingerSelectors.LovvalgsperiodeFomSelector(state);
+  const initialLovvalgsperiodeTom = behandlingsstatusErAvsluttetEllerMidlertidigBeslutning
+    ? lovvalgsperioderSelectors.TomDatoSelector(state)
+    : behandlingerSelectors.LovvalgsperiodeTomSelector(state);
+
+  return {
+    lovvalgsperiode,
+    formValues: getFormValues(KV.Form.VURDER_UTPEKING)(state) as FormValues | undefined,
+    initialValues: {
+      fom: initialLovvalgsperiodeFom ? Utils.dato.formatterDatoTilNorsk(initialLovvalgsperiodeFom) : "",
+      tom: initialLovvalgsperiodeTom ? Utils.dato.formatterDatoTilNorsk(initialLovvalgsperiodeTom) : "",
+      lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || "",
+      lovvalgsland: ownProps.tilstand.lovvalgsland,
+      utpekingVurdering: flytSelectors.UtpekingVurderingSelector(state),
+      overgangsregelbestemmelser: mottatteOpplysningerSelectors
+        .OvergangsregelbestemmelserSelector(state)
+        .map((o: KTObject) => o.kode),
+    },
+    vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state) as
+      string[] | undefined,
+    ytterligereInformasjon: mottatteOpplysningerSelectors.YtterligereInformasjonSelector(state) as string | null,
+    behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state) as string,
+    behandlingID: behandlingerSelectors.BehandlingIDSelector(state) as number,
+  };
 };
+
+const connector = connect(mapStateToProps);
+
+type VurderingUtpektProps = ConnectedProps<typeof connector> & OwnProps;
 
 export function VurderingUtpekt({
   vurderingBegrunnelser = [],
@@ -71,7 +153,7 @@ export function VurderingUtpekt({
   ytterligereInformasjon = null,
   behandlingstema,
   behandlingID,
-}) {
+}: VurderingUtpektProps & InjectedFormProps<FormValues, VurderingUtpektProps>) {
   const lovvalgsbestemmelserStottetAvBrevVedNorgeUtpekt = MKV.Kodekombinasjoner.alleEØSLovvalg.filter(
     ({ kode }) =>
       kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A ||
@@ -252,7 +334,7 @@ export function VurderingUtpekt({
           disabled: !(redigerbart && harAvklaring),
         }}
         tilbakeKnappProps={{
-          onClick: (e) => {
+          onClick: (e: MouseEvent) => {
             e.preventDefault();
             tilbake();
           },
@@ -263,75 +345,9 @@ export function VurderingUtpekt({
   );
 }
 
-VurderingUtpekt.propTypes = {
-  vurderingBegrunnelser: PT.arrayOf(PT.string),
-  slettData: PT.func.isRequired,
-  tilbake: PT.func.isRequired,
-  bekreftOgFortsett: PT.func.isRequired,
-  redigerbart: PT.bool.isRequired,
-  tilstand: PT.shape({
-    harAvklaring: PT.bool.isRequired,
-    lovvalgsbestemmelse: PT.string,
-    lovvalgsland: PT.string,
-  }).isRequired,
-  oppdaterData: PT.func.isRequired,
-  handleSubmit: PT.func.isRequired,
-  formValues: PT.object,
-  lovvalgsperiode: MPT.Periode.isRequired,
-  ytterligereInformasjon: PT.string,
-  behandlingstema: PT.string.isRequired,
-  behandlingID: PT.number.isRequired,
-};
-
-const mapStateToProps = (state, ownProps) => {
-  const behandlingsstatus = behandlingerSelectors.BehandlingsstatusKodeSelector(state);
-
-  const behandlingsstatusErAvsluttetEllerMidlertidigBeslutning =
-    MKVUtils.erAvsluttetEllerMidlertidigBeslutning(behandlingsstatus);
-
-  const lovvalgsperiode = behandlingsstatusErAvsluttetEllerMidlertidigBeslutning
-    ? {
-        fomDato: lovvalgsperioderSelectors.FomDatoSelector(state),
-        tomDato: lovvalgsperioderSelectors.TomDatoSelector(state),
-      }
-    : {
-        fomDato: mottatteOpplysningerSelectors.PeriodeFomSelector(state),
-        tomDato: mottatteOpplysningerSelectors.PeriodeTomSelector(state),
-      };
-
-  const initialLovvalgsperiodeFom = behandlingsstatusErAvsluttetEllerMidlertidigBeslutning
-    ? lovvalgsperioderSelectors.FomDatoSelector(state)
-    : behandlingerSelectors.LovvalgsperiodeFomSelector(state);
-  const initialLovvalgsperiodeTom = behandlingsstatusErAvsluttetEllerMidlertidigBeslutning
-    ? lovvalgsperioderSelectors.TomDatoSelector(state)
-    : behandlingerSelectors.LovvalgsperiodeTomSelector(state);
-
-  return {
-    lovvalgsperiode,
-    formValues: getFormValues(KV.Form.VURDER_UTPEKING)(state),
-    initialValues: {
-      fom: initialLovvalgsperiodeFom ? Utils.dato.formatterDatoTilNorsk(initialLovvalgsperiodeFom) : "",
-      tom: initialLovvalgsperiodeTom ? Utils.dato.formatterDatoTilNorsk(initialLovvalgsperiodeTom) : "",
-      lovvalgsbestemmelse: ownProps.tilstand.lovvalgsbestemmelse || "",
-      lovvalgsland: ownProps.tilstand.lovvalgsland,
-      utpekingVurdering: flytSelectors.UtpekingVurderingSelector(state),
-      overgangsregelbestemmelser: mottatteOpplysningerSelectors
-        .OvergangsregelbestemmelserSelector(state)
-        .map((o) => o.kode),
-    },
-    vurderingBegrunnelser: behandlingsresultatSelectors.KontrollresultatBegrunnelseKoderSelector(state),
-    ytterligereInformasjon: mottatteOpplysningerSelectors.YtterligereInformasjonSelector(state),
-    behandlingstema: behandlingerSelectors.BehandlingstemaKodeSelector(state),
-    behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  };
-};
-
-const nesteSteg = (values, dispatch, props) => {
-  props.bekreftOgFortsett();
-};
-
-export const VurderingUtpektForm = reduxForm({
-  onSubmit: nesteSteg,
+export const VurderingUtpektForm = reduxForm<FormValues, VurderingUtpektProps>({
+  onSubmit: (_values: FormValues, _dispatch: unknown, props: DecoratedFormProps<FormValues, VurderingUtpektProps>) =>
+    props.bekreftOgFortsett(),
   form: KV.Form.VURDER_UTPEKING,
   enableReinitialize: false,
   destroyOnUnmount: true,
@@ -340,4 +356,4 @@ export const VurderingUtpektForm = reduxForm({
   validate: lagYupToReduxformErrorMapper(vurderingUtpektSchema),
 })(VurderingUtpekt);
 
-export default connect(mapStateToProps)(VurderingUtpektForm);
+export default connector(VurderingUtpektForm);

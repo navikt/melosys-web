@@ -1,12 +1,20 @@
-import { useEffect, useState } from "react";
-import PT from "prop-types";
+import { ReactNode, useEffect, useState } from "react";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Nav from "../../navFrontend";
-import * as MPT from "../../proptypes";
 import * as Utils from "../../utils";
 
+interface KodeTermCheckboxGroupProps {
+  legend?: string;
+  muligeValg: KTObject[];
+  defaultValg?: string[];
+  onChange: (valgteKoder: string[]) => void;
+  disabled?: boolean;
+  error?: ReactNode;
+}
+
 // Stabil referanse, slik at useEffect under ikke resetter valgene ved hver render når defaultValg mangler
-const INGEN_VALG = [];
+const INGEN_VALG: string[] = [];
 
 function KodeTermCheckboxGroup({
   legend = "",
@@ -15,7 +23,7 @@ function KodeTermCheckboxGroup({
   onChange,
   disabled = false,
   error = undefined,
-}) {
+}: KodeTermCheckboxGroupProps) {
   const [valgteCheckboxer, setValgteCheckboxer] = useState(
     muligeValg.map((valg) => valg.kode).filter((kode) => defaultValg.includes(kode)),
   );
@@ -24,7 +32,7 @@ function KodeTermCheckboxGroup({
     setValgteCheckboxer(muligeValg.map((valg) => valg.kode).filter((kode) => defaultValg.includes(kode)));
   }, [defaultValg]);
 
-  const onChangeHandler = (nyeValgteCheckboxer) => {
+  const onChangeHandler = (nyeValgteCheckboxer: string[]) => {
     setValgteCheckboxer(nyeValgteCheckboxer);
     onChange(nyeValgteCheckboxer);
   };
@@ -45,14 +53,5 @@ function KodeTermCheckboxGroup({
     </Nav.CheckboxGroup>
   );
 }
-
-KodeTermCheckboxGroup.propTypes = {
-  legend: PT.string,
-  muligeValg: PT.arrayOf(MPT.Kodeverk).isRequired,
-  disabled: PT.bool,
-  onChange: PT.func.isRequired,
-  defaultValg: PT.arrayOf(PT.string),
-  error: PT.node,
-};
 
 export default KodeTermCheckboxGroup;

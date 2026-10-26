@@ -1,12 +1,27 @@
 import { useEffect } from "react";
-import PT from "prop-types";
 import * as Nav from "../../../../navFrontend";
-import * as MPT from "../../../../proptypes";
 import * as Mui from "../../../../felleskomponenter/ui";
+import { KTObject } from "@navikt/melosys-kodeverk";
 
 import { konverterVilkarTilStegData, lagVilkarbegrunnelse, lagVilkaar } from "../../../../felleskomponenter/stegvelger";
 
-function EnkeltVilkaar(props) {
+interface Vilkaar {
+  oppfylt?: boolean;
+  begrunnelseKoder?: string[];
+}
+
+interface EnkeltVilkaarProps {
+  redigerbart: boolean;
+  vilkaar: Vilkaar;
+  vilkaarKode: string;
+  tittel?: string;
+  labelOppfylt: string;
+  labelIkkeOppfylt: string;
+  begrunnelser?: KTObject[];
+  oppdaterData: (data: unknown) => void;
+}
+
+function EnkeltVilkaar(props: EnkeltVilkaarProps) {
   const {
     redigerbart,
     begrunnelser = [],
@@ -22,11 +37,11 @@ function EnkeltVilkaar(props) {
     oppdaterData(konverterVilkarTilStegData(vilkaarKode, vilkaar));
   }, []);
 
-  const radioEndringHandler = (value) => {
+  const radioEndringHandler = (value: boolean) => {
     oppdaterData(lagVilkaar(vilkaarKode, value));
   };
 
-  const begrunnelseEndringHandler = (begrunnelseKoder) => {
+  const begrunnelseEndringHandler = (begrunnelseKoder: string[]) => {
     oppdaterData(lagVilkarbegrunnelse(vilkaarKode, begrunnelseKoder));
   };
 
@@ -62,16 +77,5 @@ function EnkeltVilkaar(props) {
     </div>
   );
 }
-
-EnkeltVilkaar.propTypes = {
-  redigerbart: PT.bool.isRequired,
-  vilkaar: PT.object.isRequired,
-  vilkaarKode: PT.string.isRequired,
-  tittel: PT.string,
-  labelOppfylt: PT.string.isRequired,
-  labelIkkeOppfylt: PT.string.isRequired,
-  begrunnelser: PT.arrayOf(MPT.Kodeverk),
-  oppdaterData: PT.func.isRequired,
-};
 
 export default EnkeltVilkaar;

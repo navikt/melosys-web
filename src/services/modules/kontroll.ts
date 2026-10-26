@@ -31,8 +31,8 @@ export const kontrollerAdresse = (data: RegistrertAdresseData) =>
 export const erBucAapen = (behandlingID: number) => getAsJson(`${API_BASE_URL}${KONTROLL}/${behandlingID}/erBucAapen`);
 
 export interface PeriodeKontrollData {
-  periodeFom: Date;
-  periodeTom: Date;
+  periodeFom: string;
+  periodeTom: string;
 }
 
 export const kontrollerUnntaksperiode = (behandlingID: number, data: PeriodeKontrollData) =>

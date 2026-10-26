@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
+import { ChangeEvent, FormEvent, useState, useEffect } from "react";
 import { useParams } from "react-router";
-import PT from "prop-types";
-import { connect } from "react-redux";
+import { connect, ConnectedProps } from "react-redux";
+import { Action } from "redux";
+import { ThunkDispatch } from "redux-thunk";
+import { RootState } from "AppTypes";
 import MKV from "../../../../melosyskodeverk";
 
 import * as KV from "../../../../kodeverk";
 import * as Utils from "../../../../utils";
 import * as Api from "../../../../services/api";
-import * as MPT from "../../../../proptypes";
 import * as Nav from "../../../../navFrontend";
 import * as Mui from "../../../../felleskomponenter/ui";
 
@@ -23,7 +24,57 @@ import { kontrollOperations, kontrollSelectors } from "../../../../ducks/kontrol
 import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from "./validering/unntaksperiodeSchema";
 
 import { lagYupToReduxformErrorMapper } from "../../../../yup";
+import { Avklartfakta } from "../../../../services/modules/avklartefakta";
+import { Lovvalgsperiode } from "../../../../services/modules/lovvalgsperioder";
 import "../saksopplysninger.less";
+
+interface SedLovvalgsperiode {
+  fom?: string;
+  tom?: string;
+}
+
+interface Behandlingsresultat {
+  utfallRegistreringUnntak?: string;
+  begrunnelseKoder?: string[];
+  begrunnelseFritekst?: string;
+}
+
+interface Feilmeldinger {
+  [felt: string]: string | undefined;
+}
+
+const mapStateToProps = (state: RootState) => ({
+  avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state) as Avklartfakta[],
+  lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state) as Partial<Lovvalgsperiode>,
+  sedLovvalgsperiode: behandlingerSelectors.SEDSelector(state).lovvalgsperiode as SedLovvalgsperiode | undefined,
+  sedLovvalgsbestemmelse: behandlingerSelectors.SEDSelector(state).lovvalgsbestemmelse as string,
+  behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state) as Behandlingsresultat,
+  behandlingsresultatErHentet: behandlingsresultatSelectors.BehandlingsresultatStatusErOkSelector(state) as boolean,
+  unntaksperiodeKontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
+});
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
+  oppdaterAvklartefakta: (behandlingID: number, avklartefaktaListe: Avklartfakta[]) =>
+    dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
+  lastInnSaksopplysninger: (saksnummer: string | undefined, behandlingID: number) =>
+    datalastingOperations.lastInnSaksopplysningerRegistreringUnntaksperioder(saksnummer, behandlingID)(dispatch),
+  kontrollerUnntaksperiode: (behandlingID: number, periodeFom?: string | null, periodeTom?: string | null) => {
+    if (periodeFom && periodeTom) {
+      dispatch(kontrollOperations.kontrollerUnntaksperiode(behandlingID, { periodeFom, periodeTom }));
+    }
+  },
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+interface SaksopplysningerProps extends ConnectedProps<typeof connector> {
+  behandlingID: number;
+  redigerbart: boolean;
+  sed?: { lovvalgsperiode?: SedLovvalgsperiode };
+  vurderingBegrunnelser: string[];
+  tilForsiden: () => void;
+  startOgVisOppfriskModal: () => void;
+}
 
 function Saksopplysninger({
   behandlingID,
@@ -42,15 +93,15 @@ function Saksopplysninger({
   behandlingsresultatErHentet,
   kontrollerUnntaksperiode,
   unntaksperiodeKontrollfeil,
-}) {
-  const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = useState(null);
+}: SaksopplysningerProps) {
+  const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = useState<string | null>(null);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = useState("");
-  const [ikkeGodkjentBegrunnelseKoder, setIkkeGodkjentBegrunnelseKoder] = useState([]);
-  const [ikkeGodkjentFeilmeldinger, setIkkeGodkjentFeilmeldinger] = useState({
+  const [ikkeGodkjentBegrunnelseKoder, setIkkeGodkjentBegrunnelseKoder] = useState<string[]>([]);
+  const [ikkeGodkjentFeilmeldinger, setIkkeGodkjentFeilmeldinger] = useState<Feilmeldinger>({
     begrunnelseKoder: undefined,
     begrunnelseFritekst: undefined,
   });
-  const [endrePeriodeFeilmeldinger, setEndrePeriodeFeilmeldinger] = useState({
+  const [endrePeriodeFeilmeldinger, setEndrePeriodeFeilmeldinger] = useState<Feilmeldinger>({
     fom: undefined,
     tom: undefined,
     fritekst: undefined,
@@ -62,7 +113,7 @@ function Saksopplysninger({
   );
   const [endrePeriodeFritekst, setEndrePeriodeFritekst] = useState("");
   const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = useState(false);
-  const [durationWarningMessage, setDurationWarningMessage] = useState(null);
+  const [durationWarningMessage, setDurationWarningMessage] = useState<string | null>(null);
   const [registreringPending, setRegistreringPending] = useState(false);
 
   const { saksnr: saksnummer } = useParams();
@@ -101,10 +152,10 @@ function Saksopplysninger({
     !Utils._isEmpty(lovvalgsperiode)
       ? Utils.dato.erGyldigPeriode(lovvalgsperiode?.fomDato, lovvalgsperiode?.tomDato)
       : Utils.dato.erGyldigPeriode(sedLovvalgsperiode?.fom, sedLovvalgsperiode?.tom);
-  const settEndretPeriodeOpplysninger = async (avklartFakta) => {
+  const settEndretPeriodeOpplysninger = async (avklartFakta: Avklartfakta) => {
     setUnntaksperiodeVurdering(KV.Koder.Unntaksperiode.DELVIS_GODKJENT);
     setEndrePeriodeBegrunnelse(avklartFakta.fakta[0]); // Har alltid bare ett fakta i disse tilfellene
-    setEndrePeriodeFritekst(avklartFakta.begrunnelseFritekst);
+    setEndrePeriodeFritekst(avklartFakta.begrunnelseFritekst ?? "");
 
     if (lovvalgsperiode) {
       setEndrePeriodeFom(Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato));
@@ -125,8 +176,8 @@ function Saksopplysninger({
 
   const ikkeGodkjentUnntaksperiode = () => {
     setUnntaksperiodeVurdering(KV.Koder.Unntaksperiode.AVSLAG);
-    setBegrunnelseFritekst(behandlingsresultat.begrunnelseFritekst);
-    setIkkeGodkjentBegrunnelseKoder(behandlingsresultat.begrunnelseKoder);
+    setBegrunnelseFritekst(behandlingsresultat.begrunnelseFritekst ?? "");
+    setIkkeGodkjentBegrunnelseKoder(behandlingsresultat.begrunnelseKoder ?? []);
   };
 
   const initialiserSkjema = () => {
@@ -144,11 +195,11 @@ function Saksopplysninger({
     initialiserSkjema();
   }, [avklartefakta, behandlingsresultat, lovvalgsperiode]);
 
-  const overstyrSubmit = (event) => {
+  const overstyrSubmit = (event: FormEvent) => {
     event.preventDefault();
   };
 
-  const textAreaOnChange = (event) => {
+  const textAreaOnChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setBegrunnelseFritekst(event.target.value);
     if (ikkeGodkjentFeilmeldinger.begrunnelseFritekst) {
       validerAvslag(ikkeGodkjentBegrunnelseKoder, event.target.value);
@@ -182,8 +233,8 @@ function Saksopplysninger({
         varsleUtland: false,
         fritekst: null,
         endretPeriode: {
-          fom: Utils.dato.formatterDatoTilISO(endrePeriodeFom),
-          tom: Utils.dato.formatterDatoTilISO(endrePeriodeTom),
+          fom: Utils.dato.formatterDatoTilISO(endrePeriodeFom) as string,
+          tom: Utils.dato.formatterDatoTilISO(endrePeriodeTom) as string,
         },
         lovvalgsbestemmelse: sedLovvalgsbestemmelse,
       }),
@@ -206,13 +257,13 @@ function Saksopplysninger({
       fritekst: endrePeriodeFritekst,
       begrunnelse: endrePeriodeBegrunnelse,
     };
-    const feilmeldinger = lagYupToReduxformErrorMapper(endrePeriodeSkjema, settings)(stateObject);
+    const feilmeldinger = lagYupToReduxformErrorMapper(endrePeriodeSkjema, settings)(stateObject) as Feilmeldinger;
     setEndrePeriodeFeilmeldinger(feilmeldinger);
 
     return Utils._isEmpty(feilmeldinger);
   };
 
-  const validerAvslag = (ikkeGodkjentBegrunnelse, fritekst = begrunnelseFritekst) => {
+  const validerAvslag = (ikkeGodkjentBegrunnelse?: string[], fritekst = begrunnelseFritekst) => {
     if (unntaksperiodeVurdering !== KV.Koder.Unntaksperiode.AVSLAG) {
       return true;
     }
@@ -225,7 +276,10 @@ function Saksopplysninger({
       begrunnelseFritekst: fritekst,
     };
 
-    const feilmeldinger = lagYupToReduxformErrorMapper(ikkeGodkjentBegrunnelseSkjema, settings)(stateObject);
+    const feilmeldinger = lagYupToReduxformErrorMapper(
+      ikkeGodkjentBegrunnelseSkjema,
+      settings,
+    )(stateObject) as Feilmeldinger;
     setIkkeGodkjentFeilmeldinger(feilmeldinger);
 
     return Utils._isEmpty(feilmeldinger);
@@ -233,14 +287,14 @@ function Saksopplysninger({
 
   const validerFelt = () => validerEndrePeriode() && validerAvslag();
 
-  const sjekkDatoVarsel = (fom, tom) => {
+  const sjekkDatoVarsel = (fom: string, tom: string) => {
     if (!kanEndrePeriode()) {
       return null;
     }
 
     const fomISO = Utils.dato.formatterDatoTilISO(fom);
     const tomISO = Utils.dato.formatterDatoTilISO(tom);
-    const varighet = Utils.dato.datoDiff(fomISO, tomISO, "years");
+    const varighet = Number(Utils.dato.datoDiff(fomISO, tomISO, "years"));
 
     if (varighet <= 0) {
       return "Ugyldig periode";
@@ -318,7 +372,7 @@ function Saksopplysninger({
     return null;
   }
 
-  const begrunnelseEndringHandler = (ikkeGodkjentBegrunnelse) => {
+  const begrunnelseEndringHandler = (ikkeGodkjentBegrunnelse: string[]) => {
     setIkkeGodkjentBegrunnelseKoder(ikkeGodkjentBegrunnelse);
     validerAvslag(ikkeGodkjentBegrunnelse);
   };
@@ -437,45 +491,4 @@ function Saksopplysninger({
   );
 }
 
-Saksopplysninger.propTypes = {
-  redigerbart: PT.bool.isRequired,
-  behandlingID: PT.number.isRequired,
-  sed: MPT.Behandlinger.Saksopplysninger.SED,
-  vurderingBegrunnelser: PT.arrayOf(PT.string).isRequired,
-  avklartefakta: PT.array.isRequired,
-  lovvalgsperiode: PT.object.isRequired,
-  sedLovvalgsperiode: MPT.Periode,
-  sedLovvalgsbestemmelse: PT.string.isRequired,
-  oppdaterAvklartefakta: PT.func.isRequired,
-  lastInnSaksopplysninger: PT.func.isRequired,
-  behandlingsresultat: PT.object,
-  tilForsiden: PT.func.isRequired,
-  startOgVisOppfriskModal: PT.func.isRequired,
-  behandlingsresultatErHentet: PT.bool.isRequired,
-  kontrollerUnntaksperiode: PT.func.isRequired,
-  unntaksperiodeKontrollfeil: PT.arrayOf(PT.object).isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
-  lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
-  sedLovvalgsperiode: behandlingerSelectors.SEDSelector(state).lovvalgsperiode,
-  sedLovvalgsbestemmelse: behandlingerSelectors.SEDSelector(state).lovvalgsbestemmelse,
-  behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
-  behandlingsresultatErHentet: behandlingsresultatSelectors.BehandlingsresultatStatusErOkSelector(state),
-  unntaksperiodeKontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) =>
-    dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
-  lastInnSaksopplysninger: (saksnummer, behandlingID) =>
-    datalastingOperations.lastInnSaksopplysningerRegistreringUnntaksperioder(saksnummer, behandlingID)(dispatch),
-  kontrollerUnntaksperiode: (behandlingID, periodeFom, periodeTom) => {
-    if (periodeFom && periodeTom) {
-      dispatch(kontrollOperations.kontrollerUnntaksperiode(behandlingID, { periodeFom, periodeTom }));
-    }
-  },
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger);
+export default connector(Saksopplysninger);
