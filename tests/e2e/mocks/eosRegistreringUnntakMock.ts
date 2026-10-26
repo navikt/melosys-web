@@ -13,6 +13,12 @@ export interface IkkeGodkjennRequest {
   begrunnelseFritekst: string;
 }
 
+/** Tidligere lagret «Ikke godkjenn» i behandlingsresultatet */
+export interface LagretAvslag {
+  begrunnelseKoder: string[];
+  begrunnelseFritekst: string | null;
+}
+
 export interface EosRegistreringUnntakMock {
   url: string;
   /** Request-body for hvert kall til POST .../ikkegodkjenn */
@@ -21,9 +27,22 @@ export interface EosRegistreringUnntakMock {
   ikkeMockedeKall: string[];
 }
 
-export async function mockEosRegistreringUnntak(page: Page): Promise<EosRegistreringUnntakMock> {
+export async function mockEosRegistreringUnntak(
+  page: Page,
+  lagretAvslag?: LagretAvslag,
+): Promise<EosRegistreringUnntakMock> {
   const { saksnummer, behandlingID, get, graphql, kontrollfeil } = fixture;
-  const getResponser: Record<string, unknown> = get;
+  const resultatPath = `/api/behandlinger/${behandlingID}/resultat`;
+  const getResponser: Record<string, unknown> = {
+    ...get,
+    ...(lagretAvslag && {
+      [resultatPath]: {
+        ...(get as Record<string, object>)[resultatPath],
+        ...lagretAvslag,
+        utfallRegistreringUnntak: "IKKE_GODKJENT",
+      },
+    }),
+  };
   const ikkeMockedeKall: string[] = [];
   const ikkeGodkjennKall: IkkeGodkjennRequest[] = [];
   // Etter innsending navigeres det til forsiden, som ikke er mocket

@@ -43,7 +43,7 @@ function Saksopplysninger({
   kontrollerUnntaksperiode,
   unntaksperiodeKontrollfeil,
 }) {
-  const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = useState(KV.Koder.Unntaksperiode.AVSLAG);
+  const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = useState(null);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = useState("");
   const [ikkeGodkjentBegrunnelseKoder, setIkkeGodkjentBegrunnelseKoder] = useState([]);
   const [ikkeGodkjentFeilmeldinger, setIkkeGodkjentFeilmeldinger] = useState({
@@ -297,7 +297,7 @@ function Saksopplysninger({
       case KV.Koder.Unntaksperiode.AVSLAG: {
         const ikkegodkjenn = {
           ikkeGodkjentBegrunnelseKoder: [...ikkeGodkjentBegrunnelseKoder],
-          begrunnelseFritekst,
+          begrunnelseFritekst: ikkeGodkjentBegrunnelseKoder.includes("ANNET") ? begrunnelseFritekst : "",
         };
         Api.Saksflyt.Unntaksperioder.ikkegodkjenn(behandlingID, { ...ikkegodkjenn })
           .then(tilForsiden)
@@ -346,6 +346,7 @@ function Saksopplysninger({
                   <Nav.RadioGroup
                     legend="Vurder unntaksperiode"
                     disabled={!redigerbart}
+                    value={unntaksperiodeVurdering}
                     onChange={setUnntaksperiodeVurdering}
                     name={unikRadioButtonGruppeID}
                   >
@@ -417,7 +418,8 @@ function Saksopplysninger({
                     bekreftKnappProps={{
                       loading: registreringPending,
                       onClick: () => submitRegistrering(),
-                      disabled: !harValgtIkkeGodkjenn && (!redigerbart || harUnntaksperiodefeil),
+                      disabled:
+                        !unntaksperiodeVurdering || (!harValgtIkkeGodkjenn && (!redigerbart || harUnntaksperiodefeil)),
                     }}
                     bekreftTekst="Lagre"
                   />

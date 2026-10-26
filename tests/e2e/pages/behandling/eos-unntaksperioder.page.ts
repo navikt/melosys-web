@@ -22,8 +22,31 @@ export class EosUnntaksperioderPage {
     await expect(this.skjema.getByText("Registrering av unntaksperioder")).toBeVisible();
   }
 
+  private get vurdering(): Locator {
+    return this.skjema.getByRole("radiogroup", { name: "Vurder unntaksperiode", exact: true });
+  }
+
+  private get lagreKnapp(): Locator {
+    return this.skjema.getByRole("button", { name: "Lagre", exact: true });
+  }
+
   async velgVurdering(label: string): Promise<void> {
-    await this.skjema.getByRole("radio", { name: label, exact: true }).check();
+    await this.vurdering.getByRole("radio", { name: label, exact: true }).check();
+  }
+
+  /**
+   * Verifiser hvilken vurdering som er valgt, eller at ingen er valgt (null)
+   */
+  async verifiserValgtVurdering(forventet: string | null): Promise<void> {
+    if (forventet === null) {
+      await expect(this.vurdering.getByRole("radio", { checked: true })).toHaveCount(0);
+    } else {
+      await expect(this.vurdering.getByRole("radio", { name: forventet, exact: true })).toBeChecked();
+    }
+  }
+
+  async verifiserLagreDeaktivert(): Promise<void> {
+    await expect(this.lagreKnapp).toBeDisabled();
   }
 
   async kryssAvBegrunnelser(begrunnelser: string[]): Promise<void> {
@@ -61,6 +84,10 @@ export class EosUnntaksperioderPage {
     await this.fritekst.fill(tekst);
   }
 
+  async verifiserFritekst(tekst: string): Promise<void> {
+    await expect(this.fritekst).toHaveValue(tekst);
+  }
+
   async verifiserFritekstSynlig(): Promise<void> {
     await expect(this.fritekst).toBeVisible();
   }
@@ -74,7 +101,7 @@ export class EosUnntaksperioderPage {
   }
 
   async lagre(): Promise<void> {
-    await this.skjema.getByRole("button", { name: "Lagre", exact: true }).click();
+    await this.lagreKnapp.click();
   }
 
   /**
