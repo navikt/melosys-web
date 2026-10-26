@@ -44,7 +44,6 @@ exports[`vedleggTable > snapshot test 1`] = `
           <a
             href="#"
             title="Åpnes i ny fane"
-            aria-label="Åpnes i ny fane"
             class="aksel-link"
           >
             123
@@ -148,7 +147,6 @@ exports[`vedleggTable > snapshot test 1`] = `
           <a
             href="#"
             title="Åpnes i ny fane"
-            aria-label="Åpnes i ny fane"
             class="aksel-link"
           >
             test
