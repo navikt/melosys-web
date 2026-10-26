@@ -1065,7 +1065,8 @@ exports[`VurderingVedtak > should render snapshot with realistic data 1`] = `
       <button
         data-variant="primary"
         type="submit"
-        class="stegKnapper__bekreft aksel-button aksel-button--small aksel-button--loading"
+        class="stegKnapper__bekreft aksel-button aksel-button--small aksel-button--loading aksel-button--disabled"
+        disabled
       >
         <svg
           aria-labelledby="333"

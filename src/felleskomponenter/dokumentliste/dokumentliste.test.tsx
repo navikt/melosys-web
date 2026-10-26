@@ -61,6 +61,16 @@ describe("Dokumentliste", () => {
     expect(screen.queryAllByRole("link")).toHaveLength(props.dokumenter.length);
   });
 
+  it("bruker synlig dokumentnavn som tilgjengelig navn for brev og SED", () => {
+    props.dokumenter[0].dokumentNavn = "Vedtak om medlemskap";
+    props.dokumenter[1].dokumentNavn = "SED A003";
+
+    render(<Dokumentliste {...props} />);
+
+    expect(screen.getByRole("link", { name: "Vedtak om medlemskap" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "SED A003" })).toBeInTheDocument();
+  });
+
   describe("forhåndsvisning av brev", () => {
     it("viser feilmelding ved 400-feil fra backend", async () => {
       const errorMessage = "feilmelding";

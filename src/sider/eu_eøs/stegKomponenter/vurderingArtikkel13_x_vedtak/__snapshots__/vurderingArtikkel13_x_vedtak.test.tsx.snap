@@ -177,7 +177,6 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
                   <a
                     href="#"
                     title="Åpnes i ny fane"
-                    aria-label="Åpnes i ny fane"
                     class="aksel-link"
                   >
                     Innvilgelse yrkesaktiv i flere land
@@ -210,7 +209,6 @@ exports[`VurderingArtikkel13_x_Vedtak > snapshot test 1`] = `
                   <a
                     href="#"
                     title="Åpnes i ny fane"
-                    aria-label="Åpnes i ny fane"
                     class="aksel-link"
                   >
                     SED A003

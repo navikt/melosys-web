@@ -30,7 +30,7 @@ function StegIkon(props) {
   });
   return (
     <li className="stegIkon">
-      <button onClick={onClick} className="stegIkon__knapp" type="button" aria-label="stegikon">
+      <button onClick={onClick} className="stegIkon__knapp" type="button">
         <Ikon className={knappKlasser} aria-disabled={!tilgjengelig} />
         <div className="stegIkon__tittel" dangerouslySetInnerHTML={{ __html: tittel }} />
       </button>

@@ -30,11 +30,11 @@ describe("PdfLink", () => {
     expect(screen.getByTestId("external-link-icon")).toBeInTheDocument();
   });
 
-  it("skal ha riktig aria-label", () => {
+  it("skal bruke dokumenttittelen som tilgjengelig navn", () => {
     render(<PdfLink journalpostID="123" dokumentID="456" tittel="Test dokument" />);
 
     const link = screen.getByRole("link");
-    expect(link).toHaveAttribute("aria-label", "Åpnes i ny fane");
+    expect(link).toHaveAccessibleName(/^Test dokument/);
   });
 
   it("skal ha riktig title attributt", () => {
