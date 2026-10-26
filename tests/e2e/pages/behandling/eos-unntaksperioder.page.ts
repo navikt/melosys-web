@@ -100,6 +100,10 @@ export class EosUnntaksperioderPage {
     await expect(this.skjema.getByText(tekst, { exact: true })).toBeVisible();
   }
 
+  async verifiserIngenFeilmelding(tekst: string): Promise<void> {
+    await expect(this.skjema.getByText(tekst, { exact: true })).toHaveCount(0);
+  }
+
   async lagre(): Promise<void> {
     await this.lagreKnapp.click();
   }

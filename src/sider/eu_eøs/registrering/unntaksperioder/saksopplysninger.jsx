@@ -150,6 +150,9 @@ function Saksopplysninger({
 
   const textAreaOnChange = (event) => {
     setBegrunnelseFritekst(event.target.value);
+    if (ikkeGodkjentFeilmeldinger.begrunnelseFritekst) {
+      validerAvslag(ikkeGodkjentBegrunnelseKoder, event.target.value);
+    }
   };
 
   const lagAvklartfakta = () => ({
@@ -209,7 +212,7 @@ function Saksopplysninger({
     return Utils._isEmpty(feilmeldinger);
   };
 
-  const validerAvslag = (ikkeGodkjentBegrunnelse) => {
+  const validerAvslag = (ikkeGodkjentBegrunnelse, fritekst = begrunnelseFritekst) => {
     if (unntaksperiodeVurdering !== KV.Koder.Unntaksperiode.AVSLAG) {
       return true;
     }
@@ -219,7 +222,7 @@ function Saksopplysninger({
     const settings = { context: { fritekstPakrevd: koder.includes("ANNET") } };
     const stateObject = {
       begrunnelseKoder: koder,
-      begrunnelseFritekst,
+      begrunnelseFritekst: fritekst,
     };
 
     const feilmeldinger = lagYupToReduxformErrorMapper(ikkeGodkjentBegrunnelseSkjema, settings)(stateObject);

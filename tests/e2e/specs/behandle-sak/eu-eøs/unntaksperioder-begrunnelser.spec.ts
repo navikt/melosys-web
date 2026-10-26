@@ -95,6 +95,7 @@ test.describe("EU/EØS Registrering av unntaksperioder - begrunnelser for ikke g
       await unntaksperioder.verifiserFeilmelding("Fritekstfelt er påkrevd");
 
       await unntaksperioder.fyllUtFritekst("Mangler dokumentasjon");
+      await unntaksperioder.verifiserIngenFeilmelding("Fritekstfelt er påkrevd");
       const payload = await unntaksperioder.lagreOgHentIkkeGodkjenn();
 
       expect({ ...payload, ikkeGodkjentBegrunnelseKoder: [...payload.ikkeGodkjentBegrunnelseKoder].sort() }).toEqual({
