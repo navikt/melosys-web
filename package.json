@@ -94,7 +94,7 @@
     "@eslint/js": "^10.0.1",
     "@graphql-codegen/cli": "^7.4.6",
     "@graphql-codegen/near-operation-file-preset": "^5.2.3",
-    "@graphql-codegen/typed-document-node": "^6.1.0",
+    "@graphql-codegen/typed-document-node": "^7.2.0",
     "@graphql-codegen/typescript": "^6.1.2",
     "@graphql-codegen/typescript-generic-sdk": "^5.0.1",
     "@graphql-codegen/typescript-operations": "^6.1.10",
