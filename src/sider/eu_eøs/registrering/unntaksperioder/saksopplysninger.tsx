@@ -33,23 +33,17 @@ interface SedLovvalgsperiode {
   tom?: string;
 }
 
-interface Behandlingsresultat {
-  utfallRegistreringUnntak?: string;
-  begrunnelseKoder?: string[];
-  begrunnelseFritekst?: string;
-}
-
 interface Feilmeldinger {
   [felt: string]: string | undefined;
 }
 
 const mapStateToProps = (state: RootState) => ({
-  avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state) as Avklartfakta[],
+  avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state) as Partial<Lovvalgsperiode>,
   sedLovvalgsperiode: behandlingerSelectors.SEDSelector(state).lovvalgsperiode as SedLovvalgsperiode | undefined,
   sedLovvalgsbestemmelse: behandlingerSelectors.SEDSelector(state).lovvalgsbestemmelse as string,
-  behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state) as Behandlingsresultat,
-  behandlingsresultatErHentet: behandlingsresultatSelectors.BehandlingsresultatStatusErOkSelector(state) as boolean,
+  behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
+  behandlingsresultatErHentet: behandlingsresultatSelectors.BehandlingsresultatStatusErOkSelector(state),
   unntaksperiodeKontrollfeil: kontrollSelectors.KontrollFeilSelector(state),
 });
 
