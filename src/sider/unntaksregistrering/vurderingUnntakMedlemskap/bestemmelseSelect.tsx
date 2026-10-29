@@ -53,6 +53,7 @@ export function BestemmelseSelect({
           render={({ field, formState }) => (
             <Combobox
               label="Bestemmelse"
+              size="small"
               options={bestemmelseOpsjoner}
               selectedOptions={bestemmelseOpsjoner.filter((opsjon) => opsjon.value === field.value)}
               onToggleSelected={(kode, erValgt) => {
