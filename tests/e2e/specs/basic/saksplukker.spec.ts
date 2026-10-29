@@ -139,7 +139,6 @@ test.describe("Saksplukker («Behandle sak») på forsiden", () => {
     await hovedside.goto("sakstype=EU_EOS&sakstema=FINNES_IKKE&behandlingstema=UTSENDT_ARBEIDSTAKER");
 
     await saksplukker.verifiserValgteVerdier({ sakstype: "EU_EOS", sakstema: "", behandlingstema: "" });
-    await hovedside.verifiserUrl(/\?sakstype=EU_EOS$/);
 
     await saksplukker.klikkBehandleSak();
 

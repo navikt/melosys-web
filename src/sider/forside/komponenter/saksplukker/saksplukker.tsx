@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate, useSearchParams } from "react-router";
@@ -29,9 +29,33 @@ const compareTerm = (a: KTObject, b: KTObject) => {
 
 const FELTER = ["sakstype", "sakstema", "behandlingstema"] as const;
 
+// URL-en leses bare ved første visning. Senere endringer i URL-en kommer fra skjemaet selv.
 export function Saksplukker() {
+  const [searchParams] = useSearchParams();
+  const [fraUrl] = useState<SaksplukkerFormData>(() => ({
+    sakstype: searchParams.get("sakstype") ?? "",
+    sakstema: searchParams.get("sakstema") ?? "",
+    behandlingstema: searchParams.get("behandlingstema") ?? "",
+  }));
+  const sakstyper = useLovligeSakstyper();
+  const sakstemaer = useLovligeSakstemaer(fraUrl.sakstype);
+  const behandlingstemaer = useLovligeBehandlingstemaer(fraUrl.sakstype, fraUrl.sakstema);
+
+  if (sakstyper.isLoading || sakstemaer.isLoading || behandlingstemaer.isLoading) {
+    return <Nav.Loader />;
+  }
+
+  const defaultValues = gyldigeValg(fraUrl, {
+    sakstyper: sakstyper.data,
+    sakstemaer: sakstemaer.data,
+    behandlingstemaer: behandlingstemaer.data,
+  });
+  return <SaksplukkerSkjema defaultValues={defaultValues} />;
+}
+
+function SaksplukkerSkjema({ defaultValues }: { defaultValues: SaksplukkerFormData }) {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
   const [visIngenOppgaveFunnetAlert, setVisIngenOppgaveFunnetAlert] = useState(false);
   const [antallOppgaver, setAntallOppgaver] = useState(0);
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
@@ -39,11 +63,7 @@ export function Saksplukker() {
 
   const { control, handleSubmit, getValues, setValue, reset, watch } = useForm({
     resolver: yupResolver<FieldValues, unknown, FieldValues>(saksplukkerSchema),
-    defaultValues: {
-      sakstype: searchParams.get("sakstype") ?? "",
-      sakstema: searchParams.get("sakstema") ?? "",
-      behandlingstema: searchParams.get("behandlingstema") ?? "",
-    },
+    defaultValues,
   });
   const sakstype = watch("sakstype");
   const sakstema = watch("sakstema");
@@ -62,20 +82,6 @@ export function Saksplukker() {
     felter.forEach((felt) => setValue(felt, ""));
     oppdaterUrl();
   };
-
-  // Forhåndsvalg fra URL-en kan være ulovlige. Valg gjort i skjemaet tømmer feltene under i onChange.
-  useEffect(() => {
-    const valg = getValues() as SaksplukkerFormData;
-    const gyldige = gyldigeValg(valg, {
-      sakstyper: muligeSakstyper,
-      sakstemaer: muligeSakstemaer,
-      behandlingstemaer: muligeBehandlingstemaer,
-    });
-    const ugyldigeFelter = FELTER.filter((felt) => gyldige[felt] !== valg[felt]);
-    if (ugyldigeFelter.length > 0) {
-      tømFelter(...ugyldigeFelter);
-    }
-  }, [muligeSakstyper, muligeSakstemaer, muligeBehandlingstemaer]);
 
   const plukkOgVideresend = async (formValues: FieldValues) => {
     const response = await oppgaverOperations.plukkSak(formValues);
