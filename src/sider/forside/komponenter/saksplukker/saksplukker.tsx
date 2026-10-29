@@ -6,11 +6,16 @@ import { KTObject } from "@navikt/melosys-kodeverk";
 
 import * as Nav from "../../../../navFrontend";
 import * as Forms from "../../../../felleskomponenter/forms";
-import * as Api from "../../../../services/api";
 import * as Routing from "../../../../url";
 import { oppgaverOperations } from "../../../../ducks/oppgaver";
 
 import saksplukkerSchema from "./saksplukkerSchema";
+import { gyldigeValg, SaksplukkerFormData, TOMT_SKJEMA } from "./gyldigeValg";
+import {
+  useLovligeBehandlingstemaer,
+  useLovligeSakstemaer,
+  useLovligeSakstyper,
+} from "../../../../services/api/lovligeKombinasjoner";
 import "./saksplukker.less";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../../../featuretoggle/toggleNavn";
@@ -22,23 +27,11 @@ const compareTerm = (a: KTObject, b: KTObject) => {
   return a.term.localeCompare(b.term);
 };
 
-export interface SaksplukkerFormData {
-  sakstype: string;
-  sakstema: string;
-  behandlingstema: string;
-}
-
 const FELTER = ["sakstype", "sakstema", "behandlingstema"] as const;
-const TOMT_SKJEMA: SaksplukkerFormData = { sakstype: "", sakstema: "", behandlingstema: "" };
-
-const erLovligKode = (kode: string, lovligeKoder: KTObject[]) => lovligeKoder.some((lovlig) => lovlig.kode === kode);
 
 export function Saksplukker() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [muligeSakstyper, setMuligeSakstyper] = useState<KTObject[]>([]);
-  const [muligeSakstemaer, setMuligeSakstemaer] = useState<KTObject[]>([]);
-  const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState<KTObject[]>([]);
   const [visIngenOppgaveFunnetAlert, setVisIngenOppgaveFunnetAlert] = useState(false);
   const [antallOppgaver, setAntallOppgaver] = useState(0);
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
@@ -54,6 +47,9 @@ export function Saksplukker() {
   });
   const sakstype = watch("sakstype");
   const sakstema = watch("sakstema");
+  const { data: muligeSakstyper } = useLovligeSakstyper();
+  const { data: muligeSakstemaer } = useLovligeSakstemaer(sakstype);
+  const { data: muligeBehandlingstemaer } = useLovligeBehandlingstemaer(sakstype, sakstema);
 
   const oppdaterUrl = () => {
     const verdier = getValues();
@@ -67,54 +63,19 @@ export function Saksplukker() {
     oppdaterUrl();
   };
 
+  // Forhåndsvalg fra URL-en kan være ulovlige. Valg gjort i skjemaet tømmer feltene under i onChange.
   useEffect(() => {
-    let aktiv = true;
-    Api.LovligeKombinasjoner.hentSakstyper().then((lovligeSakstyper: KTObject[]) => {
-      if (!aktiv) return;
-      setMuligeSakstyper(lovligeSakstyper);
-      const valgtSakstype = getValues("sakstype");
-      if (valgtSakstype && !erLovligKode(valgtSakstype, lovligeSakstyper)) {
-        tømFelter(...FELTER);
-      }
+    const valg = getValues() as SaksplukkerFormData;
+    const gyldige = gyldigeValg(valg, {
+      sakstyper: muligeSakstyper,
+      sakstemaer: muligeSakstemaer,
+      behandlingstemaer: muligeBehandlingstemaer,
     });
-    return () => {
-      aktiv = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!sakstype) return;
-    let aktiv = true;
-    Api.LovligeKombinasjoner.hentSakstemaer(null, sakstype).then((lovligeSakstemaer: KTObject[]) => {
-      if (!aktiv) return;
-      setMuligeSakstemaer(lovligeSakstemaer);
-      const valgtSakstema = getValues("sakstema");
-      if (valgtSakstema && !erLovligKode(valgtSakstema, lovligeSakstemaer)) {
-        tømFelter("sakstema", "behandlingstema");
-      }
-    });
-    return () => {
-      aktiv = false;
-    };
-  }, [sakstype]);
-
-  useEffect(() => {
-    if (!sakstype || !sakstema) return;
-    let aktiv = true;
-    Api.LovligeKombinasjoner.hentBehandlingstemaer(null, sakstype, sakstema).then(
-      (lovligeBehandlingstemaer: KTObject[]) => {
-        if (!aktiv) return;
-        setMuligeBehandlingstemaer(lovligeBehandlingstemaer);
-        const valgtBehandlingstema = getValues("behandlingstema");
-        if (valgtBehandlingstema && !erLovligKode(valgtBehandlingstema, lovligeBehandlingstemaer)) {
-          tømFelter("behandlingstema");
-        }
-      },
-    );
-    return () => {
-      aktiv = false;
-    };
-  }, [sakstype, sakstema]);
+    const ugyldigeFelter = FELTER.filter((felt) => gyldige[felt] !== valg[felt]);
+    if (ugyldigeFelter.length > 0) {
+      tømFelter(...ugyldigeFelter);
+    }
+  }, [muligeSakstyper, muligeSakstemaer, muligeBehandlingstemaer]);
 
   const plukkOgVideresend = async (formValues: FieldValues) => {
     const response = await oppgaverOperations.plukkSak(formValues);
@@ -161,7 +122,7 @@ export function Saksplukker() {
               emptyFieldDisabled
               onChange={() => tømFelter("sakstema", "behandlingstema")}
             >
-              {muligeSakstyper.map(({ kode, term }: KTObject) => (
+              {(muligeSakstyper ?? []).map(({ kode, term }: KTObject) => (
                 <option key={kode} value={kode}>
                   {term}
                 </option>
@@ -176,7 +137,7 @@ export function Saksplukker() {
               emptyFieldDisabled
               onChange={() => tømFelter("behandlingstema")}
             >
-              {muligeSakstemaer.map(({ kode, term }: KTObject) => (
+              {(muligeSakstemaer ?? []).map(({ kode, term }: KTObject) => (
                 <option key={kode} value={kode}>
                   {term}
                 </option>
@@ -191,7 +152,7 @@ export function Saksplukker() {
               emptyFieldDisabled
               onChange={oppdaterUrl}
             >
-              {muligeBehandlingstemaer.sort(compareTerm).map(({ kode, term }: KTObject) => (
+              {[...(muligeBehandlingstemaer ?? [])].sort(compareTerm).map(({ kode, term }: KTObject) => (
                 <option key={kode} value={kode}>
                   {term}
                 </option>
