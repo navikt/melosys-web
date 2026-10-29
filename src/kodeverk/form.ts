@@ -1,6 +1,5 @@
 import { StrukturertAdresse } from "../services/api";
 
-export const SAKSPLUKKER_FORM = "saksplukkerform";
 export const SEND_BREV = "send_brev";
 export const FORSIDE_JOURNALFORINGS_FORM = "journalforingsform";
 export const JOURNALFORING = "journalforing";
@@ -105,7 +104,6 @@ export interface Utenlandsoppdraget {
 
 export type SoknadFormData = any;
 
-export const SOK_ETTER_SAK = "sokEtterSak";
 export const ARTIKKEL_16_ANMODNING = "artikkel_16_anmodning";
 export const ARTIKKEL_12_VEDTAK = "artikkel_12_vedtak";
 export const AVSLAG_ARTIKKEL_12_OG_16 = "avslag_artikkel_12_og_16";

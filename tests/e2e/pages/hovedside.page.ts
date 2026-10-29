@@ -5,6 +5,8 @@ export const USER_ID_VALID = "30056928150";
 export const USER_ID_INVALID = "INVALID123";
 export const ORG_NUMBER_VALID = "999999999";
 
+const FORSIDE_URL = /\/melosys(\?.*)?$/;
+
 /**
  * Page Object Model (POM) for Melosys hovedside
  */
@@ -34,9 +36,9 @@ export class HovedsidePage {
   /**
    * Naviger til hovedsiden og vent på at den er ferdig lastet
    */
-  async goto(): Promise<void> {
-    await this.page.goto("/", { waitUntil: "domcontentloaded" });
-    await expect(this.page).toHaveURL("/melosys");
+  async goto(query = ""): Promise<void> {
+    await this.page.goto(query ? `/melosys?${query}` : "/", { waitUntil: "domcontentloaded" });
+    await expect(this.page).toHaveURL(FORSIDE_URL);
     await expect(this.page).toHaveTitle(/Melosys/);
     await expect(
       this.page.getByRole("heading", { name: UI_TEXTS.HEADINGS.MINE_OPPGAVER, level: 1 }),
@@ -59,6 +61,23 @@ export class HovedsidePage {
     await expect(this.createButton, `Knapp '${UI_TEXTS.BUTTONS.OPPRETT_NY_SAK}' skal være synlig`).toBeVisible();
     await this.createButton.click();
     await this.page.waitForLoadState("domcontentloaded");
+  }
+
+  /**
+   * Gå tilbake i nettleserhistorikken til forsiden
+   */
+  async gåTilbake(): Promise<void> {
+    await this.page.goBack();
+    await expect(this.page).toHaveURL(FORSIDE_URL);
+  }
+
+  async lastInnPåNytt(): Promise<void> {
+    await this.page.reload({ waitUntil: "domcontentloaded" });
+    await expect(this.page).toHaveURL(FORSIDE_URL);
+  }
+
+  async verifiserUrl(url: RegExp): Promise<void> {
+    await expect(this.page).toHaveURL(url);
   }
 
   /**

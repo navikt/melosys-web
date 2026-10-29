@@ -1,21 +1,21 @@
-import { FormEvent, MouseEvent, useEffect, useState } from "react";
-import { Action } from "redux";
-import { connect, ConnectedProps } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
-import { clearFields, getFormValues, InjectedFormProps, reduxForm, touch } from "redux-form";
-import { useNavigate } from "react-router";
+import { MouseEvent, useState } from "react";
+import { FieldValues, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useNavigate, useSearchParams } from "react-router";
 import { KTObject } from "@navikt/melosys-kodeverk";
-import { RootState } from "AppTypes";
 
-import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
-import * as Skjema from "../../../../felleskomponenter/skjema";
-import * as Api from "../../../../services/api";
+import * as Forms from "../../../../felleskomponenter/forms";
 import * as Routing from "../../../../url";
 import { oppgaverOperations } from "../../../../ducks/oppgaver";
 
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import saksplukkerSchema from "./saksplukkerSchema";
+import { gyldigeValg, SaksplukkerFormData, TOMT_SKJEMA } from "./gyldigeValg";
+import {
+  useLovligeBehandlingstemaer,
+  useLovligeSakstemaer,
+  useLovligeSakstyper,
+} from "../../../../services/api/lovligeKombinasjoner";
 import "./saksplukker.less";
 import { useFeatureToggle } from "../../../../featuretoggle";
 import { MELOSYS_PENSJONIST, MELOSYS_PENSJONIST_EØS } from "../../../../featuretoggle/toggleNavn";
@@ -27,109 +27,90 @@ const compareTerm = (a: KTObject, b: KTObject) => {
   return a.term.localeCompare(b.term);
 };
 
-export interface SaksplukkerFormData {
-  sakstype: string;
-  sakstema: string;
-  behandlingstema: string;
+const FELTER = ["sakstype", "sakstema", "behandlingstema"] as const;
+
+// URL-en leses bare ved første visning. Senere endringer i URL-en kommer fra skjemaet selv.
+export function Saksplukker() {
+  const [searchParams] = useSearchParams();
+  const [fraUrl] = useState<SaksplukkerFormData>(() => ({
+    sakstype: searchParams.get("sakstype") ?? "",
+    sakstema: searchParams.get("sakstema") ?? "",
+    behandlingstema: searchParams.get("behandlingstema") ?? "",
+  }));
+  const sakstyper = useLovligeSakstyper();
+  const sakstemaer = useLovligeSakstemaer(fraUrl.sakstype);
+  const behandlingstemaer = useLovligeBehandlingstemaer(fraUrl.sakstype, fraUrl.sakstema);
+
+  if (sakstyper.isLoading || sakstemaer.isLoading || behandlingstemaer.isLoading) {
+    return <Nav.Loader />;
+  }
+
+  const defaultValues = gyldigeValg(fraUrl, {
+    sakstyper: sakstyper.data,
+    sakstemaer: sakstemaer.data,
+    behandlingstemaer: behandlingstemaer.data,
+  });
+  return <SaksplukkerSkjema defaultValues={defaultValues} />;
 }
 
-const mapStateToProps = (state: RootState) => ({
-  formValues: getFormValues(KV.Form.SAKSPLUKKER_FORM)(state) as SaksplukkerFormData,
-});
-
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  touchField: (felt: string) => dispatch(touch(KV.Form.SAKSPLUKKER_FORM, felt)),
-  nullstillForm: () =>
-    dispatch(clearFields(KV.Form.SAKSPLUKKER_FORM, false, false, "sakstype", "sakstema", "behandlingstema")),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-type SaksplukkerProps = PropsFromRedux;
-
-export function Saksplukker({
-  formValues,
-  change,
-  nullstillForm,
-  invalid,
-  touchField,
-}: InjectedFormProps<SaksplukkerFormData, SaksplukkerProps> & SaksplukkerProps) {
+function SaksplukkerSkjema({ defaultValues }: { defaultValues: SaksplukkerFormData }) {
   const navigate = useNavigate();
-  const [muligeSakstyper, setMuligeSakstyper] = useState([]);
-  const [muligeSakstemaer, setMuligeSakstemaer] = useState([]);
-  const [muligeBehandlingstemaer, setMuligeBehandlingstemaer] = useState([]);
+  const [, setSearchParams] = useSearchParams();
   const [visIngenOppgaveFunnetAlert, setVisIngenOppgaveFunnetAlert] = useState(false);
   const [antallOppgaver, setAntallOppgaver] = useState(0);
   const erPensjonistToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST);
   const erPensjonistEØSToggleEnabled = useFeatureToggle(MELOSYS_PENSJONIST_EØS);
-  const { sakstype, sakstema } = formValues || {};
 
-  useEffect(() => {
-    Api.LovligeKombinasjoner.hentSakstyper().then((lovligeSakstyper) => {
-      setMuligeSakstyper(lovligeSakstyper);
-    });
-  }, []);
+  const { control, handleSubmit, getValues, setValue, reset, watch } = useForm({
+    resolver: yupResolver<FieldValues, unknown, FieldValues>(saksplukkerSchema),
+    defaultValues,
+  });
+  const sakstype = watch("sakstype");
+  const sakstema = watch("sakstema");
+  const { data: muligeSakstyper } = useLovligeSakstyper();
+  const { data: muligeSakstemaer } = useLovligeSakstemaer(sakstype);
+  const { data: muligeBehandlingstemaer } = useLovligeBehandlingstemaer(sakstype, sakstema);
 
-  useEffect(() => {
-    if (sakstype) {
-      change("sakstema", null);
-      change("behandlingstema", null);
-      Api.LovligeKombinasjoner.hentSakstemaer(null, sakstype).then((lovligeSakstemaer) => {
-        setMuligeSakstemaer(lovligeSakstemaer);
-      });
-    }
-  }, [sakstype]);
+  const oppdaterUrl = () => {
+    const verdier = getValues();
+    const params = new URLSearchParams();
+    FELTER.filter((felt) => verdier[felt]).forEach((felt) => params.set(felt, verdier[felt]));
+    setSearchParams(params, { replace: true });
+  };
 
-  useEffect(() => {
-    if (sakstema && sakstype) {
-      Api.LovligeKombinasjoner.hentBehandlingstemaer(null, sakstype, sakstema).then((lovligeBehandlingstemaer) => {
-        setMuligeBehandlingstemaer(lovligeBehandlingstemaer);
-      });
-    }
-  }, [sakstype, sakstema]);
+  const tømFelter = (...felter: (keyof SaksplukkerFormData)[]) => {
+    felter.forEach((felt) => setValue(felt, ""));
+    oppdaterUrl();
+  };
 
-  useEffect(() => {
-    if (sakstema) {
-      change("behandlingstema", null);
-    }
-  }, [sakstema]);
+  const plukkOgVideresend = async (formValues: FieldValues) => {
+    const response = await oppgaverOperations.plukkSak(formValues);
+    const { saksnummer, behandlingID, behandlingstema, behandlingstype, antallUtildelteOppgaver } = response;
 
-  const submitOgVideresend = async (event: FormEvent) => {
-    event.preventDefault();
-
-    if (invalid) {
-      touchField("sakstype");
-      touchField("sakstema");
-      touchField("behandlingstema");
+    if (!saksnummer) {
+      setAntallOppgaver(antallUtildelteOppgaver);
+      setVisIngenOppgaveFunnetAlert(true);
     } else {
-      const response = await oppgaverOperations.plukkSak(formValues);
-      const { saksnummer, behandlingID, behandlingstema, behandlingstype, antallUtildelteOppgaver } = response;
+      const redirectURL = Routing.lagUrl(
+        saksnummer,
+        behandlingID,
+        formValues.sakstype,
+        formValues.sakstema,
+        behandlingstema,
+        behandlingstype,
+        erPensjonistToggleEnabled,
+        erPensjonistEØSToggleEnabled,
+      );
 
-      if (!saksnummer) {
-        setAntallOppgaver(antallUtildelteOppgaver);
-        setVisIngenOppgaveFunnetAlert(true);
-      } else {
-        const redirectURL = Routing.lagUrl(
-          saksnummer,
-          behandlingID,
-          formValues.sakstype,
-          formValues.sakstema,
-          behandlingstema,
-          behandlingstype,
-          erPensjonistToggleEnabled,
-          erPensjonistEØSToggleEnabled,
-        );
-
-        navigate(redirectURL);
-      }
+      navigate(redirectURL);
     }
   };
 
   const nullstill = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setVisIngenOppgaveFunnetAlert(false);
-    nullstillForm();
+    reset(TOMT_SKJEMA);
+    oppdaterUrl();
   };
 
   return (
@@ -137,34 +118,52 @@ export function Saksplukker({
       <Nav.Heading size="small">Behandle sak</Nav.Heading>
       <p>Velg sakstype, saks- og behandlingstema for å få tildelt en sak.</p>
 
-      <form className="saksplukker__skjema" onSubmit={submitOgVideresend}>
+      <form className="saksplukker__skjema" onSubmit={handleSubmit(plukkOgVideresend)}>
         <Nav.Row>
           <Nav.Column md="12" lg="4">
-            <Skjema.Select feltNavn="sakstype" label="Sakstype">
-              {muligeSakstyper.map(({ kode, term }: KTObject) => (
+            <Forms.Select
+              name="sakstype"
+              control={control}
+              label="Sakstype"
+              emptyFieldDisabled
+              onChange={() => tømFelter("sakstema", "behandlingstema")}
+            >
+              {(muligeSakstyper ?? []).map(({ kode, term }: KTObject) => (
                 <option key={kode} value={kode}>
                   {term}
                 </option>
               ))}
-            </Skjema.Select>
+            </Forms.Select>
           </Nav.Column>
           <Nav.Column md="12" lg="4">
-            <Skjema.Select feltNavn="sakstema" label="Sakstema">
-              {muligeSakstemaer.map(({ kode, term }: KTObject) => (
+            <Forms.Select
+              name="sakstema"
+              control={control}
+              label="Sakstema"
+              emptyFieldDisabled
+              onChange={() => tømFelter("behandlingstema")}
+            >
+              {(muligeSakstemaer ?? []).map(({ kode, term }: KTObject) => (
                 <option key={kode} value={kode}>
                   {term}
                 </option>
               ))}
-            </Skjema.Select>
+            </Forms.Select>
           </Nav.Column>
           <Nav.Column md="12" lg="4">
-            <Skjema.Select feltNavn="behandlingstema" label="Behandlingstema">
-              {muligeBehandlingstemaer.sort(compareTerm).map(({ kode, term }: KTObject) => (
+            <Forms.Select
+              name="behandlingstema"
+              control={control}
+              label="Behandlingstema"
+              emptyFieldDisabled
+              onChange={oppdaterUrl}
+            >
+              {[...(muligeBehandlingstemaer ?? [])].sort(compareTerm).map(({ kode, term }: KTObject) => (
                 <option key={kode} value={kode}>
                   {term}
                 </option>
               ))}
-            </Skjema.Select>
+            </Forms.Select>
           </Nav.Column>
         </Nav.Row>
         {visIngenOppgaveFunnetAlert && (
@@ -189,11 +188,4 @@ export function Saksplukker({
   );
 }
 
-const SaksplukkerForm = reduxForm<SaksplukkerFormData, SaksplukkerProps>({
-  form: KV.Form.SAKSPLUKKER_FORM,
-  destroyOnUnmount: false,
-  validate: lagYupToReduxformErrorMapper(saksplukkerSchema),
-  touchOnBlur: false,
-})(Saksplukker);
-
-export default connector(SaksplukkerForm);
+export default Saksplukker;
