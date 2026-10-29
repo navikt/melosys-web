@@ -55,30 +55,47 @@ vi.mock("./brevValgMedPlaceholdere", () => ({ default: () => <div>BrevValg Mock<
 vi.mock("./brevutkast/brevutkast", () => ({ default: () => <div>Brevutkast Mock</div> }));
 vi.mock("../../dokumentliste", () => ({ default: () => <div>Forhåndsvisning</div> }));
 vi.mock("./brevVedlegg/brevVedlegg", () => ({ default: () => <div>Vedlegg</div> }));
-vi.mock("./brevMottaker/brevMottaker", async () => ({
-  ...(await vi.importActual<Record<string, unknown>>("./brevMottaker/brevMottaker")),
-  default: () => <div>BrevMottaker Mock</div>,
-}));
+// Setter skjemaverdiene ved mount, slik brukeren ellers ville gjort via mottakervalget.
+const skjema = vi.hoisted(() => ({ verdier: {} as Record<string, unknown> }));
+vi.mock("./brevMottaker/brevMottaker", async () => {
+  const { useEffect } = await import("react");
+  const { useFormContext } = await import("react-hook-form");
+  function BrevMottakerMock() {
+    const { setValue } = useFormContext();
+    useEffect(() => {
+      Object.entries(skjema.verdier).forEach(([felt, verdi]) => setValue(felt, verdi));
+    }, [setValue]);
+    return <div>BrevMottaker Mock</div>;
+  }
+  return {
+    ...(await vi.importActual<Record<string, unknown>>("./brevMottaker/brevMottaker")),
+    default: BrevMottakerMock,
+  };
+});
 
-const renderSendBrev = () =>
-  renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
-    preloadedState: {
-      form: {
-        send_brev: {
-          values: {
-            mottaker: arbeidsgiverMottaker.uuid,
-            valgtMottaker: arbeidsgiverMottaker,
-            arbeidsgiver: "999999999",
-            // Låser reset-effektene som ellers tømmer skjemaet rett etter mount.
-            aktivtUtkast: { utkastBrevID: 1 },
-            felt: {},
-          },
-        },
+const renderSendBrev = () => {
+  skjema.verdier = {
+    mottaker: arbeidsgiverMottaker.uuid,
+    valgtMottaker: arbeidsgiverMottaker,
+    arbeidsgiver: "999999999",
+  };
+  // Et aktivt utkast låser reset-effektene som ellers tømmer skjemaet rett etter mount.
+  return renderWithProviders(
+    <SendBrev
+      behandlingID={123}
+      redigerbart
+      dokumenter={[]}
+      aktivtUtkast={{ utkastBrevID: 1 } as never}
+      setAktivtUtkast={vi.fn()}
+    />,
+    {
+      preloadedState: {
+        behandlinger: { data: [{ behandlingID: 123, saksnummer: "12345678" }] },
+        dokumenter: { data: [] },
       },
-      behandlinger: { data: [{ behandlingID: 123, saksnummer: "12345678" }] },
-      dokumenter: { data: [] },
     },
-  });
+  );
+};
 
 const mockTilgjengeligeMaler = (brukerFeilmelding?: FeilmeldingProps) =>
   vi.mocked(Api.DokumenterV2.hentTilgjengeligeMaler).mockResolvedValue([

@@ -61,6 +61,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <InputInnerComponent
             {...field}
             {...rest}
+            value={field.value ?? ""}
             inputMode={numeric ? "numeric" : rest.inputMode}
             pattern={numeric ? "^-?[0-9]+$" : rest.pattern}
             onChange={(event: any) => onChangeHandler(event, numeric, tillattNegativeTall, field, rest)}

@@ -22,6 +22,8 @@ interface BrevutkastProps {
   dokumenter: FysiskDokument[];
   standardvedleggListe: TilgjengeligStandardvedlegg[];
   formValues: SendBrevFormValues;
+  aktivtUtkast: Api.Brevutkast.BrevutkastResDto | null;
+  setAktivtUtkast: (utkast: Api.Brevutkast.BrevutkastResDto | null) => void;
   tilgjengeligeMottakere: Api.DokumenterV2.TilgjengeligMottaker[];
   utkastPåBehandlingen: Api.Brevutkast.BrevutkastResDto[];
   setValgteVedlegg: (valgteVedlegg: BrevVedleggInterface) => void;
@@ -33,13 +35,13 @@ function Brevutkast({
   dokumenter,
   standardvedleggListe,
   formValues,
+  aktivtUtkast,
+  setAktivtUtkast,
   tilgjengeligeMottakere,
   utkastPåBehandlingen,
   setFritekstvedlegg,
   setValgteVedlegg,
 }: BrevutkastProps) {
-  const aktivtUtkast = formValues?.aktivtUtkast;
-
   const aktivtUtkastTittel = aktivtUtkast?.tittel || null;
 
   const inaktiveUtkast = utkastPåBehandlingen.filter((utkast) => utkast.tittel !== aktivtUtkastTittel);
@@ -170,14 +172,9 @@ function Brevutkast({
       settKopiTilBruker(utkast.kopiMottakere || []);
       settFeltValg("UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER", utkast.institusjonID);
     }
-  }, [formValues?.valgtBrev?.type, aktivtUtkastTittel]);
+  }, [formValues?.valgtBrev?.type?.kode, aktivtUtkastTittel]);
 
-  return (
-    <LagredeUtkast
-      alleUtkast={inaktiveUtkast}
-      settAktivtUtkast={(valgtUtkast) => changeField("aktivtUtkast", valgtUtkast)}
-    />
-  );
+  return <LagredeUtkast alleUtkast={inaktiveUtkast} settAktivtUtkast={setAktivtUtkast} />;
 }
 
 export default Brevutkast;

@@ -94,21 +94,6 @@ export const JournalforingFormSelector = createSelector(
   (journalforing) => journalforing,
 );
 
-export const SendBrevFormSelector = createSelector(
-  (state) => getFormState(state, KV.Form.SEND_BREV, {}),
-  (sendbrev) => sendbrev,
-);
-
-export const SendBrevValidSelector = createSelector(
-  (state) => SendBrevFormSelector(state).syncErrors || {},
-  (errors) => Utils._isEmpty(errors),
-);
-
-export const SendBrevOrgnummerValidSelector = createSelector(
-  (state) => SendBrevFormSelector(state).syncErrors || {},
-  (errors) => !errors?.organisasjonsnummer,
-);
-
 export const MaritimtArbeidSelector = createSelector(
   (state) => SoknadFormSelector(state).values,
   (skjemaverdier) => [...skjemaverdier.arbeidsstedOffshore, ...skjemaverdier.arbeidsstedSkip],

@@ -1,18 +1,16 @@
-import { FocusEvent, Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { RootState } from "AppTypes";
 import { connect, ConnectedProps } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { getFormValues } from "redux-form";
+import { Controller, useFormState } from "react-hook-form";
 
 import MKV from "../../../../melosyskodeverk";
-import * as Skjema from "../../../skjema";
-import * as KV from "../../../../kodeverk";
+import * as Forms from "../../../forms";
 import * as Nav from "../../../../navFrontend";
 import * as Utils from "../../../../utils";
 
 import { OrganisasjonOperations } from "../../../../ducks/organisasjoner";
-import { formSelectors } from "../../../../ducks/form";
 
 import { DokumenterV2, Organisasjon } from "../../../../services/api";
 import { OrganisasjonsAdresse } from "../../../adresser";
@@ -21,6 +19,8 @@ import { SendBrevFormValues } from "../types";
 import BrevMottakerNorskMyndighet from "./brevMottakerNorskMyndighet";
 import { FeilmeldingProps, Underpunkt } from "../../../../services/modules/dokumenter-v2";
 import LabelMedHjelpetekst from "../../../labelMedHjelpetekst";
+import { unwrapMelding } from "../../../skjema/utils";
+import { useSendBrevValidering, useSendBrevVerdier } from "../sendBrevValidering";
 
 import "./brevMottaker.less";
 
@@ -46,34 +46,27 @@ export const skalViseBrevmalvalg = (formValues?: SendBrevFormValues): boolean =>
   return true;
 };
 
-const mapStateToProps = (state: RootState) => ({
-  formValues: getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues,
-  orgnrValid: formSelectors.SendBrevOrgnummerValidSelector(state),
-});
-
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
   hentOrganisasjon: (orgnr: string) => dispatch(OrganisasjonOperations.hent(orgnr)),
 });
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(null, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Props {
   redigerbart: boolean;
   tilgjengeligeMottakere: DokumenterV2.TilgjengeligMottaker[];
   changeField: (felt: string, data: any) => void;
-  overstyrBlurEvent: (event: FocusEvent) => void;
 }
 
-function BrevMottaker({
-  tilgjengeligeMottakere,
-  formValues,
-  redigerbart,
-  hentOrganisasjon,
-  orgnrValid,
-  changeField,
-  overstyrBlurEvent,
-}: Props & PropsFromRedux) {
+function BrevMottaker({ tilgjengeligeMottakere, redigerbart, hentOrganisasjon, changeField }: Props & PropsFromRedux) {
+  const formValues = useSendBrevVerdier();
+  const { feil: syncErrors, visFeil } = useSendBrevValidering();
+  const { touchedFields } = useFormState<SendBrevFormValues>({ name: "organisasjonsnummer" });
+  const orgnrValid = !syncErrors.organisasjonsnummer;
+  const orgnrFeil =
+    touchedFields.organisasjonsnummer || visFeil ? unwrapMelding(syncErrors.organisasjonsnummer) : undefined;
+  const arbeidsgiverFeil = visFeil ? unwrapMelding(syncErrors.arbeidsgiver) : undefined;
   const [feil, setFeil] = useState<FeilmeldingProps | undefined>(undefined);
   const [adresse, setAdresse] = useState<{
     mottakerAdresse?: DokumenterV2.BrevAdresse;
@@ -157,9 +150,9 @@ function BrevMottaker({
   }, [formValues?.mottaker, formValues?.organisasjonsnummer, orgnrValid, formValues?.arbeidsgiver]);
   return (
     <>
-      <Skjema.Select
+      <Forms.Select
         className="mottaker"
-        feltNavn="mottaker"
+        name="mottaker"
         label={
           <LabelMedHjelpetekst
             label="Mottaker"
@@ -172,14 +165,13 @@ function BrevMottaker({
         }
         disabled={!redigerbart || tilgjengeligeMottakere?.length === 1}
         emptyFieldDisabled={!!formValues.mottaker}
-        onBlur={overstyrBlurEvent}
       >
         {tilgjengeligeMottakere?.map((mottaker) => (
           <option key={mottaker.uuid} value={mottaker.uuid}>
             {mottaker.type}
           </option>
         ))}
-      </Skjema.Select>
+      </Forms.Select>
 
       {(mottakerErBruker || mottakerErVirksomhet) && (
         <Nav.Row>
@@ -215,26 +207,34 @@ function BrevMottaker({
             </Nav.Column>
           ) : (
             <Nav.Column xs="12" className="arbeidsgiver">
-              <Skjema.RadioGroup
-                legend={
-                  <LabelMedHjelpetekst label="Velg arbeidsgiver" hjelpetekst={arbeidsgiverHjelptekst} bold small />
-                }
+              <Controller
                 name="arbeidsgiver"
-              >
-                {formValues?.valgtMottaker?.adresser?.map((virksomhet: DokumenterV2.BrevAdresse) => (
-                  <Fragment key={`arbeidsgiver.${virksomhet.orgnr}`}>
-                    <Nav.Radio
-                      readOnly={(formValues?.valgtMottaker?.adresser?.length ?? 0) === 1}
-                      value={virksomhet.orgnr}
-                    >
-                      {`${virksomhet.mottakerNavn} (org.nr. ${virksomhet.orgnr})`}
-                    </Nav.Radio>
-                    {formValues.arbeidsgiver === virksomhet.orgnr && adresse?.mottakerAdresse && (
-                      <BrevAdresse {...adresse?.mottakerAdresse} className="arbeidsgiver__adresse" />
-                    )}
-                  </Fragment>
-                ))}
-              </Skjema.RadioGroup>
+                render={({ field }) => (
+                  <Nav.RadioGroup
+                    legend={
+                      <LabelMedHjelpetekst label="Velg arbeidsgiver" hjelpetekst={arbeidsgiverHjelptekst} bold small />
+                    }
+                    name={field.name}
+                    value={field.value ?? null}
+                    onChange={field.onChange}
+                    error={arbeidsgiverFeil}
+                  >
+                    {formValues?.valgtMottaker?.adresser?.map((virksomhet: DokumenterV2.BrevAdresse) => (
+                      <Fragment key={`arbeidsgiver.${virksomhet.orgnr}`}>
+                        <Nav.Radio
+                          readOnly={(formValues?.valgtMottaker?.adresser?.length ?? 0) === 1}
+                          value={virksomhet.orgnr}
+                        >
+                          {`${virksomhet.mottakerNavn} (org.nr. ${virksomhet.orgnr})`}
+                        </Nav.Radio>
+                        {formValues.arbeidsgiver === virksomhet.orgnr && adresse?.mottakerAdresse && (
+                          <BrevAdresse {...adresse?.mottakerAdresse} className="arbeidsgiver__adresse" />
+                        )}
+                      </Fragment>
+                    ))}
+                  </Nav.RadioGroup>
+                )}
+              />
             </Nav.Column>
           )}
         </Nav.Row>
@@ -243,18 +243,19 @@ function BrevMottaker({
       {mottakerErAnnenOrganisasjon && (
         <Nav.Row>
           <Nav.Column xs="4">
-            <Skjema.Input
+            <Forms.Input
               className="organisasjonsnummer"
-              feltNavn="organisasjonsnummer"
+              name="organisasjonsnummer"
               label="Org.nr."
               disabled={!redigerbart}
+              error={orgnrFeil}
             />
           </Nav.Column>
 
           <Nav.Column xs="8">
-            <Skjema.Input
+            <Forms.Input
               className="kontaktperson"
-              feltNavn="kontaktperson"
+              name="kontaktperson"
               label="Kontaktperson (valgfritt)"
               disabled={!redigerbart}
             />

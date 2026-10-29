@@ -36,6 +36,7 @@ const Select = forwardRef<HTMLSelectElement, SelectComponentProps & UseControlle
       children,
       className,
       size,
+      error,
       ...rest
     }: SelectComponentProps & UseControllerProps,
     _ref: any,
@@ -48,13 +49,14 @@ const Select = forwardRef<HTMLSelectElement, SelectComponentProps & UseControlle
           <SelectInnerComponent
             {...field}
             {...rest}
+            value={field.value ?? ""}
             readOnly={readOnly}
             label={label}
             onChange={(event: any) => {
               field.onChange(event);
               if (onChange) onChange(event?.target?.value);
             }}
-            error={getErrorMessage(field, formState)}
+            error={error ?? getErrorMessage(field, formState)}
             size={size}
             className={className ?? ""}
           >

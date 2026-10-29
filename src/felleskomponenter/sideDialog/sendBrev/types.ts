@@ -37,6 +37,4 @@ export interface SendBrevFormValues {
   };
   kopiTilBruker?: boolean;
   trygdemyndighet?: string;
-  aktivtUtkast?: Api.Brevutkast.BrevutkastResDto | null;
-  showFieldErrors?: boolean;
 }

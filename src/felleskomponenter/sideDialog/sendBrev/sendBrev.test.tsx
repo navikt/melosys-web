@@ -82,11 +82,6 @@ vi.mock("../../alertmeldinger", async () => {
 
 describe("SendBrev", () => {
   const defaultPreloadedState = {
-    form: {
-      SEND_BREV: {
-        values: {},
-      },
-    },
     behandlinger: {
       data: [
         {
@@ -102,6 +97,8 @@ describe("SendBrev", () => {
     behandlingID: 123,
     redigerbart: true,
     dokumenter: [],
+    aktivtUtkast: null,
+    setAktivtUtkast: vi.fn(),
   };
 
   beforeEach(() => {

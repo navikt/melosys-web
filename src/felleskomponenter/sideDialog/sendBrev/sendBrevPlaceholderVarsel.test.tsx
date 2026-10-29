@@ -71,27 +71,31 @@ vi.mock("../../../utils", async () => ({
   _uuid: () => "mottaker-uuid",
 }));
 
-// Editoren (Quill) er irrelevant for flyten; skjemaverdiene leses fra redux-form.
+// Editoren (Quill) er irrelevant for flyten; skjemaverdiene settes av BrevMottaker-mocken.
 vi.mock("./brevValg", () => ({ default: () => <div>BrevValg Mock</div> }));
 vi.mock("./brevutkast/brevutkast", () => ({ default: () => <div>Brevutkast Mock</div> }));
 vi.mock("./brevMottaker/brevMottakereTabell", () => ({ default: () => <div>BrevMottakereTabell Mock</div> }));
-vi.mock("./brevMottaker/brevMottaker", async () => ({
-  ...(await vi.importActual<Record<string, unknown>>("./brevMottaker/brevMottaker")),
-  default: () => <div>BrevMottaker Mock</div>,
-}));
+// Setter skjemaverdiene ved mount, slik brukeren ellers ville gjort via mottakervalget.
+const skjema = vi.hoisted(() => ({ verdier: {} as Record<string, unknown> }));
+vi.mock("./brevMottaker/brevMottaker", async () => {
+  const { useEffect } = await import("react");
+  const { useFormContext } = await import("react-hook-form");
+  function BrevMottakerMock() {
+    const { setValue } = useFormContext();
+    useEffect(() => {
+      Object.entries(skjema.verdier).forEach(([felt, verdi]) => setValue(felt, verdi));
+    }, [setValue]);
+    return <div>BrevMottaker Mock</div>;
+  }
+  return {
+    ...(await vi.importActual<Record<string, unknown>>("./brevMottaker/brevMottaker")),
+    default: BrevMottakerMock,
+  };
+});
+
+const grunnverdier = { mottaker: mottaker.uuid, valgtMottaker: mottaker };
 
 const preloadedState = {
-  form: {
-    send_brev: {
-      values: {
-        mottaker: mottaker.uuid,
-        valgtMottaker: mottaker,
-        // Låser reset-effektene som ellers tømmer skjemaet rett etter mount.
-        aktivtUtkast: { utkastBrevID: 1 },
-        felt: { FRITEKST: { feltVerdi: FRITEKST_HTML } },
-      },
-    },
-  },
   featureToggle: {
     status: STATUS.OK,
     data: { [MELOSYS_TEKSTBLOKKER]: true, [MELOSYS_TEKSTBLOKKER_DYNAMISK_PLACEHOLDER]: true },
@@ -100,20 +104,27 @@ const preloadedState = {
   dokumenter: { data: [] },
 };
 
-const renderSendBrev = () =>
-  renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, { preloadedState });
+// Et aktivt utkast låser reset-effektene som ellers tømmer skjemaet rett etter mount.
+const renderMedFelt = (
+  felt: Record<string, { feltVerdi: string }>,
+  state: Record<string, unknown> = preloadedState,
+) => {
+  skjema.verdier = { ...grunnverdier, felt };
+  return renderWithProviders(
+    <SendBrev
+      behandlingID={123}
+      redigerbart
+      dokumenter={[]}
+      aktivtUtkast={{ utkastBrevID: 1 } as never}
+      setAktivtUtkast={vi.fn()}
+    />,
+    { preloadedState: state },
+  );
+};
 
-const renderMedFritekst = (fritekst: string) =>
-  renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
-    preloadedState: {
-      ...preloadedState,
-      form: {
-        send_brev: {
-          values: { ...preloadedState.form.send_brev.values, felt: { FRITEKST: { feltVerdi: fritekst } } },
-        },
-      },
-    },
-  });
+const renderSendBrev = () => renderMedFelt({ FRITEKST: { feltVerdi: FRITEKST_HTML } });
+
+const renderMedFritekst = (fritekst: string) => renderMedFelt({ FRITEKST: { feltVerdi: fritekst } });
 
 // Innledning og hovedtekst er to felter i samme brev; analysen skal se dem som atskilte.
 const innledningsfelt = { ...brevType.felter[0], kode: "INNLEDNING_FRITEKST", beskrivelse: "Innledning" };
@@ -122,33 +133,14 @@ const renderMedToFritekstfelter = (innledning: string, fritekst: string) => {
   vi.mocked(Api.DokumenterV2.hentTilgjengeligeMaler).mockResolvedValue([
     { mottaker, brevTyper: [{ ...brevType, felter: [innledningsfelt, brevType.felter[0]] }] },
   ] as any);
-  return renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
-    preloadedState: {
-      ...preloadedState,
-      form: {
-        send_brev: {
-          values: {
-            ...preloadedState.form.send_brev.values,
-            felt: { INNLEDNING_FRITEKST: { feltVerdi: innledning }, FRITEKST: { feltVerdi: fritekst } },
-          },
-        },
-      },
-    },
-  });
+  return renderMedFelt({ INNLEDNING_FRITEKST: { feltVerdi: innledning }, FRITEKST: { feltVerdi: fritekst } });
 };
 
 const renderMedToggles = (fritekst: string, toggles: Record<string, boolean>) =>
-  renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
-    preloadedState: {
-      ...preloadedState,
-      featureToggle: { status: STATUS.OK, data: toggles },
-      form: {
-        send_brev: {
-          values: { ...preloadedState.form.send_brev.values, felt: { FRITEKST: { feltVerdi: fritekst } } },
-        },
-      },
-    },
-  });
+  renderMedFelt(
+    { FRITEKST: { feltVerdi: fritekst } },
+    { ...preloadedState, featureToggle: { status: STATUS.OK, data: toggles } },
+  );
 
 const klikkSendBrev = async () => {
   const knapp = await screen.findByRole("button", { name: "Send brev" });
@@ -246,19 +238,7 @@ describe("SendBrev – varsel om utdaterte placeholder-verdier", () => {
     vi.mocked(Api.DokumenterV2.hentTilgjengeligeMaler).mockResolvedValue([
       { mottaker, brevTyper: [{ ...brevType, felter: [{ ...brevType.felter[0], kode: "IKKE_I_BESTILLINGEN" }] }] },
     ] as any);
-    renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
-      preloadedState: {
-        ...preloadedState,
-        form: {
-          send_brev: {
-            values: {
-              ...preloadedState.form.send_brev.values,
-              felt: { IKKE_I_BESTILLINGEN: { feltVerdi: FRITEKST_HTML } },
-            },
-          },
-        },
-      },
-    });
+    renderMedFelt({ IKKE_I_BESTILLINGEN: { feltVerdi: FRITEKST_HTML } });
     await klikkSendBrev();
 
     await ventPaaBestilt();
@@ -317,9 +297,7 @@ describe("SendBrev – varsel om utdaterte placeholder-verdier", () => {
   });
 
   it("slår ikke opp ferske verdier når togglene er av", async () => {
-    renderWithProviders(<SendBrev behandlingID={123} redigerbart dokumenter={[]} />, {
-      preloadedState: { ...preloadedState, featureToggle: { status: STATUS.OK, data: {} } },
-    });
+    renderMedToggles(FRITEKST_HTML, {});
     await klikkSendBrev();
 
     await ventPaaBestilt();

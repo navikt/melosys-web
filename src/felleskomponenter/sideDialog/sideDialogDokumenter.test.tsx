@@ -39,11 +39,6 @@ vi.mock("./sendBrev/brevutkast/lagredeUtkast", () => ({
 
 vi.mock("../../hooks", () => ({
   useAsyncCallbackState: () => [[]],
-  useDispatch: () => vi.fn(),
-}));
-
-vi.mock("redux-form", () => ({
-  change: vi.fn(),
 }));
 
 import SideDialogDokumenter from "./sideDialogDokumenter";
@@ -53,6 +48,7 @@ describe("SideDialogDokumenter", () => {
     behandlingID: 1,
     dokumentOversikt: [],
     setAktivTab: vi.fn(),
+    setAktivtUtkast: vi.fn(),
   };
 
   it("viser melding når ingen dokumenter", () => {

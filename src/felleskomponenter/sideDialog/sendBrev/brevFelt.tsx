@@ -1,16 +1,11 @@
 import { ColumnWidth } from "nav-frontend-grid";
-import { useSelector } from "react-redux";
-import { getFormSyncErrors, getFormValues } from "redux-form";
-import { RootState } from "AppTypes";
 
 import * as Nav from "../../../navFrontend";
-import * as Skjema from "../../skjema";
-import * as KV from "../../../kodeverk";
+import * as Forms from "../../forms";
 import { DokumenterV2 } from "../../../services/api";
-import { begrensAntallTegn } from "../../../utils/normalisering";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
 import "./brevFelt.less";
-import { SendBrevFormValues, SyncErrors } from "./types";
+import { useSendBrevValidering, useSendBrevVerdier } from "./sendBrevValidering";
 import { Betingelse, PlaceholderVerdi } from "../../../services/modules/placeholdere";
 import { hentFeltFeilmelding, vurderPåkrevdOgMangler } from "./sendBrevSchema";
 import { unwrapMelding } from "../../skjema/utils";
@@ -36,17 +31,14 @@ function BrevFelt({
   gyldigeBetingelsesNokler,
   betingelser,
 }: BrevFeltProps) {
-  const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state)) as
-    SyncErrors | undefined;
-  const formValues = useSelector((state: RootState) => getFormValues(KV.Form.SEND_BREV)(state)) as SendBrevFormValues;
+  const { feil: syncErrors, visFeil: visFelterFeil } = useSendBrevValidering();
+  const formValues = useSendBrevVerdier();
 
   // Sjekk om dette feltet er påkrevd og mangler verdi
   const erFeltPåkrevdOgMangler = () => {
     const { erPaakrevd, valgMangler, fritekstMangler } = vurderPåkrevdOgMangler(formValues, felt.kode);
     return erPaakrevd && (valgMangler || fritekstMangler);
   };
-
-  const visFelterFeil = Boolean(formValues?.showFieldErrors);
 
   // Foretrukket: nested felt-feil fra schema
   const nestedNode =
@@ -73,17 +65,15 @@ function BrevFelt({
           {visFeltBeskrivelse && (
             <LabelMedHjelpetekst label={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} bold small />
           )}
-          <Skjema.HTMLEditor
-            feltNavn={`felt.${felt.kode}.feltVerdi`}
+          <Forms.HtmlEditor
+            name={`felt.${felt.kode}.feltVerdi`}
             className="brevfelt__fritekst"
             disabled={!redigerbart}
-            error={feilmelding}
+            feil={feilmelding}
             // Send brev (sidemenyen): her kan brukeren også sette inn hele brevmaler.
             visBrevmaler
             // Her er det plass til å utvide editoren forbi brevbredden.
             visBreddeToggle
-            // Skjul meta.error før innsending (vis først når showFieldErrors er true)
-            suppressMetaError={!formValues?.showFieldErrors}
             placeholderVerdier={placeholderVerdier}
             gyldigeNokler={gyldigeNokler}
             gyldigeBetingelsesNokler={gyldigeBetingelsesNokler}
@@ -95,9 +85,9 @@ function BrevFelt({
       return (
         <Nav.Row>
           <Nav.Column xs={width}>
-            <Skjema.Input
-              feltNavn={`felt.${felt.kode}.feltVerdi`}
-              normalize={begrensAntallTegn(felt.tegnBegrensning)}
+            <Forms.Input
+              name={`felt.${felt.kode}.feltVerdi`}
+              maxLength={felt.tegnBegrensning || undefined}
               label={
                 visFeltBeskrivelse ? (
                   <LabelMedHjelpetekst label={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} bold small />
@@ -116,11 +106,12 @@ function BrevFelt({
       return (
         <Nav.Row className="brevfelt__sjekkboks">
           <Nav.Column xs={width}>
-            <Skjema.Checkbox
-              feltNavn={`felt.${felt.kode}.feltVerdi`}
+            <Forms.Checkbox
+              name={`felt.${felt.kode}.feltVerdi`}
               label={felt.beskrivelse}
-              disabled={!redigerbart}
-              error={feilmelding}
+              readOnly={!redigerbart}
+              feil={feilmelding}
+              size="small"
             />
           </Nav.Column>
         </Nav.Row>
@@ -139,8 +130,8 @@ function BrevFelt({
         return (
           <Nav.Row>
             <Nav.Column xs={width}>
-              <Skjema.Select
-                feltNavn={`felt.${felt.kode}.valg`}
+              <Forms.Select
+                name={`felt.${felt.kode}.valg`}
                 label={
                   visFeltBeskrivelse ? (
                     <LabelMedHjelpetekst label={felt.beskrivelse} hjelpetekst={felt.hjelpetekst} bold small />
@@ -156,7 +147,7 @@ function BrevFelt({
                     {alternativ.beskrivelse}
                   </option>
                 ))}
-              </Skjema.Select>
+              </Forms.Select>
             </Nav.Column>
           </Nav.Row>
         );

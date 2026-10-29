@@ -1,10 +1,9 @@
 import * as Nav from "../../../../navFrontend";
-import * as Skjema from "../../../skjema";
+import * as Forms from "../../../forms";
 import { DokumenterV2 } from "../../../../services/api";
 import bem from "../../../../bemUtils";
 
 import "./fritekstvedleggSkjema.less";
-import { begrensAntallTegn } from "../../../../utils/normalisering";
 import Knapperad from "../../../knapperad";
 import { ColumnWidth } from "nav-frontend-grid";
 import { Betingelse, PlaceholderVerdi } from "../../../../services/modules/placeholdere";
@@ -14,7 +13,7 @@ interface FritekstvedleggSkjemaProps {
   index?: number;
   /* Index benyttes for å oppnå en rerendering av HtmlEditor. Dersom vi redigerer først ett eksisterende fritekstvedlegg
   og begynner en redigering på et annet eksisterende vedlegg uten å lagre vil ikke HtmlEditor rerenderes med ny verdi da
-  denne hentes fra redux-form
+  denne bare leses ved oppstart av editoren
    */
   resetFritekstvedlegg: () => void;
   leggTilFritekstvedlegg: () => void;
@@ -50,15 +49,15 @@ function FritekstvedleggSkjema({
         <Nav.Detail>Dokumentet journalføres og legges til som et vedlegg til brevet</Nav.Detail>
         <Nav.Row>
           <Nav.Column xs={width}>
-            <Skjema.Input
-              feltNavn={`felt.${felt.kode}_TITTEL.feltVerdi`}
+            <Forms.Input
+              name={`felt.${felt.kode}_TITTEL.feltVerdi`}
               label="Tittel (maks 60 tegn)"
-              normalize={begrensAntallTegn(TEGNBEGRENSNING)}
+              maxLength={TEGNBEGRENSNING}
             />
           </Nav.Column>
         </Nav.Row>
-        <Skjema.HTMLEditor
-          feltNavn={`felt.${felt.kode}_FRITEKST.feltVerdi`}
+        <Forms.HtmlEditor
+          name={`felt.${felt.kode}_FRITEKST.feltVerdi`}
           key={index}
           visBrevmaler
           placeholderVerdier={placeholderVerdier}

@@ -1,14 +1,12 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { getFormSyncErrors, getFormValues } from "redux-form";
-import { RootState } from "AppTypes";
+import { Controller } from "react-hook-form";
 
 import { DokumenterV2 } from "../../../services/api";
-import * as Skjema from "../../skjema";
+import * as Forms from "../../forms";
 import * as Nav from "../../../navFrontend";
-import * as KV from "../../../kodeverk";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
-import { Felt, SendBrevFormValues, SyncErrors } from "./types";
+import { Felt } from "./types";
+import { useSendBrevValidering, useSendBrevVerdier } from "./sendBrevValidering";
 import { hentFeltFeilmelding } from "./sendBrevSchema";
 import { vurderPåkrevdOgMangler } from "./sendBrevSchema";
 import { unwrapMelding } from "../../skjema/utils";
@@ -62,8 +60,8 @@ function ValgAlternativer({
   hjelpetekst,
   className,
 }: ValgAlternativProps) {
-  const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state)) as SyncErrors;
-  const formValues = useSelector((state: RootState) => getFormValues(KV.Form.SEND_BREV)(state)) as SendBrevFormValues;
+  const { feil: syncErrors, visFeil } = useSendBrevValidering();
+  const formValues = useSendBrevVerdier();
 
   // Sjekk om dette feltet er påkrevd og mangler verdi
   const erFeltPåkrevdOgMangler = () => {
@@ -80,7 +78,7 @@ function ValgAlternativer({
   const nestedValgText = unwrapMelding(nestedNode?.valg);
   const harNestedFeil = Boolean(nestedFeltVerdiText || nestedValgText);
 
-  const skalViseFeil = Boolean(formValues?.showFieldErrors) && (harNestedFeil || erFeltPåkrevdOgMangler());
+  const skalViseFeil = visFeil && (harNestedFeil || erFeltPåkrevdOgMangler());
 
   // Tekst under feltet: bruk kun valg-feil for SELECT; for andre felt kan feltVerdi brukes
   const erSelect = valg.valgType === DokumenterV2.ValgType.SELECT;
@@ -91,6 +89,7 @@ function ValgAlternativer({
     : undefined;
 
   const label = lagLabel(beskrivelse, hjelpetekst);
+  const valgtKode = formValues?.felt?.[feltKode]?.valg;
   const valgalternativErSelectOgKunEtt =
     valg.valgType === DokumenterV2.ValgType.SELECT && valg.valgAlternativer.length === 1;
 
@@ -102,7 +101,13 @@ function ValgAlternativer({
 
   if (valg.valgType === DokumenterV2.ValgType.CHECKBOX) {
     return (
-      <Nav.CheckboxGroup legend={label} name={`felt.${feltKode}.valg`} readOnly={!redigerbart} error={feilmelding}>
+      <Nav.CheckboxGroup
+        legend={label}
+        name={`felt.${feltKode}.valg`}
+        readOnly={!redigerbart}
+        error={feilmelding}
+        value={valgtKode ? [valgtKode] : []}
+      >
         {valg.valgAlternativer.map((alternativ) => (
           <Nav.Checkbox
             value={alternativ.kode}
@@ -126,29 +131,41 @@ function ValgAlternativer({
 
   if (valg.valgType === DokumenterV2.ValgType.RADIO) {
     return (
-      <Skjema.RadioGroup legend={label} name={`felt.${feltKode}.valg`} readOnly={!redigerbart} error={feilmelding}>
-        <Nav.HStack gap="space-16">
-          {valg.valgAlternativer.map((alternativ) => (
-            <Nav.Radio
-              value={alternativ.kode}
-              id={`${feltKode}.${alternativ.kode}`}
-              key={`${feltKode}.${alternativ.kode}`}
-            >
-              {alternativ.beskrivelse}
-            </Nav.Radio>
-          ))}
-        </Nav.HStack>
-      </Skjema.RadioGroup>
+      <Controller
+        name={`felt.${feltKode}.valg`}
+        render={({ field }) => (
+          <Nav.RadioGroup
+            legend={label}
+            name={field.name}
+            value={field.value ?? null}
+            onChange={field.onChange}
+            readOnly={!redigerbart}
+            error={feilmelding}
+          >
+            <Nav.HStack gap="space-16">
+              {valg.valgAlternativer.map((alternativ) => (
+                <Nav.Radio
+                  value={alternativ.kode}
+                  id={`${feltKode}.${alternativ.kode}`}
+                  key={`${feltKode}.${alternativ.kode}`}
+                >
+                  {alternativ.beskrivelse}
+                </Nav.Radio>
+              ))}
+            </Nav.HStack>
+          </Nav.RadioGroup>
+        )}
+      />
     );
   }
 
   if (valg.valgType === DokumenterV2.ValgType.SELECT) {
     return (
-      <Skjema.Select
+      <Forms.Select
         className={className}
-        feltNavn={`felt.${feltKode}.valg`}
+        name={`felt.${feltKode}.valg`}
         label={label}
-        readonly={!redigerbart || valgalternativErSelectOgKunEtt}
+        readOnly={!redigerbart || valgalternativErSelectOgKunEtt}
         error={feilmelding}
       >
         {valg.valgAlternativer.map((alternativ) => (
@@ -156,7 +173,7 @@ function ValgAlternativer({
             {alternativ.beskrivelse}
           </option>
         ))}
-      </Skjema.Select>
+      </Forms.Select>
     );
   }
 

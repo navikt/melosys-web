@@ -4,6 +4,7 @@ import { RootState } from "AppTypes";
 import { DokumentOversikt, FysiskDokument } from "Domene";
 import { Tabs } from "@navikt/ds-react";
 import * as Utils from "../../utils";
+import * as Api from "../../services/api";
 
 import { behandlingerSelectors } from "../../ducks/behandlinger";
 import { redigerbartSelectors } from "../../ducks/redigerbart";
@@ -28,6 +29,8 @@ export interface FaneViserProps {
   dokumentOversikt: DokumentOversikt[];
   dokumenter: FysiskDokument[];
   setAktivTab: (fanenavn: string) => void;
+  aktivtUtkast: Api.Brevutkast.BrevutkastResDto | null;
+  setAktivtUtkast: (utkast: Api.Brevutkast.BrevutkastResDto | null) => void;
 }
 
 export function FaneViser({
@@ -40,6 +43,8 @@ export function FaneViser({
   dokumentOversikt,
   dokumenter,
   setAktivTab,
+  aktivtUtkast,
+  setAktivtUtkast,
 }: FaneViserProps) {
   switch (navn) {
     case "dokumenter":
@@ -48,10 +53,19 @@ export function FaneViser({
           behandlingID={behandlingID}
           dokumentOversikt={dokumentOversikt}
           setAktivTab={setAktivTab}
+          setAktivtUtkast={setAktivtUtkast}
         />
       );
     case "brevbestilling":
-      return <SideDialogSendBrev behandlingID={behandlingID} redigerbart={redigerbart} dokumenter={dokumenter} />;
+      return (
+        <SideDialogSendBrev
+          behandlingID={behandlingID}
+          redigerbart={redigerbart}
+          dokumenter={dokumenter}
+          aktivtUtkast={aktivtUtkast}
+          setAktivtUtkast={setAktivtUtkast}
+        />
+      );
     case "sedbestilling":
       return (
         <SideDialogOpprettNyBuc
@@ -105,6 +119,7 @@ function SideDialog({
 }: SideDialogProps & PropsFromRedux) {
   const [aktivTab, setAktivTab] = useState<string>(tabs[0].navn);
   const [endreFokus, setEndreFokus] = useState(false);
+  const [aktivtUtkast, setAktivtUtkast] = useState<Api.Brevutkast.BrevutkastResDto | null>(null);
 
   useEffect(() => {
     if (endreFokus) {
@@ -136,6 +151,8 @@ function SideDialog({
                 dokumentOversikt={dokumentOversikt}
                 dokumenter={dokumenter}
                 setAktivTab={setAktivTab}
+                aktivtUtkast={aktivtUtkast}
+                setAktivtUtkast={setAktivtUtkast}
               />
             </Tabs.Panel>
           ))}
