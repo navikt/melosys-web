@@ -32,6 +32,6 @@ describe("kontroll", () => {
   });
 
   it("kontrollerUnntaksperiode returnerer promise", () => {
-    expect(kontrollerUnntaksperiode(1, { periodeFom: new Date(), periodeTom: new Date() })).toBeInstanceOf(Promise);
+    expect(kontrollerUnntaksperiode(1, { periodeFom: "2024-01-01", periodeTom: "2024-12-31" })).toBeInstanceOf(Promise);
   });
 });

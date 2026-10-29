@@ -1,5 +1,3 @@
-import PT from "prop-types";
-
 import MKV from "../../melosyskodeverk";
 
 import * as KV from "../../kodeverk";
@@ -9,12 +7,16 @@ import * as Utils from "../../utils";
 
 import "./registerkontrolltreff.less";
 
-function UnntakPeriodeBegrunnelse(kode) {
+function UnntakPeriodeBegrunnelse(kode: string) {
   if (!kode) return "";
   return KV.kodeTilTerm(kode, MKV.KTObjects.begrunnelser.kontroll_begrunnelser);
 }
 
-function RegisterkontrollTreff({ vurderingBegrunnelser = [] }) {
+interface RegisterkontrollTreffProps {
+  vurderingBegrunnelser?: string[];
+}
+
+function RegisterkontrollTreff({ vurderingBegrunnelser = [] }: RegisterkontrollTreffProps) {
   return vurderingBegrunnelser.map((begrunnelseKode) => (
     <div key={Utils._uuid()} className="registerkontroll-listeelement">
       <Ikoner.AdvarselSirkelFyll />
@@ -22,9 +24,5 @@ function RegisterkontrollTreff({ vurderingBegrunnelser = [] }) {
     </div>
   ));
 }
-
-RegisterkontrollTreff.propTypes = {
-  vurderingBegrunnelser: PT.arrayOf(PT.string),
-};
 
 export default RegisterkontrollTreff;
