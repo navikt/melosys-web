@@ -40,6 +40,11 @@ describe("BestemmelseSelect", () => {
     expect(bestemmelseFelt()).toBeDefined();
   });
 
+  it("rendrer bestemmelse i liten størrelse", () => {
+    render(<TestBestemmelseSelect />);
+    expect(bestemmelseFelt().closest(".aksel-form-field--small")).not.toBeNull();
+  });
+
   it("viser bestemmelser fra kodeverk når listen åpnes", async () => {
     render(<TestBestemmelseSelect />);
     await userEvent.click(bestemmelseFelt());
