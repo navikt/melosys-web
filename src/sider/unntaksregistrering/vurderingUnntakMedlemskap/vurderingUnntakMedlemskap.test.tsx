@@ -38,7 +38,10 @@ vi.mock("../../../services/api", () => ({
 
 import VurderingUnntakMedlemskap from "./vurderingUnntakMedlemskap";
 
-const settOppState = (periode: { fom: string; tom: string }) => {
+const settOppState = (
+  periode: { fom: string; tom: string },
+  utfall: string = MKV.Koder.utfallregistreringunntak.GODKJENT,
+) => {
   selectorVerdier.set(redigerbartSelectors.RedigerbartSelector, true);
   selectorVerdier.set(behandlingerSelectors.BehandlingIDSelector, 1);
   selectorVerdier.set(fagsakSelectors.SakstypeKodeSelector, MKV.Koder.sakstyper.TRYGDEAVTALE);
@@ -50,10 +53,7 @@ const settOppState = (periode: { fom: string; tom: string }) => {
   selectorVerdier.set(mottatteOpplysningerSelectors.LovvalgslandSelector, MKV.Koder.landkoder.GB);
   selectorVerdier.set(mottatteOpplysningerSelectors.PeriodeSelector, periode);
   selectorVerdier.set(lovvalgsperioderSelectors.LovvalgsperiodeSelector, {});
-  selectorVerdier.set(
-    behandlingsresultatSelectors.UtfallRegistreringUnntakSelector,
-    MKV.Koder.utfallregistreringunntak.GODKJENT,
-  );
+  selectorVerdier.set(behandlingsresultatSelectors.UtfallRegistreringUnntakSelector, utfall);
   selectorVerdier.set(feiletResponsSelectors.FeilmeldingerSelector, {});
   selectorVerdier.set(kontrollSelectors.KontrollFeilSelector, {});
 };
@@ -95,5 +95,59 @@ describe("VurderingUnntakMedlemskap – konvensjonen med Storbritannia", () => {
 
     await waitFor(() => expect(screen.queryByText(/gjelder fra 1. januar 2024/)).toBeNull());
     expect(screen.queryByText("Periodelengde er mer enn 24 måneder.")).toBeNull();
+  });
+});
+
+describe("VurderingUnntakMedlemskap – åpen sluttdato", () => {
+  const { GODKJENT, DELVIS_GODKJENT, IKKE_GODKJENT } = MKV.Koder.utfallregistreringunntak;
+  const advarsel = "En unntaksperiode kan ikke ha åpen sluttdato.";
+
+  const renderSteg = () => render(<VurderingUnntakMedlemskap oppdaterStatus={vi.fn()} tilbake={vi.fn()} aktivtSteg />);
+
+  beforeEach(() => selectorVerdier.clear());
+
+  it.each([
+    ["Godkjenn", GODKJENT],
+    ["Godkjenn, men endre periode", DELVIS_GODKJENT],
+  ])("viser advarsel, bestemmelse og deaktivert bekreft ved «%s» uten sluttdato", async (_, utfall) => {
+    settOppState({ fom: "2024-01-01", tom: "" }, utfall);
+
+    renderSteg();
+
+    expect(await screen.findByText(advarsel)).toBeDefined();
+    expect(bekreftKnapp()).toHaveProperty("disabled", true);
+    expect(await screen.findByRole("combobox", { name: "Bestemmelse" })).toBeDefined();
+  });
+
+  it("lar saksbehandler velge Godkjenn uten sluttdato og viser advarselen", async () => {
+    settOppState({ fom: "2024-01-01", tom: "" }, IKKE_GODKJENT);
+
+    renderSteg();
+    expect(screen.queryByText(advarsel)).toBeNull();
+
+    const godkjenn = screen.getByRole("radio", { name: "Godkjenn" });
+    expect(godkjenn).toHaveProperty("disabled", false);
+    await userEvent.click(godkjenn);
+
+    expect(await screen.findByText(advarsel)).toBeDefined();
+    expect(bekreftKnapp()).toHaveProperty("disabled", true);
+  });
+
+  it("holder bekreft deaktivert når bestemmelse er valgt uten sluttdato", async () => {
+    settOppState({ fom: "2024-01-01", tom: "" });
+
+    await velgBestemmelse("Konv. EFTA Storbritannia art. 14 nr. 1 – Utsendt arbeidstaker");
+
+    expect(screen.getByText(advarsel)).toBeDefined();
+    expect(bekreftKnapp()).toHaveProperty("disabled", true);
+  });
+
+  it("viser ikke advarsel når sluttdato er oppgitt", async () => {
+    settOppState({ fom: "2024-01-01", tom: "2025-12-31" });
+
+    renderSteg();
+
+    await screen.findByRole("combobox", { name: "Bestemmelse" });
+    expect(screen.queryByText(advarsel)).toBeNull();
   });
 });

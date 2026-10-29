@@ -61,7 +61,6 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
 
   const { control, watch, formState, setValue } = useForm({
     resolver: yupResolver<FieldValues, unknown, FieldValues>(vurdering_unntak_medlemskap),
-    context: { sluttDato: mottatteOpplysningerPeriode.tom },
     mode: "all",
     defaultValues: {
       utfallRegistreringUnntak,
@@ -140,7 +139,7 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
     isValid: boolean,
     kontrollerSomSkalIgnoreres: string[],
   ) => {
-    if (isValid && values.utfallRegistreringUnntak !== IKKE_GODKJENT) {
+    if (isValid && values.utfallRegistreringUnntak !== IKKE_GODKJENT && !Utils._isEmpty(values.tom)) {
       await lagreLovvalgsperiode(values);
       kontrollerFerdigbehandling(kontrollerSomSkalIgnoreres);
     }
@@ -181,6 +180,8 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   const utfallErDelvisGodkjent = formValues?.utfallRegistreringUnntak === DELVIS_GODKJENT;
   const utfallErGodkjentEllerDelvis = utfallErGODKJENT || utfallErDelvisGodkjent;
 
+  const visÅpenSluttdatoAdvarsel = utfallErGodkjentEllerDelvis && !harSluttdato;
+
   const visUtsendingOver24MånederFeil =
     utfallErGodkjentEllerDelvis &&
     erUtsendingStorbritanniaOver24Måneder(formValues.fom, formValues.tom, formValues.bestemmelse);
@@ -210,9 +211,7 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
             onChange={lagreUtfallRegistreringUnntak}
             control={control}
           >
-            <Nav.Radio value={GODKJENT} disabled={!harSluttdato}>
-              Godkjenn
-            </Nav.Radio>
+            <Nav.Radio value={GODKJENT}>Godkjenn</Nav.Radio>
             <Nav.Radio value={DELVIS_GODKJENT}>Godkjenn, men endre periode</Nav.Radio>
             <Nav.Radio value={IKKE_GODKJENT}>Ikke godkjenn</Nav.Radio>
           </Forms.RadioGroup>
@@ -253,7 +252,7 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
               />
             </Nav.Column>
           </Nav.Row>
-          {harSluttdato && !harErrorFeilmelding && (
+          {!harErrorFeilmelding && (
             <BestemmelseSelect
               formValues={formValues}
               control={control}
@@ -264,6 +263,12 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
             />
           )}
         </>
+      )}
+
+      {visÅpenSluttdatoAdvarsel && (
+        <Nav.Alert variant="warning" className="vurderingUnntakMedlemskap__apensluttdato">
+          En unntaksperiode kan ikke ha åpen sluttdato.
+        </Nav.Alert>
       )}
 
       {visUtsendingOver24MånederFeil && (
@@ -286,6 +291,7 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
           onClick: handleBekreft,
           disabled:
             !formState?.isValid ||
+            visÅpenSluttdatoAdvarsel ||
             visUtsendingOver24MånederFeil ||
             (harErrorFeilmelding && formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
             !redigerbart,
