@@ -146,9 +146,6 @@ export interface RegistreringPanelerFormData {
 export const ARBEID_TJENESTEPERSON_ELLER_FLY_VEDTAK = "arbeid_tjenesteperson_eller_fly_vedtak";
 
 export const Trygdeavtale = {
-  INNGANG: "trygdeavtale_inngang",
-  AVKLAR_VIRKSOMHET: "trygdeavtale_avklar_virksomhet",
-  BESTEMMELSE: "trygdeavtale_bestemmelse",
   FAMILIE: "trygdeavtale_familie",
   VEDTAK: "trygdeavtale_vedtak",
 };

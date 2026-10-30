@@ -32,9 +32,6 @@ describe("form konstanter", () => {
   });
 
   it("Trygdeavtale har alle steg", () => {
-    expect(Trygdeavtale.INNGANG).toContain("trygdeavtale");
-    expect(Trygdeavtale.AVKLAR_VIRKSOMHET).toContain("trygdeavtale");
-    expect(Trygdeavtale.BESTEMMELSE).toContain("trygdeavtale");
     expect(Trygdeavtale.FAMILIE).toContain("trygdeavtale");
     expect(Trygdeavtale.VEDTAK).toContain("trygdeavtale");
   });
