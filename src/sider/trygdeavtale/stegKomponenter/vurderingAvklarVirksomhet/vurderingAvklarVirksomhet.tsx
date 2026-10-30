@@ -58,7 +58,7 @@ function VurderingAvklarVirksomhet({
         virksomhet: virksomhet || null,
       });
     }
-  }, [virksomhet, redigerbart, aktivtSteg, oppdaterFlyt, resultat]);
+  }, [virksomhet, redigerbart, aktivtSteg]);
 
   const harVirksomheter = Array.isArray(virksomheterListe) && virksomheterListe.length > 0;
 
