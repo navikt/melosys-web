@@ -185,13 +185,13 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
   const visUtsendingOver24MånederFeil =
     utfallErGodkjentEllerDelvis &&
     erUtsendingStorbritanniaOver24Måneder(formValues.fom, formValues.tom, formValues.bestemmelse);
-  const visKonvensjonFørIkrafttredelseInfo =
+  const visKonvensjonFørIkrafttredelseFeil =
     utfallErGodkjentEllerDelvis && erKonvensjonStorbritanniaFørIkrafttredelse(formValues.fom, formValues.bestemmelse);
 
   return (
     <div className="vurderingUnntakMedlemskap">
-      {visKonvensjonFørIkrafttredelseInfo && (
-        <Nav.Alert variant="info" className="vurderingUnntakMedlemskap__konvensjonmelding">
+      {visKonvensjonFørIkrafttredelseFeil && (
+        <Nav.Alert variant="error" className="vurderingUnntakMedlemskap__konvensjonmelding">
           Konvensjonen mellom EØS/EFTA-landene og Storbritannia gjelder fra 1. januar 2024
         </Nav.Alert>
       )}
@@ -293,6 +293,7 @@ function VurderingUnntakMedlemskap({ oppdaterStatus, tilbake, aktivtSteg }: Vurd
             !formState?.isValid ||
             visÅpenSluttdatoAdvarsel ||
             visUtsendingOver24MånederFeil ||
+            visKonvensjonFørIkrafttredelseFeil ||
             (harErrorFeilmelding && formValues.utfallRegistreringUnntak !== IKKE_GODKJENT) ||
             !redigerbart,
         }}
