@@ -3,7 +3,7 @@ import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
-import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { FormProvider, Path, useForm, useWatch } from "react-hook-form";
 import { ColumnWidth } from "nav-frontend-grid";
 
 import { useMsal } from "@azure/msal-react";
@@ -102,7 +102,7 @@ function SendBrev({
   const { control, reset, setValue } = metoder;
   const formValues = useWatch({ control }) as SendBrevFormValues;
   const changeField = useCallback(
-    (felt: string, verdi: unknown) => setValue(felt as keyof SendBrevFormValues, verdi as never),
+    (felt: string, verdi: unknown) => setValue(felt as Path<SendBrevFormValues>, verdi as never),
     [setValue],
   );
   const syncErrors = useMemo(() => validerSendBrev(formValues), [formValues]);
