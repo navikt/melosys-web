@@ -1,19 +1,17 @@
-import { FocusEvent, useEffect, useRef, useState, useMemo, useLayoutEffect } from "react";
+import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { connect, ConnectedProps, useSelector } from "react-redux";
-import { change, getFormSyncErrors, getFormValues, reduxForm, reset } from "redux-form";
-import { touchAll as touchAllFieldsOp } from "../../../ducks/form/operations";
+import { connect, ConnectedProps } from "react-redux";
+import { FormProvider, Path, useForm, useWatch } from "react-hook-form";
 import { ColumnWidth } from "nav-frontend-grid";
 
 import { useMsal } from "@azure/msal-react";
 
 import MKV from "../../../melosyskodeverk";
 import * as Api from "../../../services/api";
-import * as KV from "../../../kodeverk";
 import * as Nav from "../../../navFrontend";
-import * as Skjema from "../../skjema";
+import * as Forms from "../../forms";
 import * as Utils from "../../../utils";
 import {
   FeilmeldingProps,
@@ -25,7 +23,6 @@ import {
 import { mottatteOpplysningerSelectors } from "../../../ducks/mottatteOpplysninger";
 import { behandlingerOperations } from "../../../ducks/behandlinger";
 import { fagsakSelectors } from "../../../ducks/fagsaker";
-import { formSelectors } from "../../../ducks/form";
 
 import BrevMottaker, {
   erAnnenOrganisasjon,
@@ -49,37 +46,28 @@ import {
   UtdatertPlaceholder,
 } from "../../../services/modules/placeholdere";
 
-import { lagYupToReduxformErrorMapper } from "../../../yup";
-import sendBrevSchema from "./sendBrevSchema";
 import "./sendBrev.less";
 import { Fritekstvedlegg } from "./brevVedlegg/brevVedlegg";
 import LabelMedHjelpetekst from "../../labelMedHjelpetekst";
-import { untouch } from "redux-form";
+import { SendBrevValideringKontekst, validerSendBrev } from "./sendBrevValidering";
 
 const { VIRKSOMHET, ARBEIDSGIVER, ANNEN_ORGANISASJON, NORSK_MYNDIGHET, UTENLANDSK_TRYGDEMYNDIGHET } =
   MKV.Koder.mottakerroller;
 
 const mapStateToProps = (state: RootState) => ({
-  formIsValid: formSelectors.SendBrevValidSelector(state),
-  formValues: getFormValues(KV.Form.SEND_BREV)(state),
-  initialValues: {
-    felt: {},
-  },
   soknadsland: mottatteOpplysningerSelectors.SoknadslandSelector(state),
   sakstype: fagsakSelectors.SakstypeKodeSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  changeField: (field: string, data: unknown) => dispatch(change(KV.Form.SEND_BREV, field, data)),
-  resetForm: () => dispatch(reset(KV.Form.SEND_BREV)),
   oppdaterBehandling: () => dispatch(behandlingerOperations.oppdaterBehandling()),
-  touchAllFields: () => dispatch(touchAllFieldsOp(KV.Form.SEND_BREV)),
-  untouchFields: (...fields: string[]) => dispatch(untouch(KV.Form.SEND_BREV, ...fields)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type Brevutkast = Api.Brevutkast.BrevutkastResDto;
 
 interface Props {
   redigerbart: boolean;
@@ -88,29 +76,38 @@ interface Props {
   mottakerSelectWidth?: ColumnWidth;
   mottakerTabellWidth?: ColumnWidth;
   felterWidth?: ColumnWidth;
-  formValues: SendBrevFormValues;
   dokumenter: FysiskDokument[];
-  syncErrors?: { [key: string]: string };
+  // Utkastet som er åpnet, enten fra listen over lagrede utkast her eller fra Dokumenter-fanen
+  aktivtUtkast: Brevutkast | null;
+  setAktivtUtkast: (utkast: Brevutkast | null) => void;
 }
+
+const defaultValues: SendBrevFormValues = { felt: {} };
 
 function SendBrev({
   behandlingID,
-  changeField,
-  formValues,
-  formIsValid,
   oppdaterBehandling,
   redigerbart,
-  resetForm,
   dokumenter,
-  touchAllFields,
   brevTypeSelectWidth = "12",
   mottakerSelectWidth = "12",
   mottakerTabellWidth = "12",
   felterWidth = "12",
   soknadsland,
   sakstype,
-  untouchFields,
+  aktivtUtkast,
+  setAktivtUtkast,
 }: Props & PropsFromRedux) {
+  const metoder = useForm<SendBrevFormValues>({ defaultValues });
+  const { control, reset, setValue } = metoder;
+  const formValues = useWatch({ control }) as SendBrevFormValues;
+  const changeField = useCallback(
+    (felt: string, verdi: unknown) => setValue(felt as Path<SendBrevFormValues>, verdi as never),
+    [setValue],
+  );
+  const syncErrors = useMemo(() => validerSendBrev(formValues), [formValues]);
+  const formIsValid = Utils._isEmpty(syncErrors);
+
   const [tilgjengeligeMaler, setTilgjengeligeMaler] = useState<Api.DokumenterV2.TilgjengeligeMalerResDto>();
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [standardvedleggListe, setStandardvedleggListe] = useState<Api.DokumenterV2.TilgjengeligStandardvedlegg[]>([]);
@@ -146,24 +143,12 @@ function SendBrev({
   const mottakerErNorskMyndighet = erNorskMyndighet(formValues?.valgtMottaker?.rolle);
   const { tekstblokkerPaa, placeholderAktiv } = usePlaceholderToggles();
   const { accounts } = useMsal();
-  const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state));
 
-  // Hent ferske verdier direkte fra store i hooks under
-  const currentValues = useSelector((state: RootState) => getFormValues(KV.Form.SEND_BREV)(state)) as
-    SendBrevFormValues | undefined;
-
-  // Hvis bruker allerede har forsøkt å sende, sørg for at showFieldErrors ikke blir skrudd av ved mal-endring
-  useEffect(() => {
-    if (submitAttempted && currentValues?.showFieldErrors !== true) {
-      changeField("showFieldErrors", true);
-    }
-  }, [submitAttempted, currentValues?.showFieldErrors, changeField]);
-
-  // Etter mal-bytte: vent til feltene er mountet, deretter touch alle felter slik at inline-feil vises videre
-  useLayoutEffect(() => {
-    if (!submitAttempted) return;
-    touchAllFields();
-  }, [submitAttempted, currentValues?.type, currentValues?.valgtBrev, touchAllFields]);
+  // useWatch gir en ny kopi av verdiene ved hver endring, så effektene under avhenger av primitive nøkler
+  const valgtMottakerUuid = formValues?.valgtMottaker?.uuid;
+  const valgtBrevKode = formValues?.valgtBrev?.type?.kode;
+  const norskeMyndigheterNokkel = formValues?.norskeMyndigheter?.join(",");
+  const utenlandskTrygdemyndighetValg = formValues?.felt?.UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER?.valg;
 
   const setValgteVedleggIState = (valgteVedleggFraVisningstabell: BrevVedleggVisningstabellInterface) => {
     setValgteVedlegg({
@@ -279,22 +264,21 @@ function SendBrev({
     changeField("kopiTilBruker", undefined);
   };
 
-  const prevValgtBrevRef = useRef<Api.DokumenterV2.TilgjengeligBrev | undefined>(undefined);
+  const prevValgtBrevKodeRef = useRef<string | undefined>(undefined);
   useEffect(() => {
-    const prevValgtBrev = prevValgtBrevRef.current;
-    const currentValgtBrev = formValues?.valgtBrev;
+    const prevValgtBrevKode = prevValgtBrevKodeRef.current;
 
-    // Only reset if both previous and current are defined and different
-    if (prevValgtBrev && currentValgtBrev && prevValgtBrev !== currentValgtBrev) {
+    // Nullstill bare ved bytte fra én brevmal til en annen
+    if (prevValgtBrevKode && valgtBrevKode && prevValgtBrevKode !== valgtBrevKode) {
       resetVedleggState();
       resetSkjemafelter();
     }
 
-    prevValgtBrevRef.current = currentValgtBrev;
-  }, [formValues?.valgtBrev]);
+    prevValgtBrevKodeRef.current = valgtBrevKode;
+  }, [valgtBrevKode]);
 
   useEffect(() => {
-    if ((!formValues?.valgtMottaker?.rolle && !formValues?.mottaker) || formValues?.aktivtUtkast) return;
+    if ((!formValues?.valgtMottaker?.rolle && !formValues?.mottaker) || aktivtUtkast) return;
     // Reset vedlegg og skjemafelter ved mottaker-endring
     resetVedleggState();
     resetSkjemafelter();
@@ -302,8 +286,7 @@ function SendBrev({
     changeField("type", undefined);
     changeField("valgtBrev", undefined);
     // Tilbakestill feilhåndtering og varsler
-    changeField("showFieldErrors", false);
-    if (submitAttempted) setSubmitAttempted(false);
+    setSubmitAttempted(false);
     setFeil(undefined);
     setVisBrevBestiltAlert(false);
     setMuligeMottakereFeil(undefined);
@@ -320,19 +303,19 @@ function SendBrev({
     }
   }, [
     tilgjengeligeBrevtyper,
-    formValues?.valgtMottaker,
+    valgtMottakerUuid,
     formValues?.organisasjonsnummer,
     formValues?.organisasjonFunnetForOrgnr,
     formValues?.arbeidsgiver,
-    formValues?.norskeMyndigheter,
+    norskeMyndigheterNokkel,
   ]);
 
   useEffect(() => {
-    if (formValues?.aktivtUtkast) return;
+    if (aktivtUtkast) return;
     if (tilgjengeligeBrevtyper?.length > 1 && formValues?.type) {
       changeField("type", undefined);
     }
-  }, [formValues?.valgtMottaker]);
+  }, [valgtMottakerUuid]);
 
   useEffect(() => {
     changeField(
@@ -341,20 +324,11 @@ function SendBrev({
     );
   }, [formValues?.type]);
 
-  // Full reset av underfelter (verdier + touched) når valgt brevmal endres
+  // Tøm underfeltene når valgt brevmal endres
   useEffect(() => {
-    const felter = formValues?.valgtBrev?.felter;
-    if (!felter || formValues?.aktivtUtkast) return;
-
-    changeField("showFieldErrors", false);
+    if (!valgtBrevKode || aktivtUtkast) return;
     changeField("felt", {});
-
-    const pathsToUntouch: string[] = ["type"];
-    felter.forEach((f) => {
-      pathsToUntouch.push(`felt.${f.kode}.valg`, `felt.${f.kode}.feltVerdi`);
-    });
-    untouchFields(...pathsToUntouch);
-  }, [formValues?.valgtBrev?.type]);
+  }, [valgtBrevKode]);
 
   useEffect(() => {
     setMuligeMottakereFeil(undefined);
@@ -362,12 +336,12 @@ function SendBrev({
       hentMuligeMottakere();
     }
   }, [
-    formValues?.valgtBrev,
+    valgtBrevKode,
     formValues?.organisasjonsnummer,
     formValues?.organisasjonFunnetForOrgnr,
     formValues?.arbeidsgiver,
-    formValues?.norskeMyndigheter,
-    formValues?.felt?.UTENLANDSK_TRYGDEMYNDIGHET_MOTTAKER,
+    norskeMyndigheterNokkel,
+    utenlandskTrygdemyndighetValg,
   ]);
 
   useEffect(() => {
@@ -375,7 +349,7 @@ function SendBrev({
       setTimeout(() => {
         if (valgtMottakerHarFeilmelding) {
           hentTilgjengeligeMaler();
-          resetForm();
+          nullstillSkjema();
         } else if (kanHenteMuligeMottakere(formValues)) {
           hentMuligeMottakere();
         }
@@ -406,8 +380,8 @@ function SendBrev({
     if (!erFritekstBrev()) return null;
 
     const saksbehandler = accounts && accounts.length > 0 ? accounts[0] : null;
-    return saksbehandler?.idTokenClaims?.NAVident !== formValues.aktivtUtkast?.lagretAvSaksbehandlerIdent
-      ? formValues.aktivtUtkast?.lagretAvSaksbehandlerIdent
+    return saksbehandler?.idTokenClaims?.NAVident !== aktivtUtkast?.lagretAvSaksbehandlerIdent
+      ? aktivtUtkast?.lagretAvSaksbehandlerIdent
       : null;
   };
 
@@ -516,8 +490,6 @@ function SendBrev({
 
     if (!formIsValid) {
       setSubmitAttempted(true);
-      changeField("showFieldErrors", true);
-      touchAllFields();
       return;
     }
 
@@ -579,10 +551,10 @@ function SendBrev({
   };
 
   const slettUtkast = async () => {
-    if (formValues?.aktivtUtkast?.utkastBrevID) {
-      await Api.Brevutkast.slettBrevutkast(behandlingID, formValues.aktivtUtkast.utkastBrevID)
+    if (aktivtUtkast?.utkastBrevID) {
+      await Api.Brevutkast.slettBrevutkast(behandlingID, aktivtUtkast.utkastBrevID)
         .then(() => {
-          changeField("aktivtUtkast", null);
+          setAktivtUtkast(null);
           hentUtkast();
         })
         .catch(() => setFeil("Utkastet er ikke slettet. Det skjedde en feil"));
@@ -605,8 +577,8 @@ function SendBrev({
     }
 
     // Hvis det var et aktivt utkast, nullstill det
-    if (formValues?.aktivtUtkast) {
-      changeField("aktivtUtkast", null);
+    if (aktivtUtkast) {
+      setAktivtUtkast(null);
     }
 
     // Oppdater listen over utkast
@@ -623,9 +595,14 @@ function SendBrev({
     setForkastBrevSpinner(false);
   };
 
+  const nullstillSkjema = () => {
+    reset(defaultValues);
+    setAktivtUtkast(null);
+    setSubmitAttempted(false);
+  };
+
   const resetFormOgFritekstvedleggState = () => {
-    resetForm();
-    changeField("showFieldErrors", false);
+    nullstillSkjema();
     setFritekstvedlegg([]);
     setVisFritekstvedleggSkjema(false);
     setRedigerFritekstvedleggIndex(undefined);
@@ -642,8 +619,8 @@ function SendBrev({
       mottaker: formValues.valgtMottaker.rolle,
     };
 
-    (formValues?.aktivtUtkast?.utkastBrevID
-      ? Api.Brevutkast.oppdaterBrevutkast(behandlingID, formValues.aktivtUtkast.utkastBrevID, requestData)
+    (aktivtUtkast?.utkastBrevID
+      ? Api.Brevutkast.oppdaterBrevutkast(behandlingID, aktivtUtkast.utkastBrevID, requestData)
       : Api.Brevutkast.lagreBrevutkast(behandlingID, requestData)
     )
       .then(() => {
@@ -652,10 +629,6 @@ function SendBrev({
       })
       .catch(() => setFeil("Utkastet ble ikke lagret. Det skjedde en feil."))
       .finally(() => setLagreUtkastSpinner(false));
-  };
-
-  const overstyrBlurEvent = (event: FocusEvent) => {
-    event.preventDefault();
   };
 
   if (!tilgjengeligeMaler || !formValues) {
@@ -683,162 +656,160 @@ function SendBrev({
   const sendBrevErDisabled = sendOgLagreErDisabled || Boolean(kopimottakerFeilmelding);
 
   return (
-    <div className="send_brev">
-      <Brevutkast
-        changeField={changeField}
-        dokumenter={dokumenter}
-        standardvedleggListe={standardvedleggListe}
-        formValues={formValues}
-        tilgjengeligeMottakere={tilgjengeligeMottakere}
-        utkastPåBehandlingen={utkastPåBehandlingen}
-        setFritekstvedlegg={setFritekstvedlegg}
-        setValgteVedlegg={setValgteVedlegg}
-      />
-
-      <Nav.Row className="brevmottaker__wrapper">
-        <Nav.Column xs={mottakerSelectWidth}>
-          <BrevMottaker
-            redigerbart={redigerbart}
-            tilgjengeligeMottakere={tilgjengeligeMottakere}
-            overstyrBlurEvent={overstyrBlurEvent}
+    <FormProvider {...metoder}>
+      <SendBrevValideringKontekst.Provider value={{ feil: syncErrors, visFeil: submitAttempted }}>
+        <div className="send_brev">
+          <Brevutkast
             changeField={changeField}
+            dokumenter={dokumenter}
+            standardvedleggListe={standardvedleggListe}
+            formValues={formValues}
+            aktivtUtkast={aktivtUtkast}
+            setAktivtUtkast={setAktivtUtkast}
+            tilgjengeligeMottakere={tilgjengeligeMottakere}
+            utkastPåBehandlingen={utkastPåBehandlingen}
+            setFritekstvedlegg={setFritekstvedlegg}
+            setValgteVedlegg={setValgteVedlegg}
           />
-        </Nav.Column>
-      </Nav.Row>
 
-      {skalViseBrevmalvalg(formValues) && (
-        <Nav.Row>
-          <Nav.Column xs={brevTypeSelectWidth}>
-            <Skjema.Select
-              feltNavn="type"
-              label={<LabelMedHjelpetekst label="Velg brevmal" bold small />}
-              readonly={!redigerbart || tilgjengeligeBrevtyper.length === 1 || !!formValues?.valgtMottaker?.feilmelding}
-              emptyFieldDisabled={!!formValues?.type}
-              onBlur={overstyrBlurEvent}
-            >
-              {tilgjengeligeBrevtyper.map((brevType) => (
-                <option key={brevType.type.kode} value={brevType.type.kode}>
-                  {brevType.type.term}
-                </option>
-              ))}
-            </Skjema.Select>
-          </Nav.Column>
-        </Nav.Row>
-      )}
+          <Nav.Row className="brevmottaker__wrapper">
+            <Nav.Column xs={mottakerSelectWidth}>
+              <BrevMottaker
+                redigerbart={redigerbart}
+                tilgjengeligeMottakere={tilgjengeligeMottakere}
+                changeField={changeField}
+              />
+            </Nav.Column>
+          </Nav.Row>
 
-      {!valgtMottakerHarFeilmelding && (
-        <BrevValgMedPlaceholdere
-          behandlingID={behandlingID}
-          formValues={formValues}
-          width={felterWidth}
-          redigerbart={redigerbart}
-          changeField={changeField}
-          finnValgAlternativ={finnValgAlternativ}
-        />
-      )}
+          {skalViseBrevmalvalg(formValues) && (
+            <Nav.Row>
+              <Nav.Column xs={brevTypeSelectWidth}>
+                <Forms.Select
+                  name="type"
+                  label={<LabelMedHjelpetekst label="Velg brevmal" bold small />}
+                  readOnly={
+                    !redigerbart || tilgjengeligeBrevtyper.length === 1 || !!formValues?.valgtMottaker?.feilmelding
+                  }
+                  emptyFieldDisabled={!!formValues?.type}
+                >
+                  {tilgjengeligeBrevtyper.map((brevType) => (
+                    <option key={brevType.type.kode} value={brevType.type.kode}>
+                      {brevType.type.term}
+                    </option>
+                  ))}
+                </Forms.Select>
+              </Nav.Column>
+            </Nav.Row>
+          )}
 
-      {formIsValid && brevtypeErValgt && (muligeMottakere || muligeMottakereNorskMyndighet) && (
-        <Nav.Row>
-          <Nav.Column xs={mottakerTabellWidth}>
-            <BrevMottakereTabell
-              muligeMottakere={muligeMottakere}
-              muligeMottakereNorskMyndighet={muligeMottakereNorskMyndighet}
+          {!valgtMottakerHarFeilmelding && (
+            <BrevValgMedPlaceholdere
+              behandlingID={behandlingID}
+              formValues={formValues}
+              width={felterWidth}
               redigerbart={redigerbart}
-              kopimottakerFeilmelding={kopimottakerFeilmelding}
-              saksbehandlerNrToIdent={finnSaksbehandlerIdentForDobbelSignatur()}
-              brevVedlegg={{
-                fritekstvedlegg,
-                setFritekstvedlegg,
-                valgteVedlegg,
-                setValgteVedlegg: setValgteVedleggIState,
-                changeField,
-                dokumenter,
-                visFritekstvedleggSkjema,
-                setVisFritekstvedleggSkjema,
-                redigerFritekstvedleggIndex: redigerFritekstVedleggIndex,
-                setRedigerFritekstvedleggIndex: setRedigerFritekstvedleggIndex,
-                standardvedlegg: standardvedleggListe,
-              }}
+              changeField={changeField}
+              finnValgAlternativ={finnValgAlternativ}
             />
-          </Nav.Column>
-        </Nav.Row>
-      )}
+          )}
 
-      {muligeMottakereFeil && (
-        <Nav.Alert variant="warning" className="varsel">
-          {muligeMottakereFeil}
-        </Nav.Alert>
-      )}
+          {formIsValid && brevtypeErValgt && (muligeMottakere || muligeMottakereNorskMyndighet) && (
+            <Nav.Row>
+              <Nav.Column xs={mottakerTabellWidth}>
+                <BrevMottakereTabell
+                  muligeMottakere={muligeMottakere}
+                  muligeMottakereNorskMyndighet={muligeMottakereNorskMyndighet}
+                  formIsValid={formIsValid}
+                  redigerbart={redigerbart}
+                  kopimottakerFeilmelding={kopimottakerFeilmelding}
+                  saksbehandlerNrToIdent={finnSaksbehandlerIdentForDobbelSignatur()}
+                  brevVedlegg={{
+                    fritekstvedlegg,
+                    setFritekstvedlegg,
+                    valgteVedlegg,
+                    setValgteVedlegg: setValgteVedleggIState,
+                    changeField,
+                    dokumenter,
+                    visFritekstvedleggSkjema,
+                    setVisFritekstvedleggSkjema,
+                    redigerFritekstvedleggIndex: redigerFritekstVedleggIndex,
+                    setRedigerFritekstvedleggIndex: setRedigerFritekstvedleggIndex,
+                    standardvedlegg: standardvedleggListe,
+                  }}
+                />
+              </Nav.Column>
+            </Nav.Row>
+          )}
 
-      <div className="send_brev__knapperad">
-        {submitAttempted && !formIsValid && (
-          <Nav.Alert variant="error" className="varsel">
-            {Utils.feilmelding.syncErrorsTilFeilmelding(syncErrors || {})}
-          </Nav.Alert>
-        )}
-        <Nav.Button
-          variant="primary"
-          disabled={sendBrevErDisabled}
-          className="brevknapp"
-          onClick={() => void sendBrev()}
-          loading={sendBrevSpinner}
-        >
-          Send brev
-        </Nav.Button>
-        <Nav.Button
-          variant="secondary"
-          disabled={sendOgLagreErDisabled}
-          className="brevknapp"
-          onClick={lagreUtkast}
-          loading={lagreUtkastSpinner}
-        >
-          Lagre utkast
-        </Nav.Button>
-        <Nav.Button
-          variant="secondary"
-          disabled={!formValues.mottaker || !redigerbart || spinnerAktiv}
-          className="brevknapp"
-          onClick={forkastBrev}
-          loading={forkastBrevSpinner}
-        >
-          Forkast brev
-        </Nav.Button>
-      </div>
+          {muligeMottakereFeil && (
+            <Nav.Alert variant="warning" className="varsel">
+              {muligeMottakereFeil}
+            </Nav.Alert>
+          )}
 
-      {(utdaterteVerdier.length > 0 || uopplosteBetingelser.length > 0 || uutfylteFelter.length > 0) && (
-        <PlaceholderUtdatertVarsel
-          utdaterte={utdaterteVerdier}
-          uopploste={uopplosteBetingelser}
-          uutfylte={uutfylteFelter}
-          onSendLikevel={() => {
-            lukkPlaceholderVarsel();
-            bestillBrev();
-          }}
-          onAvbryt={lukkPlaceholderVarsel}
-        />
-      )}
+          <div className="send_brev__knapperad">
+            {submitAttempted && !formIsValid && (
+              <Nav.Alert variant="error" className="varsel">
+                {Utils.feilmelding.syncErrorsTilFeilmelding(syncErrors as Record<string, never>)}
+              </Nav.Alert>
+            )}
+            <Nav.Button
+              variant="primary"
+              disabled={sendBrevErDisabled}
+              className="brevknapp"
+              onClick={() => void sendBrev()}
+              loading={sendBrevSpinner}
+            >
+              Send brev
+            </Nav.Button>
+            <Nav.Button
+              variant="secondary"
+              disabled={sendOgLagreErDisabled}
+              className="brevknapp"
+              onClick={lagreUtkast}
+              loading={lagreUtkastSpinner}
+            >
+              Lagre utkast
+            </Nav.Button>
+            <Nav.Button
+              variant="secondary"
+              disabled={!formValues.mottaker || !redigerbart || spinnerAktiv}
+              className="brevknapp"
+              onClick={forkastBrev}
+              loading={forkastBrevSpinner}
+            >
+              Forkast brev
+            </Nav.Button>
+          </div>
 
-      {visBrevBestiltAlert && (
-        <Nav.Alert variant="success" className="brev_sendt">
-          Brevet er bestilt. Det kan ta noe tid før brevet vises i dokumentlisten.
-        </Nav.Alert>
-      )}
-      {feil && (
-        <Nav.Alert variant="error" className="brev_sendt">
-          {feil}
-        </Nav.Alert>
-      )}
-    </div>
+          {(utdaterteVerdier.length > 0 || uopplosteBetingelser.length > 0 || uutfylteFelter.length > 0) && (
+            <PlaceholderUtdatertVarsel
+              utdaterte={utdaterteVerdier}
+              uopploste={uopplosteBetingelser}
+              uutfylte={uutfylteFelter}
+              onSendLikevel={() => {
+                lukkPlaceholderVarsel();
+                bestillBrev();
+              }}
+              onAvbryt={lukkPlaceholderVarsel}
+            />
+          )}
+
+          {visBrevBestiltAlert && (
+            <Nav.Alert variant="success" className="brev_sendt">
+              Brevet er bestilt. Det kan ta noe tid før brevet vises i dokumentlisten.
+            </Nav.Alert>
+          )}
+          {feil && (
+            <Nav.Alert variant="error" className="brev_sendt">
+              {feil}
+            </Nav.Alert>
+          )}
+        </div>
+      </SendBrevValideringKontekst.Provider>
+    </FormProvider>
   );
 }
 
-const SendBrevForm = reduxForm<object, Props & PropsFromRedux>({
-  form: KV.Form.SEND_BREV,
-  destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
-  updateUnregisteredFields: true,
-  keepValues: true,
-  validate: lagYupToReduxformErrorMapper(sendBrevSchema),
-})(SendBrev);
-
-export default connector(SendBrevForm);
+export default connector(SendBrev);

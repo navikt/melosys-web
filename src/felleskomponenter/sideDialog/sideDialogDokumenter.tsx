@@ -1,16 +1,14 @@
 import { DokumentOversikt, Mottaksretning } from "Domene";
-import { change } from "redux-form";
 import { BodyShort } from "@navikt/ds-react";
 
 import MKV from "../../melosyskodeverk";
 import * as Api from "../../services/api";
-import * as KV from "../../kodeverk";
 import * as Ikoner from "../../resources/images";
 import * as Nav from "../../navFrontend";
 
 import { hentDato } from "../../ducks/dokumenter/selectors";
 import { formatterDatoTilNorsk } from "../../utils/dato";
-import { useAsyncCallbackState, useDispatch } from "../../hooks";
+import { useAsyncCallbackState } from "../../hooks";
 import PdfLink from "../pdfLink";
 import LagredeUtkast from "./sendBrev/brevutkast/lagredeUtkast";
 
@@ -94,14 +92,19 @@ interface SideDialogDokumenterProps {
   behandlingID: number;
   dokumentOversikt: DokumentOversikt[];
   setAktivTab: (fanenavn: string) => void;
+  setAktivtUtkast: (utkast: Api.Brevutkast.BrevutkastResDto | null) => void;
 }
 
-function SideDialogDokumenter({ behandlingID, dokumentOversikt, setAktivTab }: SideDialogDokumenterProps) {
+function SideDialogDokumenter({
+  behandlingID,
+  dokumentOversikt,
+  setAktivTab,
+  setAktivtUtkast,
+}: SideDialogDokumenterProps) {
   const [utkast] = useAsyncCallbackState(() => Api.Brevutkast.hentBrevutkast(behandlingID), [], []);
-  const dispatch = useDispatch();
 
   const handleValgtUtkast = (valgtUtkast: Api.Brevutkast.BrevutkastResDto | null) => {
-    dispatch(change(KV.Form.SEND_BREV, "aktivtUtkast", valgtUtkast));
+    setAktivtUtkast(valgtUtkast);
     setAktivTab("brevbestilling");
   };
 

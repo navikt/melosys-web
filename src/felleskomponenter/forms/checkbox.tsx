@@ -46,6 +46,7 @@ function Checkbox<TFieldValues extends FieldValues = FieldValues>({
   name,
   control,
   checked,
+  feil,
   ...rest
 }: CheckboxProps<TFieldValues>) {
   return (
@@ -56,12 +57,12 @@ function Checkbox<TFieldValues extends FieldValues = FieldValues>({
         <InnerCheckboxComponent
           {...field}
           {...rest}
-          checked={checked !== undefined ? checked : field.value}
+          checked={checked !== undefined ? checked : Boolean(field.value)}
           onChange={(event: any) => {
             field.onChange(event);
             if (rest.onChange) rest.onChange(event);
           }}
-          feil={getErrorMessage(field, formState)}
+          feil={feil ?? getErrorMessage(field, formState)}
         />
       )}
     />

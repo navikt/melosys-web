@@ -1,17 +1,14 @@
 import React from "react";
 import { RootState } from "AppTypes";
-import { getFormValues } from "redux-form";
 import { connect, ConnectedProps } from "react-redux";
 
 import * as Api from "../../../../services/api";
-import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
-import * as Skjema from "../../../skjema";
+import * as Forms from "../../../forms";
 import * as Utils from "../../../../utils";
 
 import { behandlingerSelectors } from "../../../../ducks/behandlinger";
-import { formSelectors } from "../../../../ducks/form";
-import { SendBrevFormValues } from "../types";
+import { useSendBrevVerdier } from "../sendBrevValidering";
 import { erBruker } from "./brevMottaker";
 import Dokumentliste, { BrevDokumentMetadataType } from "../../../dokumentliste";
 import BrevVedlegg from "../brevVedlegg/brevVedlegg";
@@ -20,8 +17,6 @@ import "./brevMottakereTabell.less";
 
 const mapStateToProps = (state: RootState) => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  formIsValid: formSelectors.SendBrevValidSelector(state),
-  formValues: getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues,
 });
 
 const connector = connect(mapStateToProps);
@@ -60,13 +55,13 @@ function BrevMottakereTabell({
   muligeMottakere,
   muligeMottakereNorskMyndighet,
   behandlingID,
-  formValues,
   formIsValid,
   redigerbart,
   kopimottakerFeilmelding,
   brevVedlegg,
   saksbehandlerNrToIdent,
 }: BrevMottakereTabellProps & PropsFromRedux) {
+  const formValues = useSendBrevVerdier();
   const valgtMottakerHarFeilmelding: FeilmeldingProps | undefined = formValues?.valgtMottaker?.feilmelding;
   const mottakerErNorskMyndighet = formValues?.valgtMottaker?.rolle === "NORSK_MYNDIGHET";
 
@@ -173,10 +168,11 @@ function BrevMottakereTabell({
   return (
     <>
       {!Utils._isEmpty(muligeMottakere?.kopiMottakere) && (
-        <Skjema.Checkbox
+        <Forms.Checkbox
           className="kopiTilBrukerSjekkboks"
-          feltNavn="kopiTilBruker"
+          name="kopiTilBruker"
           label="Send kopi til bruker/brukers fullmektig"
+          size="small"
         />
       )}
 

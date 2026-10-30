@@ -10,9 +10,9 @@ vi.mock("../../../../services/api", () => ({
 vi.mock("../../../vedleggTable", () => ({ default: () => null }));
 vi.mock("../../../vedleggvelger", () => ({ default: () => null }));
 
-vi.mock("../../../skjema", () => ({
+vi.mock("../../../forms", () => ({
   Input: () => null,
-  HTMLEditor: ({ placeholderVerdier, gyldigeNokler }: any) => (
+  HtmlEditor: ({ placeholderVerdier, gyldigeNokler }: any) => (
     <div
       data-testid="html-editor"
       data-verdier={JSON.stringify(placeholderVerdier)}

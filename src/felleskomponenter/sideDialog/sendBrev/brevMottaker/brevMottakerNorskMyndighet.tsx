@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { getFormValues, getFormSyncErrors } from "redux-form";
-import { RootState } from "AppTypes";
 
-import * as KV from "../../../../kodeverk";
 import * as Nav from "../../../../navFrontend";
 import * as Api from "../../../../services/api";
-import { SendBrevFormValues, SyncErrors } from "../types";
 import { unwrapMelding } from "../../../skjema/utils";
+import { useSendBrevValidering, useSendBrevVerdier } from "../sendBrevValidering";
 import "./brevMottaker.less";
 
 interface BrevMottakerNorskMyndighetProps {
@@ -15,15 +11,13 @@ interface BrevMottakerNorskMyndighetProps {
 }
 
 function BrevMottakerNorskMyndighet({ changeField }: BrevMottakerNorskMyndighetProps) {
-  const formValues = useSelector((state: RootState) => getFormValues(KV.Form.SEND_BREV)(state) as SendBrevFormValues);
-  const syncErrors = useSelector((state: RootState) => getFormSyncErrors(KV.Form.SEND_BREV)(state)) as SyncErrors;
+  const formValues = useSendBrevVerdier();
+  const { feil: syncErrors, visFeil } = useSendBrevValidering();
   const [tilgjengeligeNorskeMyndigheter, setTilgjengeligeNorskeMyndigheter] =
     useState<Api.DokumenterV2.TilgjengeligeNorskeMyndigheterResDto>();
-  const [valgteNorskeMyndigheter, setValgteNorskeMyndigheter] = useState<string[]>(formValues?.norskeMyndigheter || []);
+  const valgteNorskeMyndigheter = formValues?.norskeMyndigheter ?? [];
 
-  const norskeMyndighetError = syncErrors?.norskeMyndigheter;
-  const skalViseFeil = Boolean(formValues?.showFieldErrors) && Boolean(norskeMyndighetError);
-  const errorMessage = skalViseFeil ? unwrapMelding(norskeMyndighetError) : undefined;
+  const errorMessage = visFeil ? unwrapMelding(syncErrors?.norskeMyndigheter) : undefined;
 
   useEffect(() => {
     Api.DokumenterV2.hentTilgjengeligeNorskeMyndigheter().then((response) =>
@@ -31,23 +25,19 @@ function BrevMottakerNorskMyndighet({ changeField }: BrevMottakerNorskMyndighetP
     );
   }, []);
 
-  // Sync local state with form when external changes happen
   useEffect(() => {
-    if (formValues?.norskeMyndigheter !== valgteNorskeMyndigheter) {
-      setValgteNorskeMyndigheter(formValues?.norskeMyndigheter || []);
+    if (!formValues?.norskeMyndigheter) {
+      changeField("norskeMyndigheter", []);
     }
-  }, [formValues?.norskeMyndigheter]);
-
-  useEffect(() => {
-    changeField("norskeMyndigheter", valgteNorskeMyndigheter);
-  }, [valgteNorskeMyndigheter, changeField]);
+  }, [formValues?.norskeMyndigheter, changeField]);
 
   const handleCheckboxChange = (orgnr: string) => {
-    if (valgteNorskeMyndigheter.includes(orgnr)) {
-      setValgteNorskeMyndigheter(valgteNorskeMyndigheter.filter((item) => item !== orgnr));
-    } else {
-      setValgteNorskeMyndigheter([...valgteNorskeMyndigheter, orgnr]);
-    }
+    changeField(
+      "norskeMyndigheter",
+      valgteNorskeMyndigheter.includes(orgnr)
+        ? valgteNorskeMyndigheter.filter((item) => item !== orgnr)
+        : [...valgteNorskeMyndigheter, orgnr],
+    );
   };
 
   return (

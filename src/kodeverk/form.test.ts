@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 
 import {
-  SEND_BREV,
   FORSIDE_JOURNALFORINGS_FORM,
   JOURNALFORING,
   JOURNALFORING_SED,
@@ -14,7 +13,6 @@ import {
 
 describe("form konstanter", () => {
   it("eksporterer formnavn-konstanter", () => {
-    expect(SEND_BREV).toBe("send_brev");
     expect(FORSIDE_JOURNALFORINGS_FORM).toBe("journalforingsform");
     expect(JOURNALFORING).toBe("journalforing");
     expect(JOURNALFORING_SED).toBe("journalforing_sed");
