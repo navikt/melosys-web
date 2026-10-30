@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { change, getFormValues, reduxForm, untouch } from "redux-form";
+import { FieldValues, useForm, useWatch } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { connect, ConnectedProps } from "react-redux";
 import { KTObject } from "@navikt/melosys-kodeverk";
 
@@ -10,13 +11,11 @@ import * as Api from "../../../../services/api";
 import * as KV from "../../../../kodeverk";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../navFrontend";
-import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Forms from "../../../../felleskomponenter/forms";
 import * as Utils from "../../../../utils";
 
-import { formSelectors } from "../../../../ducks/form";
 import { StegStatus } from "../../stegvelger";
 
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_bestemmelse from "./vurderingBestemmelseSchema";
 
 import "./vurderingBestemmelse.less";
@@ -28,23 +27,12 @@ import { Box } from "@navikt/ds-react";
 
 const { NEI_ANMODE_OM_UNNTAK, NEI_AVSLAG, JA_FATTE_VEDTAK } = KV.Koder.AvtalelandUtfall;
 
-const mapStateToProps = (state: RootState, ownProps: Props) => ({
-  formIsValid: formSelectors.TrygdeavtaleBestemmelseFormValidSelector(state),
-  formValues: getFormValues(KV.Form.Trygdeavtale.BESTEMMELSE)(state),
-  initialValues: {
-    vedtak: ownProps.resultat?.vedtak,
-    bestemmelse: ownProps.resultat?.bestemmelse,
-    tilleggsbestemmelse: Boolean(ownProps.resultat?.tilleggsbestemmelse),
-  },
+const mapStateToProps = (state: RootState) => ({
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, Action>) => ({
-  resetField: (field: string) => {
-    dispatch(change(KV.Form.Trygdeavtale.BESTEMMELSE, field, null));
-    dispatch(untouch(KV.Form.Trygdeavtale.BESTEMMELSE, field));
-  },
   slettLovvalgsperiode: (behandlingID: number, lovvalgsperiodeID: number) =>
     dispatch(lovvalgsperioderOperations.slettLovvalgsperiode(behandlingID, lovvalgsperiodeID)),
 });
@@ -53,15 +41,14 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface FormValuesProps {
-  vedtak?: string;
-  bestemmelse?: string;
-  tilleggsbestemmelse?: boolean;
+interface FormValues {
+  vedtak: string;
+  bestemmelse: string;
+  tilleggsbestemmelse: boolean;
 }
 
 interface Props {
   data: Api.Trygdeavtale.StegData;
-  formValues: FormValuesProps;
   fortsett: () => void;
   tilbake: () => void;
   redigerbart: boolean;
@@ -73,12 +60,9 @@ interface Props {
 
 function VurderingBestemmelse({
   data: { vedtakValg, bestemmelseValg, tilleggsbestemmelseValg },
-  formIsValid,
-  formValues,
   fortsett,
   tilbake,
   redigerbart,
-  resetField,
   resultat,
   steg,
   oppdaterFlyt,
@@ -88,17 +72,31 @@ function VurderingBestemmelse({
   behandlingID,
 }: PropsFromRedux & Props) {
   const [updatePending, setUpdatePending] = useState(false);
+  const {
+    control,
+    setValue,
+    formState: { isValid: formIsValid },
+  } = useForm({
+    resolver: yupResolver<FieldValues, unknown, FieldValues>(vurdering_bestemmelse),
+    mode: "onChange",
+    defaultValues: {
+      vedtak: resultat?.vedtak ?? "",
+      bestemmelse: resultat?.bestemmelse ?? "",
+      tilleggsbestemmelse: Boolean(resultat?.tilleggsbestemmelse),
+    },
+  });
+  const formValues = useWatch({ control }) as FormValues;
 
   const skalLagreVedtaksvalg = formValues?.vedtak !== NEI_ANMODE_OM_UNNTAK && formValues?.vedtak !== NEI_AVSLAG;
 
   useEffect(() => {
-    if (redigerbart && formValues && aktivtSteg) {
+    if (redigerbart && aktivtSteg) {
       setUpdatePending(true);
       oppdaterFlyt(
         {
           ...resultat,
-          vedtak: skalLagreVedtaksvalg ? formValues?.vedtak : undefined,
-          bestemmelse: formValues?.bestemmelse,
+          vedtak: skalLagreVedtaksvalg ? formValues.vedtak || undefined : undefined,
+          bestemmelse: formValues.bestemmelse || undefined,
           tilleggsbestemmelse: formValues.tilleggsbestemmelse ? tilleggsbestemmelseValg?.kode : undefined,
         },
         () => {
@@ -111,21 +109,20 @@ function VurderingBestemmelse({
     }
   }, [formValues?.vedtak, formValues?.bestemmelse, formValues?.tilleggsbestemmelse]);
 
-  if (!formValues) return null;
-
   return (
     <div className="vurderingBestemmelse_trygdeavtale">
       <Nav.Heading level="1" className="stegvelgertittel">
         Bestemmelse og vurdering
       </Nav.Heading>
 
-      <Skjema.RadioGroup
+      <Forms.RadioGroup
         legend="Hva er din vurdering av søknaden?"
         name="vedtak"
+        control={control}
         readOnly={!redigerbart || updatePending}
         onChange={() => {
-          resetField("tilleggsbestemmelse");
-          resetField("bestemmelse");
+          setValue("tilleggsbestemmelse", false, { shouldValidate: true });
+          setValue("bestemmelse", "", { shouldValidate: true });
         }}
         size="small"
       >
@@ -134,24 +131,25 @@ function VurderingBestemmelse({
             {valg.term}
           </Nav.Radio>
         ))}
-      </Skjema.RadioGroup>
+      </Forms.RadioGroup>
       {formValues?.vedtak && !Utils._isEmpty(bestemmelseValg) && (
         <Nav.Fieldset legend="">
           <Nav.Row>
             <Nav.Column lg="8">
-              <Skjema.Select
+              <Forms.Select
                 label="Velg bestemmelse"
-                feltNavn="bestemmelse"
-                readonly={!redigerbart || updatePending}
+                name="bestemmelse"
+                control={control}
+                readOnly={!redigerbart || updatePending}
                 emptyFieldDisabled={!!formValues.bestemmelse}
-                onChange={() => resetField("tilleggsbestemmelse")}
+                onChange={() => setValue("tilleggsbestemmelse", false, { shouldValidate: true })}
               >
                 {bestemmelseValg?.map((bestemmelse: KTObject) => (
                   <option key={bestemmelse.kode} value={bestemmelse.kode}>
                     {bestemmelse.term}
                   </option>
                 ))}
-              </Skjema.Select>
+              </Forms.Select>
             </Nav.Column>
           </Nav.Row>
         </Nav.Fieldset>
@@ -159,10 +157,11 @@ function VurderingBestemmelse({
       {formValues?.vedtak && !Utils._isEmpty(tilleggsbestemmelseValg) && (
         <Nav.Row>
           <Nav.Column xs="10">
-            <Skjema.Checkbox
-              feltNavn="tilleggsbestemmelse"
+            <Forms.Checkbox
+              name="tilleggsbestemmelse"
+              control={control}
               label={tilleggsbestemmelseValg?.term}
-              disabled={!redigerbart}
+              readOnly={!redigerbart}
             />
           </Nav.Column>
         </Nav.Row>
@@ -198,12 +197,4 @@ function VurderingBestemmelse({
   );
 }
 
-const VurderingBestemmelseForm = reduxForm<object, PropsFromRedux & Props>({
-  form: KV.Form.Trygdeavtale.BESTEMMELSE,
-  destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
-  updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(vurdering_bestemmelse),
-})(VurderingBestemmelse);
-
-export default connector(VurderingBestemmelseForm);
+export default connector(VurderingBestemmelse);

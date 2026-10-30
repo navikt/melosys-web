@@ -1,26 +1,18 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "AppTypes";
-import { getFormValues, reduxForm } from "redux-form";
+import { FieldValues, useForm, useWatch } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import * as Api from "../../../../services/api";
-import * as KV from "../../../../kodeverk";
-import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Forms from "../../../../felleskomponenter/forms";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../navFrontend";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
-import { formSelectors } from "../../../../ducks/form";
 import { StegStatus } from "../../stegvelger";
 
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_avklar_virksomhet from "./vurderingAvklarVirksomhetSchema";
 import "./vurderingAvklarVirksomhet.less";
 import { HJELPETEKST, INGEN_VIRKSOMHETER_TEKST } from "./tekster";
-
-interface FormValuesProps {
-  virksomhet?: string;
-}
 
 interface Props {
   data: Api.Trygdeavtale.StegData;
@@ -31,7 +23,6 @@ interface Props {
   tilbake: () => void;
   oppdaterFlyt: (resultat: Api.Trygdeavtale.Resultat) => void;
   aktivtSteg: boolean;
-  initialize: (values: object) => void;
 }
 
 function VurderingAvklarVirksomhet({
@@ -43,7 +34,6 @@ function VurderingAvklarVirksomhet({
   oppdaterFlyt,
   tilbake,
   aktivtSteg,
-  initialize,
 }: Props) {
   const virksomheterListe =
     data?.virksomheter?.map((virksomhet: Api.Trygdeavtale.Virksomhet) => ({
@@ -51,28 +41,24 @@ function VurderingAvklarVirksomhet({
       term: virksomhet.navn,
     })) || [];
 
-  const formValues = useSelector((state: RootState) =>
-    getFormValues(KV.Form.Trygdeavtale.AVKLAR_VIRKSOMHET)(state),
-  ) as FormValuesProps;
-
-  const formIsValid = useSelector((state: RootState) =>
-    formSelectors.TrygdeavtaleAvklarVirksomhetFormValidSelector(state),
-  );
-
-  useEffect(() => {
-    initialize({
-      virksomhet: resultat?.virksomhet,
-    });
-  }, [resultat?.virksomhet, initialize]);
+  const {
+    control,
+    formState: { isValid: formIsValid },
+  } = useForm({
+    resolver: yupResolver<FieldValues, unknown, FieldValues>(vurdering_avklar_virksomhet),
+    mode: "onChange",
+    defaultValues: { virksomhet: resultat?.virksomhet ?? "" },
+  });
+  const virksomhet = useWatch({ control, name: "virksomhet" });
 
   useEffect(() => {
-    if (redigerbart && formValues && aktivtSteg) {
+    if (redigerbart && aktivtSteg) {
       oppdaterFlyt({
         ...resultat,
-        virksomhet: formValues.virksomhet,
+        virksomhet: virksomhet || null,
       });
     }
-  }, [formValues?.virksomhet, redigerbart, aktivtSteg, oppdaterFlyt, resultat]);
+  }, [virksomhet, redigerbart, aktivtSteg]);
 
   const harVirksomheter = Array.isArray(virksomheterListe) && virksomheterListe.length > 0;
 
@@ -83,10 +69,11 @@ function VurderingAvklarVirksomhet({
       </Nav.Heading>
 
       {harVirksomheter ? (
-        <Skjema.RadioGroup
+        <Forms.RadioGroup
           legend={<LabelMedHjelpetekst label="Velg virksomhet" hjelpetekst={HJELPETEKST} bold small />}
           hideLegend
           name="virksomhet"
+          control={control}
           readOnly={!redigerbart}
         >
           {virksomheterListe.map((virksomhet) => (
@@ -94,7 +81,7 @@ function VurderingAvklarVirksomhet({
               {virksomhet.term}
             </Nav.Radio>
           ))}
-        </Skjema.RadioGroup>
+        </Forms.RadioGroup>
       ) : (
         <Nav.Alert variant="error" className="alertstripe">
           {INGEN_VIRKSOMHETER_TEKST}
@@ -112,12 +99,4 @@ function VurderingAvklarVirksomhet({
   );
 }
 
-const VurderingAvklarVirksomhetForm = reduxForm<FormValuesProps, Props>({
-  form: KV.Form.Trygdeavtale.AVKLAR_VIRKSOMHET,
-  destroyOnUnmount: true,
-  enableReinitialize: true,
-  updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(vurdering_avklar_virksomhet),
-})(VurderingAvklarVirksomhet);
-
-export default VurderingAvklarVirksomhetForm;
+export default VurderingAvklarVirksomhet;

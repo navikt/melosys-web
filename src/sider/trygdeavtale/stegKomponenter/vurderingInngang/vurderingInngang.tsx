@@ -3,13 +3,13 @@ import { RootState } from "AppTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { connect, ConnectedProps } from "react-redux";
-import { getFormValues, reduxForm } from "redux-form";
+import { FieldValues, useForm, useWatch } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import * as Api from "../../../../services/api";
-import * as KV from "../../../../kodeverk";
 import * as Mui from "../../../../felleskomponenter/ui";
 import * as Nav from "../../../../navFrontend";
-import * as Skjema from "../../../../felleskomponenter/skjema";
+import * as Forms from "../../../../felleskomponenter/forms";
 import * as Utils from "../../../../utils";
 
 import LabelMedHjelpetekst from "../../../../felleskomponenter/labelMedHjelpetekst";
@@ -17,10 +17,8 @@ import { StegStatus } from "../../stegvelger";
 
 import { mottatteOpplysningerOperations, mottatteOpplysningerSelectors } from "../../../../ducks/mottatteOpplysninger";
 import { menypanelOperations } from "../../../../ducks/menypanel";
-import { formSelectors } from "../../../../ducks/form";
 
 import { LandValgSomOptions } from "./vurderingInngangKomponenter";
-import { lagYupToReduxformErrorMapper } from "../../../../yup";
 import vurdering_inngang from "./vurderingInngangSchema";
 
 import "./vurderingInngang.less";
@@ -36,19 +34,21 @@ interface Periode {
   tom?: string | null;
 }
 
-const initializeValues = (periode: Periode, landkoder: string[]) => ({
-  fom: Utils.dato.formatterDatoTilNorsk(periode.fom, false, undefined),
-  tom: Utils.dato.formatterDatoTilNorsk(periode.tom, false, undefined),
-  arbeidsland: landkoder[0],
+interface FormValues {
+  fom: string;
+  tom: string;
+  arbeidsland: string;
+}
+
+const lagStartverdier = (periode: Periode, landkoder: string[]): FormValues => ({
+  fom: Utils.dato.formatterDatoTilNorsk(periode.fom),
+  tom: Utils.dato.formatterDatoTilNorsk(periode.tom),
+  arbeidsland: landkoder[0] ?? "",
 });
 
 const mapStateToProps = (state: RootState) => ({
-  formValues: getFormValues(KV.Form.Trygdeavtale.INNGANG)(state),
-  initialValues: initializeValues(
-    mottatteOpplysningerSelectors.PeriodeSelector(state),
-    mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
-  ),
-  formIsValid: formSelectors.TrygdeavtaleInngangFormValidSelector(state),
+  periode: mottatteOpplysningerSelectors.PeriodeSelector(state),
+  landkoder: mottatteOpplysningerSelectors.SoknadslandkoderSelector(state),
   registeropplysningerHentet: behandlingerSelectors.SisteOpplysningerHentetDatoSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
@@ -69,16 +69,9 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface FormValuesProps {
-  fom?: string;
-  tom?: string;
-  arbeidsland?: string;
-}
-
 interface Props {
   data: Api.Trygdeavtale.StegData;
   fortsett: () => void;
-  formValues: FormValuesProps;
   hentFlytOgOppdaterAktuelleSteg: () => void;
   redigerbart: boolean;
   resultat: Api.Trygdeavtale.Resultat;
@@ -90,10 +83,9 @@ interface Props {
 
 function VurderingInngang({
   data: { landValg, landValgUtenStøtte },
-  formValues,
-  formIsValid,
   fortsett,
-  initialValues,
+  periode,
+  landkoder,
   hentFlytOgOppdaterAktuelleSteg,
   lagreMottatteOpplysninger,
   redigerbart,
@@ -111,7 +103,15 @@ function VurderingInngang({
   lovvalgsperiode,
 }: PropsFromRedux & Props) {
   const { oppfriskOgLastInnSaksopplysninger } = useContext(FellesHandlersContext) as any;
-  const [initialFomTomLand, setInitialFomTomLand] = useState<{ fom?: string; tom?: string; arbeidsland?: string }>({});
+  const [startverdier] = useState(() => lagStartverdier(periode, landkoder));
+  const { control, formState } = useForm({
+    resolver: yupResolver<FieldValues, unknown, FieldValues>(vurdering_inngang),
+    mode: "onChange",
+    defaultValues: startverdier as FieldValues,
+  });
+  const formValues = useWatch({ control }) as FormValues;
+  const formIsValid = formState.isValid;
+  const [initialFomTomLand, setInitialFomTomLand] = useState<Partial<FormValues>>({});
   const [landUtenStøtteValgt, setLandUtenStøtteValgt] = useState(false);
   const [visOppfrisk, setVisOppfrisk] = useState(false);
 
@@ -122,8 +122,8 @@ function VurderingInngang({
     formValues?.arbeidsland !== initialFomTomLand?.arbeidsland;
 
   useEffect(() => {
-    if (!Utils._isEmpty(initialValues.fom) && !Utils._isEmpty(initialValues.arbeidsland)) {
-      setInitialFomTomLand({ fom: initialValues.fom, tom: initialValues.tom, arbeidsland: initialValues.arbeidsland });
+    if (!Utils._isEmpty(startverdier.fom) && !Utils._isEmpty(startverdier.arbeidsland)) {
+      setInitialFomTomLand(startverdier);
     }
   }, []);
 
@@ -187,22 +187,24 @@ function VurderingInngang({
         Periode
       </Nav.Heading>
       <div className="skjema__container">
-        <Skjema.Datovelger label="Fra og med" feltNavn="fom" disabled={!redigerbart} />
-        <Skjema.Datovelger
+        <Forms.Datovelger label="Fra og med" name="fom" control={control} readOnly={!redigerbart} />
+        <Forms.Datovelger
           label={
             <LabelMedHjelpetekst
               label="Til og med"
               hjelpetekst={`Ved åpen søknadsperiode lar du "Til og med" feltet stå tomt. Lovvalgsperiode registreres senere.`}
             />
           }
-          feltNavn="tom"
+          name="tom"
+          control={control}
           minDate={Utils.dato.norskStringTilDate(formValues?.fom)}
-          disabled={!redigerbart}
+          readOnly={!redigerbart}
         />
-        <Skjema.Select
+        <Forms.Select
           emptyFieldDisabled={!!formValues?.arbeidsland}
-          feltNavn="arbeidsland"
-          readonly={!redigerbart}
+          name="arbeidsland"
+          control={control}
+          readOnly={!redigerbart}
           className="arbeidsland__select"
           label={
             <LabelMedHjelpetekst
@@ -214,7 +216,7 @@ function VurderingInngang({
           <LandValgSomOptions landValg={landValg} />
           {landValg && landValgUtenStøtte && <option disabled>{"\u2500"}</option>}
           <LandValgSomOptions landValg={landValgUtenStøtte} />
-        </Skjema.Select>
+        </Forms.Select>
       </div>
 
       {landUtenStøtteValgt && <IngenFlytMelding />}
@@ -257,12 +259,4 @@ function VurderingInngang({
   );
 }
 
-const VurderingInngangForm = reduxForm<object, PropsFromRedux & Props>({
-  form: KV.Form.Trygdeavtale.INNGANG,
-  destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
-  updateUnregisteredFields: true,
-  validate: lagYupToReduxformErrorMapper(vurdering_inngang),
-})(VurderingInngang);
-
-export default connector(VurderingInngangForm);
+export default connector(VurderingInngang);
